@@ -15,9 +15,9 @@
 package v20180525
 
 import (
-	"encoding/json"
-	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "encoding/json"
+    tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 )
 
 // Predefined struct for user
@@ -28,14 +28,14 @@ type AcquireClusterAdminRoleRequestParams struct {
 
 type AcquireClusterAdminRoleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *AcquireClusterAdminRoleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -64,8 +64,8 @@ type AcquireClusterAdminRoleResponse struct {
 }
 
 func (r *AcquireClusterAdminRoleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -88,7 +88,7 @@ type AddClusterCIDRRequestParams struct {
 
 type AddClusterCIDRRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -100,8 +100,8 @@ type AddClusterCIDRRequest struct {
 }
 
 func (r *AddClusterCIDRRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -132,8 +132,8 @@ type AddClusterCIDRResponse struct {
 }
 
 func (r *AddClusterCIDRResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -172,7 +172,7 @@ type AddExistedInstancesRequestParams struct {
 	SkipValidateOptions []*string `json:"SkipValidateOptions,omitempty" name:"SkipValidateOptions"`
 
 	// 参数InstanceAdvancedSettingsOverride数组用于定制化地配置各台instance，与InstanceIds顺序对应。当传入InstanceAdvancedSettingsOverrides数组时，将覆盖默认参数InstanceAdvancedSettings；当没有传入参数InstanceAdvancedSettingsOverrides时，InstanceAdvancedSettings参数对每台instance生效。
-	//
+	// 
 	// 参数InstanceAdvancedSettingsOverride数组的长度应与InstanceIds数组一致；当长度大于InstanceIds数组长度时将报错；当长度小于InstanceIds数组时，没有对应配置的instace将使用默认配置。
 	InstanceAdvancedSettingsOverrides []*InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverrides,omitempty" name:"InstanceAdvancedSettingsOverrides"`
 
@@ -182,7 +182,7 @@ type AddExistedInstancesRequestParams struct {
 
 type AddExistedInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -211,7 +211,7 @@ type AddExistedInstancesRequest struct {
 	SkipValidateOptions []*string `json:"SkipValidateOptions,omitempty" name:"SkipValidateOptions"`
 
 	// 参数InstanceAdvancedSettingsOverride数组用于定制化地配置各台instance，与InstanceIds顺序对应。当传入InstanceAdvancedSettingsOverrides数组时，将覆盖默认参数InstanceAdvancedSettings；当没有传入参数InstanceAdvancedSettingsOverrides时，InstanceAdvancedSettings参数对每台instance生效。
-	//
+	// 
 	// 参数InstanceAdvancedSettingsOverride数组的长度应与InstanceIds数组一致；当长度大于InstanceIds数组长度时将报错；当长度小于InstanceIds数组时，没有对应配置的instace将使用默认配置。
 	InstanceAdvancedSettingsOverrides []*InstanceAdvancedSettings `json:"InstanceAdvancedSettingsOverrides,omitempty" name:"InstanceAdvancedSettingsOverrides"`
 
@@ -220,8 +220,8 @@ type AddExistedInstancesRequest struct {
 }
 
 func (r *AddExistedInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -276,8 +276,8 @@ type AddExistedInstancesResponse struct {
 }
 
 func (r *AddExistedInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -300,7 +300,7 @@ type AddNodeToNodePoolRequestParams struct {
 
 type AddNodeToNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -312,8 +312,8 @@ type AddNodeToNodePoolRequest struct {
 }
 
 func (r *AddNodeToNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -344,8 +344,8 @@ type AddNodeToNodePoolResponse struct {
 }
 
 func (r *AddNodeToNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -371,7 +371,7 @@ type AddVpcCniSubnetsRequestParams struct {
 
 type AddVpcCniSubnetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -386,8 +386,8 @@ type AddVpcCniSubnetsRequest struct {
 }
 
 func (r *AddVpcCniSubnetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -419,8 +419,8 @@ type AddVpcCniSubnetsResponse struct {
 }
 
 func (r *AddVpcCniSubnetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -489,17 +489,17 @@ type AutoscalingAdded struct {
 }
 
 type BackupStorageLocation struct {
-	// 备份仓库名称
+	// 备份仓库名称	
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 存储仓库所属地域，比如COS广州(ap-guangzhou)
+	// 存储仓库所属地域，比如COS广州(ap-guangzhou)	
 	StorageRegion *string `json:"StorageRegion,omitempty" name:"StorageRegion"`
 
-	// 存储服务提供方，默认腾讯云
+	// 存储服务提供方，默认腾讯云	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Provider *string `json:"Provider,omitempty" name:"Provider"`
 
-	// 对象存储桶名称，如果是COS必须是tke-backup-前缀开头
+	// 对象存储桶名称，如果是COS必须是tke-backup-前缀开头	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Bucket *string `json:"Bucket,omitempty" name:"Bucket"`
 
@@ -511,11 +511,11 @@ type BackupStorageLocation struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	State *string `json:"State,omitempty" name:"State"`
 
-	// 详细状态信息
+	// 详细状态信息	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Message *string `json:"Message,omitempty" name:"Message"`
 
-	// 最后一次检查时间
+	// 最后一次检查时间	
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LastValidationTime *string `json:"LastValidationTime,omitempty" name:"LastValidationTime"`
 }
@@ -548,7 +548,7 @@ type CancelClusterReleaseRequestParams struct {
 
 type CancelClusterReleaseRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 应用ID
 	ID *string `json:"ID,omitempty" name:"ID"`
 
@@ -560,8 +560,8 @@ type CancelClusterReleaseRequest struct {
 }
 
 func (r *CancelClusterReleaseRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -596,8 +596,8 @@ type CancelClusterReleaseResponse struct {
 }
 
 func (r *CancelClusterReleaseResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -638,7 +638,7 @@ type CheckEdgeClusterCIDRRequestParams struct {
 
 type CheckEdgeClusterCIDRRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群的vpc-id
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
@@ -650,8 +650,8 @@ type CheckEdgeClusterCIDRRequest struct {
 }
 
 func (r *CheckEdgeClusterCIDRRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -693,8 +693,8 @@ type CheckEdgeClusterCIDRResponse struct {
 }
 
 func (r *CheckEdgeClusterCIDRResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -726,7 +726,7 @@ type CheckInstancesUpgradeAbleRequestParams struct {
 
 type CheckInstancesUpgradeAbleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -747,8 +747,8 @@ type CheckInstancesUpgradeAbleRequest struct {
 }
 
 func (r *CheckInstancesUpgradeAbleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -800,8 +800,8 @@ type CheckInstancesUpgradeAbleResponse struct {
 }
 
 func (r *CheckInstancesUpgradeAbleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1463,7 +1463,7 @@ type CreateBackupStorageLocationRequestParams struct {
 
 type CreateBackupStorageLocationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 存储仓库所属地域，比如COS广州(ap-guangzhou)
 	StorageRegion *string `json:"StorageRegion,omitempty" name:"StorageRegion"`
 
@@ -1481,8 +1481,8 @@ type CreateBackupStorageLocationRequest struct {
 }
 
 func (r *CreateBackupStorageLocationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1515,8 +1515,8 @@ type CreateBackupStorageLocationResponse struct {
 }
 
 func (r *CreateBackupStorageLocationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1553,7 +1553,7 @@ type CreateClusterEndpointRequestParams struct {
 
 type CreateClusterEndpointRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -1579,8 +1579,8 @@ type CreateClusterEndpointRequest struct {
 }
 
 func (r *CreateClusterEndpointRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1614,8 +1614,8 @@ type CreateClusterEndpointResponse struct {
 }
 
 func (r *CreateClusterEndpointResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1635,7 +1635,7 @@ type CreateClusterEndpointVipRequestParams struct {
 
 type CreateClusterEndpointVipRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -1644,8 +1644,8 @@ type CreateClusterEndpointVipRequest struct {
 }
 
 func (r *CreateClusterEndpointVipRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1678,8 +1678,8 @@ type CreateClusterEndpointVipResponse struct {
 }
 
 func (r *CreateClusterEndpointVipResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1705,7 +1705,7 @@ type CreateClusterInstancesRequestParams struct {
 
 type CreateClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 ID，请填写 查询集群列表 接口中返回的 clusterId 字段
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -1720,8 +1720,8 @@ type CreateClusterInstancesRequest struct {
 }
 
 func (r *CreateClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1756,8 +1756,8 @@ type CreateClusterInstancesResponse struct {
 }
 
 func (r *CreateClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1813,7 +1813,7 @@ type CreateClusterNodePoolRequestParams struct {
 
 type CreateClusterNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// cluster id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -1858,8 +1858,8 @@ type CreateClusterNodePoolRequest struct {
 }
 
 func (r *CreateClusterNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1904,8 +1904,8 @@ type CreateClusterNodePoolResponse struct {
 }
 
 func (r *CreateClusterNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -1955,7 +1955,7 @@ type CreateClusterReleaseRequestParams struct {
 
 type CreateClusterReleaseRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -1994,8 +1994,8 @@ type CreateClusterReleaseRequest struct {
 }
 
 func (r *CreateClusterReleaseRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2039,8 +2039,8 @@ type CreateClusterReleaseResponse struct {
 }
 
 func (r *CreateClusterReleaseResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2081,7 +2081,7 @@ type CreateClusterRequestParams struct {
 
 type CreateClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群容器网络配置信息
 	ClusterCIDRSettings *ClusterCIDRSettings `json:"ClusterCIDRSettings,omitempty" name:"ClusterCIDRSettings"`
 
@@ -2111,8 +2111,8 @@ type CreateClusterRequest struct {
 }
 
 func (r *CreateClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2152,8 +2152,8 @@ type CreateClusterResponse struct {
 }
 
 func (r *CreateClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2176,7 +2176,7 @@ type CreateClusterRouteRequestParams struct {
 
 type CreateClusterRouteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表名称。
 	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 
@@ -2188,8 +2188,8 @@ type CreateClusterRouteRequest struct {
 }
 
 func (r *CreateClusterRouteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2220,8 +2220,8 @@ type CreateClusterRouteResponse struct {
 }
 
 func (r *CreateClusterRouteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2247,7 +2247,7 @@ type CreateClusterRouteTableRequestParams struct {
 
 type CreateClusterRouteTableRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表名称
 	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 
@@ -2262,8 +2262,8 @@ type CreateClusterRouteTableRequest struct {
 }
 
 func (r *CreateClusterRouteTableRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2295,8 +2295,8 @@ type CreateClusterRouteTableResponse struct {
 }
 
 func (r *CreateClusterRouteTableResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2339,7 +2339,7 @@ type CreateClusterVirtualNodePoolRequestParams struct {
 
 type CreateClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -2371,8 +2371,8 @@ type CreateClusterVirtualNodePoolRequest struct {
 }
 
 func (r *CreateClusterVirtualNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2412,8 +2412,8 @@ type CreateClusterVirtualNodePoolResponse struct {
 }
 
 func (r *CreateClusterVirtualNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2442,7 +2442,7 @@ type CreateClusterVirtualNodeRequestParams struct {
 
 type CreateClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -2460,8 +2460,8 @@ type CreateClusterVirtualNodeRequest struct {
 }
 
 func (r *CreateClusterVirtualNodeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2497,8 +2497,8 @@ type CreateClusterVirtualNodeResponse struct {
 }
 
 func (r *CreateClusterVirtualNodeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2548,7 +2548,7 @@ type CreateECMInstancesRequestParams struct {
 
 type CreateECMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -2587,8 +2587,8 @@ type CreateECMInstancesRequest struct {
 }
 
 func (r *CreateECMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2631,8 +2631,8 @@ type CreateECMInstancesResponse struct {
 }
 
 func (r *CreateECMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2679,7 +2679,7 @@ type CreateEKSClusterRequestParams struct {
 
 type CreateEKSClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// k8s版本号。可为1.18.4 1.20.6。
 	K8SVersion *string `json:"K8SVersion,omitempty" name:"K8SVersion"`
 
@@ -2715,8 +2715,8 @@ type CreateEKSClusterRequest struct {
 }
 
 func (r *CreateEKSClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2758,8 +2758,8 @@ type CreateEKSClusterResponse struct {
 }
 
 func (r *CreateEKSClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2844,7 +2844,7 @@ type CreateEKSContainerInstancesRequestParams struct {
 
 type CreateEKSContainerInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 容器组
 	Containers []*Container `json:"Containers,omitempty" name:"Containers"`
 
@@ -2918,8 +2918,8 @@ type CreateEKSContainerInstancesRequest struct {
 }
 
 func (r *CreateEKSContainerInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -2970,8 +2970,8 @@ type CreateEKSContainerInstancesResponse struct {
 }
 
 func (r *CreateEKSContainerInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3006,7 +3006,7 @@ type CreateEdgeCVMInstancesRequestParams struct {
 
 type CreateEdgeCVMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -3030,8 +3030,8 @@ type CreateEdgeCVMInstancesRequest struct {
 }
 
 func (r *CreateEdgeCVMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3069,8 +3069,8 @@ type CreateEdgeCVMInstancesResponse struct {
 }
 
 func (r *CreateEdgeCVMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3093,7 +3093,7 @@ type CreateEdgeLogConfigRequestParams struct {
 
 type CreateEdgeLogConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -3105,8 +3105,8 @@ type CreateEdgeLogConfigRequest struct {
 }
 
 func (r *CreateEdgeLogConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3137,8 +3137,8 @@ type CreateEdgeLogConfigResponse struct {
 }
 
 func (r *CreateEdgeLogConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3196,7 +3196,7 @@ type CreateImageCacheRequestParams struct {
 
 type CreateImageCacheRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 用于制作镜像缓存的容器镜像列表
 	Images []*string `json:"Images,omitempty" name:"Images"`
 
@@ -3243,8 +3243,8 @@ type CreateImageCacheRequest struct {
 }
 
 func (r *CreateImageCacheRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3289,8 +3289,8 @@ type CreateImageCacheResponse struct {
 }
 
 func (r *CreateImageCacheResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3310,7 +3310,7 @@ type CreatePrometheusAlertPolicyRequestParams struct {
 
 type CreatePrometheusAlertPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3319,8 +3319,8 @@ type CreatePrometheusAlertPolicyRequest struct {
 }
 
 func (r *CreatePrometheusAlertPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3353,8 +3353,8 @@ type CreatePrometheusAlertPolicyResponse struct {
 }
 
 func (r *CreatePrometheusAlertPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3374,7 +3374,7 @@ type CreatePrometheusAlertRuleRequestParams struct {
 
 type CreatePrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3383,8 +3383,8 @@ type CreatePrometheusAlertRuleRequest struct {
 }
 
 func (r *CreatePrometheusAlertRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3417,8 +3417,8 @@ type CreatePrometheusAlertRuleResponse struct {
 }
 
 func (r *CreatePrometheusAlertRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3438,7 +3438,7 @@ type CreatePrometheusClusterAgentRequestParams struct {
 
 type CreatePrometheusClusterAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3447,8 +3447,8 @@ type CreatePrometheusClusterAgentRequest struct {
 }
 
 func (r *CreatePrometheusClusterAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3478,8 +3478,8 @@ type CreatePrometheusClusterAgentResponse struct {
 }
 
 func (r *CreatePrometheusClusterAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3511,7 +3511,7 @@ type CreatePrometheusConfigRequestParams struct {
 
 type CreatePrometheusConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3532,8 +3532,8 @@ type CreatePrometheusConfigRequest struct {
 }
 
 func (r *CreatePrometheusConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3567,8 +3567,8 @@ type CreatePrometheusConfigResponse struct {
 }
 
 func (r *CreatePrometheusConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3592,7 +3592,7 @@ type CreatePrometheusDashboardRequestParams struct {
 
 type CreatePrometheusDashboardRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3605,8 +3605,8 @@ type CreatePrometheusDashboardRequest struct {
 }
 
 func (r *CreatePrometheusDashboardRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3637,8 +3637,8 @@ type CreatePrometheusDashboardResponse struct {
 }
 
 func (r *CreatePrometheusDashboardResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3658,7 +3658,7 @@ type CreatePrometheusGlobalNotificationRequestParams struct {
 
 type CreatePrometheusGlobalNotificationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3667,8 +3667,8 @@ type CreatePrometheusGlobalNotificationRequest struct {
 }
 
 func (r *CreatePrometheusGlobalNotificationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3702,8 +3702,8 @@ type CreatePrometheusGlobalNotificationResponse struct {
 }
 
 func (r *CreatePrometheusGlobalNotificationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3723,7 +3723,7 @@ type CreatePrometheusRecordRuleYamlRequestParams struct {
 
 type CreatePrometheusRecordRuleYamlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -3732,8 +3732,8 @@ type CreatePrometheusRecordRuleYamlRequest struct {
 }
 
 func (r *CreatePrometheusRecordRuleYamlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3763,8 +3763,8 @@ type CreatePrometheusRecordRuleYamlResponse struct {
 }
 
 func (r *CreatePrometheusRecordRuleYamlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3781,14 +3781,14 @@ type CreatePrometheusTempRequestParams struct {
 
 type CreatePrometheusTempRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板设置
 	Template *PrometheusTemp `json:"Template,omitempty" name:"Template"`
 }
 
 func (r *CreatePrometheusTempRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3820,8 +3820,8 @@ type CreatePrometheusTempResponse struct {
 }
 
 func (r *CreatePrometheusTempResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3838,14 +3838,14 @@ type CreatePrometheusTemplateRequestParams struct {
 
 type CreatePrometheusTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板设置
 	Template *PrometheusTemplate `json:"Template,omitempty" name:"Template"`
 }
 
 func (r *CreatePrometheusTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3877,8 +3877,8 @@ type CreatePrometheusTemplateResponse struct {
 }
 
 func (r *CreatePrometheusTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -3937,7 +3937,7 @@ type CreateTKEEdgeClusterRequestParams struct {
 
 type CreateTKEEdgeClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// k8s版本号
 	K8SVersion *string `json:"K8SVersion,omitempty" name:"K8SVersion"`
 
@@ -3985,8 +3985,8 @@ type CreateTKEEdgeClusterRequest struct {
 }
 
 func (r *CreateTKEEdgeClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4032,8 +4032,8 @@ type CreateTKEEdgeClusterResponse struct {
 }
 
 func (r *CreateTKEEdgeClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4109,7 +4109,7 @@ type DeleteAddonRequestParams struct {
 
 type DeleteAddonRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4118,8 +4118,8 @@ type DeleteAddonRequest struct {
 }
 
 func (r *DeleteAddonRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4149,8 +4149,8 @@ type DeleteAddonResponse struct {
 }
 
 func (r *DeleteAddonResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4167,14 +4167,14 @@ type DeleteBackupStorageLocationRequestParams struct {
 
 type DeleteBackupStorageLocationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 备份仓库名称
 	Name *string `json:"Name,omitempty" name:"Name"`
 }
 
 func (r *DeleteBackupStorageLocationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4203,8 +4203,8 @@ type DeleteBackupStorageLocationResponse struct {
 }
 
 func (r *DeleteBackupStorageLocationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4227,7 +4227,7 @@ type DeleteClusterAsGroupsRequestParams struct {
 
 type DeleteClusterAsGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID，通过[DescribeClusters](https://cloud.tencent.com/document/api/457/31862)接口获取。
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4239,8 +4239,8 @@ type DeleteClusterAsGroupsRequest struct {
 }
 
 func (r *DeleteClusterAsGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4271,8 +4271,8 @@ type DeleteClusterAsGroupsResponse struct {
 }
 
 func (r *DeleteClusterAsGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4292,7 +4292,7 @@ type DeleteClusterEndpointRequestParams struct {
 
 type DeleteClusterEndpointRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4301,8 +4301,8 @@ type DeleteClusterEndpointRequest struct {
 }
 
 func (r *DeleteClusterEndpointRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4332,8 +4332,8 @@ type DeleteClusterEndpointResponse struct {
 }
 
 func (r *DeleteClusterEndpointResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4350,14 +4350,14 @@ type DeleteClusterEndpointVipRequestParams struct {
 
 type DeleteClusterEndpointVipRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DeleteClusterEndpointVipRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4386,8 +4386,8 @@ type DeleteClusterEndpointVipResponse struct {
 }
 
 func (r *DeleteClusterEndpointVipResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4413,7 +4413,7 @@ type DeleteClusterInstancesRequestParams struct {
 
 type DeleteClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4428,8 +4428,8 @@ type DeleteClusterInstancesRequest struct {
 }
 
 func (r *DeleteClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4473,8 +4473,8 @@ type DeleteClusterInstancesResponse struct {
 }
 
 func (r *DeleteClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4497,7 +4497,7 @@ type DeleteClusterNodePoolRequestParams struct {
 
 type DeleteClusterNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 节点池对应的 ClusterId
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4509,8 +4509,8 @@ type DeleteClusterNodePoolRequest struct {
 }
 
 func (r *DeleteClusterNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4541,8 +4541,8 @@ type DeleteClusterNodePoolResponse struct {
 }
 
 func (r *DeleteClusterNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4565,7 +4565,7 @@ type DeleteClusterRequestParams struct {
 
 type DeleteClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4577,8 +4577,8 @@ type DeleteClusterRequest struct {
 }
 
 func (r *DeleteClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4609,8 +4609,8 @@ type DeleteClusterResponse struct {
 }
 
 func (r *DeleteClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4633,7 +4633,7 @@ type DeleteClusterRouteRequestParams struct {
 
 type DeleteClusterRouteRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表名称。
 	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 
@@ -4645,8 +4645,8 @@ type DeleteClusterRouteRequest struct {
 }
 
 func (r *DeleteClusterRouteRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4677,8 +4677,8 @@ type DeleteClusterRouteResponse struct {
 }
 
 func (r *DeleteClusterRouteResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4695,14 +4695,14 @@ type DeleteClusterRouteTableRequestParams struct {
 
 type DeleteClusterRouteTableRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表名称
 	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 }
 
 func (r *DeleteClusterRouteTableRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4731,8 +4731,8 @@ type DeleteClusterRouteTableResponse struct {
 }
 
 func (r *DeleteClusterRouteTableResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4755,7 +4755,7 @@ type DeleteClusterVirtualNodePoolRequestParams struct {
 
 type DeleteClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4767,8 +4767,8 @@ type DeleteClusterVirtualNodePoolRequest struct {
 }
 
 func (r *DeleteClusterVirtualNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4799,8 +4799,8 @@ type DeleteClusterVirtualNodePoolResponse struct {
 }
 
 func (r *DeleteClusterVirtualNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4823,7 +4823,7 @@ type DeleteClusterVirtualNodeRequestParams struct {
 
 type DeleteClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -4835,8 +4835,8 @@ type DeleteClusterVirtualNodeRequest struct {
 }
 
 func (r *DeleteClusterVirtualNodeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4867,8 +4867,8 @@ type DeleteClusterVirtualNodeResponse struct {
 }
 
 func (r *DeleteClusterVirtualNodeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4888,7 +4888,7 @@ type DeleteECMInstancesRequestParams struct {
 
 type DeleteECMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -4897,8 +4897,8 @@ type DeleteECMInstancesRequest struct {
 }
 
 func (r *DeleteECMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4928,8 +4928,8 @@ type DeleteECMInstancesResponse struct {
 }
 
 func (r *DeleteECMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4946,14 +4946,14 @@ type DeleteEKSClusterRequestParams struct {
 
 type DeleteEKSClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 弹性集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DeleteEKSClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -4982,8 +4982,8 @@ type DeleteEKSClusterResponse struct {
 }
 
 func (r *DeleteEKSClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5003,7 +5003,7 @@ type DeleteEKSContainerInstancesRequestParams struct {
 
 type DeleteEKSContainerInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 需要删除的EksCi的Id。 最大数量不超过20
 	EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
 
@@ -5012,8 +5012,8 @@ type DeleteEKSContainerInstancesRequest struct {
 }
 
 func (r *DeleteEKSContainerInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5043,8 +5043,8 @@ type DeleteEKSContainerInstancesResponse struct {
 }
 
 func (r *DeleteEKSContainerInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5064,7 +5064,7 @@ type DeleteEdgeCVMInstancesRequestParams struct {
 
 type DeleteEdgeCVMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -5073,8 +5073,8 @@ type DeleteEdgeCVMInstancesRequest struct {
 }
 
 func (r *DeleteEdgeCVMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5104,8 +5104,8 @@ type DeleteEdgeCVMInstancesResponse struct {
 }
 
 func (r *DeleteEdgeCVMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5125,7 +5125,7 @@ type DeleteEdgeClusterInstancesRequestParams struct {
 
 type DeleteEdgeClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -5134,8 +5134,8 @@ type DeleteEdgeClusterInstancesRequest struct {
 }
 
 func (r *DeleteEdgeClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5165,8 +5165,8 @@ type DeleteEdgeClusterInstancesResponse struct {
 }
 
 func (r *DeleteEdgeClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5183,14 +5183,14 @@ type DeleteImageCachesRequestParams struct {
 
 type DeleteImageCachesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 镜像缓存Id数组
 	ImageCacheIds []*string `json:"ImageCacheIds,omitempty" name:"ImageCacheIds"`
 }
 
 func (r *DeleteImageCachesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5219,8 +5219,8 @@ type DeleteImageCachesResponse struct {
 }
 
 func (r *DeleteImageCachesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5243,7 +5243,7 @@ type DeletePrometheusAlertPolicyRequestParams struct {
 
 type DeletePrometheusAlertPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5255,8 +5255,8 @@ type DeletePrometheusAlertPolicyRequest struct {
 }
 
 func (r *DeletePrometheusAlertPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5287,8 +5287,8 @@ type DeletePrometheusAlertPolicyResponse struct {
 }
 
 func (r *DeletePrometheusAlertPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5308,7 +5308,7 @@ type DeletePrometheusAlertRuleRequestParams struct {
 
 type DeletePrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5317,8 +5317,8 @@ type DeletePrometheusAlertRuleRequest struct {
 }
 
 func (r *DeletePrometheusAlertRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5348,8 +5348,8 @@ type DeletePrometheusAlertRuleResponse struct {
 }
 
 func (r *DeletePrometheusAlertRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5369,7 +5369,7 @@ type DeletePrometheusClusterAgentRequestParams struct {
 
 type DeletePrometheusClusterAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// agent列表
 	Agents []*PrometheusAgentInfo `json:"Agents,omitempty" name:"Agents"`
 
@@ -5378,8 +5378,8 @@ type DeletePrometheusClusterAgentRequest struct {
 }
 
 func (r *DeletePrometheusClusterAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5409,8 +5409,8 @@ type DeletePrometheusClusterAgentResponse struct {
 }
 
 func (r *DeletePrometheusClusterAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5442,7 +5442,7 @@ type DeletePrometheusConfigRequestParams struct {
 
 type DeletePrometheusConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5463,8 +5463,8 @@ type DeletePrometheusConfigRequest struct {
 }
 
 func (r *DeletePrometheusConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5498,8 +5498,8 @@ type DeletePrometheusConfigResponse struct {
 }
 
 func (r *DeletePrometheusConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5519,7 +5519,7 @@ type DeletePrometheusRecordRuleYamlRequestParams struct {
 
 type DeletePrometheusRecordRuleYamlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -5528,8 +5528,8 @@ type DeletePrometheusRecordRuleYamlRequest struct {
 }
 
 func (r *DeletePrometheusRecordRuleYamlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5559,8 +5559,8 @@ type DeletePrometheusRecordRuleYamlResponse struct {
 }
 
 func (r *DeletePrometheusRecordRuleYamlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5577,14 +5577,14 @@ type DeletePrometheusTempRequestParams struct {
 
 type DeletePrometheusTempRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 }
 
 func (r *DeletePrometheusTempRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5613,8 +5613,8 @@ type DeletePrometheusTempResponse struct {
 }
 
 func (r *DeletePrometheusTempResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5634,7 +5634,7 @@ type DeletePrometheusTempSyncRequestParams struct {
 
 type DeletePrometheusTempSyncRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -5643,8 +5643,8 @@ type DeletePrometheusTempSyncRequest struct {
 }
 
 func (r *DeletePrometheusTempSyncRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5674,8 +5674,8 @@ type DeletePrometheusTempSyncResponse struct {
 }
 
 func (r *DeletePrometheusTempSyncResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5692,14 +5692,14 @@ type DeletePrometheusTemplateRequestParams struct {
 
 type DeletePrometheusTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 }
 
 func (r *DeletePrometheusTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5728,8 +5728,8 @@ type DeletePrometheusTemplateResponse struct {
 }
 
 func (r *DeletePrometheusTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5749,7 +5749,7 @@ type DeletePrometheusTemplateSyncRequestParams struct {
 
 type DeletePrometheusTemplateSyncRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -5758,8 +5758,8 @@ type DeletePrometheusTemplateSyncRequest struct {
 }
 
 func (r *DeletePrometheusTemplateSyncRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5789,8 +5789,8 @@ type DeletePrometheusTemplateSyncResponse struct {
 }
 
 func (r *DeletePrometheusTemplateSyncResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5807,14 +5807,14 @@ type DeleteTKEEdgeClusterRequestParams struct {
 
 type DeleteTKEEdgeClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DeleteTKEEdgeClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5843,8 +5843,8 @@ type DeleteTKEEdgeClusterResponse struct {
 }
 
 func (r *DeleteTKEEdgeClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5864,7 +5864,7 @@ type DescribeAddonRequestParams struct {
 
 type DescribeAddonRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -5873,8 +5873,8 @@ type DescribeAddonRequest struct {
 }
 
 func (r *DescribeAddonRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5907,8 +5907,8 @@ type DescribeAddonResponse struct {
 }
 
 func (r *DescribeAddonResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5928,7 +5928,7 @@ type DescribeAddonValuesRequestParams struct {
 
 type DescribeAddonValuesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -5937,8 +5937,8 @@ type DescribeAddonValuesRequest struct {
 }
 
 func (r *DescribeAddonValuesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5974,8 +5974,8 @@ type DescribeAddonValuesResponse struct {
 }
 
 func (r *DescribeAddonValuesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -5995,7 +5995,7 @@ type DescribeAvailableClusterVersionRequestParams struct {
 
 type DescribeAvailableClusterVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6004,8 +6004,8 @@ type DescribeAvailableClusterVersionRequest struct {
 }
 
 func (r *DescribeAvailableClusterVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6043,8 +6043,8 @@ type DescribeAvailableClusterVersionResponse struct {
 }
 
 func (r *DescribeAvailableClusterVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6061,14 +6061,14 @@ type DescribeAvailableTKEEdgeVersionRequestParams struct {
 
 type DescribeAvailableTKEEdgeVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 填写ClusterId获取当前集群各个组件版本和最新版本
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeAvailableTKEEdgeVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6108,8 +6108,8 @@ type DescribeAvailableTKEEdgeVersionResponse struct {
 }
 
 func (r *DescribeAvailableTKEEdgeVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6126,14 +6126,14 @@ type DescribeBackupStorageLocationsRequestParams struct {
 
 type DescribeBackupStorageLocationsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 多个备份仓库名称，如果不填写，默认返回当前地域所有存储仓库名称
 	Names []*string `json:"Names,omitempty" name:"Names"`
 }
 
 func (r *DescribeBackupStorageLocationsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6166,8 +6166,8 @@ type DescribeBackupStorageLocationsResponse struct {
 }
 
 func (r *DescribeBackupStorageLocationsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6184,14 +6184,14 @@ type DescribeClusterAsGroupOptionRequestParams struct {
 
 type DescribeClusterAsGroupOptionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterAsGroupOptionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6224,8 +6224,8 @@ type DescribeClusterAsGroupOptionResponse struct {
 }
 
 func (r *DescribeClusterAsGroupOptionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6251,7 +6251,7 @@ type DescribeClusterAsGroupsRequestParams struct {
 
 type DescribeClusterAsGroupsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6266,8 +6266,8 @@ type DescribeClusterAsGroupsRequest struct {
 }
 
 func (r *DescribeClusterAsGroupsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6305,8 +6305,8 @@ type DescribeClusterAsGroupsResponse struct {
 }
 
 func (r *DescribeClusterAsGroupsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6323,14 +6323,14 @@ type DescribeClusterAuthenticationOptionsRequestParams struct {
 
 type DescribeClusterAuthenticationOptionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterAuthenticationOptionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6371,8 +6371,8 @@ type DescribeClusterAuthenticationOptionsResponse struct {
 }
 
 func (r *DescribeClusterAuthenticationOptionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6395,7 +6395,7 @@ type DescribeClusterCommonNamesRequestParams struct {
 
 type DescribeClusterCommonNamesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6407,8 +6407,8 @@ type DescribeClusterCommonNamesRequest struct {
 }
 
 func (r *DescribeClusterCommonNamesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6442,8 +6442,8 @@ type DescribeClusterCommonNamesResponse struct {
 }
 
 func (r *DescribeClusterCommonNamesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6460,14 +6460,14 @@ type DescribeClusterControllersRequestParams struct {
 
 type DescribeClusterControllersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterControllersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6499,8 +6499,8 @@ type DescribeClusterControllersResponse struct {
 }
 
 func (r *DescribeClusterControllersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6520,7 +6520,7 @@ type DescribeClusterEndpointStatusRequestParams struct {
 
 type DescribeClusterEndpointStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6529,8 +6529,8 @@ type DescribeClusterEndpointStatusRequest struct {
 }
 
 func (r *DescribeClusterEndpointStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6568,8 +6568,8 @@ type DescribeClusterEndpointStatusResponse struct {
 }
 
 func (r *DescribeClusterEndpointStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6586,14 +6586,14 @@ type DescribeClusterEndpointVipStatusRequestParams struct {
 
 type DescribeClusterEndpointVipStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterEndpointVipStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6629,8 +6629,8 @@ type DescribeClusterEndpointVipStatusResponse struct {
 }
 
 func (r *DescribeClusterEndpointVipStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6647,14 +6647,14 @@ type DescribeClusterEndpointsRequestParams struct {
 
 type DescribeClusterEndpointsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterEndpointsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6712,8 +6712,8 @@ type DescribeClusterEndpointsResponse struct {
 }
 
 func (r *DescribeClusterEndpointsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6735,7 +6735,7 @@ type DescribeClusterInspectionResultsOverviewRequestParams struct {
 
 type DescribeClusterInspectionResultsOverviewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// Array of String	目标集群列表，为空查询用户所有集群
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
 
@@ -6746,8 +6746,8 @@ type DescribeClusterInspectionResultsOverviewRequest struct {
 }
 
 func (r *DescribeClusterInspectionResultsOverviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6789,8 +6789,8 @@ type DescribeClusterInspectionResultsOverviewResponse struct {
 }
 
 func (r *DescribeClusterInspectionResultsOverviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6822,7 +6822,7 @@ type DescribeClusterInstancesRequestParams struct {
 
 type DescribeClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6843,8 +6843,8 @@ type DescribeClusterInstancesRequest struct {
 }
 
 func (r *DescribeClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6884,8 +6884,8 @@ type DescribeClusterInstancesResponse struct {
 }
 
 func (r *DescribeClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6905,7 +6905,7 @@ type DescribeClusterKubeconfigRequestParams struct {
 
 type DescribeClusterKubeconfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -6914,8 +6914,8 @@ type DescribeClusterKubeconfigRequest struct {
 }
 
 func (r *DescribeClusterKubeconfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6948,8 +6948,8 @@ type DescribeClusterKubeconfigResponse struct {
 }
 
 func (r *DescribeClusterKubeconfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -6966,14 +6966,14 @@ type DescribeClusterLevelAttributeRequestParams struct {
 
 type DescribeClusterLevelAttributeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID，变配时使用
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 }
 
 func (r *DescribeClusterLevelAttributeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7008,8 +7008,8 @@ type DescribeClusterLevelAttributeResponse struct {
 }
 
 func (r *DescribeClusterLevelAttributeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7038,7 +7038,7 @@ type DescribeClusterLevelChangeRecordsRequestParams struct {
 
 type DescribeClusterLevelChangeRecordsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -7056,8 +7056,8 @@ type DescribeClusterLevelChangeRecordsRequest struct {
 }
 
 func (r *DescribeClusterLevelChangeRecordsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7096,8 +7096,8 @@ type DescribeClusterLevelChangeRecordsResponse struct {
 }
 
 func (r *DescribeClusterLevelChangeRecordsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7117,7 +7117,7 @@ type DescribeClusterNodePoolDetailRequestParams struct {
 
 type DescribeClusterNodePoolDetailRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7126,8 +7126,8 @@ type DescribeClusterNodePoolDetailRequest struct {
 }
 
 func (r *DescribeClusterNodePoolDetailRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7160,8 +7160,8 @@ type DescribeClusterNodePoolDetailResponse struct {
 }
 
 func (r *DescribeClusterNodePoolDetailResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7179,17 +7179,17 @@ type DescribeClusterNodePoolsRequestParams struct {
 	//     按照【节点池名】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  NodePoolsId
 	//     按照【节点池id】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tags
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag:tag-key
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
@@ -7199,7 +7199,7 @@ type DescribeClusterNodePoolsRequestParams struct {
 
 type DescribeClusterNodePoolsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// ClusterId（集群id）
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7207,17 +7207,17 @@ type DescribeClusterNodePoolsRequest struct {
 	//     按照【节点池名】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  NodePoolsId
 	//     按照【节点池id】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tags
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag:tag-key
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
@@ -7226,8 +7226,8 @@ type DescribeClusterNodePoolsRequest struct {
 }
 
 func (r *DescribeClusterNodePoolsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7264,8 +7264,8 @@ type DescribeClusterNodePoolsResponse struct {
 }
 
 func (r *DescribeClusterNodePoolsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7291,7 +7291,7 @@ type DescribeClusterPendingReleasesRequestParams struct {
 
 type DescribeClusterPendingReleasesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7306,8 +7306,8 @@ type DescribeClusterPendingReleasesRequest struct {
 }
 
 func (r *DescribeClusterPendingReleasesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7355,8 +7355,8 @@ type DescribeClusterPendingReleasesResponse struct {
 }
 
 func (r *DescribeClusterPendingReleasesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7382,7 +7382,7 @@ type DescribeClusterReleaseDetailsRequestParams struct {
 
 type DescribeClusterReleaseDetailsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7397,8 +7397,8 @@ type DescribeClusterReleaseDetailsRequest struct {
 }
 
 func (r *DescribeClusterReleaseDetailsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7434,8 +7434,8 @@ type DescribeClusterReleaseDetailsResponse struct {
 }
 
 func (r *DescribeClusterReleaseDetailsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7461,7 +7461,7 @@ type DescribeClusterReleaseHistoryRequestParams struct {
 
 type DescribeClusterReleaseHistoryRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7476,8 +7476,8 @@ type DescribeClusterReleaseHistoryRequest struct {
 }
 
 func (r *DescribeClusterReleaseHistoryRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7517,8 +7517,8 @@ type DescribeClusterReleaseHistoryResponse struct {
 }
 
 func (r *DescribeClusterReleaseHistoryResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7538,7 +7538,7 @@ type DescribeClusterReleasesRequestParams struct {
 	// 页偏移量
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 集群类型, 目前支持传入 tke, eks, tkeedge, external
+	// 集群类型, 目前支持传入 tke, eks, tkeedge, external 
 	ClusterType *string `json:"ClusterType,omitempty" name:"ClusterType"`
 
 	// helm Release 安装的namespace
@@ -7553,7 +7553,7 @@ type DescribeClusterReleasesRequestParams struct {
 
 type DescribeClusterReleasesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7563,7 +7563,7 @@ type DescribeClusterReleasesRequest struct {
 	// 页偏移量
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 集群类型, 目前支持传入 tke, eks, tkeedge, external
+	// 集群类型, 目前支持传入 tke, eks, tkeedge, external 
 	ClusterType *string `json:"ClusterType,omitempty" name:"ClusterType"`
 
 	// helm Release 安装的namespace
@@ -7577,8 +7577,8 @@ type DescribeClusterReleasesRequest struct {
 }
 
 func (r *DescribeClusterReleasesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7629,8 +7629,8 @@ type DescribeClusterReleasesResponse struct {
 }
 
 func (r *DescribeClusterReleasesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7641,15 +7641,17 @@ func (r *DescribeClusterReleasesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClusterRouteTablesRequestParams struct {
+
 }
 
 type DescribeClusterRouteTablesRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeClusterRouteTablesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7659,7 +7661,7 @@ func (r *DescribeClusterRouteTablesRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterRouteTablesRequest has unknown keys!", "")
 	}
@@ -7684,8 +7686,8 @@ type DescribeClusterRouteTablesResponse struct {
 }
 
 func (r *DescribeClusterRouteTablesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7705,7 +7707,7 @@ type DescribeClusterRoutesRequestParams struct {
 
 type DescribeClusterRoutesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表名称。
 	RouteTableName *string `json:"RouteTableName,omitempty" name:"RouteTableName"`
 
@@ -7714,8 +7716,8 @@ type DescribeClusterRoutesRequest struct {
 }
 
 func (r *DescribeClusterRoutesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7751,8 +7753,8 @@ type DescribeClusterRoutesResponse struct {
 }
 
 func (r *DescribeClusterRoutesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7769,14 +7771,14 @@ type DescribeClusterSecurityRequestParams struct {
 
 type DescribeClusterSecurityRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 ID，请填写 查询集群列表 接口中返回的 clusterId 字段
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterSecurityRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7835,8 +7837,8 @@ type DescribeClusterSecurityResponse struct {
 }
 
 func (r *DescribeClusterSecurityResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7853,14 +7855,14 @@ type DescribeClusterStatusRequestParams struct {
 
 type DescribeClusterStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID列表，不传默认拉取所有集群
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
 }
 
 func (r *DescribeClusterStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7895,8 +7897,8 @@ type DescribeClusterStatusResponse struct {
 }
 
 func (r *DescribeClusterStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7913,14 +7915,14 @@ type DescribeClusterVirtualNodePoolsRequestParams struct {
 
 type DescribeClusterVirtualNodePoolsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeClusterVirtualNodePoolsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7957,8 +7959,8 @@ type DescribeClusterVirtualNodePoolsResponse struct {
 }
 
 func (r *DescribeClusterVirtualNodePoolsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -7981,7 +7983,7 @@ type DescribeClusterVirtualNodeRequestParams struct {
 
 type DescribeClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -7993,8 +7995,8 @@ type DescribeClusterVirtualNodeRequest struct {
 }
 
 func (r *DescribeClusterVirtualNodeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8033,8 +8035,8 @@ type DescribeClusterVirtualNodeResponse struct {
 }
 
 func (r *DescribeClusterVirtualNodeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8059,37 +8061,37 @@ type DescribeClustersRequestParams struct {
 	//     按照【集群名】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  ClusterType
 	//     按照【集群类型】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  ClusterStatus
 	//     按照【集群状态】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  Tags
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  vpc-id
 	//     按照【VPC】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag-key
 	//     按照【标签键】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag-value
 	//     按照【标签值】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag:tag-key
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
@@ -8102,7 +8104,7 @@ type DescribeClustersRequestParams struct {
 
 type DescribeClustersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID列表(为空时，
 	// 表示获取账号下所有集群)
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
@@ -8117,37 +8119,37 @@ type DescribeClustersRequest struct {
 	//     按照【集群名】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  ClusterType
 	//     按照【集群类型】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  ClusterStatus
 	//     按照【集群状态】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  Tags
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  vpc-id
 	//     按照【VPC】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag-key
 	//     按照【标签键】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag-value
 	//     按照【标签值】进行过滤。
 	//     类型：String
 	//     必选：否
-	//
+	// 
 	// ·  tag:tag-key
 	//     按照【标签键值对】进行过滤。
 	//     类型：String
@@ -8159,8 +8161,8 @@ type DescribeClustersRequest struct {
 }
 
 func (r *DescribeClustersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8199,8 +8201,8 @@ type DescribeClustersResponse struct {
 }
 
 func (r *DescribeClustersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8221,7 +8223,7 @@ type DescribeECMInstancesRequestParams struct {
 
 type DescribeECMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -8231,8 +8233,8 @@ type DescribeECMInstancesRequest struct {
 }
 
 func (r *DescribeECMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8268,8 +8270,8 @@ type DescribeECMInstancesResponse struct {
 }
 
 func (r *DescribeECMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8286,14 +8288,14 @@ type DescribeEKSClusterCredentialRequestParams struct {
 
 type DescribeEKSClusterCredentialRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeEKSClusterCredentialRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8340,8 +8342,8 @@ type DescribeEKSClusterCredentialResponse struct {
 }
 
 func (r *DescribeEKSClusterCredentialResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8368,7 +8370,7 @@ type DescribeEKSClustersRequestParams struct {
 
 type DescribeEKSClustersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID列表(为空时，
 	// 表示获取账号下所有集群)
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
@@ -8384,8 +8386,8 @@ type DescribeEKSClustersRequest struct {
 }
 
 func (r *DescribeEKSClustersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8423,8 +8425,8 @@ type DescribeEKSClustersResponse struct {
 }
 
 func (r *DescribeEKSClustersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8444,7 +8446,7 @@ type DescribeEKSContainerInstanceEventRequestParams struct {
 
 type DescribeEKSContainerInstanceEventRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 容器实例id
 	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
 
@@ -8453,8 +8455,8 @@ type DescribeEKSContainerInstanceEventRequest struct {
 }
 
 func (r *DescribeEKSContainerInstanceEventRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8490,8 +8492,8 @@ type DescribeEKSContainerInstanceEventResponse struct {
 }
 
 func (r *DescribeEKSContainerInstanceEventResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8502,15 +8504,17 @@ func (r *DescribeEKSContainerInstanceEventResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type DescribeEKSContainerInstanceRegionsRequestParams struct {
+
 }
 
 type DescribeEKSContainerInstanceRegionsRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeEKSContainerInstanceRegionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8520,7 +8524,7 @@ func (r *DescribeEKSContainerInstanceRegionsRequest) FromJsonString(s string) er
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEKSContainerInstanceRegionsRequest has unknown keys!", "")
 	}
@@ -8546,8 +8550,8 @@ type DescribeEKSContainerInstanceRegionsResponse struct {
 }
 
 func (r *DescribeEKSContainerInstanceRegionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8568,20 +8572,20 @@ type DescribeEKSContainerInstancesRequestParams struct {
 	// (1)实例名称
 	// KeyName: eks-ci-name
 	// 类型：String
-	//
+	// 
 	// (2)实例状态
 	// KeyName: status
 	// 类型：String
 	// 可选值："Pending", "Running", "Succeeded", "Failed"
-	//
+	// 
 	// (3)内网ip
 	// KeyName: private-ip
 	// 类型：String
-	//
+	// 
 	// (4)EIP地址
 	// KeyName: eip-address
 	// 类型：String
-	//
+	// 
 	// (5)VpcId
 	// KeyName: vpc-id
 	// 类型：String
@@ -8593,7 +8597,7 @@ type DescribeEKSContainerInstancesRequestParams struct {
 
 type DescribeEKSContainerInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 限定此次返回资源的数量。如果不设定，默认返回20，最大不能超过100
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
@@ -8604,20 +8608,20 @@ type DescribeEKSContainerInstancesRequest struct {
 	// (1)实例名称
 	// KeyName: eks-ci-name
 	// 类型：String
-	//
+	// 
 	// (2)实例状态
 	// KeyName: status
 	// 类型：String
 	// 可选值："Pending", "Running", "Succeeded", "Failed"
-	//
+	// 
 	// (3)内网ip
 	// KeyName: private-ip
 	// 类型：String
-	//
+	// 
 	// (4)EIP地址
 	// KeyName: eip-address
 	// 类型：String
-	//
+	// 
 	// (5)VpcId
 	// KeyName: vpc-id
 	// 类型：String
@@ -8628,8 +8632,8 @@ type DescribeEKSContainerInstancesRequest struct {
 }
 
 func (r *DescribeEKSContainerInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8667,8 +8671,8 @@ type DescribeEKSContainerInstancesResponse struct {
 }
 
 func (r *DescribeEKSContainerInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8685,14 +8689,14 @@ type DescribeEdgeAvailableExtraArgsRequestParams struct {
 
 type DescribeEdgeAvailableExtraArgsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群版本
 	ClusterVersion *string `json:"ClusterVersion,omitempty" name:"ClusterVersion"`
 }
 
 func (r *DescribeEdgeAvailableExtraArgsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8729,8 +8733,8 @@ type DescribeEdgeAvailableExtraArgsResponse struct {
 }
 
 func (r *DescribeEdgeAvailableExtraArgsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8751,7 +8755,7 @@ type DescribeEdgeCVMInstancesRequestParams struct {
 
 type DescribeEdgeCVMInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -8761,8 +8765,8 @@ type DescribeEdgeCVMInstancesRequest struct {
 }
 
 func (r *DescribeEdgeCVMInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8798,8 +8802,8 @@ type DescribeEdgeCVMInstancesResponse struct {
 }
 
 func (r *DescribeEdgeCVMInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8816,14 +8820,14 @@ type DescribeEdgeClusterExtraArgsRequestParams struct {
 
 type DescribeEdgeClusterExtraArgsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeEdgeClusterExtraArgsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8856,8 +8860,8 @@ type DescribeEdgeClusterExtraArgsResponse struct {
 }
 
 func (r *DescribeEdgeClusterExtraArgsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8883,7 +8887,7 @@ type DescribeEdgeClusterInstancesRequestParams struct {
 
 type DescribeEdgeClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
 
@@ -8898,8 +8902,8 @@ type DescribeEdgeClusterInstancesRequest struct {
 }
 
 func (r *DescribeEdgeClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8937,8 +8941,8 @@ type DescribeEdgeClusterInstancesResponse struct {
 }
 
 func (r *DescribeEdgeClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -8958,7 +8962,7 @@ type DescribeEdgeClusterUpgradeInfoRequestParams struct {
 
 type DescribeEdgeClusterUpgradeInfoRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -8967,8 +8971,8 @@ type DescribeEdgeClusterUpgradeInfoRequest struct {
 }
 
 func (r *DescribeEdgeClusterUpgradeInfoRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9018,8 +9022,8 @@ type DescribeEdgeClusterUpgradeInfoResponse struct {
 }
 
 func (r *DescribeEdgeClusterUpgradeInfoResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9036,14 +9040,14 @@ type DescribeEdgeLogSwitchesRequestParams struct {
 
 type DescribeEdgeLogSwitchesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID列表
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
 }
 
 func (r *DescribeEdgeLogSwitchesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9076,8 +9080,8 @@ type DescribeEdgeLogSwitchesResponse struct {
 }
 
 func (r *DescribeEdgeLogSwitchesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9112,7 +9116,7 @@ type DescribeEksContainerInstanceLogRequestParams struct {
 
 type DescribeEksContainerInstanceLogRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// Eks Container Instance Id，即容器实例Id
 	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
 
@@ -9136,8 +9140,8 @@ type DescribeEksContainerInstanceLogRequest struct {
 }
 
 func (r *DescribeEksContainerInstanceLogRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9178,8 +9182,8 @@ type DescribeEksContainerInstanceLogResponse struct {
 }
 
 func (r *DescribeEksContainerInstanceLogResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9196,14 +9200,14 @@ type DescribeEnableVpcCniProgressRequestParams struct {
 
 type DescribeEnableVpcCniProgressRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 开启vpc-cni的集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeEnableVpcCniProgressRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9239,8 +9243,8 @@ type DescribeEnableVpcCniProgressResponse struct {
 }
 
 func (r *DescribeEnableVpcCniProgressResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9257,14 +9261,14 @@ type DescribeEncryptionStatusRequestParams struct {
 
 type DescribeEncryptionStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeEncryptionStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9299,8 +9303,8 @@ type DescribeEncryptionStatusResponse struct {
 }
 
 func (r *DescribeEncryptionStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9338,7 +9342,7 @@ type DescribeExistedInstancesRequestParams struct {
 
 type DescribeExistedInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 ID，请填写查询集群列表 接口中返回的 ClusterId 字段（仅通过ClusterId获取需要过滤条件中的VPCID。节点状态比较时会使用该地域下所有集群中的节点进行比较。参数不支持同时指定InstanceIds和ClusterId。
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -9365,8 +9369,8 @@ type DescribeExistedInstancesRequest struct {
 }
 
 func (r *DescribeExistedInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9409,8 +9413,8 @@ type DescribeExistedInstancesResponse struct {
 }
 
 func (r *DescribeExistedInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9433,7 +9437,7 @@ type DescribeExternalClusterSpecRequestParams struct {
 
 type DescribeExternalClusterSpecRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 注册集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -9445,8 +9449,8 @@ type DescribeExternalClusterSpecRequest struct {
 }
 
 func (r *DescribeExternalClusterSpecRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9483,8 +9487,8 @@ type DescribeExternalClusterSpecResponse struct {
 }
 
 func (r *DescribeExternalClusterSpecResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9516,7 +9520,7 @@ type DescribeImageCachesRequestParams struct {
 
 type DescribeImageCachesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 镜像缓存Id数组
 	ImageCacheIds []*string `json:"ImageCacheIds,omitempty" name:"ImageCacheIds"`
 
@@ -9537,8 +9541,8 @@ type DescribeImageCachesRequest struct {
 }
 
 func (r *DescribeImageCachesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9577,8 +9581,8 @@ type DescribeImageCachesResponse struct {
 }
 
 func (r *DescribeImageCachesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9589,15 +9593,17 @@ func (r *DescribeImageCachesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeImagesRequestParams struct {
+
 }
 
 type DescribeImagesRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeImagesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9607,7 +9613,7 @@ func (r *DescribeImagesRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeImagesRequest has unknown keys!", "")
 	}
@@ -9634,8 +9640,8 @@ type DescribeImagesResponse struct {
 }
 
 func (r *DescribeImagesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9653,15 +9659,15 @@ type DescribePrometheusAgentInstancesRequestParams struct {
 
 type DescribePrometheusAgentInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	// 可以是tke, eks, edge的集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribePrometheusAgentInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9694,8 +9700,8 @@ type DescribePrometheusAgentInstancesResponse struct {
 }
 
 func (r *DescribePrometheusAgentInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9718,7 +9724,7 @@ type DescribePrometheusAgentsRequestParams struct {
 
 type DescribePrometheusAgentsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -9730,8 +9736,8 @@ type DescribePrometheusAgentsRequest struct {
 }
 
 func (r *DescribePrometheusAgentsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9768,8 +9774,8 @@ type DescribePrometheusAgentsResponse struct {
 }
 
 func (r *DescribePrometheusAgentsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9804,7 +9810,7 @@ type DescribePrometheusAlertHistoryRequestParams struct {
 
 type DescribePrometheusAlertHistoryRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -9828,8 +9834,8 @@ type DescribePrometheusAlertHistoryRequest struct {
 }
 
 func (r *DescribePrometheusAlertHistoryRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9870,8 +9876,8 @@ type DescribePrometheusAlertHistoryResponse struct {
 }
 
 func (r *DescribePrometheusAlertHistoryResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9898,7 +9904,7 @@ type DescribePrometheusAlertPolicyRequestParams struct {
 
 type DescribePrometheusAlertPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -9914,8 +9920,8 @@ type DescribePrometheusAlertPolicyRequest struct {
 }
 
 func (r *DescribePrometheusAlertPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9954,8 +9960,8 @@ type DescribePrometheusAlertPolicyResponse struct {
 }
 
 func (r *DescribePrometheusAlertPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -9982,7 +9988,7 @@ type DescribePrometheusAlertRuleRequestParams struct {
 
 type DescribePrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -9998,8 +10004,8 @@ type DescribePrometheusAlertRuleRequest struct {
 }
 
 func (r *DescribePrometheusAlertRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10037,8 +10043,8 @@ type DescribePrometheusAlertRuleResponse struct {
 }
 
 func (r *DescribePrometheusAlertRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10061,7 +10067,7 @@ type DescribePrometheusClusterAgentsRequestParams struct {
 
 type DescribePrometheusClusterAgentsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -10073,8 +10079,8 @@ type DescribePrometheusClusterAgentsRequest struct {
 }
 
 func (r *DescribePrometheusClusterAgentsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10111,8 +10117,8 @@ type DescribePrometheusClusterAgentsResponse struct {
 }
 
 func (r *DescribePrometheusClusterAgentsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10135,7 +10141,7 @@ type DescribePrometheusConfigRequestParams struct {
 
 type DescribePrometheusConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -10147,8 +10153,8 @@ type DescribePrometheusConfigRequest struct {
 }
 
 func (r *DescribePrometheusConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10191,8 +10197,8 @@ type DescribePrometheusConfigResponse struct {
 }
 
 func (r *DescribePrometheusConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10212,7 +10218,7 @@ type DescribePrometheusGlobalConfigRequestParams struct {
 
 type DescribePrometheusGlobalConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例级别抓取配置
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -10221,8 +10227,8 @@ type DescribePrometheusGlobalConfigRequest struct {
 }
 
 func (r *DescribePrometheusGlobalConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10267,8 +10273,8 @@ type DescribePrometheusGlobalConfigResponse struct {
 }
 
 func (r *DescribePrometheusGlobalConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10285,14 +10291,14 @@ type DescribePrometheusGlobalNotificationRequestParams struct {
 
 type DescribePrometheusGlobalNotificationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 func (r *DescribePrometheusGlobalNotificationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10325,8 +10331,8 @@ type DescribePrometheusGlobalNotificationResponse struct {
 }
 
 func (r *DescribePrometheusGlobalNotificationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10343,14 +10349,14 @@ type DescribePrometheusInstanceInitStatusRequestParams struct {
 
 type DescribePrometheusInstanceInitStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 func (r *DescribePrometheusInstanceInitStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10370,7 +10376,7 @@ func (r *DescribePrometheusInstanceInitStatusRequest) FromJsonString(s string) e
 // Predefined struct for user
 type DescribePrometheusInstanceInitStatusResponseParams struct {
 	// 实例初始化状态，取值：
-	// uninitialized 未初始化
+	// uninitialized 未初始化 
 	// initializing 初始化中
 	// running 初始化完成，运行中
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -10394,8 +10400,8 @@ type DescribePrometheusInstanceInitStatusResponse struct {
 }
 
 func (r *DescribePrometheusInstanceInitStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10412,14 +10418,14 @@ type DescribePrometheusInstanceRequestParams struct {
 
 type DescribePrometheusInstanceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 func (r *DescribePrometheusInstanceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10474,8 +10480,8 @@ type DescribePrometheusInstanceResponse struct {
 }
 
 func (r *DescribePrometheusInstanceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10493,14 +10499,14 @@ type DescribePrometheusInstancesOverviewRequestParams struct {
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// 过滤实例，目前支持：
-	// ID: 通过实例ID来过滤
+	// ID: 通过实例ID来过滤 
 	// Name: 通过实例名称来过滤
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 type DescribePrometheusInstancesOverviewRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 用于分页
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -10508,14 +10514,14 @@ type DescribePrometheusInstancesOverviewRequest struct {
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// 过滤实例，目前支持：
-	// ID: 通过实例ID来过滤
+	// ID: 通过实例ID来过滤 
 	// Name: 通过实例名称来过滤
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribePrometheusInstancesOverviewRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10553,8 +10559,8 @@ type DescribePrometheusInstancesOverviewResponse struct {
 }
 
 func (r *DescribePrometheusInstancesOverviewResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10572,14 +10578,14 @@ type DescribePrometheusOverviewsRequestParams struct {
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// 过滤实例，目前支持：
-	// ID: 通过实例ID来过滤
+	// ID: 通过实例ID来过滤 
 	// Name: 通过实例名称来过滤
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 type DescribePrometheusOverviewsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 用于分页
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
@@ -10587,14 +10593,14 @@ type DescribePrometheusOverviewsRequest struct {
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// 过滤实例，目前支持：
-	// ID: 通过实例ID来过滤
+	// ID: 通过实例ID来过滤 
 	// Name: 通过实例名称来过滤
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
 func (r *DescribePrometheusOverviewsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10632,8 +10638,8 @@ type DescribePrometheusOverviewsResponse struct {
 }
 
 func (r *DescribePrometheusOverviewsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10659,7 +10665,7 @@ type DescribePrometheusRecordRulesRequestParams struct {
 
 type DescribePrometheusRecordRulesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -10674,8 +10680,8 @@ type DescribePrometheusRecordRulesRequest struct {
 }
 
 func (r *DescribePrometheusRecordRulesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10713,8 +10719,8 @@ type DescribePrometheusRecordRulesResponse struct {
 }
 
 func (r *DescribePrometheusRecordRulesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10742,7 +10748,7 @@ type DescribePrometheusTargetsRequestParams struct {
 
 type DescribePrometheusTargetsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -10759,8 +10765,8 @@ type DescribePrometheusTargetsRequest struct {
 }
 
 func (r *DescribePrometheusTargetsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10795,8 +10801,8 @@ type DescribePrometheusTargetsResponse struct {
 }
 
 func (r *DescribePrometheusTargetsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10823,7 +10829,7 @@ type DescribePrometheusTempRequestParams struct {
 
 type DescribePrometheusTempRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模糊过滤条件，支持
 	// Level 按模板级别过滤
 	// Name 按名称过滤
@@ -10839,8 +10845,8 @@ type DescribePrometheusTempRequest struct {
 }
 
 func (r *DescribePrometheusTempRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10877,8 +10883,8 @@ type DescribePrometheusTempResponse struct {
 }
 
 func (r *DescribePrometheusTempResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10895,14 +10901,14 @@ type DescribePrometheusTempSyncRequestParams struct {
 
 type DescribePrometheusTempSyncRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板ID
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 }
 
 func (r *DescribePrometheusTempSyncRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10935,8 +10941,8 @@ type DescribePrometheusTempSyncResponse struct {
 }
 
 func (r *DescribePrometheusTempSyncResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10953,14 +10959,14 @@ type DescribePrometheusTemplateSyncRequestParams struct {
 
 type DescribePrometheusTemplateSyncRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板ID
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 }
 
 func (r *DescribePrometheusTemplateSyncRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -10992,8 +10998,8 @@ type DescribePrometheusTemplateSyncResponse struct {
 }
 
 func (r *DescribePrometheusTemplateSyncResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11020,7 +11026,7 @@ type DescribePrometheusTemplatesRequestParams struct {
 
 type DescribePrometheusTemplatesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模糊过滤条件，支持
 	// Level 按模板级别过滤
 	// Name 按名称过滤
@@ -11036,8 +11042,8 @@ type DescribePrometheusTemplatesRequest struct {
 }
 
 func (r *DescribePrometheusTemplatesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11074,8 +11080,8 @@ type DescribePrometheusTemplatesResponse struct {
 }
 
 func (r *DescribePrometheusTemplatesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11086,15 +11092,17 @@ func (r *DescribePrometheusTemplatesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRegionsRequestParams struct {
+
 }
 
 type DescribeRegionsRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeRegionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11104,7 +11112,7 @@ func (r *DescribeRegionsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRegionsRequest has unknown keys!", "")
 	}
@@ -11131,8 +11139,8 @@ type DescribeRegionsResponse struct {
 }
 
 func (r *DescribeRegionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11149,14 +11157,14 @@ type DescribeResourceUsageRequestParams struct {
 
 type DescribeResourceUsageRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeResourceUsageRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11197,8 +11205,8 @@ type DescribeResourceUsageResponse struct {
 }
 
 func (r *DescribeResourceUsageResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11218,7 +11226,7 @@ type DescribeRouteTableConflictsRequestParams struct {
 
 type DescribeRouteTableConflictsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 路由表CIDR
 	RouteTableCidrBlock *string `json:"RouteTableCidrBlock,omitempty" name:"RouteTableCidrBlock"`
 
@@ -11227,8 +11235,8 @@ type DescribeRouteTableConflictsRequest struct {
 }
 
 func (r *DescribeRouteTableConflictsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11265,8 +11273,8 @@ type DescribeRouteTableConflictsResponse struct {
 }
 
 func (r *DescribeRouteTableConflictsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11283,14 +11291,14 @@ type DescribeTKEEdgeClusterCredentialRequestParams struct {
 
 type DescribeTKEEdgeClusterCredentialRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeTKEEdgeClusterCredentialRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11347,8 +11355,8 @@ type DescribeTKEEdgeClusterCredentialResponse struct {
 }
 
 func (r *DescribeTKEEdgeClusterCredentialResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11365,14 +11373,14 @@ type DescribeTKEEdgeClusterStatusRequestParams struct {
 
 type DescribeTKEEdgeClusterStatusRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 边缘计算容器集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeTKEEdgeClusterStatusRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11407,8 +11415,8 @@ type DescribeTKEEdgeClusterStatusResponse struct {
 }
 
 func (r *DescribeTKEEdgeClusterStatusResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11435,7 +11443,7 @@ type DescribeTKEEdgeClustersRequestParams struct {
 
 type DescribeTKEEdgeClustersRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID列表(为空时，
 	// 表示获取账号下所有集群)
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
@@ -11451,8 +11459,8 @@ type DescribeTKEEdgeClustersRequest struct {
 }
 
 func (r *DescribeTKEEdgeClustersRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11490,8 +11498,8 @@ type DescribeTKEEdgeClustersResponse struct {
 }
 
 func (r *DescribeTKEEdgeClustersResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11508,14 +11516,14 @@ type DescribeTKEEdgeExternalKubeconfigRequestParams struct {
 
 type DescribeTKEEdgeExternalKubeconfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DescribeTKEEdgeExternalKubeconfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11547,8 +11555,8 @@ type DescribeTKEEdgeExternalKubeconfigResponse struct {
 }
 
 func (r *DescribeTKEEdgeExternalKubeconfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11577,7 +11585,7 @@ type DescribeTKEEdgeScriptRequestParams struct {
 
 type DescribeTKEEdgeScriptRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -11595,8 +11603,8 @@ type DescribeTKEEdgeScriptRequest struct {
 }
 
 func (r *DescribeTKEEdgeScriptRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11642,8 +11650,8 @@ type DescribeTKEEdgeScriptResponse struct {
 }
 
 func (r *DescribeTKEEdgeScriptResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11654,15 +11662,17 @@ func (r *DescribeTKEEdgeScriptResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeVersionsRequestParams struct {
+
 }
 
 type DescribeVersionsRequest struct {
 	*tchttp.BaseRequest
+	
 }
 
 func (r *DescribeVersionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11672,7 +11682,7 @@ func (r *DescribeVersionsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-
+	
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeVersionsRequest has unknown keys!", "")
 	}
@@ -11699,8 +11709,8 @@ type DescribeVersionsResponse struct {
 }
 
 func (r *DescribeVersionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11723,7 +11733,7 @@ type DescribeVpcCniPodLimitsRequestParams struct {
 
 type DescribeVpcCniPodLimitsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 查询的机型所在可用区，如：ap-guangzhou-3，默认为空，即不按可用区过滤信息
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
@@ -11735,8 +11745,8 @@ type DescribeVpcCniPodLimitsRequest struct {
 }
 
 func (r *DescribeVpcCniPodLimitsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11775,8 +11785,8 @@ type DescribeVpcCniPodLimitsResponse struct {
 }
 
 func (r *DescribeVpcCniPodLimitsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11796,7 +11806,7 @@ type DisableClusterAuditRequestParams struct {
 
 type DisableClusterAuditRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -11805,8 +11815,8 @@ type DisableClusterAuditRequest struct {
 }
 
 func (r *DisableClusterAuditRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11836,8 +11846,8 @@ type DisableClusterAuditResponse struct {
 }
 
 func (r *DisableClusterAuditResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11854,14 +11864,14 @@ type DisableClusterDeletionProtectionRequestParams struct {
 
 type DisableClusterDeletionProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DisableClusterDeletionProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11890,8 +11900,8 @@ type DisableClusterDeletionProtectionResponse struct {
 }
 
 func (r *DisableClusterDeletionProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11908,14 +11918,14 @@ type DisableEncryptionProtectionRequestParams struct {
 
 type DisableEncryptionProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DisableEncryptionProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11944,8 +11954,8 @@ type DisableEncryptionProtectionResponse struct {
 }
 
 func (r *DisableEncryptionProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -11965,7 +11975,7 @@ type DisableEventPersistenceRequestParams struct {
 
 type DisableEventPersistenceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -11974,8 +11984,8 @@ type DisableEventPersistenceRequest struct {
 }
 
 func (r *DisableEventPersistenceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12005,8 +12015,8 @@ type DisableEventPersistenceResponse struct {
 }
 
 func (r *DisableEventPersistenceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12023,14 +12033,14 @@ type DisableVpcCniNetworkTypeRequestParams struct {
 
 type DisableVpcCniNetworkTypeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *DisableVpcCniNetworkTypeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12059,8 +12069,8 @@ type DisableVpcCniNetworkTypeResponse struct {
 }
 
 func (r *DisableVpcCniNetworkTypeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12088,7 +12098,7 @@ type DrainClusterVirtualNodeRequestParams struct {
 
 type DrainClusterVirtualNodeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -12097,8 +12107,8 @@ type DrainClusterVirtualNodeRequest struct {
 }
 
 func (r *DrainClusterVirtualNodeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12128,8 +12138,8 @@ type DrainClusterVirtualNodeResponse struct {
 }
 
 func (r *DrainClusterVirtualNodeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12518,7 +12528,7 @@ type EnableClusterAuditRequestParams struct {
 
 type EnableClusterAuditRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -12533,8 +12543,8 @@ type EnableClusterAuditRequest struct {
 }
 
 func (r *EnableClusterAuditRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12566,8 +12576,8 @@ type EnableClusterAuditResponse struct {
 }
 
 func (r *EnableClusterAuditResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12584,14 +12594,14 @@ type EnableClusterDeletionProtectionRequestParams struct {
 
 type EnableClusterDeletionProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *EnableClusterDeletionProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12620,8 +12630,8 @@ type EnableClusterDeletionProtectionResponse struct {
 }
 
 func (r *EnableClusterDeletionProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12641,7 +12651,7 @@ type EnableEncryptionProtectionRequestParams struct {
 
 type EnableEncryptionProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -12650,8 +12660,8 @@ type EnableEncryptionProtectionRequest struct {
 }
 
 func (r *EnableEncryptionProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12681,8 +12691,8 @@ type EnableEncryptionProtectionResponse struct {
 }
 
 func (r *EnableEncryptionProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12708,7 +12718,7 @@ type EnableEventPersistenceRequestParams struct {
 
 type EnableEventPersistenceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -12723,8 +12733,8 @@ type EnableEventPersistenceRequest struct {
 }
 
 func (r *EnableEventPersistenceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12756,8 +12766,8 @@ type EnableEventPersistenceResponse struct {
 }
 
 func (r *EnableEventPersistenceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12789,7 +12799,7 @@ type EnableVpcCniNetworkTypeRequestParams struct {
 
 type EnableVpcCniNetworkTypeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -12810,8 +12820,8 @@ type EnableVpcCniNetworkTypeRequest struct {
 }
 
 func (r *EnableVpcCniNetworkTypeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -12845,8 +12855,8 @@ type EnableVpcCniNetworkTypeResponse struct {
 }
 
 func (r *EnableVpcCniNetworkTypeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13042,7 +13052,7 @@ type ForwardApplicationRequestV3RequestParams struct {
 
 type ForwardApplicationRequestV3Request struct {
 	*tchttp.BaseRequest
-
+	
 	// 请求集群addon的访问
 	Method *string `json:"Method,omitempty" name:"Method"`
 
@@ -13066,8 +13076,8 @@ type ForwardApplicationRequestV3Request struct {
 }
 
 func (r *ForwardApplicationRequestV3Request) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13105,8 +13115,8 @@ type ForwardApplicationRequestV3Response struct {
 }
 
 func (r *ForwardApplicationRequestV3Response) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13141,7 +13151,7 @@ type ForwardTKEEdgeApplicationRequestV3RequestParams struct {
 
 type ForwardTKEEdgeApplicationRequestV3Request struct {
 	*tchttp.BaseRequest
-
+	
 	// 请求集群addon的访问
 	Method *string `json:"Method,omitempty" name:"Method"`
 
@@ -13165,8 +13175,8 @@ type ForwardTKEEdgeApplicationRequestV3Request struct {
 }
 
 func (r *ForwardTKEEdgeApplicationRequestV3Request) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13204,8 +13214,8 @@ type ForwardTKEEdgeApplicationRequestV3Response struct {
 }
 
 func (r *ForwardTKEEdgeApplicationRequestV3Response) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13243,14 +13253,14 @@ type GetClusterLevelPriceRequestParams struct {
 
 type GetClusterLevelPriceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群规格，托管集群询价
 	ClusterLevel *string `json:"ClusterLevel,omitempty" name:"ClusterLevel"`
 }
 
 func (r *GetClusterLevelPriceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13285,8 +13295,8 @@ type GetClusterLevelPriceResponse struct {
 }
 
 func (r *GetClusterLevelPriceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13303,14 +13313,14 @@ type GetMostSuitableImageCacheRequestParams struct {
 
 type GetMostSuitableImageCacheRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 容器镜像列表
 	Images []*string `json:"Images,omitempty" name:"Images"`
 }
 
 func (r *GetMostSuitableImageCacheRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13346,8 +13356,8 @@ type GetMostSuitableImageCacheResponse struct {
 }
 
 func (r *GetMostSuitableImageCacheResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13370,7 +13380,7 @@ type GetTkeAppChartListRequestParams struct {
 
 type GetTkeAppChartListRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// app类型，取值log,scheduler,network,storage,monitor,dns,image,other,invisible
 	Kind *string `json:"Kind,omitempty" name:"Kind"`
 
@@ -13382,8 +13392,8 @@ type GetTkeAppChartListRequest struct {
 }
 
 func (r *GetTkeAppChartListRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13418,8 +13428,8 @@ type GetTkeAppChartListResponse struct {
 }
 
 func (r *GetTkeAppChartListResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13442,7 +13452,7 @@ type GetUpgradeInstanceProgressRequestParams struct {
 
 type GetUpgradeInstanceProgressRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -13454,8 +13464,8 @@ type GetUpgradeInstanceProgressRequest struct {
 }
 
 func (r *GetUpgradeInstanceProgressRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13507,8 +13517,8 @@ type GetUpgradeInstanceProgressResponse struct {
 }
 
 func (r *GetUpgradeInstanceProgressResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13649,7 +13659,7 @@ type InstallAddonRequestParams struct {
 
 type InstallAddonRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -13664,8 +13674,8 @@ type InstallAddonRequest struct {
 }
 
 func (r *InstallAddonRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13697,8 +13707,8 @@ type InstallAddonResponse struct {
 }
 
 func (r *InstallAddonResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13715,14 +13725,14 @@ type InstallEdgeLogAgentRequestParams struct {
 
 type InstallEdgeLogAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *InstallEdgeLogAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13751,8 +13761,8 @@ type InstallEdgeLogAgentResponse struct {
 }
 
 func (r *InstallEdgeLogAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13772,7 +13782,7 @@ type InstallLogAgentRequestParams struct {
 
 type InstallLogAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// TKE集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -13781,8 +13791,8 @@ type InstallLogAgentRequest struct {
 }
 
 func (r *InstallLogAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -13812,8 +13822,8 @@ type InstallLogAgentResponse struct {
 }
 
 func (r *InstallLogAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14180,7 +14190,7 @@ type ListClusterInspectionResultsItemsRequestParams struct {
 
 type ListClusterInspectionResultsItemsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14192,8 +14202,8 @@ type ListClusterInspectionResultsItemsRequest struct {
 }
 
 func (r *ListClusterInspectionResultsItemsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14228,8 +14238,8 @@ type ListClusterInspectionResultsItemsResponse struct {
 }
 
 func (r *ListClusterInspectionResultsItemsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14252,7 +14262,7 @@ type ListClusterInspectionResultsRequestParams struct {
 
 type ListClusterInspectionResultsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 目标集群列表，为空查询用户所有集群
 	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
 
@@ -14264,8 +14274,8 @@ type ListClusterInspectionResultsRequest struct {
 }
 
 func (r *ListClusterInspectionResultsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14300,8 +14310,8 @@ type ListClusterInspectionResultsResponse struct {
 }
 
 func (r *ListClusterInspectionResultsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14367,7 +14377,7 @@ type ModifyClusterAsGroupAttributeRequestParams struct {
 
 type ModifyClusterAsGroupAttributeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14376,8 +14386,8 @@ type ModifyClusterAsGroupAttributeRequest struct {
 }
 
 func (r *ModifyClusterAsGroupAttributeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14407,8 +14417,8 @@ type ModifyClusterAsGroupAttributeResponse struct {
 }
 
 func (r *ModifyClusterAsGroupAttributeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14428,7 +14438,7 @@ type ModifyClusterAsGroupOptionAttributeRequestParams struct {
 
 type ModifyClusterAsGroupOptionAttributeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14437,8 +14447,8 @@ type ModifyClusterAsGroupOptionAttributeRequest struct {
 }
 
 func (r *ModifyClusterAsGroupOptionAttributeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14468,8 +14478,8 @@ type ModifyClusterAsGroupOptionAttributeResponse struct {
 }
 
 func (r *ModifyClusterAsGroupOptionAttributeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14504,7 +14514,7 @@ type ModifyClusterAttributeRequestParams struct {
 
 type ModifyClusterAttributeRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14528,8 +14538,8 @@ type ModifyClusterAttributeRequest struct {
 }
 
 func (r *ModifyClusterAttributeRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14588,8 +14598,8 @@ type ModifyClusterAttributeResponse struct {
 }
 
 func (r *ModifyClusterAttributeResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14612,7 +14622,7 @@ type ModifyClusterAuthenticationOptionsRequestParams struct {
 
 type ModifyClusterAuthenticationOptionsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14624,8 +14634,8 @@ type ModifyClusterAuthenticationOptionsRequest struct {
 }
 
 func (r *ModifyClusterAuthenticationOptionsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14656,8 +14666,8 @@ type ModifyClusterAuthenticationOptionsResponse struct {
 }
 
 func (r *ModifyClusterAuthenticationOptionsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14680,7 +14690,7 @@ type ModifyClusterEndpointSPRequestParams struct {
 
 type ModifyClusterEndpointSPRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14692,8 +14702,8 @@ type ModifyClusterEndpointSPRequest struct {
 }
 
 func (r *ModifyClusterEndpointSPRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14724,8 +14734,8 @@ type ModifyClusterEndpointSPResponse struct {
 }
 
 func (r *ModifyClusterEndpointSPResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14793,7 +14803,7 @@ type ModifyClusterNodePoolRequestParams struct {
 
 type ModifyClusterNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14850,8 +14860,8 @@ type ModifyClusterNodePoolRequest struct {
 }
 
 func (r *ModifyClusterNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14897,8 +14907,8 @@ type ModifyClusterNodePoolResponse struct {
 }
 
 func (r *ModifyClusterNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14930,7 +14940,7 @@ type ModifyClusterVirtualNodePoolRequestParams struct {
 
 type ModifyClusterVirtualNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -14951,8 +14961,8 @@ type ModifyClusterVirtualNodePoolRequest struct {
 }
 
 func (r *ModifyClusterVirtualNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -14986,8 +14996,8 @@ type ModifyClusterVirtualNodePoolResponse struct {
 }
 
 func (r *ModifyClusterVirtualNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15010,7 +15020,7 @@ type ModifyNodePoolDesiredCapacityAboutAsgRequestParams struct {
 
 type ModifyNodePoolDesiredCapacityAboutAsgRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -15022,8 +15032,8 @@ type ModifyNodePoolDesiredCapacityAboutAsgRequest struct {
 }
 
 func (r *ModifyNodePoolDesiredCapacityAboutAsgRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15054,8 +15064,8 @@ type ModifyNodePoolDesiredCapacityAboutAsgResponse struct {
 }
 
 func (r *ModifyNodePoolDesiredCapacityAboutAsgResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15078,7 +15088,7 @@ type ModifyNodePoolInstanceTypesRequestParams struct {
 
 type ModifyNodePoolInstanceTypesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -15090,8 +15100,8 @@ type ModifyNodePoolInstanceTypesRequest struct {
 }
 
 func (r *ModifyNodePoolInstanceTypesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15122,8 +15132,8 @@ type ModifyNodePoolInstanceTypesResponse struct {
 }
 
 func (r *ModifyNodePoolInstanceTypesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15146,7 +15156,7 @@ type ModifyPrometheusAgentExternalLabelsRequestParams struct {
 
 type ModifyPrometheusAgentExternalLabelsRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15158,8 +15168,8 @@ type ModifyPrometheusAgentExternalLabelsRequest struct {
 }
 
 func (r *ModifyPrometheusAgentExternalLabelsRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15190,8 +15200,8 @@ type ModifyPrometheusAgentExternalLabelsResponse struct {
 }
 
 func (r *ModifyPrometheusAgentExternalLabelsResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15211,7 +15221,7 @@ type ModifyPrometheusAlertPolicyRequestParams struct {
 
 type ModifyPrometheusAlertPolicyRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15220,8 +15230,8 @@ type ModifyPrometheusAlertPolicyRequest struct {
 }
 
 func (r *ModifyPrometheusAlertPolicyRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15251,8 +15261,8 @@ type ModifyPrometheusAlertPolicyResponse struct {
 }
 
 func (r *ModifyPrometheusAlertPolicyResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15272,7 +15282,7 @@ type ModifyPrometheusAlertRuleRequestParams struct {
 
 type ModifyPrometheusAlertRuleRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15281,8 +15291,8 @@ type ModifyPrometheusAlertRuleRequest struct {
 }
 
 func (r *ModifyPrometheusAlertRuleRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15312,8 +15322,8 @@ type ModifyPrometheusAlertRuleResponse struct {
 }
 
 func (r *ModifyPrometheusAlertRuleResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15345,7 +15355,7 @@ type ModifyPrometheusConfigRequestParams struct {
 
 type ModifyPrometheusConfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15366,8 +15376,8 @@ type ModifyPrometheusConfigRequest struct {
 }
 
 func (r *ModifyPrometheusConfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15401,8 +15411,8 @@ type ModifyPrometheusConfigResponse struct {
 }
 
 func (r *ModifyPrometheusConfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15422,7 +15432,7 @@ type ModifyPrometheusGlobalNotificationRequestParams struct {
 
 type ModifyPrometheusGlobalNotificationRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15431,8 +15441,8 @@ type ModifyPrometheusGlobalNotificationRequest struct {
 }
 
 func (r *ModifyPrometheusGlobalNotificationRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15462,8 +15472,8 @@ type ModifyPrometheusGlobalNotificationResponse struct {
 }
 
 func (r *ModifyPrometheusGlobalNotificationResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15486,7 +15496,7 @@ type ModifyPrometheusRecordRuleYamlRequestParams struct {
 
 type ModifyPrometheusRecordRuleYamlRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -15498,8 +15508,8 @@ type ModifyPrometheusRecordRuleYamlRequest struct {
 }
 
 func (r *ModifyPrometheusRecordRuleYamlRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15530,8 +15540,8 @@ type ModifyPrometheusRecordRuleYamlResponse struct {
 }
 
 func (r *ModifyPrometheusRecordRuleYamlResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15551,7 +15561,7 @@ type ModifyPrometheusTempRequestParams struct {
 
 type ModifyPrometheusTempRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板ID
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -15560,8 +15570,8 @@ type ModifyPrometheusTempRequest struct {
 }
 
 func (r *ModifyPrometheusTempRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15591,8 +15601,8 @@ type ModifyPrometheusTempResponse struct {
 }
 
 func (r *ModifyPrometheusTempResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15612,7 +15622,7 @@ type ModifyPrometheusTemplateRequestParams struct {
 
 type ModifyPrometheusTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 模板ID
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -15621,8 +15631,8 @@ type ModifyPrometheusTemplateRequest struct {
 }
 
 func (r *ModifyPrometheusTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15652,8 +15662,8 @@ type ModifyPrometheusTemplateResponse struct {
 }
 
 func (r *ModifyPrometheusTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -15711,9 +15721,6 @@ type NodePool struct {
 	// Taints 污点标记
 	Taints []*Taint `json:"Taints,omitempty" name:"Taints"`
 
-	//DataDisks  多盘数据盘挂载信息
-	DataDisks []DataDisk `json:"DataDisk,omitempty" name:"DataDisk"`
-
 	// NodeCountSummary 节点列表
 	NodeCountSummary *NodeCountSummary `json:"NodeCountSummary,omitempty" name:"NodeCountSummary"`
 
@@ -15760,20 +15767,6 @@ type NodePool struct {
 	// 删除保护开关
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
-
-	// 设置加入的节点是否参与调度，默认值为0，表示参与调度；非0表示不参与调度, 待节点初始化完成之后, 可执行kubectl uncordon nodename使node加入调度.
-	Unschedulable *int64 `json:"Unschedulable,omitempty" name:"Unschedulable"`
-
-	//DockerGraphPath，默认值"/var/lib/docker"
-	DockerGraphPath *string `json:"DockerGraphPath,omitempty" name:"DockerGraphPath"`
-
-	// GPU驱动相关参数
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	GPUArgs *GPUArgs `json:"GPUArgs,omitempty" name:"GPUArgs"`
-
-	// 节点相关的自定义参数信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 }
 
 type NodePoolOption struct {
@@ -16781,7 +16774,7 @@ type RemoveNodeFromNodePoolRequestParams struct {
 
 type RemoveNodeFromNodePoolRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -16793,8 +16786,8 @@ type RemoveNodeFromNodePoolRequest struct {
 }
 
 func (r *RemoveNodeFromNodePoolRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16825,8 +16818,8 @@ type RemoveNodeFromNodePoolResponse struct {
 }
 
 func (r *RemoveNodeFromNodePoolResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16870,14 +16863,14 @@ type RestartEKSContainerInstancesRequestParams struct {
 
 type RestartEKSContainerInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// EKS instance ids
 	EksCiIds []*string `json:"EksCiIds,omitempty" name:"EksCiIds"`
 }
 
 func (r *RestartEKSContainerInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16906,8 +16899,8 @@ type RestartEKSContainerInstancesResponse struct {
 }
 
 func (r *RestartEKSContainerInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16936,7 +16929,7 @@ type RollbackClusterReleaseRequestParams struct {
 
 type RollbackClusterReleaseRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -16954,8 +16947,8 @@ type RollbackClusterReleaseRequest struct {
 }
 
 func (r *RollbackClusterReleaseRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -16992,8 +16985,8 @@ type RollbackClusterReleaseResponse struct {
 }
 
 func (r *RollbackClusterReleaseResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17073,7 +17066,7 @@ type RunPrometheusInstanceRequestParams struct {
 
 type RunPrometheusInstanceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
@@ -17082,8 +17075,8 @@ type RunPrometheusInstanceRequest struct {
 }
 
 func (r *RunPrometheusInstanceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17113,8 +17106,8 @@ type RunPrometheusInstanceResponse struct {
 }
 
 func (r *RunPrometheusInstanceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17139,7 +17132,7 @@ type ScaleInClusterMasterRequestParams struct {
 
 type ScaleInClusterMasterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群实例ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17148,8 +17141,8 @@ type ScaleInClusterMasterRequest struct {
 }
 
 func (r *ScaleInClusterMasterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17179,8 +17172,8 @@ type ScaleInClusterMasterResponse struct {
 }
 
 func (r *ScaleInClusterMasterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17220,7 +17213,7 @@ type ScaleOutClusterMasterRequestParams struct {
 
 type ScaleOutClusterMasterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群实例ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17238,8 +17231,8 @@ type ScaleOutClusterMasterRequest struct {
 }
 
 func (r *ScaleOutClusterMasterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17272,8 +17265,8 @@ type ScaleOutClusterMasterResponse struct {
 }
 
 func (r *ScaleOutClusterMasterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17323,7 +17316,7 @@ type SetNodePoolNodeProtectionRequestParams struct {
 
 type SetNodePoolNodeProtectionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17338,8 +17331,8 @@ type SetNodePoolNodeProtectionRequest struct {
 }
 
 func (r *SetNodePoolNodeProtectionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17379,8 +17372,8 @@ type SetNodePoolNodeProtectionResponse struct {
 }
 
 func (r *SetNodePoolNodeProtectionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17417,7 +17410,7 @@ type SyncPrometheusTempRequestParams struct {
 
 type SyncPrometheusTempRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -17426,8 +17419,8 @@ type SyncPrometheusTempRequest struct {
 }
 
 func (r *SyncPrometheusTempRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17457,8 +17450,8 @@ type SyncPrometheusTempResponse struct {
 }
 
 func (r *SyncPrometheusTempResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17478,7 +17471,7 @@ type SyncPrometheusTemplateRequestParams struct {
 
 type SyncPrometheusTemplateRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 实例id
 	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
 
@@ -17487,8 +17480,8 @@ type SyncPrometheusTemplateRequest struct {
 }
 
 func (r *SyncPrometheusTemplateRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17518,8 +17511,8 @@ type SyncPrometheusTemplateResponse struct {
 }
 
 func (r *SyncPrometheusTemplateResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17625,7 +17618,7 @@ type UninstallClusterReleaseRequestParams struct {
 
 type UninstallClusterReleaseRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17640,8 +17633,8 @@ type UninstallClusterReleaseRequest struct {
 }
 
 func (r *UninstallClusterReleaseRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17677,8 +17670,8 @@ type UninstallClusterReleaseResponse struct {
 }
 
 func (r *UninstallClusterReleaseResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17695,14 +17688,14 @@ type UninstallEdgeLogAgentRequestParams struct {
 
 type UninstallEdgeLogAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *UninstallEdgeLogAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17731,8 +17724,8 @@ type UninstallEdgeLogAgentResponse struct {
 }
 
 func (r *UninstallEdgeLogAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17749,14 +17742,14 @@ type UninstallLogAgentRequestParams struct {
 
 type UninstallLogAgentRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 }
 
 func (r *UninstallLogAgentRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17785,8 +17778,8 @@ type UninstallLogAgentResponse struct {
 }
 
 func (r *UninstallLogAgentResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17812,7 +17805,7 @@ type UpdateAddonRequestParams struct {
 
 type UpdateAddonRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17827,8 +17820,8 @@ type UpdateAddonRequest struct {
 }
 
 func (r *UpdateAddonRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17860,8 +17853,8 @@ type UpdateAddonResponse struct {
 }
 
 func (r *UpdateAddonResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17881,7 +17874,7 @@ type UpdateClusterKubeconfigRequestParams struct {
 
 type UpdateClusterKubeconfigRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17890,8 +17883,8 @@ type UpdateClusterKubeconfigRequest struct {
 }
 
 func (r *UpdateClusterKubeconfigRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17925,8 +17918,8 @@ type UpdateClusterKubeconfigResponse struct {
 }
 
 func (r *UpdateClusterKubeconfigResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -17955,7 +17948,7 @@ type UpdateClusterVersionRequestParams struct {
 
 type UpdateClusterVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -17973,8 +17966,8 @@ type UpdateClusterVersionRequest struct {
 }
 
 func (r *UpdateClusterVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18007,8 +18000,8 @@ type UpdateClusterVersionResponse struct {
 }
 
 func (r *UpdateClusterVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18058,7 +18051,7 @@ type UpdateEKSClusterRequestParams struct {
 
 type UpdateEKSClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 弹性集群Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -18097,8 +18090,8 @@ type UpdateEKSClusterRequest struct {
 }
 
 func (r *UpdateEKSClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18138,8 +18131,8 @@ type UpdateEKSClusterResponse struct {
 }
 
 func (r *UpdateEKSClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18174,7 +18167,7 @@ type UpdateEKSContainerInstanceRequestParams struct {
 
 type UpdateEKSContainerInstanceRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 容器实例 ID
 	EksCiId *string `json:"EksCiId,omitempty" name:"EksCiId"`
 
@@ -18198,8 +18191,8 @@ type UpdateEKSContainerInstanceRequest struct {
 }
 
 func (r *UpdateEKSContainerInstanceRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18238,8 +18231,8 @@ type UpdateEKSContainerInstanceResponse struct {
 }
 
 func (r *UpdateEKSContainerInstanceResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18265,7 +18258,7 @@ type UpdateEdgeClusterVersionRequestParams struct {
 
 type UpdateEdgeClusterVersionRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群 Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -18280,8 +18273,8 @@ type UpdateEdgeClusterVersionRequest struct {
 }
 
 func (r *UpdateEdgeClusterVersionRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18313,8 +18306,8 @@ type UpdateEdgeClusterVersionResponse struct {
 }
 
 func (r *UpdateEdgeClusterVersionResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18349,7 +18342,7 @@ type UpdateImageCacheRequestParams struct {
 
 type UpdateImageCacheRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 镜像缓存Id
 	ImageCacheId *string `json:"ImageCacheId,omitempty" name:"ImageCacheId"`
 
@@ -18373,8 +18366,8 @@ type UpdateImageCacheRequest struct {
 }
 
 func (r *UpdateImageCacheRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18409,8 +18402,8 @@ type UpdateImageCacheResponse struct {
 }
 
 func (r *UpdateImageCacheResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18463,7 +18456,7 @@ type UpdateTKEEdgeClusterRequestParams struct {
 
 type UpdateTKEEdgeClusterRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 边缘计算集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -18505,8 +18498,8 @@ type UpdateTKEEdgeClusterRequest struct {
 }
 
 func (r *UpdateTKEEdgeClusterRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18547,8 +18540,8 @@ type UpdateTKEEdgeClusterResponse struct {
 }
 
 func (r *UpdateTKEEdgeClusterResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18610,7 +18603,7 @@ type UpgradeClusterInstancesRequestParams struct {
 
 type UpgradeClusterInstancesRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -18643,8 +18636,8 @@ type UpgradeClusterInstancesRequest struct {
 }
 
 func (r *UpgradeClusterInstancesRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18680,8 +18673,8 @@ type UpgradeClusterInstancesResponse struct {
 }
 
 func (r *UpgradeClusterInstancesResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18731,7 +18724,7 @@ type UpgradeClusterReleaseRequestParams struct {
 
 type UpgradeClusterReleaseRequest struct {
 	*tchttp.BaseRequest
-
+	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
@@ -18770,8 +18763,8 @@ type UpgradeClusterReleaseRequest struct {
 }
 
 func (r *UpgradeClusterReleaseRequest) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function
@@ -18815,8 +18808,8 @@ type UpgradeClusterReleaseResponse struct {
 }
 
 func (r *UpgradeClusterReleaseResponse) ToJsonString() string {
-	b, _ := json.Marshal(r)
-	return string(b)
+    b, _ := json.Marshal(r)
+    return string(b)
 }
 
 // FromJsonString It is highly **NOT** recommended to use this function

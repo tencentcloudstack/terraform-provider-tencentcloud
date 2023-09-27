@@ -1236,7 +1236,7 @@ func (me *TkeService) ModifyClusterAsGroupAttribute(ctx context.Context, id, asG
 	return
 }
 
-func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings, deletionProtection bool) (asGroupId string, errRet error) {
+func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name, groupPara, configPara string, enableAutoScale bool, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, iAdvanced tke.InstanceAdvancedSettings) (asGroupId string, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewCreateClusterNodePoolRequest()
 
@@ -1251,11 +1251,9 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	request.LaunchConfigurePara = &configPara
 	request.InstanceAdvancedSettings = &iAdvanced
 	request.EnableAutoscale = &enableAutoScale
-	request.DeletionProtection = &deletionProtection
+	//request.DeletionProtection = &deletionProtection
 	request.NodePoolOs = &nodeOs
-	if nodeOsType != "" {
-		request.OsCustomizeType = &nodeOsType
-	}
+	request.OsCustomizeType = &nodeOsType
 
 	if len(labels) > 0 {
 		request.Labels = labels
@@ -1281,7 +1279,7 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	return
 }
 
-func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, tags map[string]string, deletionProtection bool) (errRet error) {
+func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, tags map[string]string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewModifyClusterNodePoolRequest()
 
@@ -1295,7 +1293,7 @@ func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, node
 	request.Taints = taints
 	request.Labels = labels
 	request.EnableAutoscale = &enableAutoScale
-	request.DeletionProtection = &deletionProtection
+	//request.DeletionProtection = &deletionProtection
 	request.MaxNodesNum = &maxSize
 	request.MinNodesNum = &minSize
 	request.Name = &name
