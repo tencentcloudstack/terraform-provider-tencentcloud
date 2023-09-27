@@ -21,7 +21,8 @@ func TestAccTencentCloudCssWatermarkRuleAttachmentResource_basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckWatermarkRuleAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccCssWatermarkRuleAttachment, defaultCSSLiveType, liveUrl, defaultCSSDomainName, defaultCSSAppName, startTime, endTime, defaultCSSOperator, defaultCSSPrefix),
