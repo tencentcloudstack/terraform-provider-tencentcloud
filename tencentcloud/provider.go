@@ -1322,6 +1322,7 @@ Real User Monitoring(RUM)
 Cloud Streaming Services(CSS)
   Resource
     tencentcloud_css_watermark
+	tencentcloud_css_watermark_rule_attachment
 	tencentcloud_css_pull_stream_task
 	tencentcloud_css_live_transcode_template
 	tencentcloud_css_live_transcode_rule_attachment
@@ -2893,6 +2894,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdcpg_cluster":                                       resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                      resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                                       resourceTencentCloudCssWatermark(),
+			"tencentcloud_css_watermark_rule_attachment":                       resourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                resourceTencentCloudCssPullStreamTask(),
 			"tencentcloud_css_live_transcode_template":                         resourceTencentCloudCssLiveTranscodeTemplate(),
 			"tencentcloud_css_live_transcode_rule_attachment":                  resourceTencentCloudCssLiveTranscodeRuleAttachment(),
