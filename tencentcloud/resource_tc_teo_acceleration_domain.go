@@ -223,16 +223,7 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 	d.SetId(zoneId + FILED_SP + domainName)
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.DomainStatus == "online" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
-	})
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
 	if err != nil {
 		return err
 	}
@@ -409,16 +400,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 		}
 
 		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if *instance.DomainStatus == "online" {
-				return nil
-			}
-			return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
-		})
+		err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
 		if err != nil {
 			return err
 		}
@@ -500,16 +482,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		return err
 	}
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.DomainStatus == "offline" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
-	})
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
 	if err != nil {
 		return err
 	}

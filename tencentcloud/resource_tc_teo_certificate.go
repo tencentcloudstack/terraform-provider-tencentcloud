@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_certificate" "certificate" {
-  zone_id = ""
-  host = ""
-  cert_id = ""
-  alias = ""
-  type = ""
-  expire_time = ""
-  deploy_time = ""
-  sign_algo = ""
-  common_name = ""
-  mode = ""
+    alias       = "EdgeOne default"
+    cert_id     = "teo-2o1tfutpnb6l"
+    common_name = "tencentcloud-terraform-provider.cn"
+    deploy_time = "2023-09-27T07:38:49Z"
+    expire_time = "2023-12-26T06:38:47Z"
+    host        = "test.tencentcloud-terraform-provider.cn"
+    mode        = "eofreecert"
+    sign_algo   = "RSA 2048"
+    type        = "default"
+    zone_id     = "zone-2o1t24kgy362"
 }
 ```
 
@@ -23,7 +23,7 @@ Import
 teo certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_certificate.certificate certificate_id
+terraform import tencentcloud_teo_certificate.certificate zone_id#host#cert_id
 ```
 */
 package tencentcloud
@@ -56,46 +56,55 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 				Description: "Site ID.",
 			},
 
-			"hosts": {
+			"host": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Acceleration domain name that needs to modify the certificate configuration.",
 			},
 
-			"cert_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "ID of the server certificate.Note: This field may return null, indicating that no valid values can be obtained.",
-			},
-			"alias": {
-				Type:        schema.TypeString,
+			"server_cert_info": {
 				Optional:    true,
-				Description: "Alias of the certificate.Note: This field may return null, indicating that no valid values can be obtained.",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate; Note: This field may return `null`, indicating that no valid value can be obtained.",
-			},
-			"expire_time": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Time when the certificate expires.Note: This field may return null, indicating that no valid values can be obtained.",
-			},
-			"deploy_time": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Time when the certificate is deployed.Note: This field may return null, indicating that no valid values can be obtained.",
-			},
-			"sign_algo": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Signature algorithm.Note: This field may return null, indicating that no valid values can be obtained.",
-			},
-			"common_name": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Domain name of the certificate.Note: This field may return `null`, indicating that no valid value can be obtained.",
+				Type:        schema.TypeList,
+				Description: "SSL certificate configuration, this parameter takes effect only when mode = sslcert, just enter the corresponding CertId. You can go to the SSL certificate list to view the CertId.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cert_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of the server certificate.Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"alias": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Alias of the certificate.Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Type of the certificate. Values:&amp;lt;li&amp;gt;`default`: Default certificate&amp;lt;/lil&amp;gt;&amp;lt;li&amp;gt;`upload`: Specified certificate&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`managed`: Tencent Cloud-managed certificate&amp;lt;/li&amp;gt;Note: This field may return `null`, indicating that no valid value can be obtained.",
+						},
+						"expire_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time when the certificate expires.Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"deploy_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Time when the certificate is deployed.Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"sign_algo": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Signature algorithm.Note: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"common_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Domain name of the certificate.Note: This field may return `null`, indicating that no valid value can be obtained.",
+						},
+					},
+				},
 			},
 
 			"mode": {
@@ -114,7 +123,6 @@ func resourceTencentCloudTeoCertificateCreate(d *schema.ResourceData, meta inter
 	var (
 		zoneId string
 		host   string
-		certId string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -123,11 +131,8 @@ func resourceTencentCloudTeoCertificateCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("host"); ok {
 		host = v.(string)
 	}
-	if v, ok := d.GetOk("cert_id"); ok {
-		certId = v.(string)
-	}
 
-	d.SetId(zoneId + FILED_SP + host + FILED_SP + certId)
+	d.SetId(zoneId + FILED_SP + host)
 
 	return resourceTencentCloudTeoCertificateUpdate(d, meta)
 }
@@ -143,67 +148,79 @@ func resourceTencentCloudTeoCertificateRead(d *schema.ResourceData, meta interfa
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
 	host := idSplit[1]
-	// certId := idSplit[2]
 
-	certificate, err := service.DescribeTeoAccelerationDomainById(ctx, zoneId, host)
+	accelerationDomain, err := service.DescribeTeoAccelerationDomainById(ctx, zoneId, host)
 	if err != nil {
 		return err
 	}
 
-	if certificate == nil {
+	if accelerationDomain == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `TeoCertificate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if certificate.ZoneId != nil {
-		_ = d.Set("zone_id", certificate.ZoneId)
+	if accelerationDomain.ZoneId != nil {
+		_ = d.Set("zone_id", accelerationDomain.ZoneId)
 	}
 
-	if certificate.DomainName != nil {
-		_ = d.Set("hosts", certificate.DomainName)
+	if accelerationDomain.DomainName != nil {
+		_ = d.Set("host", accelerationDomain.DomainName)
 	}
 
-	// if certificate.ServerCertInfo != nil {
-	// 	for _, serverCertInfo := range certificate.ServerCertInfo {
-	// 		if serverCertInfo.CertId != nil && serverCertInfo.CertId == certId {
-	// 			_ = d.Set("cert_id", serverCertInfo.CertId)
+	if accelerationDomain.Certificate != nil {
+		certificate := accelerationDomain.Certificate
+		zone, err := service.DescribeTeoZone(ctx, zoneId)
+		if err != nil {
+			return err
+		}
 
-	// 			if serverCertInfo.Alias != nil {
-	// 				_ = d.Set("alias", serverCertInfo.Alias)
-	// 			}
+		serverCertInfoList := []interface{}{}
+		for _, serverCertInfo := range certificate.List {
+			serverCertInfoMap := map[string]interface{}{}
 
-	// 			if serverCertInfo.Type != nil {
-	// 				_ = d.Set("type", serverCertInfo.Type)
-	// 			}
+			if serverCertInfo.CertId != nil {
+				serverCertInfoMap["cert_id"] = serverCertInfo.CertId
+			}
 
-	// 			if serverCertInfo.ExpireTime != nil {
-	// 				_ = d.Set("expire_time", serverCertInfo.ExpireTime)
-	// 			}
+			if serverCertInfo.Alias != nil {
+				serverCertInfoMap["alias"] = serverCertInfo.Alias
+			}
 
-	// 			if serverCertInfo.DeployTime != nil {
-	// 				_ = d.Set("deploy_time", serverCertInfo.DeployTime)
-	// 			}
+			if serverCertInfo.Type != nil {
+				serverCertInfoMap["type"] = serverCertInfo.Type
+			}
 
-	// 			if serverCertInfo.SignAlgo != nil {
-	// 				_ = d.Set("sign_algo", serverCertInfo.SignAlgo)
-	// 			}
+			if serverCertInfo.ExpireTime != nil {
+				serverCertInfoMap["expire_time"] = serverCertInfo.ExpireTime
+			}
 
-	// 			if serverCertInfo.CommonName != nil {
-	// 				_ = d.Set("common_name", serverCertInfo.CommonName)
-	// 			}
-	// 		}
-	// 	}
-	// }
+			if serverCertInfo.DeployTime != nil {
+				serverCertInfoMap["deploy_time"] = serverCertInfo.DeployTime
+			}
 
-	// if certificate.Mode != nil {
-	// 	_ = d.Set("mode", certificate.Mode)
-	// }
+			if serverCertInfo.SignAlgo != nil {
+				serverCertInfoMap["sign_algo"] = serverCertInfo.SignAlgo
+			}
+
+			if zone.ZoneName != nil {
+				serverCertInfoMap["common_name"] = zone.ZoneName
+			}
+
+			serverCertInfoList = append(serverCertInfoList, serverCertInfoMap)
+		}
+
+		_ = d.Set("server_cert_info", serverCertInfoList)
+
+		if certificate.Mode != nil {
+			_ = d.Set("mode", certificate.Mode)
+		}
+	}
 
 	return nil
 }
@@ -213,42 +230,50 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := teo.NewModifyHostsCertificateRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	zoneId := idSplit[0]
 	host := idSplit[1]
-	certId := idSplit[2]
 
 	request.ZoneId = &zoneId
 	request.Hosts = []*string{&host}
 
-	serverCertInfo := teo.ServerCertInfo{}
-	serverCertInfo.CertId = &certId
-
-	if v, ok := d.GetOk("alias"); ok {
-		serverCertInfo.Alias = helper.String(v.(string))
+	if d.HasChange("server_cert_info") {
+		if v, ok := d.GetOk("server_cert_info"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				serverCertInfo := teo.ServerCertInfo{}
+				if v, ok := dMap["cert_id"]; ok {
+					serverCertInfo.CertId = helper.String(v.(string))
+				}
+				if v, ok := dMap["alias"]; ok {
+					serverCertInfo.Alias = helper.String(v.(string))
+				}
+				if v, ok := dMap["type"]; ok {
+					serverCertInfo.Type = helper.String(v.(string))
+				}
+				if v, ok := dMap["expire_time"]; ok {
+					serverCertInfo.ExpireTime = helper.String(v.(string))
+				}
+				if v, ok := dMap["deploy_time"]; ok {
+					serverCertInfo.DeployTime = helper.String(v.(string))
+				}
+				if v, ok := dMap["sign_algo"]; ok {
+					serverCertInfo.SignAlgo = helper.String(v.(string))
+				}
+				if v, ok := dMap["common_name"]; ok {
+					serverCertInfo.CommonName = helper.String(v.(string))
+				}
+				request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
+			}
+		}
 	}
-	if v, ok := d.GetOk("type"); ok {
-		serverCertInfo.Type = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("expire_time"); ok {
-		serverCertInfo.ExpireTime = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("deploy_time"); ok {
-		serverCertInfo.DeployTime = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("sign_algo"); ok {
-		serverCertInfo.SignAlgo = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("common_name"); ok {
-		serverCertInfo.CommonName = helper.String(v.(string))
-	}
-	request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyHostsCertificate(request)
@@ -261,6 +286,12 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s update teo certificate failed, reason:%+v", logId, err)
+		return err
+	}
+
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, host)
+	if err != nil {
 		return err
 	}
 
