@@ -25,3 +25,11 @@ tencentcloud_cfw_vpc_instance
 ```release-note:new-resource
 tencentcloud_cfw_vpc_policy
 ```
+
+```release-note:new-resource
+tencentcloud_cfw_sync_asset
+```
+
+```release-note:new-resource
+tencentcloud_cfw_sync_route
+```
