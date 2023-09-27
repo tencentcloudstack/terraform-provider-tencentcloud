@@ -1052,7 +1052,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.655
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
@@ -1094,7 +1094,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.754
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1153,7 +1153,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.535
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
@@ -1237,10 +1237,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.691
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.746
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.732
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.755
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
@@ -1249,7 +1249,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.749
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.754

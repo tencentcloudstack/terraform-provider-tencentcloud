@@ -1322,6 +1322,7 @@ Real User Monitoring(RUM)
 Cloud Streaming Services(CSS)
   Resource
     tencentcloud_css_watermark
+	tencentcloud_css_watermark_rule_attachment
 	tencentcloud_css_pull_stream_task
 	tencentcloud_css_live_transcode_template
 	tencentcloud_css_live_transcode_rule_attachment
@@ -1451,6 +1452,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_trocket_rocketmq_instance
 	tencentcloud_trocket_rocketmq_topic
 	tencentcloud_trocket_rocketmq_consumer_group
+	tencentcloud_trocket_rocketmq_role
 
 TDMQ for RabbitMQ(trabbit)
   Resource
@@ -1600,6 +1602,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_gateway_routes
 	tencentcloud_tse_gateway_canary_rules
 	tencentcloud_tse_gateway_services
+	tencentcloud_tse_gateway_certificates
 
   Resource
 	tencentcloud_tse_instance
@@ -1610,6 +1613,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_cngw_service_rate_limit
 	tencentcloud_tse_cngw_route
 	tencentcloud_tse_cngw_route_rate_limit
+	tencentcloud_tse_cngw_certificate
 
 ClickHouse(CDWCH)
   Data Source
@@ -2301,6 +2305,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_tse_gateway_services":                      dataSourceTencentCloudTseGatewayServices(),
+			"tencentcloud_tse_gateway_certificates":                  dataSourceTencentCloudTseGatewayCertificates(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2889,6 +2894,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdcpg_cluster":                                       resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                      resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                                       resourceTencentCloudCssWatermark(),
+			"tencentcloud_css_watermark_rule_attachment":                       resourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                resourceTencentCloudCssPullStreamTask(),
 			"tencentcloud_css_live_transcode_template":                         resourceTencentCloudCssLiveTranscodeTemplate(),
 			"tencentcloud_css_live_transcode_rule_attachment":                  resourceTencentCloudCssLiveTranscodeRuleAttachment(),
@@ -2930,6 +2936,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_trocket_rocketmq_instance":                           resourceTencentCloudTrocketRocketmqInstance(),
 			"tencentcloud_trocket_rocketmq_topic":                              resourceTencentCloudTrocketRocketmqTopic(),
 			"tencentcloud_trocket_rocketmq_consumer_group":                     resourceTencentCloudTrocketRocketmqConsumerGroup(),
+			"tencentcloud_trocket_rocketmq_role":                               resourceTencentCloudTrocketRocketmqRole(),
 			"tencentcloud_dts_sync_job":                                        resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                                     resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":                        resourceTencentCloudDtsSyncCheckJobOperation(),
@@ -3075,6 +3082,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route":                                      resourceTencentCloudTseCngwRoute(),
 			"tencentcloud_tse_cngw_route_rate_limit":                           resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                                resourceTencentCloudTseCngwCanaryRule(),
+			"tencentcloud_tse_cngw_certificate":                                resourceTencentCloudTseCngwCertificate(),
 			"tencentcloud_clickhouse_instance":                                 resourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  resourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   resourceTencentCloudClsScheduledSql(),
