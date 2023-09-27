@@ -587,14 +587,19 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("cam_role_name", *config.CamRoleName)
 
 		if config.HostNameSettings != nil {
+			isEmptySettings := true
 			settings := map[string]interface{}{}
 			if config.HostNameSettings.HostName != nil {
+				isEmptySettings = false
 				settings["host_name"] = config.HostNameSettings.HostName
 			}
 			if config.HostNameSettings.HostNameStyle != nil {
+				isEmptySettings = false
 				settings["host_name_style"] = config.HostNameSettings.HostNameStyle
 			}
-			_ = d.Set("host_name_settings", []interface{}{settings})
+			if !isEmptySettings {
+				_ = d.Set("host_name_settings", []interface{}{settings})
+			}
 		}
 
 		if config.InstanceNameSettings != nil {
@@ -703,23 +708,6 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOkExists("public_ip_assigned"); ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
-	}
-
-	request.LoginSettings = &as.LoginSettings{}
-	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("key_ids"); ok {
-		keyIds := v.([]interface{})
-		request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
-		for i := range keyIds {
-			keyId := keyIds[i].(string)
-			request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
-		}
-	}
-	if v, ok := d.GetOk("keep_image_login"); ok {
-		keepImageLogin := v.(bool)
-		request.LoginSettings.KeepImageLogin = &keepImageLogin
 	}
 
 	if v, ok := d.GetOk("security_group_ids"); ok {
@@ -844,6 +832,34 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	} else {
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	loginSettingRequest := as.NewModifyLaunchConfigurationAttributesRequest()
+	loginSettingRequest.LaunchConfigurationId = &configurationId
+	loginSettingRequest.LoginSettings = &as.LoginSettings{}
+	if v, ok := d.GetOk("password"); ok {
+		loginSettingRequest.LoginSettings.Password = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("key_ids"); ok {
+		keyIds := v.([]interface{})
+		loginSettingRequest.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
+		for i := range keyIds {
+			keyId := keyIds[i].(string)
+			loginSettingRequest.LoginSettings.KeyIds = append(loginSettingRequest.LoginSettings.KeyIds, &keyId)
+		}
+	}
+	if v, ok := d.GetOk("keep_image_login"); ok {
+		keepImageLogin := v.(bool)
+		loginSettingRequest.LoginSettings.KeepImageLogin = &keepImageLogin
+	}
+	loginSettingResponse, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().ModifyLaunchConfigurationAttributes(loginSettingRequest)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, loginSettingRequest.GetAction(), loginSettingRequest.ToJsonString(), err.Error())
+		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, loginSettingRequest.GetAction(), loginSettingRequest.ToJsonString(), loginSettingResponse.ToJsonString())
 	}
 
 	return nil

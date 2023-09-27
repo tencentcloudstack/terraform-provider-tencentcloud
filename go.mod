@@ -28,7 +28,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.736
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.655
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
@@ -60,7 +60,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.535
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734
@@ -88,11 +88,11 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.691
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.746
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.732
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.755
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.749
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
