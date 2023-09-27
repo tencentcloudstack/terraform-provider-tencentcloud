@@ -5,18 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_acceleration_domain" "acceleration_domain" {
-  zone_id = ""
-  domain_name = ""
-  origin_info {
-	origin_type = ""
-	origin = ""
-	backup_origin = ""
-	private_access = ""
-	private_parameters {
-		name = ""
-		value = ""
-	}
-  }
+    zone_id     = "zone-2o0i41pv2h8c"
+    domain_name = "aaa.makn.cn"
+
+    origin_info {
+        origin      = "150.109.8.1"
+        origin_type = "IP_DOMAIN"
+    }
 }
 ```
 
@@ -236,10 +231,6 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 		if *instance.DomainStatus == "online" {
 			return nil
 		}
-		// if *instance.DomainStatus == "fail" {
-		// 	return resource.NonRetryableError(fmt.Errorf("AccelerationDomain status is %v, operate failed.",
-		// 		*instance.DomainStatus))
-		// }
 		return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
 	})
 	if err != nil {

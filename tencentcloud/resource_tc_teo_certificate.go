@@ -165,48 +165,40 @@ func resourceTencentCloudTeoCertificateRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("zone_id", certificate.ZoneId)
 	}
 
-	// if certificate.Hosts != nil {
-	// 	_ = d.Set("hosts", certificate.Hosts)
-	// }
+	if certificate.DomainName != nil {
+		_ = d.Set("hosts", certificate.DomainName)
+	}
 
 	// if certificate.ServerCertInfo != nil {
-	// 	serverCertInfoList := []interface{}{}
 	// 	for _, serverCertInfo := range certificate.ServerCertInfo {
-	// 		serverCertInfoMap := map[string]interface{}{}
+	// 		if serverCertInfo.CertId != nil && serverCertInfo.CertId == certId {
+	// 			_ = d.Set("cert_id", serverCertInfo.CertId)
 
-	// 		if certificate.ServerCertInfo.CertId != nil {
-	// 			serverCertInfoMap["cert_id"] = certificate.ServerCertInfo.CertId
+	// 			if serverCertInfo.Alias != nil {
+	// 				_ = d.Set("alias", serverCertInfo.Alias)
+	// 			}
+
+	// 			if serverCertInfo.Type != nil {
+	// 				_ = d.Set("type", serverCertInfo.Type)
+	// 			}
+
+	// 			if serverCertInfo.ExpireTime != nil {
+	// 				_ = d.Set("expire_time", serverCertInfo.ExpireTime)
+	// 			}
+
+	// 			if serverCertInfo.DeployTime != nil {
+	// 				_ = d.Set("deploy_time", serverCertInfo.DeployTime)
+	// 			}
+
+	// 			if serverCertInfo.SignAlgo != nil {
+	// 				_ = d.Set("sign_algo", serverCertInfo.SignAlgo)
+	// 			}
+
+	// 			if serverCertInfo.CommonName != nil {
+	// 				_ = d.Set("common_name", serverCertInfo.CommonName)
+	// 			}
 	// 		}
-
-	// 		if certificate.ServerCertInfo.Alias != nil {
-	// 			serverCertInfoMap["alias"] = certificate.ServerCertInfo.Alias
-	// 		}
-
-	// 		if certificate.ServerCertInfo.Type != nil {
-	// 			serverCertInfoMap["type"] = certificate.ServerCertInfo.Type
-	// 		}
-
-	// 		if certificate.ServerCertInfo.ExpireTime != nil {
-	// 			serverCertInfoMap["expire_time"] = certificate.ServerCertInfo.ExpireTime
-	// 		}
-
-	// 		if certificate.ServerCertInfo.DeployTime != nil {
-	// 			serverCertInfoMap["deploy_time"] = certificate.ServerCertInfo.DeployTime
-	// 		}
-
-	// 		if certificate.ServerCertInfo.SignAlgo != nil {
-	// 			serverCertInfoMap["sign_algo"] = certificate.ServerCertInfo.SignAlgo
-	// 		}
-
-	// 		if certificate.ServerCertInfo.CommonName != nil {
-	// 			serverCertInfoMap["common_name"] = certificate.ServerCertInfo.CommonName
-	// 		}
-
-	// 		serverCertInfoList = append(serverCertInfoList, serverCertInfoMap)
 	// 	}
-
-	// 	_ = d.Set("server_cert_info", serverCertInfoList)
-
 	// }
 
 	// if certificate.Mode != nil {

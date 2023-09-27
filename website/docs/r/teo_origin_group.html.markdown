@@ -37,7 +37,7 @@ The following arguments are supported:
 * `origin_group_name` - (Required, String) OriginGroup Name.
 * `origin_records` - (Required, List) Origin site records.
 * `origin_type` - (Required, String) Type of the origin site. Valid values:- `self`: self-build website.- `cos`: tencent cos.- `third_party`: third party cos.
-* `zone_id` - (Required, String) Site ID.
+* `zone_id` - (Required, String, ForceNew) Site ID.
 
 The `origin_records` object supports the following:
 

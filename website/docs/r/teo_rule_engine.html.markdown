@@ -140,7 +140,7 @@ The following arguments are supported:
 * `rule_name` - (Required, String) The rule name (1 to 255 characters).
 * `rules` - (Required, List) Rule items list.
 * `status` - (Required, String) Rule status. Values: `enable`: Enabled; `disable`: Disabled.
-* `zone_id` - (Required, String) ID of the site.
+* `zone_id` - (Required, String, ForceNew) ID of the site.
 * `tags` - (Optional, Set: [`String`]) rule tag list.
 
 The `actions` object supports the following:

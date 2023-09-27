@@ -53,6 +53,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Site ID.",
 			},
 
@@ -357,14 +358,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	request.ZoneId = &zoneId
 	request.OriginGroupId = &originGroupId
 
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
-	}
-
-	if d.HasChange("origin_group_id") {
-		return fmt.Errorf("`origin_group_id` do not support change now.")
-	}
-
 	if v, ok := d.GetOk("origin_group_name"); ok {
 		request.OriginGroupName = helper.String(v.(string))
 	}
@@ -377,45 +370,43 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 		request.ConfigurationType = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_records") {
-		if v, ok := d.GetOk("origin_records"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				originRecord := teo.OriginRecord{}
-				if v, ok := dMap["record"]; ok {
-					originRecord.Record = helper.String(v.(string))
-				}
-				if v, ok := dMap["port"]; ok {
-					originRecord.Port = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["weight"]; ok {
-					originRecord.Weight = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["area"]; ok {
-					areaSet := v.(*schema.Set).List()
-					for i := range areaSet {
-						area := areaSet[i].(string)
-						originRecord.Area = append(originRecord.Area, &area)
-					}
-				}
-				if v, ok := dMap["private"]; ok {
-					originRecord.Private = helper.Bool(v.(bool))
-				}
-				if v, ok := dMap["private_parameter"]; ok {
-					for _, item := range v.([]interface{}) {
-						PrivateParameterMap := item.(map[string]interface{})
-						originRecordPrivateParameter := teo.PrivateParameter{}
-						if v, ok := PrivateParameterMap["name"]; ok {
-							originRecordPrivateParameter.Name = helper.String(v.(string))
-						}
-						if v, ok := PrivateParameterMap["value"]; ok {
-							originRecordPrivateParameter.Value = helper.String(v.(string))
-						}
-						originRecord.PrivateParameters = append(originRecord.PrivateParameters, &originRecordPrivateParameter)
-					}
-				}
-				request.OriginRecords = append(request.OriginRecords, &originRecord)
+	if v, ok := d.GetOk("origin_records"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			originRecord := teo.OriginRecord{}
+			if v, ok := dMap["record"]; ok {
+				originRecord.Record = helper.String(v.(string))
 			}
+			if v, ok := dMap["port"]; ok {
+				originRecord.Port = helper.IntUint64(v.(int))
+			}
+			if v, ok := dMap["weight"]; ok {
+				originRecord.Weight = helper.IntUint64(v.(int))
+			}
+			if v, ok := dMap["area"]; ok {
+				areaSet := v.(*schema.Set).List()
+				for i := range areaSet {
+					area := areaSet[i].(string)
+					originRecord.Area = append(originRecord.Area, &area)
+				}
+			}
+			if v, ok := dMap["private"]; ok {
+				originRecord.Private = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["private_parameter"]; ok {
+				for _, item := range v.([]interface{}) {
+					PrivateParameterMap := item.(map[string]interface{})
+					originRecordPrivateParameter := teo.PrivateParameter{}
+					if v, ok := PrivateParameterMap["name"]; ok {
+						originRecordPrivateParameter.Name = helper.String(v.(string))
+					}
+					if v, ok := PrivateParameterMap["value"]; ok {
+						originRecordPrivateParameter.Value = helper.String(v.(string))
+					}
+					originRecord.PrivateParameters = append(originRecord.PrivateParameters, &originRecordPrivateParameter)
+				}
+			}
+			request.OriginRecords = append(request.OriginRecords, &originRecord)
 		}
 	}
 

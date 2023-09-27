@@ -133,6 +133,15 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				},
 			},
 
+			"name_servers": {
+				Type: schema.TypeList,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Computed:    true,
+				Description: "NS list allocated by Tencent Cloud.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -147,6 +156,7 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request  = teo.NewCreateZoneRequest()
@@ -199,6 +209,21 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	zoneId = *response.Response.ZoneId
 	d.SetId(zoneId)
 
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoZone(ctx, zoneId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "pending" {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("zone status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
+	}
+
 	if zoneId != "" && planId == "" {
 		planRequest := teo.NewCreatePlanForZoneRequest()
 		planRequest.ZoneId = &zoneId
@@ -223,7 +248,15 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if v, _ := d.GetOkExists("paused"); v != nil {
+		if v.(bool) {
+			err := service.ModifyZoneStatus(ctx, zoneId, v.(bool), "create")
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		resourceName := fmt.Sprintf("qcs::teo::uin/:zone/%s", zoneId)
@@ -288,9 +321,8 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if zone.OwnershipVerification != nil {
-		ownershipVerificationMap := map[string]interface{}{}
-
 		if zone.OwnershipVerification.DnsVerification != nil {
+			ownershipVerificationMap := map[string]interface{}{}
 			dnsVerificationMap := map[string]interface{}{}
 
 			if zone.OwnershipVerification.DnsVerification.Subdomain != nil {
@@ -306,9 +338,13 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 			}
 
 			ownershipVerificationMap["dns_verification"] = []interface{}{dnsVerificationMap}
-		}
+			_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
 
-		_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
+		}
+	}
+
+	if zone.Status != nil {
+		_ = d.Set("name_servers", zone.NameServers)
 	}
 
 	if zone.Status != nil {
@@ -332,6 +368,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	request := teo.NewModifyZoneRequest()
 
@@ -346,47 +383,61 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		log.Printf("[WARN] change `plan_type` is not supported now.")
 	}
 
-	if d.HasChange("type") {
-		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
+	if d.HasChange("type") || d.HasChange("alias_zone_name") || d.HasChange("area") {
+		if d.HasChange("type") {
+			if v, ok := d.GetOk("type"); ok {
+				request.Type = helper.String(v.(string))
+			}
 		}
-	}
 
-	if d.HasChange("alias_zone_name") {
-		if v, ok := d.GetOk("alias_zone_name"); ok {
-			request.AliasZoneName = helper.String(v.(string))
+		if d.HasChange("alias_zone_name") {
+			if v, ok := d.GetOk("alias_zone_name"); ok {
+				request.AliasZoneName = helper.String(v.(string))
+			}
 		}
-	}
 
-	if d.HasChange("area") {
-		if v, ok := d.GetOk("area"); ok {
-			request.Area = helper.String(v.(string))
+		if d.HasChange("area") {
+			if v, ok := d.GetOk("area"); ok {
+				request.Area = helper.String(v.(string))
+			}
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZone(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZone(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, err)
-		return err
+		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := service.DescribeTeoZone(ctx, zoneId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if *instance.Status == "pending" {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("zone status is %v, retry...", *instance.Status))
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("paused") {
-		if v := d.Get("paused"); v != nil {
-			req := teo.NewModifyZoneStatusRequest()
-			req.ZoneId, req.Paused = &zoneId, helper.Bool(v.(bool))
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneStatus(req)
-			if e != nil {
-				log.Printf("[CRITAL]%s modify zone status failed, reason:%+v", logId, err)
+		if v, _ := d.GetOkExists("paused"); v != nil {
+			err := service.ModifyZoneStatus(ctx, zoneId, v.(bool), "update")
+			if err != nil {
 				return err
 			}
 		}
@@ -416,7 +467,19 @@ func resourceTencentCloudTeoZoneDelete(d *schema.ResourceData, meta interface{})
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	zoneId := d.Id()
 
-	if err := service.DeleteTeoZoneById(ctx, zoneId); err != nil {
+	instance, err := service.DescribeTeoZone(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+
+	if !*instance.Paused {
+		err := service.ModifyZoneStatus(ctx, zoneId, true, "delete")
+		if err != nil {
+			return err
+		}
+	}
+
+	if err = service.DeleteTeoZoneById(ctx, zoneId); err != nil {
 		return err
 	}
 

@@ -868,6 +868,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.751/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.754/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.755/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.756/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.757 h1:of7Y1Y0cSNqUEMrJc7ekHEIa9QRqvk1rwpcoY+GQhX8=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.757/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.759 h1:flWgFybB3MYWFxwRO4yXbdiPT3SNwjSLuXCXsfs6kN4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.759/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
@@ -962,6 +964,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730 h1:isKxaxm
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730/go.mod h1:vA9wf067VO5kkEjUgViUw/VA0ALUXE/wbSI1baeuHpI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.756 h1:YnmjI1ZLT/gk5NiMnYZXDSVJ3MuO0tXO8uEvEjT1CuM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.756/go.mod h1:UpuvGS4BwQ6p/S//aGIiMOE9p7h0izyu9IKLCe55A4M=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.757 h1:nnuJhiXPlzZJLBVUKpnxaZM25sM8AokYH75SU70y+Uw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.757/go.mod h1:VMLUndxJ4wrBL0Ur2R/GHr1joX9yibNCQOo9aqMvyjo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759 h1:frH1xtZwfswnLG84y3FjJLgJBgGewG/A3OYVUN5vYus=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759/go.mod h1:+YUTVPhy9Lk8SutYIj4pKpO33HpdFMLs0Y3Cg1a+6qQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756 h1:89M6uA8Y/FC1b88TFxvRManGW+i62Isqg1lW8HjHDvU=

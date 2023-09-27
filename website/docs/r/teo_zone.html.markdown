@@ -45,6 +45,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `name_servers` - NS list allocated by Tencent Cloud.
 * `ownership_verification` - Ownership verification information. Note: This field may return null, indicating that no valid value can be obtained.
   * `dns_verification` - CNAME access, using DNS to resolve the information required for authentication. For details, please refer to [Site/Domain Name Ownership Verification ](https://cloud.tencent.com/document/product/1552/70789#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, indicating that no valid value can be obtained.
     * `record_type` - Record type.

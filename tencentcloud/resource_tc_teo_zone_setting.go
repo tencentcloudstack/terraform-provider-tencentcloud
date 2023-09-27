@@ -633,20 +633,14 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_teo_zone_setting.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var zoneId string
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
 
 	d.SetId(zoneId)
-	err := resourceTencentCloudTeoZoneSettingUpdate(d, meta)
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
-		return err
-	}
-	return resourceTencentCloudTeoZoneSettingRead(d, meta)
+
+	return resourceTencentCloudTeoZoneSettingUpdate(d, meta)
 }
 
 func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interface{}) error {

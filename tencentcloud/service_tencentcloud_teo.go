@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -746,4 +746,69 @@ func (me *TeoService) DeleteTeoAccelerationDomainById(ctx context.Context, zoneI
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *TeoService) DescribeIdentifications(ctx context.Context, domain string) (identifications []*teo.Identification, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = teo.NewDescribeIdentificationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.Filters = append(
+		request.Filters,
+		&teo.Filter{
+			Name:   helper.String("zone-name"),
+			Values: []*string{&domain},
+		},
+	)
+
+	response, err := me.client.UseTeoClient().DescribeIdentifications(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	identifications = response.Response.Identifications
+	return
+}
+
+func (me *TeoService) ModifyZoneStatus(ctx context.Context, zoneId string, paused bool, operate string) error {
+	logId := getLogId(ctx)
+
+	req := teo.NewModifyZoneStatusRequest()
+	req.ZoneId, req.Paused = &zoneId, helper.Bool(paused)
+	_, e := me.client.UseTeoClient().ModifyZoneStatus(req)
+	if e != nil {
+		log.Printf("[CRITAL]%s modify zone status failed, reason:%+v", logId, e)
+		return e
+	}
+
+	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := me.DescribeTeoZone(ctx, zoneId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if operate == "delete" {
+			if *instance.ActiveStatus == "paused" {
+				return nil
+			}
+		} else {
+			if *instance.ActiveStatus == "inactive" || *instance.ActiveStatus == "paused" {
+				return nil
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("zone status is %v, retry...", *instance.ActiveStatus))
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

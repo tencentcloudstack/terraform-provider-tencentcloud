@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTeoZoneSetting_basic -v
+// go test -test.run TestAccTencentCloudTeoZoneSetting_basic -v
 func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers: testAccProviders,
@@ -21,7 +20,7 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 				Config: testAccTeoZoneSetting,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", " cache.0.cache.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.#", "1"),
@@ -72,7 +71,6 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "upstream_http2.0.switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "web_socket.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "web_socket.0.switch", "off"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "web_socket.0.timeout", "30"),
 				),
 			},
 			{
@@ -84,7 +82,7 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 				Config: testAccTeoZoneSettingUp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone_setting.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", " cache.0.cache.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.#", "1"),
@@ -158,15 +156,10 @@ func testAccCheckZoneSettingExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoZoneSettingVar = `
-variable "zone_id" {
-  default = "` + defaultZoneId + `"
-}`
-
-const testAccTeoZoneSetting = testAccTeoZoneSettingVar + `
+const testAccTeoZoneSetting = testAccTeoZone + `
 
 resource "tencentcloud_teo_zone_setting" "basic" {
-  zone_id = var.zone_id
+  zone_id = tencentcloud_teo_zone.basic.id
 
   cache {
     follow_origin {
@@ -255,16 +248,15 @@ resource "tencentcloud_teo_zone_setting" "basic" {
 
   web_socket {
     switch  = "off"
-    timeout = 30
   }
 }
 
 `
 
-const testAccTeoZoneSettingUp = testAccTeoZoneSettingVar + `
+const testAccTeoZoneSettingUp = testAccTeoZone + `
 
 resource "tencentcloud_teo_zone_setting" "basic" {
-  zone_id = var.zone_id
+  zone_id = tencentcloud_teo_zone.basic.id
 
   cache {
     follow_origin {
