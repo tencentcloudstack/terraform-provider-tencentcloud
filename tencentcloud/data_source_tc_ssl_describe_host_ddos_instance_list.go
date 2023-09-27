@@ -1,12 +1,12 @@
 /*
-Use this data source to query detailed information of ssl describe_host_cos_instance_list
+Use this data source to query detailed information of ssl describe_host_ddos_instance_list
 
 Example Usage
 
 ```hcl
-data "tencentcloud_ssl_describe_host_cos_instance_list" "describe_host_cos_instance_list" {
+data "tencentcloud_ssl_describe_host_ddos_instance_list" "describe_host_ddos_instance_list" {
   certificate_id = "8u8DII0l"
-  resource_type = "cos"
+  resource_type = "ddos"
 }
 ```
 */
@@ -20,9 +20,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
+func dataSourceTencentCloudSslDescribeHostDdosInstanceList() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSslDescribeHostCosInstanceListRead,
+		Read: dataSourceTencentCloudSslDescribeHostDdosInstanceListRead,
 		Schema: map[string]*schema.Schema{
 			"certificate_id": {
 				Required:    true,
@@ -33,7 +33,7 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 			"resource_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Deploy resource type cos.",
+				Description: "Deploy resource type.",
 			},
 
 			"is_cache": {
@@ -45,7 +45,7 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "List of filter parameters.",
+				Description: "List of filtering parameters; Filterkey: domainmatch.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"filter_key": {
@@ -62,10 +62,16 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 				},
 			},
 
+			"old_certificate_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Deployed certificate ID.",
+			},
+
 			"instance_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "COS instance listNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+				Description: "DDOS example listNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"domain": {
@@ -73,46 +79,28 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 							Computed:    true,
 							Description: "domain name.",
 						},
+						"instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance ID.",
+						},
+						"protocol": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "agreement type.",
+						},
 						"cert_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Binded certificate IDNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+							Description: "Certificate IDNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
-						"status": {
+						"virtual_port": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Enabled: domain name online statusDisabled: Domain name offline status.",
-						},
-						"bucket": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Reserve bucket nameNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-						},
-						"region": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Barrel areaNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+							Description: "Forwarding port.",
 						},
 					},
 				},
-			},
-
-			"async_total_num": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "The total number of asynchronous refreshNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"async_offset": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Asynchronous refresh current execution numberNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"async_cache_time": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Current cache read timeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 			},
 
 			"result_output_file": {
@@ -124,8 +112,8 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssl_describe_host_cos_instance_list.read")()
+func dataSourceTencentCloudSslDescribeHostDdosInstanceListRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_ssl_describe_host_ddos_instance_list.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -164,12 +152,16 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 		paramMap["filters"] = tmpSet
 	}
 
+	if v, ok := d.GetOk("old_certificate_id"); ok {
+		paramMap["OldCertificateId"] = helper.String(v.(string))
+	}
+
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList *ssl.DescribeHostCosInstanceListResponseParams
+	var instanceList []*ssl.DdosInstanceDetail
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeSslDescribeHostCosInstanceListByFilter(ctx, paramMap)
+		result, e := service.DescribeSslDescribeHostDdosInstanceListByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -180,50 +172,38 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 		return err
 	}
 
-	ids := make([]string, 0, len(instanceList.InstanceList))
-	tmpList := make([]map[string]interface{}, 0, len(instanceList.InstanceList))
+	ids := make([]string, 0, len(instanceList))
+	tmpList := make([]map[string]interface{}, 0, len(instanceList))
 
-	if instanceList != nil && instanceList.InstanceList != nil {
-		for _, cosInstanceDetail := range instanceList.InstanceList {
-			cosInstanceDetailMap := map[string]interface{}{}
+	if instanceList != nil {
+		for _, ddosInstanceDetail := range instanceList {
+			ddosInstanceDetailMap := map[string]interface{}{}
 
-			if cosInstanceDetail.Domain != nil {
-				cosInstanceDetailMap["domain"] = cosInstanceDetail.Domain
+			if ddosInstanceDetail.Domain != nil {
+				ddosInstanceDetailMap["domain"] = ddosInstanceDetail.Domain
 			}
 
-			if cosInstanceDetail.CertId != nil {
-				cosInstanceDetailMap["cert_id"] = cosInstanceDetail.CertId
+			if ddosInstanceDetail.InstanceId != nil {
+				ddosInstanceDetailMap["instance_id"] = ddosInstanceDetail.InstanceId
 			}
 
-			if cosInstanceDetail.Status != nil {
-				cosInstanceDetailMap["status"] = cosInstanceDetail.Status
+			if ddosInstanceDetail.Protocol != nil {
+				ddosInstanceDetailMap["protocol"] = ddosInstanceDetail.Protocol
 			}
 
-			if cosInstanceDetail.Bucket != nil {
-				cosInstanceDetailMap["bucket"] = cosInstanceDetail.Bucket
+			if ddosInstanceDetail.CertId != nil {
+				ddosInstanceDetailMap["cert_id"] = ddosInstanceDetail.CertId
 			}
 
-			if cosInstanceDetail.Region != nil {
-				cosInstanceDetailMap["region"] = cosInstanceDetail.Region
+			if ddosInstanceDetail.VirtualPort != nil {
+				ddosInstanceDetailMap["virtual_port"] = ddosInstanceDetail.VirtualPort
 			}
 
-			ids = append(ids, *cosInstanceDetail.CertId)
-			tmpList = append(tmpList, cosInstanceDetailMap)
+			ids = append(ids, *ddosInstanceDetail.InstanceId)
+			tmpList = append(tmpList, ddosInstanceDetailMap)
 		}
 
 		_ = d.Set("instance_list", tmpList)
-	}
-
-	if instanceList.AsyncTotalNum != nil {
-		_ = d.Set("async_total_num", instanceList.AsyncTotalNum)
-	}
-
-	if instanceList.AsyncOffset != nil {
-		_ = d.Set("async_offset", instanceList.AsyncOffset)
-	}
-
-	if instanceList.AsyncCacheTime != nil {
-		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

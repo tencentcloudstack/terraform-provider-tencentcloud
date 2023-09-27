@@ -5,24 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_cdn_instance_list" "describe_host_cdn_instance_list" {
-  certificate_id = ""
-  resource_type = ""
-  is_cache =
-  filters {
-		filter_key = ""
-		filter_value = ""
-
-  }
-  old_certificate_id = ""
-  async_cache =
-        }
+  certificate_id = "8u8DII0l"
+  resource_type = "cdn"
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -245,7 +236,6 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 	if instanceList.AsyncCacheTime != nil {
 		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
 	}
-	fmt.Println(ids)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output3, ok := d.GetOk("result_output_file")
 	if ok && output3.(string) != "" {

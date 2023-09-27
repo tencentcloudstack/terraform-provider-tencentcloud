@@ -5,16 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_clb_instance_list" "describe_host_clb_instance_list" {
-  certificate_id = ""
-  is_cache =
-  filters {
-		filter_key = ""
-		filter_value = ""
-
-  }
-  async_cache =
-  old_certificate_id = ""
-        }
+  certificate_id = "8u8DII0l"
+}
 ```
 */
 package tencentcloud
