@@ -221,3 +221,365 @@ func (me *CfwService) DeleteCfwEdgePolicyById(ctx context.Context, uuid string) 
 
 	return
 }
+
+func (me *CfwService) DescribeCfwNatInstanceById(ctx context.Context, natinsId string) (natInstance *cfw.NatInstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeNatFwInstancesInfoRequest()
+	request.Offset = common.Int64Ptr(0)
+	request.Limit = common.Int64Ptr(10)
+	request.Filter = []*cfw.NatFwFilter{
+		{
+			FilterType:    common.StringPtr("NatinsId"),
+			FilterContent: common.StringPtr(natinsId),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeNatFwInstancesInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NatinsLst) < 1 {
+		return
+	}
+
+	natInstance = response.Response.NatinsLst[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwEipsById(ctx context.Context, instanceId string) (gwList []string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeCfwEipsRequest()
+	request.Mode = common.Uint64Ptr(1)
+	request.NatGatewayId = common.StringPtr("ALL")
+	request.CfwInstance = common.StringPtr(instanceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeCfwEips(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NatFwEipList) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.NatFwEipList {
+		gwList = append(gwList, *item.NatGatewayId)
+	}
+
+	return
+}
+
+func (me *CfwService) DeleteCfwNatInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDeleteNatFwInstanceRequest()
+	request.CfwInstance = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DeleteNatFwInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CfwService) DescribeNatFwVpcDnsLstById(ctx context.Context, instanceId string) (vpcList []string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeNatFwVpcDnsLstRequest()
+	request.NatFwInsId = &instanceId
+	request.Offset = common.Int64Ptr(0)
+	request.Limit = common.Int64Ptr(10)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeNatFwVpcDnsLst(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.VpcDnsSwitchLst) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.VpcDnsSwitchLst {
+		vpcList = append(vpcList, *item.VpcId)
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwNatPolicyById(ctx context.Context, uuid string) (natPolicy *cfw.DescAcItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeNatAcRuleRequest()
+	request.Limit = common.Uint64Ptr(20)
+	request.Offset = common.Uint64Ptr(0)
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("Id"),
+			Values:       common.StringPtrs([]string{uuid}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeNatAcRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	natPolicy = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) DeleteCfwNatPolicyById(ctx context.Context, uuid string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewRemoveNatAcRuleRequest()
+	uuidInt, _ := strconv.ParseInt(uuid, 10, 64)
+	request.RuleUuid = common.Int64Ptrs([]int64{uuidInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().RemoveNatAcRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcInstanceById(ctx context.Context, fwGroupId string) (vpcInstance *cfw.VpcFwGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeFwGroupInstanceInfoRequest()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("FwGroupId"),
+			Values:       common.StringPtrs([]string{fwGroupId}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+	request.Limit = common.Int64Ptr(10)
+	request.Offset = common.Int64Ptr(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeFwGroupInstanceInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.VpcFwGroupLst) < 1 {
+		return
+	}
+
+	vpcInstance = response.Response.VpcFwGroupLst[0]
+	return
+}
+
+func (me *CfwService) DeleteCfwVpcInstanceById(ctx context.Context, fwGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDeleteVpcFwGroupRequest()
+	request.FwGroupId = &fwGroupId
+	request.DeleteFwGroup = common.Int64Ptr(1)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DeleteVpcFwGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CfwService) DescribeFwGroupInstanceInfoById(ctx context.Context, fwGroupId string) (vpcFwGroupInfo *cfw.VpcFwGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeFwGroupInstanceInfoRequest()
+	request.Offset = common.Int64Ptr(0)
+	request.Limit = common.Int64Ptr(10)
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("FwGroupId"),
+			Values:       common.StringPtrs([]string{fwGroupId}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeFwGroupInstanceInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.VpcFwGroupLst) < 1 {
+		return
+	}
+
+	vpcFwGroupInfo = response.Response.VpcFwGroupLst[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcPolicyById(ctx context.Context, uuid string) (vpcPolicy *cfw.VpcRuleItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeVpcAcRuleRequest()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("Id"),
+			Values:       common.StringPtrs([]string{uuid}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+	request.Limit = common.Uint64Ptr(20)
+	request.Offset = common.Uint64Ptr(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeVpcAcRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	vpcPolicy = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) DeleteCfwVpcPolicyById(ctx context.Context, uuid string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewRemoveVpcAcRuleRequest()
+	uuidInt, _ := strconv.ParseInt(uuid, 10, 64)
+	request.RuleUuids = common.Int64Ptrs([]int64{uuidInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().RemoveVpcAcRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

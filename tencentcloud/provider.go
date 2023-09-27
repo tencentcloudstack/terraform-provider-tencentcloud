@@ -1685,6 +1685,12 @@ Cfw
     tencentcloud_cfw_address_template
     tencentcloud_cfw_block_ignore
     tencentcloud_cfw_edge_policy
+    tencentcloud_cfw_nat_instance
+    tencentcloud_cfw_nat_policy
+    tencentcloud_cfw_vpc_instance
+    tencentcloud_cfw_vpc_policy
+    tencentcloud_cfw_sync_asset
+    tencentcloud_cfw_sync_route
 */
 package tencentcloud
 
@@ -3104,6 +3110,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
+			"tencentcloud_cfw_nat_instance":                                    resourceTencentCloudCfwNatInstance(),
+			"tencentcloud_cfw_nat_policy":                                      resourceTencentCloudCfwNatPolicy(),
+			"tencentcloud_cfw_vpc_instance":                                    resourceTencentCloudCfwVpcInstance(),
+			"tencentcloud_cfw_vpc_policy":                                      resourceTencentCloudCfwVpcPolicy(),
+			"tencentcloud_cfw_sync_asset":                                      resourceTencentCloudCfwSyncAsset(),
+			"tencentcloud_cfw_sync_route":                                      resourceTencentCloudCfwSyncRoute(),
 		},
 
 		ConfigureFunc: providerConfigure,
