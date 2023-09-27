@@ -572,7 +572,7 @@ func (me *SslService) DescribeSslDescribeHostApiGatewayInstanceListByFilter(ctx 
 	describeHostApiGatewayInstanceList = response.Response.InstanceList
 	return
 }
-func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostCdnInstanceList *ssl.DescribeHostCdnInstanceListResponseParams, errRet error) {
+func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostCdnInstanceList *ssl.DescribeHostCdnInstanceListResponseParams, err error) {
 	var (
 		logId    = getLogId(ctx)
 		request  = ssl.NewDescribeHostCdnInstanceListRequest()
@@ -580,8 +580,8 @@ func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context
 	)
 
 	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
 		}
 	}()
 
@@ -611,13 +611,14 @@ func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context
 	var (
 		offset uint64 = 0
 		limit  uint64 = 20
+		list   []*ssl.CdnInstanceDetail
 	)
+
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseSSLCertificateClient().DescribeHostCdnInstanceList(request)
+		response, err = me.client.UseSSLCertificateClient().DescribeHostCdnInstanceList(request)
 		if err != nil {
-			errRet = err
 			return
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -625,16 +626,162 @@ func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context
 		if response == nil || len(response.Response.InstanceList) < 1 {
 			break
 		}
-		describeHostCdnInstanceList.InstanceList = append(describeHostCdnInstanceList.InstanceList, response.Response.InstanceList...)
+		list = append(list, response.Response.InstanceList...)
+		if len(response.Response.InstanceList) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	if response == nil || response.Response == nil || response.Response.InstanceList == nil {
+		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
+	}
+
+	describeHostCdnInstanceList = &ssl.DescribeHostCdnInstanceListResponseParams{
+		InstanceList: list,
+	}
+	if response.Response.AsyncOffset != nil {
+		describeHostCdnInstanceList.AsyncOffset = response.Response.AsyncOffset
+	}
+	if response.Response.AsyncCacheTime != nil {
+		describeHostCdnInstanceList.AsyncCacheTime = response.Response.AsyncCacheTime
+	}
+	if response.Response.AsyncTotalNum != nil {
+		describeHostCdnInstanceList.AsyncOffset = response.Response.AsyncTotalNum
+	}
+
+	return
+}
+func (me *SslService) DescribeSslDescribeHostClbInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostClbInstanceList *ssl.DescribeHostClbInstanceListResponseParams, err error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = ssl.NewDescribeHostClbInstanceListRequest()
+		response = ssl.NewDescribeHostClbInstanceListResponse()
+	)
+
+	defer func() {
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), err.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CertificateId" {
+			request.CertificateId = v.(*string)
+		}
+		if k == "IsCache" {
+			request.IsCache = v.(*uint64)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*ssl.Filter)
+		}
+		if k == "AsyncCache" {
+			request.AsyncCache = v.(*int64)
+		}
+		if k == "OldCertificateId" {
+			request.OldCertificateId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+		list   []*ssl.ClbInstanceDetail
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err = me.client.UseSSLCertificateClient().DescribeHostClbInstanceList(request)
+		if err != nil {
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceList) < 1 {
+			break
+		}
+		list = append(list, response.Response.InstanceList...)
 		if len(response.Response.InstanceList) < int(limit) {
 			break
 		}
 
 		offset += limit
 	}
-	describeHostCdnInstanceList.AsyncCacheTime = response.Response.AsyncCacheTime
-	describeHostCdnInstanceList.AsyncOffset = response.Response.AsyncOffset
-	describeHostCdnInstanceList.AsyncTotalNum = response.Response.AsyncTotalNum
+	if response == nil || response.Response == nil || response.Response.InstanceList == nil {
+		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
+	}
 
+	describeHostClbInstanceList = &ssl.DescribeHostClbInstanceListResponseParams{
+		InstanceList: list,
+	}
+	if response.Response.AsyncOffset != nil {
+		describeHostClbInstanceList.AsyncOffset = response.Response.AsyncOffset
+	}
+	if response.Response.AsyncCacheTime != nil {
+		describeHostClbInstanceList.AsyncCacheTime = response.Response.AsyncCacheTime
+	}
+	if response.Response.AsyncTotalNum != nil {
+		describeHostClbInstanceList.AsyncOffset = response.Response.AsyncTotalNum
+	}
+
+	return
+}
+func (me *SslService) DescribeSslDescribeHostCosInstanceListByFilter(ctx context.Context, param map[string]interface{}) (describeHostCosInstanceList *ssl.DescribeHostCosInstanceListResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssl.NewDescribeHostCosInstanceListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CertificateId" {
+			request.CertificateId = v.(*string)
+		}
+		if k == "ResourceType" {
+			request.ResourceType = v.(*string)
+		}
+		if k == "IsCache" {
+			request.IsCache = v.(*uint64)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*ssl.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSSLCertificateClient().DescribeHostCosInstanceList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.InstanceList) < 1 {
+		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+
+	}
+
+	describeHostCosInstanceList = &ssl.DescribeHostCosInstanceListResponseParams{
+		InstanceList: response.Response.InstanceList,
+	}
+	if response.Response.AsyncOffset != nil {
+		describeHostCosInstanceList.AsyncOffset = response.Response.AsyncOffset
+	}
+	if response.Response.AsyncCacheTime != nil {
+		describeHostCosInstanceList.AsyncCacheTime = response.Response.AsyncCacheTime
+	}
+	if response.Response.AsyncTotalNum != nil {
+		describeHostCosInstanceList.AsyncOffset = response.Response.AsyncTotalNum
+	}
 	return
 }

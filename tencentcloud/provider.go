@@ -880,6 +880,11 @@ SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
     tencentcloud_ssl_describe_certificate
+    tencentcloud_ssl_describe_companies
+    tencentcloud_ssl_describe_host_api_gateway_instance_list
+    tencentcloud_ssl_describe_host_cdn_instance_list
+    tencentcloud_ssl_describe_host_clb_instance_list
+    tencentcloud_ssl_describe_host_cos_instance_list
     tencentcloud_ssl_describe_certificate_bind_resource_task_detail
   Resource
     tencentcloud_ssl_certificate
@@ -2019,6 +2024,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_describe_companies":                             dataSourceTencentCloudSslDescribeCompanies(),
 			"tencentcloud_ssl_describe_host_api_gateway_instance_list":        dataSourceTencentCloudSslDescribeHostApiGatewayInstanceList(),
 			"tencentcloud_ssl_describe_host_cdn_instance_list":                dataSourceTencentCloudSslDescribeHostCdnInstanceList(),
+			"tencentcloud_ssl_describe_host_clb_instance_list":                dataSourceTencentCloudSslDescribeHostClbInstanceList(),
+			"tencentcloud_ssl_describe_host_cos_instance_list":                dataSourceTencentCloudSslDescribeHostCosInstanceList(),
 			"tencentcloud_ssl_describe_certificate_bind_resource_task_detail": dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail(),
 			"tencentcloud_cam_roles":                                          dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                          dataSourceTencentCloudCamUsers(),

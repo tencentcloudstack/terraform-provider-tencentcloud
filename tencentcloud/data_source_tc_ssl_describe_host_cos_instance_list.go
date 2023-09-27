@@ -1,37 +1,28 @@
 /*
-Use this data source to query detailed information of ssl describe_host_cdn_instance_list
+Use this data source to query detailed information of ssl describe_host_cos_instance_list
 
 Example Usage
 
 ```hcl
-data "tencentcloud_ssl_describe_host_cdn_instance_list" "describe_host_cdn_instance_list" {
+data "tencentcloud_ssl_describe_host_cos_instance_list" "describe_host_cos_instance_list" {
   certificate_id = ""
   resource_type = ""
-  is_cache =
-  filters {
-		filter_key = ""
-		filter_value = ""
-
-  }
-  old_certificate_id = ""
-  async_cache =
-        }
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
+func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSslDescribeHostCdnInstanceListRead,
+		Read: dataSourceTencentCloudSslDescribeHostCosInstanceListRead,
 		Schema: map[string]*schema.Schema{
 			"certificate_id": {
 				Required:    true,
@@ -42,7 +33,7 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 			"resource_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Deploy resource type.",
+				Description: "Deploy resource type cos.",
 			},
 
 			"is_cache": {
@@ -54,7 +45,7 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "List of filtering parameters; Filterkey: domainmatch.",
+				Description: "List of filter parameters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"filter_key": {
@@ -71,22 +62,10 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 				},
 			},
 
-			"old_certificate_id": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Original certificate ID.",
-			},
-
-			"async_cache": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Whether.",
-			},
-
 			"instance_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "CDN instance listNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+				Description: "COS instance listNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"domain": {
@@ -97,17 +76,22 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 						"cert_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Deployment certificate ID.",
+							Description: "Binded certificate IDNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Domain name.",
+							Description: "Enabled: domain name online statusDisabled: Domain name offline status.",
 						},
-						"https_billing_switch": {
+						"bucket": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Domain name billing status.",
+							Description: "Reserve bucket nameNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Barrel areaNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
 					},
 				},
@@ -140,8 +124,8 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ssl_describe_host_cdn_instance_list.read")()
+func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_ssl_describe_host_cos_instance_list.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -180,20 +164,12 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 		paramMap["filters"] = tmpSet
 	}
 
-	if v, ok := d.GetOk("old_certificate_id"); ok {
-		paramMap["OldCertificateId"] = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("async_cache"); v != nil {
-		paramMap["AsyncCache"] = helper.IntInt64(v.(int))
-	}
-
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList *ssl.DescribeHostCdnInstanceListResponseParams
+	var instanceList *ssl.DescribeHostCosInstanceListResponseParams
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeSslDescribeHostCdnInstanceListByFilter(ctx, paramMap)
+		result, e := service.DescribeSslDescribeHostCosInstanceListByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -208,27 +184,31 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 	tmpList := make([]map[string]interface{}, 0, len(instanceList.InstanceList))
 
 	if instanceList != nil && instanceList.InstanceList != nil {
-		for _, cdnInstanceDetail := range instanceList.InstanceList {
-			cdnInstanceDetailMap := map[string]interface{}{}
+		for _, cosInstanceDetail := range instanceList.InstanceList {
+			cosInstanceDetailMap := map[string]interface{}{}
 
-			if cdnInstanceDetail.Domain != nil {
-				cdnInstanceDetailMap["domain"] = cdnInstanceDetail.Domain
+			if cosInstanceDetail.Domain != nil {
+				cosInstanceDetailMap["domain"] = cosInstanceDetail.Domain
 			}
 
-			if cdnInstanceDetail.CertId != nil {
-				cdnInstanceDetailMap["cert_id"] = cdnInstanceDetail.CertId
+			if cosInstanceDetail.CertId != nil {
+				cosInstanceDetailMap["cert_id"] = cosInstanceDetail.CertId
 			}
 
-			if cdnInstanceDetail.Status != nil {
-				cdnInstanceDetailMap["status"] = cdnInstanceDetail.Status
+			if cosInstanceDetail.Status != nil {
+				cosInstanceDetailMap["status"] = cosInstanceDetail.Status
 			}
 
-			if cdnInstanceDetail.HttpsBillingSwitch != nil {
-				cdnInstanceDetailMap["https_billing_switch"] = cdnInstanceDetail.HttpsBillingSwitch
+			if cosInstanceDetail.Bucket != nil {
+				cosInstanceDetailMap["bucket"] = cosInstanceDetail.Bucket
 			}
 
-			ids = append(ids, *cdnInstanceDetail.CertId)
-			tmpList = append(tmpList, cdnInstanceDetailMap)
+			if cosInstanceDetail.Region != nil {
+				cosInstanceDetailMap["region"] = cosInstanceDetail.Region
+			}
+
+			ids = append(ids, *cosInstanceDetail.CertId)
+			tmpList = append(tmpList, cosInstanceDetailMap)
 		}
 
 		_ = d.Set("instance_list", tmpList)
@@ -245,7 +225,7 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 	if instanceList.AsyncCacheTime != nil {
 		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
 	}
-	fmt.Println(ids)
+
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output3, ok := d.GetOk("result_output_file")
 	if ok && output3.(string) != "" {

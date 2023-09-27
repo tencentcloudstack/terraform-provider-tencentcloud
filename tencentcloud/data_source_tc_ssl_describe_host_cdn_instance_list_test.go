@@ -24,16 +24,8 @@ func TestAccTencentCloudSslDescribeHostCdnInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostCdnInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_cdn_instance_list" "describe_host_cdn_instance_list" {
-  certificate_id = ""
-  resource_type = ""
-  is_cache = 
-  filters {
-		filter_key = ""
-		filter_value = ""
-
-  }
-  old_certificate_id = ""
-  async_cache = 
-        }
+  certificate_id = "8u8DII0l"
+  resource_type = "cdn"
+}
 
 `
