@@ -21,6 +21,8 @@ func TestAccTencentCloudTrocketRocketmqRoleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_role.rocketmq_role", "remark", "test for terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_role.rocketmq_role", "perm_write", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_role.rocketmq_role", "perm_read", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_role.rocketmq_role", "access_key"),
+					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_role.rocketmq_role", "secret_key"),
 				),
 			},
 			{
