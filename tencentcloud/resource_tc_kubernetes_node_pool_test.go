@@ -94,6 +94,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepool"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "unschedulable", "0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "deletion_protection", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "scaling_group_name", "asg_np_test"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "default_cooldown", "400"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "termination_policies.#", "1"),
@@ -120,6 +121,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.0.delete_with_instance", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.0.delete_with_instance", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "deletion_protection", "false"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "20"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.instance_charge_type", "SPOTPAID"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_instance_type", "one-time"),
@@ -297,6 +299,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
   scaling_group_project_id = var.default_project
+  deletion_protection = true
   delete_keep_instance = false
   node_os="tlinux2.2(tkernel3)x86_64"
 
@@ -358,6 +361,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   enable_auto_scale    = false
   node_os = var.default_img
   scaling_group_project_id = var.default_project
+  deletion_protection = false
   delete_keep_instance = false
   scaling_group_name 	   = "asg_np_test_changed"
   default_cooldown 		   = 350
