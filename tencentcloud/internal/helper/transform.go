@@ -71,21 +71,12 @@ func PString(pointer *string) string {
 	}
 	return *pointer
 }
-func PBool(pointer *bool) bool {
-	if pointer == nil {
-		return false
-	}
-	return *pointer
-}
 
 func PUint64(pointer *uint64) uint64 {
 	return *pointer
 }
 
 func PInt64(pointer *int64) int64 {
-	if pointer == nil {
-		return 0
-	}
 	return *pointer
 }
 
