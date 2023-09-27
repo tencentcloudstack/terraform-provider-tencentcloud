@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_auth_attachment: Support OIDC config.
+```
+
+```release-note:new-data-source
+tencentcloud_cam_oidc_config
+```
