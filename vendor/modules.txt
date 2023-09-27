@@ -1165,7 +1165,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.584
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.540
