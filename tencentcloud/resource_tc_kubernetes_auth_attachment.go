@@ -136,6 +136,30 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_at
   use_tke_default                      = true
 }
 ```
+
+Use OIDC Config
+```
+resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+  cluster_id                              = tencentcloud_kubernetes_cluster.managed_cluster.id
+  use_tke_default                         = true
+  auto_create_discovery_anonymous_auth    = true
+  auto_create_oidc_config                 = true
+  auto_install_pod_identity_webhook_addon = true
+}
+
+data "tencentcloud_cam_oidc_config" "oidc_config" {
+  name       = tencentcloud_kubernetes_cluster.managed_cluster.id
+  depends_on = [
+    tencentcloud_kubernetes_auth_attachment.test_auth_attach
+  ]
+}
+
+output "identity_key" {
+  value = data.tencentcloud_cam_oidc_config.oidc_config.identity_key
+}
+
+```
+
 */
 package tencentcloud
 
@@ -177,6 +201,24 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
+			},
+			"auto_create_oidc_config": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Creating an identity provider.",
+			},
+			"auto_create_client_id": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Creating ClientId of the identity provider.",
+			},
+			"auto_install_pod_identity_webhook_addon": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Creating the PodIdentityWebhook component.",
 			},
 			"tke_default_issuer": {
 				Type:        schema.TypeString,
@@ -221,6 +263,20 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
 		}
 	}
+	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
+	if v, ok := d.GetOkExists("auto_create_oidc_config"); ok {
+		request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
+	}
+	if v, ok := d.GetOkExists("auto_create_client_id"); ok {
+		clientsSet := v.(*schema.Set).List()
+		for i := range clientsSet {
+			client := clientsSet[i].(string)
+			request.OIDCConfig.AutoCreateClientId = append(request.OIDCConfig.AutoCreateClientId, &client)
+		}
+	}
+	if v, ok := d.GetOkExists("auto_install_pod_identity_webhook_addon"); ok {
+		request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.ModifyClusterAuthenticationOptions(ctx, request)
@@ -245,7 +301,7 @@ func resourceTencentCloudTKEAuthAttachmentRead(d *schema.ResourceData, meta inte
 	id := d.Id()
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-	info, err := service.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
+	info, oidc, err := service.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
 
 	if err != nil {
 		d.SetId("")
@@ -262,6 +318,17 @@ func resourceTencentCloudTKEAuthAttachmentRead(d *schema.ResourceData, meta inte
 		_ = d.Set("issuer", info.Issuer)
 	}
 
+	if oidc.AutoCreateOIDCConfig != nil {
+		_ = d.Set("auto_create_oidc_config", oidc.AutoCreateOIDCConfig)
+	}
+
+	if oidc.AutoCreateClientId != nil {
+		_ = d.Set("auto_create_client_id", oidc.AutoCreateClientId)
+	}
+
+	if oidc.AutoInstallPodIdentityWebhookAddon != nil {
+		_ = d.Set("auto_install_pod_identity_webhook_addon", oidc.AutoInstallPodIdentityWebhookAddon)
+	}
 	return nil
 }
 
@@ -299,6 +366,29 @@ func resourceTencentCloudTKEAuthAttachmentUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
+	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
+	if d.HasChange("auto_create_oidc_config") {
+		if v, ok := d.GetOkExists("auto_create_oidc_config"); ok {
+			request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("auto_create_client_id") {
+		if v, ok := d.GetOkExists("auto_create_client_id"); ok {
+			clientsSet := v.(*schema.Set).List()
+			for i := range clientsSet {
+				client := clientsSet[i].(string)
+				request.OIDCConfig.AutoCreateClientId = append(request.OIDCConfig.AutoCreateClientId, &client)
+			}
+		}
+	}
+
+	if d.HasChange("auto_install_pod_identity_webhook_addon") {
+		if v, ok := d.GetOkExists("auto_install_pod_identity_webhook_addon"); ok {
+			request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
+		}
+	}
+
 	err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
 		err := service.ModifyClusterAuthenticationOptions(ctx, request)
 		if err != nil {
@@ -333,7 +423,7 @@ func resourceTencentCloudTKEAuthAttachmentDelete(d *schema.ResourceData, meta in
 		return err
 	}
 
-	_, err := service.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
+	_, _, err := service.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
 
 	if err != nil {
 		return err

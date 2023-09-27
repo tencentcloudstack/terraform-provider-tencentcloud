@@ -215,6 +215,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_saml_providers
     tencentcloud_cam_user_policy_attachments
     tencentcloud_cam_users
+	tencentcloud_cam_oidc_config
     tencentcloud_user_info
 
   Resource
@@ -1986,6 +1987,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificates":                          dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_cam_roles":                                 dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                 dataSourceTencentCloudCamUsers(),
+			"tencentcloud_cam_oidc_config":                           dataSourceTencentCloudCamOidcConfig(),
 			"tencentcloud_cam_groups":                                dataSourceTencentCloudCamGroups(),
 			"tencentcloud_cam_group_memberships":                     dataSourceTencentCloudCamGroupMemberships(),
 			"tencentcloud_cam_policies":                              dataSourceTencentCloudCamPolicies(),
