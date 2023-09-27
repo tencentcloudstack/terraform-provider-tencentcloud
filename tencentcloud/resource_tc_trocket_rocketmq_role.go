@@ -24,6 +24,14 @@ resource "tencentcloud_trocket_rocketmq_role" "rocketmq_role" {
   perm_write  = false
   perm_read   = true
 }
+
+output "access_key" {
+  value = tencentcloud_trocket_rocketmq_role.rocketmq_role.access_key
+}
+
+output "secret_key" {
+  value = tencentcloud_trocket_rocketmq_role.rocketmq_role.secret_key
+}
 ```
 
 Import
@@ -88,6 +96,18 @@ func resourceTencentCloudTrocketRocketmqRole() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to enable consumption permission.",
+			},
+
+			"access_key": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Access key.",
+			},
+
+			"secret_key": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Secret key.",
 			},
 
 			"created_time": {
@@ -200,6 +220,14 @@ func resourceTencentCloudTrocketRocketmqRoleRead(d *schema.ResourceData, meta in
 
 	if rocketmqRole.PermRead != nil {
 		_ = d.Set("perm_read", rocketmqRole.PermRead)
+	}
+
+	if rocketmqRole.AccessKey != nil {
+		_ = d.Set("access_key", rocketmqRole.AccessKey)
+	}
+
+	if rocketmqRole.SecretKey != nil {
+		_ = d.Set("secret_key", rocketmqRole.SecretKey)
 	}
 
 	if rocketmqRole.CreatedTime != nil {
