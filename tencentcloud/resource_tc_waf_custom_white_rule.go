@@ -79,22 +79,22 @@ func resourceTencentCloudWafCustomWhiteRule() *schema.Resource {
 						"field": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Matching FieldsNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "Matching Fields.",
 						},
 						"compare_func": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Logical symbolNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "Logical symbol.",
 						},
 						"content": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Matching ContentNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "Matching Content.",
 						},
 						"arg": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Matching parametersNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "Matching parameters.",
 						},
 					},
 				},
