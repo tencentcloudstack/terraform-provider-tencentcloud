@@ -5,8 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_certificate" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "eofreecert"
+  zone_id = "zone-2o1t24kgy362"
+}
+```
+
+Configure SSL certificate
+
+```hcl
+resource "tencentcloud_teo_certificate" "certificate" {
     host    = "test.tencentcloud-terraform-provider.cn"
-    mode    = "disable"
+    mode    = "sslcert"
     zone_id = "zone-2o1t24kgy362"
 
     server_cert_info {

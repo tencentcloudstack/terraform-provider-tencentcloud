@@ -127,7 +127,7 @@ Import
 
 teo rule_engine can be imported using the id#rule_id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
+terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
 ```
 */
 package tencentcloud

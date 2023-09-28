@@ -66,6 +66,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo origin_group can be imported using the zone_id#originGroup_id, e.g.
 ````
-$ terraform import tencentcloud_teo_origin_group.origin_group zone-297z8rf93cfw#origin-4f8a30b2-3720-11ed-b66b-525400dceb86
+terraform import tencentcloud_teo_origin_group.origin_group zone-297z8rf93cfw#origin-4f8a30b2-3720-11ed-b66b-525400dceb86
 ````
 

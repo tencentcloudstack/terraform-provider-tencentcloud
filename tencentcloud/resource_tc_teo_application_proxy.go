@@ -24,7 +24,7 @@ Import
 
 teo application_proxy can be imported using the zoneId#proxyId, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
+terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
 ```
 */
 package tencentcloud

@@ -21,7 +21,7 @@ Import
 
 teo zone can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone.zone zone_id
+terraform import tencentcloud_teo_zone.zone zone_id
 ```
 */
 package tencentcloud
@@ -312,10 +312,6 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		}
 	}
 
-	// if zone.PlanType != nil {
-	// 	_ = d.Set("plan_type", zone.PlanType)
-	// }
-
 	if zone.Paused != nil {
 		_ = d.Set("paused", zone.Paused)
 	}
@@ -383,23 +379,26 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		log.Printf("[WARN] change `plan_type` is not supported now.")
 	}
 
+	if d.HasChange("paused") {
+		if v, ok := d.GetOkExists("paused"); ok {
+			err := service.ModifyZoneStatus(ctx, zoneId, v.(bool), "update")
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if d.HasChange("type") || d.HasChange("alias_zone_name") || d.HasChange("area") {
-		if d.HasChange("type") {
-			if v, ok := d.GetOk("type"); ok {
-				request.Type = helper.String(v.(string))
-			}
+		if v, ok := d.GetOk("type"); ok {
+			request.Type = helper.String(v.(string))
 		}
 
-		if d.HasChange("alias_zone_name") {
-			if v, ok := d.GetOk("alias_zone_name"); ok {
-				request.AliasZoneName = helper.String(v.(string))
-			}
+		if v, ok := d.GetOk("alias_zone_name"); ok {
+			request.AliasZoneName = helper.String(v.(string))
 		}
 
-		if d.HasChange("area") {
-			if v, ok := d.GetOk("area"); ok {
-				request.Area = helper.String(v.(string))
-			}
+		if v, ok := d.GetOk("area"); ok {
+			request.Area = helper.String(v.(string))
 		}
 
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -431,15 +430,6 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 		})
 		if err != nil {
 			return err
-		}
-	}
-
-	if d.HasChange("paused") {
-		if v, _ := d.GetOkExists("paused"); v != nil {
-			err := service.ModifyZoneStatus(ctx, zoneId, v.(bool), "update")
-			if err != nil {
-				return err
-			}
 		}
 	}
 

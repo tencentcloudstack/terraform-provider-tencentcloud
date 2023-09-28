@@ -116,7 +116,7 @@ Import
 
 teo zone_setting can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
+terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
 ```
 */
 package tencentcloud

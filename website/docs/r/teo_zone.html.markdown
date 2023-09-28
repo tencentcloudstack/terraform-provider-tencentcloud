@@ -58,6 +58,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo zone can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone.zone zone_id
+terraform import tencentcloud_teo_zone.zone zone_id
 ```
 
