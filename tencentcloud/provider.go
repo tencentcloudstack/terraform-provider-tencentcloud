@@ -1181,8 +1181,10 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_zone_setting
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
-	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
+	tencentcloud_teo_ownership_verify
+	tencentcloud_teo_certificate_config
+	tencentcloud_teo_acceleration_domain
 
 TencentCloud ServiceMesh(TCM)
   Data Source
@@ -2872,6 +2874,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_zone_setting":                                    resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_origin_group":                                    resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                                     resourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_ownership_verify":                                resourceTencentCloudTeoOwnershipVerify(),
+			"tencentcloud_teo_certificate_config":                              resourceTencentCloudTeoCertificateConfig(),
+			"tencentcloud_teo_acceleration_domain":                             resourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                               resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          resourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_tcm_mesh":                                            resourceTencentCloudTcmMesh(),

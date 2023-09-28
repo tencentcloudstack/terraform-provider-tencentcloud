@@ -1234,7 +1234,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.758
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759

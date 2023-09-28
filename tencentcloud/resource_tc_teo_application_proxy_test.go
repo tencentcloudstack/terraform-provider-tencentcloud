@@ -26,10 +26,8 @@ func testSweepApplicationProxy(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TeoService{client}
 
-	zoneId := defaultZoneId
-
 	for {
-		proxy, err := service.DescribeTeoApplicationProxy(ctx, zoneId, "")
+		proxy, err := service.DescribeTeoApplicationProxy(ctx, "", "")
 		if err != nil {
 			return err
 		}
@@ -38,7 +36,7 @@ func testSweepApplicationProxy(region string) error {
 			return nil
 		}
 
-		err = service.DeleteTeoApplicationProxyById(ctx, zoneId, *proxy.ProxyId)
+		err = service.DeleteTeoApplicationProxyById(ctx, *proxy.ZoneId, *proxy.ProxyId)
 		if err != nil {
 			return err
 		}
@@ -47,7 +45,7 @@ func testSweepApplicationProxy(region string) error {
 
 // go test -i; go test -test.run TestAccTencentCloudTeoApplicationProxy_basic -v
 func TestAccTencentCloudTeoApplicationProxy_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
@@ -57,7 +55,7 @@ func TestAccTencentCloudTeoApplicationProxy_basic(t *testing.T) {
 				Config: testAccTeoApplicationProxy,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckApplicationProxyExists("tencentcloud_teo_application_proxy.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_application_proxy.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy.basic", "accelerate_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy.basic", "security_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_application_proxy.basic", "plat_type", "domain"),
@@ -131,15 +129,10 @@ func testAccCheckApplicationProxyExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoApplicationProxyVar = `
-variable "zone_id" {
-  default = "` + defaultZoneId + `"
-}`
-
-const testAccTeoApplicationProxy = testAccTeoApplicationProxyVar + `
+const testAccTeoApplicationProxy = testAccTeoZone + `
 
 resource "tencentcloud_teo_application_proxy" "basic" {
-  zone_id = var.zone_id
+  zone_id = tencentcloud_teo_zone.basic.id
 
   accelerate_type      = 1
   security_type        = 1

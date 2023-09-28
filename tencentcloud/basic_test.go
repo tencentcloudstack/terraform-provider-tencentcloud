@@ -815,16 +815,6 @@ locals {
 
 // End of MongoDB
 
-// TEO
-
-const (
-	defaultZoneName    = "tf-teo-t.xyz"
-	defaultZoneId      = "zone-2a1u0y616jz6"
-	applicationProxyId = "sid-2f8xqhmf32dt"
-)
-
-// End of TEO
-
 // TCM
 
 const (

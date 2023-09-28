@@ -3,29 +3,48 @@ Provides a resource to create a teo origin_group
 
 Example Usage
 
+Self origin group
+
 ```hcl
 resource "tencentcloud_teo_origin_group" "origin_group" {
+  zone_id            = "zone-297z8rf93cfw"
   configuration_type = "weight"
   origin_group_name  = "test-group"
   origin_type        = "self"
-  tags               = {}
-  zone_id            = "zone-297z8rf93cfw"
-
   origin_records {
-    area      = []
-    port      = 8080
-    private   = false
-    record    = "150.109.8.1"
-    weight    = 100
+    area    = []
+    port    = 8080
+    private = false
+    record  = "150.109.8.1"
+    weight  = 100
   }
 }
 
-````
+```
+
+Cos origin group
+
+```hcl
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  configuration_type = "weight"
+  origin_group_name  = "test"
+  origin_type        = "cos"
+  zone_id            = "zone-2o3h21ed8bpu"
+
+  origin_records {
+    area    = []
+    port    = 0
+    private = true
+    record  = "test-ruichaolin-1310708577.cos.ap-nanjing.myqcloud.com"
+    weight  = 100
+  }
+}
+```
 Import
 
 teo origin_group can be imported using the zone_id#originGroup_id, e.g.
 ````
-$ terraform import tencentcloud_teo_origin_group.origin_group zone-297z8rf93cfw#origin-4f8a30b2-3720-11ed-b66b-525400dceb86
+terraform import tencentcloud_teo_origin_group.origin_group zone-297z8rf93cfw#origin-4f8a30b2-3720-11ed-b66b-525400dceb86
 ````
 */
 package tencentcloud
@@ -55,6 +74,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Site ID.",
 			},
 
@@ -73,13 +93,13 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 			"origin_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of the origin site. Valid values:- `self`: self-build website.- `cos`: tencent cos.- `third_party`: third party cos.",
+				Description: "Type of the origin site. Valid values: `self`: self-build website; `cos`: tencent cos; `third_party`: third party cos.",
 			},
 
 			"configuration_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values:- `area`: select an origin by using Geo info of the client IP and `Area` field in Records.- `weight`: weighted select an origin by using `Weight` field in Records.- `proto`: config by HTTP protocol.",
+				Description: "Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values: `area`: select an origin by using Geo info of the client IP and `Area` field in Records; `weight`: weighted select an origin by using `Weight` field in Records; `proto`: config by HTTP protocol.",
 			},
 
 			"origin_records": {
@@ -106,7 +126,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 						"weight": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Indicating origin site&#39;s weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
+							Description: "Indicating origin sites weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
 						},
 						"area": {
 							Type: schema.TypeSet,
@@ -114,7 +134,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "Indicating origin site&#39;s area when `Type` field is `area`. An empty List indicate the default area. Valid value:- Asia, Americas, Europe, Africa or Oceania.- 2 characters ISO 3166 area code.",
+							Description: "Indicating origin sites area when `Type` field is `area`. An empty List indicate the default area. Valid value:- Asia, Americas, Europe, Africa or Oceania.",
 						},
 						"private": {
 							Type:        schema.TypeBool,
@@ -130,7 +150,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Parameter Name. Valid values:- AccessKeyId:Access Key ID.- SecretAccessKey:Secret Access Key.",
+										Description: "Parameter Name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
@@ -170,10 +190,6 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		zoneId = v.(string)
 		request.ZoneId = helper.String(v.(string))
 	}
-
-	//if v, ok := d.GetOk("origin_group_id"); ok {
-	//	request.OriginGroupId = helper.String(v.(string))
-	//}
 
 	if v, ok := d.GetOk("origin_group_name"); ok {
 		request.OriginGroupName = helper.String(v.(string))
@@ -359,14 +375,6 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 	request.ZoneId = &zoneId
 	request.OriginGroupId = &originGroupId
 
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
-	}
-
-	if d.HasChange("origin_group_id") {
-		return fmt.Errorf("`origin_group_id` do not support change now.")
-	}
-
 	if v, ok := d.GetOk("origin_group_name"); ok {
 		request.OriginGroupName = helper.String(v.(string))
 	}
@@ -379,45 +387,43 @@ func resourceTencentCloudTeoOriginGroupUpdate(d *schema.ResourceData, meta inter
 		request.ConfigurationType = helper.String(v.(string))
 	}
 
-	if d.HasChange("origin_records") {
-		if v, ok := d.GetOk("origin_records"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				originRecord := teo.OriginRecord{}
-				if v, ok := dMap["record"]; ok {
-					originRecord.Record = helper.String(v.(string))
-				}
-				if v, ok := dMap["port"]; ok {
-					originRecord.Port = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["weight"]; ok {
-					originRecord.Weight = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["area"]; ok {
-					areaSet := v.(*schema.Set).List()
-					for i := range areaSet {
-						area := areaSet[i].(string)
-						originRecord.Area = append(originRecord.Area, &area)
-					}
-				}
-				if v, ok := dMap["private"]; ok {
-					originRecord.Private = helper.Bool(v.(bool))
-				}
-				if v, ok := dMap["private_parameter"]; ok {
-					for _, item := range v.([]interface{}) {
-						PrivateParameterMap := item.(map[string]interface{})
-						originRecordPrivateParameter := teo.PrivateParameter{}
-						if v, ok := PrivateParameterMap["name"]; ok {
-							originRecordPrivateParameter.Name = helper.String(v.(string))
-						}
-						if v, ok := PrivateParameterMap["value"]; ok {
-							originRecordPrivateParameter.Value = helper.String(v.(string))
-						}
-						originRecord.PrivateParameters = append(originRecord.PrivateParameters, &originRecordPrivateParameter)
-					}
-				}
-				request.OriginRecords = append(request.OriginRecords, &originRecord)
+	if v, ok := d.GetOk("origin_records"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			originRecord := teo.OriginRecord{}
+			if v, ok := dMap["record"]; ok {
+				originRecord.Record = helper.String(v.(string))
 			}
+			if v, ok := dMap["port"]; ok {
+				originRecord.Port = helper.IntUint64(v.(int))
+			}
+			if v, ok := dMap["weight"]; ok {
+				originRecord.Weight = helper.IntUint64(v.(int))
+			}
+			if v, ok := dMap["area"]; ok {
+				areaSet := v.(*schema.Set).List()
+				for i := range areaSet {
+					area := areaSet[i].(string)
+					originRecord.Area = append(originRecord.Area, &area)
+				}
+			}
+			if v, ok := dMap["private"]; ok {
+				originRecord.Private = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["private_parameter"]; ok {
+				for _, item := range v.([]interface{}) {
+					PrivateParameterMap := item.(map[string]interface{})
+					originRecordPrivateParameter := teo.PrivateParameter{}
+					if v, ok := PrivateParameterMap["name"]; ok {
+						originRecordPrivateParameter.Name = helper.String(v.(string))
+					}
+					if v, ok := PrivateParameterMap["value"]; ok {
+						originRecordPrivateParameter.Value = helper.String(v.(string))
+					}
+					originRecord.PrivateParameters = append(originRecord.PrivateParameters, &originRecordPrivateParameter)
+				}
+			}
+			request.OriginRecords = append(request.OriginRecords, &originRecord)
 		}
 	}
 

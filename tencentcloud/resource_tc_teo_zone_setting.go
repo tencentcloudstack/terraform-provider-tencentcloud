@@ -116,7 +116,7 @@ Import
 
 teo zone_setting can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
+terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
 ```
 */
 package tencentcloud
@@ -176,19 +176,19 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Cache configuration switch.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Cache configuration switch. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"cache_time": {
 										Type:        schema.TypeInt,
 										Optional:    true,
 										Computed:    true,
-										Description: "Cache expiration time settings.Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Cache expiration time settings, Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"ignore_cache_control": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Specifies whether to enable force cache.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Specifies whether to enable force cache. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -205,7 +205,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "Whether to cache the configuration.- `on`: Do not cache.- `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Whether to cache the configuration. Valid values: `on`: Do not cache; `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -297,7 +297,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"follow_origin": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If it&#39;s on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If is on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -554,7 +554,7 @@ func resourceTencentCloudTeoZoneSetting() *schema.Resource {
 						"switch": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Whether to enable custom WebSocket timeout setting. When it&#39;s off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.",
+							Description: "Whether to enable custom WebSocket timeout setting. When is off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.",
 						},
 						"timeout": {
 							Type:        schema.TypeInt,
@@ -633,20 +633,14 @@ func resourceTencentCloudTeoZoneSettingCreate(d *schema.ResourceData, meta inter
 	defer logElapsed("resource.tencentcloud_teo_zone_setting.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var zoneId string
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 	}
 
 	d.SetId(zoneId)
-	err := resourceTencentCloudTeoZoneSettingUpdate(d, meta)
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo zoneSetting failed, reason:%+v", logId, err)
-		return err
-	}
-	return resourceTencentCloudTeoZoneSettingRead(d, meta)
+
+	return resourceTencentCloudTeoZoneSettingUpdate(d, meta)
 }
 
 func resourceTencentCloudTeoZoneSettingRead(d *schema.ResourceData, meta interface{}) error {

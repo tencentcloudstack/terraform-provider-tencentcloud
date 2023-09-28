@@ -137,10 +137,10 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
 
 The following arguments are supported:
 
-* `rule_name` - (Required, String) Rule name.
+* `rule_name` - (Required, String) The rule name (1 to 255 characters).
 * `rules` - (Required, List) Rule items list.
-* `status` - (Required, String) Status of the rule, valid value can be `enable` or `disable`.
-* `zone_id` - (Required, String) Site ID.
+* `status` - (Required, String) Rule status. Values: `enable`: Enabled; `disable`: Disabled.
+* `zone_id` - (Required, String, ForceNew) ID of the site.
 * `tags` - (Optional, Set: [`String`]) rule tag list.
 
 The `actions` object supports the following:
@@ -156,6 +156,14 @@ The `and` object supports the following:
 * `values` - (Required, Set) Condition Value.
 * `ignore_case` - (Optional, Bool) Whether to ignore the case of the parameter value, the default value is false.
 * `name` - (Optional, String) The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty: `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.
+
+The `and` object supports the following:
+
+* `operator` - (Required, String) Condition operator. Valid values are `equal`, `notequal`.
+* `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
+* `values` - (Required, Set) Condition Value.
+* `ignore_case` - (Optional, Bool) Whether to ignore the case of the parameter value, the default value is false.
+* `name` - (Optional, String) The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty:- `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.
 
 The `code_action` object supports the following:
 
@@ -221,6 +229,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo rule_engine can be imported using the id#rule_id, e.g.
 ```
-$ terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
+terraform import tencentcloud_teo_rule_engine.rule_engine zone-297z8rf93cfw#rule-ajol584a
 ```
 
