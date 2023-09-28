@@ -76,21 +76,55 @@ resource "tencentcloud_waf_clb_domain" "example" {
 }
 ```
 
+### Create a complete waf tsegw domain
+
+```hcl
+resource "tencentcloud_waf_clb_domain" "example" {
+  instance_id     = "waf_2kxtlbky00b2v1fn"
+  domain          = "xxx.com"
+  is_cdn          = 0
+  status          = 1
+  engine          = 12
+  region          = "gz"
+  flow_mode       = 0
+  alb_type        = "tsegw"
+  bot_status      = 0
+  api_safe_status = 0
+}
+```
+
+### Create a complete waf apisix domain
+
+```hcl
+resource "tencentcloud_waf_clb_domain" "example" {
+  instance_id     = "waf_2kxtlbky00b2v1fn"
+  domain          = "xxx.com"
+  is_cdn          = 0
+  status          = 1
+  engine          = 12
+  region          = "gz"
+  flow_mode       = 0
+  alb_type        = "apisix"
+  bot_status      = 0
+  api_safe_status = 0
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `domain` - (Required, String) Domain name.
 * `instance_id` - (Required, String) Instance unique ID.
-* `load_balancer_set` - (Required, List) List of bound LB.
 * `region` - (Required, String) Regions of LB bound by domain.
-* `alb_type` - (Optional, String) Load balancer type: clb or apisix, default clbNote: This field may return null, indicating that a valid value cannot be obtained.
+* `alb_type` - (Optional, String) Load balancer type: clb, apisix or tsegw, default clb.
 * `api_safe_status` - (Optional, Int) Whether to enable api safe, 1 enable, 0 disable.
 * `bot_status` - (Optional, Int) Whether to enable bot, 1 enable, 0 disable.
 * `engine` - (Optional, Int) Protection Status: 10: Rule Observation&&AI Off Mode, 11: Rule Observation&&AI Observation Mode, 12: Rule Observation&&AI Interception Mode, 20: Rule Interception&&AI Off Mode, 21: Rule Interception&&AI Observation Mode, 22: Rule Interception&&AI Interception Mode, Default 20.
 * `flow_mode` - (Optional, Int) WAF traffic mode, 1 cleaning mode, 0 mirroring mode.
-* `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom headerNote: This field may return null, indicating that a valid value cannot be obtained.
+* `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.
 * `is_cdn` - (Optional, Int) Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.
+* `load_balancer_set` - (Optional, List) List of bound LB.
 * `status` - (Optional, Int) Binding status between waf and LB, 0:not bind, 1:binding.
 
 The `load_balancer_set` object supports the following:
@@ -104,8 +138,8 @@ The `load_balancer_set` object supports the following:
 * `vip` - (Required, String) LoadBalancer IP.
 * `vport` - (Required, Int) LoadBalancer port.
 * `zone` - (Required, String) LoadBalancer zone.
-* `load_balancer_type` - (Optional, String) Network type for load balancerNote: This field may return null, indicating that a valid value cannot be obtained.
-* `numerical_vpc_id` - (Optional, Int) VPCID for load balancer, public network is -1, and internal network is filled in according to actual conditionsNote: This field may return null, indicating that a valid value cannot be obtained.
+* `load_balancer_type` - (Optional, String) Network type for load balancer.
+* `numerical_vpc_id` - (Optional, Int) VPCID for load balancer, public network is -1, and internal network is filled in according to actual conditions.
 
 ## Attributes Reference
 

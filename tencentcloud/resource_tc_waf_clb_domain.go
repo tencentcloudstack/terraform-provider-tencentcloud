@@ -66,6 +66,40 @@ resource "tencentcloud_waf_clb_domain" "example" {
 }
 ```
 
+Create a complete waf tsegw domain
+
+```hcl
+resource "tencentcloud_waf_clb_domain" "example" {
+  instance_id     = "waf_2kxtlbky00b2v1fn"
+  domain          = "xxx.com"
+  is_cdn          = 0
+  status          = 1
+  engine          = 12
+  region          = "gz"
+  flow_mode       = 0
+  alb_type        = "tsegw"
+  bot_status      = 0
+  api_safe_status = 0
+}
+```
+
+Create a complete waf apisix domain
+
+```hcl
+resource "tencentcloud_waf_clb_domain" "example" {
+  instance_id     = "waf_2kxtlbky00b2v1fn"
+  domain          = "xxx.com"
+  is_cdn          = 0
+  status          = 1
+  engine          = 12
+  region          = "gz"
+  flow_mode       = 0
+  alb_type        = "apisix"
+  bot_status      = 0
+  api_safe_status = 0
+}
+```
+
 Import
 
 waf clb_domain can be imported using the id, e.g.
@@ -133,7 +167,7 @@ func resourceTencentCloudWafClbDomain() *schema.Resource {
 			},
 			"load_balancer_set": {
 				Type:        schema.TypeList,
-				Required:    true,
+				Optional:    true,
 				Description: "List of bound LB.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -185,12 +219,12 @@ func resourceTencentCloudWafClbDomain() *schema.Resource {
 						"numerical_vpc_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "VPCID for load balancer, public network is -1, and internal network is filled in according to actual conditionsNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "VPCID for load balancer, public network is -1, and internal network is filled in according to actual conditions.",
 						},
 						"load_balancer_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Network type for load balancerNote: This field may return null, indicating that a valid value cannot be obtained.",
+							Description: "Network type for load balancer.",
 						},
 					},
 				},
@@ -233,13 +267,13 @@ func resourceTencentCloudWafClbDomain() *schema.Resource {
 				Optional:     true,
 				Default:      ALB_TYPE_CLB,
 				ValidateFunc: validateAllowedStringValue(ALB_TYPES),
-				Description:  "Load balancer type: clb or apisix, default clbNote: This field may return null, indicating that a valid value cannot be obtained.",
+				Description:  "Load balancer type: clb, apisix or tsegw, default clb.",
 			},
 			"ip_headers": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "When is_cdn=3, this parameter needs to be filled in to indicate a custom headerNote: This field may return null, indicating that a valid value cannot be obtained.",
+				Description: "When is_cdn=3, this parameter needs to be filled in to indicate a custom header.",
 			},
 			"domain_id": {
 				Type:        schema.TypeString,
@@ -286,55 +320,68 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 		isCdn = v.(int)
 	}
 
-	if v, ok := d.GetOk("load_balancer_set"); ok {
-		for _, item := range v.([]interface{}) {
-			loadBalancerSetMap := item.(map[string]interface{})
-			loadBalancer := waf.LoadBalancer{}
-			if v, ok := loadBalancerSetMap["load_balancer_id"]; ok {
-				loadBalancer.LoadBalancerId = helper.String(v.(string))
-			}
+	if v, ok := d.GetOk("alb_type"); ok {
+		hostRecord.AlbType = helper.String(v.(string))
+		albType = v.(string)
 
-			if v, ok := loadBalancerSetMap["load_balancer_name"]; ok {
-				loadBalancer.LoadBalancerName = helper.String(v.(string))
-			}
+		if albType == ALB_TYPE_CLB {
+			if v, ok := d.GetOk("load_balancer_set"); ok {
+				for _, item := range v.([]interface{}) {
+					loadBalancerSetMap := item.(map[string]interface{})
+					loadBalancer := waf.LoadBalancer{}
+					if v, ok := loadBalancerSetMap["load_balancer_id"]; ok {
+						loadBalancer.LoadBalancerId = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["listener_id"]; ok {
-				loadBalancer.ListenerId = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["load_balancer_name"]; ok {
+						loadBalancer.LoadBalancerName = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["listener_name"]; ok {
-				loadBalancer.ListenerName = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["listener_id"]; ok {
+						loadBalancer.ListenerId = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["vip"]; ok {
-				loadBalancer.Vip = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["listener_name"]; ok {
+						loadBalancer.ListenerName = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["vport"]; ok {
-				loadBalancer.Vport = helper.IntUint64(v.(int))
-			}
+					if v, ok := loadBalancerSetMap["vip"]; ok {
+						loadBalancer.Vip = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["region"]; ok {
-				loadBalancer.Region = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["vport"]; ok {
+						loadBalancer.Vport = helper.IntUint64(v.(int))
+					}
 
-			if v, ok := loadBalancerSetMap["protocol"]; ok {
-				loadBalancer.Protocol = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["region"]; ok {
+						loadBalancer.Region = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["zone"]; ok {
-				loadBalancer.Zone = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["protocol"]; ok {
+						loadBalancer.Protocol = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["numerical_vpc_id"]; ok {
-				loadBalancer.NumericalVpcId = helper.IntInt64(v.(int))
-			}
+					if v, ok := loadBalancerSetMap["zone"]; ok {
+						loadBalancer.Zone = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["load_balancer_type"]; ok {
-				loadBalancer.LoadBalancerType = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["numerical_vpc_id"]; ok {
+						loadBalancer.NumericalVpcId = helper.IntInt64(v.(int))
+					}
 
-			hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
+					if v, ok := loadBalancerSetMap["load_balancer_type"]; ok {
+						loadBalancer.LoadBalancerType = helper.String(v.(string))
+					}
+
+					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
+				}
+			} else {
+				return fmt.Errorf("If `alb_type` is clb, `load_balancer_set` is required.")
+			}
+		} else {
+			if _, ok := d.GetOk("load_balancer_set"); ok {
+				return fmt.Errorf("If `alb_type` is apisix or tsegw, `load_balancer_set` is not supported.")
+			}
 		}
 	}
 
@@ -344,11 +391,6 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOkExists("flow_mode"); ok {
 		hostRecord.FlowMode = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("alb_type"); ok {
-		hostRecord.AlbType = helper.String(v.(string))
-		albType = v.(string)
 	}
 
 	if v, ok := d.GetOk("ip_headers"); ok {
@@ -614,59 +656,65 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 		_ = d.Set("engine", domainInfo.Engine)
 	}
 
-	if domainInfo.LoadBalancerSet != nil {
-		loadBalancerSetList := []interface{}{}
-		for _, loadBalancerSet := range domainInfo.LoadBalancerSet {
-			loadBalancerSetMap := map[string]interface{}{}
+	if domainInfo.AlbType != nil {
+		_ = d.Set("alb_type", domainInfo.AlbType)
 
-			if loadBalancerSet.LoadBalancerId != nil {
-				loadBalancerSetMap["load_balancer_id"] = loadBalancerSet.LoadBalancerId
+		if *domainInfo.AlbType == ALB_TYPE_CLB {
+			if domainInfo.LoadBalancerSet != nil {
+				loadBalancerSetList := []interface{}{}
+				for _, loadBalancerSet := range domainInfo.LoadBalancerSet {
+					loadBalancerSetMap := map[string]interface{}{}
+
+					if loadBalancerSet.LoadBalancerId != nil {
+						loadBalancerSetMap["load_balancer_id"] = loadBalancerSet.LoadBalancerId
+					}
+
+					if loadBalancerSet.LoadBalancerName != nil {
+						loadBalancerSetMap["load_balancer_name"] = loadBalancerSet.LoadBalancerName
+					}
+
+					if loadBalancerSet.ListenerId != nil {
+						loadBalancerSetMap["listener_id"] = loadBalancerSet.ListenerId
+					}
+
+					if loadBalancerSet.ListenerName != nil {
+						loadBalancerSetMap["listener_name"] = loadBalancerSet.ListenerName
+					}
+
+					if loadBalancerSet.Vip != nil {
+						loadBalancerSetMap["vip"] = loadBalancerSet.Vip
+					}
+
+					if loadBalancerSet.Vport != nil {
+						loadBalancerSetMap["vport"] = loadBalancerSet.Vport
+					}
+
+					if loadBalancerSet.Region != nil {
+						loadBalancerSetMap["region"] = loadBalancerSet.Region
+					}
+
+					if loadBalancerSet.Protocol != nil {
+						loadBalancerSetMap["protocol"] = loadBalancerSet.Protocol
+					}
+
+					if loadBalancerSet.Zone != nil {
+						loadBalancerSetMap["zone"] = loadBalancerSet.Zone
+					}
+
+					if loadBalancerSet.NumericalVpcId != nil {
+						loadBalancerSetMap["numerical_vpc_id"] = loadBalancerSet.NumericalVpcId
+					}
+
+					if loadBalancerSet.LoadBalancerType != nil {
+						loadBalancerSetMap["load_balancer_type"] = loadBalancerSet.LoadBalancerType
+					}
+
+					loadBalancerSetList = append(loadBalancerSetList, loadBalancerSetMap)
+				}
+
+				_ = d.Set("load_balancer_set", loadBalancerSetList)
 			}
-
-			if loadBalancerSet.LoadBalancerName != nil {
-				loadBalancerSetMap["load_balancer_name"] = loadBalancerSet.LoadBalancerName
-			}
-
-			if loadBalancerSet.ListenerId != nil {
-				loadBalancerSetMap["listener_id"] = loadBalancerSet.ListenerId
-			}
-
-			if loadBalancerSet.ListenerName != nil {
-				loadBalancerSetMap["listener_name"] = loadBalancerSet.ListenerName
-			}
-
-			if loadBalancerSet.Vip != nil {
-				loadBalancerSetMap["vip"] = loadBalancerSet.Vip
-			}
-
-			if loadBalancerSet.Vport != nil {
-				loadBalancerSetMap["vport"] = loadBalancerSet.Vport
-			}
-
-			if loadBalancerSet.Region != nil {
-				loadBalancerSetMap["region"] = loadBalancerSet.Region
-			}
-
-			if loadBalancerSet.Protocol != nil {
-				loadBalancerSetMap["protocol"] = loadBalancerSet.Protocol
-			}
-
-			if loadBalancerSet.Zone != nil {
-				loadBalancerSetMap["zone"] = loadBalancerSet.Zone
-			}
-
-			if loadBalancerSet.NumericalVpcId != nil {
-				loadBalancerSetMap["numerical_vpc_id"] = loadBalancerSet.NumericalVpcId
-			}
-
-			if loadBalancerSet.LoadBalancerType != nil {
-				loadBalancerSetMap["load_balancer_type"] = loadBalancerSet.LoadBalancerType
-			}
-
-			loadBalancerSetList = append(loadBalancerSetList, loadBalancerSetMap)
 		}
-
-		_ = d.Set("load_balancer_set", loadBalancerSetList)
 	}
 
 	if domainInfo.Region != nil {
@@ -687,10 +735,6 @@ func resourceTencentCloudWafClbDomainRead(d *schema.ResourceData, meta interface
 
 	if domainInfo.ApiStatus != nil {
 		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
-	}
-
-	if domainInfo.AlbType != nil {
-		_ = d.Set("alb_type", domainInfo.AlbType)
 	}
 
 	if domainInfo.DomainId != nil {
@@ -743,7 +787,7 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 	domain := idSplit[1]
 	domainId := idSplit[2]
 
-	immutableArgs := []string{"instance_id", "domain"}
+	immutableArgs := []string{"instance_id", "domain", "alb_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -798,64 +842,73 @@ func resourceTencentCloudWafClbDomainUpdate(d *schema.ResourceData, meta interfa
 		isCdn = v.(int)
 	}
 
-	if v, ok := d.GetOk("load_balancer_set"); ok {
-		for _, item := range v.([]interface{}) {
-			loadBalancerSetMap := item.(map[string]interface{})
-			loadBalancer := waf.LoadBalancer{}
-			if v, ok := loadBalancerSetMap["load_balancer_id"]; ok {
-				loadBalancer.LoadBalancerId = helper.String(v.(string))
-			}
+	if v, ok := d.GetOk("alb_type"); ok {
+		hostRecord.AlbType = helper.String(v.(string))
+		albType := v.(string)
 
-			if v, ok := loadBalancerSetMap["load_balancer_name"]; ok {
-				loadBalancer.LoadBalancerName = helper.String(v.(string))
-			}
+		if albType == ALB_TYPE_CLB {
+			if v, ok := d.GetOk("load_balancer_set"); ok {
+				for _, item := range v.([]interface{}) {
+					loadBalancerSetMap := item.(map[string]interface{})
+					loadBalancer := waf.LoadBalancer{}
+					if v, ok := loadBalancerSetMap["load_balancer_id"]; ok {
+						loadBalancer.LoadBalancerId = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["listener_id"]; ok {
-				loadBalancer.ListenerId = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["load_balancer_name"]; ok {
+						loadBalancer.LoadBalancerName = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["listener_name"]; ok {
-				loadBalancer.ListenerName = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["listener_id"]; ok {
+						loadBalancer.ListenerId = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["vip"]; ok {
-				loadBalancer.Vip = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["listener_name"]; ok {
+						loadBalancer.ListenerName = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["vport"]; ok {
-				loadBalancer.Vport = helper.IntUint64(v.(int))
-			}
+					if v, ok := loadBalancerSetMap["vip"]; ok {
+						loadBalancer.Vip = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["region"]; ok {
-				loadBalancer.Region = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["vport"]; ok {
+						loadBalancer.Vport = helper.IntUint64(v.(int))
+					}
 
-			if v, ok := loadBalancerSetMap["protocol"]; ok {
-				loadBalancer.Protocol = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["region"]; ok {
+						loadBalancer.Region = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["zone"]; ok {
-				loadBalancer.Zone = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["protocol"]; ok {
+						loadBalancer.Protocol = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["numerical_vpc_id"]; ok {
-				loadBalancer.NumericalVpcId = helper.IntInt64(v.(int))
-			}
+					if v, ok := loadBalancerSetMap["zone"]; ok {
+						loadBalancer.Zone = helper.String(v.(string))
+					}
 
-			if v, ok := loadBalancerSetMap["load_balancer_type"]; ok {
-				loadBalancer.LoadBalancerType = helper.String(v.(string))
-			}
+					if v, ok := loadBalancerSetMap["numerical_vpc_id"]; ok {
+						loadBalancer.NumericalVpcId = helper.IntInt64(v.(int))
+					}
 
-			hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
+					if v, ok := loadBalancerSetMap["load_balancer_type"]; ok {
+						loadBalancer.LoadBalancerType = helper.String(v.(string))
+					}
+
+					hostRecord.LoadBalancerSet = append(hostRecord.LoadBalancerSet, &loadBalancer)
+				}
+			} else {
+				return fmt.Errorf("If `alb_type` is clb, `load_balancer_set` is required.")
+			}
+		} else {
+			if _, ok := d.GetOk("load_balancer_set"); ok {
+				return fmt.Errorf("If `alb_type` is apisix or tsegw, `load_balancer_set` is not supported.")
+			}
 		}
 	}
 
 	if v, ok := d.GetOk("region"); ok {
 		hostRecord.Region = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("alb_type"); ok {
-		hostRecord.AlbType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("ip_headers"); ok {

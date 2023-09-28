@@ -48,10 +48,10 @@ The following arguments are supported:
 
 The `strategies` object supports the following:
 
-* `arg` - (Required, String) Matching parametersNote: This field may return null, indicating that a valid value cannot be obtained.
-* `compare_func` - (Required, String) Logical symbolNote: This field may return null, indicating that a valid value cannot be obtained.
-* `content` - (Required, String) Matching ContentNote: This field may return null, indicating that a valid value cannot be obtained.
-* `field` - (Required, String) Matching FieldsNote: This field may return null, indicating that a valid value cannot be obtained.
+* `arg` - (Required, String) Matching parameters.
+* `compare_func` - (Required, String) Logical symbol.
+* `content` - (Required, String) Matching Content.
+* `field` - (Required, String) Matching Fields.
 
 ## Attributes Reference
 
