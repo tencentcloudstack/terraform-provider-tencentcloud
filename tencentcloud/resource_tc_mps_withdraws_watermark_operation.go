@@ -3,54 +3,35 @@ Provides a resource to create a mps withdraws_watermark_operation
 
 Example Usage
 
+Withdraw the watermark from COS
+
 ```hcl
-resource "tencentcloud_mps_withdraws_watermark_operation" "withdraws_watermark_operation" {
+resource "tencentcloud_cos_bucket" "example" {
+  bucket = "tf-test-mps-wm-${local.app_id}"
+  acl    = "public-read"
+}
+
+resource "tencentcloud_cos_bucket_object" "example" {
+  bucket = tencentcloud_cos_bucket.example.bucket
+  key    = "/test-file/test.mov"
+  source = "/Users/luoyin/Downloads/file_example_MOV_480_700kB.mov"
+}
+
+
+resource "tencentcloud_mps_withdraws_watermark_operation" "operation" {
   input_info {
-		type = ""
-		cos_input_info {
-			bucket = ""
-			region = ""
-			object = ""
-		}
-		url_input_info {
-			url = ""
-		}
-		s3_input_info {
-			s3_bucket = ""
-			s3_region = ""
-			s3_object = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
+    type = "COS"
+    cos_input_info {
+      bucket = tencentcloud_cos_bucket_object.example.bucket
+      region = "%s"
+      object = tencentcloud_cos_bucket_object.example.key
+    }
   }
-  task_notify_config {
-		cmq_model = ""
-		cmq_region = ""
-		topic_name = ""
-		queue_name = ""
-		notify_mode = ""
-		notify_type = ""
-		notify_url = ""
-		aws_sqs {
-			sqs_region = ""
-			sqs_queue_name = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
 
-  }
-  session_context = ""
+  session_context = "this is a example session context"
 }
 ```
 
-Import
-
-mps withdraws_watermark_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mps_withdraws_watermark_operation.withdraws_watermark_operation withdraws_watermark_operation_id
-```
 */
 package tencentcloud
 
@@ -68,9 +49,6 @@ func resourceTencentCloudMpsWithdrawsWatermarkOperation() *schema.Resource {
 		Create: resourceTencentCloudMpsWithdrawsWatermarkOperationCreate,
 		Read:   resourceTencentCloudMpsWithdrawsWatermarkOperationRead,
 		Delete: resourceTencentCloudMpsWithdrawsWatermarkOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"input_info": {
 				Required:    true,
@@ -83,7 +61,7 @@ func resourceTencentCloudMpsWithdrawsWatermarkOperation() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+							Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks..",
 						},
 						"cos_input_info": {
 							Type:        schema.TypeList,
@@ -200,7 +178,7 @@ func resourceTencentCloudMpsWithdrawsWatermarkOperation() *schema.Resource {
 						"notify_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The notification type. Valid values: &lt;li&gt;`CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead.&lt;/li&gt; &lt;li&gt;`TDMQ-CMQ`: Message queue&lt;/li&gt; &lt;li&gt;`URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API.&lt;/li&gt; &lt;li&gt;`SCF`: This notification type is not recommended. You need to configure it in the SCF console.&lt;/li&gt; &lt;li&gt;`AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.&lt;/li&gt; &lt;font color=red&gt;Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.&lt;/font&gt;.",
+							Description: "The notification type. Valid values:  `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead.  `TDMQ-CMQ`: Message queue  `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API.  `SCF`: This notification type is not recommended. You need to configure it in the SCF console.  `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket. Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.",
 						},
 						"notify_url": {
 							Type:        schema.TypeString,

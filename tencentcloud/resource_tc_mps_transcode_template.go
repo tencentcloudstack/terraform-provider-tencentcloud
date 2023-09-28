@@ -485,10 +485,10 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 			videoTemplateInfo.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["fps"]; ok {
-			videoTemplateInfo.Fps = helper.IntUint64(v.(int))
+			videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+			videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["resolution_adaptive"]; ok {
 			videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -517,7 +517,7 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 			audioTemplateInfo.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+			audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["sample_rate"]; ok {
 			audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -534,7 +534,7 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 			tEHDConfig.Type = helper.String(v.(string))
 		}
 		if v, ok := dMap["max_video_bitrate"]; ok {
-			tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
+			tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
 		}
 		request.TEHDConfig = &tEHDConfig
 	}
@@ -1025,10 +1025,10 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 				videoTemplateInfo.Codec = helper.String(v.(string))
 			}
 			if v, ok := dMap["fps"]; ok {
-				videoTemplateInfo.Fps = helper.IntUint64(v.(int))
+				videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 			}
 			if v, ok := dMap["bitrate"]; ok {
-				videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+				videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 			}
 			if v, ok := dMap["resolution_adaptive"]; ok {
 				videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -1059,7 +1059,7 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 				audioTemplateInfo.Codec = helper.String(v.(string))
 			}
 			if v, ok := dMap["bitrate"]; ok {
-				audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+				audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 			}
 			if v, ok := dMap["sample_rate"]; ok {
 				audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -1078,7 +1078,7 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 				tEHDConfig.Type = helper.String(v.(string))
 			}
 			if v, ok := dMap["max_video_bitrate"]; ok {
-				tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
+				tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
 			}
 			request.TEHDConfig = &tEHDConfig
 		}

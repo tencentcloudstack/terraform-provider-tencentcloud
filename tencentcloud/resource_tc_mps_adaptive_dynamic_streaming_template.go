@@ -254,10 +254,10 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 					videoTemplateInfo.Codec = helper.String(v.(string))
 				}
 				if v, ok := videoMap["fps"]; ok {
-					videoTemplateInfo.Fps = helper.IntUint64(v.(int))
+					videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 				}
 				if v, ok := videoMap["bitrate"]; ok {
-					videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+					videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 				}
 				if v, ok := videoMap["resolution_adaptive"]; ok {
 					videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -285,7 +285,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 					audioTemplateInfo.Codec = helper.String(v.(string))
 				}
 				if v, ok := audioMap["bitrate"]; ok {
-					audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+					audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 				}
 				if v, ok := audioMap["sample_rate"]; ok {
 					audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -511,10 +511,10 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 						videoTemplateInfo.Codec = helper.String(v.(string))
 					}
 					if v, ok := videoMap["fps"]; ok {
-						videoTemplateInfo.Fps = helper.IntUint64(v.(int))
+						videoTemplateInfo.Fps = helper.IntInt64(v.(int))
 					}
 					if v, ok := videoMap["bitrate"]; ok {
-						videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+						videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 					}
 					if v, ok := videoMap["resolution_adaptive"]; ok {
 						videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -542,7 +542,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 						audioTemplateInfo.Codec = helper.String(v.(string))
 					}
 					if v, ok := audioMap["bitrate"]; ok {
-						audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
+						audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
 					}
 					if v, ok := audioMap["sample_rate"]; ok {
 						audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))

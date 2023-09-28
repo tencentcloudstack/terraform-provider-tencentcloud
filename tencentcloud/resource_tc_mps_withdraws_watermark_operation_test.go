@@ -2,7 +2,6 @@ package tencentcloud
 
 import (
 	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -17,22 +16,17 @@ func TestAccTencentCloudMpsWithdrawsWatermarkOperationResource_basic(t *testing.
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccMpsWithdrawsWatermarkOperation, os.Getenv(PROVIDER_REGION)),
+				Config: fmt.Sprintf(testAccMpsWithdrawsWatermarkOperation, defaultRegion),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_withdraws_watermark_operation.operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.#"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.type", "cos"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.type", "COS"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.cos_input_info.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.cos_input_info.0.bucket"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.cos_input_info.0.region", os.Getenv(PROVIDER_REGION)),
+					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.cos_input_info.0.region", defaultRegion),
 					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "input_info.0.cos_input_info.0.object", "/mps-test/test.mov"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_withdraws_watermark_operation.operation", "session_context", "this is a example session context"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_mps_withdraws_watermark_operation.operation",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -57,11 +51,11 @@ data "tencentcloud_cos_bucket_object" "object" {
 
 resource "tencentcloud_mps_withdraws_watermark_operation" "operation" {
   input_info {
-		type = "cos"
+		type = "COS"
 		cos_input_info {
-			bucket = data.tencentcloud_cos_bucket_object.object.0.bucket
+			bucket = data.tencentcloud_cos_bucket_object.object.bucket
 			region = "%s"
-			object = data.tencentcloud_cos_bucket_object.object.0.key
+			object = data.tencentcloud_cos_bucket_object.object.key
 		}
   }
 //   task_notify_config {
