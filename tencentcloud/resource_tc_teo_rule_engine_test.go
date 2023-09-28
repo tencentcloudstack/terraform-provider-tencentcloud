@@ -6,51 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
-
-func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_teo_rule_engine
-	resource.AddTestSweepers("tencentcloud_teo_rule_engine", &resource.Sweeper{
-		Name: "tencentcloud_teo_rule_engine",
-		F:    testSweepRuleEngine,
-	})
-}
-
-func testSweepRuleEngine(region string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion(region)
-	client := cli.(*TencentCloudClient).apiV3Conn
-	service := TeoService{client}
-
-	zoneId := defaultZoneId
-
-	records, err := service.DescribeTeoRuleEngines(ctx, zoneId)
-	if err != nil {
-		return err
-	}
-
-	if len(records) < 1 {
-		return nil
-	}
-
-	for _, v := range records {
-		if *v.RuleName == "rule-1" {
-			err = service.DeleteTeoRuleEngineById(ctx, zoneId, *v.RuleId)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
 
 // go test -i; go test -test.run TestAccTencentCloudTeoRuleEngine_basic -v
 func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
@@ -61,7 +22,8 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 				Config: testAccTeoRuleEngine,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRuleEngineExists("tencentcloud_teo_rule_engine.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.actions.#", "1"),
@@ -86,6 +48,32 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_teo_rule_engine.basic",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccTeoRuleEngineUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckRuleEngineExists("tencentcloud_teo_rule_engine.basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-up"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.actions.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.or.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.tags.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.operator", "equal"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.target", "filename"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.ignore_case", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.or.0.and.0.values.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.action", "HostHeader"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.name", "ServerName"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.0.sub_rules.0.rules.0.actions.0.normal_action.0.parameters.0.values.#", "1"),
+				),
 			},
 		},
 	})
@@ -146,18 +134,70 @@ func testAccCheckRuleEngineExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoRuleEngineVar = `
-variable "zone_id" {
-  default = "` + defaultZoneId + `"
-}
-`
-
-const testAccTeoRuleEngine = testAccTeoRuleEngineVar + `
+const testAccTeoRuleEngine = testAccTeoZone + `
 
 resource "tencentcloud_teo_rule_engine" "basic" {
 	rule_name = "rule-1"
 	status    = "enable"
-	zone_id   = var.zone_id
+	zone_id   = tencentcloud_teo_zone.basic.id
+  
+	rules {
+	  actions {
+  
+		rewrite_action {
+		  action = "ResponseHeader"
+  
+		  parameters {
+			action = "set"
+			name   = "project"
+			values = [
+			  "1111",
+			]
+		  }
+		}
+	  }
+  
+	  or {
+		and {
+		  operator = "equal"
+		  target   = "extension"
+		  values   = [
+			"11",
+		  ]
+		}
+	  }
+	  sub_rules {
+		  tags = ["test-tag",]
+		  rules {
+			or {
+			  and {
+				operator = "equal"
+				target = "filename"
+				ignore_case = false
+				values = ["test.txt"]
+			  }
+			}
+			actions {
+				normal_action {
+					action = "HostHeader"
+					parameters {
+						name = "ServerName"
+						values = ["terraform-test.com"]
+					}
+				}
+			}
+		  }
+	  }
+	}
+  }
+`
+
+const testAccTeoRuleEngineUp = testAccTeoZone + `
+
+resource "tencentcloud_teo_rule_engine" "basic" {
+	rule_name = "rule-up"
+	status    = "enable"
+	zone_id   = tencentcloud_teo_zone.basic.id
   
 	rules {
 	  actions {

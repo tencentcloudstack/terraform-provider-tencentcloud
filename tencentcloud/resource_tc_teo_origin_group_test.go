@@ -13,7 +13,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_basic -v
 func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
@@ -23,14 +23,14 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 				Config: testAccTeoOriginGroup,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "configuration_type", "weight"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_group_name", "keep-group-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_type", "self"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.port", "8080"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.private", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.record", defaultZoneName),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "origin_records.0.record"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.weight", "100"),
 				),
 			},
@@ -98,22 +98,13 @@ func testAccCheckOriginGroupExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoOriginGroupVar = `
-variable "zone_id" {
-  default = "` + defaultZoneId + `"
-}
-
-variable "zone_name" {
-  default = "` + defaultZoneName + `"
-}
-`
-const testAccTeoOriginGroup = testAccTeoOriginGroupVar + `
+const testAccTeoOriginGroup = testAccTeoZone + `
 
 resource "tencentcloud_teo_origin_group" "basic" {
   configuration_type = "weight"
   origin_group_name  = "keep-group-1"
   origin_type        = "self"
-  zone_id            = var.zone_id
+  zone_id            = tencentcloud_teo_zone.basic.id
 
   origin_records {
     area      = []

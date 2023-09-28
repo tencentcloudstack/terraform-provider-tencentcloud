@@ -157,9 +157,9 @@ The `cache_prefresh` object supports the following:
 
 The `cache` object supports the following:
 
-* `cache_time` - (Optional, Int) Cache expiration time settings.Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.
-* `ignore_cache_control` - (Optional, String) Specifies whether to enable force cache.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
-* `switch` - (Optional, String) Cache configuration switch.- `on`: Enable.- `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `cache_time` - (Optional, Int) Cache expiration time settings, Unit: second. The maximum value is 365 days. Note: This field may return null, indicating that no valid value can be obtained.
+* `ignore_cache_control` - (Optional, String) Specifies whether to enable force cache. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Optional, String) Cache configuration switch. Valid values: `on`: Enable; `off`: Disable. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `cache` object supports the following:
 
@@ -206,12 +206,12 @@ The `ipv6` object supports the following:
 
 The `max_age` object supports the following:
 
-* `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If it&#39;s on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.
+* `follow_origin` - (Optional, String) Specifies whether to follow the max cache age of the origin server.- `on`: Enable.- `off`: Disable.If is on, MaxAgeTime is ignored. Note: This field may return null, indicating that no valid value can be obtained.
 * `max_age_time` - (Optional, Int) Specifies the max age of the cache (in seconds). The maximum value is 365 days. Note: the value 0 means not to cache. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `no_cache` object supports the following:
 
-* `switch` - (Optional, String) Whether to cache the configuration.- `on`: Do not cache.- `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.
+* `switch` - (Optional, String) Whether to cache the configuration. Valid values: `on`: Do not cache; `off`: Cache. Note: This field may return null, indicating that no valid value can be obtained.
 
 The `offline_cache` object supports the following:
 
@@ -249,7 +249,7 @@ The `upstream_http2` object supports the following:
 
 The `web_socket` object supports the following:
 
-* `switch` - (Required, String) Whether to enable custom WebSocket timeout setting. When it&#39;s off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.
+* `switch` - (Required, String) Whether to enable custom WebSocket timeout setting. When is off: it means to keep the default WebSocket connection timeout period, which is 15 seconds. To change the timeout period, please set it to on.
 * `timeout` - (Optional, Int) Sets timeout period in seconds. Maximum value: 120.
 
 ## Attributes Reference
@@ -264,6 +264,6 @@ In addition to all arguments above, the following attributes are exported:
 
 teo zone_setting can be imported using the zone_id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
+terraform import tencentcloud_teo_zone_setting.zone_setting zone-297z8rf93cfw#
 ```
 

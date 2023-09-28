@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -25,9 +24,7 @@ func testSweepZone(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TeoService{client}
 
-	zoneId := defaultZoneId
-
-	zone, err := service.DescribeTeoZone(ctx, zoneId)
+	zone, err := service.DescribeTeoZone(ctx, "")
 	if err != nil {
 		return err
 	}
@@ -36,7 +33,7 @@ func testSweepZone(region string) error {
 		return nil
 	}
 
-	err = service.DeleteTeoZoneById(ctx, zoneId)
+	err = service.DeleteTeoZoneById(ctx, *zone.ZoneId)
 	if err != nil {
 		return err
 	}
@@ -44,8 +41,8 @@ func testSweepZone(region string) error {
 	return nil
 }
 
-// go test -i; go test -test.run TestAccTencentCloudTeoZone_basic -v
-func TestAccTencentCloudNeedFixTeoZone_basic(t *testing.T) {
+// go test -test.run TestAccTencentCloudTeoZone_basic -v
+func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
@@ -57,18 +54,44 @@ func TestAccTencentCloudNeedFixTeoZone_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "zone_name", "tf-teo.xyz"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_type", "sta"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "full"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "area", "overseas"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "alias_zone_name", "tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "cname_speed_up", "enabled"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.createdBy", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_id", "edgeone-2kfv1h391n6w"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "partial"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.勿动", "TF测试"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.占用人", "arunma"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_type", "TXT"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_value"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.subdomain"),
 				),
 			},
-			//{
-			//	ResourceName:      "tencentcloud_teo_zone.basic",
-			//	ImportState:       true,
-			//	ImportStateVerify: true,
-			//},
+			{
+				ResourceName:      "tencentcloud_teo_zone.basic",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccTeoZoneUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "zone_name", "tf-teo.xyz"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "area", "overseas"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "alias_zone_name", "tf-test-up"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_id", "edgeone-2kfv1h391n6w"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "partial"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.勿动", "TF测试"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "tags.占用人", "arunma"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_type", "TXT"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.record_value"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_zone.basic", "ownership_verification.0.dns_verification.0.subdomain"),
+				),
+			},
 		},
 	})
 }
@@ -116,18 +139,45 @@ func testAccCheckZoneExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoZone = `
+const testAccTeoZoneVar = `
+variable "zone_name" {
+  default = "tf-teo.xyz"
+}
+
+variable "plan_id" {
+  default = "edgeone-2kfv1h391n6w"
+}`
+
+const testAccTeoZone = testAccTeoZoneVar + `
 
 resource "tencentcloud_teo_zone" "basic" {
-  cname_speed_up          = "enabled"
-  plan_type               = "sta"
-  paused                  = false
-  type                    = "full"
-  zone_name               = "tf-teo.xyz"
-
-  tags = {
-    "createdBy" = "terraform"
+	area            = "overseas"
+	alias_zone_name = "tf-test"
+	paused          = false
+	plan_id         = var.plan_id
+	tags = {
+	  "勿动"  = "TF测试"
+	  "占用人" = "arunma"
+	}
+	type      = "partial"
+	zone_name = var.zone_name
   }
-}
+
+`
+
+const testAccTeoZoneUp = testAccTeoZoneVar + `
+
+resource "tencentcloud_teo_zone" "basic" {
+	area            = "overseas"
+	alias_zone_name = "tf-test-up"
+	paused          = true
+	plan_id         = var.plan_id
+	tags = {
+	  "勿动"  = "TF测试"
+	  "占用人" = "arunma"
+	}
+	type      = "partial"
+	zone_name = var.zone_name
+  }
 
 `
