@@ -13,6 +13,8 @@ Provides a resource to create a teo origin_group
 
 ## Example Usage
 
+### Self origin group
+
 ```hcl
 resource "tencentcloud_teo_origin_group" "origin_group" {
   zone_id            = "zone-297z8rf93cfw"
@@ -24,6 +26,25 @@ resource "tencentcloud_teo_origin_group" "origin_group" {
     port    = 8080
     private = false
     record  = "150.109.8.1"
+    weight  = 100
+  }
+}
+```
+
+### Cos origin group
+
+```hcl
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  configuration_type = "weight"
+  origin_group_name  = "test"
+  origin_type        = "cos"
+  zone_id            = "zone-2o3h21ed8bpu"
+
+  origin_records {
+    area    = []
+    port    = 0
+    private = true
+    record  = "test-ruichaolin-1310708577.cos.ap-nanjing.myqcloud.com"
     weight  = 100
   }
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
+func TestAccTencentCloudTeoCertificateConfigResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -15,13 +15,13 @@ func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTeoCertificate,
+				Config: testAccTeoCertificateConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate.certificate", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate_config.certificate", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_certificate.certificate",
+				ResourceName:      "tencentcloud_teo_certificate_config.certificate",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -29,9 +29,9 @@ func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTeoCertificate = testAccTeoZone + `
+const testAccTeoCertificateConfig = testAccTeoZone + `
 
-resource "tencentcloud_teo_certificate" "certificate" {
+resource "tencentcloud_teo_certificate_config" "certificate" {
     host    = ` + "test." + `var.zone_name
     mode    = "disable"
     zone_id = tencentcloud_teo_zone.basic.id

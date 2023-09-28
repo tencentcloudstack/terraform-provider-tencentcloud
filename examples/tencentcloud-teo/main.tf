@@ -87,20 +87,10 @@ resource "tencentcloud_dnspod_record" "acceleration_domain_record" {
 
 }
 
-resource "tencentcloud_teo_certificate" "certificate" {
+resource "tencentcloud_teo_certificate_config" "certificate" {
   host    = tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name
   mode    = "eofreecert"
   zone_id = tencentcloud_teo_zone.zone.id
-
-  # server_cert_info {
-  #     alias       = "EdgeOne default"
-  #     cert_id     = "teo-2o1tfutpnb6l"
-  #     common_name = var.zone_name
-  #     deploy_time = "2023-09-27T11:54:47Z"
-  #     expire_time = "2023-12-26T06:38:47Z"
-  #     sign_algo   = "RSA 2048"
-  #     type        = "default"
-  # }
 
   depends_on = [tencentcloud_dnspod_record.acceleration_domain_record]
 }

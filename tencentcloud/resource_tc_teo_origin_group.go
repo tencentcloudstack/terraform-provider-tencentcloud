@@ -3,6 +3,8 @@ Provides a resource to create a teo origin_group
 
 Example Usage
 
+Self origin group
+
 ```hcl
 resource "tencentcloud_teo_origin_group" "origin_group" {
   zone_id            = "zone-297z8rf93cfw"
@@ -18,7 +20,26 @@ resource "tencentcloud_teo_origin_group" "origin_group" {
   }
 }
 
-````
+```
+
+Cos origin group
+
+```hcl
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  configuration_type = "weight"
+  origin_group_name  = "test"
+  origin_type        = "cos"
+  zone_id            = "zone-2o3h21ed8bpu"
+
+  origin_records {
+    area    = []
+    port    = 0
+    private = true
+    record  = "test-ruichaolin-1310708577.cos.ap-nanjing.myqcloud.com"
+    weight  = 100
+  }
+}
+```
 Import
 
 teo origin_group can be imported using the zone_id#originGroup_id, e.g.
@@ -169,10 +190,6 @@ func resourceTencentCloudTeoOriginGroupCreate(d *schema.ResourceData, meta inter
 		zoneId = v.(string)
 		request.ZoneId = helper.String(v.(string))
 	}
-
-	//if v, ok := d.GetOk("origin_group_id"); ok {
-	//	request.OriginGroupId = helper.String(v.(string))
-	//}
 
 	if v, ok := d.GetOk("origin_group_name"); ok {
 		request.OriginGroupName = helper.String(v.(string))

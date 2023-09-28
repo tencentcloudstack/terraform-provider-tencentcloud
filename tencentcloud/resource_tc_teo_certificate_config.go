@@ -4,7 +4,7 @@ Provides a resource to create a teo certificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_teo_certificate" "certificate" {
+resource "tencentcloud_teo_certificate_config" "certificate" {
   host    = "test.tencentcloud-terraform-provider.cn"
   mode    = "eofreecert"
   zone_id = "zone-2o1t24kgy362"
@@ -14,20 +14,14 @@ resource "tencentcloud_teo_certificate" "certificate" {
 Configure SSL certificate
 
 ```hcl
-resource "tencentcloud_teo_certificate" "certificate" {
-    host    = "test.tencentcloud-terraform-provider.cn"
-    mode    = "sslcert"
-    zone_id = "zone-2o1t24kgy362"
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = "test.tencentcloud-terraform-provider.cn"
+  mode    = "sslcert"
+  zone_id = "zone-2o1t24kgy362"
 
-    server_cert_info {
-        alias       = "EdgeOne default"
-        cert_id     = "teo-2o1tfutpnb6l"
-        common_name = "tencentcloud-terraform-provider.cn"
-        deploy_time = "2023-09-27T11:54:47Z"
-        expire_time = "2023-12-26T06:38:47Z"
-        sign_algo   = "RSA 2048"
-        type        = "default"
-    }
+  server_cert_info {
+    cert_id     = "8xiUJIJd"
+  }
 }
 ```
 
@@ -36,7 +30,7 @@ Import
 teo certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_teo_certificate.certificate zone_id#host#cert_id
+terraform import tencentcloud_teo_certificate_config.certificate zone_id#host#cert_id
 ```
 */
 package tencentcloud
@@ -53,12 +47,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTeoCertificate() *schema.Resource {
+func resourceTencentCloudTeoCertificateConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTeoCertificateCreate,
-		Read:   resourceTencentCloudTeoCertificateRead,
-		Update: resourceTencentCloudTeoCertificateUpdate,
-		Delete: resourceTencentCloudTeoCertificateDelete,
+		Create: resourceTencentCloudTeoCertificateConfigCreate,
+		Read:   resourceTencentCloudTeoCertificateConfigRead,
+		Update: resourceTencentCloudTeoCertificateConfigUpdate,
+		Delete: resourceTencentCloudTeoCertificateConfigDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -92,31 +86,37 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 						"alias": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Alias of the certificate.Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate. Note: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 						"expire_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Time when the certificate expires. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"deploy_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Time when the certificate is deployed. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"sign_algo": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Signature algorithm. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"common_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Domain name of the certificate. Note: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 					},
@@ -133,8 +133,8 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTeoCertificateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate.create")()
+func resourceTencentCloudTeoCertificateConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_teo_certificate_config.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
@@ -151,11 +151,11 @@ func resourceTencentCloudTeoCertificateCreate(d *schema.ResourceData, meta inter
 
 	d.SetId(zoneId + FILED_SP + host)
 
-	return resourceTencentCloudTeoCertificateUpdate(d, meta)
+	return resourceTencentCloudTeoCertificateConfigUpdate(d, meta)
 }
 
-func resourceTencentCloudTeoCertificateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate.read")()
+func resourceTencentCloudTeoCertificateConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_teo_certificate_config.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -242,8 +242,8 @@ func resourceTencentCloudTeoCertificateRead(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate.update")()
+func resourceTencentCloudTeoCertificateConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_teo_certificate_config.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -268,22 +268,22 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["cert_id"]; ok {
 				serverCertInfo.CertId = helper.String(v.(string))
 			}
-			if v, ok := dMap["alias"]; ok {
+			if v, ok := dMap["alias"]; ok && v.(string) != "" {
 				serverCertInfo.Alias = helper.String(v.(string))
 			}
-			if v, ok := dMap["type"]; ok {
+			if v, ok := dMap["type"]; ok && v.(string) != "" {
 				serverCertInfo.Type = helper.String(v.(string))
 			}
-			if v, ok := dMap["expire_time"]; ok {
+			if v, ok := dMap["expire_time"]; ok && v.(string) != "" {
 				serverCertInfo.ExpireTime = helper.String(v.(string))
 			}
-			if v, ok := dMap["deploy_time"]; ok {
+			if v, ok := dMap["deploy_time"]; ok && v.(string) != "" {
 				serverCertInfo.DeployTime = helper.String(v.(string))
 			}
-			if v, ok := dMap["sign_algo"]; ok {
+			if v, ok := dMap["sign_algo"]; ok && v.(string) != "" {
 				serverCertInfo.SignAlgo = helper.String(v.(string))
 			}
-			if v, ok := dMap["common_name"]; ok {
+			if v, ok := dMap["common_name"]; ok && v.(string) != "" {
 				serverCertInfo.CommonName = helper.String(v.(string))
 			}
 			request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
@@ -314,11 +314,11 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	return resourceTencentCloudTeoCertificateRead(d, meta)
+	return resourceTencentCloudTeoCertificateConfigRead(d, meta)
 }
 
-func resourceTencentCloudTeoCertificateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_teo_certificate.delete")()
+func resourceTencentCloudTeoCertificateConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_teo_certificate_config.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
