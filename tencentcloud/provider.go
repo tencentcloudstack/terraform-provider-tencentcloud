@@ -1342,6 +1342,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_file
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
+	tencentcloud_pts_tmp_key_generate
 
 TencentCloud Automation Tools(TAT)
   Data Source
@@ -1567,6 +1568,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_ai_analysis_template
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
+	tencentcloud_mps_withdraws_watermark_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -2914,6 +2916,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_pts_file":                                            resourceTencentCloudPtsFile(),
 			"tencentcloud_pts_job":                                             resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                                        resourceTencentCloudPtsCronJob(),
+			"tencentcloud_pts_tmp_key_generate":                                resourceTencentCloudPtsTmpKeyGenerate(),
 			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),
@@ -3033,6 +3036,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_ai_analysis_template":                            resourceTencentCloudMpsAiAnalysisTemplate(),
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
+			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
