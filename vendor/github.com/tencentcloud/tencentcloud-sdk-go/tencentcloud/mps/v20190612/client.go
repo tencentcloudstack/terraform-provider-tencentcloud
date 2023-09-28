@@ -45,6 +45,166 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewBatchDeleteStreamLinkFlowRequest() (request *BatchDeleteStreamLinkFlowRequest) {
+    request = &BatchDeleteStreamLinkFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "BatchDeleteStreamLinkFlow")
+    
+    
+    return
+}
+
+func NewBatchDeleteStreamLinkFlowResponse() (response *BatchDeleteStreamLinkFlowResponse) {
+    response = &BatchDeleteStreamLinkFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// BatchDeleteStreamLinkFlow
+// 批量删除媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_OUTPUTGROUPS = "InvalidParameter.OutputGroups"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchDeleteStreamLinkFlow(request *BatchDeleteStreamLinkFlowRequest) (response *BatchDeleteStreamLinkFlowResponse, err error) {
+    return c.BatchDeleteStreamLinkFlowWithContext(context.Background(), request)
+}
+
+// BatchDeleteStreamLinkFlow
+// 批量删除媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_OUTPUTGROUPS = "InvalidParameter.OutputGroups"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchDeleteStreamLinkFlowWithContext(ctx context.Context, request *BatchDeleteStreamLinkFlowRequest) (response *BatchDeleteStreamLinkFlowResponse, err error) {
+    if request == nil {
+        request = NewBatchDeleteStreamLinkFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BatchDeleteStreamLinkFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBatchDeleteStreamLinkFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBatchStartStreamLinkFlowRequest() (request *BatchStartStreamLinkFlowRequest) {
+    request = &BatchStartStreamLinkFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "BatchStartStreamLinkFlow")
+    
+    
+    return
+}
+
+func NewBatchStartStreamLinkFlowResponse() (response *BatchStartStreamLinkFlowResponse) {
+    response = &BatchStartStreamLinkFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// BatchStartStreamLinkFlow
+// 批量启动媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_OUTPUTGROUPS = "InvalidParameter.OutputGroups"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchStartStreamLinkFlow(request *BatchStartStreamLinkFlowRequest) (response *BatchStartStreamLinkFlowResponse, err error) {
+    return c.BatchStartStreamLinkFlowWithContext(context.Background(), request)
+}
+
+// BatchStartStreamLinkFlow
+// 批量启动媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_OUTPUTGROUPS = "InvalidParameter.OutputGroups"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchStartStreamLinkFlowWithContext(ctx context.Context, request *BatchStartStreamLinkFlowRequest) (response *BatchStartStreamLinkFlowResponse, err error) {
+    if request == nil {
+        request = NewBatchStartStreamLinkFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BatchStartStreamLinkFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBatchStartStreamLinkFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewBatchStopStreamLinkFlowRequest() (request *BatchStopStreamLinkFlowRequest) {
+    request = &BatchStopStreamLinkFlowRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "BatchStopStreamLinkFlow")
+    
+    
+    return
+}
+
+func NewBatchStopStreamLinkFlowResponse() (response *BatchStopStreamLinkFlowResponse) {
+    response = &BatchStopStreamLinkFlowResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// BatchStopStreamLinkFlow
+// 批量停止媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchStopStreamLinkFlow(request *BatchStopStreamLinkFlowRequest) (response *BatchStopStreamLinkFlowResponse, err error) {
+    return c.BatchStopStreamLinkFlowWithContext(context.Background(), request)
+}
+
+// BatchStopStreamLinkFlow
+// 批量停止媒体传输流。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) BatchStopStreamLinkFlowWithContext(ctx context.Context, request *BatchStopStreamLinkFlowRequest) (response *BatchStopStreamLinkFlowResponse, err error) {
+    if request == nil {
+        request = NewBatchStopStreamLinkFlowRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("BatchStopStreamLinkFlow require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewBatchStopStreamLinkFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAIAnalysisTemplateRequest() (request *CreateAIAnalysisTemplateRequest) {
     request = &CreateAIAnalysisTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -138,13 +298,16 @@ func NewCreateAIRecognitionTemplateResponse() (response *CreateAIRecognitionTemp
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_COMMENT = "InvalidParameterValue.Comment"
 //  INVALIDPARAMETERVALUE_DEFAULTLIBRARYLABELSET = "InvalidParameterValue.DefaultLibraryLabelSet"
+//  INVALIDPARAMETERVALUE_DESTINATIONLANGUAGE = "InvalidParameterValue.DestinationLanguage"
 //  INVALIDPARAMETERVALUE_FACELIBRARY = "InvalidParameterValue.FaceLibrary"
 //  INVALIDPARAMETERVALUE_FACESCORE = "InvalidParameterValue.FaceScore"
 //  INVALIDPARAMETERVALUE_LABELSET = "InvalidParameterValue.LabelSet"
 //  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
 //  INVALIDPARAMETERVALUE_OBJECTLIBRARY = "InvalidParameterValue.ObjectLibrary"
+//  INVALIDPARAMETERVALUE_SOURCELANGUAGE = "InvalidParameterValue.SourceLanguage"
 //  INVALIDPARAMETERVALUE_SUBTITLEFORMAT = "InvalidParameterValue.SubtitleFormat"
 //  INVALIDPARAMETERVALUE_SWITCH = "InvalidParameterValue.Switch"
 //  INVALIDPARAMETERVALUE_USERDEFINELIBRARYLABELSET = "InvalidParameterValue.UserDefineLibraryLabelSet"
@@ -160,13 +323,16 @@ func (c *Client) CreateAIRecognitionTemplate(request *CreateAIRecognitionTemplat
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_COMMENT = "InvalidParameterValue.Comment"
 //  INVALIDPARAMETERVALUE_DEFAULTLIBRARYLABELSET = "InvalidParameterValue.DefaultLibraryLabelSet"
+//  INVALIDPARAMETERVALUE_DESTINATIONLANGUAGE = "InvalidParameterValue.DestinationLanguage"
 //  INVALIDPARAMETERVALUE_FACELIBRARY = "InvalidParameterValue.FaceLibrary"
 //  INVALIDPARAMETERVALUE_FACESCORE = "InvalidParameterValue.FaceScore"
 //  INVALIDPARAMETERVALUE_LABELSET = "InvalidParameterValue.LabelSet"
 //  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
 //  INVALIDPARAMETERVALUE_OBJECTLIBRARY = "InvalidParameterValue.ObjectLibrary"
+//  INVALIDPARAMETERVALUE_SOURCELANGUAGE = "InvalidParameterValue.SourceLanguage"
 //  INVALIDPARAMETERVALUE_SUBTITLEFORMAT = "InvalidParameterValue.SubtitleFormat"
 //  INVALIDPARAMETERVALUE_SWITCH = "InvalidParameterValue.Switch"
 //  INVALIDPARAMETERVALUE_USERDEFINELIBRARYLABELSET = "InvalidParameterValue.UserDefineLibraryLabelSet"
@@ -597,6 +763,114 @@ func (c *Client) CreateSampleSnapshotTemplateWithContext(ctx context.Context, re
     return
 }
 
+func NewCreateScheduleRequest() (request *CreateScheduleRequest) {
+    request = &CreateScheduleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "CreateSchedule")
+    
+    
+    return
+}
+
+func NewCreateScheduleResponse() (response *CreateScheduleResponse) {
+    response = &CreateScheduleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateSchedule
+// 对 COS 中指定 Bucket 的目录下上传的媒体文件，设置处理规则，包括：
+//
+// 1. 视频转码（带水印）；
+//
+// 2. 视频转动图；
+//
+// 3. 对视频按指定时间点截图；
+//
+// 4. 对视频采样截图；
+//
+// 5. 对视频截图雪碧图；
+//
+// 6. 对视频转自适应码流；
+//
+// 7. 智能内容审核（鉴黄、敏感信息检测）；
+//
+// 8. 智能内容分析（标签、分类、封面、按帧标签）；
+//
+// 9. 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词）。
+//
+// 
+//
+// 注意：创建编排成功后是禁用状态，需要手动启用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INTERNALERROR_GENDEFINITION = "InternalError.GenDefinition"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_TOOMUCHTEMPLATE = "LimitExceeded.TooMuchTemplate"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+func (c *Client) CreateSchedule(request *CreateScheduleRequest) (response *CreateScheduleResponse, err error) {
+    return c.CreateScheduleWithContext(context.Background(), request)
+}
+
+// CreateSchedule
+// 对 COS 中指定 Bucket 的目录下上传的媒体文件，设置处理规则，包括：
+//
+// 1. 视频转码（带水印）；
+//
+// 2. 视频转动图；
+//
+// 3. 对视频按指定时间点截图；
+//
+// 4. 对视频采样截图；
+//
+// 5. 对视频截图雪碧图；
+//
+// 6. 对视频转自适应码流；
+//
+// 7. 智能内容审核（鉴黄、敏感信息检测）；
+//
+// 8. 智能内容分析（标签、分类、封面、按帧标签）；
+//
+// 9. 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词）。
+//
+// 
+//
+// 注意：创建编排成功后是禁用状态，需要手动启用。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INTERNALERROR_GENDEFINITION = "InternalError.GenDefinition"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED_TOOMUCHTEMPLATE = "LimitExceeded.TooMuchTemplate"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+func (c *Client) CreateScheduleWithContext(ctx context.Context, request *CreateScheduleRequest) (response *CreateScheduleResponse, err error) {
+    if request == nil {
+        request = NewCreateScheduleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSchedule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateScheduleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateSnapshotByTimeOffsetTemplateRequest() (request *CreateSnapshotByTimeOffsetTemplateRequest) {
     request = &CreateSnapshotByTimeOffsetTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -661,6 +935,64 @@ func (c *Client) CreateSnapshotByTimeOffsetTemplateWithContext(ctx context.Conte
     return
 }
 
+func NewCreateStreamLinkEventRequest() (request *CreateStreamLinkEventRequest) {
+    request = &CreateStreamLinkEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "CreateStreamLinkEvent")
+    
+    
+    return
+}
+
+func NewCreateStreamLinkEventResponse() (response *CreateStreamLinkEventResponse) {
+    response = &CreateStreamLinkEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateStreamLinkEvent
+// 创建媒体传输的事件Event。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+func (c *Client) CreateStreamLinkEvent(request *CreateStreamLinkEventRequest) (response *CreateStreamLinkEventResponse, err error) {
+    return c.CreateStreamLinkEventWithContext(context.Background(), request)
+}
+
+// CreateStreamLinkEvent
+// 创建媒体传输的事件Event。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+func (c *Client) CreateStreamLinkEventWithContext(ctx context.Context, request *CreateStreamLinkEventRequest) (response *CreateStreamLinkEventResponse, err error) {
+    if request == nil {
+        request = NewCreateStreamLinkEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateStreamLinkEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateStreamLinkEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateStreamLinkFlowRequest() (request *CreateStreamLinkFlowRequest) {
     request = &CreateStreamLinkFlowRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -686,6 +1018,7 @@ func NewCreateStreamLinkFlowResponse() (response *CreateStreamLinkFlowResponse) 
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
 //  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
 //  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
@@ -700,6 +1033,7 @@ func (c *Client) CreateStreamLinkFlow(request *CreateStreamLinkFlowRequest) (res
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
 //  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
 //  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
@@ -715,6 +1049,68 @@ func (c *Client) CreateStreamLinkFlowWithContext(ctx context.Context, request *C
     request.SetContext(ctx)
     
     response = NewCreateStreamLinkFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateStreamLinkInputRequest() (request *CreateStreamLinkInputRequest) {
+    request = &CreateStreamLinkInputRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "CreateStreamLinkInput")
+    
+    
+    return
+}
+
+func NewCreateStreamLinkInputResponse() (response *CreateStreamLinkInputResponse) {
+    response = &CreateStreamLinkInputResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateStreamLinkInput
+// 创建媒体传输的输入配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_OUTPUT = "InvalidParameter.Output"
+func (c *Client) CreateStreamLinkInput(request *CreateStreamLinkInputRequest) (response *CreateStreamLinkInputResponse, err error) {
+    return c.CreateStreamLinkInputWithContext(context.Background(), request)
+}
+
+// CreateStreamLinkInput
+// 创建媒体传输的输入配置。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEEDEDQUANTITYLIMIT = "InvalidParameter.ExceededQuantityLimit"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_MAXBANDWIDTH = "InvalidParameter.MaxBandwidth"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_OUTPUT = "InvalidParameter.Output"
+func (c *Client) CreateStreamLinkInputWithContext(ctx context.Context, request *CreateStreamLinkInputRequest) (response *CreateStreamLinkInputResponse, err error) {
+    if request == nil {
+        request = NewCreateStreamLinkInputRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateStreamLinkInput require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateStreamLinkInputResponse()
     err = c.Send(request, response)
     return
 }
@@ -1543,6 +1939,60 @@ func (c *Client) DeleteSampleSnapshotTemplateWithContext(ctx context.Context, re
     return
 }
 
+func NewDeleteScheduleRequest() (request *DeleteScheduleRequest) {
+    request = &DeleteScheduleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DeleteSchedule")
+    
+    
+    return
+}
+
+func NewDeleteScheduleResponse() (response *DeleteScheduleResponse) {
+    response = &DeleteScheduleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteSchedule
+// 删除编排
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) DeleteSchedule(request *DeleteScheduleRequest) (response *DeleteScheduleResponse, err error) {
+    return c.DeleteScheduleWithContext(context.Background(), request)
+}
+
+// DeleteSchedule
+// 删除编排
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) DeleteScheduleWithContext(ctx context.Context, request *DeleteScheduleRequest) (response *DeleteScheduleResponse, err error) {
+    if request == nil {
+        request = NewDeleteScheduleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteSchedule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteScheduleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteSnapshotByTimeOffsetTemplateRequest() (request *DeleteSnapshotByTimeOffsetTemplateRequest) {
     request = &DeleteSnapshotByTimeOffsetTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1591,6 +2041,56 @@ func (c *Client) DeleteSnapshotByTimeOffsetTemplateWithContext(ctx context.Conte
     request.SetContext(ctx)
     
     response = NewDeleteSnapshotByTimeOffsetTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteStreamLinkEventRequest() (request *DeleteStreamLinkEventRequest) {
+    request = &DeleteStreamLinkEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DeleteStreamLinkEvent")
+    
+    
+    return
+}
+
+func NewDeleteStreamLinkEventResponse() (response *DeleteStreamLinkEventResponse) {
+    response = &DeleteStreamLinkEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteStreamLinkEvent
+// 删除媒体传输的事件配置。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) DeleteStreamLinkEvent(request *DeleteStreamLinkEventRequest) (response *DeleteStreamLinkEventResponse, err error) {
+    return c.DeleteStreamLinkEventWithContext(context.Background(), request)
+}
+
+// DeleteStreamLinkEvent
+// 删除媒体传输的事件配置。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) DeleteStreamLinkEventWithContext(ctx context.Context, request *DeleteStreamLinkEventRequest) (response *DeleteStreamLinkEventResponse, err error) {
+    if request == nil {
+        request = NewDeleteStreamLinkEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteStreamLinkEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteStreamLinkEventResponse()
     err = c.Send(request, response)
     return
 }
@@ -2417,6 +2917,62 @@ func (c *Client) DescribeSampleSnapshotTemplatesWithContext(ctx context.Context,
     return
 }
 
+func NewDescribeSchedulesRequest() (request *DescribeSchedulesRequest) {
+    request = &DescribeSchedulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DescribeSchedules")
+    
+    
+    return
+}
+
+func NewDescribeSchedulesResponse() (response *DescribeSchedulesResponse) {
+    response = &DescribeSchedulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeSchedules
+// 查询编排。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeSchedules(request *DescribeSchedulesRequest) (response *DescribeSchedulesResponse, err error) {
+    return c.DescribeSchedulesWithContext(context.Background(), request)
+}
+
+// DescribeSchedules
+// 查询编排。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeSchedulesWithContext(ctx context.Context, request *DescribeSchedulesRequest) (response *DescribeSchedulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeSchedulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSchedules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSchedulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeSnapshotByTimeOffsetTemplatesRequest() (request *DescribeSnapshotByTimeOffsetTemplatesRequest) {
     request = &DescribeSnapshotByTimeOffsetTemplatesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2515,6 +3071,168 @@ func (c *Client) DescribeStreamLinkActivateStateWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewDescribeStreamLinkActivateStateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeStreamLinkEventRequest() (request *DescribeStreamLinkEventRequest) {
+    request = &DescribeStreamLinkEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DescribeStreamLinkEvent")
+    
+    
+    return
+}
+
+func NewDescribeStreamLinkEventResponse() (response *DescribeStreamLinkEventResponse) {
+    response = &DescribeStreamLinkEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeStreamLinkEvent
+// 查询媒体传输事件的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEvent(request *DescribeStreamLinkEventRequest) (response *DescribeStreamLinkEventResponse, err error) {
+    return c.DescribeStreamLinkEventWithContext(context.Background(), request)
+}
+
+// DescribeStreamLinkEvent
+// 查询媒体传输事件的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEventWithContext(ctx context.Context, request *DescribeStreamLinkEventRequest) (response *DescribeStreamLinkEventResponse, err error) {
+    if request == nil {
+        request = NewDescribeStreamLinkEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeStreamLinkEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeStreamLinkEventResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeStreamLinkEventAttachedFlowsRequest() (request *DescribeStreamLinkEventAttachedFlowsRequest) {
+    request = &DescribeStreamLinkEventAttachedFlowsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DescribeStreamLinkEventAttachedFlows")
+    
+    
+    return
+}
+
+func NewDescribeStreamLinkEventAttachedFlowsResponse() (response *DescribeStreamLinkEventAttachedFlowsResponse) {
+    response = &DescribeStreamLinkEventAttachedFlowsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeStreamLinkEventAttachedFlows
+// 查询媒体传输事件关联的所有媒体输入流的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEventAttachedFlows(request *DescribeStreamLinkEventAttachedFlowsRequest) (response *DescribeStreamLinkEventAttachedFlowsResponse, err error) {
+    return c.DescribeStreamLinkEventAttachedFlowsWithContext(context.Background(), request)
+}
+
+// DescribeStreamLinkEventAttachedFlows
+// 查询媒体传输事件关联的所有媒体输入流的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEventAttachedFlowsWithContext(ctx context.Context, request *DescribeStreamLinkEventAttachedFlowsRequest) (response *DescribeStreamLinkEventAttachedFlowsResponse, err error) {
+    if request == nil {
+        request = NewDescribeStreamLinkEventAttachedFlowsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeStreamLinkEventAttachedFlows require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeStreamLinkEventAttachedFlowsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeStreamLinkEventsRequest() (request *DescribeStreamLinkEventsRequest) {
+    request = &DescribeStreamLinkEventsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DescribeStreamLinkEvents")
+    
+    
+    return
+}
+
+func NewDescribeStreamLinkEventsResponse() (response *DescribeStreamLinkEventsResponse) {
+    response = &DescribeStreamLinkEventsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeStreamLinkEvents
+// 批量查询媒体传输事件的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEvents(request *DescribeStreamLinkEventsRequest) (response *DescribeStreamLinkEventsResponse, err error) {
+    return c.DescribeStreamLinkEventsWithContext(context.Background(), request)
+}
+
+// DescribeStreamLinkEvents
+// 批量查询媒体传输事件的配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_PAGENUM = "InvalidParameter.PageNum"
+//  INVALIDPARAMETER_PAGESIZE = "InvalidParameter.PageSize"
+func (c *Client) DescribeStreamLinkEventsWithContext(ctx context.Context, request *DescribeStreamLinkEventsRequest) (response *DescribeStreamLinkEventsResponse, err error) {
+    if request == nil {
+        request = NewDescribeStreamLinkEventsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeStreamLinkEvents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeStreamLinkEventsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3000,7 +3718,7 @@ func NewDescribeTaskDetailResponse() (response *DescribeTaskDetailResponse) {
 }
 
 // DescribeTaskDetail
-// 通过任务 ID 查询任务的执行状态和结果的详细信息（最多可以查询3天之内提交的任务）。
+// 通过任务 ID 查询任务的执行状态和结果的详细信息（最多可以查询7天之内提交的任务）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -3013,7 +3731,7 @@ func (c *Client) DescribeTaskDetail(request *DescribeTaskDetailRequest) (respons
 }
 
 // DescribeTaskDetail
-// 通过任务 ID 查询任务的执行状态和结果的详细信息（最多可以查询3天之内提交的任务）。
+// 通过任务 ID 查询任务的执行状态和结果的详细信息（最多可以查询7天之内提交的任务）。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -3327,6 +4045,76 @@ func (c *Client) DescribeWorkflowsWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDisableScheduleRequest() (request *DisableScheduleRequest) {
+    request = &DisableScheduleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "DisableSchedule")
+    
+    
+    return
+}
+
+func NewDisableScheduleResponse() (response *DisableScheduleResponse) {
+    response = &DisableScheduleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DisableSchedule
+// 禁用自动化触发编排任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUCKETNOTIFYALREADYEXIST = "FailedOperation.BucketNotifyAlreadyExist"
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_GETSOURCENOTIFY = "FailedOperation.GetSourceNotify"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  FAILEDOPERATION_SETSOURCENOTIFY = "FailedOperation.SetSourceNotify"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) DisableSchedule(request *DisableScheduleRequest) (response *DisableScheduleResponse, err error) {
+    return c.DisableScheduleWithContext(context.Background(), request)
+}
+
+// DisableSchedule
+// 禁用自动化触发编排任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUCKETNOTIFYALREADYEXIST = "FailedOperation.BucketNotifyAlreadyExist"
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_GETSOURCENOTIFY = "FailedOperation.GetSourceNotify"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  FAILEDOPERATION_SETSOURCENOTIFY = "FailedOperation.SetSourceNotify"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) DisableScheduleWithContext(ctx context.Context, request *DisableScheduleRequest) (response *DisableScheduleResponse, err error) {
+    if request == nil {
+        request = NewDisableScheduleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisableSchedule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisableScheduleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDisableWorkflowRequest() (request *DisableWorkflowRequest) {
     request = &DisableWorkflowRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3406,15 +4194,31 @@ func NewEditMediaResponse() (response *EditMediaResponse) {
 }
 
 // EditMedia
-// 对视频进行编辑（剪辑、拼接等），生成一个新的点播视频。编辑的功能包括：
+// 对视频进行编辑，生成一个新的视频。编辑的功能包括：
+//
+//   
 //
 // 
+//
+// 一、**剪辑任务**：简单的视频剪辑，如剪辑、拼接等
 //
 // 1. 对一个文件进行剪辑，生成一个新的视频；
 //
 // 2. 对多个文件进行拼接，生成一个新的视频；
 //
 // 3. 对多个文件进行剪辑，然后再拼接，生成一个新的视频。
+//
+// 
+//
+// 二、**合成任务**：通过接口描述信息，合成一个新的视频。
+//
+// 1. 多轨道（视频、音频、字幕）、多类型元素（视频、图片、音频、文字、空）
+//
+// 2. 图像级别：贴图、缩放、任意角度旋转、镜像等
+//
+// 3. 音频级别：音量控制、淡入淡出、混音等
+//
+// 4. 视频级别：转场、倍数播放、拼接、剪切、字幕、画中画、音画分离、出入场动效等
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -3425,15 +4229,31 @@ func (c *Client) EditMedia(request *EditMediaRequest) (response *EditMediaRespon
 }
 
 // EditMedia
-// 对视频进行编辑（剪辑、拼接等），生成一个新的点播视频。编辑的功能包括：
+// 对视频进行编辑，生成一个新的视频。编辑的功能包括：
+//
+//   
 //
 // 
+//
+// 一、**剪辑任务**：简单的视频剪辑，如剪辑、拼接等
 //
 // 1. 对一个文件进行剪辑，生成一个新的视频；
 //
 // 2. 对多个文件进行拼接，生成一个新的视频；
 //
 // 3. 对多个文件进行剪辑，然后再拼接，生成一个新的视频。
+//
+// 
+//
+// 二、**合成任务**：通过接口描述信息，合成一个新的视频。
+//
+// 1. 多轨道（视频、音频、字幕）、多类型元素（视频、图片、音频、文字、空）
+//
+// 2. 图像级别：贴图、缩放、任意角度旋转、镜像等
+//
+// 3. 音频级别：音量控制、淡入淡出、混音等
+//
+// 4. 视频级别：转场、倍数播放、拼接、剪切、字幕、画中画、音画分离、出入场动效等
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -3451,6 +4271,76 @@ func (c *Client) EditMediaWithContext(ctx context.Context, request *EditMediaReq
     request.SetContext(ctx)
     
     response = NewEditMediaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewEnableScheduleRequest() (request *EnableScheduleRequest) {
+    request = &EnableScheduleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "EnableSchedule")
+    
+    
+    return
+}
+
+func NewEnableScheduleResponse() (response *EnableScheduleResponse) {
+    response = &EnableScheduleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// EnableSchedule
+// 启用自动化触发编排任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUCKETNOTIFYALREADYEXIST = "FailedOperation.BucketNotifyAlreadyExist"
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_GETSOURCENOTIFY = "FailedOperation.GetSourceNotify"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  FAILEDOPERATION_SETSOURCENOTIFY = "FailedOperation.SetSourceNotify"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) EnableSchedule(request *EnableScheduleRequest) (response *EnableScheduleResponse, err error) {
+    return c.EnableScheduleWithContext(context.Background(), request)
+}
+
+// EnableSchedule
+// 启用自动化触发编排任务。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_BUCKETNOTIFYALREADYEXIST = "FailedOperation.BucketNotifyAlreadyExist"
+//  FAILEDOPERATION_COSSTATUSINAVLID = "FailedOperation.CosStatusInavlid"
+//  FAILEDOPERATION_GETSOURCENOTIFY = "FailedOperation.GetSourceNotify"
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  FAILEDOPERATION_SETSOURCENOTIFY = "FailedOperation.SetSourceNotify"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_COSBUCKETNAMEINVALID = "ResourceNotFound.CosBucketNameInvalid"
+//  RESOURCENOTFOUND_COSBUCKETNOTEXIST = "ResourceNotFound.CosBucketNotExist"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) EnableScheduleWithContext(ctx context.Context, request *EnableScheduleRequest) (response *EnableScheduleResponse, err error) {
+    if request == nil {
+        request = NewEnableScheduleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableSchedule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableScheduleResponse()
     err = c.Send(request, response)
     return
 }
@@ -4209,6 +5099,64 @@ func (c *Client) ModifySampleSnapshotTemplateWithContext(ctx context.Context, re
     return
 }
 
+func NewModifyScheduleRequest() (request *ModifyScheduleRequest) {
+    request = &ModifyScheduleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "ModifySchedule")
+    
+    
+    return
+}
+
+func NewModifyScheduleResponse() (response *ModifyScheduleResponse) {
+    response = &ModifyScheduleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifySchedule
+// 修改编排
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) ModifySchedule(request *ModifyScheduleRequest) (response *ModifyScheduleResponse, err error) {
+    return c.ModifyScheduleWithContext(context.Background(), request)
+}
+
+// ModifySchedule
+// 修改编排
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  FAILEDOPERATION_INVALIDUSER = "FailedOperation.InvalidUser"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ACCESSDBERROR = "InternalError.AccessDBError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_TEMPLATENOTEXIST = "ResourceNotFound.TemplateNotExist"
+func (c *Client) ModifyScheduleWithContext(ctx context.Context, request *ModifyScheduleRequest) (response *ModifyScheduleResponse, err error) {
+    if request == nil {
+        request = NewModifyScheduleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifySchedule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyScheduleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifySnapshotByTimeOffsetTemplateRequest() (request *ModifySnapshotByTimeOffsetTemplateRequest) {
     request = &ModifySnapshotByTimeOffsetTemplateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4269,6 +5217,60 @@ func (c *Client) ModifySnapshotByTimeOffsetTemplateWithContext(ctx context.Conte
     request.SetContext(ctx)
     
     response = NewModifySnapshotByTimeOffsetTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyStreamLinkEventRequest() (request *ModifyStreamLinkEventRequest) {
+    request = &ModifyStreamLinkEventRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "ModifyStreamLinkEvent")
+    
+    
+    return
+}
+
+func NewModifyStreamLinkEventResponse() (response *ModifyStreamLinkEventResponse) {
+    response = &ModifyStreamLinkEventResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyStreamLinkEvent
+// 修改媒体传输的事件配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) ModifyStreamLinkEvent(request *ModifyStreamLinkEventRequest) (response *ModifyStreamLinkEventResponse, err error) {
+    return c.ModifyStreamLinkEventWithContext(context.Background(), request)
+}
+
+// ModifyStreamLinkEvent
+// 修改媒体传输的事件配置信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ID = "InvalidParameter.Id"
+//  INVALIDPARAMETER_NAME = "InvalidParameter.Name"
+//  INVALIDPARAMETER_STATE = "InvalidParameter.State"
+func (c *Client) ModifyStreamLinkEventWithContext(ctx context.Context, request *ModifyStreamLinkEventRequest) (response *ModifyStreamLinkEventResponse, err error) {
+    if request == nil {
+        request = NewModifyStreamLinkEventRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyStreamLinkEvent require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyStreamLinkEventResponse()
     err = c.Send(request, response)
     return
 }
@@ -4352,6 +5354,7 @@ func NewModifyStreamLinkInputResponse() (response *ModifyStreamLinkInputResponse
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_OUTPUT = "InvalidParameter.Output"
 //  INVALIDPARAMETER_PROTOCOL = "InvalidParameter.Protocol"
 //  INVALIDPARAMETER_STATE = "InvalidParameter.State"
 func (c *Client) ModifyStreamLinkInput(request *ModifyStreamLinkInputRequest) (response *ModifyStreamLinkInputResponse, err error) {
@@ -4365,6 +5368,7 @@ func (c *Client) ModifyStreamLinkInput(request *ModifyStreamLinkInputRequest) (r
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ID = "InvalidParameter.Id"
 //  INVALIDPARAMETER_INPUT = "InvalidParameter.Input"
+//  INVALIDPARAMETER_OUTPUT = "InvalidParameter.Output"
 //  INVALIDPARAMETER_PROTOCOL = "InvalidParameter.Protocol"
 //  INVALIDPARAMETER_STATE = "InvalidParameter.State"
 func (c *Client) ModifyStreamLinkInputWithContext(ctx context.Context, request *ModifyStreamLinkInputRequest) (response *ModifyStreamLinkInputResponse, err error) {
@@ -4688,7 +5692,7 @@ func NewParseLiveStreamProcessNotificationResponse() (response *ParseLiveStreamP
 // ParseLiveStreamProcessNotification
 // 从 CMQ 获取到消息后，从消息的 msgBody 字段中解析出 MPS 直播流处理事件通知的内容。
 //
-// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 的中解析函数的实现事件通知的解析。
+// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 中的解析实现事件通知的解析。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -4700,7 +5704,7 @@ func (c *Client) ParseLiveStreamProcessNotification(request *ParseLiveStreamProc
 // ParseLiveStreamProcessNotification
 // 从 CMQ 获取到消息后，从消息的 msgBody 字段中解析出 MPS 直播流处理事件通知的内容。
 //
-// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 的中解析函数的实现事件通知的解析。
+// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 中的解析实现事件通知的解析。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -4742,7 +5746,7 @@ func NewParseNotificationResponse() (response *ParseNotificationResponse) {
 // ParseNotification
 // 从 CMQ 获取到消息后，从消息的 msgBody 字段中解析出 MPS 事件通知的内容。
 //
-// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 的中解析函数的实现事件通知的解析。
+// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 中的解析函数，实现事件通知的解析。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4756,7 +5760,7 @@ func (c *Client) ParseNotification(request *ParseNotificationRequest) (response 
 // ParseNotification
 // 从 CMQ 获取到消息后，从消息的 msgBody 字段中解析出 MPS 事件通知的内容。
 //
-// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 的中解析函数的实现事件通知的解析。
+// 该接口不用于发起网络调用，而是用来帮助生成各个语言平台的 SDK，您可以参考 SDK 中的解析函数，实现事件通知的解析。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4804,11 +5808,17 @@ func NewProcessLiveStreamResponse() (response *ProcessLiveStreamResponse) {
 //
 // * 智能内容审核（画面鉴黄、敏感信息检测、声音鉴黄）；
 //
-// * 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词、语音实时翻译）。
+// * 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词、语音实时翻译、物体识别、游戏打点）。
+//
+// * 智能内容分析（新闻实时拆条）。
+//
+// * 质检（直播流格式诊断、音画内容检测（抖动、模糊、低光照、过曝光、黑边、白边、黑屏、白屏、花屏、噪点、马赛克、二维码等）、无参考打分）。
+//
+// * 录制
 //
 // 
 //
-// 直播流处理事件通知实时写入用户指定的消息队列 CMQ 中，用户需要从消息队列 CMQ 中获取事件通知结果，同时处理过程中存在输出文件的，会写入用户指定的输出文件的目标存储中。
+// 直播流处理事件通知支持HTTP回调，也支持实时写入用户指定的消息队列 CMQ 中，用户从消息队列 CMQ 中获取事件通知结果，同时处理过程中存在输出文件的，会写入用户指定的输出文件的目标存储中。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -4828,11 +5838,17 @@ func (c *Client) ProcessLiveStream(request *ProcessLiveStreamRequest) (response 
 //
 // * 智能内容审核（画面鉴黄、敏感信息检测、声音鉴黄）；
 //
-// * 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词、语音实时翻译）。
+// * 智能内容识别（人脸、文本全文、文本关键词、语音全文、语音关键词、语音实时翻译、物体识别、游戏打点）。
+//
+// * 智能内容分析（新闻实时拆条）。
+//
+// * 质检（直播流格式诊断、音画内容检测（抖动、模糊、低光照、过曝光、黑边、白边、黑屏、白屏、花屏、噪点、马赛克、二维码等）、无参考打分）。
+//
+// * 录制
 //
 // 
 //
-// 直播流处理事件通知实时写入用户指定的消息队列 CMQ 中，用户需要从消息队列 CMQ 中获取事件通知结果，同时处理过程中存在输出文件的，会写入用户指定的输出文件的目标存储中。
+// 直播流处理事件通知支持HTTP回调，也支持实时写入用户指定的消息队列 CMQ 中，用户从消息队列 CMQ 中获取事件通知结果，同时处理过程中存在输出文件的，会写入用户指定的输出文件的目标存储中。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
@@ -5159,6 +6175,58 @@ func (c *Client) StopStreamLinkFlowWithContext(ctx context.Context, request *Sto
     request.SetContext(ctx)
     
     response = NewStopStreamLinkFlowResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewWithdrawsWatermarkRequest() (request *WithdrawsWatermarkRequest) {
+    request = &WithdrawsWatermarkRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mps", APIVersion, "WithdrawsWatermark")
+    
+    
+    return
+}
+
+func NewWithdrawsWatermarkResponse() (response *WithdrawsWatermarkResponse) {
+    response = &WithdrawsWatermarkResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// WithdrawsWatermark
+// 提取视频中的盲水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) WithdrawsWatermark(request *WithdrawsWatermarkRequest) (response *WithdrawsWatermarkResponse, err error) {
+    return c.WithdrawsWatermarkWithContext(context.Background(), request)
+}
+
+// WithdrawsWatermark
+// 提取视频中的盲水印。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDMPSUSER = "FailedOperation.InvalidMpsUser"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) WithdrawsWatermarkWithContext(ctx context.Context, request *WithdrawsWatermarkRequest) (response *WithdrawsWatermarkResponse, err error) {
+    if request == nil {
+        request = NewWithdrawsWatermarkRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("WithdrawsWatermark require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewWithdrawsWatermarkResponse()
     err = c.Send(request, response)
     return
 }

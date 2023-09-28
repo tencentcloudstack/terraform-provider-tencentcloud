@@ -1342,6 +1342,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_file
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
+	tencentcloud_pts_tmp_key_generate
 
 TencentCloud Automation Tools(TAT)
   Data Source
@@ -1567,6 +1568,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_ai_analysis_template
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
+	tencentcloud_mps_withdraws_watermark_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1674,6 +1676,7 @@ Waf
     tencentcloud_waf_attack_overview
     tencentcloud_waf_attack_total_count
     tencentcloud_waf_peak_points
+    tencentcloud_waf_instance_qps_limit
 
   Resource
     tencentcloud_waf_custom_rule
@@ -1682,6 +1685,7 @@ Waf
     tencentcloud_waf_saas_domain
     tencentcloud_waf_clb_instance
     tencentcloud_waf_saas_instance
+<<<<<<< HEAD
 
 Cfw
   Data Source
@@ -1702,6 +1706,10 @@ Cfw
     tencentcloud_cfw_nat_firewall_switch
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
+=======
+    tencentcloud_waf_anti_fake
+    tencentcloud_waf_anti_info_leak
+>>>>>>> 980b4317f5abdb75718178af297400be12062e6e
 */
 package tencentcloud
 
@@ -2362,6 +2370,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
 			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_waf_instance_qps_limit":                    dataSourceTencentCloudWafInstanceQpsLimit(),
 			"tencentcloud_cfw_nat_fw_switches":                       dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                       dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                      dataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -2933,6 +2942,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_pts_file":                                            resourceTencentCloudPtsFile(),
 			"tencentcloud_pts_job":                                             resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                                        resourceTencentCloudPtsCronJob(),
+			"tencentcloud_pts_tmp_key_generate":                                resourceTencentCloudPtsTmpKeyGenerate(),
 			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),
@@ -3052,6 +3062,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_ai_analysis_template":                            resourceTencentCloudMpsAiAnalysisTemplate(),
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
+			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
@@ -3126,6 +3137,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
 			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
+			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
+			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),

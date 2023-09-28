@@ -905,3 +905,173 @@ func (me *WafService) DescribeWafPeakPointsByFilter(ctx context.Context, param m
 	PeakPoints = response.Response.Points
 	return
 }
+
+func (me *WafService) DescribeWafAntiFakeById(ctx context.Context, id, domain string) (antiFake *waf.CacheUrlItems, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeAntiFakeRulesRequest()
+	request.Domain = &domain
+	request.Offset = common.Uint64Ptr(0)
+	request.Limit = common.Uint64Ptr(10)
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("RuleID"),
+			Values:     common.StringPtrs([]string{id}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeAntiFakeRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	antiFake = response.Response.Data[0]
+	return
+}
+
+func (me *WafService) DeleteWafAntiFakeById(ctx context.Context, id, domain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteAntiFakeUrlRequest()
+	idInt, _ := strconv.ParseUint(id, 10, 64)
+	request.Id = common.Uint64Ptr(idInt)
+	request.Domain = common.StringPtr(domain)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteAntiFakeUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DescribeWafAntiInfoLeakById(ctx context.Context, ruleId, domain string) (antiInfoLeak *waf.DescribeAntiLeakageItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeAntiInfoLeakageRulesRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeAntiInfoLeakageRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RuleList) < 1 {
+		return
+	}
+
+	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
+	for _, item := range response.Response.RuleList {
+		if *item.RuleId == ruleIdInt {
+			antiInfoLeak = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *WafService) DeleteWafAntiInfoLeakById(ctx context.Context, ruleId, domain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteAntiInfoLeakRuleRequest()
+	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
+	request.Domain = &domain
+	request.RuleId = &ruleIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteAntiInfoLeakRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DescribeWafInstanceQpsLimitByFilter(ctx context.Context, param map[string]interface{}) (instanceQpsLimit *waf.QpsData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewGetInstanceQpsLimitRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().GetInstanceQpsLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	instanceQpsLimit = response.Response.QpsData
+	return
+}

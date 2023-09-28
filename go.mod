@@ -64,7 +64,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.584
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.540
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.751
@@ -100,10 +100,14 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
+<<<<<<< HEAD
 require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.754
 )
+=======
+require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
+>>>>>>> 980b4317f5abdb75718178af297400be12062e6e
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
