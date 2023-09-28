@@ -28,11 +28,12 @@ package tencentcloud
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudSslUpdateCertificateInstance() *schema.Resource {
@@ -65,7 +66,7 @@ func resourceTencentCloudSslUpdateCertificateInstance() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "The resource type that needs to be deployed. The parameter value is optional：clb、cdn、waf、live、ddos、teo、apigateway、vod、tke、tcb.",
+				Description: "The resource type that needs to be deployed. The parameter value is optional: clb,cdn,waf,live,ddos,teo,apigateway,vod,tke,tcb.",
 			},
 
 			"resource_types_regions": {

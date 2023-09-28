@@ -20,11 +20,12 @@ terraform import tencentcloud_ssl_update_certificate_record_retry.update_certifi
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudSslUpdateCertificateRecordRetry() *schema.Resource {

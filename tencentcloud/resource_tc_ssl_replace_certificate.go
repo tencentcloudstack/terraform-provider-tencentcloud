@@ -22,11 +22,12 @@ terraform import tencentcloud_ssl_replace_certificate.replace_certificate replac
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudSslReplaceCertificate() *schema.Resource {
@@ -42,7 +43,7 @@ func resourceTencentCloudSslReplaceCertificate() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Certificate ID。.",
+				Description: "Certificate ID.",
 			},
 
 			"valid_type": {
@@ -63,21 +64,21 @@ func resourceTencentCloudSslReplaceCertificate() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "CSR Content。.",
+				Description: "CSR Content.",
 			},
 
 			"csr_key_password": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "KEY Password。.",
+				Description: "KEY Password.",
 			},
 
 			"reason": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Reason for reissue。.",
+				Description: "Reason for reissue.",
 			},
 
 			"cert_csr_encrypt_algo": {
@@ -154,7 +155,7 @@ func resourceTencentCloudSslReplaceCertificateCreate(d *schema.ResourceData, met
 		log.Printf("[CRITAL]%s operate ssl replaceCertificate failed, reason:%+v", logId, err)
 		return err
 	}
-	if response != nil && response.Response != nil {
+	if response != nil && response.Response != nil && response.Response.CertificateId != nil {
 		certificateId = helper.StrToUInt64(*response.Response.CertificateId)
 	}
 

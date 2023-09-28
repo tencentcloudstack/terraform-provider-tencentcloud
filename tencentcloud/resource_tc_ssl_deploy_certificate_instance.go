@@ -21,11 +21,12 @@ terraform import tencentcloud_ssl_deploy_certificate_instance.deploy_certificate
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudSslDeployCertificateInstance() *schema.Resource {
@@ -65,7 +66,7 @@ func resourceTencentCloudSslDeployCertificateInstance() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Deployment cloud resource status：Live：-1：The domain name is not associated with a certificate.1： Domain name https is enabled.0： Domain name https is closed.",
+				Description: "Deployment cloud resource status: Live: -1: The domain name is not associated with a certificate.1:  Domain name https is enabled.0:  Domain name https is closed.",
 			},
 		},
 	}
