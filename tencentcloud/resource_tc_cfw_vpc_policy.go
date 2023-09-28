@@ -30,6 +30,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -184,6 +185,11 @@ func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interfa
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		if result.Response == nil || len(result.Response.RuleUuids) != 1 {
+			e = fmt.Errorf("create cfw vpcPolicy failed")
+			return resource.NonRetryableError(e)
 		}
 
 		response = result
