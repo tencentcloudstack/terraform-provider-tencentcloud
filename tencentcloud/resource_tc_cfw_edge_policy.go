@@ -59,7 +59,7 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 			"source_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Access source type: for inbound rules, the type can be ip, net, template, location; for outbound rules, it can be ip, net, template, instance, group, tag.",
+				Description: "Access source type: for inbound rules, the type can be net, location, vendor, template; for outbound rules, it can be net, instance, tag, template, group.",
 			},
 			"target_content": {
 				Type:        schema.TypeString,
@@ -69,7 +69,7 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 			"target_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Access purpose type: For inbound rules, the type can be ip, net, template, instance, group, tag; for outbound rules, it can be ip, net, domain, template, location.",
+				Description: "Access purpose type: For inbound rules, the type can be net, instance, tag, template, group; for outbound rules, it can be net, location, vendor, template.",
 			},
 			"protocol": {
 				Type:        schema.TypeString,
@@ -77,9 +77,10 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				Description: "Protocol, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS.",
 			},
 			"rule_action": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "How the traffic set in the access control policy passes through the cloud firewall. Values: accept: allow drop: reject log: observe.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateAllowedStringValue(POLICY_RULE_ACTION),
+				Description:  "How the traffic set in the access control policy passes through the cloud firewall. Values: accept: allow; drop: reject; log: observe.",
 			},
 			"port": {
 				Type:        schema.TypeString,
@@ -97,9 +98,11 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				Description: "The unique id corresponding to the rule, no need to fill in when creating the rule.",
 			},
 			"enable": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Rule status, true means enabled, false means disabled.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      POLICY_ENABLE_TRUE,
+				ValidateFunc: validateAllowedStringValue(POLICY_ENABLE),
+				Description:  "Rule status, true means enabled, false means disabled. Default is true.",
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -107,9 +110,11 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 				Description: "Description.",
 			},
 			"scope": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Effective range: serial, serial; Side, bypass; All, global.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      POLICY_SCOPE_ALL,
+				ValidateFunc: validateAllowedStringValue(POLICY_SCOPE),
+				Description:  "Effective range. serial: serial; side: bypass; all: global, Default is all.",
 			},
 		},
 	}
@@ -331,6 +336,8 @@ func resourceTencentCloudCfwEdgePolicyUpdate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("scope"); ok {
 		modifyRuleItem.Scope = helper.String(v.(string))
 	}
+
+	request.Rules = append(request.Rules, &modifyRuleItem)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyAclRule(request)

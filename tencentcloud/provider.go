@@ -1684,6 +1684,9 @@ Waf
 
 Cfw
   Data Source
+	tencentcloud_cfw_nat_fw_switches
+	tencentcloud_cfw_vpc_fw_switches
+	tencentcloud_cfw_edge_fw_switches
 
   Resource
     tencentcloud_cfw_address_template
@@ -1695,6 +1698,9 @@ Cfw
     tencentcloud_cfw_vpc_policy
     tencentcloud_cfw_sync_asset
     tencentcloud_cfw_sync_route
+    tencentcloud_cfw_nat_firewall_switch
+    tencentcloud_cfw_vpc_firewall_switch
+    tencentcloud_cfw_edge_firewall_switch
 */
 package tencentcloud
 
@@ -2355,6 +2361,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
 			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_cfw_nat_fw_switches":                       dataSourceTencentCloudCfwNatFwSwitches(),
+			"tencentcloud_cfw_vpc_fw_switches":                       dataSourceTencentCloudCfwVpcFwSwitches(),
+			"tencentcloud_cfw_edge_fw_switches":                      dataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
@@ -3124,6 +3133,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_vpc_policy":                                      resourceTencentCloudCfwVpcPolicy(),
 			"tencentcloud_cfw_sync_asset":                                      resourceTencentCloudCfwSyncAsset(),
 			"tencentcloud_cfw_sync_route":                                      resourceTencentCloudCfwSyncRoute(),
+			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
+			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
+			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -583,3 +583,264 @@ func (me *CfwService) DeleteCfwVpcPolicyById(ctx context.Context, uuid string) (
 
 	return
 }
+
+func (me *CfwService) DescribeCfwNatFirewallSwitchById(ctx context.Context, natInsId, subnetId string) (natFirewallSwitch *cfw.NatSwitchListData, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeNatSwitchListRequest()
+	request.Offset = common.Int64Ptr(0)
+	request.Limit = common.Int64Ptr(20)
+	request.NatInsId = &natInsId
+	searchParam := fmt.Sprintf(`{"SubnetId":"%s"}`, subnetId)
+	request.SearchValue = &searchParam
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeNatSwitchList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	natFirewallSwitch = response.Response.Data[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwNatFwSwitchesByFilter(ctx context.Context, param map[string]interface{}) (natFwSwitches []*cfw.NatSwitchListData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cfw.NewDescribeNatSwitchListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Status" {
+			request.Status = v.(*int64)
+		}
+
+		if k == "NatInsId" {
+			request.NatInsId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCfwClient().DescribeNatSwitchList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+
+		natFwSwitches = append(natFwSwitches, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcFirewallSwitchById(ctx context.Context, vpcInsId, switchId string) (vpcFirewallSwitch *cfw.FwGroupSwitchShow, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeVpcFwGroupSwitchRequest()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("SwitchId"),
+			Values:       common.StringPtrs([]string{switchId}),
+			OperatorType: common.Int64Ptr(1),
+		},
+		{
+			Name:         common.StringPtr("FwGroupId"),
+			Values:       common.StringPtrs([]string{vpcInsId}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+	request.Limit = common.Uint64Ptr(20)
+	request.Offset = common.Uint64Ptr(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeVpcFwGroupSwitch(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SwitchList) < 1 {
+		return
+	}
+
+	vpcFirewallSwitch = response.Response.SwitchList[0]
+	return
+}
+
+func (me *CfwService) DescribeCfwVpcFwSwitchesByFilter(ctx context.Context, vpcInsId string) (vpcFirewallSwitch []*cfw.FwGroupSwitchShow, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeVpcFwGroupSwitchRequest()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("FwGroupId"),
+			Values:       common.StringPtrs([]string{vpcInsId}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCfwClient().DescribeVpcFwGroupSwitch(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SwitchList) < 1 {
+			break
+		}
+
+		vpcFirewallSwitch = append(vpcFirewallSwitch, response.Response.SwitchList...)
+		if len(response.Response.SwitchList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwEdgeFwSwitchesByFilter(ctx context.Context) (edgeFwSwitches []*cfw.EdgeIpInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cfw.NewDescribeFwEdgeIpsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCfwClient().DescribeFwEdgeIps(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+
+		edgeFwSwitches = append(edgeFwSwitches, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CfwService) DescribeCfwEdgeFirewallSwitchById(ctx context.Context, publicIp string) (edgeFirewallSwitch *cfw.EdgeIpInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfw.NewDescribeFwEdgeIpsRequest()
+	request.Filters = []*cfw.CommonFilter{
+		{
+			Name:         common.StringPtr("PublicIp"),
+			Values:       common.StringPtrs([]string{publicIp}),
+			OperatorType: common.Int64Ptr(1),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfwClient().DescribeFwEdgeIps(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Data) < 1 {
+		return
+	}
+
+	edgeFirewallSwitch = response.Response.Data[0]
+	return
+}

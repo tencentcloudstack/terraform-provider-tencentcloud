@@ -42,7 +42,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.757
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -101,7 +101,7 @@ require (
 )
 
 require (
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.757
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.754
 )
 

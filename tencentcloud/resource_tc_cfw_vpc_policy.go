@@ -13,9 +13,8 @@ resource "tencentcloud_cfw_vpc_policy" "example" {
   rule_action    = "log"
   port           = "-1/-1"
   description    = "description."
-  order_index    = 28
   enable         = "true"
-  fw_group_id    = ""
+  fw_group_id    = "ALL"
 }
 ```
 
@@ -58,7 +57,7 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 			"source_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Access source type, the type can be: net.",
+				Description: "Access source type, the type can be: net, template.",
 			},
 			"dest_content": {
 				Type:        schema.TypeString,
@@ -68,7 +67,7 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 			"dest_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Access purpose type, the type can be: net, domain.",
+				Description: "Access purpose type, the type can be: net, template.",
 			},
 			"protocol": {
 				Type:        schema.TypeString,
@@ -76,9 +75,10 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Description: "Protocol, optional value:TCP, UDP, ICMP, ANY, HTTP, HTTPS, HTTP/HTTPS, SMTP, SMTPS, SMTP/SMTPS, FTP, DNS, TLS/SSL.",
 			},
 			"rule_action": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "How traffic set in the access control policy passes through the cloud firewall. Value: accept:accept, drop:drop, log:log.",
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateAllowedStringValue(POLICY_RULE_ACTION),
+				Description:  "How traffic set in the access control policy passes through the cloud firewall. Value: accept:accept, drop:drop, log:log.",
 			},
 			"port": {
 				Type:        schema.TypeString,
@@ -91,9 +91,11 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Description: "Describe.",
 			},
 			"enable": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Rule status, true means enabled, false means disabled.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      POLICY_ENABLE_TRUE,
+				ValidateFunc: validateAllowedStringValue(POLICY_ENABLE),
+				Description:  "Rule status, true means enabled, false means disabled. Default is true.",
 			},
 			"fw_group_id": {
 				Type:        schema.TypeString,
@@ -171,6 +173,10 @@ func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("fw_group_id"); ok {
 		vpcRuleItem.FwGroupId = helper.String(v.(string))
 	}
+
+	vpcRuleItem.EdgeId = helper.String("all")
+
+	request.Rules = append(request.Rules, &vpcRuleItem)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().AddVpcAcRule(request)
@@ -326,6 +332,10 @@ func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("fw_group_id"); ok {
 		vpcRuleItem.FwGroupId = helper.String(v.(string))
 	}
+
+	vpcRuleItem.EdgeId = helper.String("all")
+
+	request.Rules = append(request.Rules, &vpcRuleItem)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyVpcAcRule(request)
