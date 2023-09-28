@@ -83,7 +83,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ExactlyOneOf: []string{"plan_id"},
-				Description:  "Plan type of the zone. See details in data source `zone_available_plans`.",
+				Description:  "The plan option. Values: `sta`: Standard plan that supports content delivery network outside the Chinese mainland; `ent`: Enterprise plan that supports content delivery network outside the Chinese mainland.",
 			},
 
 			"paused": {
@@ -209,21 +209,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	zoneId = *response.Response.ZoneId
 	d.SetId(zoneId)
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoZone(ctx, zoneId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.Status == "pending" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("zone status is %v, retry...", *instance.Status))
-	})
-	if err != nil {
-		return err
-	}
-
 	if zoneId != "" && planId == "" {
 		planRequest := teo.NewCreatePlanForZoneRequest()
 		planRequest.ZoneId = &zoneId
@@ -246,6 +231,21 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, planErr)
 			return planErr
 		}
+	}
+
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeTeoZone(ctx, zoneId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *instance.Status == "pending" {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("zone status is %v, retry...", *instance.Status))
+	})
+	if err != nil {
+		return err
 	}
 
 	if v, _ := d.GetOkExists("paused"); v != nil {
