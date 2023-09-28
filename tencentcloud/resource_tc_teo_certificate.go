@@ -299,7 +299,7 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 	}
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = service.CheckAccelerationDomainStatus(ctx, zoneId, host)
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, host, "")
 	if err != nil {
 		return err
 	}

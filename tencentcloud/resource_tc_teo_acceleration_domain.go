@@ -223,7 +223,7 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 	d.SetId(zoneId + FILED_SP + domainName)
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
 	if err != nil {
 		return err
 	}
@@ -400,7 +400,7 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 		}
 
 		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
+		err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
 		if err != nil {
 			return err
 		}
@@ -482,7 +482,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 		return err
 	}
 
-	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName)
+	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "delete")
 	if err != nil {
 		return err
 	}

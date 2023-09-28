@@ -822,15 +822,22 @@ func (me *TeoService) ModifyZoneStatus(ctx context.Context, zoneId string, pause
 	return nil
 }
 
-func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId, domainName string) error {
+func (me *TeoService) CheckAccelerationDomainStatus(ctx context.Context, zoneId, domainName, operate string) error {
 	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := me.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *instance.DomainStatus == "online" {
-			return nil
+		if operate == "delete" {
+			if *instance.DomainStatus == "offline" {
+				return nil
+			}
+		} else {
+			if *instance.DomainStatus == "online" {
+				return nil
+			}
 		}
+
 		return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
 	})
 	if err != nil {
