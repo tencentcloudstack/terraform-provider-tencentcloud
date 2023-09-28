@@ -72,13 +72,13 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 			"origin_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of the origin site. Valid values:- `self`: self-build website.- `cos`: tencent cos.- `third_party`: third party cos.",
+				Description: "Type of the origin site. Valid values: `self`: self-build website; `cos`: tencent cos; `third_party`: third party cos.",
 			},
 
 			"configuration_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values:- `area`: select an origin by using Geo info of the client IP and `Area` field in Records.- `weight`: weighted select an origin by using `Weight` field in Records.- `proto`: config by HTTP protocol.",
+				Description: "Type of the origin group, this field should be set when `OriginType` is self, otherwise leave it empty. Valid values: `area`: select an origin by using Geo info of the client IP and `Area` field in Records; `weight`: weighted select an origin by using `Weight` field in Records; `proto`: config by HTTP protocol.",
 			},
 
 			"origin_records": {
@@ -105,7 +105,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 						"weight": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Indicating origin site&#39;s weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
+							Description: "Indicating origin sites weight when `Type` field is `weight`. Valid value range: 1-100. Sum of all weights should be 100.",
 						},
 						"area": {
 							Type: schema.TypeSet,
@@ -113,7 +113,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "Indicating origin site&#39;s area when `Type` field is `area`. An empty List indicate the default area. Valid value:- Asia, Americas, Europe, Africa or Oceania.- 2 characters ISO 3166 area code.",
+							Description: "Indicating origin sites area when `Type` field is `area`. An empty List indicate the default area. Valid value:- Asia, Americas, Europe, Africa or Oceania.",
 						},
 						"private": {
 							Type:        schema.TypeBool,
@@ -129,7 +129,7 @@ func resourceTencentCloudTeoOriginGroup() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Parameter Name. Valid values:- AccessKeyId:Access Key ID.- SecretAccessKey:Secret Access Key.",
+										Description: "Parameter Name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,

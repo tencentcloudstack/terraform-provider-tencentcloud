@@ -97,27 +97,27 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Type of the certificate. Values:&amp;lt;li&amp;gt;`default`: Default certificate&amp;lt;/lil&amp;gt;&amp;lt;li&amp;gt;`upload`: Specified certificate&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`managed`: Tencent Cloud-managed certificate&amp;lt;/li&amp;gt;Note: This field may return `null`, indicating that no valid value can be obtained.",
+							Description: "Type of the certificate. Values: `default`: Default certificate; `upload`: Specified certificate; `managed`: Tencent Cloud-managed certificate. Note: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 						"expire_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Time when the certificate expires.Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Time when the certificate expires. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"deploy_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Time when the certificate is deployed.Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Time when the certificate is deployed. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"sign_algo": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Signature algorithm.Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Signature algorithm. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"common_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Domain name of the certificate.Note: This field may return `null`, indicating that no valid value can be obtained.",
+							Description: "Domain name of the certificate. Note: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -127,7 +127,7 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Mode of configuring the certificate, the values are:- `disable`: Do not configure the certificate; `eofreecert`: Configure EdgeOne free certificate; `sslcert`: Configure SSL certificate. If not filled in, the default value is disable.",
+				Description: "Mode of configuring the certificate, the values are: `disable`: Do not configure the certificate; `eofreecert`: Configure EdgeOne free certificate; `sslcert`: Configure SSL certificate. If not filled in, the default value is `disable`.",
 			},
 		},
 	}

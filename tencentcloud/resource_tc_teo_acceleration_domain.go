@@ -71,7 +71,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 						"origin_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The origin type. Values:- `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
+							Description: "The origin type. Values: `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
@@ -86,7 +86,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 						"private_access": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values:  `on`: Enable private authentication.; `off`: Disable private authentication.;If this field is not specified, the default value `off` is used.",
+							Description: "Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values: `on`: Enable private authentication; `off`: Disable private authentication. If this field is not specified, the default value `off` is used.",
 						},
 						"private_parameters": {
 							Type:        schema.TypeList,
@@ -97,7 +97,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The parameter name. Values `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key;.",
+										Description: "The parameter name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
@@ -114,7 +114,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Accelerated domain name status, the values are:- `online`: enabled; `offline`: disabled.",
+				Description: "Accelerated domain name status, the values are: `online`: enabled; `offline`: disabled.",
 			},
 
 			"cname": {

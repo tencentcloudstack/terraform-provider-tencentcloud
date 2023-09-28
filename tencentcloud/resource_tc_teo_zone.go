@@ -57,7 +57,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Site access type. The value of this parameter is as follows, and the default is partial if not filled in, `partial`: CNAME access; `full`: NS access; `noDomainAccess`: No domain access.",
+				Description: "Site access type. The value of this parameter is as follows, and the default is `partial` if not filled in. Valid values: `partial`: CNAME access; `full`: NS access; `noDomainAccess`: No domain access.",
 			},
 
 			"alias_zone_name": {
@@ -69,7 +69,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"area": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "When the Type value is partial/full, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is overseas if not filled in. When the Type value is noDomainAccess, please leave this value empty:- `global`: Global availability zone; `mainland`: Chinese mainland availability zone; `overseas`: Global availability zone (excluding Chinese mainland).",
+				Description: "When the `type` value is `partial` or `full`, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is `overseas` if not filled in. When the `type` value is `noDomainAccess`, please leave this value empty. Valid values: `global`: Global availability zone; `mainland`: Chinese mainland availability zone; `overseas`: Global availability zone (excluding Chinese mainland).",
 			},
 
 			"plan_id": {
@@ -89,7 +89,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Site status. Valid values:- `active`: NS is switched.- `pending`: NS is not switched.- `moved`: NS is moved.- `deactivated`: this site is blocked.",
+				Description: "Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.",
 			},
 
 			"ownership_verification": {

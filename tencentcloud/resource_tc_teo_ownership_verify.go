@@ -37,7 +37,7 @@ func resourceTencentCloudTeoOwnershipVerify() *schema.Resource {
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Ownership verification results. `success`: verification successful; `fail`: verification failed..",
+				Description: "Ownership verification results. `success`: verification successful; `fail`: verification failed.",
 			},
 
 			"result": {
