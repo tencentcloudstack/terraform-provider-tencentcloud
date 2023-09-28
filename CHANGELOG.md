@@ -1,3 +1,37 @@
+## 1.81.32 (September 28, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cfw_edge_fw_switches` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Data Source:** `tencentcloud_cfw_nat_fw_switches` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Data Source:** `tencentcloud_cfw_vpc_fw_switches` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Data Source:** `tencentcloud_waf_instance_qps_limit` ([#2160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2160))
+* **New Resource:** `tencentcloud_cfw_address_template` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_block_ignore` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_edge_firewall_switch` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_edge_policy` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_nat_firewall_switch` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_nat_instance` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_nat_policy` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_sync_asset` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_sync_route` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_vpc_firewall_switch` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_vpc_instance` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_cfw_vpc_policy` ([#2149](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2149))
+* **New Resource:** `tencentcloud_mps_withdraws_watermark_operation` ([#2163](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2163))
+* **New Resource:** `tencentcloud_pts_tmp_key_generate` ([#2139](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2139))
+* **New Resource:** `tencentcloud_teo_acceleration_domain` ([#2154](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2154))
+* **New Resource:** `tencentcloud_teo_certificate_config` ([#2154](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2154))
+* **New Resource:** `tencentcloud_teo_ownership_verify` ([#2154](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2154))
+* **New Resource:** `tencentcloud_waf_anti_fake` ([#2160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2160))
+* **New Resource:** `tencentcloud_waf_anti_info_leak` ([#2160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2160))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_node_pool: set up the node pool and import it into Terraform ([#2164](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2164))
+* resource/tencentcloud_teo_zone: Support create zone with existing plan ([#2154](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2154))
+* resource/tencentcloud_waf_clb_domain: alb_type support apisix, tsegw ([#2160](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2160))
+
 ## 1.81.31 (September 27, 2023)
 
 FEATURES:
