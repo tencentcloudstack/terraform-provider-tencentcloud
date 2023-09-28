@@ -1685,7 +1685,8 @@ Waf
     tencentcloud_waf_saas_domain
     tencentcloud_waf_clb_instance
     tencentcloud_waf_saas_instance
-<<<<<<< HEAD
+    tencentcloud_waf_anti_fake
+    tencentcloud_waf_anti_info_leak
 
 Cfw
   Data Source
@@ -1706,10 +1707,6 @@ Cfw
     tencentcloud_cfw_nat_firewall_switch
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
-=======
-    tencentcloud_waf_anti_fake
-    tencentcloud_waf_anti_info_leak
->>>>>>> 980b4317f5abdb75718178af297400be12062e6e
 */
 package tencentcloud
 
