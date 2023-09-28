@@ -4,7 +4,7 @@ Provides a resource to create a pts tmp_key
 Example Usage
 
 ```hcl
-resource "tencentcloud_pts_tmp_key" "tmp_key" {
+resource "tencentcloud_pts_tmp_key_generate" "tmp_key" {
   project_id = "project-1b0zqmhg"
   scenario_id = "scenario-abc"
 }
@@ -21,11 +21,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsTmpKey() *schema.Resource {
+func resourceTencentCloudPtsTmpKeyGenerate() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudPtsTmpKeyCreate,
-		Read:   resourceTencentCloudPtsTmpKeyRead,
-		Delete: resourceTencentCloudPtsTmpKeyDelete,
+		Create: resourceTencentCloudPtsTmpKeyGenerateCreate,
+		Read:   resourceTencentCloudPtsTmpKeyGenerateRead,
+		Delete: resourceTencentCloudPtsTmpKeyGenerateDelete,
 
 		Schema: map[string]*schema.Schema{
 			"project_id": {
@@ -80,8 +80,8 @@ func resourceTencentCloudPtsTmpKey() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudPtsTmpKeyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key.create")()
+func resourceTencentCloudPtsTmpKeyGenerateCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -115,7 +115,6 @@ func resourceTencentCloudPtsTmpKeyCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	// d.SetId(projectId + FILED_SP + scenarioId)
 	d.SetId(projectId)
 
 	if response != nil || response.Response != nil {
@@ -146,18 +145,18 @@ func resourceTencentCloudPtsTmpKeyCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	return resourceTencentCloudPtsTmpKeyRead(d, meta)
+	return resourceTencentCloudPtsTmpKeyGenerateRead(d, meta)
 }
 
-func resourceTencentCloudPtsTmpKeyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key.read")()
+func resourceTencentCloudPtsTmpKeyGenerateRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudPtsTmpKeyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key.delete")()
+func resourceTencentCloudPtsTmpKeyGenerateDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

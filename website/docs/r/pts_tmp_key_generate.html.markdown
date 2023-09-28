@@ -1,20 +1,20 @@
 ---
 subcategory: "Performance Testing Service(PTS)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_pts_tmp_key"
-sidebar_current: "docs-tencentcloud-resource-pts_tmp_key"
+page_title: "TencentCloud: tencentcloud_pts_tmp_key_generate"
+sidebar_current: "docs-tencentcloud-resource-pts_tmp_key_generate"
 description: |-
   Provides a resource to create a pts tmp_key
 ---
 
-# tencentcloud_pts_tmp_key
+# tencentcloud_pts_tmp_key_generate
 
 Provides a resource to create a pts tmp_key
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_pts_tmp_key" "tmp_key" {
+resource "tencentcloud_pts_tmp_key_generate" "tmp_key" {
   project_id  = "project-1b0zqmhg"
   scenario_id = "scenario-abc"
 }

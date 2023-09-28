@@ -1340,7 +1340,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_file
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
-	tencentcloud_pts_tmp_key
+	tencentcloud_pts_tmp_key_generate
 
 TencentCloud Automation Tools(TAT)
   Data Source
@@ -2866,7 +2866,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_pts_file":                                            resourceTencentCloudPtsFile(),
 			"tencentcloud_pts_job":                                             resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                                        resourceTencentCloudPtsCronJob(),
-			"tencentcloud_pts_tmp_key":                                         resourceTencentCloudPtsTmpKey(),
+			"tencentcloud_pts_tmp_key_generate":                                resourceTencentCloudPtsTmpKeyGenerate(),
 			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),
