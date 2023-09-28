@@ -11,5 +11,5 @@ tencentcloud_teo_acceleration_domain
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_teo_zone: Support existing package binding
+resource/tencentcloud_teo_zone: Support create zone with existing plan
 ```
