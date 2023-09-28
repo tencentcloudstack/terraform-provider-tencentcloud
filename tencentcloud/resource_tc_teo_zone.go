@@ -50,6 +50,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"zone_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Site name. When accessing CNAME/NS, please pass the second-level domain (example.com) as the site name; when accessing without a domain name, please leave this value empty.",
 			},
 
@@ -72,18 +73,10 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			},
 
 			"plan_id": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ExactlyOneOf: []string{"plan_type"},
-				Description:  "The target Plan ID to be bound. When you have an existing Plan in your account, you can fill in this parameter to directly bind the site to the Plan. If you do not have a Plan that can be bound at the moment, please go to the console to purchase a Plan to complete the site creation.",
-			},
-
-			"plan_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ExactlyOneOf: []string{"plan_id"},
-				Description:  "The plan option. Values:- `sta`: Standard plan that supports content delivery network outside the Chinese mainland; `ent`: Enterprise plan that supports content delivery network outside the Chinese mainland.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The target Plan ID to be bound. When you have an existing Plan in your account, you can fill in this parameter to directly bind the site to the Plan. If you do not have a Plan that can be bound at the moment, please go to the console to purchase a Plan to complete the site creation.",
 			},
 
 			"paused": {
@@ -162,7 +155,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 		request  = teo.NewCreateZoneRequest()
 		response *teo.CreateZoneResponse
 		zoneId   string
-		planId   string
 	)
 
 	if v, ok := d.GetOk("zone_name"); ok {
@@ -182,7 +174,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 	}
 
 	if v, ok := d.GetOk("plan_id"); ok {
-		planId = v.(string)
 		request.PlanId = helper.String(v.(string))
 	}
 
@@ -208,30 +199,6 @@ func resourceTencentCloudTeoZoneCreate(d *schema.ResourceData, meta interface{})
 
 	zoneId = *response.Response.ZoneId
 	d.SetId(zoneId)
-
-	if zoneId != "" && planId == "" {
-		planRequest := teo.NewCreatePlanForZoneRequest()
-		planRequest.ZoneId = &zoneId
-
-		if v, ok := d.GetOk("type"); ok {
-			planRequest.PlanType = helper.String(v.(string))
-		}
-
-		planErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreatePlanForZone(planRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if planErr != nil {
-			log.Printf("[CRITAL]%s create teo zone failed, reason:%+v", logId, planErr)
-			return planErr
-		}
-	}
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
@@ -370,14 +337,6 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 
 	zoneId := d.Id()
 	request.ZoneId = &zoneId
-
-	if d.HasChange("zone_name") {
-		return fmt.Errorf("`zone_name` do not support change now.")
-	}
-
-	if d.HasChange("plan_type") {
-		log.Printf("[WARN] change `plan_type` is not supported now.")
-	}
 
 	if d.HasChange("paused") {
 		if v, ok := d.GetOkExists("paused"); ok {
