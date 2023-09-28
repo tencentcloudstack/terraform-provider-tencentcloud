@@ -24,9 +24,7 @@ func testSweepZone(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TeoService{client}
 
-	zoneId := defaultZoneId
-
-	zone, err := service.DescribeTeoZone(ctx, zoneId)
+	zone, err := service.DescribeTeoZone(ctx, "")
 	if err != nil {
 		return err
 	}

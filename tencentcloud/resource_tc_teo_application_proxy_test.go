@@ -26,10 +26,8 @@ func testSweepApplicationProxy(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TeoService{client}
 
-	zoneId := defaultZoneId
-
 	for {
-		proxy, err := service.DescribeTeoApplicationProxy(ctx, zoneId, "")
+		proxy, err := service.DescribeTeoApplicationProxy(ctx, "", "")
 		if err != nil {
 			return err
 		}
@@ -38,7 +36,7 @@ func testSweepApplicationProxy(region string) error {
 			return nil
 		}
 
-		err = service.DeleteTeoApplicationProxyById(ctx, zoneId, *proxy.ProxyId)
+		err = service.DeleteTeoApplicationProxyById(ctx, *proxy.ZoneId, *proxy.ProxyId)
 		if err != nil {
 			return err
 		}

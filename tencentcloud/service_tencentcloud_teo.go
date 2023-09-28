@@ -29,13 +29,16 @@ func (me *TeoService) DescribeTeoZone(ctx context.Context, zoneId string) (zone 
 		}
 	}()
 
-	request.Filters = append(
-		request.Filters,
-		&teo.AdvancedFilter{
-			Name:   helper.String("zone-id"),
-			Values: []*string{&zoneId},
-		},
-	)
+	if zoneId != "" {
+		request.Filters = append(
+			request.Filters,
+			&teo.AdvancedFilter{
+				Name:   helper.String("zone-id"),
+				Values: []*string{&zoneId},
+			},
+		)
+	}
+
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
@@ -311,20 +314,26 @@ func (me *TeoService) DescribeTeoApplicationProxy(ctx context.Context,
 		}
 	}()
 
-	request.Filters = append(
-		request.Filters,
-		&teo.Filter{
-			Name:   helper.String("zone-id"),
-			Values: []*string{&zoneId},
-		},
-	)
-	request.Filters = append(
-		request.Filters,
-		&teo.Filter{
-			Name:   helper.String("proxy-id"),
-			Values: []*string{&proxyId},
-		},
-	)
+	if zoneId != "" {
+		request.Filters = append(
+			request.Filters,
+			&teo.Filter{
+				Name:   helper.String("zone-id"),
+				Values: []*string{&zoneId},
+			},
+		)
+	}
+
+	if proxyId != "" {
+		request.Filters = append(
+			request.Filters,
+			&teo.Filter{
+				Name:   helper.String("proxy-id"),
+				Values: []*string{&proxyId},
+			},
+		)
+	}
+
 	ratelimit.Check(request.GetAction())
 
 	var offset int64 = 0
