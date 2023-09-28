@@ -100,7 +100,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.754
+require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect

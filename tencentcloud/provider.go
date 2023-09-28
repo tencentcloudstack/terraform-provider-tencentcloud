@@ -1676,6 +1676,7 @@ Waf
     tencentcloud_waf_attack_overview
     tencentcloud_waf_attack_total_count
     tencentcloud_waf_peak_points
+    tencentcloud_waf_instance_qps_limit
 
   Resource
     tencentcloud_waf_custom_rule
@@ -1684,6 +1685,8 @@ Waf
     tencentcloud_waf_saas_domain
     tencentcloud_waf_clb_instance
     tencentcloud_waf_saas_instance
+    tencentcloud_waf_anti_fake
+    tencentcloud_waf_anti_info_leak
 */
 package tencentcloud
 
@@ -2344,6 +2347,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
 			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_waf_instance_qps_limit":                    dataSourceTencentCloudWafInstanceQpsLimit(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
@@ -3107,6 +3111,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
 			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
+			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
+			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
 		},
 
 		ConfigureFunc: providerConfigure,
