@@ -34,6 +34,14 @@ resource "tencentcloud_trocket_rocketmq_role" "rocketmq_role" {
   perm_write  = false
   perm_read   = true
 }
+
+output "access_key" {
+  value = tencentcloud_trocket_rocketmq_role.rocketmq_role.access_key
+}
+
+output "secret_key" {
+  value = tencentcloud_trocket_rocketmq_role.rocketmq_role.secret_key
+}
 ```
 
 ## Argument Reference
@@ -51,8 +59,10 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `access_key` - Access key.
 * `created_time` - Created time.
 * `modified_time` - Modified time.
+* `secret_key` - Secret key.
 
 
 ## Import

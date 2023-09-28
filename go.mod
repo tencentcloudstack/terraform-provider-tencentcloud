@@ -87,7 +87,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.713
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.691
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.755
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
