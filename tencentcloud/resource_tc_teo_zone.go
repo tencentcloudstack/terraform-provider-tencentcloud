@@ -343,7 +343,7 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 		}
 	}
 
-	if zone.Status != nil {
+	if zone.NameServers != nil {
 		_ = d.Set("name_servers", zone.NameServers)
 	}
 

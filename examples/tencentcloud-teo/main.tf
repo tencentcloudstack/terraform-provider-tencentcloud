@@ -19,7 +19,7 @@ provider "tencentcloud" {
 
 # Domain
 provider "tencentcloud" {
-  alias      = "arunma"
+  alias      = "tfdomain"
   region     = "ap-guangzhou"
   secret_id  = ""
   secret_key = ""
@@ -33,7 +33,7 @@ variable "zone_name" {
 # cname
 resource "tencentcloud_teo_zone" "zone" {
   area            = "overseas"
-  alias_zone_name = "arunma"
+  alias_zone_name = "tftest"
   paused          = false
   plan_id         = "edgeone-2kfv1h391n6w"
   tags = {
@@ -44,7 +44,7 @@ resource "tencentcloud_teo_zone" "zone" {
 }
 
 resource "tencentcloud_dnspod_record" "demo" {
-  provider = tencentcloud.arunma
+  provider = tencentcloud.tfdomain
 
   domain      = var.zone_name
   record_type = tencentcloud_teo_zone.zone.ownership_verification.0.dns_verification.0.record_type
@@ -76,19 +76,8 @@ resource "tencentcloud_teo_acceleration_domain" "acceleration_domain" {
   depends_on = [tencentcloud_teo_ownership_verify.ownership_verify]
 }
 
-# resource "tencentcloud_dnspod_record" "acceleration_domain_verify" {
-#   provider = tencentcloud.arunma
-
-#   domain      = tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name
-#   record_type = tencentcloud_teo_acceleration_domain.acceleration_domain.ownership_verification.0.dns_verification.0.record_type
-#   record_line = "默认"
-#   value       = tencentcloud_teo_acceleration_domain.acceleration_domain.ownership_verification.0.dns_verification.0.record_value
-#   sub_domain  = tencentcloud_teo_acceleration_domain.acceleration_domain.ownership_verification.0.dns_verification.0.subdomain
-
-# }
-
 resource "tencentcloud_dnspod_record" "acceleration_domain_record" {
-  provider = tencentcloud.arunma
+  provider = tencentcloud.tfdomain
 
   domain      = var.zone_name
   record_type = "CNAME"
@@ -97,13 +86,6 @@ resource "tencentcloud_dnspod_record" "acceleration_domain_record" {
   sub_domain  = var.sub_domain
 
 }
-
-
-# resource "tencentcloud_teo_ownership_verify" "ownership_verify_acceleration_domain" {
-#   domain = tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name
-
-#   depends_on = [ tencentcloud_dnspod_record.acceleration_domain_record ]
-# }
 
 resource "tencentcloud_teo_certificate" "certificate" {
   host    = tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name
