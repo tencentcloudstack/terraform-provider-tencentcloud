@@ -317,8 +317,8 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if zone.OwnershipVerification != nil {
+		ownershipVerificationMap := map[string]interface{}{}
 		if zone.OwnershipVerification.DnsVerification != nil {
-			ownershipVerificationMap := map[string]interface{}{}
 			dnsVerificationMap := map[string]interface{}{}
 
 			if zone.OwnershipVerification.DnsVerification.Subdomain != nil {
@@ -334,9 +334,9 @@ func resourceTencentCloudTeoZoneRead(d *schema.ResourceData, meta interface{}) e
 			}
 
 			ownershipVerificationMap["dns_verification"] = []interface{}{dnsVerificationMap}
-			_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
 
 		}
+		_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
 	}
 
 	if zone.NameServers != nil {
