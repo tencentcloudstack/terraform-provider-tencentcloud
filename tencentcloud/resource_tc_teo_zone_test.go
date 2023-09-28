@@ -33,7 +33,7 @@ func testSweepZone(region string) error {
 		return nil
 	}
 
-	err = service.DeleteTeoZoneById(ctx, zoneId)
+	err = service.DeleteTeoZoneById(ctx, *zone.ZoneId)
 	if err != nil {
 		return err
 	}
