@@ -56,7 +56,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Site access type. The value of this parameter is as follows, and the default is partial if not filled in: `partial`: CNAME access; `full`: NS access; `noDomainAccess`: No domain access.",
+				Description: "Site access type. The value of this parameter is as follows, and the default is partial if not filled in, `partial`: CNAME access; `full`: NS access; `noDomainAccess`: No domain access.",
 			},
 
 			"alias_zone_name": {
@@ -68,7 +68,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 			"area": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "When the Type value is partial/full, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is overseas if not filled in. When the Type value is noDomainAccess, please leave this value empty: `global`: Global availability zone; `mainland`: Chinese mainland availability zone; `overseas`: Global availability zone (excluding Chinese mainland).",
+				Description: "When the Type value is partial/full, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is overseas if not filled in. When the Type value is noDomainAccess, please leave this value empty:- `global`: Global availability zone; `mainland`: Chinese mainland availability zone; `overseas`: Global availability zone (excluding Chinese mainland).",
 			},
 
 			"plan_id": {
@@ -83,7 +83,7 @@ func resourceTencentCloudTeoZone() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				ExactlyOneOf: []string{"plan_id"},
-				Description:  "The plan option. Values: `sta`: Standard plan that supports content delivery network outside the Chinese mainland; `ent`: Enterprise plan that supports content delivery network outside the Chinese mainland.",
+				Description:  "The plan option. Values:- `sta`: Standard plan that supports content delivery network outside the Chinese mainland; `ent`: Enterprise plan that supports content delivery network outside the Chinese mainland.",
 			},
 
 			"paused": {

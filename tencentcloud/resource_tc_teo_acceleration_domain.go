@@ -71,7 +71,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 						"origin_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The origin type. Values: `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
+							Description: "The origin type. Values:- `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
@@ -114,7 +114,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 			"status": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Accelerated domain name status, the values are: `online`: enabled; `offline`: disabled.",
+				Description: "Accelerated domain name status, the values are:- `online`: enabled; `offline`: disabled.",
 			},
 
 			"cname": {
