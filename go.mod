@@ -95,12 +95,13 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.759
+    github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect

@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
@@ -182,6 +184,7 @@ type TencentCloudClient struct {
 	dlcConn            *dlc.Client
 	wedataConn         *wedata.Client
 	wafConn            *waf.Client
+	cfwConn            *cfw.Client
 	trocketConn        *trocket.Client
 }
 
@@ -1275,6 +1278,19 @@ func (me *TencentCloudClient) UseWafClient() *waf.Client {
 	me.wafConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wafConn
+}
+
+func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
+	if me.cfwConn != nil {
+		return me.cfwConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cfwConn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
+	me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cfwConn
 }
 
 // UseTrocketClient returns trocket client for service
