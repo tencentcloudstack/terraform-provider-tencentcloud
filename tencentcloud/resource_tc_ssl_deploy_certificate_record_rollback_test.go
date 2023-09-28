@@ -17,11 +17,6 @@ func TestAccTencentCloudSslDeployCertificateRecordRollbackResource_basic(t *test
 				Config: testAccSslDeployCertificateRecordRollback,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_deploy_certificate_record_rollback.deploy_certificate_record_rollback", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_ssl_deploy_certificate_record_rollback.deploy_certificate_record_rollback",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -29,7 +24,7 @@ func TestAccTencentCloudSslDeployCertificateRecordRollbackResource_basic(t *test
 const testAccSslDeployCertificateRecordRollback = `
 
 resource "tencentcloud_ssl_deploy_certificate_record_rollback" "deploy_certificate_record_rollback" {
-  deploy_record_id = 
+  deploy_record_id = 35521
 }
 
 `

@@ -5,8 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ssl_deploy_certificate_record_retry" "deploy_certificate_record_retry" {
-  deploy_record_id =
-  deploy_record_detail_id =
+  deploy_record_id = 35474
 }
 ```
 
@@ -62,10 +61,10 @@ func resourceTencentCloudSslDeployCertificateRecordRetryCreate(d *schema.Resourc
 
 	var (
 		request        = ssl.NewDeployCertificateRecordRetryRequest()
-		response       = ssl.NewDeployCertificateRecordRetryResponse()
 		deployRecordId uint64
 	)
 	if v, _ := d.GetOk("deploy_record_id"); v != nil {
+		deployRecordId = (uint64)(v.(int))
 		request.DeployRecordId = helper.IntInt64(v.(int))
 	}
 
@@ -80,7 +79,6 @@ func resourceTencentCloudSslDeployCertificateRecordRetryCreate(d *schema.Resourc
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {

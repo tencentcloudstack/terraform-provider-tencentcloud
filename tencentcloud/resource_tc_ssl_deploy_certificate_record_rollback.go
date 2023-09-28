@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ssl_deploy_certificate_record_rollback" "deploy_certificate_record_rollback" {
-  deploy_record_id =
+  deploy_record_id = 35471
 }
 ```
 
@@ -55,7 +55,7 @@ func resourceTencentCloudSslDeployCertificateRecordRollbackCreate(d *schema.Reso
 	var (
 		request        = ssl.NewDeployCertificateRecordRollbackRequest()
 		response       = ssl.NewDeployCertificateRecordRollbackResponse()
-		deployRecordId uint64
+		deployRecordId int64
 	)
 	if v, _ := d.GetOk("deploy_record_id"); v != nil {
 		request.DeployRecordId = helper.IntInt64(v.(int))
@@ -75,8 +75,10 @@ func resourceTencentCloudSslDeployCertificateRecordRollbackCreate(d *schema.Reso
 		log.Printf("[CRITAL]%s operate ssl deployCertificateRecordRollback failed, reason:%+v", logId, err)
 		return err
 	}
-
-	d.SetId(helper.UInt64ToStr(deployRecordId))
+	if response != nil && response.Response != nil && response.Response.DeployRecordId != nil {
+		deployRecordId = *response.Response.DeployRecordId
+	}
+	d.SetId(helper.Int64ToStr(deployRecordId))
 
 	return resourceTencentCloudSslDeployCertificateRecordRollbackRead(d, meta)
 }

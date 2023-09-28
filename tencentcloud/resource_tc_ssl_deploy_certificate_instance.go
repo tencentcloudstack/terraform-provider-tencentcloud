@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ssl_deploy_certificate_instance" "deploy_certificate_instance" {
-  certificate_id = ""
-  instance_id_list =
+  certificate_id = "8x1eUSSl"
+  instance_id_list =[api1.ninghhuang.online|off]
 }
 ```
 

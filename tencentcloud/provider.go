@@ -890,20 +890,30 @@ SSL Certificates
     tencentcloud_ssl_describe_host_live_instance_list
     tencentcloud_ssl_describe_host_teo_instance_list
     tencentcloud_ssl_describe_host_tke_instance_list
-tencentcloud_ssl_describe_host_vod_instance_list
+    tencentcloud_ssl_describe_host_vod_instance_list
     tencentcloud_ssl_describe_host_deploy_record
     tencentcloud_ssl_describe_host_deploy_record_detail
-tencentcloud_ssl_describe_host_update_record
-tencentcloud_ssl_describe_host_update_record_detail
-tencentcloud_ssl_describe_managers
-tencentcloud_ssl_describe_manager_detail
+    tencentcloud_ssl_describe_host_update_record
+    tencentcloud_ssl_describe_host_update_record_detail
+    tencentcloud_ssl_describe_managers
+    tencentcloud_ssl_describe_manager_detail
     tencentcloud_ssl_describe_certificate_bind_resource_task_detail
-tencentcloud_ssl_describe_certificate_bind_resource_task_result
+    tencentcloud_ssl_describe_certificate_bind_resource_task_result
   Resource
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
     tencentcloud_ssl_deploy_certificate_instance
+    tencentcloud_ssl_deploy_certificate_record_retry
+    tencentcloud_ssl_deploy_certificate_record_rollback
+    tencentcloud_ssl_download_certificate
+    tencentcloud_ssl_replace_certificate
+    tencentcloud_ssl_revoke_certificate
+    tencentcloud_ssl_update_certificate_instance
+    tencentcloud_ssl_update_certificate_instance
+    tencentcloud_ssl_update_certificate_record_retry
+    tencentcloud_ssl_update_certificate_record_rollback
+    tencentcloud_ssl_upload_revoke_letter
 	tencentcloud_ssl_commit_certificate_information
 
 Secrets Manager(SSM)
@@ -3201,6 +3211,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_deploy_certificate_instance":                     resourceTencentCloudSslDeployCertificateInstance(),
 			"tencentcloud_ssl_deploy_certificate_record_retry":                 resourceTencentCloudSslDeployCertificateRecordRetry(),
 			"tencentcloud_ssl_deploy_certificate_record_rollback":              resourceTencentCloudSslDeployCertificateRecordRollback(),
+			"tencentcloud_ssl_download_certificate":                            resourceTencentCloudSslDownloadCertificate(),
+			"tencentcloud_ssl_replace_certificate":                             resourceTencentCloudSslReplaceCertificate(),
+			"tencentcloud_ssl_revoke_certificate":                              resourceTencentCloudSslRevokeCertificate(),
+			"tencentcloud_ssl_update_certificate_instance":                     resourceTencentCloudSslUpdateCertificateInstance(),
+			"tencentcloud_ssl_update_certificate_record_retry":                 resourceTencentCloudSslUpdateCertificateRecordRetry(),
+			"tencentcloud_ssl_update_certificate_record_rollback":              resourceTencentCloudSslUpdateCertificateRecordRollback(),
+			"tencentcloud_ssl_upload_revoke_letter":                            resourceTencentCloudSslUploadRevokeLetter(),
 		},
 
 		ConfigureFunc: providerConfigure,
