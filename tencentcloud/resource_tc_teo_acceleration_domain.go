@@ -117,38 +117,10 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 				Description: "Accelerated domain name status, the values are: `online`: enabled; `offline`: disabled.",
 			},
 
-			"ownership_verification": {
-				Type:        schema.TypeList,
+			"cname": {
+				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "Ownership verification information. Note: This field may return null, indicating that no valid value can be obtained.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"dns_verification": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "CNAME access, using DNS to resolve the information required for authentication. For details, please refer to [Site/Domain Name Ownership Verification ](https://cloud.tencent.com/document/product/1552/70789#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, indicating that no valid value can be obtained.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"subdomain": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Host record.",
-									},
-									"record_type": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Record type.",
-									},
-									"record_value": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Record the value.",
-									},
-								},
-							},
-						},
-					},
-				},
+				Description: "CNAME address.",
 			},
 		},
 	}
@@ -267,6 +239,10 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 		_ = d.Set("domain_name", accelerationDomain.DomainName)
 	}
 
+	if accelerationDomain.Cname != nil {
+		_ = d.Set("cname", accelerationDomain.Cname)
+	}
+
 	if accelerationDomain.OriginDetail != nil {
 		originInfoMap := map[string]interface{}{}
 		originDetail := accelerationDomain.OriginDetail
@@ -307,30 +283,6 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 		}
 
 		_ = d.Set("origin_info", []interface{}{originInfoMap})
-	}
-
-	if accelerationDomain.OwnershipVerification != nil {
-		ownershipVerificationMap := map[string]interface{}{}
-
-		if accelerationDomain.OwnershipVerification.DnsVerification != nil {
-			dnsVerificationMap := map[string]interface{}{}
-
-			if accelerationDomain.OwnershipVerification.DnsVerification.Subdomain != nil {
-				dnsVerificationMap["subdomain"] = accelerationDomain.OwnershipVerification.DnsVerification.Subdomain
-			}
-
-			if accelerationDomain.OwnershipVerification.DnsVerification.RecordType != nil {
-				dnsVerificationMap["record_type"] = accelerationDomain.OwnershipVerification.DnsVerification.RecordType
-			}
-
-			if accelerationDomain.OwnershipVerification.DnsVerification.RecordValue != nil {
-				dnsVerificationMap["record_value"] = accelerationDomain.OwnershipVerification.DnsVerification.RecordValue
-			}
-
-			ownershipVerificationMap["dns_verification"] = []interface{}{dnsVerificationMap}
-		}
-
-		_ = d.Set("ownership_verification", []interface{}{ownershipVerificationMap})
 	}
 
 	return nil
