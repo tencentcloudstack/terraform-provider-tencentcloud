@@ -3,46 +3,37 @@ Provides a resource to create a mps describe_media_metadata_operation
 
 Example Usage
 
-```hcl
-resource "tencentcloud_mps_describe_media_metadata_operation" "describe_media_metadata_operation" {
-  input_info {
-		type = ""
-		cos_input_info {
-			bucket = ""
-			region = ""
-			object = ""
-		}
-		url_input_info {
-			url = ""
-		}
-		s3_input_info {
-			s3_bucket = ""
-			s3_region = ""
-			s3_object = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
+Operation through COS
 
+```hcl
+data "tencentcloud_cos_bucket_object" "object" {
+	bucket = "keep-bucket-${local.app_id}"
+	key    = "/mps-test/test.mov"
+}
+
+resource "tencentcloud_mps_describe_media_metadata_operation" "operation" {
+  input_info {
+		type = "COS"
+		cos_input_info {
+			bucket = data.tencentcloud_cos_bucket_object.object.bucket
+			region = "%s"
+			object = data.tencentcloud_cos_bucket_object.object.key
+		}
   }
 }
 ```
 
-Import
-
-mps describe_media_metadata_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mps_describe_media_metadata_operation.describe_media_metadata_operation describe_media_metadata_operation_id
-```
 */
 package tencentcloud
 
 import (
+	"encoding/json"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMpsDescribeMediaMetadataOperation() *schema.Resource {
@@ -50,9 +41,6 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperation() *schema.Resource {
 		Create: resourceTencentCloudMpsDescribeMediaMetadataOperationCreate,
 		Read:   resourceTencentCloudMpsDescribeMediaMetadataOperationRead,
 		Delete: resourceTencentCloudMpsDescribeMediaMetadataOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"input_info": {
 				Required:    true,
@@ -65,7 +53,7 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperation() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+							Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL. `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 						},
 						"cos_input_info": {
 							Type:        schema.TypeList,
@@ -157,8 +145,7 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperationCreate(d *schema.Resou
 
 	var (
 		request   = mps.NewDescribeMediaMetaDataRequest()
-		response  = mps.NewDescribeMediaMetaDataResponse()
-		inputInfo uint64
+		inputInfo mps.MediaInputInfo
 	)
 	if dMap, ok := helper.InterfacesHeadMap(d, "input_info"); ok {
 		mediaInputInfo := mps.MediaInputInfo{}
@@ -205,6 +192,7 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperationCreate(d *schema.Resou
 			mediaInputInfo.S3InputInfo = &s3InputInfo
 		}
 		request.InputInfo = &mediaInputInfo
+		inputInfo = mediaInputInfo
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -214,7 +202,6 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperationCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -222,8 +209,8 @@ func resourceTencentCloudMpsDescribeMediaMetadataOperationCreate(d *schema.Resou
 		return err
 	}
 
-	inputInfo = *response.Response.InputInfo
-	d.SetId(helper.UInt64ToStr(inputInfo))
+	b, _ := json.Marshal(inputInfo)
+	d.SetId(helper.IntToStr(helper.HashString(string(b))))
 
 	return resourceTencentCloudMpsDescribeMediaMetadataOperationRead(d, meta)
 }

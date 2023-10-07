@@ -4,19 +4,20 @@ Provides a resource to create a mps parse_live_stream_process_notify_operation
 Example Usage
 
 ```hcl
-resource "tencentcloud_mps_parse_live_stream_process_notify_operation" "parse_live_stream_process_notify_operation" {
-  content = ""
+resource "tencentcloud_mps_parse_live_stream_process_notify_operation" "operation" {
+  content = "{\"EventType\":\"WorkflowTask\", xxx}"
 }
 ```
 */
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMpsParseLiveStreamProcessNotifyOperation() *schema.Resource {

@@ -1,8 +1,10 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"fmt"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudMpsDescribeMediaMetadataOperationResource_basic(t *testing.T) {
@@ -14,39 +16,35 @@ func TestAccTencentCloudMpsDescribeMediaMetadataOperationResource_basic(t *testi
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMpsDescribeMediaMetadataOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_describe_media_metadata_operation.describe_media_metadata_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_mps_describe_media_metadata_operation.describe_media_metadata_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: fmt.Sprintf(testAccMpsDescribeMediaMetadataOperation, defaultRegion),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_describe_media_metadata_operation.operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.#"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.0.type", "COS"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.0.cos_input_info.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.0.cos_input_info.0.bucket"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.0.cos_input_info.0.region", defaultRegion),
+					resource.TestCheckResourceAttr("tencentcloud_mps_describe_media_metadata_operation.operation", "input_info.0.cos_input_info.0.object", "/mps-test/test.mov"),
+				),
 			},
 		},
 	})
 }
 
-const testAccMpsDescribeMediaMetadataOperation = `
+const testAccMpsDescribeMediaMetadataOperation = userInfoData + `
+data "tencentcloud_cos_bucket_object" "object" {
+	bucket = "keep-bucket-${local.app_id}"
+	key    = "/mps-test/test.mov"
+}
 
-resource "tencentcloud_mps_describe_media_metadata_operation" "describe_media_metadata_operation" {
+resource "tencentcloud_mps_describe_media_metadata_operation" "operation" {
   input_info {
-		type = ""
+		type = "COS"
 		cos_input_info {
-			bucket = ""
-			region = ""
-			object = ""
+			bucket = data.tencentcloud_cos_bucket_object.object.bucket
+			region = "%s"
+			object = data.tencentcloud_cos_bucket_object.object.key
 		}
-		url_input_info {
-			url = ""
-		}
-		s3_input_info {
-			s3_bucket = ""
-			s3_region = ""
-			s3_object = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
   }
 }
 

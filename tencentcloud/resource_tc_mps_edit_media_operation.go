@@ -3,89 +3,52 @@ Provides a resource to create a mps edit_media_operation
 
 Example Usage
 
+Operation through COS
+
 ```hcl
-resource "tencentcloud_mps_edit_media_operation" "edit_media_operation" {
+resource "tencentcloud_cos_bucket" "output" {
+	bucket = "tf-bucket-mps-output-${local.app_id}"
+  }
+
+data "tencentcloud_cos_bucket_object" "object" {
+	bucket = "keep-bucket-${local.app_id}"
+	key    = "/mps-test/test.mov"
+}
+
+resource "tencentcloud_mps_edit_media_operation" "operation" {
   file_infos {
 		input_info {
-			type = ""
+			type = "COS"
 			cos_input_info {
-				bucket = ""
-				region = ""
-				object = ""
-			}
-			url_input_info {
-				url = ""
-			}
-			s3_input_info {
-				s3_bucket = ""
-				s3_region = ""
-				s3_object = ""
-				s3_secret_id = ""
-				s3_secret_key = ""
+				bucket = data.tencentcloud_cos_bucket_object.object.bucket
+				region = "%s"
+				object = data.tencentcloud_cos_bucket_object.object.key
 			}
 		}
-		start_time_offset =
-		end_time_offset =
-
+		start_time_offset = 60
+		end_time_offset = 120
   }
   output_storage {
-		type = ""
+		type = "COS"
 		cos_output_storage {
-			bucket = ""
-			region = ""
+			bucket = tencentcloud_cos_bucket.output.bucket
+			region = "%s"
 		}
-		s3_output_storage {
-			s3_bucket = ""
-			s3_region = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
   }
-  output_object_path = ""
-  output_config {
-		container = ""
-		type = ""
-
-  }
-  task_notify_config {
-		cmq_model = ""
-		cmq_region = ""
-		topic_name = ""
-		queue_name = ""
-		notify_mode = ""
-		notify_type = ""
-		notify_url = ""
-		aws_s_q_s {
-			s_q_s_region = ""
-			s_q_s_queue_name = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
-  }
-  tasks_priority =
-  session_id = ""
-  session_context = ""
+  output_object_path = "/output"
 }
 ```
 
-Import
-
-mps edit_media_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mps_edit_media_operation.edit_media_operation edit_media_operation_id
-```
 */
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
@@ -93,9 +56,6 @@ func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 		Create: resourceTencentCloudMpsEditMediaOperationCreate,
 		Read:   resourceTencentCloudMpsEditMediaOperationRead,
 		Delete: resourceTencentCloudMpsEditMediaOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"file_infos": {
 				Required:    true,
@@ -114,7 +74,7 @@ func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 									"type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+										Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 									},
 									"cos_input_info": {
 										Type:        schema.TypeList,
@@ -219,7 +179,7 @@ func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+							Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS. `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 						},
 						"cos_output_storage": {
 							Type:        schema.TypeList,
@@ -340,26 +300,26 @@ func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 						"notify_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The notification type. Valid values:&lt;li&gt;`CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead.&lt;/li&gt;&lt;li&gt;`TDMQ-CMQ`: Message queue&lt;/li&gt;&lt;li&gt;`URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API.&lt;/li&gt;&lt;li&gt;`SCF`: This notification type is not recommended. You need to configure it in the SCF console.&lt;/li&gt;&lt;li&gt;`AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.&lt;/li&gt;&lt;font color=red&gt;Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.&lt;/font&gt;.",
+							Description: "The notification type. Valid values: `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead. `TDMQ-CMQ`: Message queue. `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API. `SCF`: This notification type is not recommended. You need to configure it in the SCF console. `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket. If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.",
 						},
 						"notify_url": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "HTTP callback URL, required if `NotifyType` is set to `URL`.",
 						},
-						"aws_s_q_s": {
+						"aws_sqs": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
 							Description: "The AWS SQS queue. This parameter is required if `NotifyType` is `AWS-SQS`.Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"s_q_s_region": {
+									"sqs_region": {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "The region of the SQS queue.",
 									},
-									"s_q_s_queue_name": {
+									"sqs_queue_name": {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "The name of the SQS queue.",
@@ -385,7 +345,7 @@ func resourceTencentCloudMpsEditMediaOperation() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Task priority. The higher the value, the higher the priority. Value range: -10–10. If this parameter is left empty, 0 will be used.",
+				Description: "Task priority. The higher the value, the higher the priority. Value range: [-10,10]. If this parameter is left empty, 0 will be used.",
 			},
 
 			"session_id": {
@@ -414,11 +374,12 @@ func resourceTencentCloudMpsEditMediaOperationCreate(d *schema.ResourceData, met
 	var (
 		request  = mps.NewEditMediaRequest()
 		response = mps.NewEditMediaResponse()
-		taskId   uint64
+		taskId   string
 	)
 	if v, ok := d.GetOk("file_infos"); ok {
 		for _, item := range v.([]interface{}) {
 			editMediaFileInfo := mps.EditMediaFileInfo{}
+			dMap := item.(map[string]interface{})
 			if inputInfoMap, ok := helper.InterfaceToMap(dMap, "input_info"); ok {
 				mediaInputInfo := mps.MediaInputInfo{}
 				if v, ok := inputInfoMap["type"]; ok {
@@ -547,12 +508,12 @@ func resourceTencentCloudMpsEditMediaOperationCreate(d *schema.ResourceData, met
 		if v, ok := dMap["notify_url"]; ok {
 			taskNotifyConfig.NotifyUrl = helper.String(v.(string))
 		}
-		if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_s_q_s"); ok {
+		if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_sqs"); ok {
 			awsSQS := mps.AwsSQS{}
-			if v, ok := awsSQSMap["s_q_s_region"]; ok {
+			if v, ok := awsSQSMap["sqs_region"]; ok {
 				awsSQS.SQSRegion = helper.String(v.(string))
 			}
-			if v, ok := awsSQSMap["s_q_s_queue_name"]; ok {
+			if v, ok := awsSQSMap["sqs_queue_name"]; ok {
 				awsSQS.SQSQueueName = helper.String(v.(string))
 			}
 			if v, ok := awsSQSMap["s3_secret_id"]; ok {
@@ -594,7 +555,7 @@ func resourceTencentCloudMpsEditMediaOperationCreate(d *schema.ResourceData, met
 	}
 
 	taskId = *response.Response.TaskId
-	d.SetId(helper.UInt64ToStr(taskId))
+	d.SetId(taskId)
 
 	return resourceTencentCloudMpsEditMediaOperationRead(d, meta)
 }
