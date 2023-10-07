@@ -891,14 +891,14 @@ SSL Certificates
     tencentcloud_ssl_describe_host_teo_instance_list
     tencentcloud_ssl_describe_host_tke_instance_list
     tencentcloud_ssl_describe_host_vod_instance_list
+    tencentcloud_ssl_describe_host_waf_instance_list
     tencentcloud_ssl_describe_host_deploy_record
     tencentcloud_ssl_describe_host_deploy_record_detail
     tencentcloud_ssl_describe_host_update_record
     tencentcloud_ssl_describe_host_update_record_detail
     tencentcloud_ssl_describe_managers
     tencentcloud_ssl_describe_manager_detail
-    tencentcloud_ssl_describe_host_deploy_record
-    tencentcloud_ssl_describe_host_deploy_record_detail
+
 
   Resource
     tencentcloud_ssl_certificate
