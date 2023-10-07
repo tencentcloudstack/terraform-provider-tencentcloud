@@ -16,7 +16,10 @@ func TestAccTencentCloudSslDescribeHostCdnInstanceListDataSource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostCdnInstanceListDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_cdn_instance_list.describe_host_cdn_instance_list")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_cdn_instance_list.describe_host_cdn_instance_list"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cdn_instance_list.describe_host_cdn_instance_list", "certificate_id", "8xNdi2ig"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cdn_instance_list.describe_host_cdn_instance_list", "resource_type", "apigateway"),
+				),
 			},
 		},
 	})
@@ -25,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostCdnInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostCdnInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_cdn_instance_list" "describe_host_cdn_instance_list" {
-  certificate_id = "8u8DII0l"
+  certificate_id = "8xNdi2ig"
   resource_type = "cdn"
 }
 

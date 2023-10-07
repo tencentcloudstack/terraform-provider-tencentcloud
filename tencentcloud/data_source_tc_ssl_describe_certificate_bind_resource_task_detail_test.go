@@ -28,6 +28,6 @@ data "tencentcloud_ssl_describe_certificate_bind_resource_task_detail" "describe
   task_id = ""
   resource_types = 
   regions = 
-                        }
+}
 
 `

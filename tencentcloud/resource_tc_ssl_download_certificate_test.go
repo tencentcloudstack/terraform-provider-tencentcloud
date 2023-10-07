@@ -16,7 +16,11 @@ func TestAccTencentCloudSslDownloadCertificateResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDownloadCertificate,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate.download_certificate", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate.download_certificate", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_download_certificate.download_certificate", "certificate_id", "8x1eUSSl"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate.download_certificate", "output_path"),
+				),
 			},
 		},
 	})

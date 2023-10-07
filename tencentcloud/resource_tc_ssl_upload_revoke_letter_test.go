@@ -16,7 +16,10 @@ func TestAccTencentCloudSslUploadRevokeLetterResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslUploadRevokeLetter,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter", "certificate_id", "8xRYdDlc"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter", "revoke_letter"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter",

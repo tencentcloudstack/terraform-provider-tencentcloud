@@ -85,7 +85,9 @@ func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccSslCheckCertificateChain, ca),
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "certificate_chain", ca),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_ssl_check_certificate_chain.check_certificate_chain",

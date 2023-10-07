@@ -16,7 +16,9 @@ func TestAccTencentCloudSslDeployCertificateRecordRetryResource_basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDeployCertificateRecordRetry,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_deploy_certificate_record_retry.deploy_certificate_record_retry", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_deploy_certificate_record_retry.deploy_certificate_record_retry", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_deploy_certificate_record_retry.deploy_certificate_record_retry", "deploy_record_id", "35521"),
+				),
 			},
 		},
 	})

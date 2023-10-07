@@ -16,7 +16,9 @@ func TestAccTencentCloudSslDescribeManagerDetailDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeManagerDetailDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_manager_detail.describe_manager_detail")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_manager_detail.describe_manager_detail"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_manager_detail.describe_manager_detail", "manager_id", "12895"),
+				),
 			},
 		},
 	})

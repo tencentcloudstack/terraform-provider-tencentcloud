@@ -400,14 +400,10 @@ func (me *SslService) DescribeSslDescribeCertificateByID(ctx context.Context, ce
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
-		errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+	if response == nil || response.Response == nil {
 		return
 	}
-	if response.Response == nil {
-		errRet = fmt.Errorf("disable API CertificateByID fail")
-		return
-	}
+
 	describeCertificate = response.Response
 	return
 }
@@ -567,7 +563,6 @@ func (me *SslService) DescribeSslDescribeHostApiGatewayInstanceListByFilter(ctx 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		errRet = fmt.Errorf("api[%s] fail, response body [%v]", request.GetAction(), response)
 		return
 	}
 
@@ -636,7 +631,6 @@ func (me *SslService) DescribeSslDescribeHostCdnInstanceListByFilter(ctx context
 	}
 
 	if response == nil || response.Response == nil || response.Response.InstanceList == nil {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
 		return
 	}
 
@@ -713,7 +707,6 @@ func (me *SslService) DescribeSslDescribeHostClbInstanceListByFilter(ctx context
 		offset += limit
 	}
 	if response == nil || response.Response == nil || response.Response.InstanceList == nil {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
 		return
 	}
 
@@ -769,8 +762,7 @@ func (me *SslService) DescribeSslDescribeHostCosInstanceListByFilter(ctx context
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
-
+		return
 	}
 
 	describeHostCosInstanceList = &ssl.DescribeHostCosInstanceListResponseParams{
@@ -827,8 +819,7 @@ func (me *SslService) DescribeSslDescribeHostDdosInstanceListByFilter(ctx contex
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
-
+		return
 	}
 	describeHostDdosInstanceList = response.Response.InstanceList
 	return
@@ -982,7 +973,7 @@ func (me *SslService) DescribeSslDescribeHostLighthouseInstanceListByFilter(ctx 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 	describeHostLighthouseInstanceList = response.Response.InstanceList
 	return
@@ -1027,7 +1018,7 @@ func (me *SslService) DescribeSslDescribeHostLiveInstanceListByFilter(ctx contex
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 	describeHostLiveInstanceList = response.Response.InstanceList
 
@@ -1318,7 +1309,7 @@ func (me *SslService) DescribeSslDescribeHostVodInstanceListByFilter(ctx context
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 
 	describeHostVodInstanceList = response.Response.InstanceList
@@ -1365,7 +1356,7 @@ func (me *SslService) DescribeSslDescribeHostWafInstanceListByFilter(ctx context
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || len(response.Response.InstanceList) < 1 {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 
 	describeHostWafInstanceList = response.Response.InstanceList
@@ -1395,7 +1386,7 @@ func (me *SslService) DescribeSslDescribeManagerDetailByFilter(ctx context.Conte
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 
 	describeManagerDetailResponse = response.Response
@@ -1490,7 +1481,7 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskResultByFilt
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response == nil || response.Response == nil {
-		err = fmt.Errorf("[DEBUG]%s response body is nil [%s]\n", logId, response.ToJsonString())
+		return
 	}
 	describeCertificateBindResourceTaskResult = response.Response.SyncTaskBindResourceResult
 

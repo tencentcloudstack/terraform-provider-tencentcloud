@@ -16,7 +16,10 @@ func TestAccTencentCloudSslDescribeHostDeployRecordDataSource_basic(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostDeployRecordDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "certificate_id", "8u8DII0l"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "resource_type", "ddos"),
+				),
 			},
 		},
 	})

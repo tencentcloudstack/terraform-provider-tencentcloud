@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_companies" "describe_companies" {
-  company_id =
+  company_id = 122
   }
 ```
 */

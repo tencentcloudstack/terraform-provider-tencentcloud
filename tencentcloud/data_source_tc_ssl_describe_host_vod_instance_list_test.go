@@ -16,7 +16,10 @@ func TestAccTencentCloudSslDescribeHostVodInstanceListDataSource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostVodInstanceListDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_vod_instance_list.describe_host_vod_instance_list")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_vod_instance_list.describe_host_vod_instance_list"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_vod_instance_list.describe_host_vod_instance_list", "certificate_id", "8u8DII0l"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_vod_instance_list.describe_host_vod_instance_list", "resource_type", "vod"),
+				),
 			},
 		},
 	})

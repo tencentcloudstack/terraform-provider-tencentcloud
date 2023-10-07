@@ -16,7 +16,10 @@ func TestAccTencentCloudSslDescribeCompaniesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeCompaniesDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_companies.describe_companies")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_companies.describe_companies"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_companies.describe_companies", "company_id", "122"),
+				),
 			},
 		},
 	})
@@ -26,6 +29,6 @@ const testAccSslDescribeCompaniesDataSource = `
 
 data "tencentcloud_ssl_describe_companies" "describe_companies" {
   company_id = 122
-  }
+}
 
 `
