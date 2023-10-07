@@ -60,7 +60,7 @@ The following arguments are supported:
 * `session_context` - (Optional, String, ForceNew) The source context which is used to pass through the user request information. The task flow status change callback will return the value of this field. It can contain up to 1,000 characters.
 * `session_id` - (Optional, String, ForceNew) The ID used for deduplication. If there was a request with the same ID in the last three days, the current request will return an error. The ID can contain up to 50 characters. If this parameter is left empty or an empty string is entered, no deduplication will be performed.
 * `task_notify_config` - (Optional, List, ForceNew) Event notification information of task. If this parameter is left empty, no event notifications will be obtained.
-* `tasks_priority` - (Optional, Int, ForceNew) Task priority. The higher the value, the higher the priority. Value range: -10,10]. If this parameter is left empty, 0 will be used.
+* `tasks_priority` - (Optional, Int, ForceNew) Task priority. The higher the value, the higher the priority. Value range: [-10,10]. If this parameter is left empty, 0 will be used.
 
 The `aws_sqs` object supports the following:
 
