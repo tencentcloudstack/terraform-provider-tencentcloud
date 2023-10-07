@@ -899,7 +899,6 @@ SSL Certificates
     tencentcloud_ssl_describe_managers
     tencentcloud_ssl_describe_manager_detail
 
-
   Resource
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
