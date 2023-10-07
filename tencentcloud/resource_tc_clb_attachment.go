@@ -455,51 +455,25 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	} else if instance.Targets != nil {
 		onlineTargets = instance.Targets
 	}
-
-	//this may cause problems when there are members in two dimensions array
-	//need to read state of the tfstate file to clear the relationships
-	//in this situation, import action is not supported
-	// TL,DR: just update partial targets which this resource declared.
-	stateTargets := d.Get("targets").(*schema.Set)
-	if stateTargets.Len() != 0 {
-		//the old state exist
-		//create a new attachment with state
-		exactTargets := make([]interface{}, 0)
-		for i := range onlineTargets {
-			v := onlineTargets[i]
-			if *v.Type == "CVM" && v.InstanceId != nil {
-				target := map[string]interface{}{
-					"weight":      int(*v.Weight),
-					"port":        int(*v.Port),
-					"instance_id": *v.InstanceId,
-				}
-				if stateTargets.Contains(target) {
-					exactTargets = append(exactTargets, map[string]interface{}{
-						"weight":      int(*v.Weight),
-						"port":        int(*v.Port),
-						"instance_id": *v.InstanceId,
-					})
-				}
-
-			} else if len(v.PrivateIpAddresses) > 0 && *v.PrivateIpAddresses[0] != "" {
-				target := map[string]interface{}{
-					"weight": int(*v.Weight),
-					"port":   int(*v.Port),
-					"eni_ip": *v.PrivateIpAddresses[0],
-				}
-				if stateTargets.Contains(target) {
-					exactTargets = append(exactTargets, map[string]interface{}{
-						"weight": int(*v.Weight),
-						"port":   int(*v.Port),
-						"eni_ip": *v.PrivateIpAddresses[0],
-					})
-				}
+	targets := make([]interface{}, 0)
+	for _, onlineTarget := range onlineTargets {
+		if *onlineTarget.Type == CLB_BACKEND_TYPE_CVM {
+			target := map[string]interface{}{
+				"weight":      int(*onlineTarget.Weight),
+				"port":        int(*onlineTarget.Port),
+				"instance_id": *onlineTarget.InstanceId,
 			}
+			targets = append(targets, target)
+		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI {
+			target := map[string]interface{}{
+				"weight": int(*onlineTarget.Weight),
+				"port":   int(*onlineTarget.Port),
+				"eni_ip": *onlineTarget.PrivateIpAddresses[0],
+			}
+			targets = append(targets, target)
 		}
-		_ = d.Set("targets", exactTargets)
-	} else {
-		_ = d.Set("targets", flattenBackendList(onlineTargets))
 	}
+	_ = d.Set("targets", targets)
 
 	return nil
 }
@@ -508,11 +482,15 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 // If remove diffs created, check existing cvm instance first, filter target groups which already deregister
 func getRemoveCandidates(ctx context.Context, clbService ClbService, clbId string, listenerId string, locationId string, remove []interface{}) []interface{} {
 	removeCandidates := make([]interface{}, 0)
-	existAttachments, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+	listenerBackend, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 	if err != nil {
 		return removeCandidates
 	}
-	existTargetGroups := existAttachments.Targets
+	existTargetGroups := make([]*clb.Backend, 0)
+	existTargetGroups = append(existTargetGroups, listenerBackend.Targets...)
+	if len(listenerBackend.Rules) > 0 {
+		existTargetGroups = append(existTargetGroups, listenerBackend.Rules[0].Targets...)
+	}
 
 	for _, item := range remove {
 		target := item.(map[string]interface{})
@@ -551,7 +529,7 @@ func targetGroupContainsEni(targets []*clb.Backend, eniIp interface{}) (contains
 		return
 	}
 	for _, target := range targets {
-		if len(target.PrivateIpAddresses) > 0 && target.PrivateIpAddresses[0] != nil {
+		if len(target.PrivateIpAddresses) == 0 || target.PrivateIpAddresses[0] == nil {
 			continue
 		}
 		if ip == *target.PrivateIpAddresses[0] {
