@@ -20,7 +20,6 @@ terraform import tencentcloud_ssl_check_certificate_chain.check_certificate_chai
 package tencentcloud
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
@@ -68,8 +67,8 @@ func resourceTencentCloudSslCheckCertificateChainCreate(d *schema.ResourceData, 
 		if e != nil {
 			return retryError(e)
 		}
-		if result != nil && result.Response != nil && *result.Response.IsValid != true {
-			err := errors.New(fmt.Sprintf("[DEBUG]%s Certificate chain failed to check, IsValid [%v]\n", logId, *result.Response.IsValid))
+		if result != nil && result.Response != nil && !*result.Response.IsValid {
+			err := fmt.Errorf("[DEBUG]%s Certificate chain failed to check, IsValid [%v]\n", logId, *result.Response.IsValid)
 			return retryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())

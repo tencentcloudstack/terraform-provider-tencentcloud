@@ -903,7 +903,7 @@ func dataSourceTencentCloudSslDescribeCertificateRead(d *schema.ResourceData, me
 
 		sslResponseMap["dv_revoke_auth_detail"] = tmpList
 	}
-	d.Set("result", []interface{}{sslResponseMap})
+	_ = d.Set("result", []interface{}{sslResponseMap})
 	d.SetId(CertificateId)
 
 	output3, ok := d.GetOk("result_output_file")
