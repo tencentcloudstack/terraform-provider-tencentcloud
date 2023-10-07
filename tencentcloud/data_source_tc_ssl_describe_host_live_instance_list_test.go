@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeHostLiveInstanceListDataSource_basic(t *testi
 			{
 				Config: testAccSslDescribeHostLiveInstanceListDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_live_instance_list.describe_host_live_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_live_instance_list.describe_host_live_instance_list", "certificate_id", "8u8DII0l"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_live_instance_list.describe_host_live_instance_list", "certificate_id", "8hUkH3xC"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_live_instance_list.describe_host_live_instance_list", "resource_type", "live"),
 				),
 			},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostLiveInstanceListDataSource_basic(t *testi
 const testAccSslDescribeHostLiveInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_live_instance_list" "describe_host_live_instance_list" {
-  certificate_id = "8u8DII0l"
+  certificate_id = "8hUkH3xC"
   resource_type = "live"
 }
 `

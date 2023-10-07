@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeHostWafInstanceListDataSource_basic(t *testin
 			{
 				Config: testAccSslDescribeHostWafInstanceListDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list", "certificate_id", "8u8DII0l"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list", "certificate_id", "8hUkH3xC"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list", "resource_type", "waf"),
 				),
 			},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostWafInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostWafInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_waf_instance_list" "describe_host_waf_instance_list" {
-  certificate_id = "8u8DII0l"
+  certificate_id = "8hUkH3xC"
   resource_type = "waf"
  }
 

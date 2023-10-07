@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeHostDeployRecordDataSource_basic(t *testing.T
 			{
 				Config: testAccSslDescribeHostDeployRecordDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "certificate_id", "8u8DII0l"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "certificate_id", "8hUkH3xC"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "resource_type", "ddos"),
 				),
 			},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostDeployRecordDataSource_basic(t *testing.T
 const testAccSslDescribeHostDeployRecordDataSource = `
 
 data "tencentcloud_ssl_describe_host_deploy_record" "describe_host_deploy_record" {
-  certificate_id = "8u8DII0l"
+  certificate_id = "8hUkH3xC"
   resource_type = "ddos"
   }
 

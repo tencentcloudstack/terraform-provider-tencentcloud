@@ -181,10 +181,11 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 		return err
 	}
 
-	ids := make([]string, 0, len(instanceList.InstanceList))
-	tmpList := make([]map[string]interface{}, 0, len(instanceList.InstanceList))
+	ids := make([]string, 0, 0)
+	tmpList := make([]map[string]interface{}, 0, 0)
 
 	if instanceList != nil && instanceList.InstanceList != nil {
+
 		for _, cosInstanceDetail := range instanceList.InstanceList {
 			cosInstanceDetailMap := map[string]interface{}{}
 
@@ -215,15 +216,15 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 		_ = d.Set("instance_list", tmpList)
 	}
 
-	if instanceList.AsyncTotalNum != nil {
+	if instanceList != nil && instanceList.AsyncTotalNum != nil {
 		_ = d.Set("async_total_num", instanceList.AsyncTotalNum)
 	}
 
-	if instanceList.AsyncOffset != nil {
+	if instanceList != nil && instanceList.AsyncOffset != nil {
 		_ = d.Set("async_offset", instanceList.AsyncOffset)
 	}
 
-	if instanceList.AsyncCacheTime != nil {
+	if instanceList != nil && instanceList.AsyncCacheTime != nil {
 		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
 	}
 

@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeCertificateDataSource_basic(t *testing.T) {
 			{
 				Config: testAccSslDescribeCertificateDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_certificate.describe_certificate"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_certificate.describe_certificate", "certificate_id", "8cj4g8h8")),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_certificate.describe_certificate", "certificate_id", "9Bpk7XOu")),
 			},
 		},
 	})
@@ -26,6 +26,6 @@ func TestAccTencentCloudSslDescribeCertificateDataSource_basic(t *testing.T) {
 const testAccSslDescribeCertificateDataSource = `
 
 data "tencentcloud_ssl_describe_certificate" "describe_certificate" {
-  certificate_id = "8cj4g8h8"
+  certificate_id = "9Bpk7XOu"
 }
 `

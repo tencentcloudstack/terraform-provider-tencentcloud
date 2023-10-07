@@ -17,8 +17,8 @@ func TestAccTencentCloudSslDescribeHostCosInstanceListDataSource_basic(t *testin
 			{
 				Config: testAccSslDescribeHostCosInstanceListDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_cos_instance_list.describe_host_cos_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cos_instance_list.describe_host_cos_instance_list", "certificate_id", "8u8DII0l"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cos_instance_list.describe_host_cos_instance_list", "certificate_id", "cos"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cos_instance_list.describe_host_cos_instance_list", "certificate_id", "8mCN3eKd"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_cos_instance_list.describe_host_cos_instance_list", "resource_type", "cos"),
 				),
 			},
 		},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostCosInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostCosInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_cos_instance_list" "describe_host_cos_instance_list" {
-  certificate_id = "8u8DII0l"
+  certificate_id = "8mCN3eKd"
   resource_type = "cos"
 }
 
