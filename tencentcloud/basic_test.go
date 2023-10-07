@@ -1120,3 +1120,21 @@ variable "instance_id" {
 `
 
 // End of Clickhouse
+
+// CLB
+const clbTargetEniTestCase = instanceCommonTestCase + `
+resource "tencentcloud_eni" "clb_eni_target" {
+  name        = "ci-test-eni"
+  vpc_id      = var.cvm_vpc_id
+  subnet_id   = var.cvm_subnet_id
+  description = "clb eni backend"
+  ipv4_count  = 1
+}
+
+resource "tencentcloud_eni_attachment" "foo" {
+  eni_id      = tencentcloud_eni.clb_eni_target.id
+  instance_id = tencentcloud_instance.default.id
+}
+`
+
+//End of Clb
