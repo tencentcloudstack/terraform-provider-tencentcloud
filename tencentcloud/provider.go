@@ -897,10 +897,15 @@ SSL Certificates
     tencentcloud_ssl_describe_host_update_record_detail
     tencentcloud_ssl_describe_managers
     tencentcloud_ssl_describe_manager_detail
+    tencentcloud_ssl_describe_host_deploy_record
+    tencentcloud_ssl_describe_host_deploy_record_detail
+
   Resource
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
+    tencentcloud_ssl_complete_certificate
+    tencentcloud_ssl_check_certificate_chain
     tencentcloud_ssl_deploy_certificate_instance
     tencentcloud_ssl_deploy_certificate_record_retry
     tencentcloud_ssl_deploy_certificate_record_rollback
@@ -908,11 +913,9 @@ SSL Certificates
     tencentcloud_ssl_replace_certificate
     tencentcloud_ssl_revoke_certificate
     tencentcloud_ssl_update_certificate_instance
-    tencentcloud_ssl_update_certificate_instance
     tencentcloud_ssl_update_certificate_record_retry
     tencentcloud_ssl_update_certificate_record_rollback
     tencentcloud_ssl_upload_revoke_letter
-	tencentcloud_ssl_commit_certificate_information
 
 Secrets Manager(SSM)
   Data Source
@@ -2381,7 +2384,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_gateway_routes":                          dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                    dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_tse_gateway_services":                        dataSourceTencentCloudTseGatewayServices(),
-			"tencentcloud_tse_gateway_certificates":                  dataSourceTencentCloudTseGatewayCertificates(),
+			"tencentcloud_tse_gateway_certificates":                    dataSourceTencentCloudTseGatewayCertificates(),
 			"tencentcloud_lighthouse_modify_instance_bundle":           dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                             dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                            dataSourceTencentCloudLighthouseScene(),
@@ -2396,7 +2399,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disks":                            dataSourceTencentCloudLighthouseInstanceDisks(),
 			"tencentcloud_clickhouse_backup_jobs":                      dataSourceTencentCloudClickhouseBackupJobs(),
 			"tencentcloud_clickhouse_backup_job_detail":                dataSourceTencentCloudClickhouseBackupJobDetail(),
-			"tencentcloud_clickhouse_backup_tables":                  dataSourceTencentCloudClickhouseBackupTables(),
+			"tencentcloud_clickhouse_backup_tables":                    dataSourceTencentCloudClickhouseBackupTables(),
 			"tencentcloud_cls_shipper_tasks":                           dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                                dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                   dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -2405,22 +2408,22 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rules":                              dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                       dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                         dataSourceTencentCloudPrivateDnsRecords(),
-			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
-			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
-			"tencentcloud_waf_domains":                               dataSourceTencentCloudWafDomains(),
-			"tencentcloud_waf_find_domains":                          dataSourceTencentCloudWafFindDomains(),
-			"tencentcloud_waf_waf_infos":                             dataSourceTencentCloudWafWafInfos(),
-			"tencentcloud_waf_ports":                                 dataSourceTencentCloudWafPorts(),
-			"tencentcloud_waf_user_domains":                          dataSourceTencentCloudWafUserDomains(),
-			"tencentcloud_waf_attack_log_histogram":                  dataSourceTencentCloudWafAttackLogHistogram(),
-			"tencentcloud_waf_attack_log_list":                       dataSourceTencentCloudWafAttackLogList(),
-			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
-			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
-			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
-			"tencentcloud_waf_instance_qps_limit":                    dataSourceTencentCloudWafInstanceQpsLimit(),
-			"tencentcloud_cfw_nat_fw_switches":                       dataSourceTencentCloudCfwNatFwSwitches(),
-			"tencentcloud_cfw_vpc_fw_switches":                       dataSourceTencentCloudCfwVpcFwSwitches(),
-			"tencentcloud_cfw_edge_fw_switches":                      dataSourceTencentCloudCfwEdgeFwSwitches(),
+			"tencentcloud_waf_ciphers":                                 dataSourceTencentCloudWafCiphers(),
+			"tencentcloud_waf_tls_versions":                            dataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_waf_domains":                                 dataSourceTencentCloudWafDomains(),
+			"tencentcloud_waf_find_domains":                            dataSourceTencentCloudWafFindDomains(),
+			"tencentcloud_waf_waf_infos":                               dataSourceTencentCloudWafWafInfos(),
+			"tencentcloud_waf_ports":                                   dataSourceTencentCloudWafPorts(),
+			"tencentcloud_waf_user_domains":                            dataSourceTencentCloudWafUserDomains(),
+			"tencentcloud_waf_attack_log_histogram":                    dataSourceTencentCloudWafAttackLogHistogram(),
+			"tencentcloud_waf_attack_log_list":                         dataSourceTencentCloudWafAttackLogList(),
+			"tencentcloud_waf_attack_overview":                         dataSourceTencentCloudWafAttackOverview(),
+			"tencentcloud_waf_attack_total_count":                      dataSourceTencentCloudWafAttackTotalCount(),
+			"tencentcloud_waf_peak_points":                             dataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_waf_instance_qps_limit":                      dataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_cfw_nat_fw_switches":                         dataSourceTencentCloudCfwNatFwSwitches(),
+			"tencentcloud_cfw_vpc_fw_switches":                         dataSourceTencentCloudCfwVpcFwSwitches(),
+			"tencentcloud_cfw_edge_fw_switches":                        dataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_ses_receivers":                               dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                              dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                        dataSourceTencentCloudSesEmailIdentities(),
