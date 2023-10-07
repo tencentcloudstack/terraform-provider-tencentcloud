@@ -15,7 +15,7 @@ Use this data source to query detailed information of ssl describe_companies
 
 ```hcl
 data "tencentcloud_ssl_describe_companies" "describe_companies" {
-  company_id =
+  company_id = 122
 }
 ```
 

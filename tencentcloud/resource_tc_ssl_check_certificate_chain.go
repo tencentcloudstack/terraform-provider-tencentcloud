@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
-  certificate_chain = ""
+  certificate_chain = "-----BEGIN CERTIFICATE--·····---END CERTIFICATE-----"
 }
 ```
 

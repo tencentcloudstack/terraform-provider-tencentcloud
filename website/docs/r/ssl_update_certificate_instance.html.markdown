@@ -15,14 +15,9 @@ Provides a resource to create a ssl update_certificate_instance
 
 ```hcl
 resource "tencentcloud_ssl_update_certificate_instance" "update_certificate_instance" {
-  certificate_id     = ""
-  old_certificate_id = ""
-  resource_types     =
-  resource_types_regions {
-    resource_type = ""
-    regions       =
-
-  }
+  certificate_id     = "8x1eUSSl"
+  old_certificate_id = "8xNdi2ig"
+  resource_types     = ["cdn"]
 }
 ```
 

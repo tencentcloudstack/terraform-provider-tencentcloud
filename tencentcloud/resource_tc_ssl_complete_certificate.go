@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ssl_complete_certificate" "complete_certificate" {
-  certificate_id = ""
+  certificate_id = "9Bfe1IBR"
 }
 ```
 
