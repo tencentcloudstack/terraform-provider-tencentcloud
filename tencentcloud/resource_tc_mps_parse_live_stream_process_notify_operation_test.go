@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixMpsParseLiveStreamProcessNotifyOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudMpsParseLiveStreamProcessNotifyOperationResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -30,7 +30,7 @@ func TestAccTencentCloudNeedFixMpsParseLiveStreamProcessNotifyOperationResource_
 const testAccMpsParseLiveStreamProcessNotifyOperation = `
 
 resource "tencentcloud_mps_parse_live_stream_process_notify_operation" "operation" {
-  content = "{\"EventType\":\"WorkflowTask\",\n    \"WorkflowTaskEvent\":{\n        \"TaskId\":\"245****654-WorkflowTask-f46dac7fe2436c47******d71946986t0\",\n        \"Status\":\"FINISH\",\n        \"ErrCode\":0,\n        \"Message\":\"\",\n        \"InputInfo\":{\n            \"Type\":\"COS\",\n            \"CosInputInfo\":{\n                \"Bucket\":\"macgzptest-125****654\",\n                \"Region\":\"ap-guangzhou\",\n                \"Object\":\"/dianping2.mp4\"\n            }\n        }\n    }\n}"
+    content = "{\"NotificationType\":\"ProcessEof\",\"TaskId\":\"2600010949-procedure-live-48a2680775c4d73651ca894aaa91052ctt7\",\"ProcessEofInfo\":{\"ErrCode\":0,\"Message\":\"Success\"},\"AiReviewResultInfo\":null,\"AiAnalysisResultInfo\":null,\"AiRecognitionResultInfo\":null,\"AiQualityControlResultInfo\":null,\"SessionId\":\"\",\"SessionContext\":\"\"}"
 }
 
 `

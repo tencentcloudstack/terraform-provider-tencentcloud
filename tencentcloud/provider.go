@@ -1572,6 +1572,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
 	tencentcloud_mps_parse_live_stream_process_notify_operation
+	tencentcloud_mps_parse_notify_operation
 	tencentcloud_mps_edit_media_operation
 	tencentcloud_mps_describe_media_metadata_operation
 
@@ -3069,6 +3070,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
 			"tencentcloud_mps_parse_live_stream_process_notify_operation":      resourceTencentCloudMpsParseLiveStreamProcessNotifyOperation(),
+			"tencentcloud_mps_parse_notify_operation":                          resourceTencentCloudMpsParseNotifyOperation(),
 			"tencentcloud_mps_edit_media_operation":                            resourceTencentCloudMpsEditMediaOperation(),
 			"tencentcloud_mps_describe_media_metadata_operation":               resourceTencentCloudMpsDescribeMediaMetadataOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
