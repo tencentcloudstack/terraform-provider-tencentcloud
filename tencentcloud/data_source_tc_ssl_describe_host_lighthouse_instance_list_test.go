@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeHostLighthouseInstanceListDataSource_basic(t 
 			{
 				Config: testAccSslDescribeHostLighthouseInstanceListDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_lighthouse_instance_list.describe_host_lighthouse_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_lighthouse_instance_list.describe_host_lighthouse_instance_list", "certificate_id", "8hUkH3xC"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_lighthouse_instance_list.describe_host_lighthouse_instance_list", "certificate_id", "9D3mK31W"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_lighthouse_instance_list.describe_host_lighthouse_instance_list", "resource_type", "lighthouse"),
 				),
 			},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDescribeHostLighthouseInstanceListDataSource_basic(t 
 const testAccSslDescribeHostLighthouseInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_lighthouse_instance_list" "describe_host_lighthouse_instance_list" {
-  certificate_id = "8hUkH3xC"
+  certificate_id = "9D3mK31W"
   resource_type = "lighthouse"
 }
 `
