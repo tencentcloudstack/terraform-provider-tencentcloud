@@ -4,7 +4,7 @@ Provides a resource to create a ssl upload_revoke_letter
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_upload_revoke_letter" "upload_revoke_letter" {
+resource "tencentcloud_ssl_upload_revoke_letter_operation" "upload_revoke_letter" {
   certificate_id = "8xRYdDlc"
   revoke_letter = filebase64("./c.pdf")
 }
@@ -15,7 +15,7 @@ Import
 ssl upload_revoke_letter can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_upload_revoke_letter.upload_revoke_letter upload_revoke_letter_id
+terraform import tencentcloud_ssl_upload_revoke_letter_operation.upload_revoke_letter upload_revoke_letter_id
 ```
 */
 package tencentcloud
@@ -56,7 +56,7 @@ func resourceTencentCloudSslUploadRevokeLetterOperation() *schema.Resource {
 }
 
 func resourceTencentCloudSslUploadRevokeLetterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter.create")()
+	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -97,14 +97,14 @@ func resourceTencentCloudSslUploadRevokeLetterCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudSslUploadRevokeLetterRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter.read")()
+	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslUploadRevokeLetterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_upload_revoke_letter_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

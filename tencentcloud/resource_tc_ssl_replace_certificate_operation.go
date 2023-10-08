@@ -4,7 +4,7 @@ Provides a resource to create a ssl replace_certificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_replace_certificate" "replace_certificate" {
+resource "tencentcloud_ssl_replace_certificate_operation" "replace_certificate" {
   certificate_id = "8L6JsWq2"
   valid_type = "DNS_AUTO"
   csr_type = "online"
@@ -16,7 +16,7 @@ Import
 ssl replace_certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_replace_certificate.replace_certificate replace_certificate_id
+terraform import tencentcloud_ssl_replace_certificate_operation.replace_certificate replace_certificate_id
 ```
 */
 package tencentcloud
@@ -99,7 +99,7 @@ func resourceTencentCloudSslReplaceCertificateOperation() *schema.Resource {
 }
 
 func resourceTencentCloudSslReplaceCertificateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_replace_certificate.create")()
+	defer logElapsed("resource.tencentcloud_ssl_replace_certificate_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -165,14 +165,14 @@ func resourceTencentCloudSslReplaceCertificateCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudSslReplaceCertificateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_replace_certificate.read")()
+	defer logElapsed("resource.tencentcloud_ssl_replace_certificate_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslReplaceCertificateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_replace_certificate.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_replace_certificate_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

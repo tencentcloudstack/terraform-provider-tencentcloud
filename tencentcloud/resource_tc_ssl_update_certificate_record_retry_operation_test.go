@@ -16,12 +16,12 @@ func TestAccTencentCloudSslUpdateCertificateRecordRetryResource_basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslUpdateCertificateRecordRetry,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_update_certificate_record_retry.update_certificate_record_retry", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_record_retry.update_certificate_record_retry", "deploy_record_id", "1689"),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_update_certificate_record_retry_operation.update_certificate_record_retry", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_record_retry_operation.update_certificate_record_retry", "deploy_record_id", "1689"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_ssl_update_certificate_record_retry.update_certificate_record_retry",
+				ResourceName:      "tencentcloud_ssl_update_certificate_record_retry_operation.update_certificate_record_retry",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -31,7 +31,7 @@ func TestAccTencentCloudSslUpdateCertificateRecordRetryResource_basic(t *testing
 
 const testAccSslUpdateCertificateRecordRetry = `
 
-resource "tencentcloud_ssl_update_certificate_record_retry" "update_certificate_record_retry" {
+resource "tencentcloud_ssl_update_certificate_record_retry_operation" "update_certificate_record_retry" {
   deploy_record_id = "1689"
 }
 

@@ -16,10 +16,10 @@ func TestAccTencentCloudSslReplaceCertificateResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslReplaceCertificate,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_replace_certificate.replace_certificate", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate.replace_certificate", "certificate_id", "8hUkH3xC"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate.replace_certificate", "valid_type", "DNS_AUTO"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate.replace_certificate", "csr_type", "online"),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_replace_certificate_operation.replace_certificate", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate_operation.replace_certificate", "certificate_id", "8hUkH3xC"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate_operation.replace_certificate", "valid_type", "DNS_AUTO"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_replace_certificate_operation.replace_certificate", "csr_type", "online"),
 				),
 			},
 		},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslReplaceCertificateResource_basic(t *testing.T) {
 
 const testAccSslReplaceCertificate = `
 
-resource "tencentcloud_ssl_replace_certificate" "replace_certificate" {
+resource "tencentcloud_ssl_replace_certificate_operation" "replace_certificate" {
   certificate_id = "8hUkH3xC"
   valid_type = "DNS_AUTO"
   csr_type = "online"

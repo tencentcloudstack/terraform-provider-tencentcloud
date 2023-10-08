@@ -4,7 +4,7 @@ Provides a resource to create a ssl revoke_certificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_revoke_certificate" "revoke_certificate" {
+resource "tencentcloud_ssl_revoke_certificate_operation" "revoke_certificate" {
   certificate_id = "7zUGkVab"
 }
 ```
@@ -14,7 +14,7 @@ Import
 ssl revoke_certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_revoke_certificate.revoke_certificate revoke_certificate_id
+terraform import tencentcloud_ssl_revoke_certificate_operation.revoke_certificate revoke_certificate_id
 ```
 */
 package tencentcloud
@@ -56,7 +56,7 @@ func resourceTencentCloudSslRevokeCertificateOperation() *schema.Resource {
 }
 
 func resourceTencentCloudSslRevokeCertificateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate.create")()
+	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -99,14 +99,14 @@ func resourceTencentCloudSslRevokeCertificateCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudSslRevokeCertificateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate.read")()
+	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslRevokeCertificateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_revoke_certificate_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
