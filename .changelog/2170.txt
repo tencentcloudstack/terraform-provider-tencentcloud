@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_node_pool: fix bug in node pool creation
+```
