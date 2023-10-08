@@ -1181,6 +1181,7 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_zone_setting
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
+	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
 
 TencentCloud ServiceMesh(TCM)
