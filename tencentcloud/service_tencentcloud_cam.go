@@ -1384,3 +1384,56 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (lo
 	actionFlag = response.Response.ActionFlag
 	return
 }
+
+func (me *CamService) DescribeCamUserPermissionBoundaryById(ctx context.Context, targetUin string) (UserPermissionBoundary *cam.GetUserPermissionBoundaryResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewGetUserPermissionBoundaryRequest()
+	request.TargetUin = helper.StrToInt64Point(targetUin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetUserPermissionBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	UserPermissionBoundary = response
+	return
+}
+
+func (me *CamService) DeleteCamUserPermissionBoundaryById(ctx context.Context, targetUin string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeleteUserPermissionsBoundaryRequest()
+	request.TargetUin = helper.StrToInt64Point(targetUin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DeleteUserPermissionsBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
