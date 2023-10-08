@@ -1181,8 +1181,10 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_zone_setting
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
-	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
+	tencentcloud_teo_ownership_verify
+	tencentcloud_teo_certificate_config
+	tencentcloud_teo_acceleration_domain
 
 TencentCloud ServiceMesh(TCM)
   Data Source
@@ -1211,6 +1213,7 @@ Simple Email Service(SES)
 	tencentcloud_ses_send_email
 	tencentcloud_ses_batch_send_email
 	tencentcloud_ses_verify_domain
+	tencentcloud_ses_black_list_delete
 
 Security Token Service(STS)
   Data Source
@@ -1322,6 +1325,7 @@ Real User Monitoring(RUM)
 Cloud Streaming Services(CSS)
   Resource
     tencentcloud_css_watermark
+	tencentcloud_css_watermark_rule_attachment
 	tencentcloud_css_pull_stream_task
 	tencentcloud_css_live_transcode_template
 	tencentcloud_css_live_transcode_rule_attachment
@@ -1341,6 +1345,7 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_file
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
+	tencentcloud_pts_tmp_key_generate
 
 TencentCloud Automation Tools(TAT)
   Data Source
@@ -1451,6 +1456,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_trocket_rocketmq_instance
 	tencentcloud_trocket_rocketmq_topic
 	tencentcloud_trocket_rocketmq_consumer_group
+	tencentcloud_trocket_rocketmq_role
 
 TDMQ for RabbitMQ(trabbit)
   Resource
@@ -1554,6 +1560,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Resource
 	tencentcloud_mps_workflow
+	tencentcloud_mps_enable_workflow_config
 	tencentcloud_mps_transcode_template
 	tencentcloud_mps_watermark_template
 	tencentcloud_mps_image_sprite_template
@@ -1564,6 +1571,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_ai_analysis_template
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
+	tencentcloud_mps_withdraws_watermark_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1600,6 +1608,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_gateway_routes
 	tencentcloud_tse_gateway_canary_rules
 	tencentcloud_tse_gateway_services
+	tencentcloud_tse_gateway_certificates
 
   Resource
 	tencentcloud_tse_instance
@@ -1610,6 +1619,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_cngw_service_rate_limit
 	tencentcloud_tse_cngw_route
 	tencentcloud_tse_cngw_route_rate_limit
+	tencentcloud_tse_cngw_certificate
 
 ClickHouse(CDWCH)
   Data Source
@@ -1655,6 +1665,51 @@ WeData
 
   Resource
 	tencentcloud_wedata_rule_template
+
+Waf
+  Data Source
+    tencentcloud_waf_ciphers
+    tencentcloud_waf_tls_versions
+    tencentcloud_waf_domains
+    tencentcloud_waf_find_domains
+    tencentcloud_waf_ports
+    tencentcloud_waf_user_domains
+    tencentcloud_waf_attack_log_histogram
+    tencentcloud_waf_attack_log_list
+    tencentcloud_waf_attack_overview
+    tencentcloud_waf_attack_total_count
+    tencentcloud_waf_peak_points
+    tencentcloud_waf_instance_qps_limit
+
+  Resource
+    tencentcloud_waf_custom_rule
+    tencentcloud_waf_custom_white_rule
+    tencentcloud_waf_clb_domain
+    tencentcloud_waf_saas_domain
+    tencentcloud_waf_clb_instance
+    tencentcloud_waf_saas_instance
+    tencentcloud_waf_anti_fake
+    tencentcloud_waf_anti_info_leak
+
+Cfw
+  Data Source
+	tencentcloud_cfw_nat_fw_switches
+	tencentcloud_cfw_vpc_fw_switches
+	tencentcloud_cfw_edge_fw_switches
+
+  Resource
+    tencentcloud_cfw_address_template
+    tencentcloud_cfw_block_ignore
+    tencentcloud_cfw_edge_policy
+    tencentcloud_cfw_nat_instance
+    tencentcloud_cfw_nat_policy
+    tencentcloud_cfw_vpc_instance
+    tencentcloud_cfw_vpc_policy
+    tencentcloud_cfw_sync_asset
+    tencentcloud_cfw_sync_route
+    tencentcloud_cfw_nat_firewall_switch
+    tencentcloud_cfw_vpc_firewall_switch
+    tencentcloud_cfw_edge_firewall_switch
 */
 package tencentcloud
 
@@ -2280,6 +2335,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_tse_gateway_services":                      dataSourceTencentCloudTseGatewayServices(),
+			"tencentcloud_tse_gateway_certificates":                  dataSourceTencentCloudTseGatewayCertificates(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2303,6 +2359,22 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
+			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_waf_domains":                               dataSourceTencentCloudWafDomains(),
+			"tencentcloud_waf_find_domains":                          dataSourceTencentCloudWafFindDomains(),
+			"tencentcloud_waf_waf_infos":                             dataSourceTencentCloudWafWafInfos(),
+			"tencentcloud_waf_ports":                                 dataSourceTencentCloudWafPorts(),
+			"tencentcloud_waf_user_domains":                          dataSourceTencentCloudWafUserDomains(),
+			"tencentcloud_waf_attack_log_histogram":                  dataSourceTencentCloudWafAttackLogHistogram(),
+			"tencentcloud_waf_attack_log_list":                       dataSourceTencentCloudWafAttackLogList(),
+			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
+			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
+			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_waf_instance_qps_limit":                    dataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_cfw_nat_fw_switches":                       dataSourceTencentCloudCfwNatFwSwitches(),
+			"tencentcloud_cfw_vpc_fw_switches":                       dataSourceTencentCloudCfwVpcFwSwitches(),
+			"tencentcloud_cfw_edge_fw_switches":                      dataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
@@ -2804,6 +2876,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_zone_setting":                                    resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_origin_group":                                    resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                                     resourceTencentCloudTeoRuleEngine(),
+			"tencentcloud_teo_ownership_verify":                                resourceTencentCloudTeoOwnershipVerify(),
+			"tencentcloud_teo_certificate_config":                              resourceTencentCloudTeoCertificateConfig(),
+			"tencentcloud_teo_acceleration_domain":                             resourceTencentCloudTeoAccelerationDomain(),
 			"tencentcloud_teo_application_proxy":                               resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          resourceTencentCloudTeoApplicationProxyRule(),
 			"tencentcloud_tcm_mesh":                                            resourceTencentCloudTcmMesh(),
@@ -2818,6 +2893,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_send_email":                                      resourceTencentCloudSesSendEmail(),
 			"tencentcloud_ses_batch_send_email":                                resourceTencentCloudSesBatchSendEmail(),
 			"tencentcloud_ses_verify_domain":                                   resourceTencentCloudSesVerifyDomain(),
+			"tencentcloud_ses_black_list_delete":                               resourceTencentCloudSesBlackListDelete(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        resourceTencentCloudDcdbAccount(),
@@ -2855,6 +2931,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdcpg_cluster":                                       resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                      resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                                       resourceTencentCloudCssWatermark(),
+			"tencentcloud_css_watermark_rule_attachment":                       resourceTencentCloudCssWatermarkRuleAttachment(),
 			"tencentcloud_css_pull_stream_task":                                resourceTencentCloudCssPullStreamTask(),
 			"tencentcloud_css_live_transcode_template":                         resourceTencentCloudCssLiveTranscodeTemplate(),
 			"tencentcloud_css_live_transcode_rule_attachment":                  resourceTencentCloudCssLiveTranscodeRuleAttachment(),
@@ -2897,6 +2974,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_trocket_rocketmq_instance":                           resourceTencentCloudTrocketRocketmqInstance(),
 			"tencentcloud_trocket_rocketmq_topic":                              resourceTencentCloudTrocketRocketmqTopic(),
 			"tencentcloud_trocket_rocketmq_consumer_group":                     resourceTencentCloudTrocketRocketmqConsumerGroup(),
+			"tencentcloud_trocket_rocketmq_role":                               resourceTencentCloudTrocketRocketmqRole(),
 			"tencentcloud_dts_sync_job":                                        resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                                     resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":                        resourceTencentCloudDtsSyncCheckJobOperation(),
@@ -2977,6 +3055,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_operate_group":                                   resourceTencentCloudTsfOperateGroup(),
 			"tencentcloud_tsf_unit_namespace":                                  resourceTencentCloudTsfUnitNamespace(),
 			"tencentcloud_mps_workflow":                                        resourceTencentCloudMpsWorkflow(),
+			"tencentcloud_mps_enable_workflow_config":                          resourceTencentCloudMpsEnableWorkflowConfig(),
 			"tencentcloud_mps_transcode_template":                              resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                              resourceTencentCloudMpsWatermarkTemplate(),
 			"tencentcloud_mps_image_sprite_template":                           resourceTencentCloudMpsImageSpriteTemplate(),
@@ -2987,6 +3066,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_ai_analysis_template":                            resourceTencentCloudMpsAiAnalysisTemplate(),
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
+			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
@@ -3042,6 +3122,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route":                                      resourceTencentCloudTseCngwRoute(),
 			"tencentcloud_tse_cngw_route_rate_limit":                           resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                                resourceTencentCloudTseCngwCanaryRule(),
+			"tencentcloud_tse_cngw_certificate":                                resourceTencentCloudTseCngwCertificate(),
 			"tencentcloud_clickhouse_instance":                                 resourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  resourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   resourceTencentCloudClsScheduledSql(),
