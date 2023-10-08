@@ -161,7 +161,7 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		secretId := os.Getenv(SSL_PROVIDER_SECRET_ID)
 		secretKey := os.Getenv(SSL_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {
-			t.Fatalf("%v and %v must be set for acceptance tests\n", TSF_PROVIDER_SECRET_ID, TSF_PROVIDER_SECRET_KEY)
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SSL_PROVIDER_SECRET_ID, SSL_PROVIDER_SECRET_KEY)
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
