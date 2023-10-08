@@ -17,7 +17,7 @@ func TestAccTencentCloudSslDescribeHostUpdateRecordDataSource_basic(t *testing.T
 			{
 				Config: testAccSslDescribeHostUpdateRecordDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_update_record.describe_host_update_record"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_update_record.describe_host_update_record", "old_certificate_id", "8hUkH3xC"),
+					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_update_record.describe_host_update_record", "old_certificate_id", "9D3qRt7r"),
 				),
 			},
 		},
@@ -27,7 +27,7 @@ func TestAccTencentCloudSslDescribeHostUpdateRecordDataSource_basic(t *testing.T
 const testAccSslDescribeHostUpdateRecordDataSource = `
 
 data "tencentcloud_ssl_describe_host_update_record" "describe_host_update_record" {
-  old_certificate_id = "8hUkH3xC"
+  old_certificate_id = "9D3qRt7r"
   }
 
 `
