@@ -484,3 +484,199 @@ func (me *KmsService) DescribeKmsGetParametersForImportByFilter(ctx context.Cont
 	getParametersForImport = response.Response
 	return
 }
+
+func (me *KmsService) DescribeKmsKeyListsByFilter(ctx context.Context, param map[string]interface{}) (KeyLists []*kms.KeyMetadata, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewDescribeKeysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "KeyIds" {
+			request.KeyIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DescribeKeys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.KeyMetadatas) < 1 {
+		return
+	}
+
+	KeyLists = response.Response.KeyMetadatas
+
+	return
+}
+
+func (me *KmsService) DescribeKmsWhiteBoxKeyDetailsByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxKeyInfo []*kms.WhiteboxKeyInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewDescribeWhiteBoxKeyDetailsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "KeyStatus" {
+			request.KeyStatus = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseKmsClient().DescribeWhiteBoxKeyDetails(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.KeyInfos) < 1 {
+			break
+		}
+
+		whiteBoxKeyInfo = append(whiteBoxKeyInfo, response.Response.KeyInfos...)
+		if len(response.Response.KeyInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *KmsService) DescribeKmsListKeysByFilter(ctx context.Context, param map[string]interface{}) (listKeys []*kms.Key, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewListKeysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Role" {
+			request.Role = v.(*uint64)
+		}
+
+		if k == "HsmClusterId" {
+			request.HsmClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseKmsClient().ListKeys(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Keys) < 1 {
+			break
+		}
+
+		listKeys = append(listKeys, response.Response.Keys...)
+		if len(response.Response.Keys) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *KmsService) DescribeKmsWhiteBoxKeyById(ctx context.Context, keyId string) (whiteBoxKey *kms.WhiteboxKeyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := kms.NewDescribeWhiteBoxKeyRequest()
+	request.KeyId = &keyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DescribeWhiteBoxKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.KeyInfo == nil {
+		return
+	}
+
+	whiteBoxKey = response.Response.KeyInfo
+	return
+}
+
+func (me *KmsService) DeleteKmsWhiteBoxKeyById(ctx context.Context, keyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := kms.NewDeleteWhiteBoxKeyRequest()
+	request.KeyId = &keyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DeleteWhiteBoxKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -545,10 +545,14 @@ Key Management Service(KMS)
     tencentcloud_kms_keys
     tencentcloud_kms_public_key
     tencentcloud_kms_get_parameters_for_import
+    tencentcloud_kms_describe_keys
+    tencentcloud_kms_white_box_key_details
+    tencentcloud_kms_list_keys
 
   Resource
     tencentcloud_kms_key
     tencentcloud_kms_external_key
+    tencentcloud_kms_white_box_key
 
 Tencent Kubernetes Engine(TKE)
   Data Source
@@ -2156,6 +2160,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_keys":                                  dataSourceTencentCloudKmsKeys(),
 			"tencentcloud_kms_public_key":                            dataSourceTencentCloudKmsPublicKey(),
 			"tencentcloud_kms_get_parameters_for_import":             dataSourceTencentCloudKmsGetParametersForImport(),
+			"tencentcloud_kms_describe_keys":                         dataSourceTencentCloudKmsDescribeKeys(),
+			"tencentcloud_kms_white_box_key_details":                 dataSourceTencentCloudKmsWhiteBoxKeyDetails(),
+			"tencentcloud_kms_list_keys":                             dataSourceTencentCloudKmsListKeys(),
 			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),
@@ -2846,6 +2853,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_protocol_template_group":                             resourceTencentCloudProtocolTemplateGroup(),
 			"tencentcloud_kms_key":                                             resourceTencentCloudKmsKey(),
 			"tencentcloud_kms_external_key":                                    resourceTencentCloudKmsExternalKey(),
+			"tencentcloud_kms_white_box_key":                                   resourceTencentCloudKmsWhiteBoxKey(),
 			"tencentcloud_ssm_secret":                                          resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
