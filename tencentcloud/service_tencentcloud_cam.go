@@ -1385,11 +1385,11 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (lo
 	return
 }
 
-func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, accessKeyId string) (AccessKey *cam.AccessKey, errRet error) {
+func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin uint64) (AccessKey *cam.AccessKey, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cam.NewListAccessKeysRequest()
-	request.AccessKeyId = &accessKeyId
+	request.TargetUin = &targetUin
 
 	defer func() {
 		if errRet != nil {
@@ -1406,11 +1406,11 @@ func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, accessKeyId 
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.AccessKey) < 1 {
+	if len(response.Response.AccessKeys) < 1 {
 		return
 	}
 
-	AccessKey = response.Response.AccessKey[0]
+	AccessKey = response.Response.AccessKeys[0]
 	return
 }
 

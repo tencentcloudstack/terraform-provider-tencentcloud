@@ -49,6 +49,7 @@ func NewAddUserRequest() (request *AddUserRequest) {
     request = &AddUserRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "AddUser")
     
     
@@ -63,9 +64,10 @@ func NewAddUserResponse() (response *AddUserResponse) {
 }
 
 // AddUser
-// 添加子用户
+// 创建子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
@@ -78,9 +80,10 @@ func (c *Client) AddUser(request *AddUserRequest) (response *AddUserResponse, er
 }
 
 // AddUser
-// 添加子用户
+// 创建子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
@@ -108,6 +111,7 @@ func NewAddUserToGroupRequest() (request *AddUserToGroupRequest) {
     request = &AddUserToGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "AddUserToGroup")
     
     
@@ -125,6 +129,7 @@ func NewAddUserToGroupResponse() (response *AddUserToGroupResponse) {
 // 用户加入到用户组
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
 //  INVALIDPARAMETER_GROUPUSERFULL = "InvalidParameter.GroupUserFull"
@@ -139,6 +144,7 @@ func (c *Client) AddUserToGroup(request *AddUserToGroupRequest) (response *AddUs
 // 用户加入到用户组
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
 //  INVALIDPARAMETER_GROUPUSERFULL = "InvalidParameter.GroupUserFull"
@@ -165,6 +171,7 @@ func NewAttachGroupPolicyRequest() (request *AttachGroupPolicyRequest) {
     request = &AttachGroupPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "AttachGroupPolicy")
     
     
@@ -182,6 +189,7 @@ func NewAttachGroupPolicyResponse() (response *AttachGroupPolicyResponse) {
 // 本接口（AttachGroupPolicy）可用于绑定策略到用户组。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -200,6 +208,7 @@ func (c *Client) AttachGroupPolicy(request *AttachGroupPolicyRequest) (response 
 // 本接口（AttachGroupPolicy）可用于绑定策略到用户组。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -230,6 +239,7 @@ func NewAttachRolePolicyRequest() (request *AttachRolePolicyRequest) {
     request = &AttachRolePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "AttachRolePolicy")
     
     
@@ -247,6 +257,7 @@ func NewAttachRolePolicyResponse() (response *AttachRolePolicyResponse) {
 // 本接口（AttachRolePolicy）用于绑定策略到角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -262,6 +273,7 @@ func (c *Client) AttachRolePolicy(request *AttachRolePolicyRequest) (response *A
 // 本接口（AttachRolePolicy）用于绑定策略到角色。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -289,6 +301,7 @@ func NewAttachUserPolicyRequest() (request *AttachUserPolicyRequest) {
     request = &AttachUserPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "AttachUserPolicy")
     
     
@@ -306,6 +319,7 @@ func NewAttachUserPolicyResponse() (response *AttachUserPolicyResponse) {
 // 本接口（AttachUserPolicy）可用于绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -323,6 +337,7 @@ func (c *Client) AttachUserPolicy(request *AttachUserPolicyRequest) (response *A
 // 本接口（AttachUserPolicy）可用于绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
@@ -352,6 +367,7 @@ func NewConsumeCustomMFATokenRequest() (request *ConsumeCustomMFATokenRequest) {
     request = &ConsumeCustomMFATokenRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ConsumeCustomMFAToken")
     
     
@@ -395,10 +411,71 @@ func (c *Client) ConsumeCustomMFATokenWithContext(ctx context.Context, request *
     return
 }
 
+func NewCreateAccessKeyRequest() (request *CreateAccessKeyRequest) {
+    request = &CreateAccessKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "CreateAccessKey")
+    
+    
+    return
+}
+
+func NewCreateAccessKeyResponse() (response *CreateAccessKeyResponse) {
+    response = &CreateAccessKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateAccessKey
+// 为CAM用户创建访问密钥
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+func (c *Client) CreateAccessKey(request *CreateAccessKeyRequest) (response *CreateAccessKeyResponse, err error) {
+    return c.CreateAccessKeyWithContext(context.Background(), request)
+}
+
+// CreateAccessKey
+// 为CAM用户创建访问密钥
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+func (c *Client) CreateAccessKeyWithContext(ctx context.Context, request *CreateAccessKeyRequest) (response *CreateAccessKeyResponse, err error) {
+    if request == nil {
+        request = NewCreateAccessKeyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAccessKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAccessKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateGroupRequest() (request *CreateGroupRequest) {
     request = &CreateGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateGroup")
     
     
@@ -416,8 +493,10 @@ func NewCreateGroupResponse() (response *CreateGroupResponse) {
 // 创建用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPFULL = "InvalidParameter.GroupFull"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) CreateGroup(request *CreateGroupRequest) (response *CreateGroupResponse, err error) {
     return c.CreateGroupWithContext(context.Background(), request)
 }
@@ -426,8 +505,10 @@ func (c *Client) CreateGroup(request *CreateGroupRequest) (response *CreateGroup
 // 创建用户组
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPFULL = "InvalidParameter.GroupFull"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGroupRequest) (response *CreateGroupResponse, err error) {
     if request == nil {
         request = NewCreateGroupRequest()
@@ -444,10 +525,71 @@ func (c *Client) CreateGroupWithContext(ctx context.Context, request *CreateGrou
     return
 }
 
+func NewCreateMessageReceiverRequest() (request *CreateMessageReceiverRequest) {
+    request = &CreateMessageReceiverRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "CreateMessageReceiver")
+    
+    
+    return
+}
+
+func NewCreateMessageReceiverResponse() (response *CreateMessageReceiverResponse) {
+    response = &CreateMessageReceiverResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateMessageReceiver
+// 创建消息接收人接口：仅允许已完成实名认证的用户访问消息接收人接口，并对每个用户限制每天最多请求10次。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INTERFACENOTEXIST = "InvalidParameter.InterfaceNotExist"
+//  INVALIDPARAMETER_RECEIVEROVERLIMIT = "InvalidParameter.ReceiverOverLimit"
+//  INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
+//  INVALIDPARAMETER_USERNOTAUTH = "InvalidParameter.UserNotAuth"
+//  LIMITEXCEEDED_UIN = "LimitExceeded.Uin"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateMessageReceiver(request *CreateMessageReceiverRequest) (response *CreateMessageReceiverResponse, err error) {
+    return c.CreateMessageReceiverWithContext(context.Background(), request)
+}
+
+// CreateMessageReceiver
+// 创建消息接收人接口：仅允许已完成实名认证的用户访问消息接收人接口，并对每个用户限制每天最多请求10次。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INTERFACENOTEXIST = "InvalidParameter.InterfaceNotExist"
+//  INVALIDPARAMETER_RECEIVEROVERLIMIT = "InvalidParameter.ReceiverOverLimit"
+//  INVALIDPARAMETER_SUBUSERNAMEINUSE = "InvalidParameter.SubUserNameInUse"
+//  INVALIDPARAMETER_USERNOTAUTH = "InvalidParameter.UserNotAuth"
+//  LIMITEXCEEDED_UIN = "LimitExceeded.Uin"
+//  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
+func (c *Client) CreateMessageReceiverWithContext(ctx context.Context, request *CreateMessageReceiverRequest) (response *CreateMessageReceiverResponse, err error) {
+    if request == nil {
+        request = NewCreateMessageReceiverRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateMessageReceiver require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateMessageReceiverResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateOIDCConfigRequest() (request *CreateOIDCConfigRequest) {
     request = &CreateOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateOIDCConfig")
     
     
@@ -465,6 +607,7 @@ func NewCreateOIDCConfigResponse() (response *CreateOIDCConfigResponse) {
 // 创建角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -479,6 +622,7 @@ func (c *Client) CreateOIDCConfig(request *CreateOIDCConfigRequest) (response *C
 // 创建角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -505,6 +649,7 @@ func NewCreatePolicyRequest() (request *CreatePolicyRequest) {
     request = &CreatePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreatePolicy")
     
     
@@ -541,6 +686,9 @@ func NewCreatePolicyResponse() (response *CreatePolicyResponse) {
 //  INVALIDPARAMETER_POLICYDOCUMENTLENGTHOVERLIMIT = "InvalidParameter.PolicyDocumentLengthOverLimit"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -581,6 +729,9 @@ func (c *Client) CreatePolicy(request *CreatePolicyRequest) (response *CreatePol
 //  INVALIDPARAMETER_POLICYDOCUMENTLENGTHOVERLIMIT = "InvalidParameter.PolicyDocumentLengthOverLimit"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -614,6 +765,7 @@ func NewCreatePolicyVersionRequest() (request *CreatePolicyVersionRequest) {
     request = &CreatePolicyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreatePolicyVersion")
     
     
@@ -631,6 +783,8 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 // 该接口（CreatePolicyVersion）用于新增策略版本，用户创建了一个策略版本之后可以方便的通过变更策略版本的方式来变更策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -652,6 +806,9 @@ func NewCreatePolicyVersionResponse() (response *CreatePolicyVersionResponse) {
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -673,6 +830,8 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 // 该接口（CreatePolicyVersion）用于新增策略版本，用户创建了一个策略版本之后可以方便的通过变更策略版本的方式来变更策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYFULL = "FailedOperation.PolicyFull"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONFULL = "FailedOperation.PolicyVersionFull"
@@ -694,6 +853,9 @@ func (c *Client) CreatePolicyVersion(request *CreatePolicyVersionRequest) (respo
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_PRINCIPALERROR = "InvalidParameter.PrincipalError"
+//  INVALIDPARAMETER_PRINCIPALQCSERROR = "InvalidParameter.PrincipalQcsError"
+//  INVALIDPARAMETER_PRINCIPALQCSNOTEXIST = "InvalidParameter.PrincipalQcsNotExist"
+//  INVALIDPARAMETER_PRINCIPALSERVICENOTEXIST = "InvalidParameter.PrincipalServiceNotExist"
 //  INVALIDPARAMETER_RESOURCECONTENTERROR = "InvalidParameter.ResourceContentError"
 //  INVALIDPARAMETER_RESOURCEERROR = "InvalidParameter.ResourceError"
 //  INVALIDPARAMETER_RESOURCEPROJECTERROR = "InvalidParameter.ResourceProjectError"
@@ -727,6 +889,7 @@ func NewCreateRoleRequest() (request *CreateRoleRequest) {
     request = &CreateRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateRole")
     
     
@@ -820,6 +983,7 @@ func NewCreateSAMLProviderRequest() (request *CreateSAMLProviderRequest) {
     request = &CreateSAMLProviderRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateSAMLProvider")
     
     
@@ -875,6 +1039,7 @@ func NewCreateServiceLinkedRoleRequest() (request *CreateServiceLinkedRoleReques
     request = &CreateServiceLinkedRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateServiceLinkedRole")
     
     
@@ -893,6 +1058,7 @@ func NewCreateServiceLinkedRoleResponse() (response *CreateServiceLinkedRoleResp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONDITIONCONTENTERROR = "InvalidParameter.ConditionContentError"
 //  INVALIDPARAMETER_CONDITIONERROR = "InvalidParameter.ConditionError"
 //  INVALIDPARAMETER_CONDITIONTYPEERROR = "InvalidParameter.ConditionTypeError"
@@ -916,6 +1082,7 @@ func (c *Client) CreateServiceLinkedRole(request *CreateServiceLinkedRoleRequest
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TAGRESOURCEFAILED = "FailedOperation.TagResourceFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_CONDITIONCONTENTERROR = "InvalidParameter.ConditionContentError"
 //  INVALIDPARAMETER_CONDITIONERROR = "InvalidParameter.ConditionError"
 //  INVALIDPARAMETER_CONDITIONTYPEERROR = "InvalidParameter.ConditionTypeError"
@@ -950,6 +1117,7 @@ func NewCreateUserOIDCConfigRequest() (request *CreateUserOIDCConfigRequest) {
     request = &CreateUserOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateUserOIDCConfig")
     
     
@@ -1009,6 +1177,7 @@ func NewCreateUserSAMLConfigRequest() (request *CreateUserSAMLConfigRequest) {
     request = &CreateUserSAMLConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "CreateUserSAMLConfig")
     
     
@@ -1026,6 +1195,7 @@ func NewCreateUserSAMLConfigResponse() (response *CreateUserSAMLConfigResponse) 
 // 创建用户SAML配置
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 func (c *Client) CreateUserSAMLConfig(request *CreateUserSAMLConfigRequest) (response *CreateUserSAMLConfigResponse, err error) {
     return c.CreateUserSAMLConfigWithContext(context.Background(), request)
@@ -1035,6 +1205,7 @@ func (c *Client) CreateUserSAMLConfig(request *CreateUserSAMLConfigRequest) (res
 // 创建用户SAML配置
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_METADATAERROR = "InvalidParameterValue.MetadataError"
 func (c *Client) CreateUserSAMLConfigWithContext(ctx context.Context, request *CreateUserSAMLConfigRequest) (response *CreateUserSAMLConfigResponse, err error) {
     if request == nil {
@@ -1052,10 +1223,77 @@ func (c *Client) CreateUserSAMLConfigWithContext(ctx context.Context, request *C
     return
 }
 
+func NewDeleteAccessKeyRequest() (request *DeleteAccessKeyRequest) {
+    request = &DeleteAccessKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "DeleteAccessKey")
+    
+    
+    return
+}
+
+func NewDeleteAccessKeyResponse() (response *DeleteAccessKeyResponse) {
+    response = &DeleteAccessKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteAccessKey
+// 为CAM用户删除访问密钥。
+//
+// 此接口属于高风险操作，删除密钥后不可恢复，腾讯云将永久拒绝此密钥的所有请求，请谨慎使用。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
+func (c *Client) DeleteAccessKey(request *DeleteAccessKeyRequest) (response *DeleteAccessKeyResponse, err error) {
+    return c.DeleteAccessKeyWithContext(context.Background(), request)
+}
+
+// DeleteAccessKey
+// 为CAM用户删除访问密钥。
+//
+// 此接口属于高风险操作，删除密钥后不可恢复，腾讯云将永久拒绝此密钥的所有请求，请谨慎使用。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
+func (c *Client) DeleteAccessKeyWithContext(ctx context.Context, request *DeleteAccessKeyRequest) (response *DeleteAccessKeyResponse, err error) {
+    if request == nil {
+        request = NewDeleteAccessKeyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAccessKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAccessKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteGroupRequest() (request *DeleteGroupRequest) {
     request = &DeleteGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteGroup")
     
     
@@ -1105,6 +1343,7 @@ func NewDeleteOIDCConfigRequest() (request *DeleteOIDCConfigRequest) {
     request = &DeleteOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteOIDCConfig")
     
     
@@ -1154,6 +1393,7 @@ func NewDeletePolicyRequest() (request *DeletePolicyRequest) {
     request = &DeletePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeletePolicy")
     
     
@@ -1171,6 +1411,7 @@ func NewDeletePolicyResponse() (response *DeletePolicyResponse) {
 // 本接口（DeletePolicy）可用于删除策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -1185,6 +1426,7 @@ func (c *Client) DeletePolicy(request *DeletePolicyRequest) (response *DeletePol
 // 本接口（DeletePolicy）可用于删除策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -1211,6 +1453,7 @@ func NewDeletePolicyVersionRequest() (request *DeletePolicyVersionRequest) {
     request = &DeletePolicyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeletePolicyVersion")
     
     
@@ -1228,6 +1471,8 @@ func NewDeletePolicyVersionResponse() (response *DeletePolicyVersionResponse) {
 // 本接口（DeletePolicyVersion）可用于删除一个策略的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1261,6 +1506,8 @@ func (c *Client) DeletePolicyVersion(request *DeletePolicyVersionRequest) (respo
 // 本接口（DeletePolicyVersion）可用于删除一个策略的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -1306,6 +1553,7 @@ func NewDeleteRoleRequest() (request *DeleteRoleRequest) {
     request = &DeleteRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteRole")
     
     
@@ -1324,9 +1572,11 @@ func NewDeleteRoleResponse() (response *DeleteRoleResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ORGANIZATIONROLEOPERATEERROR = "InvalidParameter.OrganizationRoleOperateError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) DeleteRole(request *DeleteRoleRequest) (response *DeleteRoleResponse, err error) {
     return c.DeleteRoleWithContext(context.Background(), request)
 }
@@ -1336,9 +1586,11 @@ func (c *Client) DeleteRole(request *DeleteRoleRequest) (response *DeleteRoleRes
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ORGANIZATIONROLEOPERATEERROR = "InvalidParameter.OrganizationRoleOperateError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYNAMEERROR = "InvalidParameter.PolicyNameError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
+//  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
 func (c *Client) DeleteRoleWithContext(ctx context.Context, request *DeleteRoleRequest) (response *DeleteRoleResponse, err error) {
     if request == nil {
         request = NewDeleteRoleRequest()
@@ -1359,6 +1611,7 @@ func NewDeleteRolePermissionsBoundaryRequest() (request *DeleteRolePermissionsBo
     request = &DeleteRolePermissionsBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteRolePermissionsBoundary")
     
     
@@ -1420,6 +1673,7 @@ func NewDeleteSAMLProviderRequest() (request *DeleteSAMLProviderRequest) {
     request = &DeleteSAMLProviderRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteSAMLProvider")
     
     
@@ -1469,6 +1723,7 @@ func NewDeleteServiceLinkedRoleRequest() (request *DeleteServiceLinkedRoleReques
     request = &DeleteServiceLinkedRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteServiceLinkedRole")
     
     
@@ -1520,6 +1775,7 @@ func NewDeleteUserRequest() (request *DeleteUserRequest) {
     request = &DeleteUserRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteUser")
     
     
@@ -1537,6 +1793,7 @@ func NewDeleteUserResponse() (response *DeleteUserResponse) {
 // 删除子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
@@ -1550,6 +1807,7 @@ func (c *Client) DeleteUser(request *DeleteUserRequest) (response *DeleteUserRes
 // 删除子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  OPERATIONDENIED_HAVEKEYS = "OperationDenied.HaveKeys"
 //  REQUESTLIMITEXCEEDED_UINLIMITEXCEEDED = "RequestLimitExceeded.UinLimitExceeded"
@@ -1575,6 +1833,7 @@ func NewDeleteUserPermissionsBoundaryRequest() (request *DeleteUserPermissionsBo
     request = &DeleteUserPermissionsBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DeleteUserPermissionsBoundary")
     
     
@@ -1632,6 +1891,7 @@ func NewDescribeOIDCConfigRequest() (request *DescribeOIDCConfigRequest) {
     request = &DescribeOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeOIDCConfig")
     
     
@@ -1683,6 +1943,7 @@ func NewDescribeRoleListRequest() (request *DescribeRoleListRequest) {
     request = &DescribeRoleListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeRoleList")
     
     
@@ -1700,6 +1961,7 @@ func NewDescribeRoleListResponse() (response *DescribeRoleListResponse) {
 // 本接口（DescribeRoleList）用于获取账号下的角色列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) DescribeRoleList(request *DescribeRoleListRequest) (response *DescribeRoleListResponse, err error) {
@@ -1710,6 +1972,7 @@ func (c *Client) DescribeRoleList(request *DescribeRoleListRequest) (response *D
 // 本接口（DescribeRoleList）用于获取账号下的角色列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 func (c *Client) DescribeRoleListWithContext(ctx context.Context, request *DescribeRoleListRequest) (response *DescribeRoleListResponse, err error) {
@@ -1732,6 +1995,7 @@ func NewDescribeSafeAuthFlagRequest() (request *DescribeSafeAuthFlagRequest) {
     request = &DescribeSafeAuthFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeSafeAuthFlag")
     
     
@@ -1783,6 +2047,7 @@ func NewDescribeSafeAuthFlagCollRequest() (request *DescribeSafeAuthFlagCollRequ
     request = &DescribeSafeAuthFlagCollRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeSafeAuthFlagColl")
     
     
@@ -1797,7 +2062,7 @@ func NewDescribeSafeAuthFlagCollResponse() (response *DescribeSafeAuthFlagCollRe
 }
 
 // DescribeSafeAuthFlagColl
-// 查询安全设置
+// 获取子账号安全设置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1808,7 +2073,7 @@ func (c *Client) DescribeSafeAuthFlagColl(request *DescribeSafeAuthFlagCollReque
 }
 
 // DescribeSafeAuthFlagColl
-// 查询安全设置
+// 获取子账号安全设置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1834,6 +2099,7 @@ func NewDescribeSafeAuthFlagIntlRequest() (request *DescribeSafeAuthFlagIntlRequ
     request = &DescribeSafeAuthFlagIntlRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeSafeAuthFlagIntl")
     
     
@@ -1885,6 +2151,7 @@ func NewDescribeSubAccountsRequest() (request *DescribeSubAccountsRequest) {
     request = &DescribeSubAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeSubAccounts")
     
     
@@ -1936,6 +2203,7 @@ func NewDescribeUserOIDCConfigRequest() (request *DescribeUserOIDCConfigRequest)
     request = &DescribeUserOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeUserOIDCConfig")
     
     
@@ -1983,6 +2251,7 @@ func NewDescribeUserSAMLConfigRequest() (request *DescribeUserSAMLConfigRequest)
     request = &DescribeUserSAMLConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DescribeUserSAMLConfig")
     
     
@@ -2030,6 +2299,7 @@ func NewDetachGroupPolicyRequest() (request *DetachGroupPolicyRequest) {
     request = &DetachGroupPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DetachGroupPolicy")
     
     
@@ -2047,6 +2317,7 @@ func NewDetachGroupPolicyResponse() (response *DetachGroupPolicyResponse) {
 // 本接口（DetachGroupPolicy）可用于解除绑定到用户组的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -2062,6 +2333,7 @@ func (c *Client) DetachGroupPolicy(request *DetachGroupPolicyRequest) (response 
 // 本接口（DetachGroupPolicy）可用于解除绑定到用户组的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
@@ -2089,6 +2361,7 @@ func NewDetachRolePolicyRequest() (request *DetachRolePolicyRequest) {
     request = &DetachRolePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DetachRolePolicy")
     
     
@@ -2106,6 +2379,7 @@ func NewDetachRolePolicyResponse() (response *DetachRolePolicyResponse) {
 // 本接口（DetachRolePolicy）用于解除绑定角色的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -2118,6 +2392,7 @@ func (c *Client) DetachRolePolicy(request *DetachRolePolicyRequest) (response *D
 // 本接口（DetachRolePolicy）用于解除绑定角色的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_POLICYIDNOTEXIST = "InvalidParameter.PolicyIdNotExist"
@@ -2142,6 +2417,7 @@ func NewDetachUserPolicyRequest() (request *DetachUserPolicyRequest) {
     request = &DetachUserPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DetachUserPolicy")
     
     
@@ -2159,6 +2435,7 @@ func NewDetachUserPolicyResponse() (response *DetachUserPolicyResponse) {
 // 本接口（DetachUserPolicy）可用于解除绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -2175,6 +2452,7 @@ func (c *Client) DetachUserPolicy(request *DetachUserPolicyRequest) (response *D
 // 本接口（DetachUserPolicy）可用于解除绑定到用户的策略。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ATTACHMENTFULL = "InvalidParameter.AttachmentFull"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
@@ -2203,6 +2481,7 @@ func NewDisableUserSSORequest() (request *DisableUserSSORequest) {
     request = &DisableUserSSORequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "DisableUserSSO")
     
     
@@ -2250,6 +2529,7 @@ func NewGetAccountSummaryRequest() (request *GetAccountSummaryRequest) {
     request = &GetAccountSummaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetAccountSummary")
     
     
@@ -2264,7 +2544,7 @@ func NewGetAccountSummaryResponse() (response *GetAccountSummaryResponse) {
 }
 
 // GetAccountSummary
-// 查询账户摘要 
+// 查询账户摘要
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2273,7 +2553,7 @@ func (c *Client) GetAccountSummary(request *GetAccountSummaryRequest) (response 
 }
 
 // GetAccountSummary
-// 查询账户摘要 
+// 查询账户摘要
 //
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2297,6 +2577,7 @@ func NewGetCustomMFATokenInfoRequest() (request *GetCustomMFATokenInfoRequest) {
     request = &GetCustomMFATokenInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetCustomMFATokenInfo")
     
     
@@ -2344,6 +2625,7 @@ func NewGetGroupRequest() (request *GetGroupRequest) {
     request = &GetGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetGroup")
     
     
@@ -2393,6 +2675,7 @@ func NewGetPolicyRequest() (request *GetPolicyRequest) {
     request = &GetPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetPolicy")
     
     
@@ -2446,6 +2729,7 @@ func NewGetPolicyVersionRequest() (request *GetPolicyVersionRequest) {
     request = &GetPolicyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetPolicyVersion")
     
     
@@ -2501,6 +2785,7 @@ func NewGetRoleRequest() (request *GetRoleRequest) {
     request = &GetRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetRole")
     
     
@@ -2552,6 +2837,7 @@ func NewGetRolePermissionBoundaryRequest() (request *GetRolePermissionBoundaryRe
     request = &GetRolePermissionBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetRolePermissionBoundary")
     
     
@@ -2605,6 +2891,7 @@ func NewGetSAMLProviderRequest() (request *GetSAMLProviderRequest) {
     request = &GetSAMLProviderRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetSAMLProvider")
     
     
@@ -2654,6 +2941,7 @@ func NewGetSecurityLastUsedRequest() (request *GetSecurityLastUsedRequest) {
     request = &GetSecurityLastUsedRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetSecurityLastUsed")
     
     
@@ -2703,6 +2991,7 @@ func NewGetServiceLinkedRoleDeletionStatusRequest() (request *GetServiceLinkedRo
     request = &GetServiceLinkedRoleDeletionStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetServiceLinkedRoleDeletionStatus")
     
     
@@ -2754,6 +3043,7 @@ func NewGetUserRequest() (request *GetUserRequest) {
     request = &GetUserRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetUser")
     
     
@@ -2771,6 +3061,7 @@ func NewGetUserResponse() (response *GetUserResponse) {
 // 查询子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) GetUser(request *GetUserRequest) (response *GetUserResponse, err error) {
@@ -2781,6 +3072,7 @@ func (c *Client) GetUser(request *GetUserRequest) (response *GetUserResponse, er
 // 查询子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) GetUserWithContext(ctx context.Context, request *GetUserRequest) (response *GetUserResponse, err error) {
@@ -2803,6 +3095,7 @@ func NewGetUserAppIdRequest() (request *GetUserAppIdRequest) {
     request = &GetUserAppIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetUserAppId")
     
     
@@ -2852,6 +3145,7 @@ func NewGetUserPermissionBoundaryRequest() (request *GetUserPermissionBoundaryRe
     request = &GetUserPermissionBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "GetUserPermissionBoundary")
     
     
@@ -2905,6 +3199,7 @@ func NewListAccessKeysRequest() (request *ListAccessKeysRequest) {
     request = &ListAccessKeysRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListAccessKeys")
     
     
@@ -2924,11 +3219,13 @@ func NewListAccessKeysResponse() (response *ListAccessKeysResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) ListAccessKeys(request *ListAccessKeysRequest) (response *ListAccessKeysResponse, err error) {
     return c.ListAccessKeysWithContext(context.Background(), request)
 }
@@ -2939,11 +3236,13 @@ func (c *Client) ListAccessKeys(request *ListAccessKeysRequest) (response *ListA
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
 //  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
 //  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
 func (c *Client) ListAccessKeysWithContext(ctx context.Context, request *ListAccessKeysRequest) (response *ListAccessKeysResponse, err error) {
     if request == nil {
         request = NewListAccessKeysRequest()
@@ -2964,6 +3263,7 @@ func NewListAttachedGroupPoliciesRequest() (request *ListAttachedGroupPoliciesRe
     request = &ListAttachedGroupPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListAttachedGroupPolicies")
     
     
@@ -2983,6 +3283,7 @@ func NewListAttachedGroupPoliciesResponse() (response *ListAttachedGroupPolicies
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 func (c *Client) ListAttachedGroupPolicies(request *ListAttachedGroupPoliciesRequest) (response *ListAttachedGroupPoliciesResponse, err error) {
     return c.ListAttachedGroupPoliciesWithContext(context.Background(), request)
 }
@@ -2993,6 +3294,7 @@ func (c *Client) ListAttachedGroupPolicies(request *ListAttachedGroupPoliciesReq
 // 可能返回的错误码:
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 func (c *Client) ListAttachedGroupPoliciesWithContext(ctx context.Context, request *ListAttachedGroupPoliciesRequest) (response *ListAttachedGroupPoliciesResponse, err error) {
     if request == nil {
         request = NewListAttachedGroupPoliciesRequest()
@@ -3013,6 +3315,7 @@ func NewListAttachedRolePoliciesRequest() (request *ListAttachedRolePoliciesRequ
     request = &ListAttachedRolePoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListAttachedRolePolicies")
     
     
@@ -3062,6 +3365,7 @@ func NewListAttachedUserAllPoliciesRequest() (request *ListAttachedUserAllPolici
     request = &ListAttachedUserAllPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListAttachedUserAllPolicies")
     
     
@@ -3113,6 +3417,7 @@ func NewListAttachedUserPoliciesRequest() (request *ListAttachedUserPoliciesRequ
     request = &ListAttachedUserPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListAttachedUserPolicies")
     
     
@@ -3162,6 +3467,7 @@ func NewListCollaboratorsRequest() (request *ListCollaboratorsRequest) {
     request = &ListCollaboratorsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListCollaborators")
     
     
@@ -3209,6 +3515,7 @@ func NewListEntitiesForPolicyRequest() (request *ListEntitiesForPolicyRequest) {
     request = &ListEntitiesForPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListEntitiesForPolicy")
     
     
@@ -3262,6 +3569,7 @@ func NewListGroupsRequest() (request *ListGroupsRequest) {
     request = &ListGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListGroups")
     
     
@@ -3279,10 +3587,7 @@ func NewListGroupsResponse() (response *ListGroupsResponse) {
 // 查询用户组列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_ENTITYFILTERERROR = "InvalidParameter.EntityFilterError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) ListGroups(request *ListGroupsRequest) (response *ListGroupsResponse, err error) {
     return c.ListGroupsWithContext(context.Background(), request)
 }
@@ -3291,10 +3596,7 @@ func (c *Client) ListGroups(request *ListGroupsRequest) (response *ListGroupsRes
 // 查询用户组列表
 //
 // 可能返回的错误码:
-//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
-//  INVALIDPARAMETER_ENTITYFILTERERROR = "InvalidParameter.EntityFilterError"
-//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
-//  INVALIDPARAMETER_POLICYIDERROR = "InvalidParameter.PolicyIdError"
+//  FAILEDOPERATION = "FailedOperation"
 func (c *Client) ListGroupsWithContext(ctx context.Context, request *ListGroupsRequest) (response *ListGroupsResponse, err error) {
     if request == nil {
         request = NewListGroupsRequest()
@@ -3315,6 +3617,7 @@ func NewListGroupsForUserRequest() (request *ListGroupsForUserRequest) {
     request = &ListGroupsForUserRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListGroupsForUser")
     
     
@@ -3332,6 +3635,8 @@ func NewListGroupsForUserResponse() (response *ListGroupsForUserResponse) {
 // 列出用户关联的用户组
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) ListGroupsForUser(request *ListGroupsForUserRequest) (response *ListGroupsForUserResponse, err error) {
     return c.ListGroupsForUserWithContext(context.Background(), request)
@@ -3341,6 +3646,8 @@ func (c *Client) ListGroupsForUser(request *ListGroupsForUserRequest) (response 
 // 列出用户关联的用户组
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) ListGroupsForUserWithContext(ctx context.Context, request *ListGroupsForUserRequest) (response *ListGroupsForUserResponse, err error) {
     if request == nil {
@@ -3362,6 +3669,7 @@ func NewListPoliciesRequest() (request *ListPoliciesRequest) {
     request = &ListPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListPolicies")
     
     
@@ -3384,6 +3692,7 @@ func NewListPoliciesResponse() (response *ListPoliciesResponse) {
 //  INVALIDPARAMETER_KEYWORDERROR = "InvalidParameter.KeywordError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_SCOPEERROR = "InvalidParameter.ScopeError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 //  INVALIDPARAMETER_SERVICETYPEERROR = "InvalidParameter.ServiceTypeError"
 //  INVALIDPARAMETER_UINERROR = "InvalidParameter.UinError"
 func (c *Client) ListPolicies(request *ListPoliciesRequest) (response *ListPoliciesResponse, err error) {
@@ -3399,6 +3708,7 @@ func (c *Client) ListPolicies(request *ListPoliciesRequest) (response *ListPolic
 //  INVALIDPARAMETER_KEYWORDERROR = "InvalidParameter.KeywordError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_SCOPEERROR = "InvalidParameter.ScopeError"
+//  INVALIDPARAMETER_SEARCHKEYWORDLENGTHERROR = "InvalidParameter.SearchKeywordLengthError"
 //  INVALIDPARAMETER_SERVICETYPEERROR = "InvalidParameter.ServiceTypeError"
 //  INVALIDPARAMETER_UINERROR = "InvalidParameter.UinError"
 func (c *Client) ListPoliciesWithContext(ctx context.Context, request *ListPoliciesRequest) (response *ListPoliciesResponse, err error) {
@@ -3421,6 +3731,7 @@ func NewListPoliciesGrantingServiceAccessRequest() (request *ListPoliciesGrantin
     request = &ListPoliciesGrantingServiceAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListPoliciesGrantingServiceAccess")
     
     
@@ -3474,6 +3785,7 @@ func NewListPolicyVersionsRequest() (request *ListPolicyVersionsRequest) {
     request = &ListPolicyVersionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListPolicyVersions")
     
     
@@ -3527,6 +3839,7 @@ func NewListSAMLProvidersRequest() (request *ListSAMLProvidersRequest) {
     request = &ListSAMLProvidersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListSAMLProviders")
     
     
@@ -3580,6 +3893,7 @@ func NewListUsersRequest() (request *ListUsersRequest) {
     request = &ListUsersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListUsers")
     
     
@@ -3627,6 +3941,7 @@ func NewListUsersForGroupRequest() (request *ListUsersForGroupRequest) {
     request = &ListUsersForGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListUsersForGroup")
     
     
@@ -3644,6 +3959,7 @@ func NewListUsersForGroupResponse() (response *ListUsersForGroupResponse) {
 // 查询用户组关联的用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListUsersForGroup(request *ListUsersForGroupRequest) (response *ListUsersForGroupResponse, err error) {
     return c.ListUsersForGroupWithContext(context.Background(), request)
@@ -3653,6 +3969,7 @@ func (c *Client) ListUsersForGroup(request *ListUsersForGroupRequest) (response 
 // 查询用户组关联的用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListUsersForGroupWithContext(ctx context.Context, request *ListUsersForGroupRequest) (response *ListUsersForGroupResponse, err error) {
     if request == nil {
@@ -3674,6 +3991,7 @@ func NewListWeChatWorkSubAccountsRequest() (request *ListWeChatWorkSubAccountsRe
     request = &ListWeChatWorkSubAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "ListWeChatWorkSubAccounts")
     
     
@@ -3691,6 +4009,7 @@ func NewListWeChatWorkSubAccountsResponse() (response *ListWeChatWorkSubAccounts
 // 获取企业微信子用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListWeChatWorkSubAccounts(request *ListWeChatWorkSubAccountsRequest) (response *ListWeChatWorkSubAccountsResponse, err error) {
     return c.ListWeChatWorkSubAccountsWithContext(context.Background(), request)
@@ -3700,6 +4019,7 @@ func (c *Client) ListWeChatWorkSubAccounts(request *ListWeChatWorkSubAccountsReq
 // 获取企业微信子用户列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) ListWeChatWorkSubAccountsWithContext(ctx context.Context, request *ListWeChatWorkSubAccountsRequest) (response *ListWeChatWorkSubAccountsResponse, err error) {
     if request == nil {
@@ -3721,6 +4041,7 @@ func NewPutRolePermissionsBoundaryRequest() (request *PutRolePermissionsBoundary
     request = &PutRolePermissionsBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "PutRolePermissionsBoundary")
     
     
@@ -3784,6 +4105,7 @@ func NewPutUserPermissionsBoundaryRequest() (request *PutUserPermissionsBoundary
     request = &PutUserPermissionsBoundaryRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "PutUserPermissionsBoundary")
     
     
@@ -3845,6 +4167,7 @@ func NewRemoveUserFromGroupRequest() (request *RemoveUserFromGroupRequest) {
     request = &RemoveUserFromGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "RemoveUserFromGroup")
     
     
@@ -3862,6 +4185,7 @@ func NewRemoveUserFromGroupResponse() (response *RemoveUserFromGroupResponse) {
 // 从用户组删除用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_USERUINANDUINNOTALLNULL = "InvalidParameter.UserUinAndUinNotAllNull"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -3873,6 +4197,7 @@ func (c *Client) RemoveUserFromGroup(request *RemoveUserFromGroupRequest) (respo
 // 从用户组删除用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_USERUINANDUINNOTALLNULL = "InvalidParameter.UserUinAndUinNotAllNull"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
@@ -3896,6 +4221,7 @@ func NewSetDefaultPolicyVersionRequest() (request *SetDefaultPolicyVersionReques
     request = &SetDefaultPolicyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "SetDefaultPolicyVersion")
     
     
@@ -3913,6 +4239,7 @@ func NewSetDefaultPolicyVersionResponse() (response *SetDefaultPolicyVersionResp
 // 本接口（SetDefaultPolicyVersion）可用于设置生效的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3960,6 +4287,7 @@ func (c *Client) SetDefaultPolicyVersion(request *SetDefaultPolicyVersionRequest
 // 本接口（SetDefaultPolicyVersion）可用于设置生效的策略版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  FAILEDOPERATION_POLICYVERSIONALREADYDEFAULT = "FailedOperation.PolicyVersionAlreadyDefault"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -4019,6 +4347,7 @@ func NewSetMfaFlagRequest() (request *SetMfaFlagRequest) {
     request = &SetMfaFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "SetMfaFlag")
     
     
@@ -4040,6 +4369,7 @@ func NewSetMfaFlagResponse() (response *SetMfaFlagResponse) {
 //  FAILEDOPERATION_USERNOTBINDWECHAT = "FailedOperation.UserNotBindWechat"
 //  FAILEDOPERATION_USERUNBINDNOPERMISSION = "FailedOperation.UserUnbindNoPermission"
 //  INVALIDPARAMETER_MFATOKENERROR = "InvalidParameter.MFATokenError"
+//  INVALIDPARAMETER_NAMEORIDCARDERROR = "InvalidParameter.NameOrIdCardError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) SetMfaFlag(request *SetMfaFlagRequest) (response *SetMfaFlagResponse, err error) {
@@ -4054,6 +4384,7 @@ func (c *Client) SetMfaFlag(request *SetMfaFlagRequest) (response *SetMfaFlagRes
 //  FAILEDOPERATION_USERNOTBINDWECHAT = "FailedOperation.UserNotBindWechat"
 //  FAILEDOPERATION_USERUNBINDNOPERMISSION = "FailedOperation.UserUnbindNoPermission"
 //  INVALIDPARAMETER_MFATOKENERROR = "InvalidParameter.MFATokenError"
+//  INVALIDPARAMETER_NAMEORIDCARDERROR = "InvalidParameter.NameOrIdCardError"
 //  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) SetMfaFlagWithContext(ctx context.Context, request *SetMfaFlagRequest) (response *SetMfaFlagResponse, err error) {
@@ -4076,6 +4407,7 @@ func NewTagRoleRequest() (request *TagRoleRequest) {
     request = &TagRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "TagRole")
     
     
@@ -4098,6 +4430,7 @@ func NewTagRoleResponse() (response *TagRoleResponse) {
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
 //  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
 //  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
@@ -4114,6 +4447,7 @@ func (c *Client) TagRole(request *TagRoleRequest) (response *TagRoleResponse, er
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETER_ROLENOTEXIST = "InvalidParameter.RoleNotExist"
 //  INVALIDPARAMETER_TAGLIMITEXCEEDED = "InvalidParameter.TagLimitExceeded"
 //  INVALIDPARAMETER_TAGPARAMERROR = "InvalidParameter.TagParamError"
@@ -4137,6 +4471,7 @@ func NewUntagRoleRequest() (request *UntagRoleRequest) {
     request = &UntagRoleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UntagRole")
     
     
@@ -4196,10 +4531,73 @@ func (c *Client) UntagRoleWithContext(ctx context.Context, request *UntagRoleReq
     return
 }
 
+func NewUpdateAccessKeyRequest() (request *UpdateAccessKeyRequest) {
+    request = &UpdateAccessKeyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cam", APIVersion, "UpdateAccessKey")
+    
+    
+    return
+}
+
+func NewUpdateAccessKeyResponse() (response *UpdateAccessKeyResponse) {
+    response = &UpdateAccessKeyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateAccessKey
+// 为CAM用户更新访问密钥
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
+func (c *Client) UpdateAccessKey(request *UpdateAccessKeyRequest) (response *UpdateAccessKeyResponse, err error) {
+    return c.UpdateAccessKeyWithContext(context.Background(), request)
+}
+
+// UpdateAccessKey
+// 为CAM用户更新访问密钥
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ACCESSKEY = "FailedOperation.Accesskey"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETER_USERNOTEXIST = "InvalidParameter.UserNotExist"
+//  OPERATIONDENIED_ACCESSKEYOVERLIMIT = "OperationDenied.AccessKeyOverLimit"
+//  OPERATIONDENIED_SUBUIN = "OperationDenied.SubUin"
+//  OPERATIONDENIED_UINNOTMATCH = "OperationDenied.UinNotMatch"
+//  RESOURCENOTFOUND_SECRETNOTEXIST = "ResourceNotFound.SecretNotExist"
+func (c *Client) UpdateAccessKeyWithContext(ctx context.Context, request *UpdateAccessKeyRequest) (response *UpdateAccessKeyResponse, err error) {
+    if request == nil {
+        request = NewUpdateAccessKeyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateAccessKey require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateAccessKeyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateAssumeRolePolicyRequest() (request *UpdateAssumeRolePolicyRequest) {
     request = &UpdateAssumeRolePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateAssumeRolePolicy")
     
     
@@ -4283,6 +4681,7 @@ func NewUpdateGroupRequest() (request *UpdateGroupRequest) {
     request = &UpdateGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateGroup")
     
     
@@ -4303,6 +4702,7 @@ func NewUpdateGroupResponse() (response *UpdateGroupResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) UpdateGroup(request *UpdateGroupRequest) (response *UpdateGroupResponse, err error) {
     return c.UpdateGroupWithContext(context.Background(), request)
@@ -4315,6 +4715,7 @@ func (c *Client) UpdateGroup(request *UpdateGroupRequest) (response *UpdateGroup
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_GROUPNAMEINUSE = "InvalidParameter.GroupNameInUse"
 //  INVALIDPARAMETER_GROUPNOTEXIST = "InvalidParameter.GroupNotExist"
+//  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_GROUPNOTEXIST = "ResourceNotFound.GroupNotExist"
 func (c *Client) UpdateGroupWithContext(ctx context.Context, request *UpdateGroupRequest) (response *UpdateGroupResponse, err error) {
     if request == nil {
@@ -4336,6 +4737,7 @@ func NewUpdateOIDCConfigRequest() (request *UpdateOIDCConfigRequest) {
     request = &UpdateOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateOIDCConfig")
     
     
@@ -4353,6 +4755,7 @@ func NewUpdateOIDCConfigResponse() (response *UpdateOIDCConfigResponse) {
 // 修改角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -4368,6 +4771,7 @@ func (c *Client) UpdateOIDCConfig(request *UpdateOIDCConfigRequest) (response *U
 // 修改角色OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYURLERROR = "InvalidParameterValue.IdentityUrlError"
@@ -4395,6 +4799,7 @@ func NewUpdatePolicyRequest() (request *UpdatePolicyRequest) {
     request = &UpdatePolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdatePolicy")
     
     
@@ -4414,6 +4819,7 @@ func NewUpdatePolicyResponse() (response *UpdatePolicyResponse) {
 // 如果已存在策略版本，本接口会直接更新策略的默认版本，不会创建新版本，如果不存在任何策略版本，则直接创建一个默认版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
@@ -4461,6 +4867,7 @@ func (c *Client) UpdatePolicy(request *UpdatePolicyRequest) (response *UpdatePol
 // 如果已存在策略版本，本接口会直接更新策略的默认版本，不会创建新版本，如果不存在任何策略版本，则直接创建一个默认版本。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONPOLICYOPERATEERROR = "FailedOperation.OrganizationPolicyOperateError"
 //  FAILEDOPERATION_POLICYNAMEINUSE = "FailedOperation.PolicyNameInUse"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_ACTIONERROR = "InvalidParameter.ActionError"
@@ -4518,6 +4925,7 @@ func NewUpdateRoleConsoleLoginRequest() (request *UpdateRoleConsoleLoginRequest)
     request = &UpdateRoleConsoleLoginRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateRoleConsoleLogin")
     
     
@@ -4569,6 +4977,7 @@ func NewUpdateRoleDescriptionRequest() (request *UpdateRoleDescriptionRequest) {
     request = &UpdateRoleDescriptionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateRoleDescription")
     
     
@@ -4622,6 +5031,7 @@ func NewUpdateSAMLProviderRequest() (request *UpdateSAMLProviderRequest) {
     request = &UpdateSAMLProviderRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateSAMLProvider")
     
     
@@ -4671,6 +5081,7 @@ func NewUpdateUserRequest() (request *UpdateUserRequest) {
     request = &UpdateUserRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateUser")
     
     
@@ -4688,7 +5099,10 @@ func NewUpdateUserResponse() (response *UpdateUserResponse) {
 // 更新子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
+//  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserResponse, err error) {
     return c.UpdateUserWithContext(context.Background(), request)
@@ -4698,7 +5112,10 @@ func (c *Client) UpdateUser(request *UpdateUserRequest) (response *UpdateUserRes
 // 更新子用户
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER_PASSWORDVIOLATEDRULES = "InvalidParameter.PasswordViolatedRules"
+//  INVALIDPARAMETER_USERNAMEILLEGAL = "InvalidParameter.UserNameIllegal"
 //  RESOURCENOTFOUND_USERNOTEXIST = "ResourceNotFound.UserNotExist"
 func (c *Client) UpdateUserWithContext(ctx context.Context, request *UpdateUserRequest) (response *UpdateUserResponse, err error) {
     if request == nil {
@@ -4720,6 +5137,7 @@ func NewUpdateUserOIDCConfigRequest() (request *UpdateUserOIDCConfigRequest) {
     request = &UpdateUserOIDCConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateUserOIDCConfig")
     
     
@@ -4737,6 +5155,7 @@ func NewUpdateUserOIDCConfigResponse() (response *UpdateUserOIDCConfigResponse) 
 // 修改用户OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYKEYERROR = "InvalidParameterValue.IdentityKeyError"
@@ -4752,6 +5171,7 @@ func (c *Client) UpdateUserOIDCConfig(request *UpdateUserOIDCConfigRequest) (res
 // 修改用户OIDC配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_IDENTITYNAMEINUSE = "InvalidParameter.IdentityNameInUse"
 //  INVALIDPARAMETERVALUE_IDENTITYKEYERROR = "InvalidParameterValue.IdentityKeyError"
@@ -4779,6 +5199,7 @@ func NewUpdateUserSAMLConfigRequest() (request *UpdateUserSAMLConfigRequest) {
     request = &UpdateUserSAMLConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cam", APIVersion, "UpdateUserSAMLConfig")
     
     

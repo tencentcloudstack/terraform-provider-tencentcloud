@@ -44,6 +44,11 @@ func resourceTencentCloudCamAccessKey() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Specify user Uin, if not filled, the access key is created for the current user by default.",
 			},
+			"access_key": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Access_key is the access key identification.",
+			},
 		},
 	}
 }
@@ -55,11 +60,12 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	var (
-		request     = cam.NewCreateAccessKeyRequest()
-		response    = cam.NewCreateAccessKeyResponse()
-		accessKeyId string
+		request   = cam.NewCreateAccessKeyRequest()
+		response  = cam.NewCreateAccessKeyResponse()
+		targetUin int64
 	)
 	if v, ok := d.GetOkExists("target_uin"); ok {
+		targetUin = int64(v.(int))
 		request.TargetUin = helper.IntUint64(v.(int))
 	}
 
@@ -78,8 +84,7 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	accessKeyId = *response.Response.AccessKeyId
-	d.SetId(helper.String(accessKeyId))
+	d.SetId(helper.Int64ToStr(targetUin))
 
 	return resourceTencentCloudCamAccessKeyRead(d, meta)
 }
@@ -94,9 +99,9 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	accessKeyId := d.Id()
+	uin := d.Id()
 
-	AccessKey, err := service.DescribeCamAccessKeyById(ctx, accessKeyId)
+	AccessKey, err := service.DescribeCamAccessKeyById(ctx, helper.StrToUInt64(uin))
 	if err != nil {
 		return err
 	}
@@ -107,8 +112,8 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	if AccessKey.TargetUin != nil {
-		_ = d.Set("target_uin", AccessKey.TargetUin)
+	if AccessKey.AccessKeyId != nil {
+		_ = d.Set("access_key", AccessKey.AccessKeyId)
 	}
 
 	return nil
