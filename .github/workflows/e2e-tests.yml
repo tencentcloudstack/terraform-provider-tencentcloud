@@ -34,6 +34,8 @@ env:
   TENCENTCLOUD_SECRET_ID_SMS: ${{ secrets.TENCENTCLOUD_SECRET_ID_SMS }}
   TENCENTCLOUD_SECRET_KEY_TSF: ${{ secrets.TENCENTCLOUD_SECRET_KEY_TSF }}
   TENCENTCLOUD_SECRET_ID_TSF: ${{ secrets.TENCENTCLOUD_SECRET_ID_TSF }}
+  TENCENTCLOUD_SECRET_KEY_SSL: ${{ secrets.TENCENTCLOUD_SECRET_KEY_SSL }}
+  TENCENTCLOUD_SECRET_ID_SSL: ${{ secrets.TENCENTCLOUD_SECRET_ID_SSL }}
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
