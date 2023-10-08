@@ -1571,6 +1571,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
+	tencentcloud_mps_word_sample
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -3065,6 +3066,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
+			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
