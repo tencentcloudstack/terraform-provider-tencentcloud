@@ -1,3 +1,30 @@
+## 1.81.33 (October 8, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cat_metric_data` ([#2143](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2143))
+* **New Data Source:** `tencentcloud_kms_describe_keys` ([#2171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2171))
+* **New Data Source:** `tencentcloud_kms_list_keys` ([#2171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2171))
+* **New Data Source:** `tencentcloud_kms_white_box_key_details` ([#2171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2171))
+* **New Data Source:** `tencentcloud_ssm_rotation_detail` ([#2172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2172))
+* **New Data Source:** `tencentcloud_ssm_rotation_history` ([#2172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2172))
+* **New Data Source:** `tencentcloud_ssm_service_status` ([#2172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2172))
+* **New Data Source:** `tencentcloud_ssm_ssh_key_pair_value` ([#2172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2172))
+* **New Resource:** `tencentcloud_kms_white_box_key` ([#2171](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2171))
+* **New Resource:** `tencentcloud_mps_word_sample` ([#2176](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2176))
+* **New Resource:** `tencentcloud_ssm_rotate_product_secret` ([#2172](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2172))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_cat_node: Add computed `task_types` ([#2143](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2143))
+* resource/tencentcloud_cat_task_set: Support `suspend` and `resume` for dial test tasks ([#2143](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2143))
+* resource/tencentcloud_cfw_sync_asset: Update operation status query interface ([#2169](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2169))
+
+BUG FIXES:
+
+* resource/tencentcloud_clb_attachment: fix http backend delete problem. ([#2148](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2148))
+* resource/tencentcloud_kubernetes_node_pool: fix bug in node pool creation ([#2170](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2170))
+
 ## 1.81.32 (September 28, 2023)
 
 FEATURES:
