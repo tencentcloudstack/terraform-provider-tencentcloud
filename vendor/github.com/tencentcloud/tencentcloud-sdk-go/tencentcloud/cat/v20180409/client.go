@@ -345,6 +345,7 @@ func NewDescribeProbeMetricDataResponse() (response *DescribeProbeMetricDataResp
 // 查询云拨测指标数据，指标支持使用sum,avg,max,min聚合函数进行指标数据查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 func (c *Client) DescribeProbeMetricData(request *DescribeProbeMetricDataRequest) (response *DescribeProbeMetricDataResponse, err error) {
     return c.DescribeProbeMetricDataWithContext(context.Background(), request)
@@ -354,6 +355,7 @@ func (c *Client) DescribeProbeMetricData(request *DescribeProbeMetricDataRequest
 // 查询云拨测指标数据，指标支持使用sum,avg,max,min聚合函数进行指标数据查询
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 func (c *Client) DescribeProbeMetricDataWithContext(ctx context.Context, request *DescribeProbeMetricDataRequest) (response *DescribeProbeMetricDataResponse, err error) {
     if request == nil {
@@ -615,6 +617,72 @@ func (c *Client) SuspendProbeTaskWithContext(ctx context.Context, request *Suspe
     request.SetContext(ctx)
     
     response = NewSuspendProbeTaskResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateProbeTaskAttributesRequest() (request *UpdateProbeTaskAttributesRequest) {
+    request = &UpdateProbeTaskAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cat", APIVersion, "UpdateProbeTaskAttributes")
+    
+    
+    return
+}
+
+func NewUpdateProbeTaskAttributesResponse() (response *UpdateProbeTaskAttributesResponse) {
+    response = &UpdateProbeTaskAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateProbeTaskAttributes
+// 更新探测任务属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_NOVALIDNODES = "FailedOperation.NoValidNodes"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TASKNOTRUNNING = "FailedOperation.TaskNotRunning"
+//  FAILEDOPERATION_TASKNOTSUSPENDED = "FailedOperation.TaskNotSuspended"
+//  FAILEDOPERATION_TASKOPERATIONNOTALLOW = "FailedOperation.TaskOperationNotAllow"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateProbeTaskAttributes(request *UpdateProbeTaskAttributesRequest) (response *UpdateProbeTaskAttributesResponse, err error) {
+    return c.UpdateProbeTaskAttributesWithContext(context.Background(), request)
+}
+
+// UpdateProbeTaskAttributes
+// 更新探测任务属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
+//  FAILEDOPERATION_NOVALIDNODES = "FailedOperation.NoValidNodes"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  FAILEDOPERATION_TASKNOTRUNNING = "FailedOperation.TaskNotRunning"
+//  FAILEDOPERATION_TASKNOTSUSPENDED = "FailedOperation.TaskNotSuspended"
+//  FAILEDOPERATION_TASKOPERATIONNOTALLOW = "FailedOperation.TaskOperationNotAllow"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) UpdateProbeTaskAttributesWithContext(ctx context.Context, request *UpdateProbeTaskAttributesRequest) (response *UpdateProbeTaskAttributesResponse, err error) {
+    if request == nil {
+        request = NewUpdateProbeTaskAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateProbeTaskAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateProbeTaskAttributesResponse()
     err = c.Send(request, response)
     return
 }

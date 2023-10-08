@@ -1275,6 +1275,7 @@ Cloud Automated Testing(CAT)
   Data Source
 	tencentcloud_cat_probe_data
 	tencentcloud_cat_node
+	tencentcloud_cat_metric_data
 
   Resource
  	tencentcloud_cat_task_set
@@ -2218,6 +2219,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdcpg_instances":                           dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                            dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                  dataSourceTencentCloudCatNode(),
+			"tencentcloud_cat_metric_data":                           dataSourceTencentCloudCatMetricData(),
 			"tencentcloud_rum_project":                               dataSourceTencentCloudRumProject(),
 			"tencentcloud_rum_offline_log_config":                    dataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                             dataSourceTencentCloudRumWhitelist(),
