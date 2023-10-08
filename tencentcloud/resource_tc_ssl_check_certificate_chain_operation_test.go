@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -16,7 +15,7 @@ func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccSslCheckCertificateChain),
+				Config: testAccSslCheckCertificateChain,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "certificate_chain"),
 				),
