@@ -113,6 +113,12 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 							Computed:    true,
 							Description: "Node status: 1=running, 2=offline.",
 						},
+						"task_types": {
+							Type:        schema.TypeList,
+							Elem:        &schema.Schema{Type: schema.TypeInt},
+							Computed:    true,
+							Description: "The task types supported by the node. `1`: page performance, `2`: file upload, `3`: file download, `4`: port performance, `5`: network quality, `6`: audio and video experience.",
+						},
 					},
 				},
 			},
@@ -158,11 +164,25 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 
 	var nodeSets []*cat.NodeDefine
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		results, e := catService.DescribeCatNodeByFilter(ctx, paramMap)
+		results, e := catService.DescribeCatProbeNodeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
 		nodeSets = results
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read Cat nodeSet failed, reason:%+v", logId, err)
+		return err
+	}
+
+	var nodeSetExt []*cat.NodeDefineExt
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		results, e := catService.DescribeCatNodeByFilter(ctx, paramMap)
+		if e != nil {
+			return retryError(e)
+		}
+		nodeSetExt = results
 		return nil
 	})
 	if err != nil {
@@ -205,6 +225,16 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 			if nodeSet.NodeDefineStatus != nil {
 				nodeSetMap["node_define_status"] = nodeSet.NodeDefineStatus
 			}
+
+			for _, node := range nodeSetExt {
+				if *node.Code == *nodeSet.Code {
+					if node.TaskTypes != nil {
+						nodeSetMap["task_types"] = node.TaskTypes
+					}
+					break
+				}
+			}
+
 			ids = append(ids, *nodeSet.Name)
 			nodeSetList = append(nodeSetList, nodeSetMap)
 		}

@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_cat_metric_data
+```
+
+```release-note:enhancement
+datasource/tencentcloud_cat_node: Add computed `task_types`
+```
+
+```release-note:enhancement
+resource/tencentcloud_cat_task_set: Support `suspend` and `resume` for dial test tasks
+```

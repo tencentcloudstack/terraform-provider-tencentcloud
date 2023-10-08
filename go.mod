@@ -30,19 +30,20 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.699
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.0.745
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.627
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.748
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.759
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -93,15 +94,13 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw v1.0.759
-    github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	gopkg.in/yaml.v2 v2.4.0
 )
-
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
