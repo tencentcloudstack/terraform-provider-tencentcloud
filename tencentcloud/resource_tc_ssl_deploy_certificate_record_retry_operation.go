@@ -4,7 +4,7 @@ Provides a resource to create a ssl deploy_certificate_record_retry
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_deploy_certificate_record_retry" "deploy_certificate_record_retry" {
+resource "tencentcloud_ssl_deploy_certificate_record_retry_operation" "deploy_certificate_record_retry" {
   deploy_record_id = 35474
 }
 ```
@@ -14,7 +14,7 @@ Import
 ssl deploy_certificate_record_retry can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_deploy_certificate_record_retry.deploy_certificate_record_retry deploy_certificate_record_retry_id
+terraform import tencentcloud_ssl_deploy_certificate_record_retry_operation.deploy_certificate_record_retry deploy_certificate_record_retry_id
 ```
 */
 package tencentcloud
@@ -55,7 +55,7 @@ func resourceTencentCloudSslDeployCertificateRecordRetryOperation() *schema.Reso
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRetryCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry.create")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -93,14 +93,14 @@ func resourceTencentCloudSslDeployCertificateRecordRetryCreate(d *schema.Resourc
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRetryRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry.read")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRetryDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_retry_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

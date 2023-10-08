@@ -14,7 +14,7 @@ Provides a resource to create a ssl deploy_certificate_record_retry
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_deploy_certificate_record_retry" "deploy_certificate_record_retry" {
+resource "tencentcloud_ssl_deploy_certificate_record_retry_operation" "deploy_certificate_record_retry" {
   deploy_record_id = 35474
 }
 ```
@@ -39,6 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 ssl deploy_certificate_record_retry can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_deploy_certificate_record_retry.deploy_certificate_record_retry deploy_certificate_record_retry_id
+terraform import tencentcloud_ssl_deploy_certificate_record_retry_operation.deploy_certificate_record_retry deploy_certificate_record_retry_id
 ```
 

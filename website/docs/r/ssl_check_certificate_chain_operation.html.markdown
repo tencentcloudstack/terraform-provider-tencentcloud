@@ -14,7 +14,7 @@ Provides a resource to create a ssl check_certificate_chain
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
+resource "tencentcloud_ssl_check_certificate_chain_operation" "check_certificate_chain" {
   certificate_chain = "-----BEGIN CERTIFICATE--·····---END CERTIFICATE-----"
 }
 ```
@@ -38,6 +38,6 @@ In addition to all arguments above, the following attributes are exported:
 ssl check_certificate_chain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_check_certificate_chain.check_certificate_chain check_certificate_chain_id
+terraform import tencentcloud_ssl_check_certificate_chain_operation.check_certificate_chain check_certificate_chain_id
 ```
 

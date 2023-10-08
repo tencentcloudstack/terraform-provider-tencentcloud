@@ -16,8 +16,8 @@ func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslCheckCertificateChain,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "certificate_chain"),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain_operation.check_certificate_chain", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain_operation.check_certificate_chain", "certificate_chain"),
 				),
 			},
 		},
@@ -26,7 +26,7 @@ func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
 
 const testAccSslCheckCertificateChain = `
 
-resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
+resource "tencentcloud_ssl_check_certificate_chain_operation" "check_certificate_chain" {
   certificate_chain = <<EOT
 -----BEGIN CERTIFICATE-----
 MIIGgjCCBOqgAwIBAgIQD2LBHbHYKhfZEhJYSdrsXTANBgkqhkiG9w0BAQwFADBZ

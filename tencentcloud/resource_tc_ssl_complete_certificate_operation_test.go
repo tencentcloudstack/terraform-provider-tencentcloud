@@ -16,8 +16,8 @@ func TestAccTencentCloudSslCompleteCertificateResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslCompleteCertificate,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_complete_certificate.complete_certificate", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_complete_certificate.complete_certificate", "certificate_id", "709ahm2q"),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_complete_certificate_operation.complete_certificate", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_complete_certificate_operation.complete_certificate", "certificate_id", "709ahm2q"),
 				),
 			},
 		},
@@ -26,7 +26,7 @@ func TestAccTencentCloudSslCompleteCertificateResource_basic(t *testing.T) {
 
 const testAccSslCompleteCertificate = `
 
-resource "tencentcloud_ssl_complete_certificate" "complete_certificate" {
+resource "tencentcloud_ssl_complete_certificate_operation" "complete_certificate" {
   certificate_id = "709ahm2q"
 }
 

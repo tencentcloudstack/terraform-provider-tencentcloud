@@ -17,9 +17,9 @@ func TestAccTencentCloudSslDownloadCertificateResource_basic(t *testing.T) {
 			{
 				Config: testAccSslDownloadCertificate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate.download_certificate", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_download_certificate.download_certificate", "certificate_id", "8x1eUSSl"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate.download_certificate", "output_path"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate_operation.download_certificate", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_download_certificate_operation.download_certificate", "certificate_id", "8x1eUSSl"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_download_certificate_operation.download_certificate", "output_path"),
 				),
 			},
 		},
@@ -28,7 +28,7 @@ func TestAccTencentCloudSslDownloadCertificateResource_basic(t *testing.T) {
 
 const testAccSslDownloadCertificate = `
 
-resource "tencentcloud_ssl_download_certificate" "download_certificate" {
+resource "tencentcloud_ssl_download_certificate_operation" "download_certificate" {
   certificate_id = "8x1eUSSl"
   output_path = "./"
 }

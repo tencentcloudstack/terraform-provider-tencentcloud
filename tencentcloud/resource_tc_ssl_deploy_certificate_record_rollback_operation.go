@@ -4,7 +4,7 @@ Provides a resource to create a ssl deploy_certificate_record_rollback
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_deploy_certificate_record_rollback" "deploy_certificate_record_rollback" {
+resource "tencentcloud_ssl_deploy_certificate_record_rollback_operation" "deploy_certificate_record_rollback" {
   deploy_record_id = 35471
 }
 ```
@@ -14,7 +14,7 @@ Import
 ssl deploy_certificate_record_rollback can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_deploy_certificate_record_rollback.deploy_certificate_record_rollback deploy_certificate_record_rollback_id
+terraform import tencentcloud_ssl_deploy_certificate_record_rollback_operation.deploy_certificate_record_rollback deploy_certificate_record_rollback_id
 ```
 */
 package tencentcloud
@@ -48,7 +48,7 @@ func resourceTencentCloudSslDeployCertificateRecordRollbackOperation() *schema.R
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRollbackCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback.create")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -85,14 +85,14 @@ func resourceTencentCloudSslDeployCertificateRecordRollbackCreate(d *schema.Reso
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRollbackRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback.read")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslDeployCertificateRecordRollbackDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_record_rollback_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

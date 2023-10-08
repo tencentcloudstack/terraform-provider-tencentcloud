@@ -4,7 +4,7 @@ Provides a resource to create a ssl deploy_certificate_instance
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_deploy_certificate_instance" "deploy_certificate_instance" {
+resource "tencentcloud_ssl_deploy_certificate_instance_operation" "deploy_certificate_instance" {
   certificate_id = "8x1eUSSl"
   instance_id_list =[api1.ninghhuang.online|off]
 }
@@ -15,7 +15,7 @@ Import
 ssl deploy_certificate_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_deploy_certificate_instance.deploy_certificate_instance deploy_certificate_instance_id
+terraform import tencentcloud_ssl_deploy_certificate_instance_operation.deploy_certificate_instance deploy_certificate_instance_id
 ```
 */
 package tencentcloud
@@ -73,7 +73,7 @@ func resourceTencentCloudSslDeployCertificateInstanceOperation() *schema.Resourc
 }
 
 func resourceTencentCloudSslDeployCertificateInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance.create")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -125,14 +125,14 @@ func resourceTencentCloudSslDeployCertificateInstanceCreate(d *schema.ResourceDa
 }
 
 func resourceTencentCloudSslDeployCertificateInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance.read")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslDeployCertificateInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_deploy_certificate_instance_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

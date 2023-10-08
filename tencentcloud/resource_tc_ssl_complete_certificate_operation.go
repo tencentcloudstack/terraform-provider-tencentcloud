@@ -4,7 +4,7 @@ Provides a resource to create a ssl complete_certificate
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_complete_certificate" "complete_certificate" {
+resource "tencentcloud_ssl_complete_certificate_operation" "complete_certificate" {
   certificate_id = "9Bfe1IBR"
 }
 ```
@@ -14,7 +14,7 @@ Import
 ssl complete_certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_complete_certificate.complete_certificate complete_certificate_id
+terraform import tencentcloud_ssl_complete_certificate_operation.complete_certificate complete_certificate_id
 ```
 */
 package tencentcloud
@@ -48,7 +48,7 @@ func resourceTencentCloudSslCompleteCertificateOperation() *schema.Resource {
 }
 
 func resourceTencentCloudSslCompleteCertificateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_complete_certificate.create")()
+	defer logElapsed("resource.tencentcloud_ssl_complete_certificate_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -85,14 +85,14 @@ func resourceTencentCloudSslCompleteCertificateCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudSslCompleteCertificateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_complete_certificate.read")()
+	defer logElapsed("resource.tencentcloud_ssl_complete_certificate_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslCompleteCertificateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_complete_certificate.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_complete_certificate_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

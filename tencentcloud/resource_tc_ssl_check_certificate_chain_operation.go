@@ -4,7 +4,7 @@ Provides a resource to create a ssl check_certificate_chain
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
+resource "tencentcloud_ssl_check_certificate_chain_operation" "check_certificate_chain" {
   certificate_chain = "-----BEGIN CERTIFICATE--·····---END CERTIFICATE-----"
 }
 ```
@@ -14,7 +14,7 @@ Import
 ssl check_certificate_chain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ssl_check_certificate_chain.check_certificate_chain check_certificate_chain_id
+terraform import tencentcloud_ssl_check_certificate_chain_operation.check_certificate_chain check_certificate_chain_id
 ```
 */
 package tencentcloud
@@ -50,7 +50,7 @@ func resourceTencentCloudSslCheckCertificateChainOperation() *schema.Resource {
 }
 
 func resourceTencentCloudSslCheckCertificateChainCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain.create")()
+	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -87,14 +87,14 @@ func resourceTencentCloudSslCheckCertificateChainCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudSslCheckCertificateChainRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain.read")()
+	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudSslCheckCertificateChainDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain.delete")()
+	defer logElapsed("resource.tencentcloud_ssl_check_certificate_chain_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
