@@ -21,9 +21,9 @@ resource "tencentcloud_mps_schedule" "schedule" {
 			formats =
 			s3_secret_id = ""
 			s3_secret_key = ""
-			aws_s_q_s {
-				s_q_s_region = ""
-				s_q_s_queue_name = ""
+			aws_sqs {
+				sqs_region = ""
+				sqs_queue_name = ""
 				s3_secret_id = ""
 				s3_secret_key = ""
 			}
@@ -520,9 +520,9 @@ resource "tencentcloud_mps_schedule" "schedule" {
 		notify_mode = ""
 		notify_type = ""
 		notify_url = ""
-		aws_s_q_s {
-			s_q_s_region = ""
-			s_q_s_queue_name = ""
+		aws_sqs {
+			sqs_region = ""
+			sqs_queue_name = ""
 			s3_secret_id = ""
 			s3_secret_key = ""
 		}
@@ -578,7 +578,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The trigger type. Valid values:&lt;li&gt;`CosFileUpload`: Tencent Cloud COS trigger.&lt;/li&gt;&lt;li&gt;`AwsS3FileUpload`: AWS S3 trigger. Currently, this type is only supported for transcoding tasks and schemes (not supported for workflows).&lt;/li&gt;.",
+							Description: "The trigger type. Valid values: `CosFileUpload`: Tencent Cloud COS trigger. `AwsS3FileUpload`: AWS S3 trigger. Currently, this type is only supported for transcoding tasks and schemes (not supported for workflows).",
 						},
 						"cos_file_upload_trigger": {
 							Type:        schema.TypeList,
@@ -653,19 +653,19 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 										Optional:    true,
 										Description: "The key of the AWS S3 bucket.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
-									"aws_s_q_s": {
+									"aws_sqs": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
 										Description: "The SQS queue of the AWS S3 bucket.Note: The queue must be in the same region as the bucket.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"s_q_s_region": {
+												"sqs_region": {
 													Type:        schema.TypeString,
 													Required:    true,
 													Description: "The region of the SQS queue.",
 												},
-												"s_q_s_queue_name": {
+												"sqs_queue_name": {
 													Type:        schema.TypeString,
 													Required:    true,
 													Description: "The name of the SQS queue.",
@@ -699,7 +699,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 						"activity_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The subtask type.&lt;li&gt;`input`: The start.&lt;/li&gt;&lt;li&gt;`output`: The end.&lt;/li&gt;&lt;li&gt;`action-trans`: Transcoding.&lt;/li&gt;&lt;li&gt;`action-samplesnapshot`: Sampled screencapturing.&lt;/li&gt;&lt;li&gt;`action-AIAnalysis`: Content analysis.&lt;/li&gt;&lt;li&gt;`action-AIRecognition`: Content recognition.&lt;/li&gt;&lt;li&gt;`action-aiReview`: Content moderation.&lt;/li&gt;&lt;li&gt;`action-animated-graphics`: Animated screenshot generation.&lt;/li&gt;&lt;li&gt;`action-image-sprite`: Image sprite generation.&lt;/li&gt;&lt;li&gt;`action-snapshotByTimeOffset`: Time point screencapturing.&lt;/li&gt;&lt;li&gt;`action-adaptive-substream`: Adaptive bitrate streaming.&lt;/li&gt;Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "The subtask type. `input`: The start. `output`: The end. `action-trans`: Transcoding. `action-samplesnapshot`: Sampled screencapturing. `action-AIAnalysis`: Content analysis. `action-AIRecognition`: Content recognition. `action-aiReview`: Content moderation. `action-animated-graphics`: Animated screenshot generation. `action-image-sprite`: Image sprite generation. `action-snapshotByTimeOffset`: Time point screencapturing. `action-adaptive-substream`: Adaptive bitrate streaming.Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"reardrive_index": {
 							Type: schema.TypeSet,
@@ -707,7 +707,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 								Type: schema.TypeInt,
 							},
 							Optional:    true,
-							Description: "The indexes of the subsequent actions.Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "The indexes of the subsequent actions. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"activity_para": {
 							Type:        schema.TypeList,
@@ -743,12 +743,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"remove_video": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Whether to remove video data. Valid values:&lt;li&gt;0: retain;&lt;/li&gt;&lt;li&gt;1: remove.&lt;/li&gt;Default value: 0.",
+																Description: "Whether to remove video data. Valid values: 0: retain; 1: remove.Default value: 0.",
 															},
 															"remove_audio": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Whether to remove audio data. Valid values:&lt;li&gt;0: retain;&lt;/li&gt;&lt;li&gt;1: remove.&lt;/li&gt;Default value: 0.",
+																Description: "Whether to remove audio data. Valid values: 0: retain; 1: remove.Default value: 0.",
 															},
 															"video_template": {
 																Type:        schema.TypeList,
@@ -760,7 +760,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"codec": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The video codec. Valid values:&lt;li&gt;`libx264`: H.264&lt;/li&gt;&lt;li&gt;`libx265`: H.265&lt;/li&gt;&lt;li&gt;`av1`: AOMedia Video 1&lt;/li&gt;Note: You must specify a resolution (not higher than 640 x 480) if the H.265 codec is used.Note: You can only use the AOMedia Video 1 codec for MP4 files.",
+																			Description: "The video codec. Valid values: `libx264`: H.264 `libx265`: H.265 `av1`: AOMedia Video 1Note: You must specify a resolution (not higher than 640 x 480) if the H.265 codec is used.Note: You can only use the AOMedia Video 1 codec for MP4 files.",
 																		},
 																		"fps": {
 																			Type:        schema.TypeInt,
@@ -775,17 +775,17 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"resolution_adaptive": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Resolution adaption. Valid values:&lt;li&gt;open: Enabled. When resolution adaption is enabled, `Width` indicates the long side of a video, while `Height` indicates the short side.&lt;/li&gt;&lt;li&gt;close: Disabled. When resolution adaption is disabled, `Width` indicates the width of a video, while `Height` indicates the height.&lt;/li&gt;Default value: open.Note: When resolution adaption is enabled, `Width` cannot be smaller than `Height`.",
+																			Description: "Resolution adaption. Valid values: open: Enabled. When resolution adaption is enabled, `Width` indicates the long side of a video, while `Height` indicates the short side. close: Disabled. When resolution adaption is disabled, `Width` indicates the width of a video, while `Height` indicates the height.Default value: open.Note: When resolution adaption is enabled, `Width` cannot be smaller than `Height`.",
 																		},
 																		"width": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Maximum value of the width (or long side) of a video stream in px. Value range: 0 and [128, 4,096].&lt;li&gt;If both `Width` and `Height` are 0, the resolution will be the same as that of the source video;&lt;/li&gt;&lt;li&gt;If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If both `Width` and `Height` are not 0, the custom resolution will be used.&lt;/li&gt;Default value: 0.",
+																			Description: "Maximum value of the width (or long side) of a video stream in px. Value range: 0 and [128, 4,096]. If both `Width` and `Height` are 0, the resolution will be the same as that of the source video; If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled; If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled; If both `Width` and `Height` are not 0, the custom resolution will be used.Default value: 0.",
 																		},
 																		"height": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Maximum value of the height (or short side) of a video stream in px. Value range: 0 and [128, 4,096].&lt;li&gt;If both `Width` and `Height` are 0, the resolution will be the same as that of the source video;&lt;/li&gt;&lt;li&gt;If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If both `Width` and `Height` are not 0, the custom resolution will be used.&lt;/li&gt;Default value: 0.",
+																			Description: "Maximum value of the height (or short side) of a video stream in px. Value range: 0 and [128, 4,096]. If both `Width` and `Height` are 0, the resolution will be the same as that of the source video; If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled; If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled; If both `Width` and `Height` are not 0, the custom resolution will be used.Default value: 0.",
 																		},
 																		"gop": {
 																			Type:        schema.TypeInt,
@@ -795,7 +795,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"fill_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The fill mode, which indicates how a video is resized when the video’s original aspect ratio is different from the target aspect ratio. Valid values:&lt;li&gt;stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding.&lt;/li&gt;&lt;li&gt;black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars.&lt;/li&gt;&lt;li&gt;white: Keep the image’s original aspect ratio and fill the blank space with white bars.&lt;/li&gt;&lt;li&gt;gauss: Keep the image’s original aspect ratio and apply Gaussian blur to the blank space.&lt;/li&gt;Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
+																			Description: "The fill mode, which indicates how a video is resized when the video’s original aspect ratio is different from the target aspect ratio. Valid values: stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding. black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars. white: Keep the image’s original aspect ratio and fill the blank space with white bars. gauss: Keep the image’s original aspect ratio and apply Gaussian blur to the blank space.Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
 																		},
 																		"vcrf": {
 																			Type:        schema.TypeInt,
@@ -815,7 +815,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"codec": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Audio stream codec.When the outer `Container` parameter is `mp3`, the valid value is:&lt;li&gt;libmp3lame.&lt;/li&gt;When the outer `Container` parameter is `ogg` or `flac`, the valid value is:&lt;li&gt;flac.&lt;/li&gt;When the outer `Container` parameter is `m4a`, the valid values include:&lt;li&gt;libfdk_aac;&lt;/li&gt;&lt;li&gt;libmp3lame;&lt;/li&gt;&lt;li&gt;ac3.&lt;/li&gt;When the outer `Container` parameter is `mp4` or `flv`, the valid values include:&lt;li&gt;libfdk_aac: more suitable for mp4;&lt;/li&gt;&lt;li&gt;libmp3lame: more suitable for flv.&lt;/li&gt;When the outer `Container` parameter is `hls`, the valid values include:&lt;li&gt;libfdk_aac;&lt;/li&gt;&lt;li&gt;libmp3lame.&lt;/li&gt;.",
+																			Description: "Audio stream codec.When the outer `Container` parameter is `mp3`, the valid value is: libmp3lame.When the outer `Container` parameter is `ogg` or `flac`, the valid value is: flac.When the outer `Container` parameter is `m4a`, the valid values include: libfdk_aac; libmp3lame; ac3.When the outer `Container` parameter is `mp4` or `flv`, the valid values include: libfdk_aac: more suitable for mp4; libmp3lame: more suitable for flv.When the outer `Container` parameter is `hls`, the valid values include: libfdk_aac; libmp3lame.",
 																		},
 																		"bitrate": {
 																			Type:        schema.TypeInt,
@@ -825,12 +825,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"sample_rate": {
 																			Type:        schema.TypeInt,
 																			Required:    true,
-																			Description: "Audio stream sample rate. Valid values:&lt;li&gt;32,000&lt;/li&gt;&lt;li&gt;44,100&lt;/li&gt;&lt;li&gt;48,000&lt;/li&gt;In Hz.",
+																			Description: "Audio stream sample rate. Valid values: 32,000 44,100 48,000In Hz.",
 																		},
 																		"audio_channel": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Audio channel system. Valid values:&lt;li&gt;1: Mono&lt;/li&gt;&lt;li&gt;2: Dual&lt;/li&gt;&lt;li&gt;6: Stereo&lt;/li&gt;When the media is packaged in audio format (FLAC, OGG, MP3, M4A), the sound channel cannot be set to stereo.Default value: 2.",
+																			Description: "Audio channel system. Valid values: 1: Mono 2: Dual 6: StereoWhen the media is packaged in audio format (FLAC, OGG, MP3, M4A), the sound channel cannot be set to stereo.Default value: 2.",
 																		},
 																	},
 																},
@@ -845,7 +845,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "TESHD type. Valid values:&lt;li&gt;TEHD-100: TESHD-100.&lt;/li&gt;If this parameter is left empty, TESHD will not be enabled.",
+																			Description: "TESHD type. Valid values: TEHD-100: TESHD-100.If this parameter is left empty, TESHD will not be enabled.",
 																		},
 																		"max_video_bitrate": {
 																			Type:        schema.TypeInt,
@@ -873,12 +873,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"remove_video": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Whether to remove video data. Valid values:&lt;li&gt;0: retain&lt;/li&gt;&lt;li&gt;1: remove&lt;/li&gt;.",
+																Description: "Whether to remove video data. Valid values: 0: retain 1: remove.",
 															},
 															"remove_audio": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Whether to remove audio data. Valid values:&lt;li&gt;0: retain&lt;/li&gt;&lt;li&gt;1: remove&lt;/li&gt;.",
+																Description: "Whether to remove audio data. Valid values: 0: retain 1: remove.",
 															},
 															"video_template": {
 																Type:        schema.TypeList,
@@ -890,7 +890,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"codec": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The video codec. Valid values:&lt;li&gt;libx264: H.264&lt;/li&gt;&lt;li&gt;libx265: H.265&lt;/li&gt;&lt;li&gt;av1: AOMedia Video 1&lt;/li&gt;Note: You must specify a resolution (not higher than 640 x 480) if the H.265 codec is used.Note: You can only use the AOMedia Video 1 codec for MP4 files.",
+																			Description: "The video codec. Valid values: libx264: H.264 libx265: H.265 av1: AOMedia Video 1Note: You must specify a resolution (not higher than 640 x 480) if the H.265 codec is used.Note: You can only use the AOMedia Video 1 codec for MP4 files.",
 																		},
 																		"fps": {
 																			Type:        schema.TypeInt,
@@ -905,12 +905,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"resolution_adaptive": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Resolution adaption. Valid values:&lt;li&gt;open: Enabled. When resolution adaption is enabled, `Width` indicates the long side of a video, while `Height` indicates the short side.&lt;/li&gt;&lt;li&gt;close: Disabled. When resolution adaption is disabled, `Width` indicates the width of a video, while `Height` indicates the height.&lt;/li&gt;Note: When resolution adaption is enabled, `Width` cannot be smaller than `Height`.",
+																			Description: "Resolution adaption. Valid values: open: Enabled. When resolution adaption is enabled, `Width` indicates the long side of a video, while `Height` indicates the short side. close: Disabled. When resolution adaption is disabled, `Width` indicates the width of a video, while `Height` indicates the height.Note: When resolution adaption is enabled, `Width` cannot be smaller than `Height`.",
 																		},
 																		"width": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Maximum value of the width (or long side) of a video stream in px. Value range: 0 and [128, 4,096].&lt;li&gt;If both `Width` and `Height` are 0, the resolution will be the same as that of the source video;&lt;/li&gt;&lt;li&gt;If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled;&lt;/li&gt;&lt;li&gt;If both `Width` and `Height` are not 0, the custom resolution will be used.&lt;/li&gt;.",
+																			Description: "Maximum value of the width (or long side) of a video stream in px. Value range: 0 and [128, 4,096]. If both `Width` and `Height` are 0, the resolution will be the same as that of the source video; If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled; If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled; If both `Width` and `Height` are not 0, the custom resolution will be used.",
 																		},
 																		"height": {
 																			Type:        schema.TypeInt,
@@ -925,7 +925,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"fill_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Fill type. Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported:&lt;li&gt; stretch: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer;&lt;/li&gt;&lt;li&gt;black: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks.&lt;/li&gt;&lt;li&gt;white: fill with white. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with white color blocks.&lt;/li&gt;&lt;li&gt;gauss: fill with Gaussian blur. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with Gaussian blur.&lt;/li&gt;.",
+																			Description: "Fill type. Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported:  stretch: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; black: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks. white: fill with white. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with white color blocks. gauss: fill with Gaussian blur. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with Gaussian blur.",
 																		},
 																		"vcrf": {
 																			Type:        schema.TypeInt,
@@ -935,7 +935,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"content_adapt_stream": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Whether to enable adaptive encoding. Valid values:&lt;li&gt;0: Disable&lt;/li&gt;&lt;li&gt;1: Enable&lt;/li&gt;Default value: 0. If this parameter is set to `1`, multiple streams with different resolutions and bitrates will be generated automatically. The highest resolution, bitrate, and quality of the streams are determined by the values of `width` and `height`, `Bitrate`, and `Vcrf` in `VideoTemplate` respectively. If these parameters are not set in `VideoTemplate`, the highest resolution generated will be the same as that of the source video, and the highest video quality will be close to VMAF 95. To use this parameter or learn about the billing details of adaptive encoding, please contact your sales rep.",
+																			Description: "Whether to enable adaptive encoding. Valid values: 0: Disable 1: EnableDefault value: 0. If this parameter is set to `1`, multiple streams with different resolutions and bitrates will be generated automatically. The highest resolution, bitrate, and quality of the streams are determined by the values of `width` and `height`, `Bitrate`, and `Vcrf` in `VideoTemplate` respectively. If these parameters are not set in `VideoTemplate`, the highest resolution generated will be the same as that of the source video, and the highest video quality will be close to VMAF 95. To use this parameter or learn about the billing details of adaptive encoding, please contact your sales rep.",
 																		},
 																	},
 																},
@@ -950,7 +950,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"codec": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Audio stream codec.When the outer `Container` parameter is `mp3`, the valid value is:&lt;li&gt;libmp3lame.&lt;/li&gt;When the outer `Container` parameter is `ogg` or `flac`, the valid value is:&lt;li&gt;flac.&lt;/li&gt;When the outer `Container` parameter is `m4a`, the valid values include:&lt;li&gt;libfdk_aac;&lt;/li&gt;&lt;li&gt;libmp3lame;&lt;/li&gt;&lt;li&gt;ac3.&lt;/li&gt;When the outer `Container` parameter is `mp4` or `flv`, the valid values include:&lt;li&gt;libfdk_aac: More suitable for mp4;&lt;/li&gt;&lt;li&gt;libmp3lame: More suitable for flv;&lt;/li&gt;&lt;li&gt;mp2.&lt;/li&gt;When the outer `Container` parameter is `hls`, the valid values include:&lt;li&gt;libfdk_aac;&lt;/li&gt;&lt;li&gt;libmp3lame.&lt;/li&gt;.",
+																			Description: "Audio stream codec.When the outer `Container` parameter is `mp3`, the valid value is: libmp3lame.When the outer `Container` parameter is `ogg` or `flac`, the valid value is: flac.When the outer `Container` parameter is `m4a`, the valid values include: libfdk_aac; libmp3lame; ac3.When the outer `Container` parameter is `mp4` or `flv`, the valid values include: libfdk_aac: More suitable for mp4; libmp3lame: More suitable for flv; mp2.When the outer `Container` parameter is `hls`, the valid values include: libfdk_aac; libmp3lame.",
 																		},
 																		"bitrate": {
 																			Type:        schema.TypeInt,
@@ -960,12 +960,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"sample_rate": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Audio stream sample rate. Valid values:&lt;li&gt;32,000&lt;/li&gt;&lt;li&gt;44,100&lt;/li&gt;&lt;li&gt;48,000&lt;/li&gt;In Hz.",
+																			Description: "Audio stream sample rate. Valid values: 32,000 44,100 48,000In Hz.",
 																		},
 																		"audio_channel": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
-																			Description: "Audio channel system. Valid values:&lt;li&gt;1: Mono&lt;/li&gt;&lt;li&gt;2: Dual&lt;/li&gt;&lt;li&gt;6: Stereo&lt;/li&gt;When the media is packaged in audio format (FLAC, OGG, MP3, M4A), the sound channel cannot be set to stereo.",
+																			Description: "Audio channel system. Valid values: 1: Mono 2: Dual 6: StereoWhen the media is packaged in audio format (FLAC, OGG, MP3, M4A), the sound channel cannot be set to stereo.",
 																		},
 																		"stream_selects": {
 																			Type: schema.TypeSet,
@@ -988,7 +988,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "TESHD type. Valid values:&lt;li&gt;TEHD-100: TESHD-100.&lt;/li&gt;If this parameter is left blank, no modification will be made.",
+																			Description: "TESHD type. Valid values: TEHD-100: TESHD-100.If this parameter is left blank, no modification will be made.",
 																		},
 																		"max_video_bitrate": {
 																			Type:        schema.TypeInt,
@@ -1018,7 +1018,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"font_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The font. Valid values:&lt;li&gt;hei.ttf&lt;/li&gt;&lt;li&gt;song.ttf&lt;/li&gt;&lt;li&gt;simkai.ttf&lt;/li&gt;&lt;li&gt;arial.ttf (for English only)&lt;/li&gt;The default is `hei.ttf`.",
+																			Description: "The font type. Valid values: `hei.ttf` `song.ttf` `simkai.ttf` `arial.ttf` (for English only). The default is `hei.ttf`.",
 																		},
 																		"font_size": {
 																			Type:        schema.TypeString,
@@ -1033,7 +1033,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"font_alpha": {
 																			Type:        schema.TypeFloat,
 																			Optional:    true,
-																			Description: "The text transparency. Value range: 0-1.&lt;li&gt;0: Completely transparent&lt;/li&gt;&lt;li&gt;1: Completely opaque&lt;/li&gt;Default value: 1.",
+																			Description: "The text transparency. Value range: 0-1. 0: Completely transparent 1: Completely opaqueDefault value: 1.",
 																		},
 																	},
 																},
@@ -1047,7 +1047,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																			Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																		},
 																		"cos_input_info": {
 																			Type:        schema.TypeList,
@@ -1141,7 +1141,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The inserting type. Valid values：&lt;li&gt;subtitle-stream：Insert title track&lt;/li&gt;&lt;li&gt;close-caption-708：CEA-708 subtitle encode to SEI frame&lt;/li&gt;&lt;li&gt;close-caption-608：CEA-608 subtitle encode to SEI frame&lt;/li&gt;Note: This field may return null, indicating that no valid value can be obtained.",
+																			Description: "The inserting type. Valid values： subtitle-stream：Insert title track close-caption-708：CEA-708 subtitle encode to SEI frame close-caption-608：CEA-608 subtitle encode to SEI frameNote: This field may return null, indicating that no valid value can be obtained.",
 																		},
 																		"subtitle": {
 																			Type:        schema.TypeList,
@@ -1153,7 +1153,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"type": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "The input type. Valid values:&lt;li&gt; COS：A COS bucket address&lt;/li&gt;&lt;li&gt; URL：A URL&lt;/li&gt;&lt;li&gt; AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. &lt;/li&gt;.",
+																						Description: "The input type. Valid values:  COS：A COS bucket address  URL：A URL  AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. .",
 																					},
 																					"cos_input_info": {
 																						Type:        schema.TypeList,
@@ -1260,22 +1260,22 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Watermark type. Valid values:&lt;li&gt;image: image watermark.&lt;/li&gt;.",
+																			Description: "Watermark type. Valid values: image: image watermark.",
 																		},
 																		"coordinate_origin": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Origin position, which currently can only be:&lt;li&gt;TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.&lt;/li&gt;Default value: TopLeft.",
+																			Description: "Origin position, which currently can only be: TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.Default value: TopLeft.",
 																		},
 																		"x_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width; If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.Default value: 0 px.",
 																		},
 																		"y_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height; If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.Default value: 0 px.",
 																		},
 																		"image_template": {
 																			Type:        schema.TypeList,
@@ -1294,7 +1294,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																								"type": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																									Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																								},
 																								"cos_input_info": {
 																									Type:        schema.TypeList,
@@ -1377,17 +1377,17 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark width. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.&lt;/li&gt;Default value: 10%.",
+																						Description: "Watermark width. % and px formats are supported: If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width; If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.Default value: 10%.",
 																					},
 																					"height": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark height. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.&lt;/li&gt;Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
+																						Description: "Watermark height. % and px formats are supported: If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height; If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
 																					},
 																					"repeat_type": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Repeat type of an animated watermark. Valid values:&lt;li&gt;`once`: no longer appears after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat_last_frame`: stays on the last frame after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat` (default): repeats the playback until the video ends.&lt;/li&gt;.",
+																						Description: "Repeat type of an animated watermark. Valid values: `once`: no longer appears after watermark playback ends. `repeat_last_frame`: stays on the last frame after watermark playback ends. `repeat` (default): repeats the playback until the video ends.",
 																					},
 																				},
 																			},
@@ -1408,12 +1408,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"start_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.&lt;/li&gt;.",
+																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame; If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.",
 															},
 															"end_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "End time offset of a watermark in seconds.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will exist till second n;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.&lt;/li&gt;.",
+																Description: "End time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame; If this value is greater than 0 (e.g., n), the watermark will exist till second n; If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.",
 															},
 														},
 													},
@@ -1427,37 +1427,37 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"coordinate_origin": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Origin position, which currently can only be:&lt;li&gt;TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the blur is in the top-left corner of the image or text.&lt;/li&gt;Default value: TopLeft.",
+																Description: "Origin position, which currently can only be: TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the blur is in the top-left corner of the image or text.Default value: TopLeft.",
 															},
 															"x_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The horizontal position of the origin of the blur relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `XPos` of the blur will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `XPos` of the blur will be the specified px; for example, `100px` means that `XPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																Description: "The horizontal position of the origin of the blur relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `XPos` of the blur will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width; If the string ends in px, the `XPos` of the blur will be the specified px; for example, `100px` means that `XPos` is 100 px.Default value: 0 px.",
 															},
 															"y_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Vertical position of the origin of blur relative to the origin of coordinates of video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `YPos` of the blur will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `YPos` of the blur will be the specified px; for example, `100px` means that `YPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																Description: "Vertical position of the origin of blur relative to the origin of coordinates of video. % and px formats are supported: If the string ends in %, the `YPos` of the blur will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height; If the string ends in px, the `YPos` of the blur will be the specified px; for example, `100px` means that `YPos` is 100 px.Default value: 0 px.",
 															},
 															"width": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Blur width. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Width` of the blur will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Width` of the blur will be in px; for example, `100px` means that `Width` is 100 px.&lt;/li&gt;Default value: 10%.",
+																Description: "Blur width. % and px formats are supported: If the string ends in %, the `Width` of the blur will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width; If the string ends in px, the `Width` of the blur will be in px; for example, `100px` means that `Width` is 100 px.Default value: 10%.",
 															},
 															"height": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Blur height. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Height` of the blur will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Height` of the blur will be in px; for example, `100px` means that `Height` is 100 px.&lt;/li&gt;Default value: 10%.",
+																Description: "Blur height. % and px formats are supported: If the string ends in %, the `Height` of the blur will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height; If the string ends in px, the `Height` of the blur will be in px; for example, `100px` means that `Height` is 100 px.Default value: 10%.",
 															},
 															"start_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Start time offset of blur in seconds. If this parameter is left empty or 0 is entered, the blur will appear upon the first video frame.&lt;li&gt;If this parameter is left empty or 0 is entered, the blur will appear upon the first video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the blur will appear at second n after the first video frame;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the blur will appear at second n before the last video frame.&lt;/li&gt;.",
+																Description: "Start time offset of blur in seconds. If this parameter is left empty or 0 is entered, the blur will appear upon the first video frame. If this parameter is left empty or 0 is entered, the blur will appear upon the first video frame; If this value is greater than 0 (e.g., n), the blur will appear at second n after the first video frame; If this value is smaller than 0 (e.g., -n), the blur will appear at second n before the last video frame.",
 															},
 															"end_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "End time offset of blur in seconds.&lt;li&gt;If this parameter is left empty or 0 is entered, the blur will exist till the last video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the blur will exist till second n;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the blur will exist till second n before the last video frame.&lt;/li&gt;.",
+																Description: "End time offset of blur in seconds. If this parameter is left empty or 0 is entered, the blur will exist till the last video frame; If this value is greater than 0 (e.g., n), the blur will exist till second n; If this value is smaller than 0 (e.g., -n), the blur will exist till second n before the last video frame.",
 															},
 														},
 													},
@@ -1465,12 +1465,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "Start time offset of a transcoded video, in seconds.&lt;li&gt;If this parameter is left empty or set to 0, the transcoded video will start at the same time as the original video.&lt;/li&gt;&lt;li&gt;If this parameter is set to a positive number (n for example), the transcoded video will start at the nth second of the original video.&lt;/li&gt;&lt;li&gt;If this parameter is set to a negative number (-n for example), the transcoded video will start at the nth second before the end of the original video.&lt;/li&gt;.",
+													Description: "Start time offset of a transcoded video, in seconds. If this parameter is left empty or set to 0, the transcoded video will start at the same time as the original video. If this parameter is set to a positive number (n for example), the transcoded video will start at the nth second of the original video. If this parameter is set to a negative number (-n for example), the transcoded video will start at the nth second before the end of the original video.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "End time offset of a transcoded video, in seconds.&lt;li&gt;If this parameter is left empty or set to 0, the transcoded video will end at the same time as the original video.&lt;/li&gt;&lt;li&gt;If this parameter is set to a positive number (n for example), the transcoded video will end at the nth second of the original video.&lt;/li&gt;&lt;li&gt;If this parameter is set to a negative number (-n for example), the transcoded video will end at the nth second before the end of the original video.&lt;/li&gt;.",
+													Description: "End time offset of a transcoded video, in seconds. If this parameter is left empty or set to 0, the transcoded video will end at the same time as the original video. If this parameter is set to a positive number (n for example), the transcoded video will end at the nth second of the original video. If this parameter is set to a negative number (-n for example), the transcoded video will end at the nth second before the end of the original video.",
 												},
 												"output_storage": {
 													Type:        schema.TypeList,
@@ -1482,7 +1482,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -1593,7 +1593,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																			Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																		},
 																		"cos_input_info": {
 																			Type:        schema.TypeList,
@@ -1682,7 +1682,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																			Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																		},
 																		"cos_input_info": {
 																			Type:        schema.TypeList,
@@ -1800,7 +1800,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -1881,11 +1881,11 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
-													Description: "List of screenshot time points in the format of `s` or `%`:&lt;li&gt;If the string ends in `s`, it means that the time point is in seconds; for example, `3.5s` means that the time point is the 3.5th second;&lt;/li&gt;&lt;li&gt;If the string ends in `%`, it means that the time point is the specified percentage of the video duration; for example, `10%` means that the time point is 10% of the video duration.&lt;/li&gt;.",
+													Description: "List of screenshot time points in the format of `s` or `%`: If the string ends in `s`, it means that the time point is in seconds; for example, `3.5s` means that the time point is the 3.5th second; If the string ends in `%`, it means that the time point is the specified percentage of the video duration; for example, `10%` means that the time point is 10% of the video duration.",
 												},
 												"time_offset_set": {
 													Optional:    true,
-													Description: "List of time points of screenshots in &lt;font color=red&gt;seconds&lt;/font&gt;.",
+													Description: "List of time points of screenshots in seconds.",
 												},
 												"watermark_set": {
 													Type:        schema.TypeList,
@@ -1908,22 +1908,22 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Watermark type. Valid values:&lt;li&gt;image: image watermark.&lt;/li&gt;.",
+																			Description: "Watermark type. Valid values: image: image watermark.",
 																		},
 																		"coordinate_origin": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Origin position, which currently can only be:&lt;li&gt;TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.&lt;/li&gt;Default value: TopLeft.",
+																			Description: "Origin position, which currently can only be: TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.Default value: TopLeft.",
 																		},
 																		"x_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width; If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.Default value: 0 px.",
 																		},
 																		"y_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height; If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.Default value: 0 px.",
 																		},
 																		"image_template": {
 																			Type:        schema.TypeList,
@@ -1942,7 +1942,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																								"type": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																									Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																								},
 																								"cos_input_info": {
 																									Type:        schema.TypeList,
@@ -2025,17 +2025,17 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark width. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.&lt;/li&gt;Default value: 10%.",
+																						Description: "Watermark width. % and px formats are supported: If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width; If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.Default value: 10%.",
 																					},
 																					"height": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark height. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.&lt;/li&gt;Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
+																						Description: "Watermark height. % and px formats are supported: If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height; If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
 																					},
 																					"repeat_type": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Repeat type of an animated watermark. Valid values:&lt;li&gt;`once`: no longer appears after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat_last_frame`: stays on the last frame after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat` (default): repeats the playback until the video ends.&lt;/li&gt;.",
+																						Description: "Repeat type of an animated watermark. Valid values: `once`: no longer appears after watermark playback ends. `repeat_last_frame`: stays on the last frame after watermark playback ends. `repeat` (default): repeats the playback until the video ends.",
 																					},
 																				},
 																			},
@@ -2056,12 +2056,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"start_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.&lt;/li&gt;.",
+																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame; If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.",
 															},
 															"end_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "End time offset of a watermark in seconds.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will exist till second n;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.&lt;/li&gt;.",
+																Description: "End time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame; If this value is greater than 0 (e.g., n), the watermark will exist till second n; If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.",
 															},
 														},
 													},
@@ -2076,7 +2076,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -2202,22 +2202,22 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Watermark type. Valid values:&lt;li&gt;image: image watermark.&lt;/li&gt;.",
+																			Description: "Watermark type. Valid values: image: image watermark.",
 																		},
 																		"coordinate_origin": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Origin position, which currently can only be:&lt;li&gt;TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.&lt;/li&gt;Default value: TopLeft.",
+																			Description: "Origin position, which currently can only be: TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.Default value: TopLeft.",
 																		},
 																		"x_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width; If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.Default value: 0 px.",
 																		},
 																		"y_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height; If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.Default value: 0 px.",
 																		},
 																		"image_template": {
 																			Type:        schema.TypeList,
@@ -2236,7 +2236,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																								"type": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																									Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																								},
 																								"cos_input_info": {
 																									Type:        schema.TypeList,
@@ -2319,17 +2319,17 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark width. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.&lt;/li&gt;Default value: 10%.",
+																						Description: "Watermark width. % and px formats are supported: If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width; If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.Default value: 10%.",
 																					},
 																					"height": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark height. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.&lt;/li&gt;Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
+																						Description: "Watermark height. % and px formats are supported: If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height; If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
 																					},
 																					"repeat_type": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Repeat type of an animated watermark. Valid values:&lt;li&gt;`once`: no longer appears after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat_last_frame`: stays on the last frame after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat` (default): repeats the playback until the video ends.&lt;/li&gt;.",
+																						Description: "Repeat type of an animated watermark. Valid values: `once`: no longer appears after watermark playback ends. `repeat_last_frame`: stays on the last frame after watermark playback ends. `repeat` (default): repeats the playback until the video ends.",
 																					},
 																				},
 																			},
@@ -2350,12 +2350,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"start_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.&lt;/li&gt;.",
+																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame; If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.",
 															},
 															"end_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "End time offset of a watermark in seconds.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will exist till second n;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.&lt;/li&gt;.",
+																Description: "End time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame; If this value is greater than 0 (e.g., n), the watermark will exist till second n; If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.",
 															},
 														},
 													},
@@ -2370,7 +2370,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -2485,7 +2485,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -2616,22 +2616,22 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "Watermark type. Valid values:&lt;li&gt;image: image watermark.&lt;/li&gt;.",
+																			Description: "Watermark type. Valid values: image: image watermark.",
 																		},
 																		"coordinate_origin": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Origin position, which currently can only be:&lt;li&gt;TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.&lt;/li&gt;Default value: TopLeft.",
+																			Description: "Origin position, which currently can only be: TopLeft: the origin of coordinates is in the top-left corner of the video, and the origin of the watermark is in the top-left corner of the image or text.Default value: TopLeft.",
 																		},
 																		"x_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The horizontal position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `XPos` of the watermark will be the specified percentage of the video width; for example, `10%` means that `XPos` is 10% of the video width; If the string ends in px, the `XPos` of the watermark will be the specified px; for example, `100px` means that `XPos` is 100 px.Default value: 0 px.",
 																		},
 																		"y_pos": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported:&lt;li&gt;If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.&lt;/li&gt;Default value: 0 px.",
+																			Description: "The vertical position of the origin of the watermark relative to the origin of coordinates of the video. % and px formats are supported: If the string ends in %, the `YPos` of the watermark will be the specified percentage of the video height; for example, `10%` means that `YPos` is 10% of the video height; If the string ends in px, the `YPos` of the watermark will be the specified px; for example, `100px` means that `YPos` is 100 px.Default value: 0 px.",
 																		},
 																		"image_template": {
 																			Type:        schema.TypeList,
@@ -2650,7 +2650,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																								"type": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "The input type. Valid values:&lt;li&gt;`COS`: A COS bucket address.&lt;/li&gt;&lt;li&gt; `URL`: A URL.&lt;/li&gt;&lt;li&gt; `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.&lt;/li&gt;.",
+																									Description: "The input type. Valid values: `COS`: A COS bucket address.  `URL`: A URL.  `AWS-S3`: An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																								},
 																								"cos_input_info": {
 																									Type:        schema.TypeList,
@@ -2733,17 +2733,17 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark width. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.&lt;/li&gt;Default value: 10%.",
+																						Description: "Watermark width. % and px formats are supported: If the string ends in %, the `Width` of the watermark will be the specified percentage of the video width; for example, `10%` means that `Width` is 10% of the video width; If the string ends in px, the `Width` of the watermark will be in px; for example, `100px` means that `Width` is 100 px.Default value: 10%.",
 																					},
 																					"height": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Watermark height. % and px formats are supported:&lt;li&gt;If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height;&lt;/li&gt;&lt;li&gt;If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.&lt;/li&gt;Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
+																						Description: "Watermark height. % and px formats are supported: If the string ends in %, the `Height` of the watermark will be the specified percentage of the video height; for example, `10%` means that `Height` is 10% of the video height; If the string ends in px, the `Height` of the watermark will be in px; for example, `100px` means that `Height` is 100 px.Default value: 0 px, which means that `Height` will be proportionally scaled according to the aspect ratio of the original watermark image.",
 																					},
 																					"repeat_type": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: "Repeat type of an animated watermark. Valid values:&lt;li&gt;`once`: no longer appears after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat_last_frame`: stays on the last frame after watermark playback ends.&lt;/li&gt;&lt;li&gt;`repeat` (default): repeats the playback until the video ends.&lt;/li&gt;.",
+																						Description: "Repeat type of an animated watermark. Valid values: `once`: no longer appears after watermark playback ends. `repeat_last_frame`: stays on the last frame after watermark playback ends. `repeat` (default): repeats the playback until the video ends.",
 																					},
 																				},
 																			},
@@ -2764,12 +2764,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"start_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.&lt;/li&gt;.",
+																Description: "Start time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame. If this parameter is left empty or 0 is entered, the watermark will appear upon the first video frame; If this value is greater than 0 (e.g., n), the watermark will appear at second n after the first video frame; If this value is smaller than 0 (e.g., -n), the watermark will appear at second n before the last video frame.",
 															},
 															"end_time_offset": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "End time offset of a watermark in seconds.&lt;li&gt;If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame;&lt;/li&gt;&lt;li&gt;If this value is greater than 0 (e.g., n), the watermark will exist till second n;&lt;/li&gt;&lt;li&gt;If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.&lt;/li&gt;.",
+																Description: "End time offset of a watermark in seconds. If this parameter is left empty or 0 is entered, the watermark will exist till the last video frame; If this value is greater than 0 (e.g., n), the watermark will exist till second n; If this value is smaller than 0 (e.g., -n), the watermark will exist till second n before the last video frame.",
 															},
 														},
 													},
@@ -2784,7 +2784,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+																Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 															},
 															"cos_output_storage": {
 																Type:        schema.TypeList,
@@ -2863,7 +2863,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The inserting type. Valid values：&lt;li&gt;subtitle-stream：Insert title track&lt;/li&gt;&lt;li&gt;close-caption-708：CEA-708 subtitle encode to SEI frame&lt;/li&gt;&lt;li&gt;close-caption-608：CEA-608 subtitle encode to SEI frame&lt;/li&gt;Note: This field may return null, indicating that no valid value can be obtained.",
+																Description: "The inserting type. Valid values： subtitle-stream：Insert title track close-caption-708：CEA-708 subtitle encode to SEI frame close-caption-608：CEA-608 subtitle encode to SEI frameNote: This field may return null, indicating that no valid value can be obtained.",
 															},
 															"subtitle": {
 																Type:        schema.TypeList,
@@ -2875,7 +2875,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The input type. Valid values:&lt;li&gt; COS：A COS bucket address&lt;/li&gt;&lt;li&gt; URL：A URL&lt;/li&gt;&lt;li&gt; AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. &lt;/li&gt;.",
+																			Description: "The input type. Valid values:  COS：A COS bucket address  URL：A URL  AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. .",
 																		},
 																		"cos_input_info": {
 																			Type:        schema.TypeList,
@@ -3028,7 +3028,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The storage type for a media processing output file. Valid values:&lt;li&gt;`COS`: Tencent Cloud COS&lt;/li&gt;&lt;li&gt;`&gt;AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.&lt;/li&gt;.",
+							Description: "The storage type for a media processing output file. Valid values: `COS`: Tencent Cloud COS `AWS-S3`: AWS S3. This type is only supported for AWS tasks, and the output bucket must be in the same region as the bucket of the source file.",
 						},
 						"cos_output_storage": {
 							Type:        schema.TypeList,
@@ -3125,26 +3125,26 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 						"notify_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The notification type. Valid values:&lt;li&gt;`CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead.&lt;/li&gt;&lt;li&gt;`TDMQ-CMQ`: Message queue&lt;/li&gt;&lt;li&gt;`URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API.&lt;/li&gt;&lt;li&gt;`SCF`: This notification type is not recommended. You need to configure it in the SCF console.&lt;/li&gt;&lt;li&gt;`AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.&lt;/li&gt;&lt;font color=red&gt;Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.&lt;/font&gt;.",
+							Description: "The notification type. Valid values: `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead. `TDMQ-CMQ`: Message queue `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API. `SCF`: This notification type is not recommended. You need to configure it in the SCF console. `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly..",
 						},
 						"notify_url": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "HTTP callback URL, required if `NotifyType` is set to `URL`.",
 						},
-						"aws_s_q_s": {
+						"aws_sqs": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
 							Description: "The AWS SQS queue. This parameter is required if `NotifyType` is `AWS-SQS`.Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"s_q_s_region": {
+									"sqs_region": {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "The region of the SQS queue.",
 									},
-									"s_q_s_queue_name": {
+									"sqs_queue_name": {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "The name of the SQS queue.",
@@ -3237,12 +3237,12 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 			if v, ok := awsS3FileUploadTriggerMap["s3_secret_key"]; ok {
 				awsS3FileUploadTrigger.S3SecretKey = helper.String(v.(string))
 			}
-			if awsSQSMap, ok := helper.InterfaceToMap(awsS3FileUploadTriggerMap, "aws_s_q_s"); ok {
+			if awsSQSMap, ok := helper.InterfaceToMap(awsS3FileUploadTriggerMap, "aws_sqs"); ok {
 				awsSQS := mps.AwsSQS{}
-				if v, ok := awsSQSMap["s_q_s_region"]; ok {
+				if v, ok := awsSQSMap["sqs_region"]; ok {
 					awsSQS.SQSRegion = helper.String(v.(string))
 				}
-				if v, ok := awsSQSMap["s_q_s_queue_name"]; ok {
+				if v, ok := awsSQSMap["sqs_queue_name"]; ok {
 					awsSQS.SQSQueueName = helper.String(v.(string))
 				}
 				if v, ok := awsSQSMap["s3_secret_id"]; ok {
@@ -4577,12 +4577,12 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 		if v, ok := dMap["notify_url"]; ok {
 			taskNotifyConfig.NotifyUrl = helper.String(v.(string))
 		}
-		if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_s_q_s"); ok {
+		if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_sqs"); ok {
 			awsSQS := mps.AwsSQS{}
-			if v, ok := awsSQSMap["s_q_s_region"]; ok {
+			if v, ok := awsSQSMap["sqs_region"]; ok {
 				awsSQS.SQSRegion = helper.String(v.(string))
 			}
-			if v, ok := awsSQSMap["s_q_s_queue_name"]; ok {
+			if v, ok := awsSQSMap["sqs_queue_name"]; ok {
 				awsSQS.SQSQueueName = helper.String(v.(string))
 			}
 			if v, ok := awsSQSMap["s3_secret_id"]; ok {
@@ -4704,11 +4704,11 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 				awsSQSMap := map[string]interface{}{}
 
 				if schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSRegion != nil {
-					awsSQSMap["s_q_s_region"] = schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSRegion
+					awsSQSMap["sqs_region"] = schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSRegion
 				}
 
 				if schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSQueueName != nil {
-					awsSQSMap["s_q_s_queue_name"] = schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSQueueName
+					awsSQSMap["sqs_queue_name"] = schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.SQSQueueName
 				}
 
 				if schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.S3SecretId != nil {
@@ -4719,7 +4719,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 					awsSQSMap["s3_secret_key"] = schedule.Trigger.AwsS3FileUploadTrigger.AwsSQS.S3SecretKey
 				}
 
-				awsS3FileUploadTriggerMap["aws_s_q_s"] = []interface{}{awsSQSMap}
+				awsS3FileUploadTriggerMap["aws_sqs"] = []interface{}{awsSQSMap}
 			}
 
 			triggerMap["aws_s3_file_upload_trigger"] = []interface{}{awsS3FileUploadTriggerMap}
@@ -6545,11 +6545,11 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 			awsSQSMap := map[string]interface{}{}
 
 			if schedule.TaskNotifyConfig.AwsSQS.SQSRegion != nil {
-				awsSQSMap["s_q_s_region"] = schedule.TaskNotifyConfig.AwsSQS.SQSRegion
+				awsSQSMap["sqs_region"] = schedule.TaskNotifyConfig.AwsSQS.SQSRegion
 			}
 
 			if schedule.TaskNotifyConfig.AwsSQS.SQSQueueName != nil {
-				awsSQSMap["s_q_s_queue_name"] = schedule.TaskNotifyConfig.AwsSQS.SQSQueueName
+				awsSQSMap["sqs_queue_name"] = schedule.TaskNotifyConfig.AwsSQS.SQSQueueName
 			}
 
 			if schedule.TaskNotifyConfig.AwsSQS.S3SecretId != nil {
@@ -6560,7 +6560,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 				awsSQSMap["s3_secret_key"] = schedule.TaskNotifyConfig.AwsSQS.S3SecretKey
 			}
 
-			taskNotifyConfigMap["aws_s_q_s"] = []interface{}{awsSQSMap}
+			taskNotifyConfigMap["aws_sqs"] = []interface{}{awsSQSMap}
 		}
 
 		_ = d.Set("task_notify_config", []interface{}{taskNotifyConfigMap})
@@ -6649,12 +6649,12 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 				if v, ok := awsS3FileUploadTriggerMap["s3_secret_key"]; ok {
 					awsS3FileUploadTrigger.S3SecretKey = helper.String(v.(string))
 				}
-				if awsSQSMap, ok := helper.InterfaceToMap(awsS3FileUploadTriggerMap, "aws_s_q_s"); ok {
+				if awsSQSMap, ok := helper.InterfaceToMap(awsS3FileUploadTriggerMap, "aws_sqs"); ok {
 					awsSQS := mps.AwsSQS{}
-					if v, ok := awsSQSMap["s_q_s_region"]; ok {
+					if v, ok := awsSQSMap["sqs_region"]; ok {
 						awsSQS.SQSRegion = helper.String(v.(string))
 					}
-					if v, ok := awsSQSMap["s_q_s_queue_name"]; ok {
+					if v, ok := awsSQSMap["sqs_queue_name"]; ok {
 						awsSQS.SQSQueueName = helper.String(v.(string))
 					}
 					if v, ok := awsSQSMap["s3_secret_id"]; ok {
@@ -7997,12 +7997,12 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["notify_url"]; ok {
 				taskNotifyConfig.NotifyUrl = helper.String(v.(string))
 			}
-			if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_s_q_s"); ok {
+			if awsSQSMap, ok := helper.InterfaceToMap(dMap, "aws_sqs"); ok {
 				awsSQS := mps.AwsSQS{}
-				if v, ok := awsSQSMap["s_q_s_region"]; ok {
+				if v, ok := awsSQSMap["sqs_region"]; ok {
 					awsSQS.SQSRegion = helper.String(v.(string))
 				}
-				if v, ok := awsSQSMap["s_q_s_queue_name"]; ok {
+				if v, ok := awsSQSMap["sqs_queue_name"]; ok {
 					awsSQS.SQSQueueName = helper.String(v.(string))
 				}
 				if v, ok := awsSQSMap["s3_secret_id"]; ok {
