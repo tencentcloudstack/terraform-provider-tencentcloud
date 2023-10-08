@@ -28,7 +28,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslCompleteCertificate() *schema.Resource {
+func resourceTencentCloudSslCompleteCertificateOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslCompleteCertificateCreate,
 		Read:   resourceTencentCloudSslCompleteCertificateRead,

@@ -30,7 +30,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslReplaceCertificate() *schema.Resource {
+func resourceTencentCloudSslReplaceCertificateOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslReplaceCertificateCreate,
 		Read:   resourceTencentCloudSslReplaceCertificateRead,

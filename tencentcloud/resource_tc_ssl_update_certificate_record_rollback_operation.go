@@ -28,7 +28,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslUpdateCertificateRecordRollback() *schema.Resource {
+func resourceTencentCloudSslUpdateCertificateRecordRollbackOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslUpdateCertificateRecordRollbackCreate,
 		Read:   resourceTencentCloudSslUpdateCertificateRecordRollbackRead,
@@ -59,7 +59,7 @@ func resourceTencentCloudSslUpdateCertificateRecordRollbackCreate(d *schema.Reso
 		deployRecordId int64
 	)
 	if v, _ := d.GetOk("deploy_record_id"); v != nil {
-		request.DeployRecordId = helper.IntInt64(v.(int))
+		request.DeployRecordId = helper.StrToInt64Point(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

@@ -28,7 +28,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslUpdateCertificateRecordRetry() *schema.Resource {
+func resourceTencentCloudSslUpdateCertificateRecordRetryOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslUpdateCertificateRecordRetryCreate,
 		Read:   resourceTencentCloudSslUpdateCertificateRecordRetryRead,

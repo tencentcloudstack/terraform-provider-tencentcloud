@@ -28,7 +28,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslDeployCertificateRecordRollback() *schema.Resource {
+func resourceTencentCloudSslDeployCertificateRecordRollbackOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslDeployCertificateRecordRollbackCreate,
 		Read:   resourceTencentCloudSslDeployCertificateRecordRollbackRead,

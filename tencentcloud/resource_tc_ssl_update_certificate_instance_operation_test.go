@@ -17,9 +17,9 @@ func TestAccTencentCloudSslUpdateCertificateInstanceResource_basic(t *testing.T)
 			{
 				Config: testAccSslUpdateCertificateInstance,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "certificate_id", "8x1eUSSl"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "old_certificate_id", "8xNdi2ig"),
-					resource.TestCheckResourceAttr("\"tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "resource_types.0", "cdn"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "certificate_id", "7REHyHM1"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "old_certificate_id", "9D3qRt7r"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_update_certificate_instance.update_certificate_instance", "resource_types.0", "cdn"),
 				),
 			},
 		},
@@ -29,8 +29,8 @@ func TestAccTencentCloudSslUpdateCertificateInstanceResource_basic(t *testing.T)
 const testAccSslUpdateCertificateInstance = `
 
 resource "tencentcloud_ssl_update_certificate_instance" "update_certificate_instance" {
-  certificate_id = "8x1eUSSl"
-  old_certificate_id = "8xNdi2ig"
+  certificate_id = "7REHyHM1"
+  old_certificate_id = "9D3qRt7r"
   resource_types = ["cdn"]
 }
 `

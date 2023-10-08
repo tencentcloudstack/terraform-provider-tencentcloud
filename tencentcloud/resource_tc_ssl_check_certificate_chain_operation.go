@@ -30,7 +30,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslCheckCertificateChain() *schema.Resource {
+func resourceTencentCloudSslCheckCertificateChainOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslCheckCertificateChainCreate,
 		Read:   resourceTencentCloudSslCheckCertificateChainRead,

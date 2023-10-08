@@ -17,7 +17,7 @@ func TestAccTencentCloudSslRevokeCertificateResource_basic(t *testing.T) {
 			{
 				Config: testAccSslRevokeCertificate,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_revoke_certificate.revoke_certificate", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_revoke_certificate.revoke_certificate", "certificate_id", "8xRYdDlc"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_revoke_certificate.revoke_certificate", "certificate_id", "8hUkH3xC"),
 				),
 			},
 		},
@@ -27,7 +27,7 @@ func TestAccTencentCloudSslRevokeCertificateResource_basic(t *testing.T) {
 const testAccSslRevokeCertificate = `
 
 resource "tencentcloud_ssl_revoke_certificate" "revoke_certificate" {
-  certificate_id = "8xRYdDlc"
+  certificate_id = "8hUkH3xC"
 }
 
 `

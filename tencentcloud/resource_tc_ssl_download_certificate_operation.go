@@ -31,7 +31,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslDownloadCertificate() *schema.Resource {
+func resourceTencentCloudSslDownloadCertificateOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslDownloadCertificateCreate,
 		Read:   resourceTencentCloudSslDownloadCertificateRead,

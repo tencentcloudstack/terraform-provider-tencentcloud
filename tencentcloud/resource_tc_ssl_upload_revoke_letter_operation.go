@@ -29,7 +29,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslUploadRevokeLetter() *schema.Resource {
+func resourceTencentCloudSslUploadRevokeLetterOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslUploadRevokeLetterCreate,
 		Read:   resourceTencentCloudSslUploadRevokeLetterRead,

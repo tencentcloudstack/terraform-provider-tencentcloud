@@ -29,7 +29,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSslRevokeCertificate() *schema.Resource {
+func resourceTencentCloudSslRevokeCertificateOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSslRevokeCertificateCreate,
 		Read:   resourceTencentCloudSslRevokeCertificateRead,

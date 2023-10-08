@@ -241,7 +241,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 			}
 
 			if updateRecordDetails.List != nil {
-				listList := []interface{}{}
+				var listList []interface{}
 				for _, list := range updateRecordDetails.List {
 					listMap := map[string]interface{}{}
 
@@ -336,7 +336,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 					listList = append(listList, listMap)
 				}
 
-				updateRecordDetailsMap["list"] = []interface{}{listList}
+				updateRecordDetailsMap["list"] = listList
 			}
 
 			if updateRecordDetails.TotalCount != nil {

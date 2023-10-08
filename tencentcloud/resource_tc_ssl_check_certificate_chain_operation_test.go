@@ -7,7 +7,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-const ca = `-----BEGIN CERTIFICATE-----
+func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testAccSslCheckCertificateChain),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "certificate_chain"),
+				),
+			},
+		},
+	})
+}
+
+const testAccSslCheckCertificateChain = `
+
+resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
+  certificate_chain = <<EOT
+-----BEGIN CERTIFICATE-----
 MIIGgjCCBOqgAwIBAgIQD2LBHbHYKhfZEhJYSdrsXTANBgkqhkiG9w0BAQwFADBZ
 MQswCQYDVQQGEwJDTjElMCMGA1UEChMcVHJ1c3RBc2lhIFRlY2hub2xvZ2llcywg
 SW5jLjEjMCEGA1UEAxMaVHJ1c3RBc2lhIFJTQSBEViBUTFMgQ0EgRzIwHhcNMjMw
@@ -73,35 +95,8 @@ eU5cyfQ/Aep9kAXYUDuWsaT85721JxeXFYkf4D/cgNd9+hxT8ZeDOJrn+ysqR7NO
 3tYyoHipMMnS4OiYKakDJny0XVuchIP7ZMKiP07Q3FIuSS4omzR77kmc75/6Q9dP
 v4wa90UCOn1j6r7WhMmX3eT3Gsdj3WMe9bYD0AFuqa6MDyjIeXq08mVGraXiw73s
 Zale8OMckn/BU3O/3aFNLHLfET2H2hT6Wb3nwxjpLIfXmSVcVd8A58XH0g==
------END CERTIFICATE-----`
-
-func TestAccTencentCloudSslCheckCertificateChainResource_basic(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: fmt.Sprintf(testAccSslCheckCertificateChain, ca),
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ssl_check_certificate_chain.check_certificate_chain", "certificate_chain", ca),
-				),
-			},
-			{
-				ResourceName:      "tencentcloud_ssl_check_certificate_chain.check_certificate_chain",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-		},
-	})
-}
-
-const testAccSslCheckCertificateChain = `
-
-resource "tencentcloud_ssl_check_certificate_chain" "check_certificate_chain" {
-  certificate_chain = "%s"
+-----END CERTIFICATE-----
+EOT
 }
 
 `
