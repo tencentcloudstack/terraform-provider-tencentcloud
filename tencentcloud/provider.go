@@ -890,12 +890,17 @@ Secrets Manager(SSM)
 	tencentcloud_ssm_products
     tencentcloud_ssm_secrets
     tencentcloud_ssm_secret_versions
+    tencentcloud_ssm_rotation_detail
+    tencentcloud_ssm_rotation_history
+    tencentcloud_ssm_service_status
+    tencentcloud_ssm_ssh_key_pair_value
 
   Resource
     tencentcloud_ssm_secret
     tencentcloud_ssm_secret_version
 	tencentcloud_ssm_product_secret
 	tencentcloud_ssm_ssh_key_pair_secret
+	tencentcloud_ssm_rotate_product_secret
 
 TcaplusDB
   Data Source
@@ -2154,6 +2159,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),
+			"tencentcloud_ssm_rotation_detail":                       dataSourceTencentCloudSsmRotationDetail(),
+			"tencentcloud_ssm_rotation_history":                      dataSourceTencentCloudSsmRotationHistory(),
+			"tencentcloud_ssm_service_status":                        dataSourceTencentCloudSsmServiceStatus(),
+			"tencentcloud_ssm_ssh_key_pair_value":                    dataSourceTencentCloudSsmSshKeyPairValue(),
 			"tencentcloud_cdh_instances":                             dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                  dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                  dataSourceTencentCloudTeoZoneAvailablePlans(),
@@ -2841,6 +2850,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
 			"tencentcloud_ssm_secret_version":                                  resourceTencentCloudSsmSecretVersion(),
+			"tencentcloud_ssm_rotate_product_secret":                           resourceTencentCloudSsmRotateProductSecret(),
 			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),

@@ -514,3 +514,145 @@ func (me *SsmService) DescribeSsmProductsByFilter(ctx context.Context) (products
 
 	return
 }
+
+func (me *SsmService) DescribeSsmRotationDetailByFilter(ctx context.Context, param map[string]interface{}) (rotationDetail *ssm.DescribeRotationDetailResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssm.NewDescribeRotationDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecretName" {
+			request.SecretName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().DescribeRotationDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	rotationDetail = response.Response
+	return
+}
+
+func (me *SsmService) DescribeSsmRotationHistoryByFilter(ctx context.Context, param map[string]interface{}) (rotationHistory []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssm.NewDescribeRotationHistoryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecretName" {
+			request.SecretName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().DescribeRotationHistory(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.VersionIDs) < 1 {
+		return
+	}
+
+	rotationHistory = response.Response.VersionIDs
+	return
+}
+
+func (me *SsmService) DescribeSsmServiceStatusByFilter(ctx context.Context) (ServiceStatus *ssm.GetServiceStatusResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssm.NewGetServiceStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().GetServiceStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	ServiceStatus = response.Response
+	return
+}
+
+func (me *SsmService) DescribeSsmSshKeyPairValueByFilter(ctx context.Context, param map[string]interface{}) (sshKeyPairValue *ssm.GetSSHKeyPairValueResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssm.NewGetSSHKeyPairValueRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecretName" {
+			request.SecretName = v.(*string)
+		}
+
+		if k == "SSHKeyId" {
+			request.SSHKeyId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().GetSSHKeyPairValue(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	sshKeyPairValue = response.Response
+	return
+}
