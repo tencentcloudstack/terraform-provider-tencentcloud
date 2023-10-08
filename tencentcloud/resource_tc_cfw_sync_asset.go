@@ -36,7 +36,7 @@ func resourceTencentCloudCfwSyncAssetCreate(d *schema.ResourceData, meta interfa
 	var (
 		logId         = getLogId(contextNil)
 		request       = cfw.NewModifyAssetSyncRequest()
-		statusRequest = cfw.NewDescribeFwSyncStatusRequest()
+		statusRequest = cfw.NewDescribeAssetSyncRequest()
 	)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -57,16 +57,16 @@ func resourceTencentCloudCfwSyncAssetCreate(d *schema.ResourceData, meta interfa
 
 	// wait
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().DescribeFwSyncStatus(statusRequest)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().DescribeAssetSync(statusRequest)
 		if e != nil {
 			return retryError(e)
 		}
 
-		if *result.Response.SyncStatus == 0 {
+		if *result.Response.Status == 2 {
 			return nil
 		}
 
-		return resource.RetryableError(fmt.Errorf("The fw sync status is %d.", *result.Response.SyncStatus))
+		return resource.RetryableError(fmt.Errorf("The fw sync asset status is %d.", *result.Response.Status))
 	})
 
 	if err != nil {
