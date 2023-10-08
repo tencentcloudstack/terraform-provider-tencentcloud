@@ -718,7 +718,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 
 	if v, ok := dMap["data_disk"]; ok {
 		dataDisks := v.([]interface{})
-		request.DataDisks = make([]*as.DataDisk, 0, len(dataDisks))
+		//request.DataDisks = make([]*as.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
 			diskType := value["disk_type"].(string)
@@ -773,7 +773,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	}
 	if v, ok := dMap["key_ids"]; ok {
 		keyIds := v.([]interface{})
-		request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
+		//request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
 		for i := range keyIds {
 			keyId := keyIds[i].(string)
 			request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
@@ -900,7 +900,7 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 
 	if v, ok := dMap["data_disk"]; ok {
 		dataDisks := v.([]interface{})
-		request.DataDisks = make([]*as.DataDisk, 0, len(dataDisks))
+		//request.DataDisks = make([]*as.DataDisk, 0, len(dataDisks))
 		for _, d := range dataDisks {
 			value := d.(map[string]interface{})
 			diskType := value["disk_type"].(string)
@@ -929,8 +929,6 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 			}
 			request.DataDisks = append(request.DataDisks, &dataDisk)
 		}
-	} else {
-		request.DataDisks = []*as.DataDisk{}
 	}
 
 	request.InternetAccessible = &as.InternetAccessible{}
