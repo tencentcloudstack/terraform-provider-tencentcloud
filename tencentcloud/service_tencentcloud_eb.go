@@ -529,3 +529,102 @@ func (me *EbService) DescribeEbEventRulesByFilter(ctx context.Context, param map
 
 	return
 }
+
+func (me *EbService) DescribeEbPlateformByFilter(ctx context.Context, param map[string]interface{}) (plateform []*eb.PlatformEventDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformEventNamesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProductType" {
+			request.ProductType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseEbClient().ListPlatformEventNames(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.EventNames) < 1 {
+		return
+	}
+
+	plateform = response.Response.EventNames
+
+	return
+}
+
+func (me *EbService) DescribeEbPlatformEventPatternsByFilter(ctx context.Context, param map[string]interface{}) (platformEventPatterns []*eb.PlatformEventSummary, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformEventPatternsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProductType" {
+			request.ProductType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseEbClient().ListPlatformEventPatterns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.EventPatterns) < 1 {
+		return
+	}
+
+	platformEventPatterns = response.Response.EventPatterns
+
+	return
+}
+
+func (me *EbService) DescribeEbPlatformProductsByFilter(ctx context.Context, param map[string]interface{}) (platformProducts []*eb.PlatformProduct, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformProductsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseEbClient().ListPlatformProducts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.PlatformProducts) < 1 {
+		return
+	}
+
+	platformProducts = response.Response.PlatformProducts
+
+	return
+}
