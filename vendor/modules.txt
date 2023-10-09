@@ -1147,7 +1147,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.699
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.760
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
