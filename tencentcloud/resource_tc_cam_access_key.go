@@ -5,10 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_access_key" "access_key" {
-  target_uin = &lt;nil&gt;
+  target_uin = 100033690181
 }
 ```
-
+Update
+```hcl
+resource "tencentcloud_cam_access_key" "access_key" {
+  target_uin = 100033690181
+  status = "Inactive"
+}
+```
 Import
 
 cam access_key can be imported using the id, e.g.
@@ -22,11 +28,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudCamAccessKey() *schema.Resource {
@@ -45,9 +53,21 @@ func resourceTencentCloudCamAccessKey() *schema.Resource {
 				Description: "Specify user Uin, if not filled, the access key is created for the current user by default.",
 			},
 			"access_key": {
+				Optional:    true,
 				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "Access_key is the access key identification.",
+				Type:        schema.TypeString,
+				Description: "Access_key is the access key identification, required when updating.",
+			},
+			"secret_access_key": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Access key (key is only visible when created, please keep it properly).",
+			},
+			"status": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Key status, activated (Active) or inactive (Inactive), required when updating.",
 			},
 		},
 	}
@@ -83,8 +103,11 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 		log.Printf("[CRITAL]%s create cam AccessKey failed, reason:%+v", logId, err)
 		return err
 	}
-
-	d.SetId(helper.Int64ToStr(targetUin))
+	if response == nil || response.Response == nil || response.Response.AccessKey == nil || response.Response.AccessKey.SecretAccessKey == nil {
+		return fmt.Errorf("CAM AccessKey id is nil")
+	}
+	d.SetId(helper.Int64ToStr(targetUin) + FILED_SP + *response.Response.AccessKey.AccessKeyId)
+	_ = d.Set("secret_access_key", response.Response.AccessKey.SecretAccessKey)
 
 	return resourceTencentCloudCamAccessKeyRead(d, meta)
 }
@@ -99,9 +122,14 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	uin := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	uin := idSplit[0]
+	accessKey := idSplit[1]
 
-	AccessKey, err := service.DescribeCamAccessKeyById(ctx, helper.StrToUInt64(uin))
+	AccessKey, err := service.DescribeCamAccessKeyById(ctx, helper.StrToUInt64(uin), accessKey)
 	if err != nil {
 		return err
 	}
@@ -115,6 +143,10 @@ func resourceTencentCloudCamAccessKeyRead(d *schema.ResourceData, meta interface
 	if AccessKey.AccessKeyId != nil {
 		_ = d.Set("access_key", AccessKey.AccessKeyId)
 	}
+	if AccessKey.Status != nil {
+		_ = d.Set("status", AccessKey.Status)
+	}
+	_ = d.Set("target_uin", helper.StrToUInt64(uin))
 
 	return nil
 }
@@ -127,21 +159,18 @@ func resourceTencentCloudCamAccessKeyUpdate(d *schema.ResourceData, meta interfa
 
 	request := cam.NewUpdateAccessKeyRequest()
 
-	accessKeyId := d.Id()
-
-	request.AccessKeyId = &accessKeyId
-
-	immutableArgs := []string{"target_uin"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
 	}
+	uin := idSplit[0]
+	accessKey := idSplit[1]
+	request.TargetUin = helper.StrToUint64Point(uin)
+	request.AccessKeyId = &accessKey
 
-	if d.HasChange("target_uin") {
-		if v, ok := d.GetOkExists("target_uin"); ok {
-			request.TargetUin = helper.IntUint64(v.(int))
+	if d.HasChange("status") {
+		if v, ok := d.GetOkExists("status"); ok {
+			request.Status = helper.String(v.(string))
 		}
 	}
 
@@ -170,9 +199,11 @@ func resourceTencentCloudCamAccessKeyDelete(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
-	accessKeyId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	uin := idSplit[0]
+	accessKey := idSplit[1]
 
-	if err := service.DeleteCamAccessKeyById(ctx, accessKeyId); err != nil {
+	if err := service.DeleteCamAccessKeyById(ctx, uin, accessKey); err != nil {
 		return err
 	}
 

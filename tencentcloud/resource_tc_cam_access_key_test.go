@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudCamAccessKeyResource_basic(t *testing.T) {
@@ -15,12 +16,22 @@ func TestAccTencentCloudCamAccessKeyResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCamAccessKey,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cam_access_key.access_key", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cam_access_key.access_key", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_access_key.access_key", "target_uin", "100033690181"),
+				),
 			},
 			{
-				ResourceName:      "tencentcloud_cam_access_key.access_key",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccCamAccessKeyUpdate,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cam_access_key.access_key", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_access_key.access_key", "target_uin", "100033690181"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_access_key.access_key", "status", "Inactive"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_cam_access_key.access_key",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"secret_access_key"},
 			},
 		},
 	})
@@ -29,7 +40,15 @@ func TestAccTencentCloudCamAccessKeyResource_basic(t *testing.T) {
 const testAccCamAccessKey = `
 
 resource "tencentcloud_cam_access_key" "access_key" {
-  target_uin = &lt;nil&gt;
+  target_uin = 100033690181
+}
+
+`
+const testAccCamAccessKeyUpdate = `
+
+resource "tencentcloud_cam_access_key" "access_key" {
+  target_uin = 100033690181
+  status = "Inactive"
 }
 
 `

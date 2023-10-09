@@ -1385,7 +1385,7 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (lo
 	return
 }
 
-func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin uint64) (AccessKey *cam.AccessKey, errRet error) {
+func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin uint64, accessKey string) (AccessKey *cam.AccessKey, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cam.NewListAccessKeysRequest()
@@ -1406,20 +1406,24 @@ func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin ui
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.AccessKeys) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.AccessKeys) < 1 {
 		return
 	}
 
-	AccessKey = response.Response.AccessKeys[0]
+	for _, v := range response.Response.AccessKeys {
+		if *v.AccessKeyId == accessKey {
+			AccessKey = v
+		}
+	}
 	return
 }
 
-func (me *CamService) DeleteCamAccessKeyById(ctx context.Context, accessKeyId string) (errRet error) {
+func (me *CamService) DeleteCamAccessKeyById(ctx context.Context, uin, accessKeyId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := cam.NewDeleteAccessKeyRequest()
 	request.AccessKeyId = &accessKeyId
-
+	request.TargetUin = helper.StrToUint64Point(uin)
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
