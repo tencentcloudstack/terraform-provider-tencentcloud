@@ -1659,6 +1659,7 @@ EventBridge(EB)
 	tencentcloud_eb_platform_event_names
 	tencentcloud_eb_platform_event_patterns
 	tencentcloud_eb_platform_products
+	tencentcloud_eb_plateform_event_template
 
   Resource
 	tencentcloud_eb_event_transform
@@ -2381,6 +2382,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_platform_event_names":                   dataSourceTencentCloudEbPlatformEventNames(),
 			"tencentcloud_eb_platform_event_patterns":                dataSourceTencentCloudEbPlatformEventPatterns(),
 			"tencentcloud_eb_platform_products":                      dataSourceTencentCloudEbPlatformProducts(),
+			"tencentcloud_eb_plateform_event_template":               dataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
