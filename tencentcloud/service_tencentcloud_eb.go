@@ -628,3 +628,38 @@ func (me *EbService) DescribeEbPlatformProductsByFilter(ctx context.Context, par
 
 	return
 }
+
+func (me *EbService) DescribeEbPlateformEventTemplateByFilter(ctx context.Context, param map[string]interface{}) (plateformEventTemplate *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewGetPlatformEventTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EventType" {
+			request.EventType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseEbClient().GetPlatformEventTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.EventTemplate == nil {
+		return
+	}
+
+	plateformEventTemplate = response.Response.EventTemplate
+
+	return
+}
