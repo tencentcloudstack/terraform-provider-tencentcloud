@@ -11,6 +11,7 @@ func TestAccTencentCloudEbPlatformEventPatternsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-chongqing")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
