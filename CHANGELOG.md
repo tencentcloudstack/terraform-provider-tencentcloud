@@ -1,3 +1,26 @@
+## 1.81.34 (October 9, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_eb_plateform_event_template` ([#2181](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2181))
+* **New Data Source:** `tencentcloud_eb_platform_event_names` ([#2180](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2180))
+* **New Data Source:** `tencentcloud_eb_platform_event_patterns` ([#2180](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2180))
+* **New Data Source:** `tencentcloud_eb_platform_products` ([#2180](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2180))
+* **New Data Source:** `tencentcloud_gaap_access_regions` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_access_regions_by_dest_region` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_black_header` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_country_area_mapping` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_custom_header` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_dest_regions` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_proxy_detail` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_proxy_group_statistics` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_proxy_groups` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_proxy_statistics` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Data Source:** `tencentcloud_gaap_real_servers_status` ([#2183](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2183))
+* **New Resource:** `tencentcloud_cam_user_permission_boundary_attachment` ([#2177](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2177))
+* **New Resource:** `tencentcloud_mps_enable_schedule_config` ([#2179](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2179))
+* **New Resource:** `tencentcloud_mps_schedule` ([#2179](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2179))
+
 ## 1.81.33 (October 8, 2023)
 
 FEATURES:
