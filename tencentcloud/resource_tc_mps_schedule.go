@@ -3,532 +3,143 @@ Provides a resource to create a mps schedule
 
 Example Usage
 
+Create a schedule through COS bucket
+
 ```hcl
-resource "tencentcloud_mps_schedule" "schedule" {
-  schedule_name = ""
-  trigger {
-		type = ""
-		cos_file_upload_trigger {
-			bucket = ""
-			region = ""
-			dir = ""
-			formats =
-		}
-		aws_s3_file_upload_trigger {
-			s3_bucket = ""
-			s3_region = ""
-			dir = ""
-			formats =
-			s3_secret_id = ""
-			s3_secret_key = ""
-			aws_sqs {
-				sqs_region = ""
-				sqs_queue_name = ""
-				s3_secret_id = ""
-				s3_secret_key = ""
-			}
-		}
-
-  }
-  activities {
-		activity_type = ""
-		reardrive_index =
-		activity_para {
-			transcode_task {
-				definition =
-				raw_parameter {
-					container = ""
-					remove_video =
-					remove_audio =
-					video_template {
-						codec = ""
-						fps =
-						bitrate =
-						resolution_adaptive = ""
-						width =
-						height =
-						gop =
-						fill_type = ""
-						vcrf =
-					}
-					audio_template {
-						codec = ""
-						bitrate =
-						sample_rate =
-						audio_channel =
-					}
-					t_e_h_d_config {
-						type = ""
-						max_video_bitrate =
-					}
-				}
-				override_parameter {
-					container = ""
-					remove_video =
-					remove_audio =
-					video_template {
-						codec = ""
-						fps =
-						bitrate =
-						resolution_adaptive = ""
-						width =
-						height =
-						gop =
-						fill_type = ""
-						vcrf =
-						content_adapt_stream =
-					}
-					audio_template {
-						codec = ""
-						bitrate =
-						sample_rate =
-						audio_channel =
-						stream_selects =
-					}
-					t_e_h_d_config {
-						type = ""
-						max_video_bitrate =
-					}
-					subtitle_template {
-						path = ""
-						stream_index =
-						font_type = ""
-						font_size = ""
-						font_color = ""
-						font_alpha =
-					}
-					addon_audio_stream {
-						type = ""
-						cos_input_info {
-							bucket = ""
-							region = ""
-							object = ""
-						}
-						url_input_info {
-							url = ""
-						}
-						s3_input_info {
-							s3_bucket = ""
-							s3_region = ""
-							s3_object = ""
-							s3_secret_id = ""
-							s3_secret_key = ""
-						}
-					}
-					std_ext_info = ""
-					add_on_subtitles {
-						type = ""
-						subtitle {
-							type = ""
-							cos_input_info {
-								bucket = ""
-								region = ""
-								object = ""
-							}
-							url_input_info {
-								url = ""
-							}
-							s3_input_info {
-								s3_bucket = ""
-								s3_region = ""
-								s3_object = ""
-								s3_secret_id = ""
-								s3_secret_key = ""
-							}
-						}
-					}
-				}
-				watermark_set {
-					definition =
-					raw_parameter {
-						type = ""
-						coordinate_origin = ""
-						x_pos = ""
-						y_pos = ""
-						image_template {
-							image_content {
-								type = ""
-								cos_input_info {
-									bucket = ""
-									region = ""
-									object = ""
-								}
-								url_input_info {
-									url = ""
-								}
-								s3_input_info {
-									s3_bucket = ""
-									s3_region = ""
-									s3_object = ""
-									s3_secret_id = ""
-									s3_secret_key = ""
-								}
-							}
-							width = ""
-							height = ""
-							repeat_type = ""
-						}
-					}
-					text_content = ""
-					svg_content = ""
-					start_time_offset =
-					end_time_offset =
-				}
-				mosaic_set {
-					coordinate_origin = ""
-					x_pos = ""
-					y_pos = ""
-					width = ""
-					height = ""
-					start_time_offset =
-					end_time_offset =
-				}
-				start_time_offset =
-				end_time_offset =
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-				segment_object_name = ""
-				object_number_format {
-					initial_value =
-					increment =
-					min_length =
-					place_holder = ""
-				}
-				head_tail_parameter {
-					head_set {
-						type = ""
-						cos_input_info {
-							bucket = ""
-							region = ""
-							object = ""
-						}
-						url_input_info {
-							url = ""
-						}
-						s3_input_info {
-							s3_bucket = ""
-							s3_region = ""
-							s3_object = ""
-							s3_secret_id = ""
-							s3_secret_key = ""
-						}
-					}
-					tail_set {
-						type = ""
-						cos_input_info {
-							bucket = ""
-							region = ""
-							object = ""
-						}
-						url_input_info {
-							url = ""
-						}
-						s3_input_info {
-							s3_bucket = ""
-							s3_region = ""
-							s3_object = ""
-							s3_secret_id = ""
-							s3_secret_key = ""
-						}
-					}
-				}
-			}
-			animated_graphic_task {
-				definition =
-				start_time_offset =
-				end_time_offset =
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-			}
-			snapshot_by_time_offset_task {
-				definition =
-				ext_time_offset_set =
-				time_offset_set =
-				watermark_set {
-					definition =
-					raw_parameter {
-						type = ""
-						coordinate_origin = ""
-						x_pos = ""
-						y_pos = ""
-						image_template {
-							image_content {
-								type = ""
-								cos_input_info {
-									bucket = ""
-									region = ""
-									object = ""
-								}
-								url_input_info {
-									url = ""
-								}
-								s3_input_info {
-									s3_bucket = ""
-									s3_region = ""
-									s3_object = ""
-									s3_secret_id = ""
-									s3_secret_key = ""
-								}
-							}
-							width = ""
-							height = ""
-							repeat_type = ""
-						}
-					}
-					text_content = ""
-					svg_content = ""
-					start_time_offset =
-					end_time_offset =
-				}
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-				object_number_format {
-					initial_value =
-					increment =
-					min_length =
-					place_holder = ""
-				}
-			}
-			sample_snapshot_task {
-				definition =
-				watermark_set {
-					definition =
-					raw_parameter {
-						type = ""
-						coordinate_origin = ""
-						x_pos = ""
-						y_pos = ""
-						image_template {
-							image_content {
-								type = ""
-								cos_input_info {
-									bucket = ""
-									region = ""
-									object = ""
-								}
-								url_input_info {
-									url = ""
-								}
-								s3_input_info {
-									s3_bucket = ""
-									s3_region = ""
-									s3_object = ""
-									s3_secret_id = ""
-									s3_secret_key = ""
-								}
-							}
-							width = ""
-							height = ""
-							repeat_type = ""
-						}
-					}
-					text_content = ""
-					svg_content = ""
-					start_time_offset =
-					end_time_offset =
-				}
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-				object_number_format {
-					initial_value =
-					increment =
-					min_length =
-					place_holder = ""
-				}
-			}
-			image_sprite_task {
-				definition =
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-				web_vtt_object_name = ""
-				object_number_format {
-					initial_value =
-					increment =
-					min_length =
-					place_holder = ""
-				}
-			}
-			adaptive_dynamic_streaming_task {
-				definition =
-				watermark_set {
-					definition =
-					raw_parameter {
-						type = ""
-						coordinate_origin = ""
-						x_pos = ""
-						y_pos = ""
-						image_template {
-							image_content {
-								type = ""
-								cos_input_info {
-									bucket = ""
-									region = ""
-									object = ""
-								}
-								url_input_info {
-									url = ""
-								}
-								s3_input_info {
-									s3_bucket = ""
-									s3_region = ""
-									s3_object = ""
-									s3_secret_id = ""
-									s3_secret_key = ""
-								}
-							}
-							width = ""
-							height = ""
-							repeat_type = ""
-						}
-					}
-					text_content = ""
-					svg_content = ""
-					start_time_offset =
-					end_time_offset =
-				}
-				output_storage {
-					type = ""
-					cos_output_storage {
-						bucket = ""
-						region = ""
-					}
-					s3_output_storage {
-						s3_bucket = ""
-						s3_region = ""
-						s3_secret_id = ""
-						s3_secret_key = ""
-					}
-				}
-				output_object_path = ""
-				sub_stream_object_name = ""
-				segment_object_name = ""
-				add_on_subtitles {
-					type = ""
-					subtitle {
-						type = ""
-						cos_input_info {
-							bucket = ""
-							region = ""
-							object = ""
-						}
-						url_input_info {
-							url = ""
-						}
-						s3_input_info {
-							s3_bucket = ""
-							s3_region = ""
-							s3_object = ""
-							s3_secret_id = ""
-							s3_secret_key = ""
-						}
-					}
-				}
-			}
-			ai_content_review_task {
-				definition =
-			}
-			ai_analysis_task {
-				definition =
-				extended_parameter = ""
-			}
-			ai_recognition_task {
-				definition =
-			}
-		}
-
-  }
-  output_storage {
-		type = ""
-		cos_output_storage {
-			bucket = ""
-			region = ""
-		}
-		s3_output_storage {
-			s3_bucket = ""
-			s3_region = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
-  }
-  output_dir = ""
-  task_notify_config {
-		cmq_model = ""
-		cmq_region = ""
-		topic_name = ""
-		queue_name = ""
-		notify_mode = ""
-		notify_type = ""
-		notify_url = ""
-		aws_sqs {
-			sqs_region = ""
-			sqs_queue_name = ""
-			s3_secret_id = ""
-			s3_secret_key = ""
-		}
-
-  }
+data "tencentcloud_cos_bucket_object" "object" {
+  bucket = "keep-bucket-${local.app_id}"
+  key    = "/mps-test/test.mov"
 }
+
+resource "tencentcloud_cos_bucket" "output" {
+  bucket      = "tf-bucket-mps-schedule-output-${local.app_id}"
+  force_clean = true
+  acl         = "public-read"
+}
+
+resource "tencentcloud_mps_schedule" "schedule" {
+  schedule_name = "tf_test_mps_schedule_%d"
+
+  trigger {
+    type = "CosFileUpload"
+    cos_file_upload_trigger {
+      bucket  = data.tencentcloud_cos_bucket_object.object.bucket
+      region  = "%s"
+      dir     = "/upload/"
+      formats = ["flv", "mov"]
+    }
+  }
+
+  activities {
+    activity_type   = "input"
+    reardrive_index = [1, 2]
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [3]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [6, 7]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [4, 5]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [8]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [9]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type = "output"
+  }
+
+  output_storage {
+    type = "COS"
+    cos_output_storage {
+      bucket = tencentcloud_cos_bucket.output.bucket
+      region = "%s"
+    }
+  }
+
+  output_dir = "output/"
+}
+
 ```
 
 Import
@@ -543,7 +154,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -707,12 +317,14 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 								Type: schema.TypeInt,
 							},
 							Optional:    true,
+							Computed:    true,
 							Description: "The indexes of the subsequent actions. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"activity_para": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "The parameters of a subtask.Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -732,6 +344,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
+													Computed:    true,
 													Description: "Custom video transcoding parameter, which is valid if `Definition` is 0.This parameter is used in highly customized scenarios. We recommend you use `Definition` to specify the transcoding parameter preferably.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -754,6 +367,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Video stream configuration parameter. This field is required when `RemoveVideo` is 0.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -809,6 +423,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Audio stream configuration parameter. This field is required when `RemoveAudio` is 0.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -835,10 +450,11 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																	},
 																},
 															},
-															"t_e_h_d_config": {
+															"tehd_config": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "TESHD transcoding parameter.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -873,17 +489,20 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"remove_video": {
 																Type:        schema.TypeInt,
 																Optional:    true,
+																Computed:    true,
 																Description: "Whether to remove video data. Valid values: 0: retain 1: remove.",
 															},
 															"remove_audio": {
 																Type:        schema.TypeInt,
 																Optional:    true,
+																Computed:    true,
 																Description: "Whether to remove audio data. Valid values: 0: retain 1: remove.",
 															},
 															"video_template": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Video stream configuration parameter.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -895,11 +514,13 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"fps": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Video frame rate in Hz. Value range: [0, 100].If the value is 0, the frame rate will be the same as that of the source video.",
 																		},
 																		"bitrate": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Bitrate of a video stream in Kbps. Value range: 0 and [128, 35,000].If the value is 0, the bitrate of the video will be the same as that of the source video.",
 																		},
 																		"resolution_adaptive": {
@@ -910,16 +531,19 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"width": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Maximum value of the width (or long side) of a video stream in px. Value range: 0 and [128, 4,096]. If both `Width` and `Height` are 0, the resolution will be the same as that of the source video; If `Width` is 0, but `Height` is not 0, `Width` will be proportionally scaled; If `Width` is not 0, but `Height` is 0, `Height` will be proportionally scaled; If both `Width` and `Height` are not 0, the custom resolution will be used.",
 																		},
 																		"height": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Maximum value of the height (or short side) of a video stream in px. Value range: 0 and [128, 4,096].",
 																		},
 																		"gop": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Frame interval between I keyframes. Value range: 0 and [1,100000]. If this parameter is 0, the system will automatically set the GOP length.",
 																		},
 																		"fill_type": {
@@ -930,6 +554,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"vcrf": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "The control factor of video constant bitrate. Value range: [0, 51]. This parameter will be disabled if you enter `0`.It is not recommended to specify this parameter if there are no special requirements.",
 																		},
 																		"content_adapt_stream": {
@@ -944,6 +569,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Audio stream configuration parameter.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -955,16 +581,19 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"bitrate": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Audio stream bitrate in Kbps. Value range: 0 and [26, 256]. If the value is 0, the bitrate of the audio stream will be the same as that of the original audio.",
 																		},
 																		"sample_rate": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Audio stream sample rate. Valid values: 32,000 44,100 48,000In Hz.",
 																		},
 																		"audio_channel": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Audio channel system. Valid values: 1: Mono 2: Dual 6: StereoWhen the media is packaged in audio format (FLAC, OGG, MP3, M4A), the sound channel cannot be set to stereo.",
 																		},
 																		"stream_selects": {
@@ -978,10 +607,11 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																	},
 																},
 															},
-															"t_e_h_d_config": {
+															"tehd_config": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "TESHD transcoding parameter.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -993,6 +623,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"max_video_bitrate": {
 																			Type:        schema.TypeInt,
 																			Optional:    true,
+																			Computed:    true,
 																			Description: "Maximum bitrate. If this parameter is left empty, no modification will be made.",
 																		},
 																	},
@@ -1254,6 +885,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Custom watermark parameter, which is valid if `Definition` is 0.This parameter is used in highly customized scenarios. We recommend you use `Definition` to specify the watermark parameter preferably.Custom watermark parameter is not available for screenshot.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -1883,10 +1515,6 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 													Optional:    true,
 													Description: "List of screenshot time points in the format of `s` or `%`: If the string ends in `s`, it means that the time point is in seconds; for example, `3.5s` means that the time point is the 3.5th second; If the string ends in `%`, it means that the time point is the specified percentage of the video duration; for example, `10%` means that the time point is 10% of the video duration.",
 												},
-												"time_offset_set": {
-													Optional:    true,
-													Description: "List of time points of screenshots in seconds.",
-												},
 												"watermark_set": {
 													Type:        schema.TypeList,
 													Optional:    true,
@@ -1902,6 +1530,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Custom watermark parameter, which is valid if `Definition` is 0.This parameter is used in highly customized scenarios. We recommend you use `Definition` to specify the watermark parameter preferably.Custom watermark parameter is not available for screenshot.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -2196,6 +1825,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Custom watermark parameter, which is valid if `Definition` is 0.This parameter is used in highly customized scenarios. We recommend you use `Definition` to specify the watermark parameter preferably.Custom watermark parameter is not available for screenshot.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -2610,6 +2240,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Custom watermark parameter, which is valid if `Definition` is 0.This parameter is used in highly customized scenarios. We recommend you use `Definition` to specify the watermark parameter preferably.Custom watermark parameter is not available for screenshot.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -3092,6 +2723,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 
 			"task_notify_config": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "The notification configuration. If you do not specify this parameter, notifications will not be sent.",
@@ -3120,11 +2752,13 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 						"notify_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Workflow notification method. Valid values: Finish, Change. If this parameter is left empty, `Finish` will be used.",
 						},
 						"notify_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "The notification type. Valid values: `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead. `TDMQ-CMQ`: Message queue `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API. `SCF`: This notification type is not recommended. You need to configure it in the SCF console. `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly..",
 						},
 						"notify_url": {
@@ -3337,7 +2971,7 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 							}
 							rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
 							tEHDConfig := mps.TEHDConfig{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfig.Type = helper.String(v.(string))
@@ -3417,7 +3051,7 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 							}
 							overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
 							tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfigForUpdate.Type = helper.String(v.(string))
@@ -3911,8 +3545,6 @@ func resourceTencentCloudMpsScheduleCreate(d *schema.ResourceData, meta interfac
 								snapshotByTimeOffsetTaskInput.ExtTimeOffsetSet = append(snapshotByTimeOffsetTaskInput.ExtTimeOffsetSet, &extTimeOffsetSet)
 							}
 						}
-					}
-					if v, _ := d.GetOk("time_offset_set"); v != nil {
 					}
 
 					if v, ok := snapshotByTimeOffsetTaskMap["watermark_set"]; ok {
@@ -4629,16 +4261,18 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 
 	scheduleId := d.Id()
 
-	schedule, err := service.DescribeMpsScheduleById(ctx, scheduleId)
+	schedules, err := service.DescribeMpsScheduleById(ctx, &scheduleId)
 	if err != nil {
 		return err
 	}
 
-	if schedule == nil {
+	if len(schedules) == 0 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `MpsSchedule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	schedule := schedules[0]
 
 	if schedule.ScheduleName != nil {
 		_ = d.Set("schedule_name", schedule.ScheduleName)
@@ -4841,7 +4475,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								tEHDConfigMap["max_video_bitrate"] = activity.ActivityPara.TranscodeTask.RawParameter.TEHDConfig.MaxVideoBitrate
 							}
 
-							rawParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
+							rawParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
 						}
 
 						transcodeTaskMap["raw_parameter"] = []interface{}{rawParameterMap}
@@ -4945,7 +4579,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								tEHDConfigMap["max_video_bitrate"] = activity.ActivityPara.TranscodeTask.OverrideParameter.TEHDConfig.MaxVideoBitrate
 							}
 
-							overrideParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
+							overrideParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
 						}
 
 						if activity.ActivityPara.TranscodeTask.OverrideParameter.SubtitleTemplate != nil {
@@ -5044,7 +4678,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								addonAudioStreamList = append(addonAudioStreamList, addonAudioStreamMap)
 							}
 
-							overrideParameterMap["addon_audio_stream"] = []interface{}{addonAudioStreamList}
+							overrideParameterMap["addon_audio_stream"] = addonAudioStreamList
 						}
 
 						if activity.ActivityPara.TranscodeTask.OverrideParameter.StdExtInfo != nil {
@@ -5127,7 +4761,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								addOnSubtitlesList = append(addOnSubtitlesList, addOnSubtitlesMap)
 							}
 
-							overrideParameterMap["add_on_subtitles"] = []interface{}{addOnSubtitlesList}
+							overrideParameterMap["add_on_subtitles"] = addOnSubtitlesList
 						}
 
 						transcodeTaskMap["override_parameter"] = []interface{}{overrideParameterMap}
@@ -5265,7 +4899,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							watermarkSetList = append(watermarkSetList, watermarkSetMap)
 						}
 
-						transcodeTaskMap["watermark_set"] = []interface{}{watermarkSetList}
+						transcodeTaskMap["watermark_set"] = watermarkSetList
 					}
 
 					if activity.ActivityPara.TranscodeTask.MosaicSet != nil {
@@ -5304,7 +4938,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							mosaicSetList = append(mosaicSetList, mosaicSetMap)
 						}
 
-						transcodeTaskMap["mosaic_set"] = []interface{}{mosaicSetList}
+						transcodeTaskMap["mosaic_set"] = mosaicSetList
 					}
 
 					if activity.ActivityPara.TranscodeTask.StartTimeOffset != nil {
@@ -5460,7 +5094,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								headSetList = append(headSetList, headSetMap)
 							}
 
-							headTailParameterMap["head_set"] = []interface{}{headSetList}
+							headTailParameterMap["head_set"] = headSetList
 						}
 
 						if activity.ActivityPara.TranscodeTask.HeadTailParameter.TailSet != nil {
@@ -5529,7 +5163,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 								tailSetList = append(tailSetList, tailSetMap)
 							}
 
-							headTailParameterMap["tail_set"] = []interface{}{tailSetList}
+							headTailParameterMap["tail_set"] = tailSetList
 						}
 
 						transcodeTaskMap["head_tail_parameter"] = []interface{}{headTailParameterMap}
@@ -5615,10 +5249,6 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 
 					if activity.ActivityPara.SnapshotByTimeOffsetTask.ExtTimeOffsetSet != nil {
 						snapshotByTimeOffsetTaskMap["ext_time_offset_set"] = activity.ActivityPara.SnapshotByTimeOffsetTask.ExtTimeOffsetSet
-					}
-
-					if activity.ActivityPara.SnapshotByTimeOffsetTask.TimeOffsetSet != nil {
-						snapshotByTimeOffsetTaskMap["time_offset_set"] = activity.ActivityPara.SnapshotByTimeOffsetTask.TimeOffsetSet
 					}
 
 					if activity.ActivityPara.SnapshotByTimeOffsetTask.WatermarkSet != nil {
@@ -5753,7 +5383,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							watermarkSetList = append(watermarkSetList, watermarkSetMap)
 						}
 
-						snapshotByTimeOffsetTaskMap["watermark_set"] = []interface{}{watermarkSetList}
+						snapshotByTimeOffsetTaskMap["watermark_set"] = watermarkSetList
 					}
 
 					if activity.ActivityPara.SnapshotByTimeOffsetTask.OutputStorage != nil {
@@ -5970,7 +5600,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							watermarkSetList = append(watermarkSetList, watermarkSetMap)
 						}
 
-						sampleSnapshotTaskMap["watermark_set"] = []interface{}{watermarkSetList}
+						sampleSnapshotTaskMap["watermark_set"] = watermarkSetList
 					}
 
 					if activity.ActivityPara.SampleSnapshotTask.OutputStorage != nil {
@@ -6273,7 +5903,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							watermarkSetList = append(watermarkSetList, watermarkSetMap)
 						}
 
-						adaptiveDynamicStreamingTaskMap["watermark_set"] = []interface{}{watermarkSetList}
+						adaptiveDynamicStreamingTaskMap["watermark_set"] = watermarkSetList
 					}
 
 					if activity.ActivityPara.AdaptiveDynamicStreamingTask.OutputStorage != nil {
@@ -6410,7 +6040,7 @@ func resourceTencentCloudMpsScheduleRead(d *schema.ResourceData, meta interface{
 							addOnSubtitlesList = append(addOnSubtitlesList, addOnSubtitlesMap)
 						}
 
-						adaptiveDynamicStreamingTaskMap["add_on_subtitles"] = []interface{}{addOnSubtitlesList}
+						adaptiveDynamicStreamingTaskMap["add_on_subtitles"] = addOnSubtitlesList
 					}
 
 					activityParaMap["adaptive_dynamic_streaming_task"] = []interface{}{adaptiveDynamicStreamingTaskMap}
@@ -6581,14 +6211,6 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 
 	request.ScheduleId = helper.StrToInt64Point(scheduleId)
 
-	immutableArgs := []string{"schedule_name", "trigger", "activities", "output_storage", "output_dir", "task_notify_config"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	if d.HasChange("schedule_name") {
 		if v, ok := d.GetOk("schedule_name"); ok {
 			request.ScheduleName = helper.String(v.(string))
@@ -6751,7 +6373,7 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 								}
 								rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 							}
-							if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
+							if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
 								tEHDConfig := mps.TEHDConfig{}
 								if v, ok := tEHDConfigMap["type"]; ok {
 									tEHDConfig.Type = helper.String(v.(string))
@@ -6831,7 +6453,7 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 								}
 								overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 							}
-							if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
+							if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
 								tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 								if v, ok := tEHDConfigMap["type"]; ok {
 									tEHDConfigForUpdate.Type = helper.String(v.(string))
@@ -7325,8 +6947,6 @@ func resourceTencentCloudMpsScheduleUpdate(d *schema.ResourceData, meta interfac
 									snapshotByTimeOffsetTaskInput.ExtTimeOffsetSet = append(snapshotByTimeOffsetTaskInput.ExtTimeOffsetSet, &extTimeOffsetSet)
 								}
 							}
-						}
-						if v, _ := d.GetOk("time_offset_set"); v != nil {
 						}
 
 						if v, ok := snapshotByTimeOffsetTaskMap["watermark_set"]; ok {

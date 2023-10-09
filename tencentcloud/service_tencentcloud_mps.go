@@ -729,11 +729,13 @@ func (me *MpsService) DeleteMpsWordSamplesById(ctx context.Context, keywords []s
 	return
 }
 
-func (me *MpsService) DescribeMpsScheduleById(ctx context.Context, scheduleId string) (schedule *mps.SchedulesInfo, errRet error) {
+func (me *MpsService) DescribeMpsScheduleById(ctx context.Context, scheduleId *string) (schedules []*mps.SchedulesInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := mps.NewDescribeSchedulesRequest()
-	request.ScheduleIds = []*int64{helper.StrToInt64Point(scheduleId)}
+	if scheduleId != nil {
+		request.ScheduleIds = []*int64{helper.StrToInt64Point(*scheduleId)}
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -750,11 +752,7 @@ func (me *MpsService) DescribeMpsScheduleById(ctx context.Context, scheduleId st
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.ScheduleInfoSet) < 1 {
-		return
-	}
-
-	schedule = response.Response.ScheduleInfoSet[0]
+	schedules = response.Response.ScheduleInfoSet
 	return
 }
 

@@ -3,10 +3,157 @@ Provides a resource to create a mps enable_schedule_config
 
 Example Usage
 
+Enable the mps schedule
+
 ```hcl
-resource "tencentcloud_mps_enable_schedule_config" "enable_schedule_config" {
-  schedule_id =
+data "tencentcloud_cos_bucket_object" "object" {
+  bucket = "keep-bucket-${local.app_id}"
+  key    = "/mps-test/test.mov"
 }
+
+resource "tencentcloud_cos_bucket" "output" {
+  bucket      = "tf-bucket-mps-schedule-config-output1-${local.app_id}"
+  force_clean = true
+  acl         = "public-read"
+}
+
+resource "tencentcloud_mps_schedule" "example" {
+  schedule_name = "tf_test_mps_schedule_config"
+
+  trigger {
+    type = "CosFileUpload"
+    cos_file_upload_trigger {
+      bucket  = data.tencentcloud_cos_bucket_object.object.bucket
+      region  = "%s"
+      dir     = "/upload/"
+      formats = ["flv", "mov"]
+    }
+  }
+
+  activities {
+    activity_type   = "input"
+    reardrive_index = [1, 2]
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [3]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [6, 7]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [4, 5]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [8]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [9]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type   = "action-trans"
+    reardrive_index = [10]
+    activity_para {
+      transcode_task {
+        definition = 10
+      }
+    }
+  }
+
+  activities {
+    activity_type = "output"
+  }
+
+  output_storage {
+    type = "COS"
+    cos_output_storage {
+      bucket = tencentcloud_cos_bucket.output.bucket
+      region = "%s"
+    }
+  }
+
+  output_dir = "output/"
+}
+
+resource "tencentcloud_mps_enable_schedule_config" "config" {
+  schedule_id = tencentcloud_mps_schedule.example.id
+  enabled = true
+}
+```
+
+Disable the mps schedule
+
+```hcl
+resource "tencentcloud_mps_enable_schedule_config" "config" {
+  schedule_id = tencentcloud_mps_schedule.example.id
+  enabled = false
+}
+
 ```
 
 Import
@@ -64,7 +211,7 @@ func resourceTencentCloudMpsEnableScheduleConfigCreate(d *schema.ResourceData, m
 	}
 	d.SetId(helper.IntToStr(scheduleId))
 
-	return resourceTencentCloudMpsEnableScheduleConfigRead(d, meta)
+	return resourceTencentCloudMpsEnableScheduleConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudMpsEnableScheduleConfigRead(d *schema.ResourceData, meta interface{}) error {
@@ -79,16 +226,18 @@ func resourceTencentCloudMpsEnableScheduleConfigRead(d *schema.ResourceData, met
 
 	scheduleId := d.Id()
 
-	enableScheduleConfig, err := service.DescribeMpsScheduleById(ctx, scheduleId)
+	schedules, err := service.DescribeMpsScheduleById(ctx, &scheduleId)
 	if err != nil {
 		return err
 	}
 
-	if enableScheduleConfig == nil {
+	if len(schedules) == 0 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `MpsEnableScheduleConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	enableScheduleConfig := schedules[0]
 
 	if enableScheduleConfig.ScheduleId != nil {
 		_ = d.Set("schedule_id", enableScheduleConfig.ScheduleId)
