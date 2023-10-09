@@ -52,7 +52,7 @@ func dataSourceTencentCloudGaapProxyStatistics() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Metric Names. 支持 InBandwidth,OutBandwidth, Concurrent, InPackets, OutPackets, PacketLoss, Latency，HttpQPS, HttpsQPS.",
+				Description: "Metric Names. Valid values: InBandwidth,OutBandwidth, Concurrent, InPackets, OutPackets, PacketLoss, Latency, HttpQPS, HttpsQPS.",
 			},
 
 			"granularity": {

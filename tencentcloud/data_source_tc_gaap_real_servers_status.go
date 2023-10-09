@@ -47,7 +47,7 @@ func dataSourceTencentCloudGaapRealServersStatus() *schema.Resource {
 						"bind_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Bind Status, 0 indicates unbound ,1 indicates bound by rules or listeners.",
+							Description: "Bind Status, 0 indicates unbound, 1 indicates bound by rules or listeners.",
 						},
 						"proxy_id": {
 							Type:        schema.TypeString,
