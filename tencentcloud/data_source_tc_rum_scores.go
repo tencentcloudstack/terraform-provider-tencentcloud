@@ -149,12 +149,15 @@ func dataSourceTencentCloudRumScoresRead(d *schema.ResourceData, meta interface{
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	var startTime, endTime string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("end_time"); ok {
+		endTime = v.(string)
 		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
+		startTime = v.(string)
 		paramMap["StartTime"] = helper.String(v.(string))
 	}
 
@@ -252,6 +255,8 @@ func dataSourceTencentCloudRumScoresRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("score_set", tmpList)
 	}
 
+	ids = append(ids, startTime)
+	ids = append(ids, endTime)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

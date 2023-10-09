@@ -1,13 +1,19 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudRumEventUrlDataSource_basic -v
 func TestAccTencentCloudRumEventUrlDataSource_basic(t *testing.T) {
 	t.Parallel()
+
+	startTime := time.Now().AddDate(0, 0, -29).Unix()
+	endTime := time.Now().Unix()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -15,8 +21,11 @@ func TestAccTencentCloudRumEventUrlDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRumEventUrlDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_event_url.event_url")),
+				Config: fmt.Sprintf(testAccRumEventUrlDataSource, startTime, endTime),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_event_url.event_url"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_rum_event_url.event_url", "result"),
+				),
 			},
 		},
 	})
@@ -25,28 +34,10 @@ func TestAccTencentCloudRumEventUrlDataSource_basic(t *testing.T) {
 const testAccRumEventUrlDataSource = `
 
 data "tencentcloud_rum_event_url" "event_url" {
-  start_time = 1625444040
-  type = "allcount"
-  end_time = 1625454840
-  i_d = 1
-  ext_second = "ext2"
-  engine = "Blink(79.0)"
-  isp = "中国电信"
-  from = "https://user.qzone.qq.com/"
-  level = "1"
-  brand = "Apple"
-  area = "广州市"
-  version_num = "1.0"
-  platform = "2"
-  ext_third = "ext3"
-  ext_first = "ext1"
-  net_type = "2"
-  device = "Apple - iPhone"
-  is_abroad = "0"
-  os = "Windows - 10"
-  browser = "Chrome(79.0)"
-  name = "test"
-  env = "production"
-  }
+  start_time = %v
+  type       = "allcount"
+  end_time   = %v
+  project_id = 120000
+}
 
 `

@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudRumLogExportListDataSource_basic -v
 func TestAccTencentCloudRumLogExportListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -16,7 +17,10 @@ func TestAccTencentCloudRumLogExportListDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRumLogExportListDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_log_export_list.log_export_list")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_log_export_list.log_export_list"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_rum_log_export_list.log_export_list", "result"),
+				),
 			},
 		},
 	})
@@ -25,7 +29,7 @@ func TestAccTencentCloudRumLogExportListDataSource_basic(t *testing.T) {
 const testAccRumLogExportListDataSource = `
 
 data "tencentcloud_rum_log_export_list" "log_export_list" {
-  project_id = 1
+  project_id = 120000
 }
 
 `

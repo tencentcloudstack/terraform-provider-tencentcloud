@@ -1,13 +1,20 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudRumScoresDataSource_basic -v
 func TestAccTencentCloudRumScoresDataSource_basic(t *testing.T) {
 	t.Parallel()
+
+	startTime := time.Now().AddDate(0, 0, -29).Unix()
+	endTime := time.Now().Unix()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -15,8 +22,10 @@ func TestAccTencentCloudRumScoresDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRumScoresDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_scores.scores")),
+				Config: fmt.Sprintf(testAccRumScoresDataSource, startTime, endTime),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_scores.scores"),
+				),
 			},
 		},
 	})
@@ -25,10 +34,10 @@ func TestAccTencentCloudRumScoresDataSource_basic(t *testing.T) {
 const testAccRumScoresDataSource = `
 
 data "tencentcloud_rum_scores" "scores" {
-  end_time = "2023082215"
-  start_time = "2023082214"
-  i_d = 1
+  start_time = %v
+  end_time   = %v
+  project_id = 120000
   is_demo = 1
-  }
+}
 
 `

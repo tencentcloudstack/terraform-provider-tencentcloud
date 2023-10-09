@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudRumSignDataSource_basic -v
 func TestAccTencentCloudRumSignDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -16,7 +17,9 @@ func TestAccTencentCloudRumSignDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRumSignDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_sign.sign")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_sign.sign"),
+				),
 			},
 		},
 	})
@@ -26,7 +29,7 @@ const testAccRumSignDataSource = `
 
 data "tencentcloud_rum_sign" "sign" {
   timeout = 1800
-  file_type = web
-          }
+  file_type = 1
+}
 
 `

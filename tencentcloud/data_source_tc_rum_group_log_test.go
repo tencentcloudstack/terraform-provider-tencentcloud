@@ -16,7 +16,9 @@ func TestAccTencentCloudRumGroupLogDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRumGroupLogDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_group_log.group_log")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_group_log.group_log"),
+				),
 			},
 		},
 	})
@@ -29,8 +31,8 @@ data "tencentcloud_rum_group_log" "group_log" {
   start_time = 1625444040000
   query = "id:123 AND type:&quot;log&quot;"
   end_time = 1625454840000
-  i_d = 1
+  id = 1
   group_field = "level"
-  }
+}
 
 `

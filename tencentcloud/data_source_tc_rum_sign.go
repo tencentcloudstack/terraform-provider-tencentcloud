@@ -34,7 +34,7 @@ func dataSourceTencentCloudRumSign() *schema.Resource {
 			"file_type": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Bucket type. `web`:web project; `app`:app project.",
+				Description: "Bucket type. `1`:web project; `2`:app project.",
 			},
 
 			"secret_key": {

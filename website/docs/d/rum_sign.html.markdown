@@ -24,7 +24,7 @@ data "tencentcloud_rum_sign" "sign" {
 
 The following arguments are supported:
 
-* `file_type` - (Optional, Int) Bucket type. `web`:web project; `app`:app project.
+* `file_type` - (Optional, Int) Bucket type. `1`:web project; `2`:app project.
 * `result_output_file` - (Optional, String) Used to save results.
 * `timeout` - (Optional, Int) Timeout duration.
 

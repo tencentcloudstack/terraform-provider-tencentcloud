@@ -24,13 +24,13 @@ func TestAccTencentCloudRumLogExportDataSource_basic(t *testing.T) {
 
 const testAccRumLogExportDataSource = `
 
-data "tencentcloud_rum_log_export" "log_export" {
-  name = "log"
-  start_time = "1692594840000"
-  query = "id:123 AND type:&quot;log&quot;"
-  end_time = "1692609240000"
-  project_id = 1
-  fields = 
-  }
+data "tencentcloud_rum_group_log" "group_log" {
+  order_by    = "desc"
+  start_time  = 1696216110
+  query       = "type:\"log\""
+  end_time    = 1696820910
+  project_id  = 120000
+  group_field = "level"
+}
 
 `

@@ -1896,6 +1896,14 @@ func (me *RumService) DescribeRumGroupLogByFilter(ctx context.Context, param map
 		}
 	}
 
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	request.Page = &offset
+	request.Limit = &limit
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRumClient().DescribeRumGroupLog(request)
 	if err != nil {
@@ -1942,6 +1950,14 @@ func (me *RumService) DescribeRumLogListByFilter(ctx context.Context, param map[
 			request.ID = v.(*int64)
 		}
 	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	request.Page = &offset
+	request.Limit = &limit
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRumClient().DescribeRumLogList(request)
@@ -2339,6 +2355,14 @@ func (me *RumService) DescribeRumLogExportListByFilter(ctx context.Context, para
 			request.ID = v.(*int64)
 		}
 	}
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	request.PageNum = &offset
+	request.PageSize = &limit
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseRumClient().DescribeRumLogExports(request)

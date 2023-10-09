@@ -1,13 +1,19 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudRumCustomUrlDataSource_basic -v
 func TestAccTencentCloudRumCustomUrlDataSource_basic(t *testing.T) {
 	t.Parallel()
+
+	startTime := time.Now().AddDate(0, 0, -29).Unix()
+	endTime := time.Now().Unix()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -15,8 +21,11 @@ func TestAccTencentCloudRumCustomUrlDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRumCustomUrlDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_custom_url.custom_url")),
+				Config: fmt.Sprintf(testAccRumCustomUrlDataSource, startTime, endTime),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_custom_url.custom_url"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_rum_custom_url.custom_url", "result"),
+				),
 			},
 		},
 	})
@@ -25,29 +34,10 @@ func TestAccTencentCloudRumCustomUrlDataSource_basic(t *testing.T) {
 const testAccRumCustomUrlDataSource = `
 
 data "tencentcloud_rum_custom_url" "custom_url" {
-  start_time = 1625444040
-  type = "top"
-  end_time = 1625454840
-  i_d = 1
-  ext_second = "ext2"
-  engine = "Blink(79.0)"
-  isp = "中国电信"
-  from = "https://user.qzone.qq.com/"
-  level = "1"
-  brand = "Apple"
-  area = "广州市"
-  version_num = "1.0"
-  platform = "2"
-  ext_third = "ext3"
-  ext_first = "ext1"
-  net_type = "2"
-  device = "Apple - iPhone"
-  is_abroad = "0"
-  os = "Windows - 10"
-  browser = "Chrome(79.0)"
-  cost_type = "50"
-  url = "http://qq.com/"
-  env = "production"
-  }
+  start_time = %v
+  type       = "top"
+  end_time   = %v
+  project_id = 120000
+}
 
 `
