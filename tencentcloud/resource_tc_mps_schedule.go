@@ -409,7 +409,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"fill_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The fill mode, which indicates how a video is resized when the video’s original aspect ratio is different from the target aspect ratio. Valid values: stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding. black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars. white: Keep the image’s original aspect ratio and fill the blank space with white bars. gauss: Keep the image’s original aspect ratio and apply Gaussian blur to the blank space.Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
+																			Description: "The fill mode, which indicates how a video is resized when the video's original aspect ratio is different from the target aspect ratio. Valid values: stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding. black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars. white: Keep the image's original aspect ratio and fill the blank space with white bars. gauss: Keep the image's original aspect ratio and apply Gaussian blur to the blank space.Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
 																		},
 																		"vcrf": {
 																			Type:        schema.TypeInt,
@@ -772,7 +772,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The inserting type. Valid values： subtitle-stream：Insert title track close-caption-708：CEA-708 subtitle encode to SEI frame close-caption-608：CEA-608 subtitle encode to SEI frameNote: This field may return null, indicating that no valid value can be obtained.",
+																			Description: "The inserting type. Valid values: `subtitle-stream`:Insert title track. `close-caption-708`:CEA-708 subtitle encode to SEI frame. `close-caption-608`:CEA-608 subtitle encode to SEI frame. Note: This field may return null, indicating that no valid value can be obtained.",
 																		},
 																		"subtitle": {
 																			Type:        schema.TypeList,
@@ -784,7 +784,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"type": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "The input type. Valid values:  COS：A COS bucket address  URL：A URL  AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. .",
+																						Description: "The input type. Valid values:  `COS`:A COS bucket address. `URL`:A URL. `AWS-S3`:An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																					},
 																					"cos_input_info": {
 																						Type:        schema.TypeList,
@@ -836,12 +836,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																								"s3_bucket": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "S3 bucket。Note: This field may return null, indicating that no valid value can be obtained.",
+																									Description: "S3 bucket.Note: This field may return null, indicating that no valid value can be obtained.",
 																								},
 																								"s3_region": {
 																									Type:        schema.TypeString,
 																									Required:    true,
-																									Description: "The region of the AWS S3 bucket, support：  us-east-1  eu-west-3Note: This field may return null, indicating that no valid value can be obtained.",
+																									Description: "The region of the AWS S3 bucket, support:  us-east-1  eu-west-3Note: This field may return null, indicating that no valid value can be obtained.",
 																								},
 																								"s3_object": {
 																									Type:        schema.TypeString,
@@ -2494,7 +2494,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The inserting type. Valid values： subtitle-stream：Insert title track close-caption-708：CEA-708 subtitle encode to SEI frame close-caption-608：CEA-608 subtitle encode to SEI frameNote: This field may return null, indicating that no valid value can be obtained.",
+																Description: "The inserting type. Valid values: subtitle-stream:Insert title track close-caption-708:CEA-708 subtitle encode to SEI frame close-caption-608:CEA-608 subtitle encode to SEI frameNote: This field may return null, indicating that no valid value can be obtained.",
 															},
 															"subtitle": {
 																Type:        schema.TypeList,
@@ -2506,7 +2506,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																		"type": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "The input type. Valid values:  COS：A COS bucket address  URL：A URL  AWS-S3：An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks. .",
+																			Description: "The input type. Valid values:  COS:A COS bucket address  URL:A URL  AWS-S3:An AWS S3 bucket address. Currently, this type is only supported for transcoding tasks.",
 																		},
 																		"cos_input_info": {
 																			Type:        schema.TypeList,
@@ -2558,12 +2558,12 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 																					"s3_bucket": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "S3 bucket。Note: This field may return null, indicating that no valid value can be obtained.",
+																						Description: "S3 bucket.Note: This field may return null, indicating that no valid value can be obtained.",
 																					},
 																					"s3_region": {
 																						Type:        schema.TypeString,
 																						Required:    true,
-																						Description: "The region of the AWS S3 bucket, support：  us-east-1  eu-west-3Note: This field may return null, indicating that no valid value can be obtained.",
+																						Description: "The region of the AWS S3 bucket, support:  us-east-1  eu-west-3Note: This field may return null, indicating that no valid value can be obtained.",
 																					},
 																					"s3_object": {
 																						Type:        schema.TypeString,
@@ -2759,7 +2759,7 @@ func resourceTencentCloudMpsSchedule() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "The notification type. Valid values: `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead. `TDMQ-CMQ`: Message queue `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API. `SCF`: This notification type is not recommended. You need to configure it in the SCF console. `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly..",
+							Description: "The notification type. Valid values: `CMQ`: This value is no longer used. Please use `TDMQ-CMQ` instead. `TDMQ-CMQ`: Message queue `URL`: If `NotifyType` is set to `URL`, HTTP callbacks are sent to the URL specified by `NotifyUrl`. HTTP and JSON are used for the callbacks. The packet contains the response parameters of the `ParseNotification` API. `SCF`: This notification type is not recommended. You need to configure it in the SCF console. `AWS-SQS`: AWS queue. This type is only supported for AWS tasks, and the queue must be in the same region as the AWS bucket.Note: If you do not pass this parameter or pass in an empty string, `CMQ` will be used. To use a different notification type, specify this parameter accordingly.",
 						},
 						"notify_url": {
 							Type:        schema.TypeString,
