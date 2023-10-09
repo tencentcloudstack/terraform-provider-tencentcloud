@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 data "tencentcloud_rum_rum_log_stats_log_list" "rum_log_stats_log_list" {
   start_time = 1625444040
-  query = "id:123 AND type:&quot;log&quot;"
-  end_time = 1625454840
+  query      = "id:123 AND type:\"log\""
+  end_time   = 1625454840
   project_id = 1
-  }
+}
 ```
 */
 package tencentcloud

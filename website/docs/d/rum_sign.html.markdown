@@ -16,7 +16,7 @@ Use this data source to query detailed information of rum sign
 ```hcl
 data "tencentcloud_rum_sign" "sign" {
   timeout   = 1800
-  file_type = web
+  file_type = 1
 }
 ```
 

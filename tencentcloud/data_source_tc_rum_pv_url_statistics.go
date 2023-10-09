@@ -6,28 +6,10 @@ Example Usage
 ```hcl
 data "tencentcloud_rum_pv_url_statistics" "pv_url_statistics" {
   start_time = 1625444040
-  type = "allcount"
-  end_time = 1625454840
+  type       = "allcount"
+  end_time   = 1625454840
   project_id = 1
-  ext_second = "ext2"
-  engine = "Blink(79.0)"
-  isp = "中国电信"
-  from = "https://user.qzone.qq.com/"
-  level = "1"
-  brand = "Apple"
-  area = "广州市"
-  version_num = "1.0"
-  platform = "2"
-  ext_third = "ext3"
-  ext_first = "ext1"
-  net_type = "2"
-  device = "Apple - iPhone"
-  is_abroad = "0"
-  os = "Windows - 10"
-  browser = "Chrome(79.0)"
-  env = "production"
-  group_by_type = 1
-  }
+}
 ```
 */
 package tencentcloud

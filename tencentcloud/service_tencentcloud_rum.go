@@ -2113,11 +2113,13 @@ func (me *RumService) DescribeRumTawAreaByFilter(ctx context.Context, param map[
 
 	for k, v := range param {
 		if k == "AreaIds" {
+			request.AreaIds = v.([]*int64)
 		}
 		if k == "AreaKeys" {
 			request.AreaKeys = v.([]*string)
 		}
 		if k == "AreaStatuses" {
+			request.AreaStatuses = v.([]*int64)
 		}
 	}
 

@@ -20,7 +20,6 @@ data "tencentcloud_rum_log_export" "log_export" {
   query      = "id:123 AND type: \"log\""
   end_time   = "1692609240000"
   project_id = 1
-  fields     =
 }
 ```
 

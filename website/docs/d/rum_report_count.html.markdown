@@ -19,7 +19,6 @@ data "tencentcloud_rum_report_count" "report_count" {
   end_time    = 1625454840
   project_id  = 1
   report_type = "log"
-  instance_id = "rum-xxx"
 }
 ```
 

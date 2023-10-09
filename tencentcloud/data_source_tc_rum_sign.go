@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_sign" "sign" {
-  timeout = 1800
-  file_type = web
-          }
+  timeout   = 1800
+  file_type = 1
+}
 ```
 */
 package tencentcloud

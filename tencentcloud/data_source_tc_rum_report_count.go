@@ -5,12 +5,11 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_report_count" "report_count" {
-  start_time = 1625444040
-  end_time = 1625454840
-  project_id = 1
+  start_time  = 1625444040
+  end_time    = 1625454840
+  project_id  = 1
   report_type = "log"
-  instance_id = "rum-xxx"
-  }
+}
 ```
 */
 package tencentcloud

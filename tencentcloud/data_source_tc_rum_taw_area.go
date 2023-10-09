@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_taw_area" "taw_area" {
-  area_ids =
-  area_keys =
+  area_ids      =
+  area_keys     =
   area_statuses =
-  }
+}
 ```
 */
 package tencentcloud
