@@ -655,7 +655,7 @@ func (me *EbService) DescribeEbPlateformEventTemplateByFilter(ctx context.Contex
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response.EventTemplate == nil {
+	if response == nil || response.Response == nil || response.Response.EventTemplate == nil {
 		return
 	}
 
