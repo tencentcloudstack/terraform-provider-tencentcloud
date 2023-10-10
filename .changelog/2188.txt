@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_mps_edit_media_operation
+```
