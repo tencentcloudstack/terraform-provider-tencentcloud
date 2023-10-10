@@ -33,9 +33,10 @@ func TestAccTencentCloudMpsEditMediaOperationResource_basic(t *testing.T) {
 
 const testAccMpsEditMediaOperation = userInfoData + `
 resource "tencentcloud_cos_bucket" "output" {
-	bucket = "tf-bucket-mps-output-${local.app_id}"
+	bucket      = "tf-bucket-mps-edit-media-output-${local.app_id}"
 	force_clean = true
-  }
+	acl         = "public-read"
+}
 
 data "tencentcloud_cos_bucket_object" "object" {
 	bucket = "keep-bucket-${local.app_id}"
@@ -53,7 +54,7 @@ resource "tencentcloud_mps_edit_media_operation" "operation" {
 			}
 		}
 		start_time_offset = 60
-		end_time_offset = 120
+		end_time_offset   = 120
   }
   output_storage {
 		type = "COS"
