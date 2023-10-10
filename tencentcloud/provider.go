@@ -1724,6 +1724,11 @@ Cfw
     tencentcloud_cfw_nat_firewall_switch
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
+
+Cwp
+  Resource
+	tencentcloud_cwp_license_order
+	tencentcloud_cwp_license_bind_attachment
 */
 package tencentcloud
 
@@ -3183,6 +3188,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_cwp_license_order":                                   resourceTencentCloudCwpLicenseOrder(),
+			"tencentcloud_cwp_license_bind_attachment":                         resourceTencentCloudCwpLicenseBindAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
