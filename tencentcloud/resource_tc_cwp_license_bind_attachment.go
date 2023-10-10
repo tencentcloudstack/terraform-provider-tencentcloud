@@ -4,11 +4,22 @@ Provides a resource to create a cwp license_bind_attachment
 Example Usage
 
 ```hcl
-resource "tencentcloud_cwp_license_bind_attachment" "example" {
-  resource_id  = ""
-  license_id   = 0
+resource "tencentcloud_cwp_license_order" "example" {
+  alias        = "tf_example"
   license_type = 0
-  quuid        = ""
+  license_num  = 1
+  region_id    = 1
+  project_id   = 0
+  tags         = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_cwp_license_bind_attachment" "example" {
+  resource_id  = tencentcloud_cwp_license_order.example.resource_id
+  license_id   = tencentcloud_cwp_license_order.example.license_id
+  license_type = 0
+  quuid        = "2c7e5cce-1cec-4456-8d18-018f160dd987"
 }
 ```
 
@@ -17,7 +28,7 @@ Import
 cwp license_bind_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cwp_license_bind_attachment.example license_bind_attachment_id
+terraform import tencentcloud_cwp_license_bind_attachment.example cwplic-ab3edffa#44#2c7e5cce-1cec-4456-8d18-018f160dd987#0
 ```
 */
 package tencentcloud
@@ -232,7 +243,7 @@ func resourceTencentCloudCwpLicenseBindAttachmentRead(d *schema.ResourceData, me
 	_ = d.Set("resource_id", resourceId)
 	_ = d.Set("license_id", licenseIdInt)
 	_ = d.Set("license_type", licenseTypeInt)
-	_ = d.Set("quuid", licenseType)
+	_ = d.Set("quuid", quuid)
 
 	if licenseBindAttachment.MachineName != nil {
 		_ = d.Set("machine_name", licenseBindAttachment.MachineName)

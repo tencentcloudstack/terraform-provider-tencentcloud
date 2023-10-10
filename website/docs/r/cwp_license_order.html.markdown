@@ -20,6 +20,9 @@ resource "tencentcloud_cwp_license_order" "example" {
   license_num  = 1
   region_id    = 1
   project_id   = 0
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -39,7 +42,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `license_id` - license id.
+* `resource_id` - resource id.
 
 
 ## Import
@@ -47,6 +51,6 @@ In addition to all arguments above, the following attributes are exported:
 cwp license_order can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cwp_license_order.license_order license_order_id
+terraform import tencentcloud_cwp_license_order.example cwplic-130715d2#1
 ```
 

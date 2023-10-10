@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCwpLicenseOrderResource_basic -v
-func TestAccTencentCloudCwpLicenseOrderResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixCwpLicenseOrderResource_basic -v
+func TestAccTencentCloudNeedFixCwpLicenseOrderResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -53,15 +53,21 @@ resource "tencentcloud_cwp_license_order" "example" {
   license_num  = 1
   region_id    = 1
   project_id   = 0
+  tags        = {
+    "createdBy" = "terraform"
+  }
 }
 `
 
 const testAccCwpLicenseOrderUpdate = `
 resource "tencentcloud_cwp_license_order" "example" {
-  alias        = "tf_example_update"
+  alias        = "tf_example1"
   license_type = 0
   license_num  = 2
   region_id    = 1
-  project_id   = 1
+  project_id   = 0
+  tags        = {
+    "createdBy1" = "terraform1"
+  }
 }
 `

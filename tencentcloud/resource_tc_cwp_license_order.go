@@ -10,6 +10,9 @@ resource "tencentcloud_cwp_license_order" "example" {
   license_num  = 1
   region_id    = 1
   project_id   = 0
+  tags        = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 
@@ -18,7 +21,7 @@ Import
 cwp license_order can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cwp_license_order.license_order license_order_id
+terraform import tencentcloud_cwp_license_order.example cwplic-130715d2#1
 ```
 */
 package tencentcloud
@@ -27,6 +30,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -81,6 +86,16 @@ func resourceTencentCloudCwpLicenseOrder() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the license order.",
 			},
+			"resource_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "resource id.",
+			},
+			"license_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "license id.",
+			},
 		},
 	}
 }
@@ -90,10 +105,13 @@ func resourceTencentCloudCwpLicenseOrderCreate(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		request    = cwp.NewCreateLicenseOrderRequest()
-		response   = cwp.NewCreateLicenseOrderResponse()
-		resourceId string
+		logId       = getLogId(contextNil)
+		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
+		request     = cwp.NewCreateLicenseOrderRequest()
+		response    = cwp.NewCreateLicenseOrderResponse()
+		resourceId  string
+		regionIdInt int
+		licenseNum  *uint64
 	)
 
 	if v, ok := d.GetOkExists("license_type"); ok {
@@ -102,10 +120,12 @@ func resourceTencentCloudCwpLicenseOrderCreate(d *schema.ResourceData, meta inte
 
 	if v, ok := d.GetOkExists("license_num"); ok {
 		request.LicenseNum = helper.IntUint64(v.(int))
+		licenseNum = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOkExists("region_id"); ok {
 		request.RegionId = helper.IntUint64(v.(int))
+		regionIdInt = v.(int)
 	}
 
 	if v, ok := d.GetOkExists("project_id"); ok {
@@ -135,21 +155,25 @@ func resourceTencentCloudCwpLicenseOrderCreate(d *schema.ResourceData, meta inte
 	}
 
 	resourceId = *response.Response.ResourceIds[0]
-	d.SetId(resourceId)
+	regionId := strconv.Itoa(regionIdInt)
+	d.SetId(strings.Join([]string{resourceId, regionId}, FILED_SP))
 
-	//if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-	//	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	//	region := meta.(*TencentCloudClient).apiV3Conn.Region
-	//	resourceName := fmt.Sprintf("qcs::cwp::uin/:apiAppId/%s", region, apiAppId)
-	//	if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-	//		return err
-	//	}
-	//}
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		//region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::cwp::uin/:order/%s", resourceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	// set alias
 	if v, ok := d.GetOk("alias"); ok {
 		aliasRequest := cwp.NewModifyLicenseOrderRequest()
 		aliasRequest.Alias = helper.String(v.(string))
+		aliasRequest.ResourceId = &resourceId
+		aliasRequest.InquireNum = licenseNum
+
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCwpClient().ModifyLicenseOrder(aliasRequest)
 			if e != nil {
@@ -175,11 +199,17 @@ func resourceTencentCloudCwpLicenseOrderRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
-		resourceId = d.Id()
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	resourceId := idSplit[0]
+	regionId := idSplit[1]
 
 	licenseOrder, err := service.DescribeCwpLicenseOrderById(ctx, resourceId)
 	if err != nil {
@@ -192,8 +222,19 @@ func resourceTencentCloudCwpLicenseOrderRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
+	regionIdInt, _ := strconv.Atoi(regionId)
+	_ = d.Set("region_id", regionIdInt)
+
 	if licenseOrder.Alias != nil {
 		_ = d.Set("alias", licenseOrder.Alias)
+	}
+
+	if licenseOrder.ResourceId != nil {
+		_ = d.Set("resource_id", licenseOrder.ResourceId)
+	}
+
+	if licenseOrder.LicenseId != nil {
+		_ = d.Set("license_id", licenseOrder.LicenseId)
 	}
 
 	if licenseOrder.LicenseType != nil {
@@ -208,6 +249,14 @@ func resourceTencentCloudCwpLicenseOrderRead(d *schema.ResourceData, meta interf
 		_ = d.Set("project_id", licenseOrder.ProjectId)
 	}
 
+	tagService := &TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tags, err := tagService.DescribeResourceTags(ctx, "cwp", "order", "", resourceId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -216,9 +265,9 @@ func resourceTencentCloudCwpLicenseOrderUpdate(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		request    = cwp.NewModifyLicenseOrderRequest()
-		resourceId = d.Id()
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		request = cwp.NewModifyLicenseOrderRequest()
 	)
 
 	immutableArgs := []string{"license_type", "region_id"}
@@ -229,24 +278,24 @@ func resourceTencentCloudCwpLicenseOrderUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	resourceId := idSplit[0]
+
 	request.ResourceId = &resourceId
 
-	if d.HasChange("alias") {
-		if v, ok := d.GetOk("alias"); ok {
-			request.Alias = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("alias"); ok {
+		request.Alias = helper.String(v.(string))
 	}
 
-	if d.HasChange("license_num") {
-		if v, ok := d.GetOkExists("license_num"); ok {
-			request.InquireNum = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOkExists("license_num"); ok {
+		request.InquireNum = helper.IntUint64(v.(int))
 	}
 
-	if d.HasChange("project_id") {
-		if v, ok := d.GetOkExists("project_id"); ok {
-			request.ProjectId = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOkExists("project_id"); ok {
+		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -265,6 +314,16 @@ func resourceTencentCloudCwpLicenseOrderUpdate(d *schema.ResourceData, meta inte
 		return err
 	}
 
+	if d.HasChange("tags") {
+		tagService := &TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("cwp", "order", "", resourceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudCwpLicenseOrderRead(d, meta)
 }
 
@@ -276,9 +335,14 @@ func resourceTencentCloudCwpLicenseOrderDelete(d *schema.ResourceData, meta inte
 		logId       = getLogId(contextNil)
 		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
 		service     = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
-		resourceId  = d.Id()
 		licenseType *uint64
 	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	resourceId := idSplit[0]
 
 	if v, ok := d.GetOkExists("license_type"); ok {
 		licenseType = helper.IntUint64(v.(int))
