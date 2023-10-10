@@ -31,7 +31,7 @@ func TestAccTencentCloudMpsEventResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccMpsEvent_update, randomNum),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_event.event", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_event.event", "event_name", fmt.Sprintf("tf_test_event_%d", randomNum)),
+					resource.TestCheckResourceAttr("tencentcloud_mps_event.event", "event_name", fmt.Sprintf("tf_test_event_%d_changed", randomNum)),
 					resource.TestCheckResourceAttr("tencentcloud_mps_event.event", "description", "tf test mps event description changed"),
 				),
 			},
