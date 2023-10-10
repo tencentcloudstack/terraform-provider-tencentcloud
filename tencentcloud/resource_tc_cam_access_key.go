@@ -15,6 +15,13 @@ resource "tencentcloud_cam_access_key" "access_key" {
   status = "Inactive"
 }
 ```
+Encrypted
+```hcl
+resource "tencentcloud_cam_access_key" "access_key" {
+  target_uin = 100033690181
+  pgp_key = "keybase:some_person_that_exists"
+}
+```
 Import
 
 cam access_key can be imported using the id, e.g.
@@ -27,6 +34,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
 	"strings"
@@ -58,10 +66,27 @@ func resourceTencentCloudCamAccessKey() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Access_key is the access key identification, required when updating.",
 			},
+			"pgp_key": {
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Optional:    true,
+				Description: "Either a base-64 encoded PGP public key, or a keybase username in the form keybase:some_person_that_exists, for use in the encrypted_secret output attribute. If providing a base-64 encoded PGP public key, make sure to provide the \"raw\" version and not the \"armored\" one (e.g. avoid passing the -a option to gpg --export).",
+			},
 			"secret_access_key": {
 				Computed:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				Description: "Access key (key is only visible when created, please keep it properly).",
+			},
+			"encrypted_secret_access_key": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Encrypted secret, base64 encoded, if pgp_key was specified. This attribute is not available for imported resources. The encrypted secret may be decrypted using the command line, for example: terraform output -raw encrypted_secret | base64 --decode | keybase pgp decrypt.",
+			},
+			"key_fingerprint": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Fingerprint of the PGP key used to encrypt the secret. This attribute is not available for imported resources.",
 			},
 			"status": {
 				Optional:    true,
@@ -107,7 +132,25 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("CAM AccessKey id is nil")
 	}
 	d.SetId(helper.Int64ToStr(targetUin) + FILED_SP + *response.Response.AccessKey.AccessKeyId)
-	_ = d.Set("secret_access_key", response.Response.AccessKey.SecretAccessKey)
+
+	if v, ok := d.GetOk("pgp_key"); ok {
+		pgpKey := v.(string)
+
+		encryptionKey, err := retrieveGPGKey(pgpKey)
+		if err != nil {
+			return fmt.Errorf("creating IAM Access Key (%v): %s", targetUin, err)
+		}
+		fingerprint, encrypted, err := encryptValue(encryptionKey, *response.Response.AccessKey.SecretAccessKey, "IAM Access Key Secret")
+		if err != nil {
+			return fmt.Errorf("creating IAM Access Key (%v): %s", targetUin, err)
+		}
+
+		d.Set("key_fingerprint", fingerprint)
+		d.Set("encrypted_secret_access_key", encrypted)
+
+	} else {
+		_ = d.Set("secret_access_key", response.Response.AccessKey.SecretAccessKey)
+	}
 
 	return resourceTencentCloudCamAccessKeyRead(d, meta)
 }
@@ -208,4 +251,28 @@ func resourceTencentCloudCamAccessKeyDelete(d *schema.ResourceData, meta interfa
 	}
 
 	return nil
+}
+
+func retrieveGPGKey(pgpKey string) (string, error) {
+
+	encryptionKey := pgpKey
+	if strings.HasPrefix(pgpKey, kbPrefix) {
+		publicKeys, err := FetchKeybasePubkeys([]string{pgpKey})
+		if err != nil {
+			return "", fmt.Errorf("retrieving Public Key (%s): %w", pgpKey, err)
+		}
+		encryptionKey = publicKeys[pgpKey]
+	}
+
+	return encryptionKey, nil
+}
+
+func encryptValue(encryptionKey, value, description string) (string, string, error) {
+	fingerprints, encryptedValue, err :=
+		EncryptShares([][]byte{[]byte(value)}, []string{encryptionKey})
+	if err != nil {
+		return "", "", fmt.Errorf("encrypting %s: %w", description, err)
+	}
+
+	return fingerprints[0], base64.StdEncoding.EncodeToString(encryptedValue[0]), nil
 }
