@@ -235,6 +235,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_mfa_flag
 	tencentcloud_cam_user_saml_config
+	tencentcloud_cam_user_permission_boundary_attachment
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -527,6 +528,17 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_policies
     tencentcloud_gaap_security_rules
     tencentcloud_gaap_domain_error_pages
+	tencentcloud_gaap_access_regions
+	tencentcloud_gaap_access_regions_by_dest_region
+	tencentcloud_gaap_black_header
+	tencentcloud_gaap_country_area_mapping
+	tencentcloud_gaap_custom_header
+	tencentcloud_gaap_dest_regions
+	tencentcloud_gaap_proxy_detail
+	tencentcloud_gaap_proxy_groups
+	tencentcloud_gaap_proxy_statistics
+	tencentcloud_gaap_proxy_group_statistics
+	tencentcloud_gaap_real_servers_status
 
   Resource
     tencentcloud_gaap_proxy
@@ -894,12 +906,17 @@ Secrets Manager(SSM)
 	tencentcloud_ssm_products
     tencentcloud_ssm_secrets
     tencentcloud_ssm_secret_versions
+    tencentcloud_ssm_rotation_detail
+    tencentcloud_ssm_rotation_history
+    tencentcloud_ssm_service_status
+    tencentcloud_ssm_ssh_key_pair_value
 
   Resource
     tencentcloud_ssm_secret
     tencentcloud_ssm_secret_version
 	tencentcloud_ssm_product_secret
 	tencentcloud_ssm_ssh_key_pair_secret
+	tencentcloud_ssm_rotate_product_secret
 
 TcaplusDB
   Data Source
@@ -1270,6 +1287,7 @@ Cloud Automated Testing(CAT)
   Data Source
 	tencentcloud_cat_probe_data
 	tencentcloud_cat_node
+	tencentcloud_cat_metric_data
 
   Resource
  	tencentcloud_cat_task_set
@@ -1575,6 +1593,9 @@ Media Processing Service(MPS)
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
+	tencentcloud_mps_word_sample
+	tencentcloud_mps_schedule
+	tencentcloud_mps_enable_schedule_config
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1648,6 +1669,10 @@ EventBridge(EB)
   Data Source
 	tencentcloud_eb_bus
 	tencentcloud_eb_event_rules
+	tencentcloud_eb_platform_event_names
+	tencentcloud_eb_platform_event_patterns
+	tencentcloud_eb_platform_products
+	tencentcloud_eb_plateform_event_template
 
   Resource
 	tencentcloud_eb_event_transform
@@ -2017,6 +2042,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_rules":                       dataSourceTencentCloudGaapSecurityRules(),
 			"tencentcloud_gaap_certificates":                         dataSourceTencentCloudGaapCertificates(),
 			"tencentcloud_gaap_domain_error_pages":                   dataSourceTencentCloudGaapDomainErrorPageInfoList(),
+			"tencentcloud_gaap_access_regions":                       dataSourceTencentCloudGaapAccessRegions(),
+			"tencentcloud_gaap_access_regions_by_dest_region":        dataSourceTencentCloudGaapAccessRegionsByDestRegion(),
+			"tencentcloud_gaap_black_header":                         dataSourceTencentCloudGaapBlackHeader(),
+			"tencentcloud_gaap_country_area_mapping":                 dataSourceTencentCloudGaapCountryAreaMapping(),
+			"tencentcloud_gaap_custom_header":                        dataSourceTencentCloudGaapCustomHeader(),
+			"tencentcloud_gaap_dest_regions":                         dataSourceTencentCloudGaapDestRegions(),
+			"tencentcloud_gaap_proxy_detail":                         dataSourceTencentCloudGaapProxyDetail(),
+			"tencentcloud_gaap_proxy_groups":                         dataSourceTencentCloudGaapProxyGroups(),
+			"tencentcloud_gaap_proxy_group_statistics":               dataSourceTencentCloudGaapProxyGroupStatistics(),
+			"tencentcloud_gaap_proxy_statistics":                     dataSourceTencentCloudGaapProxyStatistics(),
+			"tencentcloud_gaap_real_servers_status":                  dataSourceTencentCloudGaapRealServersStatus(),
 			"tencentcloud_ssl_certificates":                          dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_cam_roles":                                 dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                 dataSourceTencentCloudCamUsers(),
@@ -2160,6 +2196,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),
+			"tencentcloud_ssm_rotation_detail":                       dataSourceTencentCloudSsmRotationDetail(),
+			"tencentcloud_ssm_rotation_history":                      dataSourceTencentCloudSsmRotationHistory(),
+			"tencentcloud_ssm_service_status":                        dataSourceTencentCloudSsmServiceStatus(),
+			"tencentcloud_ssm_ssh_key_pair_value":                    dataSourceTencentCloudSsmSshKeyPairValue(),
 			"tencentcloud_cdh_instances":                             dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                  dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                  dataSourceTencentCloudTeoZoneAvailablePlans(),
@@ -2208,6 +2248,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdcpg_instances":                           dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                            dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                  dataSourceTencentCloudCatNode(),
+			"tencentcloud_cat_metric_data":                           dataSourceTencentCloudCatMetricData(),
 			"tencentcloud_rum_project":                               dataSourceTencentCloudRumProject(),
 			"tencentcloud_rum_offline_log_config":                    dataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                             dataSourceTencentCloudRumWhitelist(),
@@ -2362,6 +2403,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
 			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
+			"tencentcloud_eb_platform_event_names":                   dataSourceTencentCloudEbPlatformEventNames(),
+			"tencentcloud_eb_platform_event_patterns":                dataSourceTencentCloudEbPlatformEventPatterns(),
+			"tencentcloud_eb_platform_products":                      dataSourceTencentCloudEbPlatformProducts(),
+			"tencentcloud_eb_plateform_event_template":               dataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
@@ -2642,6 +2687,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_service_linked_role":                             resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
+			"tencentcloud_cam_user_permission_boundary_attachment":             resourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        resourceTencentCloudScfFunction(),
@@ -2848,6 +2894,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
 			"tencentcloud_ssm_secret_version":                                  resourceTencentCloudSsmSecretVersion(),
+			"tencentcloud_ssm_rotate_product_secret":                           resourceTencentCloudSsmRotateProductSecret(),
 			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
@@ -3073,6 +3120,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
+			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
+			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
+			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),

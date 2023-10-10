@@ -436,6 +436,7 @@ func NewCreateTargetResponse() (response *CreateTargetResponse) {
 //  FAILEDOPERATION_ESINTERNALERROR = "FailedOperation.ESInternalError"
 //  FAILEDOPERATION_ESREQUESTFAILED = "FailedOperation.ESRequestFailed"
 //  FAILEDOPERATION_ESTEMPLATECONFLICT = "FailedOperation.ESTemplateConflict"
+//  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE_AMPPARAMS = "InvalidParameterValue.AMPParams"
 //  INVALIDPARAMETERVALUE_BATCHEVENTCOUNT = "InvalidParameterValue.BatchEventCount"
 //  INVALIDPARAMETERVALUE_BATCHTIMEOUT = "InvalidParameterValue.BatchTimeout"
@@ -487,6 +488,7 @@ func (c *Client) CreateTarget(request *CreateTargetRequest) (response *CreateTar
 //  FAILEDOPERATION_ESINTERNALERROR = "FailedOperation.ESInternalError"
 //  FAILEDOPERATION_ESREQUESTFAILED = "FailedOperation.ESRequestFailed"
 //  FAILEDOPERATION_ESTEMPLATECONFLICT = "FailedOperation.ESTemplateConflict"
+//  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE_AMPPARAMS = "InvalidParameterValue.AMPParams"
 //  INVALIDPARAMETERVALUE_BATCHEVENTCOUNT = "InvalidParameterValue.BatchEventCount"
 //  INVALIDPARAMETERVALUE_BATCHTIMEOUT = "InvalidParameterValue.BatchTimeout"
@@ -986,6 +988,7 @@ func NewGetEventBusResponse() (response *GetEventBusResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) GetEventBus(request *GetEventBusRequest) (response *GetEventBusResponse, err error) {
     return c.GetEventBusWithContext(context.Background(), request)
@@ -996,6 +999,7 @@ func (c *Client) GetEventBus(request *GetEventBusRequest) (response *GetEventBus
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) GetEventBusWithContext(ctx context.Context, request *GetEventBusRequest) (response *GetEventBusResponse, err error) {
     if request == nil {
@@ -1009,6 +1013,56 @@ func (c *Client) GetEventBusWithContext(ctx context.Context, request *GetEventBu
     request.SetContext(ctx)
     
     response = NewGetEventBusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetPlatformEventTemplateRequest() (request *GetPlatformEventTemplateRequest) {
+    request = &GetPlatformEventTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("eb", APIVersion, "GetPlatformEventTemplate")
+    
+    
+    return
+}
+
+func NewGetPlatformEventTemplateResponse() (response *GetPlatformEventTemplateResponse) {
+    response = &GetPlatformEventTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// GetPlatformEventTemplate
+// 获取平台产品事件模板
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) GetPlatformEventTemplate(request *GetPlatformEventTemplateRequest) (response *GetPlatformEventTemplateResponse, err error) {
+    return c.GetPlatformEventTemplateWithContext(context.Background(), request)
+}
+
+// GetPlatformEventTemplate
+// 获取平台产品事件模板
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) GetPlatformEventTemplateWithContext(ctx context.Context, request *GetPlatformEventTemplateRequest) (response *GetPlatformEventTemplateResponse, err error) {
+    if request == nil {
+        request = NewGetPlatformEventTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetPlatformEventTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetPlatformEventTemplateResponse()
     err = c.Send(request, response)
     return
 }
@@ -1038,6 +1092,7 @@ func NewGetRuleResponse() (response *GetRuleResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) GetRule(request *GetRuleRequest) (response *GetRuleResponse, err error) {
@@ -1051,6 +1106,7 @@ func (c *Client) GetRule(request *GetRuleRequest) (response *GetRuleResponse, er
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_EVENTBUSID = "InvalidParameterValue.EventBusId"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) GetRuleWithContext(ctx context.Context, request *GetRuleRequest) (response *GetRuleResponse, err error) {
@@ -1150,6 +1206,7 @@ func NewListConnectionsResponse() (response *ListConnectionsResponse) {
 //  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) ListConnections(request *ListConnectionsRequest) (response *ListConnectionsResponse, err error) {
     return c.ListConnectionsWithContext(context.Background(), request)
@@ -1164,6 +1221,7 @@ func (c *Client) ListConnections(request *ListConnectionsRequest) (response *Lis
 //  INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) ListConnectionsWithContext(ctx context.Context, request *ListConnectionsRequest) (response *ListConnectionsResponse, err error) {
     if request == nil {
@@ -1241,6 +1299,154 @@ func (c *Client) ListEventBusesWithContext(ctx context.Context, request *ListEve
     return
 }
 
+func NewListPlatformEventNamesRequest() (request *ListPlatformEventNamesRequest) {
+    request = &ListPlatformEventNamesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("eb", APIVersion, "ListPlatformEventNames")
+    
+    
+    return
+}
+
+func NewListPlatformEventNamesResponse() (response *ListPlatformEventNamesResponse) {
+    response = &ListPlatformEventNamesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ListPlatformEventNames
+// 获取平台产品事件名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) ListPlatformEventNames(request *ListPlatformEventNamesRequest) (response *ListPlatformEventNamesResponse, err error) {
+    return c.ListPlatformEventNamesWithContext(context.Background(), request)
+}
+
+// ListPlatformEventNames
+// 获取平台产品事件名称
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) ListPlatformEventNamesWithContext(ctx context.Context, request *ListPlatformEventNamesRequest) (response *ListPlatformEventNamesResponse, err error) {
+    if request == nil {
+        request = NewListPlatformEventNamesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListPlatformEventNames require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListPlatformEventNamesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListPlatformEventPatternsRequest() (request *ListPlatformEventPatternsRequest) {
+    request = &ListPlatformEventPatternsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("eb", APIVersion, "ListPlatformEventPatterns")
+    
+    
+    return
+}
+
+func NewListPlatformEventPatternsResponse() (response *ListPlatformEventPatternsResponse) {
+    response = &ListPlatformEventPatternsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ListPlatformEventPatterns
+// 获取平台产品事件匹配规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) ListPlatformEventPatterns(request *ListPlatformEventPatternsRequest) (response *ListPlatformEventPatternsResponse, err error) {
+    return c.ListPlatformEventPatternsWithContext(context.Background(), request)
+}
+
+// ListPlatformEventPatterns
+// 获取平台产品事件匹配规则
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) ListPlatformEventPatternsWithContext(ctx context.Context, request *ListPlatformEventPatternsRequest) (response *ListPlatformEventPatternsResponse, err error) {
+    if request == nil {
+        request = NewListPlatformEventPatternsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListPlatformEventPatterns require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListPlatformEventPatternsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListPlatformProductsRequest() (request *ListPlatformProductsRequest) {
+    request = &ListPlatformProductsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("eb", APIVersion, "ListPlatformProducts")
+    
+    
+    return
+}
+
+func NewListPlatformProductsResponse() (response *ListPlatformProductsResponse) {
+    response = &ListPlatformProductsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ListPlatformProducts
+// 获取平台产品列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) ListPlatformProducts(request *ListPlatformProductsRequest) (response *ListPlatformProductsResponse, err error) {
+    return c.ListPlatformProductsWithContext(context.Background(), request)
+}
+
+// ListPlatformProducts
+// 获取平台产品列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+func (c *Client) ListPlatformProductsWithContext(ctx context.Context, request *ListPlatformProductsRequest) (response *ListPlatformProductsResponse, err error) {
+    if request == nil {
+        request = NewListPlatformProductsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListPlatformProducts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListPlatformProductsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewListRulesRequest() (request *ListRulesRequest) {
     request = &ListRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1268,6 +1474,7 @@ func NewListRulesResponse() (response *ListRulesResponse) {
 //  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) ListRules(request *ListRulesRequest) (response *ListRulesResponse, err error) {
     return c.ListRulesWithContext(context.Background(), request)
@@ -1282,6 +1489,7 @@ func (c *Client) ListRules(request *ListRulesRequest) (response *ListRulesRespon
 //  INVALIDPARAMETERVALUE_LIMIT = "InvalidParameterValue.Limit"
 //  INVALIDPARAMETERVALUE_ORDER = "InvalidParameterValue.Order"
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 func (c *Client) ListRulesWithContext(ctx context.Context, request *ListRulesRequest) (response *ListRulesResponse, err error) {
     if request == nil {
@@ -1328,6 +1536,7 @@ func NewListTargetsResponse() (response *ListTargetsResponse) {
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TARGETID = "InvalidParameterValue.TargetId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) ListTargets(request *ListTargetsRequest) (response *ListTargetsResponse, err error) {
@@ -1345,6 +1554,7 @@ func (c *Client) ListTargets(request *ListTargetsRequest) (response *ListTargets
 //  INVALIDPARAMETERVALUE_ORDERBY = "InvalidParameterValue.OrderBy"
 //  INVALIDPARAMETERVALUE_RULEID = "InvalidParameterValue.RuleId"
 //  INVALIDPARAMETERVALUE_TARGETID = "InvalidParameterValue.TargetId"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_EVENTBUS = "ResourceNotFound.EventBus"
 //  RESOURCENOTFOUND_RULE = "ResourceNotFound.Rule"
 func (c *Client) ListTargetsWithContext(ctx context.Context, request *ListTargetsRequest) (response *ListTargetsResponse, err error) {
@@ -1626,6 +1836,7 @@ func NewUpdateEventBusResponse() (response *UpdateEventBusResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REGISTERCLSSERVICE = "FailedOperation.RegisterCLSService"
+//  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_EVENTBUSNAME = "InvalidParameterValue.EventBusName"
 //  INVALIDPARAMETERVALUE_EVENTTRACECONFIG = "InvalidParameterValue.EventTraceConfig"
@@ -1641,6 +1852,7 @@ func (c *Client) UpdateEventBus(request *UpdateEventBusRequest) (response *Updat
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_REGISTERCLSSERVICE = "FailedOperation.RegisterCLSService"
+//  INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_EVENTBUSNAME = "InvalidParameterValue.EventBusName"
 //  INVALIDPARAMETERVALUE_EVENTTRACECONFIG = "InvalidParameterValue.EventTraceConfig"
