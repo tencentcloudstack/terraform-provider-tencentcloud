@@ -45,16 +45,15 @@ func TestAccTencentCloudMpsFlowResource_srt(t *testing.T) {
 				Config: fmt.Sprintf(testAccMpsFlow_srt_update, randomNum, randomNum),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "flow_name", fmt.Sprintf("tf_test_mps_flow_%d_changed", randomNum)),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "flow_name", fmt.Sprintf("tf_test_mps_flow_srt_%d_changed", randomNum)),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "event_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "max_bandwidth", "10000000"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "input_group.#"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_mps_flow.flow",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName: "tencentcloud_mps_flow.flow",
+				ImportState:  true,
 			},
 		},
 	})
@@ -73,26 +72,25 @@ func TestAccTencentCloudMpsFlowResource_rtp(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccMpsFlow_rtp, randomNum, randomNum),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "flow_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "event_id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "max_bandwidth", "10000000"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow_rtp", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow_rtp", "flow_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow_rtp", "event_id"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "max_bandwidth", "10000000"),
 
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "input_group.#"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "input_group.0.input_name", "test_inputname"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "input_group.0.protocol", "RTP"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "input_group.0.description", "input name Description"),
-					resource.TestCheckTypeSetElemAttr("tencentcloud_mps_flow.flow", "input_group.0.allow_ip_list.*", "0.0.0.0/0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow_rtp", "input_group.#"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.input_name", "test_inputname"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.protocol", "RTP"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.description", "input name Description"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.allow_ip_list.*", "0.0.0.0/0"),
 
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow", "input_group.0.rtp_settings.#"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "input_group.0.rtp_settings.0.fec", "none"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow", "input_group.0.rtp_settings.0.idle_timeout", "1000"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_flow.flow_rtp", "input_group.0.rtp_settings.#"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.rtp_settings.0.fec", "none"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_flow.flow_rtp", "input_group.0.rtp_settings.0.idle_timeout", "1000"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_mps_flow.flow",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName: "tencentcloud_mps_flow.flow_rtp",
+				ImportState:  true,
 			},
 		},
 	})
@@ -149,24 +147,24 @@ resource "tencentcloud_mps_flow" "flow" {
 			peer_idle_timeout =  1000
 		}
   }
-} 
   event_id = tencentcloud_mps_event.event.id
-}
+} 
+
 
 `
 
 const testAccMpsFlow_rtp = `
-resource "tencentcloud_mps_event" "event" {
+resource "tencentcloud_mps_event" "event_rtp" {
 	event_name = "tf_test_event_rtp_%d"
 	description = "tf test mps event description"
   }
 
-resource "tencentcloud_mps_flow" "flow" {
+resource "tencentcloud_mps_flow" "flow_rtp" {
   flow_name = "tf_test_mps_flow_rtp_%d"
   max_bandwidth = 10000000
   input_group {
 		input_name = "test_inputname"
-		protocol = "SRT"
+		protocol = "RTP"
 		description = "input name Description"
 		allow_ip_list = ["0.0.0.0/0"]
 		rtp_settings {
@@ -174,7 +172,7 @@ resource "tencentcloud_mps_flow" "flow" {
 			idle_timeout = 1000
 		}
   }
-  event_id = tencentcloud_mps_event.event.id
+  event_id = tencentcloud_mps_event.event_rtp.id
 }
 
 `

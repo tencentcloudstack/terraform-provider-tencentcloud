@@ -1603,7 +1603,6 @@ Media Processing Service(MPS)
 	tencentcloud_mps_schedule
 	tencentcloud_mps_enable_schedule_config
 	tencentcloud_mps_flow
-	tencentcloud_mps_start_flow_operation
 	tencentcloud_mps_event
 
 Cloud HDFS(CHDFS)

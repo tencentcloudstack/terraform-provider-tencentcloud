@@ -3,57 +3,57 @@ Provides a resource to create a mps flow
 
 Example Usage
 
-```hcl
-resource "tencentcloud_mps_flow" "flow" {
-  flow_name = ""
-  max_bandwidth =
-  input_group {
-		input_name = ""
-		protocol = ""
-		description = ""
-		allow_ip_list =
-		srt_settings {
-			mode = ""
-			stream_id = ""
-			latency =
-			recv_latency =
-			peer_latency =
-			peer_idle_timeout =
-			passphrase = ""
-			pb_key_len =
-			source_addresses {
-				ip = ""
-				port =
-			}
-		}
-		rtp_settings {
-			fec = ""
-			idle_timeout =
-		}
-		fail_over = ""
-		rtmp_pull_settings {
-			source_addresses {
-				tc_url = ""
-				stream_key = ""
-			}
-		}
-		rtsp_pull_settings {
-			source_addresses {
-				url = ""
-			}
-		}
-		hls_pull_settings {
-			source_addresses {
-				url = ""
-			}
-		}
-		resilient_stream {
-			enable =
-			buffer_time =
-		}
+Create a mps RTP flow
 
+```hcl
+resource "tencentcloud_mps_event" "event" {
+	event_name = "tf_test_event_srt_%d"
+	description = "tf test mps event description"
   }
-  event_id = ""
+
+resource "tencentcloud_mps_flow" "flow" {
+  flow_name = "tf_test_mps_flow_srt_%d"
+  max_bandwidth = 10000000
+  input_group {
+		input_name = "test_inputname"
+		protocol = "SRT"
+		description = "input name Description"
+		allow_ip_list = ["0.0.0.0/0"]
+		srt_settings {
+			mode = "LISTENER"
+			stream_id = "#!::u=johnny,r=resource,h=xxx.com,t=stream,m=play"
+			latency = 1000
+			recv_latency = 1000
+			peer_latency =  1000
+			peer_idle_timeout =  1000
+		}
+  }
+  event_id = tencentcloud_mps_event.event.id
+}
+```
+
+Create a mps RTP flow
+
+```hcl
+resource "tencentcloud_mps_event" "event_rtp" {
+	event_name = "tf_test_event_rtp_%d"
+	description = "tf test mps event description"
+  }
+
+resource "tencentcloud_mps_flow" "flow_rtp" {
+  flow_name = "tf_test_mps_flow_rtp_%d"
+  max_bandwidth = 10000000
+  input_group {
+		input_name = "test_inputname"
+		protocol = "RTP"
+		description = "input name Description"
+		allow_ip_list = ["0.0.0.0/0"]
+		rtp_settings {
+			fec = "none"
+			idle_timeout = 1000
+		}
+  }
+  event_id = tencentcloud_mps_event.event_rtp.id
 }
 ```
 
