@@ -107,17 +107,17 @@ func resourceTencentCloudRumReleaseFileCreate(d *schema.ResourceData, meta inter
 		releaseFile.Version = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("file_key"); ok {
-		releaseFile.Version = helper.String(v.(string))
+		releaseFile.FileKey = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("file_name"); ok {
-		releaseFile.Version = helper.String(v.(string))
+		releaseFile.FileName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("file_hash"); ok {
-		releaseFile.Version = helper.String(v.(string))
+		releaseFile.FileHash = helper.String(v.(string))
 	}
 	if v, ok := d.GetOkExists("release_file_id"); ok {
 		releaseFileId = v.(int)
-		releaseFile.Version = helper.String(v.(string))
+		releaseFile.ID = helper.IntInt64(v.(int))
 	}
 	request.Files = append(request.Files, &releaseFile)
 

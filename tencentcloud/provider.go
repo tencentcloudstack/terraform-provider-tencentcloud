@@ -1384,7 +1384,6 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_offline_log_config_attachment
 	tencentcloud_rum_instance_status_attachment
 	tencentcloud_rum_project_status_attachment
-	tencentcloud_rum_release_file
 
 Cloud Streaming Services(CSS)
   Resource

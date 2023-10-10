@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudRumReleaseFileResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixRumReleaseFileResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,7 +30,7 @@ func TestAccTencentCloudRumReleaseFileResource_basic(t *testing.T) {
 const testAccRumReleaseFile = `
 
 resource "tencentcloud_rum_release_file" "release_file" {
-  project_id      = 123
+  project_id      = 120000
   version         = "1.0"
   file_key        = "120000-last-1632921299138-index.js.map"
   file_name       = "index.js.map"
