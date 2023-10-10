@@ -14,6 +14,18 @@ Provides a resource to create a cwp license_bind_attachment
 ## Example Usage
 
 ```hcl
+data "tencentcloud_cwp_machines_simple" "example" {
+  machine_type   = "CVM"
+  machine_region = "ap-guangzhou"
+  project_ids    = [1210293]
+
+  filters {
+    name        = "Version"
+    values      = ["BASIC_VERSION"]
+    exact_match = true
+  }
+}
+
 resource "tencentcloud_cwp_license_order" "example" {
   alias        = "tf_example"
   license_type = 0
@@ -29,7 +41,7 @@ resource "tencentcloud_cwp_license_bind_attachment" "example" {
   resource_id  = tencentcloud_cwp_license_order.example.resource_id
   license_id   = tencentcloud_cwp_license_order.example.license_id
   license_type = 0
-  quuid        = "2c7e5cce-1cec-4456-8d18-018f160dd987"
+  quuid        = data.tencentcloud_cwp_machines_simple.example.machines[0].quuid
 }
 ```
 

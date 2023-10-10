@@ -143,3 +143,65 @@ func (me *CwpService) DeleteCwpLicenseBindAttachmentById(ctx context.Context, re
 
 	return
 }
+
+func (me *CwpService) DescribeCwpMachinesSimpleByFilter(ctx context.Context, param map[string]interface{}) (machinesSimple []*cwp.MachineSimple, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cwp.NewDescribeMachinesSimpleRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MachineType" {
+			request.MachineType = v.(*string)
+		}
+
+		if k == "MachineRegion" {
+			request.MachineRegion = v.(*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*cwp.Filter)
+		}
+
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCwpClient().DescribeMachinesSimple(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Machines) < 1 {
+			break
+		}
+
+		machinesSimple = append(machinesSimple, response.Response.Machines...)
+		if len(response.Response.Machines) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
