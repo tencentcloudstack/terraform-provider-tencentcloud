@@ -1388,6 +1388,7 @@ Tencent Cloud Organization (TCO)
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
 	tencentcloud_organization_policy_sub_account_attachment
+	tencentcloud_organization_org_member_auth_identity_attachment
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -3025,6 +3026,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
+			"tencentcloud_organization_org_member_auth_identity_attachment":    resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                  resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":              resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                         resourceTencentCloudDbbrainDbDiagReportTask(),

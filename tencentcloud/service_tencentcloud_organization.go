@@ -238,3 +238,65 @@ func (me *OrganizationService) DeleteOrganizationPolicySubAccountAttachmentById(
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgMemberAuthIdentityById(ctx context.Context, memberUin int64) (identityIds []int64, errRet error) {
+	logId := getLogId(ctx)
+	request := organization.NewDescribeOrganizationMemberAuthIdentitiesRequest()
+	request.MemberUin = &memberUin
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeOrganizationMemberAuthIdentities(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Items {
+		if v.MemberUin != nil && *v.MemberUin == memberUin {
+			identityIds = append(identityIds, *v.IdentityId)
+		}
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgMemberAuthIdentityById(ctx context.Context, memberUin string, identityId []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDeleteOrganizationMemberAuthIdentityRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	for _, id := range identityId {
+		log.Printf("[DEBUG]%s api[%s] delete identity, uin [%s], identityId [%s]\n", logId, request.GetAction(), memberUin, id)
+
+		request.MemberUin = helper.StrToUint64Point(memberUin)
+		request.IdentityId = helper.StrToUint64Point(id)
+
+		response, err := me.client.UseOrganizationClient().DeleteOrganizationMemberAuthIdentity(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] delete identity success, request memberUin [%s], response body [%s]\n", logId, request.GetAction(), memberUin, response.ToJsonString())
+	}
+
+	return
+}
