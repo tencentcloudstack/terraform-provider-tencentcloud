@@ -4,7 +4,7 @@ Provides a resource to create a organization org_member_auth_identity
 Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_member_auth_identity" "org_member_auth_identity" {
+resource "tencentcloud_organization_org_member_auth_identity_attachment" "org_member_auth_identity" {
   member_uin = &lt;nil&gt;
   identity_ids = &lt;nil&gt;
 }
@@ -66,7 +66,6 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 
 	var (
 		request    = organization.NewCreateOrganizationMemberAuthIdentityRequest()
-		response   = organization.NewCreateOrganizationMemberAuthIdentityResponse()
 		memberUin  string
 		identityId []string
 	)
@@ -91,7 +90,6 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -100,7 +98,6 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 	}
 
 	d.SetId(memberUin)
-
 	return resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentRead(d, meta)
 }
 
@@ -128,7 +125,7 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentRead(d *sche
 	}
 
 	_ = d.Set("identity_ids", identityIds)
-
+	_ = d.Set("member_uin", uin)
 	return nil
 }
 
