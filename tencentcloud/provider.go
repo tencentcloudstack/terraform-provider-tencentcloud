@@ -528,6 +528,17 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_policies
     tencentcloud_gaap_security_rules
     tencentcloud_gaap_domain_error_pages
+	tencentcloud_gaap_access_regions
+	tencentcloud_gaap_access_regions_by_dest_region
+	tencentcloud_gaap_black_header
+	tencentcloud_gaap_country_area_mapping
+	tencentcloud_gaap_custom_header
+	tencentcloud_gaap_dest_regions
+	tencentcloud_gaap_proxy_detail
+	tencentcloud_gaap_proxy_groups
+	tencentcloud_gaap_proxy_statistics
+	tencentcloud_gaap_proxy_group_statistics
+	tencentcloud_gaap_real_servers_status
 
   Resource
     tencentcloud_gaap_proxy
@@ -1583,6 +1594,8 @@ Media Processing Service(MPS)
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
 	tencentcloud_mps_word_sample
+	tencentcloud_mps_schedule
+	tencentcloud_mps_enable_schedule_config
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1659,6 +1672,7 @@ EventBridge(EB)
 	tencentcloud_eb_platform_event_names
 	tencentcloud_eb_platform_event_patterns
 	tencentcloud_eb_platform_products
+	tencentcloud_eb_plateform_event_template
 
   Resource
 	tencentcloud_eb_event_transform
@@ -2033,6 +2047,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_rules":                       dataSourceTencentCloudGaapSecurityRules(),
 			"tencentcloud_gaap_certificates":                         dataSourceTencentCloudGaapCertificates(),
 			"tencentcloud_gaap_domain_error_pages":                   dataSourceTencentCloudGaapDomainErrorPageInfoList(),
+			"tencentcloud_gaap_access_regions":                       dataSourceTencentCloudGaapAccessRegions(),
+			"tencentcloud_gaap_access_regions_by_dest_region":        dataSourceTencentCloudGaapAccessRegionsByDestRegion(),
+			"tencentcloud_gaap_black_header":                         dataSourceTencentCloudGaapBlackHeader(),
+			"tencentcloud_gaap_country_area_mapping":                 dataSourceTencentCloudGaapCountryAreaMapping(),
+			"tencentcloud_gaap_custom_header":                        dataSourceTencentCloudGaapCustomHeader(),
+			"tencentcloud_gaap_dest_regions":                         dataSourceTencentCloudGaapDestRegions(),
+			"tencentcloud_gaap_proxy_detail":                         dataSourceTencentCloudGaapProxyDetail(),
+			"tencentcloud_gaap_proxy_groups":                         dataSourceTencentCloudGaapProxyGroups(),
+			"tencentcloud_gaap_proxy_group_statistics":               dataSourceTencentCloudGaapProxyGroupStatistics(),
+			"tencentcloud_gaap_proxy_statistics":                     dataSourceTencentCloudGaapProxyStatistics(),
+			"tencentcloud_gaap_real_servers_status":                  dataSourceTencentCloudGaapRealServersStatus(),
 			"tencentcloud_ssl_certificates":                          dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_cam_roles":                                 dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                 dataSourceTencentCloudCamUsers(),
@@ -2386,6 +2411,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_platform_event_names":                   dataSourceTencentCloudEbPlatformEventNames(),
 			"tencentcloud_eb_platform_event_patterns":                dataSourceTencentCloudEbPlatformEventPatterns(),
 			"tencentcloud_eb_platform_products":                      dataSourceTencentCloudEbPlatformProducts(),
+			"tencentcloud_eb_plateform_event_template":               dataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
@@ -3100,6 +3126,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
 			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
+			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
+			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),

@@ -728,3 +728,54 @@ func (me *MpsService) DeleteMpsWordSamplesById(ctx context.Context, keywords []s
 
 	return
 }
+
+func (me *MpsService) DescribeMpsScheduleById(ctx context.Context, scheduleId *string) (schedules []*mps.SchedulesInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeSchedulesRequest()
+	if scheduleId != nil {
+		request.ScheduleIds = []*int64{helper.StrToInt64Point(*scheduleId)}
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeSchedules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	schedules = response.Response.ScheduleInfoSet
+	return
+}
+
+func (me *MpsService) DeleteMpsScheduleById(ctx context.Context, scheduleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteScheduleRequest()
+	request.ScheduleId = helper.StrToInt64Point(scheduleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteSchedule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
