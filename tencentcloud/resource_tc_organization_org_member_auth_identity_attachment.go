@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_org_member_auth_identity_attachment" "org_member_auth_identity" {
-  member_uin = &lt;nil&gt;
-  identity_ids = &lt;nil&gt;
+  member_uin = 100033704327
+  identity_ids = [1657]
 }
 ```
 
@@ -22,11 +22,12 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment() *schema.Resource {

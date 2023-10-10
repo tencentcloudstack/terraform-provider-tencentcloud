@@ -1384,6 +1384,8 @@ TencentCloud Automation Tools(TAT)
 	tencentcloud_tat_invocation_command_attachment
 
 Tencent Cloud Organization (TCO)
+  Data Source
+	tencentcloud_organization_org_auth_node
   Resource
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
@@ -2449,6 +2451,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_black_email_address":                   dataSourceTencentCloudSesBlackEmailAddress(),
 			"tencentcloud_ses_statistics_report":                     dataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                     dataSourceTencentCloudSesSendEmailStatus(),
+			"tencentcloud_organization_org_auth_node":                dataSourceTencentCloudOrganizationOrgAuthNode(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
