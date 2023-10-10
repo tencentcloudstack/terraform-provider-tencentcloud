@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_instance: Add more data disk types
+```
