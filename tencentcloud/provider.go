@@ -1363,23 +1363,20 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_fetch_url_info
 	tencentcloud_rum_fetch_url
 	tencentcloud_rum_group_log
-	tencentcloud_rum_log_list
 	tencentcloud_rum_log_url_statistics
 	tencentcloud_rum_performance_page
 	tencentcloud_rum_pv_url_info
 	tencentcloud_rum_pv_url_statistics
 	tencentcloud_rum_report_count
-	tencentcloud_rum_rum_log_stats_log_list
 	tencentcloud_rum_scores
 	tencentcloud_rum_set_url_statistics
 	tencentcloud_rum_sign
 	tencentcloud_rum_static_project
 	tencentcloud_rum_static_resource
 	tencentcloud_rum_static_url
-	tencentcloud_rum_taw_area
 	tencentcloud_rum_web_vitals_page
-	tencentcloud_rum_log_export
 	tencentcloud_rum_log_export_list
+
   Resource
 	tencentcloud_rum_project
 	tencentcloud_rum_taw_instance
