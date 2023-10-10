@@ -77,7 +77,3 @@ tencentcloud_rum_instance_status_attachment
 ```release-note:new-resource
 tencentcloud_rum_project_status_attachment
 ```
-
-```release-note:new-resource
-tencentcloud_rum_release_file
-```
