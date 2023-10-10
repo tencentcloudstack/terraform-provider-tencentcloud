@@ -66,9 +66,8 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 	logId := getLogId(contextNil)
 
 	var (
-		request    = organization.NewCreateOrganizationMemberAuthIdentityRequest()
-		memberUin  string
-		identityId []string
+		request   = organization.NewCreateOrganizationMemberAuthIdentityRequest()
+		memberUin string
 	)
 	if v, ok := d.GetOk("member_uin"); ok {
 		request.MemberUins = append(request.MemberUins, helper.IntUint64(v.(int)))
@@ -80,7 +79,6 @@ func resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachmentCreate(d *sc
 		for i := range identityIdsSet {
 			identityIds := identityIdsSet[i].(int)
 			request.IdentityIds = append(request.IdentityIds, helper.IntUint64(identityIds))
-			identityId = append(identityId, helper.IntToStr(identityIds))
 		}
 	}
 
