@@ -183,6 +183,8 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		return outErr
 	}
 
+	d.SetId(keyId)
+
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, d.Id())
@@ -247,9 +249,7 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		}
 	}
 
-	d.SetId(keyId)
 	return resourceTencentCloudKmsKeyRead(d, meta)
-
 }
 
 func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) error {
