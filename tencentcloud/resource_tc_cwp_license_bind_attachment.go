@@ -177,6 +177,8 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 		return err
 	}
 
+	d.SetId(strings.Join([]string{resourceId, licenseId, quuid, licenseType}, FILED_SP))
+
 	// wait
 	taskRequest.TaskId = response.Response.TaskId
 	err = resource.Retry(writeRetryTimeout*6, func() *resource.RetryError {
@@ -201,8 +203,6 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 		log.Printf("[CRITAL]%s create cwp licenseBindAttachment failed, reason:%+v", logId, err)
 		return err
 	}
-
-	d.SetId(strings.Join([]string{resourceId, licenseId, quuid, licenseType}, FILED_SP))
 
 	return resourceTencentCloudCwpLicenseBindAttachmentRead(d, meta)
 }
