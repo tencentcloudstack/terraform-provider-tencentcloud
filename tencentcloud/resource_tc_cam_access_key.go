@@ -145,8 +145,8 @@ func resourceTencentCloudCamAccessKeyCreate(d *schema.ResourceData, meta interfa
 			return fmt.Errorf("creating IAM Access Key (%v): %s", targetUin, err)
 		}
 
-		d.Set("key_fingerprint", fingerprint)
-		d.Set("encrypted_secret_access_key", encrypted)
+		_ = d.Set("key_fingerprint", fingerprint)
+		_ = d.Set("encrypted_secret_access_key", encrypted)
 
 	} else {
 		_ = d.Set("secret_access_key", response.Response.AccessKey.SecretAccessKey)
