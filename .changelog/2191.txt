@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_organization_org_member_auth_identity_attachment
+```
+
+```release-note:new-data-source
+tencentcloud_organization_org_auth_node
+```
