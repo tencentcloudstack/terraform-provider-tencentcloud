@@ -1651,6 +1651,8 @@ Media Processing Service(MPS)
 	tencentcloud_mps_enable_schedule_config
 	tencentcloud_mps_flow
 	tencentcloud_mps_event
+	tencentcloud_mps_manage_task_operation
+	tencentcloud_mps_execute_function_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -3226,6 +3228,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_flow":                                            resourceTencentCloudMpsFlow(),
 			"tencentcloud_mps_start_flow_operation":                            resourceTencentCloudMpsStartFlowOperation(),
 			"tencentcloud_mps_event":                                           resourceTencentCloudMpsEvent(),
+			"tencentcloud_mps_execute_function_operation":                      resourceTencentCloudMpsExecuteFunctionOperation(),
+			"tencentcloud_mps_manage_task_operation":                           resourceTencentCloudMpsManageTaskOperation(),
 			"tencentcloud_mps_transcode_template":                              resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                              resourceTencentCloudMpsWatermarkTemplate(),
 			"tencentcloud_mps_image_sprite_template":                           resourceTencentCloudMpsImageSpriteTemplate(),
