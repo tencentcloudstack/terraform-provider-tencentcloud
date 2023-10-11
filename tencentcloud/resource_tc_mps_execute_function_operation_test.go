@@ -17,7 +17,7 @@ func TestAccTencentCloudNeedFixMpsExecuteFunctionOperationResource_basic(t *test
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMpsExecuteFunctionOperation,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_execute_function_operation.operation", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_execute_function_operation.operation", "function_name", "ExampleFunc"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_execute_function_operation.operation", "function_arg", "arg1"),

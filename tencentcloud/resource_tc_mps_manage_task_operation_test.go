@@ -17,7 +17,7 @@ func TestAccTencentCloudNeedFixMpsManageTaskOperationResource_basic(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMpsManageTaskOperation,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_manage_task_operation.operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_manage_task_operation.operation", "task_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_manage_task_operation.operation", "operation_type", "Abort"),
@@ -27,7 +27,7 @@ func TestAccTencentCloudNeedFixMpsManageTaskOperationResource_basic(t *testing.T
 	})
 }
 
-const testAccMpsManageTaskOperation =userInfoData+  `
+const testAccMpsManageTaskOperation = userInfoData + `
 
 resource "tencentcloud_mps_manage_task_operation" "operation" {
   operation_type = "Abort"
