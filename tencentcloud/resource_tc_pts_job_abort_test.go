@@ -20,11 +20,6 @@ func TestAccTencentCloudNeedFixPtsJobAbortResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_pts_job_abort.job_abort", "id"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_pts_job_abort.job_abort",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }

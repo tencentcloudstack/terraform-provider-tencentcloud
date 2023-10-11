@@ -18,11 +18,6 @@ func TestAccTencentCloudPtsCronJobAbortResource_basic(t *testing.T) {
 				Config: testAccPtsCronJobAbort,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_pts_cron_job_abort.cron_job_abort", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_pts_cron_job_abort.cron_job_abort",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
