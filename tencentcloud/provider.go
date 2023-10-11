@@ -701,15 +701,8 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
-	tencentcloud_monitor_tmp_tke_template
-	tencentcloud_monitor_tmp_tke_template_attachment
-	tencentcloud_monitor_tmp_tke_alert_policy
-	tencentcloud_monitor_tmp_tke_config
 	tencentcloud_monitor_alarm_notice
-	tencentcloud_monitor_tmp_tke_record_rule_yaml
-	tencentcloud_monitor_tmp_tke_global_notification
-	tencentcloud_monitor_tmp_tke_cluster_agent
-	tencentcloud_monitor_tmp_tke_basic_config
+
 
 Managed Service for Prometheus(TMP)
   Resource
@@ -720,6 +713,14 @@ Managed Service for Prometheus(TMP)
 	tencentcloud_monitor_tmp_scrape_job
 	tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_manage_grafana_attachment
+	tencentcloud_monitor_tmp_tke_template
+	tencentcloud_monitor_tmp_tke_template_attachment
+	tencentcloud_monitor_tmp_tke_alert_policy
+	tencentcloud_monitor_tmp_tke_config
+	tencentcloud_monitor_tmp_tke_record_rule_yaml
+	tencentcloud_monitor_tmp_tke_global_notification
+	tencentcloud_monitor_tmp_tke_cluster_agent
+	tencentcloud_monitor_tmp_tke_basic_config
 
 TencentCloud Managed Service for Grafana(TCMG)
   Resource
