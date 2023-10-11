@@ -701,15 +701,8 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
-	tencentcloud_monitor_tmp_tke_template
-	tencentcloud_monitor_tmp_tke_template_attachment
-	tencentcloud_monitor_tmp_tke_alert_policy
-	tencentcloud_monitor_tmp_tke_config
 	tencentcloud_monitor_alarm_notice
-	tencentcloud_monitor_tmp_tke_record_rule_yaml
-	tencentcloud_monitor_tmp_tke_global_notification
-	tencentcloud_monitor_tmp_tke_cluster_agent
-	tencentcloud_monitor_tmp_tke_basic_config
+
 
 Managed Service for Prometheus(TMP)
   Resource
@@ -720,6 +713,14 @@ Managed Service for Prometheus(TMP)
 	tencentcloud_monitor_tmp_scrape_job
 	tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_manage_grafana_attachment
+	tencentcloud_monitor_tmp_tke_template
+	tencentcloud_monitor_tmp_tke_template_attachment
+	tencentcloud_monitor_tmp_tke_alert_policy
+	tencentcloud_monitor_tmp_tke_config
+	tencentcloud_monitor_tmp_tke_record_rule_yaml
+	tencentcloud_monitor_tmp_tke_global_notification
+	tencentcloud_monitor_tmp_tke_cluster_agent
+	tencentcloud_monitor_tmp_tke_basic_config
 
 TencentCloud Managed Service for Grafana(TCMG)
   Resource
@@ -1579,6 +1580,9 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_unit_namespace
 
 Media Processing Service(MPS)
+  Data Source
+	tencentcloud_mps_schedules
+
   Resource
 	tencentcloud_mps_workflow
 	tencentcloud_mps_enable_workflow_config
@@ -1593,6 +1597,8 @@ Media Processing Service(MPS)
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
+	tencentcloud_mps_process_live_stream_operation
+	tencentcloud_mps_edit_media_operation
 	tencentcloud_mps_word_sample
 	tencentcloud_mps_schedule
 	tencentcloud_mps_enable_schedule_config
@@ -2244,6 +2250,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_sale_info":                         dataSourceTencentCloudMariadbSaleInfo(),
 			"tencentcloud_mariadb_slow_logs":                         dataSourceTencentCloudMariadbSlowLogs(),
 			"tencentcloud_mariadb_upgrade_price":                     dataSourceTencentCloudMariadbUpgradePrice(),
+			"tencentcloud_mps_schedules":                             dataSourceTencentCloudMpsSchedules(),
 			"tencentcloud_tdcpg_clusters":                            dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                           dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                            dataSourceTencentCloudCatProbeData(),
@@ -3120,6 +3127,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
+			"tencentcloud_mps_process_live_stream_operation":                   resourceTencentCloudMpsProcessLiveStreamOperation(),
+			"tencentcloud_mps_edit_media_operation":                            resourceTencentCloudMpsEditMediaOperation(),
 			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
 			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
 			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
