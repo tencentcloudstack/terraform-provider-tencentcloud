@@ -220,7 +220,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [local.sg_id]
+    orderly_security_group_ids = [local.sg_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -347,7 +347,7 @@ resource "tencentcloud_kubernetes_node_pool" "example" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [local.sg_id]
+    orderly_security_group_ids = [local.sg_id]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
