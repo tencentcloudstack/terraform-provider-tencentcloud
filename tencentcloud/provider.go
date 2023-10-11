@@ -921,6 +921,12 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
+    tencentcloud_ssl_replace_certificate_operation
+    tencentcloud_ssl_revoke_certificate_operation
+    tencentcloud_ssl_update_certificate_instance_operation
+    tencentcloud_ssl_update_certificate_record_retry_operation
+    tencentcloud_ssl_update_certificate_record_rollback_operation
+    tencentcloud_ssl_upload_revoke_letter_operation
     tencentcloud_ssl_complete_certificate_operation
     tencentcloud_ssl_check_certificate_chain_operation
     tencentcloud_ssl_deploy_certificate_instance_operation
@@ -3358,6 +3364,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_download_certificate_operation":                  resourceTencentCloudSslDownloadCertificateOperation(),
 			"tencentcloud_cwp_license_order":                                   resourceTencentCloudCwpLicenseOrder(),
 			"tencentcloud_cwp_license_bind_attachment":                         resourceTencentCloudCwpLicenseBindAttachment(),
+			"tencentcloud_ssl_replace_certificate_operation":                   resourceTencentCloudSslReplaceCertificateOperation(),
+			"tencentcloud_ssl_revoke_certificate_operation":                    resourceTencentCloudSslRevokeCertificateOperation(),
+			"tencentcloud_ssl_update_certificate_instance_operation":           resourceTencentCloudSslUpdateCertificateInstanceOperation(),
+			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
+			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
+			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
 		},
 
 		ConfigureFunc: providerConfigure,
