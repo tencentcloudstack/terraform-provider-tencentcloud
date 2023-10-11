@@ -1744,6 +1744,13 @@ Cfw
     tencentcloud_cfw_nat_firewall_switch
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
+
+Cwp
+  Data Source
+	tencentcloud_cwp_machines_simple
+  Resource
+	tencentcloud_cwp_license_order
+	tencentcloud_cwp_license_bind_attachment
 */
 package tencentcloud
 
@@ -2432,6 +2439,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_fw_switches":                       dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                       dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                      dataSourceTencentCloudCfwEdgeFwSwitches(),
+			"tencentcloud_cwp_machines_simple":                       dataSourceTencentCloudCwpMachinesSimple(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
@@ -3220,6 +3228,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_cwp_license_order":                                   resourceTencentCloudCwpLicenseOrder(),
+			"tencentcloud_cwp_license_bind_attachment":                         resourceTencentCloudCwpLicenseBindAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
