@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mps_input
+```
+
+```release-note:new-resource
+tencentcloud_mps_output
+```
