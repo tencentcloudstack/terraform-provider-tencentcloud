@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mps_flow
+```
+
+```release-note:new-resource
+tencentcloud_mps_event
+```

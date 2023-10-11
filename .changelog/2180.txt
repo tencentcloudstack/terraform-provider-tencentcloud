@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_eb_platform_event_names
+```
+
+```release-note:new-data-source
+tencentcloud_eb_platform_event_patterns
+```
+
+```release-note:new-data-source
+tencentcloud_eb_platform_products
+```

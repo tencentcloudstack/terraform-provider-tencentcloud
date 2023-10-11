@@ -938,6 +938,7 @@ const (
 // RUM
 const (
 	defaultRumInstanceId = "rum-pasZKEI3RLgakj"
+	defaultRumProjectId  = "131407"
 )
 
 // End of RUM
@@ -1138,3 +1139,11 @@ resource "tencentcloud_eni_attachment" "foo" {
 `
 
 //End of Clb
+
+// MPS
+const (
+	defaultMpsScheduleId   = 24685
+	defaultMpsScheduleName = "keep_mps_schedule_001"
+)
+
+//End of MPS

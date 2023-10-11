@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Monitor(Monitor)"
+subcategory: "Managed Service for Prometheus(TMP)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_tke_template_attachment"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_tke_template_attachment"

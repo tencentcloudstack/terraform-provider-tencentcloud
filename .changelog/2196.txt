@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mps_manage_task_operation
+```
+
+```release-note:new-resource
+tencentcloud_mps_execute_function_operation
+```

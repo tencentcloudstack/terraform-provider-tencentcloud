@@ -644,3 +644,316 @@ func (me *MpsService) DeleteMpsPersonSampleById(ctx context.Context, personId st
 
 	return
 }
+
+func (me *MpsService) DescribeMpsWordSamplesById(ctx context.Context, keywords []string) (wordSamples []*mps.AiSampleWord, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeWordSamplesRequest()
+	request.Keywords = helper.Strings(keywords)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeWordSamples(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WordSet) < 1 {
+		return
+	}
+
+	wordSamples = response.Response.WordSet
+	return
+}
+
+func (me *MpsService) DescribeMpsWordSampleById(ctx context.Context, keyword string) (wordSample *mps.AiSampleWord, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeWordSamplesRequest()
+	request.Keywords = []*string{
+		helper.String(keyword),
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeWordSamples(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WordSet) < 1 {
+		return
+	}
+
+	wordSample = response.Response.WordSet[0]
+	return
+}
+
+func (me *MpsService) DeleteMpsWordSamplesById(ctx context.Context, keywords []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteWordSamplesRequest()
+	request.Keywords = helper.Strings(keywords)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteWordSamples(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MpsService) DescribeMpsScheduleById(ctx context.Context, scheduleId *string) (schedules []*mps.SchedulesInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeSchedulesRequest()
+	if scheduleId != nil {
+		request.ScheduleIds = []*int64{helper.StrToInt64Point(*scheduleId)}
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeSchedules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	schedules = response.Response.ScheduleInfoSet
+	return
+}
+
+func (me *MpsService) DeleteMpsScheduleById(ctx context.Context, scheduleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteScheduleRequest()
+	request.ScheduleId = helper.StrToInt64Point(scheduleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteSchedule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MpsService) DescribeMpsSchedulesByFilter(ctx context.Context, param map[string]interface{}) (schedules []*mps.SchedulesInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeSchedulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ScheduleIds" {
+			request.ScheduleIds = helper.InterfacesIntInt64Point(v.([]interface{}))
+		}
+		if k == "TriggerType" {
+			request.TriggerType = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeSchedules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ScheduleInfoSet) < 1 {
+			break
+		}
+		schedules = append(schedules, response.Response.ScheduleInfoSet...)
+		if len(response.Response.ScheduleInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsFlowById(ctx context.Context, flowId string) (flow *mps.DescribeFlow, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeStreamLinkFlowRequest()
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeStreamLinkFlow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flow = response.Response.Info
+	return
+}
+
+func (me *MpsService) DeleteMpsFlowById(ctx context.Context, flowId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteStreamLinkFlowRequest()
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteStreamLinkFlow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MpsService) DescribeMpsEventById(ctx context.Context, eventId string) (event *mps.DescribeEvent, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeStreamLinkEventRequest()
+	request.EventId = &eventId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeStreamLinkEvent(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	event = response.Response.Info
+	return
+}
+
+func (me *MpsService) DeleteMpsEventById(ctx context.Context, eventId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteStreamLinkEventRequest()
+	request.EventId = &eventId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteStreamLinkEvent(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MpsService) DescribeMpsTaskDetailById(ctx context.Context, taskId string) (manageTaskOperation *mps.DescribeTaskDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeTaskDetailRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeTaskDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	manageTaskOperation = response.Response
+	return
+}

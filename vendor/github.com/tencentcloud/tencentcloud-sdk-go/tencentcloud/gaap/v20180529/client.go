@@ -1134,6 +1134,7 @@ func NewCreateGlobalDomainResponse() (response *CreateGlobalDomainResponse) {
 //  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
 //  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
 //  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  FAILEDOPERATION_USERNOTINWHITELIST = "FailedOperation.UserNotInWhitelist"
 //  INVALIDPARAMETERVALUE_GLOBALDOMAINHITBANBLACKLIST = "InvalidParameterValue.GlobalDomainHitBanBlacklist"
 //  LIMITEXCEEDED_DOMAIN = "LimitExceeded.Domain"
 //  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
@@ -1153,6 +1154,7 @@ func (c *Client) CreateGlobalDomain(request *CreateGlobalDomainRequest) (respons
 //  FAILEDOPERATION_TAGRESOURCESFAILED = "FailedOperation.TagResourcesFailed"
 //  FAILEDOPERATION_UNTAGRESOURCESFAILED = "FailedOperation.UnTagResourcesFailed"
 //  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  FAILEDOPERATION_USERNOTINWHITELIST = "FailedOperation.UserNotInWhitelist"
 //  INVALIDPARAMETERVALUE_GLOBALDOMAINHITBANBLACKLIST = "InvalidParameterValue.GlobalDomainHitBanBlacklist"
 //  LIMITEXCEEDED_DOMAIN = "LimitExceeded.Domain"
 //  LIMITEXCEEDED_TAGQUOTA = "LimitExceeded.TagQuota"
@@ -3065,6 +3067,74 @@ func (c *Client) DescribeAccessRegionsByDestRegionWithContext(ctx context.Contex
     request.SetContext(ctx)
     
     response = NewDescribeAccessRegionsByDestRegionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuthSignatureRequest() (request *DescribeAuthSignatureRequest) {
+    request = &DescribeAuthSignatureRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("gaap", APIVersion, "DescribeAuthSignature")
+    
+    
+    return
+}
+
+func NewDescribeAuthSignatureResponse() (response *DescribeAuthSignatureResponse) {
+    response = &DescribeAuthSignatureResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAuthSignature
+// 为了防止在下单、询价、后付费开通等过程中确保来源合法以及订单参数没有被篡改过，各个业务方使用下单、询价等场景需调用计费签名接口获取签名，获取签名的请求需带上签名以验证身份，本接口可以获取计费签名。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeAuthSignature(request *DescribeAuthSignatureRequest) (response *DescribeAuthSignatureResponse, err error) {
+    return c.DescribeAuthSignatureWithContext(context.Background(), request)
+}
+
+// DescribeAuthSignature
+// 为了防止在下单、询价、后付费开通等过程中确保来源合法以及订单参数没有被篡改过，各个业务方使用下单、询价等场景需调用计费签名接口获取签名，获取签名的请求需带上签名以验证身份，本接口可以获取计费签名。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_NOTENTERPRISEAUTHORIZATION = "AuthFailure.NotEnterpriseAuthorization"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_ACCOUNTVIOLATION = "ResourceUnavailable.AccountViolation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeAuthSignatureWithContext(ctx context.Context, request *DescribeAuthSignatureRequest) (response *DescribeAuthSignatureResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuthSignatureRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuthSignature require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuthSignatureResponse()
     err = c.Send(request, response)
     return
 }
@@ -6602,6 +6672,7 @@ func NewModifyHTTPSListenerAttributeResponse() (response *ModifyHTTPSListenerAtt
 //  FAILEDOPERATION_GROUPSTATUSNOTINRUNING = "FailedOperation.GroupStatusNotInRuning"
 //  FAILEDOPERATION_INSTANCESTATUSNOTINRUNING = "FailedOperation.InstanceStatusNotInRuning"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
+//  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"
@@ -6627,6 +6698,7 @@ func (c *Client) ModifyHTTPSListenerAttribute(request *ModifyHTTPSListenerAttrib
 //  FAILEDOPERATION_GROUPSTATUSNOTINRUNING = "FailedOperation.GroupStatusNotInRuning"
 //  FAILEDOPERATION_INSTANCESTATUSNOTINRUNING = "FailedOperation.InstanceStatusNotInRuning"
 //  FAILEDOPERATION_LISTENERHASTASK = "FailedOperation.ListenerHasTask"
+//  FAILEDOPERATION_LISTENERSTATUSERROR = "FailedOperation.ListenerStatusError"
 //  FAILEDOPERATION_NONSTANDARDPROXY = "FailedOperation.NonStandardProxy"
 //  FAILEDOPERATION_NOTSUPPORTOLDVERSIONPROXY = "FailedOperation.NotSupportOldVersionProxy"
 //  FAILEDOPERATION_USERNOTCONFIRMPROTOCOL = "FailedOperation.UserNotConfirmProtocol"

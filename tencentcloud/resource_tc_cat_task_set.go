@@ -44,7 +44,6 @@ resource "tencentcloud_cat_task_set" "task_set" {
     "createdBy" = "terraform"
   }
 }
-
 ```
 Import
 
@@ -140,6 +139,12 @@ func resourceTencentCloudCatTaskSet() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Timer task cron expression.",
+			},
+
+			"operate": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The input is valid when the parameter is modified, `suspend`/`resume`, used to suspend/resume the dial test task.",
 			},
 
 			"status": {
@@ -379,16 +384,48 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("batch_tasks") {
-		return fmt.Errorf("`batch_tasks` do not support change now.")
-	}
-
 	if d.HasChange("task_type") {
 		return fmt.Errorf("`task_type` do not support change now.")
 	}
 
 	if d.HasChange("task_category") {
 		return fmt.Errorf("`task_category` do not support change now.")
+	}
+
+	if d.HasChange("batch_tasks") {
+		oldInterface, newInterface := d.GetChange("batch_tasks")
+		oldMap := make(map[string]interface{})
+		newMap := make(map[string]interface{})
+		for _, item := range oldInterface.([]interface{}) {
+			oldMap = item.(map[string]interface{})
+		}
+		for _, item := range newInterface.([]interface{}) {
+			newMap = item.(map[string]interface{})
+		}
+		replace, _ := diffTags(oldMap, newMap)
+
+		if _, ok := replace["target_address"]; ok {
+			return fmt.Errorf("`target_address` do not support change now.")
+		}
+
+		if v, ok := replace["name"]; ok {
+			requestTaskAttributes := cat.NewUpdateProbeTaskAttributesRequest()
+			requestTaskAttributes.TaskId = &taskId
+			requestTaskAttributes.Name = &v
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().UpdateProbeTaskAttributes(requestTaskAttributes)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s Suspend cat task failed, reason:%+v", logId, err)
+				return err
+			}
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -405,6 +442,47 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 	if err != nil {
 		log.Printf("[CRITAL]%s create cat taskSet failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("operate") {
+		if v, ok := d.GetOk("operate"); ok {
+			operate := v.(string)
+			if operate == "suspend" {
+				requestSuspend := cat.NewSuspendProbeTaskRequest()
+				requestSuspend.TaskIds = append(requestSuspend.TaskIds, &taskId)
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().SuspendProbeTask(requestSuspend)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s Suspend cat task failed, reason:%+v", logId, err)
+					return err
+				}
+			} else if operate == "resume" {
+				requestResume := cat.NewResumeProbeTaskRequest()
+				requestResume.TaskIds = append(requestResume.TaskIds, &taskId)
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().ResumeProbeTask(requestResume)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s Resume cat task failed, reason:%+v", logId, err)
+					return err
+				}
+			} else {
+				return fmt.Errorf("`operate` only allows the input of suspend/resume.")
+			}
+		}
 	}
 
 	if d.HasChange("tags") {

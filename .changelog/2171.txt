@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_kms_white_box_key
+```
+
+```release-note:new-data-source
+tencentcloud_kms_describe_keys
+```
+
+```release-note:new-data-source
+tencentcloud_kms_white_box_key_details
+```
+
+```release-note:new-data-source
+tencentcloud_kms_list_keys
+```

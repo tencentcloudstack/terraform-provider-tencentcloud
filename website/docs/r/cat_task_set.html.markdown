@@ -67,6 +67,7 @@ The following arguments are supported:
 * `task_category` - (Required, Int) Task category,1:PC,2:Mobile.
 * `task_type` - (Required, Int) Task Type 1:Page Performance, 2:File upload,3:File Download,4:Port performance 5:Audio and video.
 * `cron` - (Optional, String) Timer task cron expression.
+* `operate` - (Optional, String) The input is valid when the parameter is modified, `suspend`/`resume`, used to suspend/resume the dial test task.
 * `tags` - (Optional, Map) Tag description list.
 
 The `batch_tasks` object supports the following:
