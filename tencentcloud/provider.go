@@ -1407,6 +1407,9 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_domains
 
 Performance Testing Service(PTS)
+  Data Source
+	tencentcloud_pts_scenario_with_jobs
+
   Resource
 	tencentcloud_pts_project
 	tencentcloud_pts_alert_channel
@@ -1415,6 +1418,9 @@ Performance Testing Service(PTS)
 	tencentcloud_pts_job
 	tencentcloud_pts_cron_job
 	tencentcloud_pts_tmp_key_generate
+	tencentcloud_pts_cron_job_restart
+	tencentcloud_pts_job_abort
+	tencentcloud_pts_cron_job_abort
 
 TencentCloud Automation Tools(TAT)
   Data Source
@@ -2546,6 +2552,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_send_email_status":                       dataSourceTencentCloudSesSendEmailStatus(),
 			"tencentcloud_organization_org_financial_by_member":        dataSourceTencentCloudOrganizationOrgFinancialByMember(),
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
+			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3116,6 +3123,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_pts_job":                                             resourceTencentCloudPtsJob(),
 			"tencentcloud_pts_cron_job":                                        resourceTencentCloudPtsCronJob(),
 			"tencentcloud_pts_tmp_key_generate":                                resourceTencentCloudPtsTmpKeyGenerate(),
+			"tencentcloud_pts_cron_job_restart":                                resourceTencentCloudPtsCronJobRestart(),
+			"tencentcloud_pts_job_abort":                                       resourceTencentCloudPtsJobAbort(),
+			"tencentcloud_pts_cron_job_abort":                                  resourceTencentCloudPtsCronJobAbort(),
 			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),
