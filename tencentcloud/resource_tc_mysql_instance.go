@@ -326,6 +326,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"parameters": {
 			Type:        schema.TypeMap,
 			Optional:    true,
+			Computed:    true,
 			Description: "List of parameters to use.",
 		},
 		"internet_service": {
@@ -989,9 +990,22 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-	parametersMap, ok := d.Get("parameters").(map[string]interface{})
-	if !ok {
-		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
+	parametersMap, _ := d.Get("parameters").(map[string]interface{})
+	if len(parametersMap) < 1 {
+		parameterList, err := mysqlService.DescribeInstanceParameters(ctx, *mysqlInfo.InstanceId)
+		if err != nil {
+			return err
+		}
+
+		parameters := make(map[string]string)
+		for _, v := range parameterList {
+			parameters[*v.Name] = *v.CurrentValue
+		}
+		if e := d.Set("parameters", parameters); e != nil {
+			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
+			return e
+		}
+		_ = d.Set("availability_zone", mysqlInfo.Zone)
 	} else {
 		var cares []string
 		for k := range parametersMap {
