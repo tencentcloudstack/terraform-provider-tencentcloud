@@ -1358,11 +1358,32 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_offline_log_config
 	tencentcloud_rum_whitelist
 	tencentcloud_rum_taw_instance
+	tencentcloud_rum_custom_url
+	tencentcloud_rum_event_url
+	tencentcloud_rum_fetch_url_info
+	tencentcloud_rum_fetch_url
+	tencentcloud_rum_group_log
+	tencentcloud_rum_log_url_statistics
+	tencentcloud_rum_performance_page
+	tencentcloud_rum_pv_url_info
+	tencentcloud_rum_pv_url_statistics
+	tencentcloud_rum_report_count
+	tencentcloud_rum_scores
+	tencentcloud_rum_set_url_statistics
+	tencentcloud_rum_sign
+	tencentcloud_rum_static_project
+	tencentcloud_rum_static_resource
+	tencentcloud_rum_static_url
+	tencentcloud_rum_web_vitals_page
+	tencentcloud_rum_log_export_list
+
   Resource
 	tencentcloud_rum_project
 	tencentcloud_rum_taw_instance
 	tencentcloud_rum_whitelist
 	tencentcloud_rum_offline_log_config_attachment
+	tencentcloud_rum_instance_status_config
+	tencentcloud_rum_project_status_config
 
 Cloud Streaming Services(CSS)
   Resource
@@ -2314,6 +2335,28 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_offline_log_config":                      dataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                               dataSourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_taw_instance":                            dataSourceTencentCloudRumTawInstance(),
+			"tencentcloud_rum_custom_url":                              dataSourceTencentCloudRumCustomUrl(),
+			"tencentcloud_rum_event_url":                               dataSourceTencentCloudRumEventUrl(),
+			"tencentcloud_rum_fetch_url_info":                          dataSourceTencentCloudRumFetchUrlInfo(),
+			"tencentcloud_rum_fetch_url":                               dataSourceTencentCloudRumFetchUrl(),
+			"tencentcloud_rum_group_log":                               dataSourceTencentCloudRumGroupLog(),
+			"tencentcloud_rum_log_list":                                dataSourceTencentCloudRumLogList(),
+			"tencentcloud_rum_log_url_statistics":                      dataSourceTencentCloudRumLogUrlStatistics(),
+			"tencentcloud_rum_performance_page":                        dataSourceTencentCloudRumPerformancePage(),
+			"tencentcloud_rum_pv_url_info":                             dataSourceTencentCloudRumPvUrlInfo(),
+			"tencentcloud_rum_pv_url_statistics":                       dataSourceTencentCloudRumPvUrlStatistics(),
+			"tencentcloud_rum_report_count":                            dataSourceTencentCloudRumReportCount(),
+			"tencentcloud_rum_log_stats_log_list":                      dataSourceTencentCloudRumLogStatsLogList(),
+			"tencentcloud_rum_scores":                                  dataSourceTencentCloudRumScores(),
+			"tencentcloud_rum_set_url_statistics":                      dataSourceTencentCloudRumSetUrlStatistics(),
+			"tencentcloud_rum_sign":                                    dataSourceTencentCloudRumSign(),
+			"tencentcloud_rum_static_project":                          dataSourceTencentCloudRumStaticProject(),
+			"tencentcloud_rum_static_resource":                         dataSourceTencentCloudRumStaticResource(),
+			"tencentcloud_rum_static_url":                              dataSourceTencentCloudRumStaticUrl(),
+			"tencentcloud_rum_taw_area":                                dataSourceTencentCloudRumTawArea(),
+			"tencentcloud_rum_web_vitals_page":                         dataSourceTencentCloudRumWebVitalsPage(),
+			"tencentcloud_rum_log_export":                              dataSourceTencentCloudRumLogExport(),
+			"tencentcloud_rum_log_export_list":                         dataSourceTencentCloudRumLogExportList(),
 			"tencentcloud_dnspod_records":                              dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                                 dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                 dataSourceTencentCloudTatInvoker(),
@@ -3085,6 +3128,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_taw_instance":                                    resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                                       resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":                   resourceTencentCloudRumOfflineLogConfigAttachment(),
+			"tencentcloud_rum_instance_status_config":                          resourceTencentCloudRumInstanceStatusConfig(),
+			"tencentcloud_rum_project_status_config":                           resourceTencentCloudRumProjectStatusConfig(),
+			"tencentcloud_rum_release_file":                                    resourceTencentCloudRumReleaseFile(),
 			"tencentcloud_tdmq_rocketmq_cluster":                               resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                             resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                                  resourceTencentCloudTdmqRocketmqRole(),
