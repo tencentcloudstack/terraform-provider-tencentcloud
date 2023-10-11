@@ -594,6 +594,11 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							Optional:    true,
 							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The network environment to which the database belongs. It is required when AccessType is Cloud Network (CCN). `UserIDC` represents the user IDC. `TencentVPC` represents Tencent Cloud VPC. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
 					},
 				},
 			},
@@ -732,6 +737,11 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The network environment to which the database belongs. It is required when AccessType is Cloud Network (CCN). `UserIDC` represents the user IDC. `TencentVPC` represents Tencent Cloud VPC. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -1105,6 +1115,10 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 
 		if syncConfig.SrcInfo.EncryptConn != nil {
 			srcInfoMap["encrypt_conn"] = syncConfig.SrcInfo.EncryptConn
+		}
+
+		if syncConfig.SrcInfo.DatabaseNetEnv != nil {
+			srcInfoMap["database_net_env"] = syncConfig.SrcInfo.DatabaseNetEnv
 		}
 
 		// reset the password due to the describe api always return an empty string
@@ -1558,6 +1572,9 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["encrypt_conn"]; ok {
 				endpoint.EncryptConn = helper.String(v.(string))
 			}
+			if v, ok := dMap["database_net_env"]; ok {
+				endpoint.DatabaseNetEnv = helper.String(v.(string))
+			}
 			request.SrcInfo = &endpoint
 		}
 	}
@@ -1639,6 +1656,9 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 			}
 			if v, ok := dMap["encrypt_conn"]; ok {
 				endpoint.EncryptConn = helper.String(v.(string))
+			}
+			if v, ok := dMap["database_net_env"]; ok {
+				endpoint.DatabaseNetEnv = helper.String(v.(string))
 			}
 			request.DstInfo = &endpoint
 		}
