@@ -1597,6 +1597,8 @@ Media Processing Service(MPS)
 	tencentcloud_mps_adaptive_dynamic_streaming_template
 	tencentcloud_mps_person_sample
 	tencentcloud_mps_withdraws_watermark_operation
+	tencentcloud_mps_process_live_stream_operation
+	tencentcloud_mps_edit_media_operation
 	tencentcloud_mps_word_sample
 	tencentcloud_mps_schedule
 	tencentcloud_mps_enable_schedule_config
@@ -3125,6 +3127,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":             resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_mps_person_sample":                                   resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_mps_withdraws_watermark_operation":                   resourceTencentCloudMpsWithdrawsWatermarkOperation(),
+			"tencentcloud_mps_process_live_stream_operation":                   resourceTencentCloudMpsProcessLiveStreamOperation(),
+			"tencentcloud_mps_edit_media_operation":                            resourceTencentCloudMpsEditMediaOperation(),
 			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
 			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
 			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
