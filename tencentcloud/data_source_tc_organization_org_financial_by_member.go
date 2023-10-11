@@ -59,7 +59,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 			"total_cost": {
 				Computed:    true,
 				Type:        schema.TypeFloat,
-				Description: "Total cost of the member(¥).",
+				Description: "Total cost of the member.",
 			},
 
 			"items": {
@@ -81,7 +81,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the member(¥).",
+							Description: "Total cost of the member.",
 						},
 						"ratio": {
 							Type:        schema.TypeString,
