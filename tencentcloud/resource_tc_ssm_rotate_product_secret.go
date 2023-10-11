@@ -73,6 +73,8 @@ func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, me
 		return err
 	}
 
+	d.SetId(secretName)
+
 	// wait
 	flowId = *response.Response.FlowID
 	asyncRequest.FlowID = &flowId
@@ -96,7 +98,6 @@ func resourceTencentCloudSsmRotateProductSecretCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(secretName)
 	return resourceTencentCloudSsmRotateProductSecretRead(d, meta)
 }
 
