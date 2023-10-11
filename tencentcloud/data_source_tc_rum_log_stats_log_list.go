@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of rum rum_log_stats_log_list
+Use this data source to query detailed information of rum log_stats_log_list
 
 Example Usage
 
 ```hcl
-data "tencentcloud_rum_rum_log_stats_log_list" "rum_log_stats_log_list" {
+data "tencentcloud_rum_log_stats_log_list" "log_stats_log_list" {
   start_time = 1625444040
   query      = "id:123 AND type:\"log\""
   end_time   = 1625454840
@@ -22,9 +22,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudRumRumLogStatsLogList() *schema.Resource {
+func dataSourceTencentCloudRumLogStatsLogList() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudRumRumLogStatsLogListRead,
+		Read: dataSourceTencentCloudRumLogStatsLogListRead,
 		Schema: map[string]*schema.Schema{
 			"start_time": {
 				Required:    true,
@@ -65,8 +65,8 @@ func dataSourceTencentCloudRumRumLogStatsLogList() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudRumRumLogStatsLogListRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_rum_rum_log_stats_log_list.read")()
+func dataSourceTencentCloudRumLogStatsLogListRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_rum_log_stats_log_list.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -101,7 +101,7 @@ func dataSourceTencentCloudRumRumLogStatsLogListRead(d *schema.ResourceData, met
 
 	var result *string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeRumRumLogStatsLogListByFilter(ctx, paramMap)
+		response, e := service.DescribeRumLogStatsLogListByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

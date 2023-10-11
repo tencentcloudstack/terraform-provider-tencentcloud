@@ -2346,7 +2346,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_pv_url_info":                             dataSourceTencentCloudRumPvUrlInfo(),
 			"tencentcloud_rum_pv_url_statistics":                       dataSourceTencentCloudRumPvUrlStatistics(),
 			"tencentcloud_rum_report_count":                            dataSourceTencentCloudRumReportCount(),
-			"tencentcloud_rum_rum_log_stats_log_list":                  dataSourceTencentCloudRumRumLogStatsLogList(),
+			"tencentcloud_rum_log_stats_log_list":                      dataSourceTencentCloudRumLogStatsLogList(),
 			"tencentcloud_rum_scores":                                  dataSourceTencentCloudRumScores(),
 			"tencentcloud_rum_set_url_statistics":                      dataSourceTencentCloudRumSetUrlStatistics(),
 			"tencentcloud_rum_sign":                                    dataSourceTencentCloudRumSign(),

@@ -1975,7 +1975,7 @@ func (me *RumService) DescribeRumLogListByFilter(ctx context.Context, param map[
 
 	return
 }
-func (me *RumService) DescribeRumRumLogStatsLogListByFilter(ctx context.Context, param map[string]interface{}) (rumLogStatsLogList *string, errRet error) {
+func (me *RumService) DescribeRumLogStatsLogListByFilter(ctx context.Context, param map[string]interface{}) (logStatsLogList *string, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = rum.NewDescribeRumStatsLogListRequest()
@@ -2014,7 +2014,7 @@ func (me *RumService) DescribeRumRumLogStatsLogListByFilter(ctx context.Context,
 		return
 	}
 
-	rumLogStatsLogList = response.Response.Result
+	logStatsLogList = response.Response.Result
 
 	return
 }
