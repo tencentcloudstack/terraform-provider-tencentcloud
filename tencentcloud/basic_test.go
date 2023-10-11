@@ -1144,6 +1144,7 @@ resource "tencentcloud_eni_attachment" "foo" {
 const (
 	defaultMpsScheduleId   = 24685
 	defaultMpsScheduleName = "keep_mps_schedule_001"
+  defaultMpsCOSBucketName = "keep-mps-1308919341"
 )
 
 //End of MPS
