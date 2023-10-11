@@ -364,3 +364,149 @@ func (me *OrganizationService) DescribeOrganizationOrgAuthNodeByFilter(ctx conte
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrganizationById(ctx context.Context) (result *organization.DescribeOrganizationResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDescribeOrganizationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeOrganization(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	result = response.Response
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrganizationById(ctx context.Context) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDeleteOrganizationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteOrganization(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgMemberEmailById(ctx context.Context, memberUin int64, bindId uint64) (orgMemberEmail *organization.DescribeOrganizationMemberEmailBindResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDescribeOrganizationMemberEmailBindRequest()
+	request.MemberUin = &memberUin
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeOrganizationMemberEmailBind(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	if *response.Response.BindId != bindId {
+		return
+	}
+	orgMemberEmail = response.Response
+	return
+}
+
+func (me *OrganizationService) DescribeOrganizationOrgFinancialByMemberByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByMember *organization.DescribeOrganizationFinancialByMemberResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = organization.NewDescribeOrganizationFinancialByMemberRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Month" {
+			request.Month = v.(*string)
+		}
+		if k == "EndMonth" {
+			request.EndMonth = v.(*string)
+		}
+		if k == "MemberUins" {
+			request.MemberUins = v.([]*int64)
+		}
+		if k == "ProductCodes" {
+			request.ProductCodes = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 20
+		items     []*organization.OrgMemberFinancial
+		totalCost float64 = 0
+		total     int64   = 0
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeOrganizationFinancialByMember(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		items = append(items, response.Response.Items...)
+		if response.Response != nil && response.Response.TotalCost != nil && totalCost == 0 && total == 0 {
+			totalCost = *response.Response.TotalCost
+			total = *response.Response.Total
+		}
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+	orgFinancialByMember = &organization.DescribeOrganizationFinancialByMemberResponseParams{
+		TotalCost: &totalCost,
+		Items:     items,
+		Total:     &total,
+	}
+	return
+}

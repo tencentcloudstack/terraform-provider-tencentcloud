@@ -1387,11 +1387,14 @@ TencentCloud Automation Tools(TAT)
 Tencent Cloud Organization (TCO)
   Data Source
 	tencentcloud_organization_org_auth_node
+	tencentcloud_organization_org_financial_by_member
   Resource
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
-	tencentcloud_organization_policy_sub_account_attachment
+	tencentcloud_organization_instance
+	tencentcloud_organization_org_member_email
 	tencentcloud_organization_org_member_auth_identity_attachment
+	tencentcloud_organization_policy_sub_account_attachment
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -2452,6 +2455,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_black_email_address":                   dataSourceTencentCloudSesBlackEmailAddress(),
 			"tencentcloud_ses_statistics_report":                     dataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                     dataSourceTencentCloudSesSendEmailStatus(),
+			"tencentcloud_organization_org_financial_by_member":      dataSourceTencentCloudOrganizationOrgFinancialByMember(),
 			"tencentcloud_organization_org_auth_node":                dataSourceTencentCloudOrganizationOrgAuthNode(),
 		},
 
@@ -3030,6 +3034,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tat_invocation_command_attachment":                   resourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
+			"tencentcloud_organization_org_member_email":                       resourceTencentCloudOrganizationOrgMemberEmail(),
+			"tencentcloud_organization_instance":                               resourceTencentCloudOrganizationOrganization(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
 			"tencentcloud_organization_org_member_auth_identity_attachment":    resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                  resourceTencentCloudDbbrainSqlFilter(),
