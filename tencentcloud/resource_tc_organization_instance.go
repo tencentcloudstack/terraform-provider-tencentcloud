@@ -4,7 +4,7 @@ Provides a resource to create a organization organization
 Example Usage
 
 ```hcl
-resource "tencentcloud_organization_organization" "organization" {
+resource "tencentcloud_organization_instance" "organization" {
   }
 ```
 
@@ -13,7 +13,7 @@ Import
 organization organization can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_organization_organization.organization organization_id
+terraform import tencentcloud_organization_instance.organization organization_id
 ```
 */
 package tencentcloud
@@ -151,7 +151,7 @@ func resourceTencentCloudOrganizationOrganization() *schema.Resource {
 }
 
 func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_organization.create")()
+	defer logElapsed("resource.tencentcloud_organization_instance.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -183,7 +183,7 @@ func resourceTencentCloudOrganizationOrganizationCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudOrganizationOrganizationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_organization.read")()
+	defer logElapsed("resource.tencentcloud_organization_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -287,7 +287,7 @@ func resourceTencentCloudOrganizationOrganizationRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudOrganizationOrganizationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_organization.delete")()
+	defer logElapsed("resource.tencentcloud_organization_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)

@@ -16,10 +16,10 @@ func TestAccTencentCloudOrganizationOrganizationResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrganization,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_organization.organization", "id")),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_instance.organization", "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_organization_organization.organization",
+				ResourceName:      "tencentcloud_organization_instance.organization",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -29,7 +29,7 @@ func TestAccTencentCloudOrganizationOrganizationResource_basic(t *testing.T) {
 
 const testAccOrganizationOrganization = `
 
-resource "tencentcloud_organization_organization" "organization" {
+resource "tencentcloud_organization_instance" "organization" {
 }
 
 `

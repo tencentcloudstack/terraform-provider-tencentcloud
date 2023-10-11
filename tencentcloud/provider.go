@@ -1391,7 +1391,7 @@ Tencent Cloud Organization (TCO)
   Resource
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
-	tencentcloud_organization_organization
+	tencentcloud_organization_instance
 	tencentcloud_organization_org_member_email
 	tencentcloud_organization_org_member_auth_identity_attachment
 	tencentcloud_organization_policy_sub_account_attachment
@@ -3035,7 +3035,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_org_member_email":                       resourceTencentCloudOrganizationOrgMemberEmail(),
-			"tencentcloud_organization_organization":                           resourceTencentCloudOrganizationOrganization(),
+			"tencentcloud_organization_instance":                               resourceTencentCloudOrganizationOrganization(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
 			"tencentcloud_organization_org_member_auth_identity_attachment":    resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                  resourceTencentCloudDbbrainSqlFilter(),
