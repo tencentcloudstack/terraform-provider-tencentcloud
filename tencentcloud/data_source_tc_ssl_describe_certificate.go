@@ -906,9 +906,9 @@ func dataSourceTencentCloudSslDescribeCertificateRead(d *schema.ResourceData, me
 	_ = d.Set("result", []interface{}{sslResponseMap})
 	d.SetId(CertificateId)
 
-	output3, ok := d.GetOk("result_output_file")
-	if ok && output3.(string) != "" {
-		if e := writeToFile(output3.(string), sslResponseMap); e != nil {
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), sslResponseMap); e != nil {
 			return e
 		}
 	}

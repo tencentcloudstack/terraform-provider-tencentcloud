@@ -208,9 +208,9 @@ func dataSourceTencentCloudSslDescribeHostApiGatewayInstanceListRead(d *schema.R
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	output3, ok := d.GetOk("result_output_file")
-	if ok && output3.(string) != "" {
-		if e := writeToFile(output3.(string), tmpList); e != nil {
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
