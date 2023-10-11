@@ -1171,7 +1171,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.540
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.762
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676

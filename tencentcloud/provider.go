@@ -1384,10 +1384,13 @@ TencentCloud Automation Tools(TAT)
 	tencentcloud_tat_invocation_command_attachment
 
 Tencent Cloud Organization (TCO)
+  Data Source
+	tencentcloud_organization_org_auth_node
   Resource
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
 	tencentcloud_organization_policy_sub_account_attachment
+	tencentcloud_organization_org_member_auth_identity_attachment
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -2448,6 +2451,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_black_email_address":                   dataSourceTencentCloudSesBlackEmailAddress(),
 			"tencentcloud_ses_statistics_report":                     dataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                     dataSourceTencentCloudSesSendEmailStatus(),
+			"tencentcloud_organization_org_auth_node":                dataSourceTencentCloudOrganizationOrgAuthNode(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3025,6 +3029,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
+			"tencentcloud_organization_org_member_auth_identity_attachment":    resourceTencentCloudOrganizationOrgMemberAuthIdentityAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                                  resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":              resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                         resourceTencentCloudDbbrainDbDiagReportTask(),
