@@ -51,6 +51,7 @@ In addition to all arguments above, the following attributes are exported:
 * `abort_reason` - Reason for suspension.
 * `app_id` - App ID.
 * `created_at` - Creation time; type: Timestamp ISO8601.
+* `cron_job_id` - Cron job ID.
 * `status` - Scheduled task status.
 * `sub_account_uin` - Sub-user ID.
 * `uin` - User ID.

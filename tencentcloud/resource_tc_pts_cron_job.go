@@ -145,6 +145,12 @@ func resourceTencentCloudPtsCronJob() *schema.Resource {
 				Description: "User ID.",
 			},
 
+			"cron_job_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cron job ID.",
+			},
+
 			"sub_account_uin": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -257,6 +263,8 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 		d.SetId("")
 		return fmt.Errorf("resource `cronJob` %s does not exist", cronJobId)
 	}
+
+	_ = d.Set("cron_job_id", cronJobId)
 
 	if cronJob.Name != nil {
 		_ = d.Set("name", cronJob.Name)

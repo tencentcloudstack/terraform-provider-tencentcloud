@@ -331,6 +331,7 @@ func NewCreateCronJobResponse() (response *CreateCronJobResponse) {
 // 创建定时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 func (c *Client) CreateCronJob(request *CreateCronJobRequest) (response *CreateCronJobResponse, err error) {
     return c.CreateCronJobWithContext(context.Background(), request)
@@ -340,6 +341,7 @@ func (c *Client) CreateCronJob(request *CreateCronJobRequest) (response *CreateC
 // 创建定时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 func (c *Client) CreateCronJobWithContext(ctx context.Context, request *CreateCronJobRequest) (response *CreateCronJobResponse, err error) {
     if request == nil {
@@ -913,15 +915,7 @@ func NewDescribeAlertChannelsResponse() (response *DescribeAlertChannelsResponse
 // 查询告警通知接收组
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAlertChannels(request *DescribeAlertChannelsRequest) (response *DescribeAlertChannelsResponse, err error) {
     return c.DescribeAlertChannelsWithContext(context.Background(), request)
 }
@@ -930,15 +924,7 @@ func (c *Client) DescribeAlertChannels(request *DescribeAlertChannelsRequest) (r
 // 查询告警通知接收组
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAlertChannelsWithContext(ctx context.Context, request *DescribeAlertChannelsRequest) (response *DescribeAlertChannelsResponse, err error) {
     if request == nil {
         request = NewDescribeAlertChannelsRequest()
@@ -977,15 +963,7 @@ func NewDescribeAlertRecordsResponse() (response *DescribeAlertRecordsResponse) 
 // 返回告警历史项的列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAlertRecords(request *DescribeAlertRecordsRequest) (response *DescribeAlertRecordsResponse, err error) {
     return c.DescribeAlertRecordsWithContext(context.Background(), request)
 }
@@ -994,15 +972,7 @@ func (c *Client) DescribeAlertRecords(request *DescribeAlertRecordsRequest) (res
 // 返回告警历史项的列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAlertRecordsWithContext(ctx context.Context, request *DescribeAlertRecordsRequest) (response *DescribeAlertRecordsResponse, err error) {
     if request == nil {
         request = NewDescribeAlertRecordsRequest()
@@ -1041,15 +1011,7 @@ func NewDescribeAvailableMetricsResponse() (response *DescribeAvailableMetricsRe
 // 查询系统支持的指标
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAvailableMetrics(request *DescribeAvailableMetricsRequest) (response *DescribeAvailableMetricsResponse, err error) {
     return c.DescribeAvailableMetricsWithContext(context.Background(), request)
 }
@@ -1058,15 +1020,7 @@ func (c *Client) DescribeAvailableMetrics(request *DescribeAvailableMetricsReque
 // 查询系统支持的指标
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
-//  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
-//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
-//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeAvailableMetricsWithContext(ctx context.Context, request *DescribeAvailableMetricsRequest) (response *DescribeAvailableMetricsResponse, err error) {
     if request == nil {
         request = NewDescribeAvailableMetricsRequest()
@@ -1189,6 +1143,64 @@ func (c *Client) DescribeCronJobsWithContext(ctx context.Context, request *Descr
     return
 }
 
+func NewDescribeErrorSummaryRequest() (request *DescribeErrorSummaryRequest) {
+    request = &DescribeErrorSummaryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("pts", APIVersion, "DescribeErrorSummary")
+    
+    
+    return
+}
+
+func NewDescribeErrorSummaryResponse() (response *DescribeErrorSummaryResponse) {
+    response = &DescribeErrorSummaryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeErrorSummary
+// 查询错误详情汇总信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeErrorSummary(request *DescribeErrorSummaryRequest) (response *DescribeErrorSummaryResponse, err error) {
+    return c.DescribeErrorSummaryWithContext(context.Background(), request)
+}
+
+// DescribeErrorSummary
+// 查询错误详情汇总信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+func (c *Client) DescribeErrorSummaryWithContext(ctx context.Context, request *DescribeErrorSummaryRequest) (response *DescribeErrorSummaryResponse, err error) {
+    if request == nil {
+        request = NewDescribeErrorSummaryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeErrorSummary require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeErrorSummaryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeFilesRequest() (request *DescribeFilesRequest) {
     request = &DescribeFilesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1211,7 +1223,12 @@ func NewDescribeFilesResponse() (response *DescribeFilesResponse) {
 // 查询文件列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeFiles(request *DescribeFilesRequest) (response *DescribeFilesResponse, err error) {
     return c.DescribeFilesWithContext(context.Background(), request)
 }
@@ -1220,7 +1237,12 @@ func (c *Client) DescribeFiles(request *DescribeFilesRequest) (response *Describ
 // 查询文件列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 func (c *Client) DescribeFilesWithContext(ctx context.Context, request *DescribeFilesRequest) (response *DescribeFilesResponse, err error) {
     if request == nil {
         request = NewDescribeFilesRequest()
@@ -1432,7 +1454,7 @@ func NewDescribeNormalLogsResponse() (response *DescribeNormalLogsResponse) {
 }
 
 // DescribeNormalLogs
-// 压测过程日志日志包括引擎输出日志及用户输出日志
+// 压测过程日志包括引擎输出日志及用户输出日志
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1446,7 +1468,7 @@ func (c *Client) DescribeNormalLogs(request *DescribeNormalLogsRequest) (respons
 }
 
 // DescribeNormalLogs
-// 压测过程日志日志包括引擎输出日志及用户输出日志
+// 压测过程日志包括引擎输出日志及用户输出日志
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1494,6 +1516,7 @@ func NewDescribeProjectsResponse() (response *DescribeProjectsResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
@@ -1505,6 +1528,7 @@ func NewDescribeProjectsResponse() (response *DescribeProjectsResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeProjects(request *DescribeProjectsRequest) (response *DescribeProjectsResponse, err error) {
     return c.DescribeProjectsWithContext(context.Background(), request)
 }
@@ -1514,6 +1538,7 @@ func (c *Client) DescribeProjects(request *DescribeProjectsRequest) (response *D
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTAGFAIL = "FailedOperation.AccessTagFail"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
@@ -1525,6 +1550,7 @@ func (c *Client) DescribeProjects(request *DescribeProjectsRequest) (response *D
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) DescribeProjectsWithContext(ctx context.Context, request *DescribeProjectsRequest) (response *DescribeProjectsResponse, err error) {
     if request == nil {
         request = NewDescribeProjectsRequest()
@@ -1961,6 +1987,7 @@ func NewDescribeScenarioWithJobsResponse() (response *DescribeScenarioWithJobsRe
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -1974,6 +2001,7 @@ func (c *Client) DescribeScenarioWithJobs(request *DescribeScenarioWithJobsReque
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -2192,12 +2220,14 @@ func NewStartJobResponse() (response *StartJobResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_NOTASKSINJOB = "FailedOperation.NoTasksInJob"
 //  FAILEDOPERATION_NOTSUPPORTEDINENV = "FailedOperation.NotSupportedInEnv"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) StartJob(request *StartJobRequest) (response *StartJobResponse, err error) {
     return c.StartJobWithContext(context.Background(), request)
 }
@@ -2209,12 +2239,14 @@ func (c *Client) StartJob(request *StartJobRequest) (response *StartJobResponse,
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_NOTASKSINJOB = "FailedOperation.NoTasksInJob"
 //  FAILEDOPERATION_NOTSUPPORTEDINENV = "FailedOperation.NotSupportedInEnv"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) StartJobWithContext(ctx context.Context, request *StartJobRequest) (response *StartJobResponse, err error) {
     if request == nil {
         request = NewStartJobRequest()
@@ -2253,6 +2285,7 @@ func NewUpdateCronJobResponse() (response *UpdateCronJobResponse) {
 // 更新定时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UpdateCronJob(request *UpdateCronJobRequest) (response *UpdateCronJobResponse, err error) {
     return c.UpdateCronJobWithContext(context.Background(), request)
@@ -2262,6 +2295,7 @@ func (c *Client) UpdateCronJob(request *UpdateCronJobRequest) (response *UpdateC
 // 更新定时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UpdateCronJobWithContext(ctx context.Context, request *UpdateCronJobRequest) (response *UpdateCronJobResponse, err error) {
     if request == nil {
@@ -2301,6 +2335,7 @@ func NewUpdateFileScenarioRelationResponse() (response *UpdateFileScenarioRelati
 // 更新关联文件场景
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UpdateFileScenarioRelation(request *UpdateFileScenarioRelationRequest) (response *UpdateFileScenarioRelationResponse, err error) {
     return c.UpdateFileScenarioRelationWithContext(context.Background(), request)
@@ -2310,6 +2345,7 @@ func (c *Client) UpdateFileScenarioRelation(request *UpdateFileScenarioRelationR
 // 更新关联文件场景
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBRECORDUPDATEFAILED = "FailedOperation.DbRecordUpdateFailed"
 //  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UpdateFileScenarioRelationWithContext(ctx context.Context, request *UpdateFileScenarioRelationRequest) (response *UpdateFileScenarioRelationResponse, err error) {
     if request == nil {
