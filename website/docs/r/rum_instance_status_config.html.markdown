@@ -1,20 +1,20 @@
 ---
 subcategory: "Real User Monitoring(RUM)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_rum_instance_status_attachment"
-sidebar_current: "docs-tencentcloud-resource-rum_instance_status_attachment"
+page_title: "TencentCloud: tencentcloud_rum_instance_status_config"
+sidebar_current: "docs-tencentcloud-resource-rum_instance_status_config"
 description: |-
-  Provides a resource to create a rum instance_status_attachment
+  Provides a resource to create a rum instance_status_config
 ---
 
-# tencentcloud_rum_instance_status_attachment
+# tencentcloud_rum_instance_status_config
 
-Provides a resource to create a rum instance_status_attachment
+Provides a resource to create a rum instance_status_config
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_rum_instance_status_attachment" "instance_status_attachment" {
+resource "tencentcloud_rum_instance_status_config" "instance_status_config" {
   instance_id = "rum-pasZKEI3RLgakj"
   operate     = "stop"
 }
@@ -37,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-rum instance_status_attachment can be imported using the id, e.g.
+rum instance_status_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_rum_instance_status_attachment.instance_status_attachment instance_id
+terraform import tencentcloud_rum_instance_status_config.instance_status_config instance_id
 ```
 
