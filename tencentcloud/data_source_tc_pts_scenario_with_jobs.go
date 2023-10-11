@@ -643,7 +643,7 @@ func dataSourceTencentCloudPtsScenarioWithJobs() *schema.Resource {
 																Computed:    true,
 																Description: "The notice ID bound with this alert channel.",
 															},
-															"a_m_p_consumer_id": {
+															"amp_consumer_id": {
 																Type:        schema.TypeString,
 																Computed:    true,
 																Description: "AMP consumer ID.",
@@ -2017,7 +2017,7 @@ func dataSourceTencentCloudPtsScenarioWithJobsRead(d *schema.ResourceData, meta 
 						}
 
 						if scenario.SLAPolicy.AlertChannel.AMPConsumerId != nil {
-							alertChannelMap["a_m_p_consumer_id"] = scenario.SLAPolicy.AlertChannel.AMPConsumerId
+							alertChannelMap["amp_consumer_id"] = scenario.SLAPolicy.AlertChannel.AMPConsumerId
 						}
 
 						sLAPolicyMap["alert_channel"] = []interface{}{alertChannelMap}

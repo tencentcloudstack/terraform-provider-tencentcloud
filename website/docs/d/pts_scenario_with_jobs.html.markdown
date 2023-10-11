@@ -252,7 +252,7 @@ In addition to all arguments above, the following attributes are exported:
     * `sla_id` - The ID of the SLA policy.
     * `sla_policy` - The SLA policy.
       * `alert_channel` - The alert channel.
-        * `a_m_p_consumer_id` - AMP consumer ID.
+        * `amp_consumer_id` - AMP consumer ID.
         * `notice_id` - The notice ID bound with this alert channel.
       * `sla_rules` - The SLA rules.
         * `abort_flag` - Whether to abort the load test job.
