@@ -522,7 +522,10 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	flowId = *response.Response.Info.FlowId
+	if response.Response.Info != nil {
+		flowId = *response.Response.Info.FlowId
+	}
+
 	d.SetId(flowId)
 
 	return resourceTencentCloudMpsFlowRead(d, meta)

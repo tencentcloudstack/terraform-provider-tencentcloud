@@ -89,7 +89,10 @@ func resourceTencentCloudMpsEventCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	eventId = *response.Response.Info.EventId
+	if response.Response.Info != nil {
+		eventId = *response.Response.Info.EventId
+	}
+
 	d.SetId(eventId)
 
 	return resourceTencentCloudMpsEventRead(d, meta)
