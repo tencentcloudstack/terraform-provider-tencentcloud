@@ -364,3 +364,50 @@ func (me *OrganizationService) DescribeOrganizationOrgAuthNodeByFilter(ctx conte
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrganizationById(ctx context.Context) (result *organization.DescribeOrganizationResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDescribeOrganizationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeOrganization(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	result = response.Response
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrganizationById(ctx context.Context) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDeleteOrganizationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteOrganization(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
