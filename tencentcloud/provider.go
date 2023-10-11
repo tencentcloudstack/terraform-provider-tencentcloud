@@ -921,6 +921,12 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
+    tencentcloud_ssl_complete_certificate_operation
+    tencentcloud_ssl_check_certificate_chain_operation
+    tencentcloud_ssl_deploy_certificate_instance_operation
+    tencentcloud_ssl_deploy_certificate_record_retry_operation
+    tencentcloud_ssl_deploy_certificate_record_rollback_operation
+    tencentcloud_ssl_download_certificate_operation
 
 Secrets Manager(SSM)
   Data Source
@@ -3334,6 +3340,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
+			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
+			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),
+			"tencentcloud_ssl_deploy_certificate_record_retry_operation":       resourceTencentCloudSslDeployCertificateRecordRetryOperation(),
+			"tencentcloud_ssl_deploy_certificate_record_rollback_operation":    resourceTencentCloudSslDeployCertificateRecordRollbackOperation(),
+			"tencentcloud_ssl_download_certificate_operation":                  resourceTencentCloudSslDownloadCertificateOperation(),
 			"tencentcloud_cwp_license_order":                                   resourceTencentCloudCwpLicenseOrder(),
 			"tencentcloud_cwp_license_bind_attachment":                         resourceTencentCloudCwpLicenseBindAttachment(),
 		},
