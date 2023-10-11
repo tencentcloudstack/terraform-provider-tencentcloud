@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a rum project_status_attachment
+Provides a resource to create a rum project_status_config
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_rum_project_status_attachment" "project_status_attachment" {
+resource "tencentcloud_rum_project_status_config" "project_status_config" {
   project_id = 131407
   operate    = "stop"
 }
@@ -12,10 +12,10 @@ resource "tencentcloud_rum_project_status_attachment" "project_status_attachment
 
 Import
 
-rum project_status_attachment can be imported using the id, e.g.
+rum project_status_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_rum_project_status_attachment.project_status_attachment project_status_attachment_id
+terraform import tencentcloud_rum_project_status_config.project_status_config project_id
 ```
 */
 package tencentcloud
@@ -31,12 +31,12 @@ import (
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 )
 
-func resourceTencentCloudRumProjectStatusAttachment() *schema.Resource {
+func resourceTencentCloudRumProjectStatusConfig() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudRumProjectStatusAttachmentCreate,
-		Read:   resourceTencentCloudRumProjectStatusAttachmentRead,
-		Update: resourceTencentCloudRumProjectStatusAttachmentUpdate,
-		Delete: resourceTencentCloudRumProjectStatusAttachmentDelete,
+		Create: resourceTencentCloudRumProjectStatusConfigCreate,
+		Read:   resourceTencentCloudRumProjectStatusConfigRead,
+		Update: resourceTencentCloudRumProjectStatusConfigUpdate,
+		Delete: resourceTencentCloudRumProjectStatusConfigDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -56,8 +56,8 @@ func resourceTencentCloudRumProjectStatusAttachment() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudRumProjectStatusAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_rum_project_status_attachment.create")()
+func resourceTencentCloudRumProjectStatusConfigCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_rum_project_status_config.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var projectId int
@@ -67,11 +67,11 @@ func resourceTencentCloudRumProjectStatusAttachmentCreate(d *schema.ResourceData
 
 	d.SetId(strconv.Itoa(projectId))
 
-	return resourceTencentCloudRumProjectStatusAttachmentRead(d, meta)
+	return resourceTencentCloudRumProjectStatusConfigRead(d, meta)
 }
 
-func resourceTencentCloudRumProjectStatusAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_rum_project_status_attachment.read")()
+func resourceTencentCloudRumProjectStatusConfigRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_rum_project_status_config.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -82,14 +82,14 @@ func resourceTencentCloudRumProjectStatusAttachmentRead(d *schema.ResourceData, 
 
 	projectId := d.Id()
 
-	project, err := service.DescribeRumProjectStatusAttachmentById(ctx, projectId)
+	project, err := service.DescribeRumProjectStatusConfigById(ctx, projectId)
 	if err != nil {
 		return err
 	}
 
 	if project == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `RumProjectStatusAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `RumProjectStatusConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -100,8 +100,8 @@ func resourceTencentCloudRumProjectStatusAttachmentRead(d *schema.ResourceData, 
 	return nil
 }
 
-func resourceTencentCloudRumProjectStatusAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_rum_project_status_attachment.update")()
+func resourceTencentCloudRumProjectStatusConfigUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_rum_project_status_config.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -149,11 +149,11 @@ func resourceTencentCloudRumProjectStatusAttachmentUpdate(d *schema.ResourceData
 		return fmt.Errorf("[CRITAL]%s Operation type error", logId)
 	}
 
-	return resourceTencentCloudRumProjectStatusAttachmentRead(d, meta)
+	return resourceTencentCloudRumProjectStatusConfigRead(d, meta)
 }
 
-func resourceTencentCloudRumProjectStatusAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_rum_project_status_attachment.delete")()
+func resourceTencentCloudRumProjectStatusConfigDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_rum_project_status_config.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

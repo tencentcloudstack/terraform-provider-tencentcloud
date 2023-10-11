@@ -2153,7 +2153,7 @@ func (me *RumService) DescribeRumTawAreaByFilter(ctx context.Context, param map[
 	return
 }
 
-func (me *RumService) DescribeRumInstanceStatusAttachmentById(ctx context.Context, instanceId string) (instanceStatusAttachment *rum.RumInstanceInfo, errRet error) {
+func (me *RumService) DescribeRumInstanceStatusConfigById(ctx context.Context, instanceId string) (instanceStatusConfig *rum.RumInstanceInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := rum.NewDescribeTawInstancesRequest()
@@ -2184,11 +2184,11 @@ func (me *RumService) DescribeRumInstanceStatusAttachmentById(ctx context.Contex
 		return
 	}
 
-	instanceStatusAttachment = response.Response.InstanceSet[0]
+	instanceStatusConfig = response.Response.InstanceSet[0]
 	return
 }
 
-func (me *RumService) DescribeRumProjectStatusAttachmentById(ctx context.Context, projectId string) (projectStatusAttachment *rum.RumProject, errRet error) {
+func (me *RumService) DescribeRumProjectStatusConfigById(ctx context.Context, projectId string) (projectStatusConfig *rum.RumProject, errRet error) {
 	logId := getLogId(ctx)
 
 	request := rum.NewDescribeProjectsRequest()
@@ -2227,7 +2227,7 @@ func (me *RumService) DescribeRumProjectStatusAttachmentById(ctx context.Context
 		return
 	}
 
-	projectStatusAttachment = response.Response.ProjectSet[0]
+	projectStatusConfig = response.Response.ProjectSet[0]
 	return
 }
 

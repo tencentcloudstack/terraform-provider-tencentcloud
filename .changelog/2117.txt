@@ -71,9 +71,9 @@ tencentcloud_rum_log_export_list
 ```
 
 ```release-note:new-resource
-tencentcloud_rum_instance_status_attachment
+tencentcloud_rum_instance_status_config
 ```
 
 ```release-note:new-resource
-tencentcloud_rum_project_status_attachment
+tencentcloud_rum_project_status_config
 ```

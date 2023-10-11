@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -test.run TestAccTencentCloudRumProjectStatusAttachmentResource_basic -v
-func TestAccTencentCloudRumProjectStatusAttachmentResource_basic(t *testing.T) {
+// go test -test.run TestAccTencentCloudRumProjectStatusConfigResource_basic -v
+func TestAccTencentCloudRumProjectStatusConfigResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,19 +16,19 @@ func TestAccTencentCloudRumProjectStatusAttachmentResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRumProjectStatusAttachment,
+				Config: testAccRumProjectStatusConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_rum_project_status_attachment.project_status_attachment", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_rum_project_status_config.project_status_config", "id"),
 				),
 			},
 			{
-				Config: testAccRumProjectStatusAttachmentUp,
+				Config: testAccRumProjectStatusConfigUp,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_rum_project_status_attachment.project_status_attachment", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_rum_project_status_config.project_status_config", "id"),
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_rum_project_status_attachment.project_status_attachment",
+				ResourceName:            "tencentcloud_rum_project_status_config.project_status_config",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"operate"},
@@ -37,25 +37,25 @@ func TestAccTencentCloudRumProjectStatusAttachmentResource_basic(t *testing.T) {
 	})
 }
 
-const testAccRumProjectStatusAttachmentVar = `
+const testAccRumProjectStatusConfigVar = `
 variable "project_id" {
   default = "` + defaultRumProjectId + `"
 }
 `
 
-const testAccRumProjectStatusAttachment = testAccRumProjectStatusAttachmentVar + `
+const testAccRumProjectStatusConfig = testAccRumProjectStatusConfigVar + `
 
-resource "tencentcloud_rum_project_status_attachment" "project_status_attachment" {
+resource "tencentcloud_rum_project_status_config" "project_status_config" {
 	project_id = var.project_id
 	operate = "stop"
 }
 
 `
 
-const testAccRumProjectStatusAttachmentUp = testAccRumProjectStatusAttachmentVar + `
+const testAccRumProjectStatusConfigUp = testAccRumProjectStatusConfigVar + `
 
 
-resource "tencentcloud_rum_project_status_attachment" "project_status_attachment" {
+resource "tencentcloud_rum_project_status_config" "project_status_config" {
 	project_id = var.project_id
 	operate = "resume"
 }
