@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudMpsExecuteFunctionOperationResource_basic(t *testing.T) {
+// NeedFix: reserved for the custom support
+func TestAccTencentCloudNeedFixMpsExecuteFunctionOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,12 +17,11 @@ func TestAccTencentCloudMpsExecuteFunctionOperationResource_basic(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMpsExecuteFunctionOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_execute_function_operation.execute_function_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_mps_execute_function_operation.execute_function_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check:  resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_execute_function_operation.operation", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_execute_function_operation.operation", "function_name", "ExampleFunc"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_execute_function_operation.operation", "function_arg", "arg1"),
+				),
 			},
 		},
 	})
@@ -29,9 +29,9 @@ func TestAccTencentCloudMpsExecuteFunctionOperationResource_basic(t *testing.T) 
 
 const testAccMpsExecuteFunctionOperation = `
 
-resource "tencentcloud_mps_execute_function_operation" "execute_function_operation" {
-  function_name = ""
-  function_arg = ""
+resource "tencentcloud_mps_execute_function_operation" "operation" {
+  function_name = "ExampleFunc"
+  function_arg = "arg1"
 }
 
 `
