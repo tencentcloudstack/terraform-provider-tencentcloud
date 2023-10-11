@@ -1750,3 +1750,57 @@ func (me *MonitorService) DescribeMonitorTmpGrafanaConfigById(ctx context.Contex
 	tmpGrafanaConfig = response.Response
 	return
 }
+
+func (me *MonitorService) DescribeMonitorGrafanaPluginOverviewsByFilter(ctx context.Context, param map[string]interface{}) (pluginOverviews []*monitor.GrafanaPlugin, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePluginOverviewsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePluginOverviews(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.PluginSet == nil {
+		return nil, nil
+	}
+
+	pluginOverviews = response.Response.PluginSet
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaDnsConfigById(ctx context.Context, instanceId string) (grafanaDnsConfig *monitor.DescribeDNSConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDescribeDNSConfigRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeDNSConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	grafanaDnsConfig = response.Response
+	return
+}

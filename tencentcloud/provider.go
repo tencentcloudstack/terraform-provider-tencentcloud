@@ -751,6 +751,9 @@ Managed Service for Prometheus(TMP)
 	tencentcloud_monitor_tmp_tke_basic_config
 
 TencentCloud Managed Service for Grafana(TCMG)
+  Data Source
+	tencentcloud_monitor_grafana_plugin_overviews
+
   Resource
 	tencentcloud_monitor_grafana_instance
 	tencentcloud_monitor_grafana_integration
@@ -2231,6 +2234,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_policy_groups":                       dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":                   dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_monitor_alarm_notices":                       dataSourceTencentMonitorAlarmNotices(),
+			"tencentcloud_monitor_grafana_plugin_overviews":          	dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
 			"tencentcloud_elasticsearch_instances":                     dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                        dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                        dataSourceTencentCloudPostgresqlSpecinfos(),
@@ -2927,6 +2931,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_grafana_plugin":                              resourceTencentCloudMonitorGrafanaPlugin(),
 			"tencentcloud_monitor_grafana_sso_account":                         resourceTencentCloudMonitorGrafanaSsoAccount(),
 			"tencentcloud_monitor_tmp_grafana_config":                          resourceTencentCloudMonitorTmpGrafanaConfig(),
+			"tencentcloud_monitor_grafana_dns_config":                          resourceTencentCloudMonitorGrafanaDnsConfig(),
 			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                        resourceTencentCloudElasticsearchSecurityGroup(),
