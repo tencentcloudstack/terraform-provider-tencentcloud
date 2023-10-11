@@ -990,8 +990,8 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-	parametersMap, _ := d.Get("parameters").(map[string]interface{})
-	if len(parametersMap) < 1 {
+	parametersMap, ok := d.Get("parameters").(map[string]interface{})
+	if !ok || len(parametersMap) < 1 {
 		parameterList, err := mysqlService.DescribeInstanceParameters(ctx, *mysqlInfo.InstanceId)
 		if err != nil {
 			return err
