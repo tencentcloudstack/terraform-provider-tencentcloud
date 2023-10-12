@@ -938,6 +938,7 @@ const (
 // RUM
 const (
 	defaultRumInstanceId = "rum-pasZKEI3RLgakj"
+	defaultRumProjectId  = "131407"
 )
 
 // End of RUM

@@ -1385,6 +1385,63 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (lo
 	return
 }
 
+func (me *CamService) DescribeCamAccessKeyById(ctx context.Context, targetUin uint64, accessKey string) (AccessKey *cam.AccessKey, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewListAccessKeysRequest()
+	request.TargetUin = &targetUin
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListAccessKeys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.AccessKeys) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.AccessKeys {
+		if *v.AccessKeyId == accessKey {
+			AccessKey = v
+		}
+	}
+	return
+}
+
+func (me *CamService) DeleteCamAccessKeyById(ctx context.Context, uin, accessKeyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeleteAccessKeyRequest()
+	request.AccessKeyId = &accessKeyId
+	request.TargetUin = helper.StrToUint64Point(uin)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DeleteAccessKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *CamService) DescribeCamUserPermissionBoundaryById(ctx context.Context, targetUin string) (UserPermissionBoundary *cam.GetUserPermissionBoundaryResponse, errRet error) {
 	logId := getLogId(ctx)
 

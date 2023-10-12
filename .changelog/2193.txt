@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_pts_scenario_with_jobs
+```
+
+```release-note:new-resource
+tencentcloud_pts_cron_job_restart
+```
+
+```release-note:new-resource
+tencentcloud_pts_job_abort
+```
+
+```release-note:new-resource
+tencentcloud_pts_cron_job_abort
+```

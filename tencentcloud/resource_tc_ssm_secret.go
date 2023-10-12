@@ -211,6 +211,7 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	}
 
 	secretName = *response.Response.SecretName
+	d.SetId(secretName)
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -249,7 +250,6 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	d.SetId(secretName)
 	return resourceTencentCloudSsmSecretRead(d, meta)
 }
 

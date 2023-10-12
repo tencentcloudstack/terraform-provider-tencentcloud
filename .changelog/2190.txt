@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_ssm_secret: Optimize code structure
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_ssh_key_pair_secret: Optimize code structure
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_product_secret: Optimize code structure
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_rotate_product_secret: Optimize code structure
+```
