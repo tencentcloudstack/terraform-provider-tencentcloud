@@ -510,3 +510,110 @@ func (me *OrganizationService) DescribeOrganizationOrgFinancialByMemberByFilter(
 	}
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgFinancialByMonthByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByMonth []*organization.OrgFinancialByMonth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = organization.NewDescribeOrganizationFinancialByMonthRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EndMonth" {
+			request.EndMonth = v.(*string)
+		}
+		if k == "MemberUins" {
+			request.MemberUins = v.([]*int64)
+		}
+		if k == "ProductCodes" {
+			request.ProductCodes = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DescribeOrganizationFinancialByMonth(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Items) < 1 {
+		return
+	}
+	orgFinancialByMonth = append(orgFinancialByMonth, response.Response.Items...)
+	return
+}
+func (me *OrganizationService) DescribeOrganizationOrgFinancialByProductByFilter(ctx context.Context, param map[string]interface{}) (orgFinancialByProduct *organization.DescribeOrganizationFinancialByProductResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = organization.NewDescribeOrganizationFinancialByProductRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Month" {
+			request.Month = v.(*string)
+		}
+		if k == "EndMonth" {
+			request.EndMonth = v.(*string)
+		}
+		if k == "MemberUins" {
+			request.MemberUins = v.([]*int64)
+		}
+		if k == "ProductCodes" {
+			request.ProductCodes = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 20
+		items     []*organization.OrgProductFinancial
+		totalCost float64 = 0
+		total     int64   = 0
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeOrganizationFinancialByProduct(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		items = append(items, response.Response.Items...)
+		if response.Response != nil && response.Response.TotalCost != nil && totalCost == 0 && total == 0 {
+			totalCost = *response.Response.TotalCost
+			total = *response.Response.Total
+		}
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+	orgFinancialByProduct = &organization.DescribeOrganizationFinancialByProductResponseParams{
+		TotalCost: &totalCost,
+		Items:     items,
+		Total:     &total,
+	}
+	return
+}
