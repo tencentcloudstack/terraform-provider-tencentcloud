@@ -160,7 +160,7 @@ func resourceTencentCloudCfwEdgePolicyCreate(d *schema.ResourceData, meta interf
 		createRuleItem.Port = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("direction"); ok {
+	if v, ok := d.GetOkExists("direction"); ok {
 		createRuleItem.Direction = helper.IntUint64(v.(int))
 	}
 

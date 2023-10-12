@@ -152,7 +152,7 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 		createNatRuleItem.Port = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("direction"); ok {
+	if v, ok := d.GetOkExists("direction"); ok {
 		createNatRuleItem.Direction = helper.IntUint64(v.(int))
 	}
 
