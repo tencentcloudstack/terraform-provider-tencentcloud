@@ -10,6 +10,18 @@ tencentcloud_api_gateway_api_app_api
 tencentcloud_api_gateway_api_plugins
 ```
 
+```release-note:new-data-source
+tencentcloud_api_gateway_service_release_versions
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_service_environment_list
+```
+
 ```release-note:new-resource
 tencentcloud_api_gateway_update_api_app_key
+```
+
+```release-note:new-resource
+tencentcloud_api_gateway_import_open_api
 ```
