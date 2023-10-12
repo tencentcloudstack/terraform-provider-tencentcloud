@@ -998,7 +998,7 @@ func (me *MpsService) DescribeMpsInputById(ctx context.Context, flowId, inputId 
 		}
 	}
 
-	log.Printf("[DEBUG]%s `DescribeMpsInputById` success, inputId: %s, flowId: %s \n", logId, input.InputId, flowId)
+	log.Printf("[DEBUG]%s `DescribeMpsInputById` success, inputId: %s, flowId: %s \n", logId, *input.InputId, flowId)
 	return
 }
 
@@ -1017,6 +1017,6 @@ func (me *MpsService) DescribeMpsOutputById(ctx context.Context, flowId, outputI
 		}
 	}
 
-	log.Printf("[DEBUG]%s `DescribeMpsOutputById` success, outputId: %s, flowId: %s \n", logId, output.OutputId, flowId)
+	log.Printf("[DEBUG]%s `DescribeMpsOutputById` success, outputId: %s, flowId: %s \n", logId, *output.OutputId, flowId)
 	return
 }

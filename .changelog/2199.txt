@@ -5,3 +5,7 @@ tencentcloud_mps_input
 ```release-note:new-resource
 tencentcloud_mps_output
 ```
+
+```release-note:new-resource
+tencentcloud_mps_start_flow_operation
+```

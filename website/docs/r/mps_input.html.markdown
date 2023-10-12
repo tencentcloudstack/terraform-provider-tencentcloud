@@ -1,31 +1,25 @@
 ---
 subcategory: "Media Processing Service(MPS)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_mps_flow"
-sidebar_current: "docs-tencentcloud-resource-mps_flow"
+page_title: "TencentCloud: tencentcloud_mps_input"
+sidebar_current: "docs-tencentcloud-resource-mps_input"
 description: |-
-  Provides a resource to create a mps flow
+  Provides a resource to create a mps input
 ---
 
-# tencentcloud_mps_flow
+# tencentcloud_mps_input
 
-Provides a resource to create a mps flow
+Provides a resource to create a mps input
 
 ## Example Usage
 
-### Create a mps RTP flow
+### Create mps input group with SRT
 
 ```hcl
-resource "tencentcloud_mps_event" "event" {
-  event_name  = "tf_test_event_srt_%d"
-  description = "tf test mps event description"
-}
-
-resource "tencentcloud_mps_flow" "flow" {
-  flow_name     = "tf_test_mps_flow_srt_%d"
-  max_bandwidth = 10000000
+resource "tencentcloud_mps_input" "input" {
+  flow_id = tencentcloud_mps_flow.flow.id
   input_group {
-    input_name    = "test_inputname"
+    input_name    = "your_input_name"
     protocol      = "SRT"
     description   = "input name Description"
     allow_ip_list = ["0.0.0.0/0"]
@@ -38,83 +32,6 @@ resource "tencentcloud_mps_flow" "flow" {
       peer_idle_timeout = 1000
     }
   }
-  event_id = tencentcloud_mps_event.event.id
-}
-```
-
-### Create a mps RTP flow
-
-```hcl
-resource "tencentcloud_mps_event" "event_rtp" {
-  event_name  = "tf_test_event_rtp_%d"
-  description = "tf test mps event description"
-}
-
-resource "tencentcloud_mps_flow" "flow_rtp" {
-  flow_name     = "tf_test_mps_flow_rtp_%d"
-  max_bandwidth = 10000000
-  input_group {
-    input_name    = "test_inputname"
-    protocol      = "RTP"
-    description   = "input name Description"
-    allow_ip_list = ["0.0.0.0/0"]
-    rtp_settings {
-      fec          = "none"
-      idle_timeout = 1000
-    }
-  }
-  event_id = tencentcloud_mps_event.event_rtp.id
-}
-```
-
-### Create a mps RTP flow and start it
-
-Before you start a mps flow, you need to create a output first.
-
-```hcl
-resource "tencentcloud_mps_event" "event_rtp" {
-  event_name  = "your_event_name"
-  description = "tf test mps event description"
-}
-
-resource "tencentcloud_mps_flow" "flow_rtp" {
-  flow_name     = "your_flow_name"
-  max_bandwidth = 10000000
-  input_group {
-    input_name    = "test_inputname"
-    protocol      = "RTP"
-    description   = "input name Description"
-    allow_ip_list = ["0.0.0.0/0"]
-    rtp_settings {
-      fec          = "none"
-      idle_timeout = 1000
-    }
-  }
-  event_id = tencentcloud_mps_event.event_rtp.id
-}
-
-resource "tencentcloud_mps_output" "output" {
-  flow_id = tencentcloud_mps_flow.flow_rtp.id
-  output {
-    output_name   = "your_output_name"
-    description   = "tf mps output group"
-    protocol      = "RTP"
-    output_region = "ap-guangzhou"
-    rtp_settings {
-      destinations {
-        ip   = "203.205.141.84"
-        port = 65535
-      }
-      fec          = "none"
-      idle_timeout = 1000
-    }
-  }
-}
-
-resource "tencentcloud_mps_start_flow_operation" "operation" {
-  flow_id    = tencentcloud_mps_flow.flow_rtp.id
-  start      = true
-  depends_on = [tencentcloud_mps_output.output]
 }
 ```
 
@@ -122,10 +39,8 @@ resource "tencentcloud_mps_start_flow_operation" "operation" {
 
 The following arguments are supported:
 
-* `flow_name` - (Required, String) Flow name.
-* `max_bandwidth` - (Required, Int) Maximum bandwidth, unit bps, optional [10000000, 20000000, 50000000].
-* `event_id` - (Optional, String) The event ID associated with this Flow. Each flow can only be associated with one Event.
-* `input_group` - (Optional, List) The input group for the flow.
+* `flow_id` - (Required, String) Flow ID.
+* `input_group` - (Optional, List) The input group for the input. Only support one group for one `tencentcloud_mps_input`. Use `for_each` to create multiple inputs Scenario.
 
 The `hls_pull_settings` object supports the following:
 
@@ -133,15 +48,15 @@ The `hls_pull_settings` object supports the following:
 
 The `input_group` object supports the following:
 
-* `input_name` - (Required, String) Input name, you can fill in uppercase and lowercase letters, numbers and underscores, and the length is [1, 32].
+* `input_name` - (Required, String) The input name, you can fill in uppercase and lowercase letters, numbers and underscores, and the length is [1, 32].
 * `protocol` - (Required, String) Input protocol, optional [SRT|RTP|RTMP|RTMP_PULL].
 * `allow_ip_list` - (Optional, Set) The input IP whitelist, the format is CIDR.
-* `description` - (Optional, String) Input description with a length of [0, 255].
+* `description` - (Optional, String) The input description with a length of [0, 255].
 * `fail_over` - (Optional, String) The active/standby switch of the input, [OPEN|CLOSE] is optional, and the default is CLOSE.
 * `hls_pull_settings` - (Optional, List) Input HLS_PULL configuration information.
 * `resilient_stream` - (Optional, List) Delay broadcast smooth streaming configuration information.
 * `rtmp_pull_settings` - (Optional, List) Input RTMP_PULL configuration information.
-* `rtp_settings` - (Optional, List) RTP configuration information.
+* `rtp_settings` - (Optional, List) Input RTP configuration information.
 * `rtsp_pull_settings` - (Optional, List) Input RTSP_PULL configuration information.
 * `srt_settings` - (Optional, List) The input SRT configuration information.
 
@@ -156,7 +71,7 @@ The `rtmp_pull_settings` object supports the following:
 
 The `rtp_settings` object supports the following:
 
-* `fec` - (Optional, String) Defaults to none, optional values[none].
+* `fec` - (Optional, String) Defaults to &#39;none&#39;, optional values[&#39;none&#39;].
 * `idle_timeout` - (Optional, Int) Idle timeout, the default is 5000, the unit is ms, and the range is [1000, 10000].
 
 The `rtsp_pull_settings` object supports the following:
@@ -191,7 +106,7 @@ The `srt_settings` object supports the following:
 * `peer_latency` - (Optional, Int) Peer delay, the default is 0, the unit is ms, and the range is [0, 3000].
 * `recv_latency` - (Optional, Int) Receiving delay, default is 120, unit ms, range is [0, 3000].
 * `source_addresses` - (Optional, List) SRT peer address, required when Mode is CALLER, and only 1 set can be filled in.
-* `stream_id` - (Optional, String) Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;,=_-), length 0~512. For specific format, please refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys.
+* `stream_id` - (Optional, String) Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;,=_-), length 0~512. Specific format can refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys.
 
 ## Attributes Reference
 
@@ -203,9 +118,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-mps flow can be imported using the id, e.g.
+mps input can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mps_flow.flow flow_id
+terraform import tencentcloud_mps_input.input input_id
 ```
 
