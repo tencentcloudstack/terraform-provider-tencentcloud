@@ -1,16 +1,15 @@
 /*
 Use this data source to query detailed information of organization org_financial_by_product
 
-# Example Usage
+Example Usage
 
 ```hcl
 
-	data "tencentcloud_organization_org_financial_by_product" "org_financial_by_product" {
-	  month = "2023-05"
-	  end_month = "2023-09"
-	  product_codes = ["p_eip"]
-	    }
-
+data "tencentcloud_organization_org_financial_by_product" "org_financial_by_product" {
+  month = "2023-05"
+  end_month = "2023-09"
+  product_codes = ["p_eip"]
+  }
 ```
 */
 package tencentcloud
@@ -83,7 +82,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProduct() *schema.Resource 
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the product(¥).",
+							Description: "Total cost of the product.",
 						},
 						"ratio": {
 							Type:        schema.TypeString,

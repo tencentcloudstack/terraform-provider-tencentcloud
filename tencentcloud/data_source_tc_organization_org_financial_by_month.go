@@ -1,14 +1,14 @@
 /*
 Use this data source to query detailed information of organization org_financial_by_month
 
-# Example Usage
+Example Usage
 
 ```hcl
 
-	data "tencentcloud_organization_org_financial_by_month" "org_financial_by_month" {
-	  end_month = "2023-05"
-	  member_uins = [100026517717]
-
+data "tencentcloud_organization_org_financial_by_month" "org_financial_by_month" {
+  end_month = "2023-05"
+  member_uins = [100026517717]
+}
 ```
 */
 package tencentcloud
@@ -69,7 +69,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMonth() *schema.Resource {
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the month(¥).",
+							Description: "Total cost of the month.",
 						},
 						"growth_rate": {
 							Type:        schema.TypeString,

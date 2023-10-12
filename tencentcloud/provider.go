@@ -1446,6 +1446,8 @@ Tencent Cloud Organization (TCO)
   Data Source
 	tencentcloud_organization_org_auth_node
 	tencentcloud_organization_org_financial_by_member
+	tencentcloud_organization_org_financial_by_month
+	tencentcloud_organization_org_financial_by_product
   Resource
 	tencentcloud_organization_instance
 	tencentcloud_organization_org_node
@@ -2557,6 +2559,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_statistics_report":                       dataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                       dataSourceTencentCloudSesSendEmailStatus(),
 			"tencentcloud_organization_org_financial_by_member":        dataSourceTencentCloudOrganizationOrgFinancialByMember(),
+			"tencentcloud_organization_org_financial_by_month":         dataSourceTencentCloudOrganizationOrgFinancialByMonth(),
+			"tencentcloud_organization_org_financial_by_product":       dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
 		},
