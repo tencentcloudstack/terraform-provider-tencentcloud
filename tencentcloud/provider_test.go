@@ -25,6 +25,7 @@ const (
 	ACCOUNT_TYPE_SMS                  = "SMS"
 	ACCOUNT_TYPE_SES                  = "SES"
 	ACCOUNT_TYPE_TSF                  = "TSF"
+	ACCOUNT_TYPE_SSL                  = "SSL"
 	INTERNATIONAL_PROVIDER_SECRET_ID  = "TENCENTCLOUD_SECRET_ID_INTERNATIONAL"
 	INTERNATIONAL_PROVIDER_SECRET_KEY = "TENCENTCLOUD_SECRET_KEY_INTERNATIONAL"
 	PREPAY_PROVIDER_SECRET_ID         = "TENCENTCLOUD_SECRET_ID_PREPAY"
@@ -39,6 +40,8 @@ const (
 	SMS_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_SMS"
 	TSF_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_TSF"
 	TSF_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_TSF"
+	SSL_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_SSL"
+	SSL_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_SSL"
 )
 
 func init() {
@@ -151,6 +154,14 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		secretKey := os.Getenv(TSF_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {
 			t.Fatalf("%v and %v must be set for acceptance tests\n", TSF_PROVIDER_SECRET_ID, TSF_PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_SSL:
+		secretId := os.Getenv(SSL_PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(SSL_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SSL_PROVIDER_SECRET_ID, SSL_PROVIDER_SECRET_KEY)
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)

@@ -172,6 +172,7 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 	}
 
 	secretName = *response.Response.SecretName
+	d.SetId(secretName)
 
 	// update status if disabled
 	if v, ok := d.GetOk("status"); ok {
@@ -206,7 +207,6 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 		}
 	}
 
-	d.SetId(secretName)
 	return resourceTencentCloudSsmSshKeyPairSecretRead(d, meta)
 }
 

@@ -46,6 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 * `duration` - Job duration.
 * `end_time` - End time of the job.
 * `error_rate` - Percentage of error rate.
+* `job_id` - Job Id.
 * `load` - Pressure configuration of job.
 * `max_requests_per_second` - Maximum requests per second.
 * `max_virtual_user_count` - Maximum number of VU for the job.

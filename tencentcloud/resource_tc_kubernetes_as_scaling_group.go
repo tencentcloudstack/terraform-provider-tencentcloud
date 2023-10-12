@@ -23,7 +23,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    orderly_security_group_ids = ["sg-24vswocp"]
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"

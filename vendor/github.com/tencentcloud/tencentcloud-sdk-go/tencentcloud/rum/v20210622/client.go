@@ -180,7 +180,7 @@ func NewCreateProjectResponse() (response *CreateProjectResponse) {
 }
 
 // CreateProject
-// 创建项目（归属于某个团队）
+// 创建 RUM 应用（归属于某个团队）
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -197,7 +197,7 @@ func (c *Client) CreateProject(request *CreateProjectRequest) (response *CreateP
 }
 
 // CreateProject
-// 创建项目（归属于某个团队）
+// 创建 RUM 应用（归属于某个团队）
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -418,11 +418,15 @@ func NewCreateTawInstanceResponse() (response *CreateTawInstanceResponse) {
 }
 
 // CreateTawInstance
-// 创建Rum实例
+// 创建 RUM 业务系统
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CHARGENOBALANCE = "FailedOperation.ChargeNoBalance"
+//  FAILEDOPERATION_CHARGENOPAYRIGHT = "FailedOperation.ChargeNoPayRight"
+//  FAILEDOPERATION_CHARGEPARAMINVALID = "FailedOperation.ChargeParamInvalid"
+//  FAILEDOPERATION_INFRASTRUCTUREERROR = "FailedOperation.InfrastructureError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -431,11 +435,15 @@ func (c *Client) CreateTawInstance(request *CreateTawInstanceRequest) (response 
 }
 
 // CreateTawInstance
-// 创建Rum实例
+// 创建 RUM 业务系统
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CHARGENOBALANCE = "FailedOperation.ChargeNoBalance"
+//  FAILEDOPERATION_CHARGENOPAYRIGHT = "FailedOperation.ChargeNoPayRight"
+//  FAILEDOPERATION_CHARGEPARAMINVALID = "FailedOperation.ChargeParamInvalid"
+//  FAILEDOPERATION_INFRASTRUCTUREERROR = "FailedOperation.InfrastructureError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -1121,6 +1129,204 @@ func (c *Client) DeleteWhitelistWithContext(ctx context.Context, request *Delete
     request.SetContext(ctx)
     
     response = NewDeleteWhitelistResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAppDimensionMetricsRequest() (request *DescribeAppDimensionMetricsRequest) {
+    request = &DescribeAppDimensionMetricsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeAppDimensionMetrics")
+    
+    
+    return
+}
+
+func NewDescribeAppDimensionMetricsResponse() (response *DescribeAppDimensionMetricsResponse) {
+    response = &DescribeAppDimensionMetricsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAppDimensionMetrics
+// 用于查询 app 监控多维分析数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppDimensionMetrics(request *DescribeAppDimensionMetricsRequest) (response *DescribeAppDimensionMetricsResponse, err error) {
+    return c.DescribeAppDimensionMetricsWithContext(context.Background(), request)
+}
+
+// DescribeAppDimensionMetrics
+// 用于查询 app 监控多维分析数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppDimensionMetricsWithContext(ctx context.Context, request *DescribeAppDimensionMetricsRequest) (response *DescribeAppDimensionMetricsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAppDimensionMetricsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAppDimensionMetrics require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAppDimensionMetricsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAppMetricsDataRequest() (request *DescribeAppMetricsDataRequest) {
+    request = &DescribeAppMetricsDataRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeAppMetricsData")
+    
+    
+    return
+}
+
+func NewDescribeAppMetricsDataResponse() (response *DescribeAppMetricsDataResponse) {
+    response = &DescribeAppMetricsDataResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAppMetricsData
+// 获取 app 监控指标数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppMetricsData(request *DescribeAppMetricsDataRequest) (response *DescribeAppMetricsDataResponse, err error) {
+    return c.DescribeAppMetricsDataWithContext(context.Background(), request)
+}
+
+// DescribeAppMetricsData
+// 获取 app 监控指标数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppMetricsDataWithContext(ctx context.Context, request *DescribeAppMetricsDataRequest) (response *DescribeAppMetricsDataResponse, err error) {
+    if request == nil {
+        request = NewDescribeAppMetricsDataRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAppMetricsData require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAppMetricsDataResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAppSingleCaseDetailListRequest() (request *DescribeAppSingleCaseDetailListRequest) {
+    request = &DescribeAppSingleCaseDetailListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeAppSingleCaseDetailList")
+    
+    
+    return
+}
+
+func NewDescribeAppSingleCaseDetailListResponse() (response *DescribeAppSingleCaseDetailListResponse) {
+    response = &DescribeAppSingleCaseDetailListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAppSingleCaseDetailList
+// 查询 app 监控个例样本详情列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeAppSingleCaseDetailList(request *DescribeAppSingleCaseDetailListRequest) (response *DescribeAppSingleCaseDetailListResponse, err error) {
+    return c.DescribeAppSingleCaseDetailListWithContext(context.Background(), request)
+}
+
+// DescribeAppSingleCaseDetailList
+// 查询 app 监控个例样本详情列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeAppSingleCaseDetailListWithContext(ctx context.Context, request *DescribeAppSingleCaseDetailListRequest) (response *DescribeAppSingleCaseDetailListResponse, err error) {
+    if request == nil {
+        request = NewDescribeAppSingleCaseDetailListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAppSingleCaseDetailList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAppSingleCaseDetailListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAppSingleCaseListRequest() (request *DescribeAppSingleCaseListRequest) {
+    request = &DescribeAppSingleCaseListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeAppSingleCaseList")
+    
+    
+    return
+}
+
+func NewDescribeAppSingleCaseListResponse() (response *DescribeAppSingleCaseListResponse) {
+    response = &DescribeAppSingleCaseListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAppSingleCaseList
+// 查询 app 监控个例聚合列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppSingleCaseList(request *DescribeAppSingleCaseListRequest) (response *DescribeAppSingleCaseListResponse, err error) {
+    return c.DescribeAppSingleCaseListWithContext(context.Background(), request)
+}
+
+// DescribeAppSingleCaseList
+// 查询 app 监控个例聚合列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAppSingleCaseListWithContext(ctx context.Context, request *DescribeAppSingleCaseListRequest) (response *DescribeAppSingleCaseListResponse, err error) {
+    if request == nil {
+        request = NewDescribeAppSingleCaseListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAppSingleCaseList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAppSingleCaseListResponse()
     err = c.Send(request, response)
     return
 }
@@ -2916,7 +3122,7 @@ func NewDescribeLogListResponse() (response *DescribeLogListResponse) {
 }
 
 // DescribeLogList
-// 获取项目下的日志列表（实例创建的项目下的日志列表）
+// (已下线，请用DescribeRumLogList)
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2944,7 +3150,7 @@ func (c *Client) DescribeLogList(request *DescribeLogListRequest) (response *Des
 }
 
 // DescribeLogList
-// 获取项目下的日志列表（实例创建的项目下的日志列表）
+// (已下线，请用DescribeRumLogList)
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3146,7 +3352,7 @@ func NewDescribeProjectLimitsResponse() (response *DescribeProjectLimitsResponse
 }
 
 // DescribeProjectLimits
-// 获取项目上报率列表
+// 获取应用上报抽样信息
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3176,7 +3382,7 @@ func (c *Client) DescribeProjectLimits(request *DescribeProjectLimitsRequest) (r
 }
 
 // DescribeProjectLimits
-// 获取项目上报率列表
+// 获取应用上报抽样信息
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3476,7 +3682,7 @@ func NewDescribeReleaseFilesResponse() (response *DescribeReleaseFilesResponse) 
 }
 
 // DescribeReleaseFiles
-// 获取项目对应sourcemap文件列表
+// 获取应用对应sourcemap文件列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3505,7 +3711,7 @@ func (c *Client) DescribeReleaseFiles(request *DescribeReleaseFilesRequest) (res
 }
 
 // DescribeReleaseFiles
-// 获取项目对应sourcemap文件列表
+// 获取应用对应sourcemap文件列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3541,6 +3747,436 @@ func (c *Client) DescribeReleaseFilesWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDescribeReleaseFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRumGroupLogRequest() (request *DescribeRumGroupLogRequest) {
+    request = &DescribeRumGroupLogRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeRumGroupLog")
+    
+    
+    return
+}
+
+func NewDescribeRumGroupLogResponse() (response *DescribeRumGroupLogResponse) {
+    response = &DescribeRumGroupLogResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRumGroupLog
+// 获取项目下的日志聚合信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumGroupLog(request *DescribeRumGroupLogRequest) (response *DescribeRumGroupLogResponse, err error) {
+    return c.DescribeRumGroupLogWithContext(context.Background(), request)
+}
+
+// DescribeRumGroupLog
+// 获取项目下的日志聚合信息
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumGroupLogWithContext(ctx context.Context, request *DescribeRumGroupLogRequest) (response *DescribeRumGroupLogResponse, err error) {
+    if request == nil {
+        request = NewDescribeRumGroupLogRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRumGroupLog require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRumGroupLogResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRumLogExportRequest() (request *DescribeRumLogExportRequest) {
+    request = &DescribeRumLogExportRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeRumLogExport")
+    
+    
+    return
+}
+
+func NewDescribeRumLogExportResponse() (response *DescribeRumLogExportResponse) {
+    response = &DescribeRumLogExportResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRumLogExport
+// 获取项目下的日志列表（实例创建的项目下的日志列表）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogExport(request *DescribeRumLogExportRequest) (response *DescribeRumLogExportResponse, err error) {
+    return c.DescribeRumLogExportWithContext(context.Background(), request)
+}
+
+// DescribeRumLogExport
+// 获取项目下的日志列表（实例创建的项目下的日志列表）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogExportWithContext(ctx context.Context, request *DescribeRumLogExportRequest) (response *DescribeRumLogExportResponse, err error) {
+    if request == nil {
+        request = NewDescribeRumLogExportRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRumLogExport require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRumLogExportResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRumLogExportsRequest() (request *DescribeRumLogExportsRequest) {
+    request = &DescribeRumLogExportsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeRumLogExports")
+    
+    
+    return
+}
+
+func NewDescribeRumLogExportsResponse() (response *DescribeRumLogExportsResponse) {
+    response = &DescribeRumLogExportsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRumLogExports
+// 获取项目下的日志导出列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogExports(request *DescribeRumLogExportsRequest) (response *DescribeRumLogExportsResponse, err error) {
+    return c.DescribeRumLogExportsWithContext(context.Background(), request)
+}
+
+// DescribeRumLogExports
+// 获取项目下的日志导出列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogExportsWithContext(ctx context.Context, request *DescribeRumLogExportsRequest) (response *DescribeRumLogExportsResponse, err error) {
+    if request == nil {
+        request = NewDescribeRumLogExportsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRumLogExports require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRumLogExportsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRumLogListRequest() (request *DescribeRumLogListRequest) {
+    request = &DescribeRumLogListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeRumLogList")
+    
+    
+    return
+}
+
+func NewDescribeRumLogListResponse() (response *DescribeRumLogListResponse) {
+    response = &DescribeRumLogListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRumLogList
+// 获取项目下的日志列表（实例创建的项目下的日志列表）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogList(request *DescribeRumLogListRequest) (response *DescribeRumLogListResponse, err error) {
+    return c.DescribeRumLogListWithContext(context.Background(), request)
+}
+
+// DescribeRumLogList
+// 获取项目下的日志列表（实例创建的项目下的日志列表）
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumLogListWithContext(ctx context.Context, request *DescribeRumLogListRequest) (response *DescribeRumLogListResponse, err error) {
+    if request == nil {
+        request = NewDescribeRumLogListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRumLogList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRumLogListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRumStatsLogListRequest() (request *DescribeRumStatsLogListRequest) {
+    request = &DescribeRumStatsLogListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "DescribeRumStatsLogList")
+    
+    
+    return
+}
+
+func NewDescribeRumStatsLogListResponse() (response *DescribeRumStatsLogListResponse) {
+    response = &DescribeRumStatsLogListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRumStatsLogList
+// 获取项目下的日志列表，分钟级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumStatsLogList(request *DescribeRumStatsLogListRequest) (response *DescribeRumStatsLogListResponse, err error) {
+    return c.DescribeRumStatsLogListWithContext(context.Background(), request)
+}
+
+// DescribeRumStatsLogList
+// 获取项目下的日志列表，分钟级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSCALLFAIL = "FailedOperation.ClsCallFail"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeRumStatsLogListWithContext(ctx context.Context, request *DescribeRumStatsLogListRequest) (response *DescribeRumStatsLogListResponse, err error) {
+    if request == nil {
+        request = NewDescribeRumStatsLogListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRumStatsLogList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRumStatsLogListResponse()
     err = c.Send(request, response)
     return
 }
@@ -3709,6 +4345,7 @@ func NewDescribeTawInstancesResponse() (response *DescribeTawInstancesResponse) 
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeTawInstances(request *DescribeTawInstancesRequest) (response *DescribeTawInstancesResponse, err error) {
@@ -3721,6 +4358,7 @@ func (c *Client) DescribeTawInstances(request *DescribeTawInstancesRequest) (res
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEEXCEPTION = "FailedOperation.DataBaseException"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DescribeTawInstancesWithContext(ctx context.Context, request *DescribeTawInstancesRequest) (response *DescribeTawInstancesResponse, err error) {
@@ -3928,7 +4566,7 @@ func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
 }
 
 // ModifyInstance
-// 修改实例信息
+// 修改 RUM 业务系统
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3948,7 +4586,7 @@ func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *Modif
 }
 
 // ModifyInstance
-// 修改实例信息
+// 修改 RUM 业务系统
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3998,7 +4636,7 @@ func NewModifyProjectResponse() (response *ModifyProjectResponse) {
 }
 
 // ModifyProject
-// 修改 rum 项目信息
+// 修改 RUM 应用信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4008,7 +4646,7 @@ func (c *Client) ModifyProject(request *ModifyProjectRequest) (response *ModifyP
 }
 
 // ModifyProject
-// 修改 rum 项目信息
+// 修改 RUM 应用信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4138,7 +4776,7 @@ func NewResumeInstanceResponse() (response *ResumeInstanceResponse) {
 }
 
 // ResumeInstance
-// 恢复实例
+// 恢复 RUM 业务系统，恢复后，用户可以正常使用和上报数据
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4159,7 +4797,7 @@ func (c *Client) ResumeInstance(request *ResumeInstanceRequest) (response *Resum
 }
 
 // ResumeInstance
-// 恢复实例
+// 恢复 RUM 业务系统，恢复后，用户可以正常使用和上报数据
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4187,6 +4825,54 @@ func (c *Client) ResumeInstanceWithContext(ctx context.Context, request *ResumeI
     request.SetContext(ctx)
     
     response = NewResumeInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResumeProjectRequest() (request *ResumeProjectRequest) {
+    request = &ResumeProjectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "ResumeProject")
+    
+    
+    return
+}
+
+func NewResumeProjectResponse() (response *ResumeProjectResponse) {
+    response = &ResumeProjectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ResumeProject
+// 恢复应用使用与上报数据
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResumeProject(request *ResumeProjectRequest) (response *ResumeProjectResponse, err error) {
+    return c.ResumeProjectWithContext(context.Background(), request)
+}
+
+// ResumeProject
+// 恢复应用使用与上报数据
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ResumeProjectWithContext(ctx context.Context, request *ResumeProjectRequest) (response *ResumeProjectResponse, err error) {
+    if request == nil {
+        request = NewResumeProjectRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResumeProject require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResumeProjectResponse()
     err = c.Send(request, response)
     return
 }
@@ -4261,6 +4947,56 @@ func (c *Client) StopInstanceWithContext(ctx context.Context, request *StopInsta
     request.SetContext(ctx)
     
     response = NewStopInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopProjectRequest() (request *StopProjectRequest) {
+    request = &StopProjectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("rum", APIVersion, "StopProject")
+    
+    
+    return
+}
+
+func NewStopProjectResponse() (response *StopProjectResponse) {
+    response = &StopProjectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// StopProject
+// 停止项目使用与上报数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StopProject(request *StopProjectRequest) (response *StopProjectResponse, err error) {
+    return c.StopProjectWithContext(context.Background(), request)
+}
+
+// StopProject
+// 停止项目使用与上报数据
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) StopProjectWithContext(ctx context.Context, request *StopProjectRequest) (response *StopProjectResponse, err error) {
+    if request == nil {
+        request = NewStopProjectRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopProject require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopProjectResponse()
     err = c.Send(request, response)
     return
 }

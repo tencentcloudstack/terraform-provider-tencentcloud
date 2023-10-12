@@ -326,6 +326,7 @@ func resourceTencentCloudSsmProductSecretCreate(d *schema.ResourceData, meta int
 	}
 
 	secretName = *response.Response.SecretName
+	d.SetId(secretName)
 	flowId := *response.Response.FlowID
 	conf := BuildStateChangeConf([]string{}, []string{"1"}, readRetryTimeout, time.Second, service.SsmProductSecretStateRefreshFunc(flowId, []string{"0"}))
 
@@ -367,7 +368,6 @@ func resourceTencentCloudSsmProductSecretCreate(d *schema.ResourceData, meta int
 		}
 	}
 
-	d.SetId(secretName)
 	return resourceTencentCloudSsmProductSecretRead(d, meta)
 }
 
