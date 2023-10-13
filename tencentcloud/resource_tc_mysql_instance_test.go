@@ -107,6 +107,8 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.prepaid"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "subnet_id"),
 				),
 			},
 			{
