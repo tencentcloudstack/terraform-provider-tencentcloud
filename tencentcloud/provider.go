@@ -2559,6 +2559,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_financial_by_member":        dataSourceTencentCloudOrganizationOrgFinancialByMember(),
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
+			"tencentcloud_dnspod_domain_list":                          dataSourceTencentCloudDnspodDomainList(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
