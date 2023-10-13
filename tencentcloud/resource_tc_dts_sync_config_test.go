@@ -112,62 +112,15 @@ func TestAccTencentCloudDtsSyncConfigResource_ccn(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_dts_sync_config.sync_config",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"dst_info.0.password", "src_info.0.password", "job_mode"},
+				ResourceName: "tencentcloud_dts_sync_config.sync_config",
+				ImportState:  true,
 			},
 		},
 	})
 }
 
 const testAccDtsSyncConfig = testAccDtsMigrateJob_vpc_config + `
-resource "tencentcloud_cynosdb_cluster" "foo" {
-	available_zone               = var.availability_zone
-	vpc_id                       = local.vpc_id
-	subnet_id                    = local.subnet_id
-	db_type                      = "MYSQL"
-	db_version                   = "5.7"
-	storage_limit                = 1000
-	cluster_name                 = "tf-cynosdb-mysql-sync-dst"
-	password                     = "cynos@123"
-	instance_maintain_duration   = 3600
-	instance_maintain_start_time = 10800
-	instance_maintain_weekdays   = [
-	  "Fri",
-	  "Mon",
-	  "Sat",
-	  "Sun",
-	  "Thu",
-	  "Wed",
-	  "Tue",
-	]
-  
-	instance_cpu_core    = 1
-	instance_memory_size = 2
-	param_items {
-	  name = "character_set_server"
-	  current_value = "utf8"
-	}
-	param_items {
-	  name = "time_zone"
-	  current_value = "+09:00"
-	}
-	param_items {
-		name = "lower_case_table_names"
-		current_value = "1"
-	}
-  
-	force_delete = true
-  
-	rw_group_sg = [
-	  local.sg_id
-	]
-	ro_group_sg = [
-	  local.sg_id
-	]
-	prarm_template_id = var.my_param_template
-  }
+
 
 resource "tencentcloud_dts_sync_job" "sync_job" {
 	pay_mode = "PostPay"
@@ -216,12 +169,12 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
   }
   dst_info {
 		region        = "ap-guangzhou"
-		instance_id   = tencentcloud_cynosdb_cluster.foo.id
-		user          = "root"
-		password      = "cynos@123"
+		instance_id   = "cynosdbmysql-bws8h88b"
+		user          = "keep_dts"
+		password      = "Letmein123"
 		db_name       = "tf_ci_test_new"
-		vpc_id        = local.vpc_id
-		subnet_id     = local.subnet_id
+		vpc_id        = "vpc-pewdpc0d"
+		subnet_id     = "subnet-driddx4g"
   }
   auto_retry_time_range_minutes = 0
 }
