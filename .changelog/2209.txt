@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_ckafka_instance: support param `upgrade_strategy` and postpaid scaling down
+```
