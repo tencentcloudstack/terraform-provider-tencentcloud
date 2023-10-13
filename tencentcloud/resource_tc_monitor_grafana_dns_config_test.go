@@ -6,8 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -test.run TestAccTencentCloudMonitorGrafanaDnsConfigResource_basic -v
 func TestAccTencentCloudMonitorGrafanaDnsConfigResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -18,6 +19,7 @@ func TestAccTencentCloudMonitorGrafanaDnsConfigResource_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaDnsConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_dns_config.grafana_dns_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_dns_config.grafana_dns_config", "name_servers.#", "3"),
 				),
 			},
 			{
@@ -29,25 +31,32 @@ func TestAccTencentCloudMonitorGrafanaDnsConfigResource_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaDnsConfigUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_dns_config.grafana_dns_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_dns_config.grafana_dns_config", "name_servers.#", "0"),
 				),
 			},
 		},
 	})
 }
 
-const testAccMonitorGrafanaDnsConfig = `
+const testAccMonitorGrafanaDnsConfigVar = `
+variable "instance_id" {
+  default = "` + defaultGrafanaInstanceId + `"
+}
+`
+
+const testAccMonitorGrafanaDnsConfig = testAccMonitorGrafanaDnsConfigVar + `
 
 resource "tencentcloud_monitor_grafana_dns_config" "grafana_dns_config" {
-  instance_id  = "grafana-dp2hnnfa"
+  instance_id  = var.instance_id
   name_servers = ["10.1.2.1", "10.1.2.2", "10.1.2.3"]
 }
 
 `
 
-const testAccMonitorGrafanaDnsConfigUp = `
+const testAccMonitorGrafanaDnsConfigUp = testAccMonitorGrafanaDnsConfigVar + `
 
 resource "tencentcloud_monitor_grafana_dns_config" "grafana_dns_config" {
-  instance_id  = "grafana-dp2hnnfa"
+  instance_id  = var.instance_id
   name_servers = []
 }
 

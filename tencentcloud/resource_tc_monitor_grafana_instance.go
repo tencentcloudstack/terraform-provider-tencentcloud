@@ -322,15 +322,28 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := monitor.NewModifyGrafanaInstanceRequest()
-
 	instanceId := d.Id()
 
-	request.InstanceId = &instanceId
-
 	if d.HasChange("instance_name") {
+		request := monitor.NewModifyGrafanaInstanceRequest()
+		request.InstanceId = &instanceId
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyGrafanaInstance(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
 	}
 
@@ -347,22 +360,26 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 	}
 
 	if d.HasChange("enable_internet") {
-		return fmt.Errorf("`enable_internet` do not support change now.")
-	}
+		request := monitor.NewEnableGrafanaInternetRequest()
+		request.InstanceID = &instanceId
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyGrafanaInstance(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if v, ok := d.GetOk("enable_internet"); ok {
+			request.EnableInternet = helper.Bool(v.(bool))
 		}
-		return nil
-	})
 
-	if err != nil {
-		return err
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().EnableGrafanaInternet(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {

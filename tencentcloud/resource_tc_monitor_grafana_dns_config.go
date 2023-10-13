@@ -15,7 +15,7 @@ Import
 monitor grafana_dns_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_monitor_grafana_dns_config.grafana_dns_config grafana-12345678
+terraform import tencentcloud_monitor_grafana_dns_config.grafana_dns_config instance_id
 ```
 */
 package tencentcloud
@@ -50,7 +50,7 @@ func resourceTencentCloudMonitorGrafanaDnsConfig() *schema.Resource {
 			},
 
 			"name_servers": {
-				Required: true,
+				Optional: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
