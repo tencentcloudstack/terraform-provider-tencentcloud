@@ -724,7 +724,6 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_alarm_notices
 	tencentcloud_monitor_alarm_history
 	tencentcloud_monitor_alarm_metric
-	tencentcloud_monitor_alarm_history
 	tencentcloud_monitor_alarm_basic_alarms
 	tencentcloud_monitor_alarm_basic_metric
 	tencentcloud_monitor_alarm_conditions_template
@@ -2252,7 +2251,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_alarms":                  dataSourceTencentCloudMonitorAlarmBasicAlarms(),
 			"tencentcloud_monitor_alarm_basic_metric":                  dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":           dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
-			"tencentcloud_monitor_grafana_plugin_overviews":          	dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_grafana_plugin_overviews":            dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
 			"tencentcloud_elasticsearch_instances":                     dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                        dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                        dataSourceTencentCloudPostgresqlSpecinfos(),
