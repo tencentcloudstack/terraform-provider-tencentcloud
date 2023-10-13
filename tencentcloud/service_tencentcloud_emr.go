@@ -348,3 +348,58 @@ func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, in
 	}
 	return nil
 }
+
+func (me *EMRService) DescribeEmrUserManagerById(ctx context.Context, instanceId string, userName string) (userManager *emr.DescribeUsersForUserManagerResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := emr.NewDescribeUsersForUserManagerRequest()
+	request.InstanceId = &instanceId
+	request.UserManagerFilter = &emr.UserManagerFilter{
+		UserName: &userName,
+	}
+	request.PageNo = helper.IntInt64(0)
+	request.PageSize = helper.IntInt64(100)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeUsersForUserManager(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	userManager = response.Response
+	return
+}
+
+func (me *EMRService) DeleteEmrUserManagerById(ctx context.Context, instanceId string, userName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := emr.NewDeleteUserManagerUserListRequest()
+	request.InstanceId = &instanceId
+	request.UserNameList = []*string{&userName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DeleteUserManagerUserList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

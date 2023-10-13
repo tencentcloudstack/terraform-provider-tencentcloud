@@ -58,7 +58,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.725
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.699
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
@@ -103,6 +103,8 @@ require (
 	github.com/yangwenmai/ratelimit v0.0.0-20180104140304-44221c2292e1
 	gopkg.in/yaml.v2 v2.4.0
 )
+
+require github.com/hashicorp/go-uuid v1.0.3
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect
@@ -190,7 +192,6 @@ require (
 	github.com/hashicorp/go-hclog v1.2.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
-	github.com/hashicorp/go-uuid v1.0.3 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/hashicorp/hc-install v0.4.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
