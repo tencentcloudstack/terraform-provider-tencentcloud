@@ -153,3 +153,85 @@ func (me *DnspodService) DescribeRecordList(ctx context.Context, request *dnspod
 
 	return
 }
+func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, param map[string]interface{}) (domain_list []*dnspod.DomainListItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeDomainFilterListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "GroupId" {
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+		if k == "SortField" {
+			request.SortField = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.([]*string)
+		}
+		if k == "Package" {
+			request.Package = v.([]*string)
+		}
+		if k == "Remark" {
+			request.Remark = v.(*string)
+		}
+		if k == "UpdatedAtBegin" {
+			request.UpdatedAtBegin = v.(*string)
+		}
+		if k == "UpdatedAtEnd" {
+			request.UpdatedAtEnd = v.(*string)
+		}
+		if k == "RecordCountBegin" {
+			request.RecordCountBegin = v.(*uint64)
+		}
+		if k == "RecordCountEnd" {
+			request.RecordCountEnd = v.(*uint64)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDnsPodClient().DescribeDomainFilterList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DomainList) < 1 {
+			break
+		}
+		domain_list = append(domain_list, response.Response.DomainList...)
+		if len(response.Response.DomainList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

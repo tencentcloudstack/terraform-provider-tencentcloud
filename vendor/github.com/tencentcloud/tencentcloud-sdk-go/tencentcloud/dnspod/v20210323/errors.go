@@ -26,16 +26,16 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
-	// 抱歉，该帐户已经被锁定。
+	// 抱歉，该账户已经被锁定。
 	FAILEDOPERATION_ACCOUNTISLOCKED = "FailedOperation.AccountIsLocked"
 
-	// 您的帐号下包含个人豪华域名，不能直接升级，请联系销售。
+	// 您的账户下包含个人豪华域名，不能直接升级，请联系销售。
 	FAILEDOPERATION_CONTAINSPERSONALVIP = "FailedOperation.ContainsPersonalVip"
 
 	// 此优惠券只能被免费域名使用。
 	FAILEDOPERATION_COUPONFORFREEDOMAIN = "FailedOperation.CouponForFreeDomain"
 
-	// 您的帐户不满足使用此优惠券的条件。
+	// 您的账户不满足使用此优惠券的条件。
 	FAILEDOPERATION_COUPONNOTSUPPORTED = "FailedOperation.CouponNotSupported"
 
 	// 域名已经使用过该类型的礼券了，不能重复使用。
@@ -43,6 +43,9 @@ const (
 
 	// 该域名已在您的列表中，无需重复添加。
 	FAILEDOPERATION_DOMAINEXISTS = "FailedOperation.DomainExists"
+
+	// 该域名属于企业邮用户
+	FAILEDOPERATION_DOMAININENTERPRISEMAILACCOUNT = "FailedOperation.DomainInEnterpriseMailAccount"
 
 	// 该域名为腾讯云 DNSPod 重点保护资源，为了避免误操作造成的业务影响，域名禁止自行操作删除。如果您确认需要删除域名，请先联系您的客户经理，我们将竭诚为您提供技术支持。
 	FAILEDOPERATION_DOMAINISKEYDOMAIN = "FailedOperation.DomainIsKeyDomain"
@@ -68,6 +71,9 @@ const (
 	// 校验公网 IP 发生异常。
 	FAILEDOPERATION_EIPCHECKFAILED = "FailedOperation.EipCheckFailed"
 
+	// 您操作过于频繁，请稍后重试
+	FAILEDOPERATION_FREQUENCYLIMIT = "FailedOperation.FrequencyLimit"
+
 	// 此功能暂停申请，请稍候重试。
 	FAILEDOPERATION_FUNCTIONNOTALLOWEDAPPLY = "FailedOperation.FunctionNotAllowedApply"
 
@@ -77,7 +83,7 @@ const (
 	// 账户余额不足。
 	FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 
-	// 帐号异地登录，请求被拒绝。
+	// 账号异地登录，请求被拒绝。
 	FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
 
 	// 登录失败，请检查账号和密码是否正确。
@@ -155,6 +161,9 @@ const (
 	// 记录值无效。
 	INVALIDPARAMETER_BATCHRECORDMODIFYACTIONINVALIDVALUE = "InvalidParameter.BatchRecordModifyActionInvalidValue"
 
+	// 批量删除记录任务失败，原因：内部错误。
+	INVALIDPARAMETER_BATCHRECORDREMOVEACTIONERROR = "InvalidParameter.BatchRecordRemoveActionError"
+
 	// 批量替换记录任务失败，原因：内部错误。
 	INVALIDPARAMETER_BATCHRECORDREPLACEACTIONERROR = "InvalidParameter.BatchRecordReplaceActionError"
 
@@ -206,6 +215,9 @@ const (
 	// 域名编号不正确。
 	INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 
+	// 该域名涉及违法违规黑名单，无法进行该操作
+	INVALIDPARAMETER_DOMAININBLACKLIST = "InvalidParameter.DomainInBlackList"
+
 	// 不允许操作生效中或失效中的域名。
 	INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
 
@@ -217,6 +229,9 @@ const (
 
 	// 该域名已有同类型操作未完成，无法执行该操作。
 	INVALIDPARAMETER_DOMAINISMODIFYINGDNS = "InvalidParameter.DomainIsModifyingDns"
+
+	// 此域名是自己域名的别名
+	INVALIDPARAMETER_DOMAINISMYALIAS = "InvalidParameter.DomainIsMyAlias"
 
 	// 域名没有锁定。
 	INVALIDPARAMETER_DOMAINISNOTLOCKED = "InvalidParameter.DomainIsNotlocked"
@@ -290,6 +305,9 @@ const (
 	// 该订单存在冲突或参数有误，无法完成支付，请重新购买。
 	INVALIDPARAMETER_ILLEGALNEWDEAL = "InvalidParameter.IllegalNewDeal"
 
+	// 任务不存在。
+	INVALIDPARAMETER_INNERTASKNOTEXIST = "InvalidParameter.InnerTaskNotExist"
+
 	// 礼券代码无效。
 	INVALIDPARAMETER_INVALIDCOUPON = "InvalidParameter.InvalidCoupon"
 
@@ -341,7 +359,7 @@ const (
 	// 无效的openid。
 	INVALIDPARAMETER_OPENIDINVALID = "InvalidParameter.OpenidInvalid"
 
-	// 操作失败，请稍候再试。
+	// 操作失败，请稍后再试。
 	INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 
 	// 当前操作过于频繁，请 1 分钟后重试。
@@ -367,6 +385,12 @@ const (
 
 	// 用户UIN无效。
 	INVALIDPARAMETER_QCLOUDUININVALID = "InvalidParameter.QcloudUinInvalid"
+
+	// TXT 记录无法匹配，请确认记录值是否准确，并再次验证。
+	INVALIDPARAMETER_QUHUITXTNOTMATCH = "InvalidParameter.QuhuiTxtNotMatch"
+
+	// TXT 记录未设置或暂未生效，请稍后重试。
+	INVALIDPARAMETER_QUHUITXTRECORDWAIT = "InvalidParameter.QuhuiTxtRecordWait"
 
 	// 已实名用户。
 	INVALIDPARAMETER_REALNAMEUSER = "InvalidParameter.RealNameUser"
@@ -419,7 +443,7 @@ const (
 	// 时间戳已过期。
 	INVALIDPARAMETER_TIMESTAMPEXPIRED = "InvalidParameter.TimestampExpired"
 
-	// 当前帐号下的无效域名过多，暂时无法使用该功能。请将已有域名的 DNS 服务器正确指向 DNSPod 之后，再尝试添加。
+	// 当前账号下的无效域名过多，暂时无法使用该功能。请将已有域名的 DNS 服务器正确指向 DNSPod 之后，再尝试添加。
 	INVALIDPARAMETER_TOOMANYINVALIDDOMAINS = "InvalidParameter.TooManyInvalidDomains"
 
 	// 域名无效。
@@ -493,6 +517,9 @@ const (
 
 	// NS记录数量超出限制。
 	LIMITEXCEEDED_NSCOUNTLIMIT = "LimitExceeded.NsCountLimit"
+
+	// 分页起始数量过大。
+	LIMITEXCEEDED_OFFSETEXCEEDED = "LimitExceeded.OffsetExceeded"
 
 	// 记录的TTL值超出了限制。
 	LIMITEXCEEDED_RECORDTTLLIMIT = "LimitExceeded.RecordTtlLimit"
@@ -581,7 +608,7 @@ const (
 	// 您的IP添加了过多任务，请稍后重试。
 	REQUESTLIMITEXCEEDED_BATCHTASKLIMIT = "RequestLimitExceeded.BatchTaskLimit"
 
-	// 您的帐号在短时间内添加了大量的域名，请控制添加频率。
+	// 您的账号在短时间内添加了大量的域名，请控制添加频率。
 	REQUESTLIMITEXCEEDED_CREATEDOMAINLIMIT = "RequestLimitExceeded.CreateDomainLimit"
 
 	// API请求次数超出限制。
