@@ -158,6 +158,9 @@ The following arguments are supported:
 * `subnet_id` - (Optional, String) Subnet id, it will be basic network if not set.
 * `tag_set` - (Optional, Map) Tag set of instance.
 * `tags` - (Optional, List, **Deprecated**) It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead. Tags of instance. Partition size, the professional version does not need tag.
+* `upgrade_strategy` - (Optional, Int) POSTPAID_BY_HOUR scale-down mode
+- 1: stable transformation;
+- 2: High-speed transformer.
 * `vpc_id` - (Optional, String) Vpc id, it will be basic network if not set.
 * `zone_ids` - (Optional, Set: [`Int`]) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 

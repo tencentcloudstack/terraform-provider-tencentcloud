@@ -137,6 +137,7 @@ import (
 	"log"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -203,6 +204,14 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}),
 				Description:  "Description of instance type. `profession`: 1, `standard`:  1(general), 2(standard), 3(advanced), 4(capacity), 5(specialized-1), 6(specialized-2), 7(specialized-3), 8(specialized-4), 9(exclusive).",
+			},
+			"upgrade_strategy": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1,
+				Description: "POSTPAID_BY_HOUR scale-down mode\n" +
+					"- 1: stable transformation;\n" +
+					"- 2: High-speed transformer.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -837,17 +846,20 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	}
 
 	instanceId := d.Id()
+	modifyInstanceAttributesFlag := false
 	request := ckafka.NewModifyInstanceAttributesRequest()
 	request.InstanceId = &instanceId
 	if d.HasChange("instance_name") {
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("msg_retention_time") {
 		if v, ok := d.GetOk("msg_retention_time"); ok {
 			request.MsgRetentionTime = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
@@ -866,6 +878,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 				configInfo.DefaultReplicationFactor = helper.Int64(int64(defaultReplicationFactor.(int)))
 			}
 			request.Config = &configInfo
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
@@ -887,52 +900,86 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 				dynamicInfo.BottomRetention = helper.Int64(int64(bottomRetention.(int)))
 			}
 			request.DynamicRetentionConfig = &dynamicInfo
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("rebalance_time") {
 		if v, ok := d.GetOk("rebalance_time"); ok {
 			request.RebalanceTime = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("public_network") {
 		if v, ok := d.GetOk("public_network"); ok {
 			request.PublicNetwork = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("max_message_byte") {
 		if v, ok := d.GetOkExists("max_message_byte"); ok {
 			request.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
-	err := service.ModifyCkafkaInstanceAttributes(ctx, request)
-	if err != nil {
-		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
+	if modifyInstanceAttributesFlag {
+		err := service.ModifyCkafkaInstanceAttributes(ctx, request)
+		if err != nil {
+			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
+		}
 	}
 
 	if d.HasChange("band_width") || d.HasChange("disk_size") || d.HasChange("partition") {
-		request := ckafka.NewModifyInstancePreRequest()
-		request.InstanceId = helper.String(instanceId)
-		if v, ok := d.GetOk("band_width"); ok {
-			request.BandWidth = helper.Int64(int64(v.(int)))
-		}
-		if v, ok := d.GetOk("disk_size"); ok {
-			request.DiskSize = helper.Int64(int64(v.(int)))
-		}
-		if v, ok := d.GetOk("partition"); ok {
-			request.Partition = helper.Int64(int64(v.(int)))
-		}
+		chargeType := d.Get("charge_type").(string)
+		if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+			request := ckafka.NewInstanceScalingDownRequest()
+			request.InstanceId = helper.String(instanceId)
+			upgradeStrategy := d.Get("upgrade_strategy").(int)
+			request.UpgradeStrategy = helper.IntInt64(upgradeStrategy)
+			if v, ok := d.GetOk("band_width"); ok && d.HasChange("band_width") {
+				request.BandWidth = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("disk_size"); ok && d.HasChange("disk_size") {
+				request.DiskSize = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("partition"); ok && d.HasChange("partition") {
+				request.Partition = helper.Int64(int64(v.(int)))
+			}
 
-		_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
-		if err != nil {
-			return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
-				request.GetAction(), request.ToJsonString(), err.Error())
-		}
+			_, err := service.client.UseCkafkaClient().InstanceScalingDown(request)
+			if err != nil {
+				return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+					request.GetAction(), request.ToJsonString(), err.Error())
+			}
+		} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+			request := ckafka.NewModifyInstancePreRequest()
+			request.InstanceId = helper.String(instanceId)
 
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+			if v, ok := d.GetOk("band_width"); ok {
+				request.BandWidth = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("disk_size"); ok {
+				request.DiskSize = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("partition"); ok {
+				request.Partition = helper.Int64(int64(v.(int)))
+			}
+
+			_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
+			if err != nil {
+				return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+					request.GetAction(), request.ToJsonString(), err.Error())
+			}
+		} else {
+			return fmt.Errorf("invalid `charge_type` value")
+		}
+		// InstanceScalingDown statue delay
+		time.Sleep(5 * time.Second)
+
+		err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, ready, err := service.CheckCkafkaInstanceReady(ctx, instanceId)
 			if err != nil {
 				return resource.NonRetryableError(err)
