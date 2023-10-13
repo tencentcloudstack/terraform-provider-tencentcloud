@@ -102,7 +102,7 @@ func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance_postpaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
 			},
 		},
 	})
@@ -303,6 +303,18 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
     enable = 1
   }
 }
+
+resource "tencentcloud_ckafka_topic" "foo" {
+	instance_id                     = tencentcloud_ckafka_instance.kafka_instance_postpaid.id
+	topic_name                      = "tmp"
+	note                            = "topic note"
+	replica_num                     = 2
+	partition_num                   = 1
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
+	unclean_leader_election_enable  = false
+	retention                       = 60000
+}
 `
 
 const testAccKafkaInstanceUpdatePostpaid = defaultKafkaVariable + `
@@ -332,6 +344,18 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
     createdBy = "terraform"
   }
 }
+
+resource "tencentcloud_ckafka_topic" "foo" {
+	instance_id                     = tencentcloud_ckafka_instance.kafka_instance_postpaid.id
+	topic_name                      = "tmp"
+	note                            = "topic note"
+	replica_num                     = 2
+	partition_num                   = 1
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
+	unclean_leader_election_enable  = false
+	retention                       = 60000
+}
 `
 
 const testAccKafkaInstanceUpdatePostpaidDiskSize = defaultKafkaVariable + `
@@ -360,6 +384,18 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   tag_set = {
     createdBy = "terraform"
   }
+}
+
+resource "tencentcloud_ckafka_topic" "foo" {
+	instance_id                     = tencentcloud_ckafka_instance.kafka_instance_postpaid.id
+	topic_name                      = "tmp"
+	note                            = "topic note"
+	replica_num                     = 2
+	partition_num                   = 1
+	clean_up_policy                 = "delete"
+	sync_replica_min_num            = 1
+	unclean_leader_election_enable  = false
+	retention                       = 60000
 }
 `
 
