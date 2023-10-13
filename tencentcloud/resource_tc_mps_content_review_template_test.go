@@ -16,7 +16,7 @@ func TestAccTencentCloudMpsContentReviewTemplateResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMpsContentReviewTemplate,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "name", "tf_test_content_review_temp"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "comment", "tf test content review temp"),
@@ -57,7 +57,6 @@ func TestAccTencentCloudMpsContentReviewTemplateResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.switch", "ON"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.block_confidence", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.review_confidence", "100"),
-					
 
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "user_define_configure.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "user_define_configure.0.face_review_info.#"),
@@ -84,7 +83,7 @@ func TestAccTencentCloudMpsContentReviewTemplateResource_basic(t *testing.T) {
 			},
 			{
 				Config: testAccMpsContentReviewTemplate_update,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "name", "tf_test_content_review_temp_changed"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "comment", "tf test content review temp changed"),
@@ -125,7 +124,6 @@ func TestAccTencentCloudMpsContentReviewTemplateResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.switch", "ON"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.block_confidence", "60"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_content_review_template.template", "prohibited_configure.0.ocr_review_info.0.review_confidence", "90"),
-					
 
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "user_define_configure.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_content_review_template.template", "user_define_configure.0.face_review_info.#"),
@@ -252,7 +250,6 @@ resource "tencentcloud_mps_content_review_template" "template" {
 }
 
 `
-
 
 const testAccMpsContentReviewTemplate_update = `
 
