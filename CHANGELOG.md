@@ -1,3 +1,34 @@
+## 1.81.36 (October 13, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_api_gateway_api_app_api` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Data Source:** `tencentcloud_api_gateway_api_plugins` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Data Source:** `tencentcloud_api_gateway_bind_api_apps_status` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Data Source:** `tencentcloud_api_gateway_service_environment_list` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Data Source:** `tencentcloud_api_gateway_service_release_versions` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Data Source:** `tencentcloud_cam_list_entities_for_policy` ([#2211](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2211))
+* **New Data Source:** `tencentcloud_mps_tasks` ([#2214](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2214))
+* **New Data Source:** `tencentcloud_organization_org_financial_by_month` ([#2206](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2206))
+* **New Data Source:** `tencentcloud_organization_org_financial_by_product` ([#2206](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2206))
+* **New Resource:** `tencentcloud_api_gateway_import_open_api` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Resource:** `tencentcloud_api_gateway_update_api_app_key` ([#2204](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2204))
+* **New Resource:** `tencentcloud_cam_policy_version` ([#2211](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2211))
+* **New Resource:** `tencentcloud_emr_user_manager` ([#2208](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2208))
+* **New Resource:** `tencentcloud_mps_content_review_template` ([#2214](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2214))
+* **New Resource:** `tencentcloud_mps_input` ([#2199](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2199))
+* **New Resource:** `tencentcloud_mps_output` ([#2199](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2199))
+* **New Resource:** `tencentcloud_mps_start_flow_operation` ([#2199](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2199))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfw_edge_policy: Update code logic ([#2207](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2207))
+* resource/tencentcloud_cfw_nat_policy: Update code logic ([#2207](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2207))
+* resource/tencentcloud_dts_sync_config: Support `database_net_env` field when the access type is ccn. ([#2201](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2201))
+* tencentcloud_ckafka_instance: support param `upgrade_strategy` and postpaid scaling down ([#2209](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2209))
+* tencentcloud_organization_org_member: support api `UpdateOrganizationMember` ([#2206](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2206))
+* tencentcloud_tse_cngw_gateway: Add computed `instance_port` and `public_ip_addresses` ([#2210](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2210))
+
 ## 1.81.35 (October 11, 2023)
 
 FEATURES:
