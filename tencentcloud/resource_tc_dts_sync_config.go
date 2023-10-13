@@ -3,6 +3,8 @@ Provides a resource to create a dts sync_config
 
 Example Usage
 
+Sync mysql database to cynosdb through cdb access type
+
 ```hcl
 resource "tencentcloud_cynosdb_cluster" "foo" {
 	available_zone               = var.availability_zone
@@ -90,7 +92,7 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
   src_info {
 		region        = "ap-guangzhou"
 		instance_id   = "cdb-fitq5t9h"
-		user          = "keep_dts"
+		user          = "your_user_name"
 		password      = "*"
 		db_name       = "tf_ci_test"
 		vpc_id        = local.vpc_id
@@ -108,6 +110,85 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
   auto_retry_time_range_minutes = 0
 }
 ```
+
+Sync mysql database using CCN to route from ap-shanghai to ap-guangzhou
+
+```hcl
+locals {
+  vpc_id_sh    = "vpc-evtcyb3g"
+  subnet_id_sh = "subnet-1t83cxkp"
+  src_ip       = data.tencentcloud_mysql_instance.src_mysql.instance_list.0.intranet_ip
+  src_port     = data.tencentcloud_mysql_instance.src_mysql.instance_list.0.intranet_port
+  ccn_id       = data.tencentcloud_ccn_instances.ccns.instance_list.0.ccn_id
+  dst_mysql_id = data.tencentcloud_mysql_instance.dst_mysql.instance_list.0.mysql_id
+}
+
+variable "src_az_sh" {
+  default = "ap-shanghai"
+}
+
+variable "dst_az_gz" {
+  default = "ap-guangzhou"
+}
+
+data "tencentcloud_dts_sync_jobs" "sync_jobs" {
+  job_name = "keep_sync_config_ccn_2_cdb"
+}
+
+data "tencentcloud_ccn_instances" "ccns" {
+  name = "keep-ccn-dts-sh"
+}
+
+data "tencentcloud_mysql_instance" "src_mysql" {
+  instance_name = "your_user_name_mysql_src"
+}
+
+data "tencentcloud_mysql_instance" "dst_mysql" {
+  instance_name = "your_user_name_mysql_src"
+}
+
+resource "tencentcloud_dts_sync_config" "sync_config" {
+  job_id          = data.tencentcloud_dts_sync_jobs.sync_jobs.list.0.job_id
+  src_access_type = "ccn"
+  dst_access_type = "cdb"
+
+  job_mode = "liteMode"
+  run_mode = "Immediate"
+
+  objects {
+    mode = "Partial"
+    databases {
+      db_name     = "tf_ci_test"
+      new_db_name = "tf_ci_test_new"
+      db_mode     = "Partial"
+      table_mode  = "All"
+      tables {
+        table_name     = "test"
+        new_table_name = "test_new"
+      }
+    }
+  }
+  src_info { // shanghai to guangzhou via ccn
+    region           = var.src_az_sh
+    user             = "your_user_name"
+    password         = "your_pass_word"
+    ip               = local.src_ip
+    port             = local.src_port
+    vpc_id           = local.vpc_id_sh
+    subnet_id        = local.subnet_id_sh
+    ccn_id           = local.ccn_id
+    database_net_env = "TencentVPC"
+  }
+  dst_info {
+    region      = var.dst_az_gz
+    instance_id = local.dst_mysql_id
+    user        = "your_user_name"
+    password    = "your_pass_word"
+  }
+  auto_retry_time_range_minutes = 0
+}
+
+````
 
 Import
 
@@ -436,6 +517,7 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 
 			"job_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Sync job name.",
 			},
@@ -594,6 +676,11 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							Optional:    true,
 							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The network environment to which the database belongs. It is required when AccessType is Cloud Network (CCN). `UserIDC` represents the user IDC. `TencentVPC` represents Tencent Cloud VPC. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
 					},
 				},
 			},
@@ -732,6 +819,11 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"database_net_env": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The network environment to which the database belongs. It is required when AccessType is Cloud Network (CCN). `UserIDC` represents the user IDC. `TencentVPC` represents Tencent Cloud VPC. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -1105,6 +1197,10 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 
 		if syncConfig.SrcInfo.EncryptConn != nil {
 			srcInfoMap["encrypt_conn"] = syncConfig.SrcInfo.EncryptConn
+		}
+
+		if syncConfig.SrcInfo.DatabaseNetEnv != nil {
+			srcInfoMap["database_net_env"] = syncConfig.SrcInfo.DatabaseNetEnv
 		}
 
 		// reset the password due to the describe api always return an empty string
@@ -1558,6 +1654,9 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["encrypt_conn"]; ok {
 				endpoint.EncryptConn = helper.String(v.(string))
 			}
+			if v, ok := dMap["database_net_env"]; ok {
+				endpoint.DatabaseNetEnv = helper.String(v.(string))
+			}
 			request.SrcInfo = &endpoint
 		}
 	}
@@ -1639,6 +1738,9 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 			}
 			if v, ok := dMap["encrypt_conn"]; ok {
 				endpoint.EncryptConn = helper.String(v.(string))
+			}
+			if v, ok := dMap["database_net_env"]; ok {
+				endpoint.DatabaseNetEnv = helper.String(v.(string))
 			}
 			request.DstInfo = &endpoint
 		}
