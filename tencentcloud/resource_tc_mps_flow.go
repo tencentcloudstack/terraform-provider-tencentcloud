@@ -153,6 +153,7 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 
 			"input_group": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "The input group for the flow.",
 				Elem: &schema.Resource{

@@ -565,9 +565,9 @@ func resourceTencentCloudMpsInputRead(d *schema.ResourceData, meta interface{}) 
 			sRTSettingsMap["recv_latency"] = input.SRTSettings.RecvLatency
 		}
 
-		if input.SRTSettings.PeerLatency != nil {
-			sRTSettingsMap["peer_latency"] = input.SRTSettings.PeerLatency
-		}
+		// if input.SRTSettings.PeerLatency != nil {
+		// 	sRTSettingsMap["peer_latency"] = input.SRTSettings.PeerLatency
+		// }
 		//cannot be imported
 		if input.SRTSettings.PeerLatency != nil {
 			index := fmt.Sprintf("input_group.%d.srt_settings.0.peer_latency", 0)
@@ -732,6 +732,7 @@ func resourceTencentCloudMpsInputUpdate(d *schema.ResourceData, meta interface{}
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	flowId := idSplit[0]
+	inputId := idSplit[1]
 
 	request.FlowId = &flowId
 
@@ -747,6 +748,7 @@ func resourceTencentCloudMpsInputUpdate(d *schema.ResourceData, meta interface{}
 		if v, ok := d.GetOk("input_group"); ok {
 			for _, item := range v.([]interface{}) {
 				modifyInput := mps.ModifyInput{}
+				modifyInput.InputId = &inputId
 				dMap := item.(map[string]interface{})
 				if v, ok := dMap["input_name"]; ok {
 					modifyInput.InputName = helper.String(v.(string))

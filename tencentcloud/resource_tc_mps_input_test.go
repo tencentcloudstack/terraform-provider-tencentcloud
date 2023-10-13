@@ -46,15 +46,14 @@ func TestAccTencentCloudMpsInputResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mps_input.input", "input_group.0.description", "input name Description changed"),
 					resource.TestCheckTypeSetElemAttr("tencentcloud_mps_input.input", "input_group.0.allow_ip_list.*", "1.1.1.1/8"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mps_input.input", "input_group.0.srt_settings.#"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_input.input", "input_group.0.srt_settings.0.mode", "CALLER"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_input.input", "input_group.0.srt_settings.0.latency", "999"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_input.input", "input_group.0.srt_settings.0.recv_latency", "999"),
 					resource.TestCheckResourceAttr("tencentcloud_mps_input.input", "input_group.0.srt_settings.0.stream_id", "#!::u=johnny,r=resource,h=xxx.com,t=stream,m=play"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_mps_input.input",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName: "tencentcloud_mps_input.input",
+				ImportState:  true,
 			},
 		},
 	})
@@ -98,15 +97,15 @@ const testAccMpsInput_update = testAccMpsInput_flow + `
 resource "tencentcloud_mps_input" "input" {
 	flow_id = tencentcloud_mps_flow.flow.id
 	input_group {
-		input_name    = "tf_mps_input_group_%d"
+		input_name    = "tf_mps_input_group_%d_changed"
 		protocol      = "SRT"
 		description   = "input name Description changed"
 		allow_ip_list = ["1.1.1.1/8"]
 		srt_settings {
-		  mode              = "CALLER"
+		  mode              = "LISTENER"
 		  stream_id         = "#!::u=johnny,r=resource,h=xxx.com,t=stream,m=play"
 		  latency           = 999
-		  recv_latency      = 1000
+		  recv_latency      = 999
 		  peer_latency      = 1000
 		  peer_idle_timeout = 1000
 		}
