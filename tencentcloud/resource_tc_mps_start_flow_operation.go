@@ -7,8 +7,8 @@ Start flow
 
 ```hcl
 resource "tencentcloud_mps_start_flow_operation" "operation" {
-  flow_id = "your-flow-id"
-  start   = true
+  flow_id    = tencentcloud_mps_flow.flow_rtp.id
+  start      = true
 }
 ```
 
@@ -16,8 +16,8 @@ Stop flow
 
 ```hcl
 resource "tencentcloud_mps_start_flow_operation" "operation" {
-  flow_id = "your-flow-id"
-  start   = false
+  flow_id    = tencentcloud_mps_flow.flow_rtp.id
+  start      = false
 }
 ```
 

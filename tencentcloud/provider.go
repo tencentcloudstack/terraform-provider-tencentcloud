@@ -1677,6 +1677,9 @@ Media Processing Service(MPS)
 	tencentcloud_mps_schedule
 	tencentcloud_mps_enable_schedule_config
 	tencentcloud_mps_flow
+	tencentcloud_mps_input
+	tencentcloud_mps_output
+	tencentcloud_mps_start_flow_operation
 	tencentcloud_mps_event
 	tencentcloud_mps_manage_task_operation
 	tencentcloud_mps_execute_function_operation
@@ -3264,6 +3267,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_workflow":                                        resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_enable_workflow_config":                          resourceTencentCloudMpsEnableWorkflowConfig(),
 			"tencentcloud_mps_flow":                                            resourceTencentCloudMpsFlow(),
+			"tencentcloud_mps_input":                                           resourceTencentCloudMpsInput(),
+			"tencentcloud_mps_output":                                          resourceTencentCloudMpsOutput(),
 			"tencentcloud_mps_start_flow_operation":                            resourceTencentCloudMpsStartFlowOperation(),
 			"tencentcloud_mps_event":                                           resourceTencentCloudMpsEvent(),
 			"tencentcloud_mps_execute_function_operation":                      resourceTencentCloudMpsExecuteFunctionOperation(),

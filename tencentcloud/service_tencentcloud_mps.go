@@ -957,3 +957,66 @@ func (me *MpsService) DescribeMpsTaskDetailById(ctx context.Context, taskId stri
 	manageTaskOperation = response.Response
 	return
 }
+
+func (me *MpsService) DeleteMpsOutputById(ctx context.Context, flowId, outputId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteStreamLinkOutputRequest()
+	request.FlowId = &flowId
+	request.OutputId = &outputId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteStreamLinkOutput(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MpsService) DescribeMpsInputById(ctx context.Context, flowId, inputId string) (input *mps.DescribeInput, errRet error) {
+	logId := getLogId(ctx)
+
+	flow, err := me.DescribeMpsFlowById(ctx, flowId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, iter := range flow.InputGroup {
+		if *iter.InputId == inputId {
+			input = iter
+			break
+		}
+	}
+
+	log.Printf("[DEBUG]%s `DescribeMpsInputById` success, inputId: %s, flowId: %s \n", logId, *input.InputId, flowId)
+	return
+}
+
+func (me *MpsService) DescribeMpsOutputById(ctx context.Context, flowId, outputId string) (output *mps.DescribeOutput, errRet error) {
+	logId := getLogId(ctx)
+
+	flow, err := me.DescribeMpsFlowById(ctx, flowId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, iter := range flow.OutputGroup {
+		if *iter.OutputId == outputId {
+			output = iter
+			break
+		}
+	}
+
+	log.Printf("[DEBUG]%s `DescribeMpsOutputById` success, outputId: %s, flowId: %s \n", logId, *output.OutputId, flowId)
+	return
+}

@@ -57,6 +57,57 @@ resource "tencentcloud_mps_flow" "flow_rtp" {
 }
 ```
 
+Create a mps RTP flow and start it
+
+Before you start a mps flow, you need to create a output first.
+
+```hcl
+resource "tencentcloud_mps_event" "event_rtp" {
+  event_name  = "your_event_name"
+  description = "tf test mps event description"
+}
+
+resource "tencentcloud_mps_flow" "flow_rtp" {
+  flow_name     = "your_flow_name"
+  max_bandwidth = 10000000
+  input_group {
+    input_name    = "test_inputname"
+    protocol      = "RTP"
+    description   = "input name Description"
+    allow_ip_list = ["0.0.0.0/0"]
+    rtp_settings {
+      fec          = "none"
+      idle_timeout = 1000
+    }
+  }
+  event_id = tencentcloud_mps_event.event_rtp.id
+}
+
+resource "tencentcloud_mps_output" "output" {
+  flow_id = tencentcloud_mps_flow.flow_rtp.id
+  output {
+    output_name   = "your_output_name"
+    description   = "tf mps output group"
+    protocol      = "RTP"
+    output_region = "ap-guangzhou"
+    rtp_settings {
+      destinations {
+        ip   = "203.205.141.84"
+        port = 65535
+      }
+      fec          = "none"
+      idle_timeout = 1000
+    }
+  }
+}
+
+resource "tencentcloud_mps_start_flow_operation" "operation" {
+  flow_id    = tencentcloud_mps_flow.flow_rtp.id
+  start      = true
+  depends_on = [tencentcloud_mps_output.output]
+}
+```
+
 Import
 
 mps flow can be imported using the id, e.g.
@@ -102,6 +153,7 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 
 			"input_group": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "The input group for the flow.",
 				Elem: &schema.Resource{
