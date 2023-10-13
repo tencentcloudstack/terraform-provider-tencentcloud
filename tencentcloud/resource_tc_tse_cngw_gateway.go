@@ -512,9 +512,7 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 
 		addresses := make([]*string, len(cngwGateway.PublicIpAddresses))
 
-		for _, address := range cngwGateway.PublicIpAddresses {
-			addresses = append(addresses, address)
-		}
+		addresses = append(addresses, cngwGateway.PublicIpAddresses...)
 
 		_ = d.Set("public_ip_addresses", addresses)
 	}
