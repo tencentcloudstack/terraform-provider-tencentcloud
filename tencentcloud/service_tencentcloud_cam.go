@@ -1549,3 +1549,61 @@ func (me *CamService) DeleteCamPolicyVersionById(ctx context.Context, policyId u
 
 	return
 }
+
+func (me *CamService) DescribeCamListEntitiesForPolicyByFilter(ctx context.Context, param map[string]interface{}) (ListEntitiesForPolicy []*cam.AttachEntityOfPolicy, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewListEntitiesForPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "PolicyId" {
+			request.PolicyId = v.(*uint64)
+		}
+		if k == "Rp" {
+			request.Rp = v.(*uint64)
+		}
+		if k == "EntityFilter" {
+			request.EntityFilter = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	pageStart := uint64(1)
+	rp := uint64(PAGE_ITEM) //to save in extension
+	result := make([]*cam.AttachEntityOfPolicy, 0)
+	for {
+		request.Page = &pageStart
+		request.Rp = &rp
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCamClient().ListEntitiesForPolicy(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+		for _, inc := range response.Response.List {
+			result = append(result, inc)
+		}
+		if len(response.Response.List) < PAGE_ITEM {
+			break
+		}
+		pageStart += 1
+	}
+	ListEntitiesForPolicy = result
+	return
+}
