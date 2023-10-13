@@ -44,7 +44,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "max_message_byte", "1025"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "renew_flag", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "kafka_version", "1.1.1"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "200"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "300"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_type", "CLOUD_BASIC"),
 				),
 			},
@@ -52,7 +52,7 @@ func TestAccTencentCloudCkafkaInstanceResource_prepaid(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
 			},
 		},
 	})
@@ -128,7 +128,7 @@ func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
 			},
 		},
 	})
@@ -154,7 +154,7 @@ func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type", "upgrade_strategy"},
 			},
 		},
 	})
@@ -257,7 +257,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   max_message_byte   = 1025
   renew_flag         = 0
   kafka_version      = "1.1.1"
-  disk_size          = 200
+  disk_size          = 300
   band_width         = 20
   disk_type          = "CLOUD_BASIC"
   partition          = 400
