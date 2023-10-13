@@ -1596,9 +1596,7 @@ func (me *CamService) DescribeCamListEntitiesForPolicyByFilter(ctx context.Conte
 		if response == nil || len(response.Response.List) < 1 {
 			break
 		}
-		for _, inc := range response.Response.List {
-			result = append(result, inc)
-		}
+		result = append(result, response.Response.List...)
 		if len(response.Response.List) < PAGE_ITEM {
 			break
 		}
