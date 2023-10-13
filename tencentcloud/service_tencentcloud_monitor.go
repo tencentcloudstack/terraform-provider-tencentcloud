@@ -1977,16 +1977,19 @@ func (me *MonitorService) DescribeMonitorAlarmBasicAlarmsByFilter(ctx context.Co
 			request.OccurTimeOrder = v.(*string)
 		}
 		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*int64)
 		}
 		if k == "ViewNames" {
 			request.ViewNames = v.([]*string)
 		}
 		if k == "AlarmStatus" {
+			request.AlarmStatus = v.([]*int64)
 		}
 		if k == "ObjLike" {
-			request.ObjLike = v.(*string)
+			request.ObjLike = v.([]*string)
 		}
 		if k == "InstanceGroupIds" {
+			request.InstanceGroupIds = v.([]*int64)
 		}
 		if k == "MetricNames" {
 			request.MetricNames = v.([]*string)
