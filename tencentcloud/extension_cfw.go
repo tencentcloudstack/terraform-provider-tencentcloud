@@ -505,3 +505,13 @@ var POLICY_RULE_ACTION = []string{
 	POLICY_RULE_ACTION_DROP,
 	POLICY_RULE_ACTION_LOG,
 }
+
+type SourceContentJson struct {
+	Key   string `json:"Key"`
+	Value string `json:"Value"`
+}
+
+type TargetContentJson struct {
+	Key   string `json:"Key"`
+	Value string `json:"Value"`
+}

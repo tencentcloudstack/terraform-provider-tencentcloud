@@ -73,7 +73,7 @@ func resourceTencentCloudCfwNatPolicy() *schema.Resource {
 			"protocol": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Protocol, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS.",
+				Description: "Protocol. If Direction=1, optional values: TCP, UDP, ANY; If Direction=0, optional values: TCP, UDP, ICMP, ANY, HTTP, HTTPS, HTTP/HTTPS, SMTP, SMTPS, SMTP/SMTPS, FTP, and DNS.",
 			},
 			"rule_action": {
 				Type:         schema.TypeString,
