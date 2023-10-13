@@ -30,7 +30,7 @@ resource "tencentcloud_emr_user_manager" "user_manager" {
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String) Cluster string ID.
+* `instance_id` - (Required, String, ForceNew) Cluster string ID.
 * `password` - (Required, String) PassWord.
 * `user_group` - (Required, String, ForceNew) User group membership.
 * `user_name` - (Required, String, ForceNew) Username.

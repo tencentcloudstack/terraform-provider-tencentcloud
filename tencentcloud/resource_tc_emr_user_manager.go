@@ -30,12 +30,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudEmrUserManager() *schema.Resource {
@@ -51,6 +52,7 @@ func resourceTencentCloudEmrUserManager() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Description: "Cluster string ID.",
 			},
 			"user_name": {
