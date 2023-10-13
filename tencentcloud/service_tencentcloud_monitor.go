@@ -1986,7 +1986,7 @@ func (me *MonitorService) DescribeMonitorAlarmBasicAlarmsByFilter(ctx context.Co
 			request.AlarmStatus = v.([]*int64)
 		}
 		if k == "ObjLike" {
-			request.ObjLike = v.([]*string)
+			request.ObjLike = v.(*string)
 		}
 		if k == "InstanceGroupIds" {
 			request.InstanceGroupIds = v.([]*int64)
