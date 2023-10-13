@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mps_content_review_template
+```
+
+```release-note:new-data-source
+tencentcloud_mps_tasks
+```

@@ -1659,6 +1659,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Data Source
 	tencentcloud_mps_schedules
+	tencentcloud_mps_tasks
 
   Resource
 	tencentcloud_mps_workflow
@@ -1682,6 +1683,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_flow
 	tencentcloud_mps_input
 	tencentcloud_mps_output
+	tencentcloud_mps_content_review_template
 	tencentcloud_mps_start_flow_operation
 	tencentcloud_mps_event
 	tencentcloud_mps_manage_task_operation
@@ -2367,6 +2369,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_slow_logs":                           dataSourceTencentCloudMariadbSlowLogs(),
 			"tencentcloud_mariadb_upgrade_price":                       dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_mps_schedules":                               dataSourceTencentCloudMpsSchedules(),
+			"tencentcloud_mps_tasks":                                   dataSourceTencentCloudMpsTasks(),
 			"tencentcloud_tdcpg_clusters":                              dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                             dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                              dataSourceTencentCloudCatProbeData(),
@@ -3275,6 +3278,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_flow":                                            resourceTencentCloudMpsFlow(),
 			"tencentcloud_mps_input":                                           resourceTencentCloudMpsInput(),
 			"tencentcloud_mps_output":                                          resourceTencentCloudMpsOutput(),
+			"tencentcloud_mps_content_review_template":                         resourceTencentCloudMpsContentReviewTemplate(),
 			"tencentcloud_mps_start_flow_operation":                            resourceTencentCloudMpsStartFlowOperation(),
 			"tencentcloud_mps_event":                                           resourceTencentCloudMpsEvent(),
 			"tencentcloud_mps_execute_function_operation":                      resourceTencentCloudMpsExecuteFunctionOperation(),
