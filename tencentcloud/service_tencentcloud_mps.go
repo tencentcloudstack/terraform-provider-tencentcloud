@@ -1047,30 +1047,17 @@ func (me *MpsService) DescribeMpsTasksByFilter(ctx context.Context, param map[st
 
 	ratelimit.Check(request.GetAction())
 
-	var (
-		offset int64 = 0
-		limit  int64 = 20
-	)
-	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		response, err := me.client.UseMpsClient().DescribeTasks(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.TaskSet) < 1 {
-			break
-		}
-		tasks = append(tasks, response.Response.TaskSet...)
-		if len(response.Response.TaskSet) < int(limit) {
-			break
-		}
-
-		offset += limit
+	response, err := me.client.UseMpsClient().DescribeTasks(request)
+	if err != nil {
+		errRet = err
+		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	tasks = response.Response.TaskSet
 
 	return
 }

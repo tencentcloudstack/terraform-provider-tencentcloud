@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mps_tasks" "tasks" {
-  status = &lt;nil&gt;
-  limit = &lt;nil&gt;
-  scroll_token = &lt;nil&gt;
-  }
+  status = "FINISH"
+  limit  = 20
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"

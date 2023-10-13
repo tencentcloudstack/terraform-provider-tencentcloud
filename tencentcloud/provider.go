@@ -1657,6 +1657,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Data Source
 	tencentcloud_mps_schedules
+	tencentcloud_mps_tasks
 
   Resource
 	tencentcloud_mps_workflow
@@ -2364,6 +2365,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_slow_logs":                           dataSourceTencentCloudMariadbSlowLogs(),
 			"tencentcloud_mariadb_upgrade_price":                       dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_mps_schedules":                               dataSourceTencentCloudMpsSchedules(),
+			"tencentcloud_mps_tasks":                                   dataSourceTencentCloudMpsTasks(),
 			"tencentcloud_tdcpg_clusters":                              dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                             dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                              dataSourceTencentCloudCatProbeData(),

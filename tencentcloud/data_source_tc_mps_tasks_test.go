@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudMpsTasksDataSource_basic(t *testing.T) {
@@ -15,7 +16,12 @@ func TestAccTencentCloudMpsTasksDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMpsTasksDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mps_tasks.tasks")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_mps_tasks.tasks"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mps_tasks.tasks", "task_set.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mps_tasks.tasks", "task_set.0.task_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mps_tasks.tasks", "task_set.0.task_type"),
+				),
 			},
 		},
 	})
@@ -24,9 +30,8 @@ func TestAccTencentCloudMpsTasksDataSource_basic(t *testing.T) {
 const testAccMpsTasksDataSource = `
 
 data "tencentcloud_mps_tasks" "tasks" {
-  status = &lt;nil&gt;
-  limit = &lt;nil&gt;
-  scroll_token = &lt;nil&gt;
-  }
+  status = "FINISH"
+  limit  = 20
+}
 
 `
