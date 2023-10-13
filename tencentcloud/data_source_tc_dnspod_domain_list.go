@@ -6,22 +6,22 @@ Use this data source to query detailed information of dnspod domain_list
 ```hcl
 
 	data "tencentcloud_dnspod_domain_list" "domain_list" {
-	  type = "ALL"
-	  group_id =
-	  keyword = "keyword_demo"
-	  sort_field = "UPDATED_ON"
-	  sort_type = "DESC"
-	  status =
-	  package =
-	  remark = "remark_demo"
-	  updated_at_begin = "2021-05-01 03:00:00"
-	  updated_at_end = "2021-05-10 20:00:00"
-	  record_count_begin = 0
-	  record_count_end = 100
-	  project_id = -1
-	      tags = {
-	    "createdBy" = "terraform"
-	  }
+        type = "ALL"
+        group_id = [1]
+        # keyword = "keyword_demo"
+        sort_field = "UPDATED_ON"
+        sort_type = "DESC"
+        status = ["PAUSE"]
+        # package =
+        remark = ""
+        # updated_at_begin = "2021-05-01 03:00:00"
+        # updated_at_end = "2021-05-10 20:00:00"
+        # record_count_begin = 0
+        # record_count_end = 100
+        # project_id = -1
+        tags = {
+         "createdBy" = "terraform"
+        }
 	}
 
 ```
@@ -342,15 +342,15 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 		paramMap["UpdatedAtEnd"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("record_count_begin"); v != nil {
+	if v, ok := d.GetOkExists("record_count_begin"); ok {
 		paramMap["RecordCountBegin"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("record_count_end"); v != nil {
+	if v, ok := d.GetOkExists("record_count_end"); ok {
 		paramMap["RecordCountEnd"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("project_id"); v != nil {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
 	}
 
