@@ -17,8 +17,8 @@ func TestAccTencentCloudCamListEntitiesForPolicyDataSource_basic(t *testing.T) {
 			{
 				Config: testAccCamListEntitiesForPolicyDataSource,
 				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cam_list_entities_for_policy.list_entities_for_policy"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "policy_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_groups.groups", "entity_filter"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_list_entities_for_policy.list_entities_for_policy", "policy_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_cam_list_entities_for_policy.list_entities_for_policy", "entity_filter"),
 				),
 			},
 		},
