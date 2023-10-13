@@ -102,6 +102,11 @@ API GateWay
 	tencentcloud_api_gateway_upstreams
 	tencentcloud_api_gateway_api_usage_plans
 	tencentcloud_api_gateway_api_app_service
+	tencentcloud_api_gateway_bind_api_apps_status
+	tencentcloud_api_gateway_api_app_api
+	tencentcloud_api_gateway_api_plugins
+	tencentcloud_api_gateway_service_release_versions
+	tencentcloud_api_gateway_service_environment_list
 
   Resource
   	tencentcloud_api_gateway_api
@@ -120,6 +125,8 @@ API GateWay
 	tencentcloud_api_gateway_api_app
 	tencentcloud_api_gateway_upstream
 	tencentcloud_api_gateway_api_app_attachment
+	tencentcloud_api_gateway_update_api_app_key
+	tencentcloud_api_gateway_import_open_api
 
 Cloud Audit(Audit)
   Data Source
@@ -1446,6 +1453,8 @@ Tencent Cloud Organization (TCO)
   Data Source
 	tencentcloud_organization_org_auth_node
 	tencentcloud_organization_org_financial_by_member
+	tencentcloud_organization_org_financial_by_month
+	tencentcloud_organization_org_financial_by_product
   Resource
 	tencentcloud_organization_instance
 	tencentcloud_organization_org_node
@@ -2269,6 +2278,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_upstreams":                       dataSourceTencentCloudAPIGatewayUpstreams(),
 			"tencentcloud_api_gateway_api_usage_plans":                 dataSourceTencentCloudAPIGatewayApiUsagePlans(),
 			"tencentcloud_api_gateway_api_app_service":                 dataSourceTencentCloudAPIGatewayApiAppService(),
+			"tencentcloud_api_gateway_bind_api_apps_status":            dataSourceTencentCloudApiGatewayBindApiAppsStatus(),
+			"tencentcloud_api_gateway_api_app_api":                     dataSourceTencentCloudApiGatewayApiAppApi(),
+			"tencentcloud_api_gateway_api_plugins":                     dataSourceTencentCloudApiGatewayApiPlugins(),
+			"tencentcloud_api_gateway_service_release_versions":        dataSourceTencentCloudApiGatewayServiceReleaseVersions(),
+			"tencentcloud_api_gateway_service_environment_list":        dataSourceTencentCloudApiGatewayServiceEnvironmentList(),
 			"tencentcloud_sqlserver_basic_instances":                   dataSourceTencentCloudSqlserverBasicInstances(),
 			"tencentcloud_sqlserver_query_xevent":                      dataSourceTencentCloudSqlserverQueryXevent(),
 			"tencentcloud_sqlserver_ins_attribute":                     dataSourceTencentCloudSqlserverInsAttribute(),
@@ -2557,6 +2571,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_statistics_report":                       dataSourceTencentCloudSesStatisticsReport(),
 			"tencentcloud_ses_send_email_status":                       dataSourceTencentCloudSesSendEmailStatus(),
 			"tencentcloud_organization_org_financial_by_member":        dataSourceTencentCloudOrganizationOrgFinancialByMember(),
+			"tencentcloud_organization_org_financial_by_month":         dataSourceTencentCloudOrganizationOrgFinancialByMonth(),
+			"tencentcloud_organization_org_financial_by_product":       dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
 		},
@@ -3315,6 +3331,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_account_permission":                       resourceTencentCloudClickhouseAccountPermission(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
+			"tencentcloud_api_gateway_update_api_app_key":                      resourceTencentCloudApiGatewayUpdateApiAppKey(),
+			"tencentcloud_api_gateway_import_open_api":                         resourceTencentCloudApiGatewayImportOpenApi(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
 			"tencentcloud_tse_cngw_gateway":                                    resourceTencentCloudTseCngwGateway(),
 			"tencentcloud_tse_cngw_group":                                      resourceTencentCloudTseCngwGroup(),

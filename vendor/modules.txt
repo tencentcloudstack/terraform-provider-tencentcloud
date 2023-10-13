@@ -1080,7 +1080,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.736
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
@@ -1131,7 +1131,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
+<<<<<<< HEAD
+=======
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.762
+>>>>>>> 2ee8ca9d3bd5ac92f636a8279a9a16c48b2034d9
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.763
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common

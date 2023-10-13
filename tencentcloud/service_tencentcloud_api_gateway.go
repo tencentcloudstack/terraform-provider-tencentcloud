@@ -2336,3 +2336,320 @@ func (me *APIGatewayService) DescribeAPIGatewayApiAppServiceByFilter(ctx context
 
 	return
 }
+
+func (me *APIGatewayService) DescribeApiGatewayBindApiAppsStatusByFilter(ctx context.Context, param map[string]interface{}) (bindApiAppsStatus []*apigateway.ApiAppApiInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeApiBindApiAppsStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+
+		if k == "APIIds" {
+			request.ApiIds = v.([]*string)
+		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*apigateway.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeApiBindApiAppsStatus(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.ApiAppApiSet) < 1 {
+			break
+		}
+
+		bindApiAppsStatus = append(bindApiAppsStatus, response.Response.Result.ApiAppApiSet...)
+		if len(response.Response.Result.ApiAppApiSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *APIGatewayService) DescribeApiGatewayApiAppApiByFilter(ctx context.Context, param map[string]interface{}) (apiAppApi *apigateway.ApiInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeApiForApiAppRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+
+		if k == "APIId" {
+			request.ApiId = v.(*string)
+		}
+
+		if k == "ApiRegion" {
+			request.ApiRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribeApiForApiApp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	apiAppApi = response.Response.Result
+	return
+}
+
+func (me *APIGatewayService) DescribeApiGatewayApiPluginsByFilter(ctx context.Context, param map[string]interface{}) (ApiPlugins []*apigateway.AttachedPluginInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribePluginsByApiRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "APIId" {
+			request.ApiId = v.(*string)
+		}
+
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+
+		if k == "EnvironmentName" {
+			request.EnvironmentName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribePluginsByApi(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.PluginSummary) < 1 {
+			break
+		}
+
+		ApiPlugins = append(ApiPlugins, response.Response.Result.PluginSummary...)
+		if len(response.Response.Result.PluginSummary) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *APIGatewayService) DescribeApiGatewayImportOpenApiById(ctx context.Context, serviceId, apiId string) (importOpenApi *apigateway.ApiInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDescribeApiRequest()
+	request.ServiceId = &serviceId
+	request.ApiId = &apiId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribeApi(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	importOpenApi = response.Response.Result
+	return
+}
+
+func (me *APIGatewayService) DeleteApiGatewayImportOpenApiById(ctx context.Context, serviceId, apiId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDeleteApiRequest()
+	request.ServiceId = &serviceId
+	request.ApiId = &apiId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DeleteApi(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *APIGatewayService) DescribeApiGatewayServiceReleaseVersionsByFilter(ctx context.Context, param map[string]interface{}) (versionList []*apigateway.DescribeServiceReleaseVersionResultVersionListInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeServiceReleaseVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeServiceReleaseVersion(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.VersionList) < 1 {
+			break
+		}
+
+		versionList = append(versionList, response.Response.Result.VersionList...)
+		if len(response.Response.Result.VersionList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *APIGatewayService) DescribeApiGatewayServiceEnvironmentListByFilter(ctx context.Context, param map[string]interface{}) (environmentList []*apigateway.Environment, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeServiceEnvironmentListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeServiceEnvironmentList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.EnvironmentList) < 1 {
+			break
+		}
+
+		environmentList = append(environmentList, response.Response.Result.EnvironmentList...)
+		if len(response.Response.Result.EnvironmentList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

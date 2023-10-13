@@ -332,69 +332,90 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 
 	request := organization.NewMoveOrganizationNodeMembersRequest()
+	updateRequest := organization.NewUpdateOrganizationMemberRequest()
 
 	orgMemberId := d.Id()
 
 	request.MemberUin = []*int64{helper.Int64(helper.StrToInt64(orgMemberId))}
-
-	if d.HasChange("name") {
-
-		return fmt.Errorf("`name` do not support change now.")
-
-	}
-
-	if d.HasChange("policy_type") {
-
-		return fmt.Errorf("`policy_type` do not support change now.")
-
-	}
-
-	if d.HasChange("permission_ids") {
-
-		return fmt.Errorf("`permission_ids` do not support change now.")
-
-	}
-
+	updateRequest.MemberUin = helper.Uint64(helper.StrToUInt64(orgMemberId))
 	if d.HasChange("node_id") {
 		if v, _ := d.GetOk("node_id"); v != nil {
 			request.NodeId = helper.IntInt64(v.(int))
 		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().MoveOrganizationNodeMembers(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create organization orgMember failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	if d.HasChange("name") {
+		if v, _ := d.GetOk("name"); v != nil {
+			updateRequest.Name = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("remark") {
+		if v, _ := d.GetOk("remark"); v != nil {
+			updateRequest.Remark = helper.String(v.(string))
+		}
+	}
 
-		return fmt.Errorf("`remark` do not support change now.")
+	if d.HasChange("policy_type") {
+		if v, _ := d.GetOk("policy_type"); v != nil {
+			updateRequest.PolicyType = helper.String(v.(string))
+		}
+	}
 
+	if d.HasChange("permission_ids") {
+		if v, _ := d.GetOk("permission_ids"); v != nil {
+			ids := v.(*schema.Set).List()
+			for i := range ids {
+				id := ids[i].(uint64)
+				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.Uint64(id))
+			}
+		}
+	}
+
+	if d.HasChange("is_allow_quit") {
+		if v, _ := d.GetOk("is_allow_quit"); v != nil {
+			updateRequest.IsAllowQuit = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("record_id") {
-
 		return fmt.Errorf("`record_id` do not support change now.")
-
 	}
 
 	if d.HasChange("pay_uin") {
-
-		return fmt.Errorf("`pay_uin` do not support change now.")
-
+		if v, _ := d.GetOk("pay_uin"); v != nil {
+			updateRequest.PayUin = helper.String(v.(string))
+		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().MoveOrganizationNodeMembers(request)
+	UpdateErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().UpdateOrganizationMember(updateRequest)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, updateRequest.GetAction(), updateRequest.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create organization orgMember failed, reason:%+v", logId, err)
-		return err
+	if UpdateErr != nil {
+		log.Printf("[CRITAL]%s update organization orgMember failed, reason:%+v", logId, UpdateErr)
+		return UpdateErr
 	}
-
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }
 

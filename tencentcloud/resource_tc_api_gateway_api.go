@@ -1329,6 +1329,8 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		}
 
 		_ = d.Set("service_tsf_load_balance_conf", []interface{}{ServiceTsfLoadBalanceConfMap})
+	} else {
+		_ = d.Set("service_tsf_load_balance_conf", []interface{}{})
 	}
 
 	if info.ServiceTsfHealthCheckConf != nil {
@@ -1351,6 +1353,8 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		}
 
 		_ = d.Set("service_tsf_health_check_conf", []interface{}{serviceTsfHealthCheckConfMap})
+	} else {
+		_ = d.Set("service_tsf_health_check_conf", []interface{}{})
 	}
 
 	if info.ApiBusinessType != nil {
@@ -1404,6 +1408,8 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 			}
 
 			_ = d.Set("service_config_cos_config", []interface{}{cosConfigMap})
+		} else {
+			_ = d.Set("service_config_cos_config", []interface{}{})
 		}
 	}
 
@@ -1483,6 +1489,8 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		}
 
 		_ = d.Set("oauth_config", []interface{}{oauthConfigMap})
+	} else {
+		_ = d.Set("oauth_config", []interface{}{})
 	}
 
 	if info.ResponseErrorCodes != nil {
