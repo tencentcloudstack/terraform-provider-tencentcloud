@@ -223,6 +223,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_user_policy_attachments
     tencentcloud_cam_users
     tencentcloud_user_info
+    tencentcloud_cam_list_entities_for_policy
 
   Resource
     tencentcloud_cam_role
@@ -243,6 +244,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_mfa_flag
     tencentcloud_cam_access_key
 	tencentcloud_cam_user_saml_config
+	tencentcloud_cam_policy_version
 	tencentcloud_cam_user_permission_boundary_attachment
 
 Customer Identity and Access Management(CIAM)
@@ -2177,6 +2179,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_user_policy_attachments":                 dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments":                dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                          dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_cam_list_entities_for_policy":                dataSourceTencentCloudCamListEntitiesForPolicy(),
 			"tencentcloud_user_info":                                   datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                                 dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                         dataSourceTencentCloudCdnDomainVerifyRecord(),
@@ -2837,6 +2840,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_cam_access_key":                                      resourceTencentCloudCamAccessKey(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
+			"tencentcloud_cam_policy_version":                                  resourceTencentCloudCamPolicyVersion(),
 			"tencentcloud_cam_user_permission_boundary_attachment":             resourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
