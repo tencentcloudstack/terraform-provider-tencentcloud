@@ -1145,6 +1145,7 @@ MapReduce(EMR)
 
   Resource
     tencentcloud_emr_cluster
+	tencentcloud_emr_user_manager
 
 DNSPOD
   Resource
@@ -2583,6 +2584,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                             resourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                         resourceTencentCloudEmrCluster(),
+			"tencentcloud_emr_user_manager":                                    resourceTencentCloudEmrUserManager(),
 			"tencentcloud_instance":                                            resourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                        resourceTencentCloudInstanceSet(),
 			"tencentcloud_reserved_instance":                                   resourceTencentCloudReservedInstance(),
