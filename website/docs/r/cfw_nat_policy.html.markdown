@@ -34,7 +34,7 @@ The following arguments are supported:
 
 * `direction` - (Required, Int) Rule direction: 1, inbound; 0, outbound.
 * `port` - (Required, String) The port for the access control policy. Value: -1/-1: All ports 80: Port 80.
-* `protocol` - (Required, String) Protocol, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS.
+* `protocol` - (Required, String) Protocol. If Direction=1, optional values: TCP, UDP, ANY; If Direction=0, optional values: TCP, UDP, ICMP, ANY, HTTP, HTTPS, HTTP/HTTPS, SMTP, SMTPS, SMTP/SMTPS, FTP, and DNS.
 * `rule_action` - (Required, String) How the traffic set in the access control policy passes through the cloud firewall. Values: accept: allow; drop: reject; log: observe.
 * `source_content` - (Required, String) Access source example: net:IP/CIDR(192.168.0.2).
 * `source_type` - (Required, String) Access source type: for inbound rules, the type can be net, location, vendor, template; for outbound rules, it can be net, instance, tag, template, group.

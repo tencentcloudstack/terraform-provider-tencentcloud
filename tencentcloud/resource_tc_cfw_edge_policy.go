@@ -19,6 +19,24 @@ resource "tencentcloud_cfw_edge_policy" "example" {
 }
 ```
 
+If target_type is tag
+
+```hcl
+resource "tencentcloud_cfw_edge_policy" "example" {
+  source_content = "0.0.0.0/0"
+  source_type    = "net"
+  target_content = jsonencode({"Key":"test","Value":"dddd"})
+  target_type    = "tag"
+  protocol       = "TCP"
+  rule_action    = "drop"
+  port           = "-1/-1"
+  direction      = 1
+  enable         = "true"
+  description    = "policy description."
+  scope          = "all"
+}
+```
+
 Import
 
 cfw edge_policy can be imported using the id, e.g.
@@ -31,9 +49,11 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -74,7 +94,7 @@ func resourceTencentCloudCfwEdgePolicy() *schema.Resource {
 			"protocol": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Protocol, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS.",
+				Description: "Protocol. If Direction=1 && Scope=serial, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS; If Direction=1 && Scope!=serial, optional values: TCP; If Direction=0 && Scope=serial, optional values: TCP UDP ICMP ANY HTTP HTTPS HTTP/HTTPS SMTP SMTPS SMTP/SMTPS FTP DNS; If Direction=0 && Scope!=serial, optional values: TCP HTTP/HTTPS TLS/SSL.",
 			},
 			"rule_action": {
 				Type:         schema.TypeString,
@@ -160,7 +180,7 @@ func resourceTencentCloudCfwEdgePolicyCreate(d *schema.ResourceData, meta interf
 		createRuleItem.Port = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("direction"); ok {
+	if v, ok := d.GetOkExists("direction"); ok {
 		createRuleItem.Direction = helper.IntUint64(v.(int))
 	}
 
@@ -207,10 +227,12 @@ func resourceTencentCloudCfwEdgePolicyRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ruleUuid = d.Id()
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ruleUuid   = d.Id()
+		sourceType string
+		targetType string
 	)
 
 	edgePolicy, err := service.DescribeCfwEdgePolicyById(ctx, ruleUuid)
@@ -224,20 +246,44 @@ func resourceTencentCloudCfwEdgePolicyRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	if edgePolicy.SourceContent != nil {
-		_ = d.Set("source_content", edgePolicy.SourceContent)
-	}
-
 	if edgePolicy.SourceType != nil {
 		_ = d.Set("source_type", edgePolicy.SourceType)
+		sourceType = *edgePolicy.SourceType
 	}
 
-	if edgePolicy.TargetContent != nil {
-		_ = d.Set("target_content", edgePolicy.TargetContent)
+	if edgePolicy.SourceContent != nil {
+		if sourceType == "tag" {
+			params := strings.Split(*edgePolicy.SourceContent, "|")
+			key := params[0]
+			value := params[1]
+			var obj SourceContentJson
+			obj.Key = key
+			obj.Value = value
+			tmpStr, _ := json.Marshal(obj)
+			_ = d.Set("source_content", string(tmpStr))
+		} else {
+			_ = d.Set("source_content", edgePolicy.SourceContent)
+		}
 	}
 
 	if edgePolicy.TargetType != nil {
 		_ = d.Set("target_type", edgePolicy.TargetType)
+		targetType = *edgePolicy.TargetType
+	}
+
+	if edgePolicy.TargetContent != nil {
+		if targetType == "tag" {
+			params := strings.Split(*edgePolicy.TargetContent, "|")
+			key := params[0]
+			value := params[1]
+			var obj TargetContentJson
+			obj.Key = key
+			obj.Value = value
+			tmpStr, _ := json.Marshal(obj)
+			_ = d.Set("target_content", string(tmpStr))
+		} else {
+			_ = d.Set("target_content", edgePolicy.TargetContent)
+		}
 	}
 
 	if edgePolicy.Protocol != nil {
