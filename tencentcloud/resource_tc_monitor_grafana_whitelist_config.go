@@ -101,6 +101,7 @@ func resourceTencentCloudMonitorGrafanaWhitelistConfigRead(d *schema.ResourceDat
 	if grafanaWhitelistConfig.WhiteList != nil {
 		whiteList := grafanaWhitelistConfig.WhiteList
 		if len(whiteList) == 1 && *whiteList[0] == "" {
+			return nil
 		}
 		if len(whiteList) == 1 && strings.Contains(*whiteList[0], "\n") {
 			_ = d.Set("whitelist", strings.Split(*whiteList[0], "\n"))
