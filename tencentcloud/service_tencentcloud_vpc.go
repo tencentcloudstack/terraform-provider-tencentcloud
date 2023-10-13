@@ -8066,3 +8066,74 @@ func (me *VpcService) DescribeVpnDefaultHealthCheckIp(ctx context.Context, param
 
 	return
 }
+
+func (me *VpcService) DescribeVpcPeeringConnectionById(ctx context.Context, peeringConnectionId string) (peeringConnection *vpc.PeerConnection, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpcPeeringConnectionsRequest()
+	request.PeeringConnectionIds = []*string{&peeringConnectionId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*vpc.PeerConnection, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeVpcPeeringConnections(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.PeerConnectionSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.PeerConnectionSet...)
+		if len(response.Response.PeerConnectionSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	peeringConnection = instances[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcPeeringConnectionById(ctx context.Context, peeringConnectionId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteVpcPeeringConnectionRequest()
+	request.PeeringConnectionId = &peeringConnectionId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteVpcPeeringConnection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

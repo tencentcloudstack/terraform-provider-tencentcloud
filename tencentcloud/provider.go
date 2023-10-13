@@ -1103,6 +1103,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
+	tencentcloud_vpc_peering_connection
 	tencentcloud_ipv6_address_bandwidth
 
 Private Link(PLS)
@@ -2604,6 +2605,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_notify_routes":                                   resourceTencentCloudVpcNotifyRoutes(),
 			"tencentcloud_vpc_bandwidth_package":                               resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":                    resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_vpc_peering_connection":                              resourceTencentCloudVpcPeeringConnection(),
 			"tencentcloud_vpc_traffic_package":                                 resourceTencentCloudVpcTrafficPackage(),
 			"tencentcloud_vpc_snapshot_policy":                                 resourceTencentCloudVpcSnapshotPolicy(),
 			"tencentcloud_vpc_snapshot_policy_attachment":                      resourceTencentCloudVpcSnapshotPolicyAttachment(),
