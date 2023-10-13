@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_cam_list_entities_for_policy
+```
+
+```release-note:new-resource
+tencentcloud_cam_policy_version
+```
