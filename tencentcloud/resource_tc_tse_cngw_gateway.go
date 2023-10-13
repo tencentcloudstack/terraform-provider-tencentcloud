@@ -232,6 +232,35 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			"instance_port": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Port information that the instance listens to.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"http_port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Http port range.",
+						},
+						"https_port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Https port range.",
+						},
+					},
+				},
+			},
+
+			"public_ip_addresses": {
+				Type: schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Computed:    true,
+				Description: "Public IP address list.",
+			},
 		},
 	}
 }
@@ -463,6 +492,29 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 
 	if cngwGateway.TradeType != nil {
 		_ = d.Set("trade_type", cngwGateway.TradeType)
+	}
+
+	if cngwGateway.InstancePort != nil {
+		instancePortMap := map[string]interface{}{}
+
+		if cngwGateway.InstancePort.HttpPort != nil {
+			instancePortMap["http_port"] = cngwGateway.InstancePort.HttpPort
+		}
+
+		if cngwGateway.InstancePort.HttpsPort != nil {
+			instancePortMap["https_port"] = cngwGateway.InstancePort.HttpsPort
+		}
+
+		_ = d.Set("instance_port", []interface{}{instancePortMap})
+	}
+
+	if cngwGateway.PublicIpAddresses != nil {
+
+		addresses := make([]*string, len(cngwGateway.PublicIpAddresses))
+
+		addresses = append(addresses, cngwGateway.PublicIpAddresses...)
+
+		_ = d.Set("public_ip_addresses", addresses)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn

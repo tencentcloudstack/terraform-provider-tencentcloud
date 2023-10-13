@@ -103,6 +103,9 @@ The `vpc_config` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `instance_port` - Port information that the instance listens to.
+  * `http_port` - Http port range.
+  * `https_port` - Https port range.
+* `public_ip_addresses` - Public IP address list.
 
 
