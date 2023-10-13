@@ -1061,3 +1061,56 @@ func (me *MpsService) DescribeMpsTasksByFilter(ctx context.Context, param map[st
 
 	return
 }
+
+func (me *MpsService) DescribeMpsContentReviewTemplateById(ctx context.Context, definition string) (contentReviewTemplate *mps.ContentReviewTemplateItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeContentReviewTemplatesRequest()
+	request.Definitions = []*int64{helper.StrToInt64Point(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeContentReviewTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ContentReviewTemplateSet) < 1 {
+		return
+	}
+
+	contentReviewTemplate = response.Response.ContentReviewTemplateSet[0]
+	return
+}
+
+func (me *MpsService) DeleteMpsContentReviewTemplateById(ctx context.Context, definition string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteContentReviewTemplateRequest()
+	request.Definition = helper.StrToInt64Point(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteContentReviewTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
