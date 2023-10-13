@@ -110,24 +110,24 @@ func dataSourceTencentCloudCamListEntitiesForPolicyRead(d *schema.ResourceData, 
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var ListEntitiesForPolicy []*cam.AttachEntityOfPolicy
+	var listEntitiesForPolicy []*cam.AttachEntityOfPolicy
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCamListEntitiesForPolicyByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		ListEntitiesForPolicy = result
+		listEntitiesForPolicy = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(ListEntitiesForPolicy))
+	ids := make([]string, 0, len(listEntitiesForPolicy))
 	tmpList := make([]map[string]interface{}, 0)
 
-	if ListEntitiesForPolicy != nil {
-		for _, attachEntityOfPolicy := range ListEntitiesForPolicy {
+	if listEntitiesForPolicy != nil {
+		for _, attachEntityOfPolicy := range listEntitiesForPolicy {
 			attachEntityOfPolicyMap := map[string]interface{}{}
 
 			if attachEntityOfPolicy.Id != nil {
