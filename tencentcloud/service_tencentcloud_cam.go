@@ -1494,3 +1494,58 @@ func (me *CamService) DeleteCamUserPermissionBoundaryById(ctx context.Context, t
 
 	return
 }
+
+func (me *CamService) DescribeCamPolicyVersionById(ctx context.Context, policyId uint64, versionId uint64) (policyVersion *cam.PolicyVersionDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewGetPolicyVersionRequest()
+	request.PolicyId = &policyId
+	request.VersionId = &versionId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetPolicyVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.PolicyVersion == nil {
+		return
+	}
+
+	policyVersion = response.Response.PolicyVersion
+	return
+}
+
+func (me *CamService) DeleteCamPolicyVersionById(ctx context.Context, policyId uint64, versionId uint64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeletePolicyVersionRequest()
+	request.PolicyId = &policyId
+	request.VersionId = []*uint64{helper.Uint64(versionId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DeletePolicyVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

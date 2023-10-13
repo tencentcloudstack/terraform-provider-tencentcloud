@@ -3395,6 +3395,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
+			"tencentcloud_cam_policy_version":                                  resourceTencentCloudCamPolicyVersion(),
 		},
 
 		ConfigureFunc: providerConfigure,
