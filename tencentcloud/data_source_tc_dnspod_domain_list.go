@@ -1,7 +1,7 @@
 /*
 Use this data source to query detailed information of dnspod domain_list
 
-# Example Usage
+Example Usage
 
 ```hcl
 
