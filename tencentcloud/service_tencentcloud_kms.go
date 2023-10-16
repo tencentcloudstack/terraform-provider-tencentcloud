@@ -680,3 +680,160 @@ func (me *KmsService) DeleteKmsWhiteBoxKeyById(ctx context.Context, keyId string
 
 	return
 }
+
+func (me *KmsService) DescribeKmsCloudResourceAttachmentById(ctx context.Context, keyId string) (keyMetadata *kms.KeyMetadata, errRet error) {
+	logId := getLogId(ctx)
+
+	request := kms.NewDescribeKeyRequest()
+	request.KeyId = &keyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DescribeKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	keyMetadata = response.Response.KeyMetadata
+	return
+}
+
+func (me *KmsService) DeleteKmsCloudResourceAttachmentById(ctx context.Context, keyId, productId, resourceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := kms.NewUnbindCloudResourceRequest()
+	request.KeyId = &keyId
+	request.ProductId = &productId
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().UnbindCloudResource(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *KmsService) DescribeKmsWhiteBoxDecryptKeyByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxDecryptKey *kms.DescribeWhiteBoxDecryptKeyResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewDescribeWhiteBoxDecryptKeyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "KeyId" {
+			request.KeyId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DescribeWhiteBoxDecryptKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	whiteBoxDecryptKey = response.Response
+	return
+}
+
+func (me *KmsService) DescribeKmsWhiteBoxDeviceFingerprintsByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxDeviceFingerprints []*kms.DeviceFingerprint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewDescribeWhiteBoxDeviceFingerprintsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "KeyId" {
+			request.KeyId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().DescribeWhiteBoxDeviceFingerprints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	whiteBoxDeviceFingerprints = response.Response.DeviceFingerprints
+	return
+}
+
+func (me *KmsService) DescribeKmsListAlgorithmsByFilter(ctx context.Context) (listAlgorithms *kms.ListAlgorithmsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewListAlgorithmsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().ListAlgorithms(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	listAlgorithms = response.Response
+	return
+}
