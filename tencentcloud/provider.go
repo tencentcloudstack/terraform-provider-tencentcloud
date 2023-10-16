@@ -571,11 +571,16 @@ Key Management Service(KMS)
     tencentcloud_kms_describe_keys
     tencentcloud_kms_white_box_key_details
     tencentcloud_kms_list_keys
+    tencentcloud_kms_white_box_decrypt_key
+    tencentcloud_kms_white_box_device_fingerprints
+    tencentcloud_kms_list_algorithms
 
   Resource
     tencentcloud_kms_key
     tencentcloud_kms_external_key
     tencentcloud_kms_white_box_key
+    tencentcloud_kms_cloud_resource_attachment
+    tencentcloud_kms_overwrite_white_box_device_fingerprints
 
 Tencent Kubernetes Engine(TKE)
   Data Source
@@ -2318,6 +2323,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_describe_keys":                           dataSourceTencentCloudKmsDescribeKeys(),
 			"tencentcloud_kms_white_box_key_details":                   dataSourceTencentCloudKmsWhiteBoxKeyDetails(),
 			"tencentcloud_kms_list_keys":                               dataSourceTencentCloudKmsListKeys(),
+			"tencentcloud_kms_white_box_decrypt_key":                   dataSourceTencentCloudKmsWhiteBoxDecryptKey(),
+			"tencentcloud_kms_white_box_device_fingerprints":           dataSourceTencentCloudKmsWhiteBoxDeviceFingerprints(),
+			"tencentcloud_kms_list_algorithms":                         dataSourceTencentCloudKmsListAlgorithms(),
 			"tencentcloud_ssm_products":                                dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                                 dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                         dataSourceTencentCloudSsmSecretVersions(),
@@ -3050,6 +3058,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_key":                                             resourceTencentCloudKmsKey(),
 			"tencentcloud_kms_external_key":                                    resourceTencentCloudKmsExternalKey(),
 			"tencentcloud_kms_white_box_key":                                   resourceTencentCloudKmsWhiteBoxKey(),
+			"tencentcloud_kms_cloud_resource_attachment":                       resourceTencentCloudKmsCloudResourceAttachment(),
+			"tencentcloud_kms_overwrite_white_box_device_fingerprints":         resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints(),
 			"tencentcloud_ssm_secret":                                          resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
