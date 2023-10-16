@@ -6,12 +6,11 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_tag_role_attachment" "tag_role" {
   tags {
-		key = "test1"
-		value = "test1"
-
+    key = "test1"
+    value = "test1"
   }
-  role_id = "4611686018436805021"
-  }
+  role_id = "test-cam-tag"
+}
 ```
 
 Import
@@ -27,12 +26,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudCamTagRoleAttachment() *schema.Resource {

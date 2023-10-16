@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudCamTagRoleResource_basic(t *testing.T) {
@@ -17,7 +18,7 @@ func TestAccTencentCloudCamTagRoleResource_basic(t *testing.T) {
 				Config: testAccCamTagRole,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cam_tag_role_attachment.tag_role", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_tag_role_attachment.tag_role", "tags.#"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_tag_role_attachment.tag_role", "role_id", "4611686018436805021")),
+					resource.TestCheckResourceAttr("tencentcloud_cam_tag_role_attachment.tag_role", "role_name", "test-cam-tag")),
 			},
 			{
 				ResourceName:      "tencentcloud_cam_tag_role_attachment.tag_role",
@@ -32,11 +33,9 @@ const testAccCamTagRole = `
 
 resource "tencentcloud_cam_tag_role_attachment" "tag_role" {
   tags {
-		key = "test1"
-		value = "test1"
-
+    key = "test1"
+    value = "test1"
   }
-  role_id = "4611686018436805021"
-  }
-
+  role_name = "test-cam-tag"
+}
 `
