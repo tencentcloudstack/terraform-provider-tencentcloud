@@ -22,7 +22,8 @@ package tencentcloud
 
 import (
 	"context"
-	// "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -212,17 +213,17 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	var (
-		domain    *string
+		domain    string
 		aliasData []*dnspod.DomainAliasAnalyticsItem
 		data      []*dnspod.DomainAnalyticsDetail
 		info      *dnspod.DomainAnalyticsInfo
+		err       error
 	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("domain"); ok {
-		domain = helper.String(v.(string))
-		paramMap["Domain"] = domain
-
+		domain = v.(string)
+		paramMap["Domain"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_date"); ok {
@@ -242,12 +243,17 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 	}
 
 	service := DnspodService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	// var data []*dnspod.DomainAnalyticsDetail
-	// var aliasData []*dnspod.DomainAliasAnalyticsItem
-	// var info *dnspod.DomainAnalyticsInfo
-
-	aliasData, data, info, e := service.DescribeDnspodDomainAnalyticsByFilter(ctx, paramMap)
+	// aliasData, data, info, e := service.DescribeDnspodDomainAnalyticsByFilter(ctx, paramMap)
+	// if e != nil {
+	// 	return e
+	// }
+	e := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		aliasData, data, info, err = service.DescribeDnspodDomainAnalyticsByFilter(ctx, paramMap)
+		if err != nil {
+			return retryError(err)
+		}
+		return nil
+	})
 	if e != nil {
 		return e
 	}
@@ -370,7 +376,7 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 		_ = d.Set("alias_data", tmpAliasDataList)
 	}
 
-	d.SetId(helper.DataResourceIdHash(*domain))
+	d.SetId(helper.DataResourceIdHash(domain))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		e = writeToFile(output.(string), map[string]interface{}{
