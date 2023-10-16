@@ -212,10 +212,10 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	var (
-		domain          *string
-		aliasData		[]*dnspod.DomainAliasAnalyticsItem	
-		data			[]*dnspod.DomainAnalyticsDetail
-		info			*dnspod.DomainAnalyticsInfo
+		domain    *string
+		aliasData []*dnspod.DomainAliasAnalyticsItem
+		data      []*dnspod.DomainAnalyticsDetail
+		info      *dnspod.DomainAnalyticsInfo
 	)
 
 	paramMap := make(map[string]interface{})
@@ -374,8 +374,8 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		e = writeToFile(output.(string), map[string]interface{}{
-			"info": info,
-			"data": data,
+			"info":       info,
+			"data":       data,
 			"alias_data": aliasData,
 		})
 		if e != nil {
