@@ -1605,3 +1605,117 @@ func (me *CamService) DescribeCamListEntitiesForPolicyByFilter(ctx context.Conte
 	ListEntitiesForPolicy = result
 	return
 }
+
+func (me *CamService) DescribeCamListAttachedUserPolicyByFilter(ctx context.Context, param map[string]interface{}) (ListAttachedUserPolicy []*cam.AttachedUserPolicy, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewListAttachedUserAllPoliciesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TargetUin" {
+			request.TargetUin = v.(*uint64)
+		}
+		if k == "AttachType" {
+			request.AttachType = v.(*uint64)
+		}
+		if k == "StrategyType" {
+			request.StrategyType = v.(*uint64)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+	}
+
+	pageStart := uint64(1)
+	rp := uint64(PAGE_ITEM) //to save in extension
+	result := make([]*cam.AttachedUserPolicy, 0)
+	for {
+		request.Page = &pageStart
+		request.Rp = &rp
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCamClient().ListAttachedUserAllPolicies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.PolicyList) < 1 {
+			break
+		}
+		result = append(result, response.Response.PolicyList...)
+		if len(response.Response.PolicyList) < PAGE_ITEM {
+			break
+		}
+
+		pageStart += 1
+	}
+	ListAttachedUserPolicy = result
+	return
+}
+
+func (me *CamService) DescribeCamTagRoleById(ctx context.Context, roleName, roleId string) (TagRole *cam.RoleInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewGetRoleRequest()
+	if roleName == "" {
+		request.RoleId = &roleId
+	} else {
+		request.RoleName = &roleName
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetRole(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.RoleInfo == nil {
+		return
+	}
+	TagRole = response.Response.RoleInfo
+	return
+}
+
+func (me *CamService) DeleteCamTagRoleById(ctx context.Context, roleName, roleId string, keys []*string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewUntagRoleRequest()
+	if roleName == "" {
+		request.RoleId = &roleId
+	} else {
+		request.RoleName = &roleName
+	}
+	request.TagKeys = keys
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().UntagRole(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

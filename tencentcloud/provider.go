@@ -244,6 +244,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_mfa_flag
     tencentcloud_cam_access_key
 	tencentcloud_cam_user_saml_config
+    tencentcloud_cam_tag_role_attachment
 	tencentcloud_cam_policy_version
 	tencentcloud_cam_user_permission_boundary_attachment
 
@@ -2585,6 +2586,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_financial_by_product":       dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
+			"tencentcloud_cam_list_attached_user_policy":               dataSourceTencentCloudCamListAttachedUserPolicy(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2843,6 +2845,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_cam_access_key":                                      resourceTencentCloudCamAccessKey(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
+			"tencentcloud_cam_tag_role_attachment":                             resourceTencentCloudCamTagRoleAttachment(),
 			"tencentcloud_cam_policy_version":                                  resourceTencentCloudCamPolicyVersion(),
 			"tencentcloud_cam_user_permission_boundary_attachment":             resourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
