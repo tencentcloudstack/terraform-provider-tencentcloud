@@ -5,14 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_css_live_domain_cert" "live_domain_cert" {
-  domain_name = ""
-  }
+  domain_name = "your_domain_name"
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -121,8 +122,7 @@ func dataSourceTencentCloudCssLiveDomainCertRead(d *schema.ResourceData, meta in
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var domainCertInfo []*css.DomainCertInfo
-
+	var domainCertInfo *css.DomainCertInfo
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCssLiveDomainCertByFilter(ctx, paramMap)
 		if e != nil {
@@ -135,10 +135,9 @@ func dataSourceTencentCloudCssLiveDomainCertRead(d *schema.ResourceData, meta in
 		return err
 	}
 
-	ids := make([]string, 0, len(domainCertInfo))
+	var id string
+	domainCertInfoMap := map[string]interface{}{}
 	if domainCertInfo != nil {
-		domainCertInfoMap := map[string]interface{}{}
-
 		if domainCertInfo.CertId != nil {
 			domainCertInfoMap["cert_id"] = domainCertInfo.CertId
 		}
@@ -183,11 +182,11 @@ func dataSourceTencentCloudCssLiveDomainCertRead(d *schema.ResourceData, meta in
 			domainCertInfoMap["cloud_cert_id"] = domainCertInfo.CloudCertId
 		}
 
-		ids = append(ids, *domainCertInfo.CertId)
-		_ = d.Set("domain_cert_info", domainCertInfoMap)
+		id = helper.Int64ToStr(*domainCertInfo.CertId)
 	}
+	_ = d.Set("domain_cert_info", []interface{}{domainCertInfoMap})
 
-	d.SetId(helper.DataResourceIdsHash(ids))
+	d.SetId(id)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), domainCertInfoMap); e != nil {

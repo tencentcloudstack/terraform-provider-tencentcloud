@@ -1,12 +1,18 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"fmt"
+	"math/rand"
 	"testing"
+	"time"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudCssCommonMixResource_basic(t *testing.T) {
 	t.Parallel()
+	randIns := rand.New(rand.NewSource(time.Now().UnixNano()))
+	randomNum := randIns.Intn(1000)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -14,13 +20,21 @@ func TestAccTencentCloudCssCommonMixResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCssCommonMix,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_css_common_mix.common_mix",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: fmt.Sprintf(testAccCssCommonMix, randomNum),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "mix_stream_session_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "input_stream_list.#"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "input_stream_list.0.input_stream_name", "test_stream1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "input_stream_list.0.layout_params.#"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "input_stream_list.0.layout_params.0.image_layer", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "input_stream_list.1.input_stream_name", "test_stream2"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "input_stream_list.1.layout_params.#"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "input_stream_list.1.layout_params.0.image_layer", "2"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_common_mix.common_mix", "output_params.#"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "output_params.0output_stream_name", "test_output_stream1"),
+					resource.TestCheckResourceAttr("tencentcloud_css_common_mix.common_mix", "mix_stream_template_id", "30"),
+				),
 			},
 		},
 	})
@@ -29,46 +43,23 @@ func TestAccTencentCloudCssCommonMixResource_basic(t *testing.T) {
 const testAccCssCommonMix = `
 
 resource "tencentcloud_css_common_mix" "common_mix" {
-  mix_stream_session_id = ""
+  mix_stream_session_id = "test_room_%d"
   input_stream_list {
-		input_stream_name = ""
+		input_stream_name = "test_stream1"
 		layout_params {
-			image_layer = 
-			input_type = 
-			image_height = 
-			image_width = 
-			location_x = 
-			location_y = 
-			color = ""
-			watermark_id = 
+			image_layer = 1
 		}
-		crop_params {
-			crop_width = 
-			crop_height = 
-			crop_start_location_x = 
-			crop_start_location_y = 
-		}
-
   }
+  input_stream_list {
+	input_stream_name = "test_stream2"
+	layout_params {
+		image_layer = 2
+	}
+}
   output_params {
-		output_stream_name = ""
-		output_stream_type = 
-		output_stream_bit_rate = 
-		output_stream_gop = 
-		output_stream_frame_rate = 
-		output_audio_bit_rate = 
-		output_audio_sample_rate = 
-		output_audio_channels = 
-		mix_sei = ""
-
+		output_stream_name = "test_stream1"
   }
-  mix_stream_template_id = 
-  control_params {
-		use_mix_crop_center = 
-		allow_copy = 
-		pass_input_sei = 
-
-  }
+  mix_stream_template_id = 20
 }
 
 `

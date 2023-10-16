@@ -1,11 +1,12 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudCssLiveDomainCertDataSource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixCssLiveDomainCertDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -15,7 +16,14 @@ func TestAccTencentCloudCssLiveDomainCertDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCssLiveDomainCertDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_css_live_domain_cert.live_domain_cert")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_css_live_domain_cert.cert"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_css_live_domain_cert.cert", "domain_cert_info.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_css_live_domain_cert.cert", "domain_cert_info.0.cert_id"),
+					resource.TestCheckResourceAttr("data.tencentcloud_css_live_domain_cert.cert", "domain_cert_info.0.cert_name", "keep_ssl_css_domain_test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_css_live_domain_cert.cert", "domain_cert_info.0.domain_name", "test122.jingxhu.top"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_css_live_domain_cert.cert", "domain_cert_info.0.create_time"),
+				),
 			},
 		},
 	})
@@ -23,8 +31,8 @@ func TestAccTencentCloudCssLiveDomainCertDataSource_basic(t *testing.T) {
 
 const testAccCssLiveDomainCertDataSource = `
 
-data "tencentcloud_css_live_domain_cert" "live_domain_cert" {
-  domain_name = ""
-  }
+data "tencentcloud_css_live_domain_cert" "cert" {
+  domain_name = "test122.jingxhu.top"
+}
 
 `

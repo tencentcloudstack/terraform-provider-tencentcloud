@@ -47,25 +47,18 @@ resource "tencentcloud_css_common_mix" "common_mix" {
   }
 }
 ```
-
-Import
-
-css common_mix can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_css_common_mix.common_mix common_mix_id
-```
 */
 package tencentcloud
 
 import (
 	"context"
+	"log"
 	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudCssCommonMix() *schema.Resource {
@@ -74,9 +67,6 @@ func resourceTencentCloudCssCommonMix() *schema.Resource {
 		Read:   resourceTencentCloudCssCommonMixRead,
 		Update: resourceTencentCloudCssCommonMixUpdate,
 		Delete: resourceTencentCloudCssCommonMixDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"mix_stream_session_id": {
 				Required:    true,
@@ -278,60 +268,85 @@ func resourceTencentCloudCssCommonMixCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request            = css.NewCreateCommonMixStreamRequest()
-		response           = css.NewCreateCommonMixStreamResponse()
 		mixStreamSessionId string
 	)
 	if v, ok := d.GetOk("mix_stream_session_id"); ok {
 		request.MixStreamSessionId = helper.String(v.(string))
+		mixStreamSessionId = v.(string)
 	}
 
 	if v, ok := d.GetOk("input_stream_list"); ok {
-		for _, item := range v.([]interface{}) {
+		for ii, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			commonMixInputParam := css.CommonMixInputParam{}
 			if v, ok := dMap["input_stream_name"]; ok {
 				commonMixInputParam.InputStreamName = helper.String(v.(string))
 			}
-			if layoutParamsMap, ok := helper.InterfaceToMap(dMap, "layout_params"); ok {
+
+			indexLayoutParams :=fmt.Sprintf("input_stream_list.%v.layout_params.0", ii)
+			// if layoutParamsMap, ok := helper.InterfaceToMap(dMap, "layout_params"); ok {
+			if _, ok := d.GetOk(indexLayoutParams); ok {
+				indexLayoutParams = indexLayoutParams + "."
 				commonMixLayoutParams := css.CommonMixLayoutParams{}
-				if v, ok := layoutParamsMap["image_layer"]; ok {
+				// if v, ok := layoutParamsMap["image_layer"]; ok {
+				// 		commonMixLayoutParams.ImageLayer = helper.IntInt64(v.(int))
+				// }
+				if v, ok := d.GetOk(indexLayoutParams+"image_layer"); ok {
 					commonMixLayoutParams.ImageLayer = helper.IntInt64(v.(int))
 				}
-				if v, ok := layoutParamsMap["input_type"]; ok {
+				// if v, ok := layoutParamsMap["input_type"]; ok {
+				// 	commonMixLayoutParams.InputType = helper.IntInt64(v.(int))
+				// }
+				if v, ok := d.GetOk(indexLayoutParams+"input_type"); ok {
 					commonMixLayoutParams.InputType = helper.IntInt64(v.(int))
 				}
-				if v, ok := layoutParamsMap["image_height"]; ok {
+
+				// if v, ok := layoutParamsMap["image_height"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"image_height"); ok {
 					commonMixLayoutParams.ImageHeight = helper.Float64(v.(float64))
 				}
-				if v, ok := layoutParamsMap["image_width"]; ok {
+				// if v, ok := layoutParamsMap["image_width"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"image_width"); ok {
 					commonMixLayoutParams.ImageWidth = helper.Float64(v.(float64))
 				}
-				if v, ok := layoutParamsMap["location_x"]; ok {
+				// if v, ok := layoutParamsMap["location_x"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"location_x"); ok {
 					commonMixLayoutParams.LocationX = helper.Float64(v.(float64))
 				}
-				if v, ok := layoutParamsMap["location_y"]; ok {
+				// if v, ok := layoutParamsMap["location_y"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"location_y"); ok {
 					commonMixLayoutParams.LocationY = helper.Float64(v.(float64))
 				}
-				if v, ok := layoutParamsMap["color"]; ok {
+				// if v, ok := layoutParamsMap["color"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"color"); ok {
 					commonMixLayoutParams.Color = helper.String(v.(string))
 				}
-				if v, ok := layoutParamsMap["watermark_id"]; ok {
+				// if v, ok := layoutParamsMap["watermark_id"]; ok {
+					if v, ok := d.GetOk(indexLayoutParams+"watermark_id"); ok {
 					commonMixLayoutParams.WatermarkId = helper.IntInt64(v.(int))
 				}
 				commonMixInputParam.LayoutParams = &commonMixLayoutParams
 			}
-			if cropParamsMap, ok := helper.InterfaceToMap(dMap, "crop_params"); ok {
+
+			indexCropParams :=fmt.Sprintf("input_stream_list.%v.crop_params.0", ii)
+			// if cropParamsMap, ok := helper.InterfaceToMap(dMap, "crop_params"); ok {
+			if _, ok := d.GetOk(indexCropParams); ok {
+				indexCropParams = indexCropParams + "."
 				commonMixCropParams := css.CommonMixCropParams{}
-				if v, ok := cropParamsMap["crop_width"]; ok {
+				// if v, ok := cropParamsMap["crop_width"]; ok {
+					if v, ok := d.GetOk(indexCropParams+"crop_width"); ok {
 					commonMixCropParams.CropWidth = helper.Float64(v.(float64))
 				}
-				if v, ok := cropParamsMap["crop_height"]; ok {
+				// if v, ok := cropParamsMap["crop_height"]; ok {
+					if v, ok := d.GetOk(indexCropParams+"crop_height"); ok {
 					commonMixCropParams.CropHeight = helper.Float64(v.(float64))
 				}
-				if v, ok := cropParamsMap["crop_start_location_x"]; ok {
+				// if v, ok := cropParamsMap["crop_start_location_x"]; ok {
+					if v, ok := d.GetOk(indexCropParams+"crop_start_location_x"); ok {
 					commonMixCropParams.CropStartLocationX = helper.Float64(v.(float64))
 				}
-				if v, ok := cropParamsMap["crop_start_location_y"]; ok {
+				// if v, ok := cropParamsMap["crop_start_location_y"]; ok {
+					if v, ok := d.GetOk(indexCropParams+"crop_start_location_y"); ok {
 					commonMixCropParams.CropStartLocationY = helper.Float64(v.(float64))
 				}
 				commonMixInputParam.CropParams = &commonMixCropParams
@@ -340,33 +355,45 @@ func resourceTencentCloudCssCommonMixCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "output_params"); ok {
+	indexOutputParams :=fmt.Sprintf("output_params.%v", 0)
+	// if dMap, ok := helper.InterfacesHeadMap(d, "output_params"); ok {
+	if _, ok := d.GetOk(indexOutputParams); ok {
+		indexOutputParams = indexOutputParams + "."
 		commonMixOutputParams := css.CommonMixOutputParams{}
-		if v, ok := dMap["output_stream_name"]; ok {
+		// if v, ok := dMap["output_stream_name"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_stream_name"); ok {
 			commonMixOutputParams.OutputStreamName = helper.String(v.(string))
 		}
-		if v, ok := dMap["output_stream_type"]; ok {
+		// if v, ok := dMap["output_stream_type"]; ok {
+		if v, ok := d.GetOk(indexOutputParams+"output_stream_type"); ok {
 			commonMixOutputParams.OutputStreamType = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_stream_bit_rate"]; ok {
-			commonMixOutputParams.OutputStreamBitRate = helper.IntInt64(v.(int))
+		// if v, ok := dMap["output_stream_bit_rate"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_stream_bit_rate"); ok {
+				commonMixOutputParams.OutputStreamBitRate = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_stream_gop"]; ok {
+		// if v, ok := dMap["output_stream_gop"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_stream_gop"); ok {
 			commonMixOutputParams.OutputStreamGop = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_stream_frame_rate"]; ok {
+		// if v, ok := dMap["output_stream_frame_rate"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_stream_frame_rate"); ok {
 			commonMixOutputParams.OutputStreamFrameRate = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_audio_bit_rate"]; ok {
+		// if v, ok := dMap["output_audio_bit_rate"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_audio_bit_rate"); ok {
 			commonMixOutputParams.OutputAudioBitRate = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_audio_sample_rate"]; ok {
+		// if v, ok := dMap["output_audio_sample_rate"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_audio_sample_rate"); ok {
 			commonMixOutputParams.OutputAudioSampleRate = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["output_audio_channels"]; ok {
+		// if v, ok := dMap["output_audio_channels"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"output_audio_channels"); ok {
 			commonMixOutputParams.OutputAudioChannels = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["mix_sei"]; ok {
+		// if v, ok := dMap["mix_sei"]; ok {
+			if v, ok := d.GetOk(indexOutputParams+"mix_sei"); ok {
 			commonMixOutputParams.MixSei = helper.String(v.(string))
 		}
 		request.OutputParams = &commonMixOutputParams
@@ -376,15 +403,21 @@ func resourceTencentCloudCssCommonMixCreate(d *schema.ResourceData, meta interfa
 		request.MixStreamTemplateId = helper.IntInt64(v.(int))
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "control_params"); ok {
+	indexControlParams :=fmt.Sprintf("control_params.%v", 0)
+	// if dMap, ok := helper.InterfacesHeadMap(d, "control_params"); ok {
+	if _, ok := d.GetOk(indexControlParams); ok {
+		indexControlParams = indexControlParams + "."
 		commonMixControlParams := css.CommonMixControlParams{}
-		if v, ok := dMap["use_mix_crop_center"]; ok {
+		// if v, ok := dMap["use_mix_crop_center"]; ok {
+		if v, ok := d.GetOk(indexControlParams+"use_mix_crop_center"); ok {
 			commonMixControlParams.UseMixCropCenter = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["allow_copy"]; ok {
+		// if v, ok := dMap["allow_copy"]; ok {
+		if v, ok := d.GetOk(indexControlParams+"allow_copy"); ok {
 			commonMixControlParams.AllowCopy = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["pass_input_sei"]; ok {
+		// if v, ok := dMap["pass_input_sei"]; ok {
+		if v, ok := d.GetOk(indexControlParams+"pass_input_sei"); ok {
 			commonMixControlParams.PassInputSei = helper.IntInt64(v.(int))
 		}
 		request.ControlParams = &commonMixControlParams
@@ -397,7 +430,6 @@ func resourceTencentCloudCssCommonMixCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -405,8 +437,7 @@ func resourceTencentCloudCssCommonMixCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	mixStreamSessionId = *response.Response.MixStreamSessionId
-	d.SetId(helper.String(mixStreamSessionId))
+	d.SetId(mixStreamSessionId)
 
 	return resourceTencentCloudCssCommonMixRead(d, meta)
 }
@@ -415,169 +446,6 @@ func resourceTencentCloudCssCommonMixRead(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_css_common_mix.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	commonMixId := d.Id()
-
-	commonMix, err := service.DescribeCssCommonMixById(ctx, mixStreamSessionId)
-	if err != nil {
-		return err
-	}
-
-	if commonMix == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `CssCommonMix` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	if commonMix.MixStreamSessionId != nil {
-		_ = d.Set("mix_stream_session_id", commonMix.MixStreamSessionId)
-	}
-
-	if commonMix.InputStreamList != nil {
-		inputStreamListList := []interface{}{}
-		for _, inputStreamList := range commonMix.InputStreamList {
-			inputStreamListMap := map[string]interface{}{}
-
-			if commonMix.InputStreamList.InputStreamName != nil {
-				inputStreamListMap["input_stream_name"] = commonMix.InputStreamList.InputStreamName
-			}
-
-			if commonMix.InputStreamList.LayoutParams != nil {
-				layoutParamsMap := map[string]interface{}{}
-
-				if commonMix.InputStreamList.LayoutParams.ImageLayer != nil {
-					layoutParamsMap["image_layer"] = commonMix.InputStreamList.LayoutParams.ImageLayer
-				}
-
-				if commonMix.InputStreamList.LayoutParams.InputType != nil {
-					layoutParamsMap["input_type"] = commonMix.InputStreamList.LayoutParams.InputType
-				}
-
-				if commonMix.InputStreamList.LayoutParams.ImageHeight != nil {
-					layoutParamsMap["image_height"] = commonMix.InputStreamList.LayoutParams.ImageHeight
-				}
-
-				if commonMix.InputStreamList.LayoutParams.ImageWidth != nil {
-					layoutParamsMap["image_width"] = commonMix.InputStreamList.LayoutParams.ImageWidth
-				}
-
-				if commonMix.InputStreamList.LayoutParams.LocationX != nil {
-					layoutParamsMap["location_x"] = commonMix.InputStreamList.LayoutParams.LocationX
-				}
-
-				if commonMix.InputStreamList.LayoutParams.LocationY != nil {
-					layoutParamsMap["location_y"] = commonMix.InputStreamList.LayoutParams.LocationY
-				}
-
-				if commonMix.InputStreamList.LayoutParams.Color != nil {
-					layoutParamsMap["color"] = commonMix.InputStreamList.LayoutParams.Color
-				}
-
-				if commonMix.InputStreamList.LayoutParams.WatermarkId != nil {
-					layoutParamsMap["watermark_id"] = commonMix.InputStreamList.LayoutParams.WatermarkId
-				}
-
-				inputStreamListMap["layout_params"] = []interface{}{layoutParamsMap}
-			}
-
-			if commonMix.InputStreamList.CropParams != nil {
-				cropParamsMap := map[string]interface{}{}
-
-				if commonMix.InputStreamList.CropParams.CropWidth != nil {
-					cropParamsMap["crop_width"] = commonMix.InputStreamList.CropParams.CropWidth
-				}
-
-				if commonMix.InputStreamList.CropParams.CropHeight != nil {
-					cropParamsMap["crop_height"] = commonMix.InputStreamList.CropParams.CropHeight
-				}
-
-				if commonMix.InputStreamList.CropParams.CropStartLocationX != nil {
-					cropParamsMap["crop_start_location_x"] = commonMix.InputStreamList.CropParams.CropStartLocationX
-				}
-
-				if commonMix.InputStreamList.CropParams.CropStartLocationY != nil {
-					cropParamsMap["crop_start_location_y"] = commonMix.InputStreamList.CropParams.CropStartLocationY
-				}
-
-				inputStreamListMap["crop_params"] = []interface{}{cropParamsMap}
-			}
-
-			inputStreamListList = append(inputStreamListList, inputStreamListMap)
-		}
-
-		_ = d.Set("input_stream_list", inputStreamListList)
-
-	}
-
-	if commonMix.OutputParams != nil {
-		outputParamsMap := map[string]interface{}{}
-
-		if commonMix.OutputParams.OutputStreamName != nil {
-			outputParamsMap["output_stream_name"] = commonMix.OutputParams.OutputStreamName
-		}
-
-		if commonMix.OutputParams.OutputStreamType != nil {
-			outputParamsMap["output_stream_type"] = commonMix.OutputParams.OutputStreamType
-		}
-
-		if commonMix.OutputParams.OutputStreamBitRate != nil {
-			outputParamsMap["output_stream_bit_rate"] = commonMix.OutputParams.OutputStreamBitRate
-		}
-
-		if commonMix.OutputParams.OutputStreamGop != nil {
-			outputParamsMap["output_stream_gop"] = commonMix.OutputParams.OutputStreamGop
-		}
-
-		if commonMix.OutputParams.OutputStreamFrameRate != nil {
-			outputParamsMap["output_stream_frame_rate"] = commonMix.OutputParams.OutputStreamFrameRate
-		}
-
-		if commonMix.OutputParams.OutputAudioBitRate != nil {
-			outputParamsMap["output_audio_bit_rate"] = commonMix.OutputParams.OutputAudioBitRate
-		}
-
-		if commonMix.OutputParams.OutputAudioSampleRate != nil {
-			outputParamsMap["output_audio_sample_rate"] = commonMix.OutputParams.OutputAudioSampleRate
-		}
-
-		if commonMix.OutputParams.OutputAudioChannels != nil {
-			outputParamsMap["output_audio_channels"] = commonMix.OutputParams.OutputAudioChannels
-		}
-
-		if commonMix.OutputParams.MixSei != nil {
-			outputParamsMap["mix_sei"] = commonMix.OutputParams.MixSei
-		}
-
-		_ = d.Set("output_params", []interface{}{outputParamsMap})
-	}
-
-	if commonMix.MixStreamTemplateId != nil {
-		_ = d.Set("mix_stream_template_id", commonMix.MixStreamTemplateId)
-	}
-
-	if commonMix.ControlParams != nil {
-		controlParamsMap := map[string]interface{}{}
-
-		if commonMix.ControlParams.UseMixCropCenter != nil {
-			controlParamsMap["use_mix_crop_center"] = commonMix.ControlParams.UseMixCropCenter
-		}
-
-		if commonMix.ControlParams.AllowCopy != nil {
-			controlParamsMap["allow_copy"] = commonMix.ControlParams.AllowCopy
-		}
-
-		if commonMix.ControlParams.PassInputSei != nil {
-			controlParamsMap["pass_input_sei"] = commonMix.ControlParams.PassInputSei
-		}
-
-		_ = d.Set("control_params", []interface{}{controlParamsMap})
-	}
-
 	return nil
 }
 
@@ -585,16 +453,7 @@ func resourceTencentCloudCssCommonMixUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_css_common_mix.update")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	immutableArgs := []string{"mix_stream_session_id", "input_stream_list", "output_params", "mix_stream_template_id", "control_params"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-	return resourceTencentCloudCssCommonMixRead(d, meta)
+	return nil
 }
 
 func resourceTencentCloudCssCommonMixDelete(d *schema.ResourceData, meta interface{}) error {
