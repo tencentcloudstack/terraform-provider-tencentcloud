@@ -149,7 +149,6 @@ func resourceTencentCloudCamRole() *schema.Resource {
 			"console_login": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the CAM role can login or not.",
 			},
 			"create_time": {
@@ -409,6 +408,39 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 
 	}
 
+	if d.HasChange("console_login") {
+		consoleLoginRequest := cam.NewUpdateRoleConsoleLoginRequest()
+
+		if v, ok := d.GetOkExists("console_login"); ok {
+			loginBool := v.(bool)
+			loginInt := int64(1)
+			if !loginBool {
+				loginInt = int64(0)
+			}
+			consoleLoginRequest.ConsoleLogin = &loginInt
+		}
+
+		consoleLoginRequest.RoleId = helper.StrToInt64Point(roleId)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateRoleConsoleLogin(consoleLoginRequest)
+
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, consoleLoginRequest.GetAction(), consoleLoginRequest.ToJsonString(), e.Error())
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, consoleLoginRequest.GetAction(), consoleLoginRequest.ToJsonString(), response.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update CAM role console login failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 

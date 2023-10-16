@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cam_tag_role_attachment
+```
+
+```release-note:new-data-source
+tencentcloud_cam_list_attached_user_policy
+```
+
+```release-note:enhancement
+tencentcloud_ckafka_instance: Support api `UpdateRoleConsoleLogin`
+```
