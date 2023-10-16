@@ -170,6 +170,7 @@ func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, p
 			request.Type = v.(*string)
 		}
 		if k == "GroupId" {
+			request.GroupId = v.([]*int64)
 		}
 		if k == "Keyword" {
 			request.Keyword = v.(*string)
