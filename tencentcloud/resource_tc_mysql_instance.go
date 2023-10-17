@@ -932,7 +932,6 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-	parametersMap, ok := d.Get("parameters").(map[string]interface{})
 
 	if importFlag {
 		// import logic:
@@ -952,7 +951,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		}
 		_ = d.Set("availability_zone", mysqlInfo.Zone)
 		importFlag = false
-	} else if ok {
+	} else if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
 		// read logic:
 		var cares []string
 		for k := range parametersMap {
