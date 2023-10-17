@@ -1027,6 +1027,13 @@ Video on Demand(VOD)
     tencentcloud_vod_super_player_config
 	tencentcloud_vod_sub_application
 
+Oceanus
+  Data Source
+	tencentcloud_oceanus_resource_related_job
+	tencentcloud_oceanus_savepoint_list
+	tencentcloud_oceanus_system_resource
+	tencentcloud_oceanus_work_spaces
+
 Virtual Private Cloud(VPC)
   Data Source
     tencentcloud_route_table
@@ -2015,6 +2022,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateways":                                dataSourceTencentCloudNatGateways(),
 			"tencentcloud_nat_gateway_snats":                           dataSourceTencentCloudNatGatewaySnats(),
 			"tencentcloud_nat_dc_route":                                dataSourceTencentCloudNatDcRoute(),
+			"tencentcloud_oceanus_resource_related_job":                dataSourceTencentCloudOceanusResourceRelatedJob(),
+			"tencentcloud_oceanus_savepoint_list":                      dataSourceTencentCloudOceanusSavepointList(),
+			"tencentcloud_oceanus_system_resource":                     dataSourceTencentCloudOceanusSystemResource(),
+			"tencentcloud_oceanus_work_spaces":                         dataSourceTencentCloudOceanusWorkSpaces(),
 			"tencentcloud_vpn_customer_gateways":                       dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                                dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                          dataSourceTencentCloudVpnGatewayRoutes(),

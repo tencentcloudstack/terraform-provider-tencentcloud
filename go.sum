@@ -863,6 +863,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.760/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.762/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.763 h1:N+/GDFRlTSgufNGIotPcPRe1+tF0H94K0z11cleqhDg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.763/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.767 h1:LO+t7y656Z11tyx97d/8b2CyLV+OG2HJNZbjdY7JDd8=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.767/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762 h1:2egy69SP/wPsmnfozcQVZ6tUY6F6N/TpEe/7xtXrc/8=
@@ -907,6 +909,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734 h1:VJl
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734/go.mod h1:H2gtCj02D5k7h0JttS9RMoRgkJ8m9qia/9RlMjbvT0o=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758 h1:lsuwM6CNu1aKpHOmsA7dizDxd4gCOBNvT25+yQNPGx8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758/go.mod h1:OklPo0yw4wKOYDAtXgmtUJCzGdvYooaqKchviSg84Ro=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.767 h1:f/2RagLRTg+TyFqnZn5G3b4cJSIDMxqDqL7S5MMGzbc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.767/go.mod h1:bM0OjwtGR1FwMm8SARwTW+KSuBcLzl1VJfYE4HAF+LI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.763 h1:Qfsu2gRG+rguebyfKqoBrfxBkzxazQymQtdf4Azl9ow=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.763/go.mod h1:bR3aAS3kvCEJXgjWpMOocxMNDGoD+7Aue6BWN8TKZ40=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676 h1:KDt87M2b8j/Xo/9o+kaVtJ46fOtPctCpMDa1CJpSlkY=
