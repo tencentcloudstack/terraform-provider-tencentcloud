@@ -1853,3 +1853,36 @@ func (me *CamService) DescribeCamPolicyGrantingServiceAccessByFilter(ctx context
 	PolicyGrantingServiceAccess = response.Response.List
 	return
 }
+
+func (me *CamService) DescribeCamSetPolicyVersionById(ctx context.Context, policyId, versionId string) (SetPolicyVersion *cam.PolicyVersionItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewListPolicyVersionsRequest()
+	request.PolicyId = helper.StrToUint64Point(policyId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListPolicyVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Versions) < 1 {
+		return
+	}
+	for _, v := range response.Response.Versions {
+		if *v.IsDefaultVersion == int64(1) && *v.VersionId == helper.StrToUInt64(versionId) {
+			SetPolicyVersion = v
+		}
+	}
+
+	return
+}
