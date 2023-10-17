@@ -225,6 +225,7 @@ Cloud Access Management(CAM)
     tencentcloud_user_info
     tencentcloud_cam_list_entities_for_policy
     tencentcloud_cam_secret_last_used_time
+    tencentcloud_cam_account_summary
     tencentcloud_cam_policy_granting_service_access
 
   Resource
@@ -2192,6 +2193,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_policy_attachments":                dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                          dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_cam_list_entities_for_policy":                dataSourceTencentCloudCamListEntitiesForPolicy(),
+			"tencentcloud_cam_account_summary":                         dataSourceTencentCloudCamAccountSummary(),
 			"tencentcloud_user_info":                                   datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                                 dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                         dataSourceTencentCloudCdnDomainVerifyRecord(),
