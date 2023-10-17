@@ -1719,3 +1719,60 @@ func (me *CamService) DeleteCamTagRoleById(ctx context.Context, roleName, roleId
 
 	return
 }
+
+func (me *CamService) DescribeCamRolePermissionBoundaryAttachmentById(ctx context.Context, roleId string, policyId string) (RolePermissionBoundaryAttachment *cam.GetRolePermissionBoundaryResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewGetRolePermissionBoundaryRequest()
+	request.RoleId = &roleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetRolePermissionBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
+	if *response.Response.PolicyId != helper.StrToInt64(policyId) {
+		return
+	}
+	RolePermissionBoundaryAttachment = response.Response
+	return
+}
+
+func (me *CamService) DeleteCamRolePermissionBoundaryAttachmentById(ctx context.Context, roleId string, roleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeleteRolePermissionsBoundaryRequest()
+	if roleId == "" {
+		request.RoleName = &roleName
+	} else {
+		request.RoleId = &roleId
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DeleteRolePermissionsBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
