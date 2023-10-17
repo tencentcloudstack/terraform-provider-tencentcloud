@@ -169,7 +169,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		request.SubnetId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("nat_product_version"); ok {
+	if v, ok := d.GetOkExists("nat_product_version"); ok {
 		request.NatProductVersion = helper.IntUint64(v.(int))
 	}
 
