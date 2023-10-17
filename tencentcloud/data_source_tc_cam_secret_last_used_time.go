@@ -36,6 +36,7 @@ func dataSourceTencentCloudCamSecretLastUsedTime() *schema.Resource {
 
 			"secret_id_last_used_rows": {
 				Computed:    true,
+				Sensitive:   true,
 				Type:        schema.TypeList,
 				Description: "Last used time list.",
 				Elem: &schema.Resource{
