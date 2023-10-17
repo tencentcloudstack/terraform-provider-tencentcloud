@@ -17,8 +17,8 @@ Use this data source to query detailed information of oceanus work_spaces
 data "tencentcloud_oceanus_work_spaces" "example" {
   order_type = 1
   filters {
-    name   = "WorkSpaceId"
-    values = ["space-bshmbms5"]
+    name   = "WorkSpaceName"
+    values = ["tf_example"]
   }
 }
 ```

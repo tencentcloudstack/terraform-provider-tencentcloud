@@ -30,8 +30,8 @@ const testAccOceanusWorkSpacesDataSource = `
 data "tencentcloud_oceanus_work_spaces" "example" {
   order_type = 1
   filters {
-    name   = "WorkSpaceId"
-    values = ["space-bshmbms5"]
+    name   = "WorkSpaceName"
+    values = ["keep-work-space"]
   }
 }
 `
