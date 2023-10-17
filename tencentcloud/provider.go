@@ -224,6 +224,8 @@ Cloud Access Management(CAM)
     tencentcloud_cam_users
     tencentcloud_user_info
     tencentcloud_cam_list_entities_for_policy
+    tencentcloud_cam_secret_last_used_time
+    tencentcloud_cam_policy_granting_service_access
 
   Resource
     tencentcloud_cam_role
@@ -2596,6 +2598,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
 			"tencentcloud_cam_list_attached_user_policy":               dataSourceTencentCloudCamListAttachedUserPolicy(),
+			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
+			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

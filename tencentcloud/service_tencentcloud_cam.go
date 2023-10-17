@@ -1776,3 +1776,80 @@ func (me *CamService) DeleteCamRolePermissionBoundaryAttachmentById(ctx context.
 
 	return
 }
+
+func (me *CamService) DescribeCamSecretLastUsedTimeByFilter(ctx context.Context, param map[string]interface{}) (SecretLastUsedTime []*cam.SecretIdLastUsed, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewGetSecurityLastUsedRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecretIdList" {
+			request.SecretIdList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetSecurityLastUsed(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.SecretIdLastUsedRows) < 1 {
+		return
+	}
+	SecretLastUsedTime = append(SecretLastUsedTime, response.Response.SecretIdLastUsedRows...)
+	return
+}
+
+func (me *CamService) DescribeCamPolicyGrantingServiceAccessByFilter(ctx context.Context, param map[string]interface{}) (PolicyGrantingServiceAccess []*cam.ListGrantServiceAccessNode, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewListPoliciesGrantingServiceAccessRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TargetUin" {
+			request.TargetUin = v.(*uint64)
+		}
+		if k == "RoleId" {
+			request.RoleId = v.(*uint64)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*uint64)
+		}
+		if k == "ServiceType" {
+			request.ServiceType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListPoliciesGrantingServiceAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.List) < 1 {
+		return
+	}
+	PolicyGrantingServiceAccess = response.Response.List
+	return
+}
