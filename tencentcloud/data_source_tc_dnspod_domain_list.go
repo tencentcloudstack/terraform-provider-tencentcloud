@@ -5,24 +5,24 @@ Example Usage
 
 ```hcl
 
-	data "tencentcloud_dnspod_domain_list" "domain_list" {
-        type = "ALL"
-        group_id = [1]
-        # keyword = "keyword_demo"
-        sort_field = "UPDATED_ON"
-        sort_type = "DESC"
-        status = ["PAUSE"]
-        # package =
-        remark = ""
-        # updated_at_begin = "2021-05-01 03:00:00"
-        # updated_at_end = "2021-05-10 20:00:00"
-        # record_count_begin = 0
-        # record_count_end = 100
-        # project_id = -1
-        tags = {
-         "createdBy" = "terraform"
-        }
+data "tencentcloud_dnspod_domain_list" "domain_list" {
+	type = "ALL"
+	group_id = [1]
+	keyword = ""
+	sort_field = "UPDATED_ON"
+	sort_type = "DESC"
+	status = ["PAUSE"]
+	package = [""]
+	remark = ""
+	updated_at_begin = "2021-05-01 03:00:00"
+	updated_at_end = "2024-05-10 20:00:00"
+	record_count_begin = 0
+	record_count_end = 100
+	project_id = -1
+	tags = {
+	 "createdBy" = "terraform"
 	}
+}
 
 ```
 */
@@ -299,13 +299,11 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 	}
 
 	if v, ok := d.GetOk("group_id"); ok {
-		paramMapGroupIdList := []interface{}{}
-		groupIdSet := v.(*schema.Set).List()
-		for i := range groupIdSet {
-			groupId := groupIdSet[i].(int)
-			paramMapGroupIdList = append(paramMapGroupIdList, helper.IntInt64(groupId))
+		groupIds := make([]*int64, 0)
+		for _, item := range v.(*schema.Set).List() {
+			groupIds = append(groupIds, helper.IntInt64(item.(int)))
 		}
-		paramMap["GroupId"] = paramMapGroupIdList
+		paramMap["GroupId"] = groupIds
 	}
 
 	if v, ok := d.GetOk("keyword"); ok {

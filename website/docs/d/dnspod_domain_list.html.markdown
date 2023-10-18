@@ -15,19 +15,19 @@ Use this data source to query detailed information of dnspod domain_list
 
 ```hcl
 data "tencentcloud_dnspod_domain_list" "domain_list" {
-  type     = "ALL"
-  group_id = [1]
-  # keyword = "keyword_demo"
-  sort_field = "UPDATED_ON"
-  sort_type  = "DESC"
-  status     = ["PAUSE"]
-  # package =
-  remark = ""
-  # updated_at_begin = "2021-05-01 03:00:00"
-  # updated_at_end = "2021-05-10 20:00:00"
-  # record_count_begin = 0
-  # record_count_end = 100
-  # project_id = -1
+  type               = "ALL"
+  group_id           = [1]
+  keyword            = ""
+  sort_field         = "UPDATED_ON"
+  sort_type          = "DESC"
+  status             = ["PAUSE"]
+  package            = [""]
+  remark             = ""
+  updated_at_begin   = "2021-05-01 03:00:00"
+  updated_at_end     = "2024-05-10 20:00:00"
+  record_count_begin = 0
+  record_count_end   = 100
+  project_id         = -1
   tags = {
     "createdBy" = "terraform"
   }
