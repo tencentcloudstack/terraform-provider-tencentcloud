@@ -39,7 +39,7 @@ func resourceTencentCloudElasticsearchRestartLogstashInstanceOperation() *schema
 			},
 
 			"type": {
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Restart type, 0 full restart, 1 rolling restart.",
