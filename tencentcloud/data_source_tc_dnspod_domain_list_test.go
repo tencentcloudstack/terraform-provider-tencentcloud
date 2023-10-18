@@ -15,14 +15,14 @@ func TestAccTencentCloudDnspodDomainListDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDnspodDomain_listDataSource,
+				Config: testAccDnspodDomainListDataSource,
 				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dnspod_domain_list.domain_list")),
 			},
 		},
 	})
 }
 
-const testAccDnspodDomain_listDataSource = `
+const testAccDnspodDomainListDataSource = `
 
 data "tencentcloud_dnspod_domain_list" "domain_list" {
 	type = "ALL"

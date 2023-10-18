@@ -153,6 +153,7 @@ func (me *DnspodService) DescribeRecordList(ctx context.Context, request *dnspod
 
 	return
 }
+
 func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, param map[string]interface{}) (domain_list []*dnspod.DomainListItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -236,6 +237,55 @@ func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, p
 
 		offset += limit
 	}
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodDomainAnalyticsByFilter(ctx context.Context, param map[string]interface{}) (alias_data []*dnspod.DomainAliasAnalyticsItem, data []*dnspod.DomainAnalyticsDetail, info *dnspod.DomainAnalyticsInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeDomainAnalyticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "DnsFormat" {
+			request.DnsFormat = v.(*string)
+		}
+		if k == "DomainId" {
+			request.DomainId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDnsPodClient().DescribeDomainAnalytics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	alias_data = response.Response.AliasData
+	data = response.Response.Data
+	info = response.Response.Info
 
 	return
 }
