@@ -11,9 +11,6 @@ Example Usage
 	  end_date = "2023-10-12"
 	  dns_format = "HOUR"
 	  # domain_id = 123
-	  tags = {
-	    "createdBy" = "terraform"
-	  }
 	}
 
 ```
@@ -191,11 +188,6 @@ func dataSourceTencentCloudDnspodDomainAnalytics() *schema.Resource {
 				},
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -243,10 +235,6 @@ func dataSourceTencentCloudDnspodDomainAnalyticsRead(d *schema.ResourceData, met
 	}
 
 	service := DnspodService{client: meta.(*TencentCloudClient).apiV3Conn}
-	// aliasData, data, info, e := service.DescribeDnspodDomainAnalyticsByFilter(ctx, paramMap)
-	// if e != nil {
-	// 	return e
-	// }
 	e := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		aliasData, data, info, err = service.DescribeDnspodDomainAnalyticsByFilter(ctx, paramMap)
 		if err != nil {

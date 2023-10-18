@@ -30,9 +30,6 @@ data "tencentcloud_dnspod_domain_analytics" "domain_analytics" {
   end_date = "2023-10-12"
   dns_format = "HOUR"
   # domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 
 `

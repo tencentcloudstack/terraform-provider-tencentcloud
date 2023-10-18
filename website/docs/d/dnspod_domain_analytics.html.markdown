@@ -20,9 +20,6 @@ data "tencentcloud_dnspod_domain_analytics" "domain_analytics" {
   end_date   = "2023-10-12"
   dns_format = "HOUR"
   # domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 ```
 
@@ -36,7 +33,6 @@ The following arguments are supported:
 * `dns_format` - (Optional, String) DATE: Statistics by day dimension HOUR: Statistics by hour dimension.
 * `domain_id` - (Optional, Int) Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.
 * `result_output_file` - (Optional, String) Used to save results.
-* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 
