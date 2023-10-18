@@ -25,7 +25,7 @@ func TestAccTencentCloudDnspodDomainAnalyticsDataSource_basic(t *testing.T) {
 const testAccDnspodDomainAnalyticsDataSource = `
 
 data "tencentcloud_dnspod_domain_analytics" "domain_analytics" {
-  domain = "magicszhao-pre.top"
+  domain = "iac-tf.cloud"
   start_date = "2023-10-07"
   end_date = "2023-10-12"
   dns_format = "HOUR"
