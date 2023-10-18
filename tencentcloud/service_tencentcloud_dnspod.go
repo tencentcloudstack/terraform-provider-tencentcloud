@@ -153,6 +153,7 @@ func (me *DnspodService) DescribeRecordList(ctx context.Context, request *dnspod
 
 	return
 }
+
 func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, param map[string]interface{}) (domain_list []*dnspod.DomainListItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
