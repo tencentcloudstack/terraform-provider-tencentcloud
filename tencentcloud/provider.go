@@ -224,6 +224,9 @@ Cloud Access Management(CAM)
     tencentcloud_cam_users
     tencentcloud_user_info
     tencentcloud_cam_list_entities_for_policy
+    tencentcloud_cam_secret_last_used_time
+    tencentcloud_cam_account_summary
+    tencentcloud_cam_policy_granting_service_access
 
   Resource
     tencentcloud_cam_role
@@ -246,6 +249,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_user_saml_config
     tencentcloud_cam_tag_role_attachment
 	tencentcloud_cam_policy_version
+	tencentcloud_cam_set_policy_version_config
 	tencentcloud_cam_user_permission_boundary_attachment
 	tencentcloud_cam_role_permission_boundary_attachment
 
@@ -2189,6 +2193,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_policy_attachments":                dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                          dataSourceTencentCloudCamSAMLProviders(),
 			"tencentcloud_cam_list_entities_for_policy":                dataSourceTencentCloudCamListEntitiesForPolicy(),
+			"tencentcloud_cam_account_summary":                         dataSourceTencentCloudCamAccountSummary(),
 			"tencentcloud_user_info":                                   datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                                 dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                         dataSourceTencentCloudCdnDomainVerifyRecord(),
@@ -2596,6 +2601,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_auth_node":                  dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_pts_scenario_with_jobs":                      dataSourceTencentCloudPtsScenarioWithJobs(),
 			"tencentcloud_cam_list_attached_user_policy":               dataSourceTencentCloudCamListAttachedUserPolicy(),
+			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
+			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2856,6 +2863,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
 			"tencentcloud_cam_tag_role_attachment":                             resourceTencentCloudCamTagRoleAttachment(),
 			"tencentcloud_cam_policy_version":                                  resourceTencentCloudCamPolicyVersion(),
+			"tencentcloud_cam_set_policy_version_config":                       resourceTencentCloudCamSetPolicyVersionConfig(),
 			"tencentcloud_cam_user_permission_boundary_attachment":             resourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_cam_role_permission_boundary_attachment":             resourceTencentCloudCamRolePermissionBoundaryAttachment(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
