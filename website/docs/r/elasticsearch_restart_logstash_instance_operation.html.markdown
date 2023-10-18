@@ -25,7 +25,7 @@ resource "tencentcloud_elasticsearch_restart_logstash_instance_operation" "resta
 The following arguments are supported:
 
 * `instance_id` - (Required, String, ForceNew) Instance id.
-* `type` - (Optional, Int, ForceNew) Restart type, 0 full restart, 1 rolling restart.
+* `type` - (Required, Int, ForceNew) Restart type, 0 full restart, 1 rolling restart.
 
 ## Attributes Reference
 
