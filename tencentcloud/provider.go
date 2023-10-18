@@ -253,6 +253,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_set_policy_version_config
 	tencentcloud_cam_user_permission_boundary_attachment
 	tencentcloud_cam_role_permission_boundary_attachment
+	tencentcloud_organization_quit_organization_operation
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -2868,6 +2869,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_set_policy_version_config":                       resourceTencentCloudCamSetPolicyVersionConfig(),
 			"tencentcloud_cam_user_permission_boundary_attachment":             resourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_cam_role_permission_boundary_attachment":             resourceTencentCloudCamRolePermissionBoundaryAttachment(),
+			"tencentcloud_organization_quit_organization_operation":            resourceTencentCloudOrganizationQuitOrganizationOperation(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        resourceTencentCloudScfFunction(),
