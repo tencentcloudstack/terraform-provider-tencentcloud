@@ -182,7 +182,7 @@ The following arguments are supported:
 * `auto_create_client_id` - (Optional, Set: [`String`]) Creating ClientId of the identity provider.
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
 * `auto_create_oidc_config` - (Optional, Bool) Creating an identity provider.
-* `auto_install_pod_identity_webhook_addon` - (Optional, Bool) Creating the PodIdentityWebhook component.
+* `auto_install_pod_identity_webhook_addon` - (Optional, Bool) Creating the PodIdentityWebhook component. if `auto_create_oidc_config` is true, this field must set true.
 * `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field.
 * `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field.
 * `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri.

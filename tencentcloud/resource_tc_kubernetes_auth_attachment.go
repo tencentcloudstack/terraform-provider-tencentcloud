@@ -185,20 +185,23 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 				Required:    true,
 				Description: "ID of clusters.",
 			},
-			"issuer": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field.",
-			},
 			"use_tke_default": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri.",
+				Type:          schema.TypeBool,
+				Optional:      true,
+				ConflictsWith: []string{"issuer", "jwks_uri"},
+				Description:   "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri.",
+			},
+			"issuer": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"use_tke_default"},
+				Description:   "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field.",
 			},
 			"jwks_uri": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"use_tke_default"},
+				Description:   "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field.",
 			},
 			"auto_create_discovery_anonymous_auth": {
 				Type:        schema.TypeBool,
@@ -225,7 +228,7 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Computed:    true,
-				Description: "Creating the PodIdentityWebhook component.",
+				Description: "Creating the PodIdentityWebhook component. if `auto_create_oidc_config` is true, this field must set true.",
 			},
 			"tke_default_issuer": {
 				Type:        schema.TypeString,
