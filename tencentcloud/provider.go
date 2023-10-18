@@ -1173,6 +1173,7 @@ DNSPOD
     tencentcloud_dnspod_record
   Data Source
     tencentcloud_dnspod_records
+    tencentcloud_dnspod_domain_list
 
 PrivateDNS
   Resource
@@ -2425,6 +2426,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_log_export":                              dataSourceTencentCloudRumLogExport(),
 			"tencentcloud_rum_log_export_list":                         dataSourceTencentCloudRumLogExportList(),
 			"tencentcloud_dnspod_records":                              dataSourceTencentCloudDnspodRecords(),
+			"tencentcloud_dnspod_domain_list":                          dataSourceTencentCloudDnspodDomainList(),
 			"tencentcloud_tat_command":                                 dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                 dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                         dataSourceTencentCloudTatInvokerRecords(),
