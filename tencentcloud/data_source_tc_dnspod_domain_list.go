@@ -293,12 +293,6 @@ func dataSourceTencentCloudDnspodDomainList() *schema.Resource {
 				},
 			},
 
-			// "tags": {
-			// 	Type:        schema.TypeMap,
-			// 	Optional:    true,
-			// 	Description: "Tag description list.",
-			// },
-
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
