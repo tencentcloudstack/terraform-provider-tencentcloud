@@ -268,11 +268,6 @@ func dataSourceTencentCloudDnspodDomainList() *schema.Resource {
 				},
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -458,25 +453,6 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 			if domainListItem.Owner != nil {
 				domainListItemMap["owner"] = domainListItem.Owner
 			}
-
-			// if domainListItem.TagList != nil {
-			// 	tagListList := []interface{}{}
-			// 	for _, tagList := range domainListItem.TagList {
-			// 		tagListMap := map[string]interface{}{}
-
-			// 		if tagList.TagKey != nil {
-			// 			tagListMap["tag_key"] = tagList.TagKey
-			// 		}
-
-			// 		if tagList.TagValue != nil {
-			// 			tagListMap["tag_value"] = tagList.TagValue
-			// 		}
-
-			// 		tagListList = append(tagListList, tagListMap)
-			// 	}
-
-			// 	domainListItemMap["tag_list"] = []interface{}{tagListList}
-			// }
 
 			ids = append(ids, strconv.FormatUint(*domainListItem.DomainId, 10))
 			tmpList = append(tmpList, domainListItemMap)

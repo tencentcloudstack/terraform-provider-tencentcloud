@@ -47,7 +47,6 @@ The following arguments are supported:
 * `sort_field` - (Optional, String) Sorting field. Available values are NAME, STATUS, RECORDS, GRADE, UPDATED_ON. NAME: Domain name STATUS: Domain status RECORDS: Number of records GRADE: Package level UPDATED_ON: Update time.
 * `sort_type` - (Optional, String) Sorting type, ascending: ASC, descending: DESC.
 * `status` - (Optional, Set: [`String`]) Get domain names based on domain status. Available values are ENABLE, LOCK, PAUSE, SPAM. ENABLE: Normal LOCK: Locked PAUSE: Paused SPAM: Banned.
-* `tags` - (Optional, Map) Tag description list.
 * `updated_at_begin` - (Optional, String) The start time of the domain name&amp;#39;s update time to be obtained, such as &amp;#39;2021-05-01 03:00:00&amp;#39;.
 * `updated_at_end` - (Optional, String) The end time of the domain name&amp;#39;s update time to be obtained, such as &amp;#39;2021-05-10 20:00:00&amp;#39;.
 
