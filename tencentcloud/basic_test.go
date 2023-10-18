@@ -1097,6 +1097,7 @@ variable "cert_id" {
 const (
 	defaultEsInstanceId    = "es-5wn36he6"
 	defaultEsSecurityGroup = "sg-edmur627"
+	defaultEsLogstash      = "ls-kru90fkz"
 )
 
 const DefaultEsVariables = `
@@ -1106,6 +1107,10 @@ variable "instance_id" {
 
 variable "security_group_id" {
   default = "` + defaultEsSecurityGroup + `"
+}
+
+variable "logstash_id" {
+  default = "` + defaultEsLogstash + `"
 }
 `
 

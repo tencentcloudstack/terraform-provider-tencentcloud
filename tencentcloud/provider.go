@@ -533,6 +533,11 @@ Elasticsearch Service(ES)
   Resource
     tencentcloud_elasticsearch_instance
 	tencentcloud_elasticsearch_security_group
+	tencentcloud_elasticsearch_logstash
+	tencentcloud_elasticsearch_logstash_pipeline
+	tencentcloud_elasticsearch_restart_logstash_instance_operation
+	tencentcloud_elasticsearch_start_logstash_pipeline_operation
+	tencentcloud_elasticsearch_stop_logstash_pipeline_operation
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -2921,6 +2926,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                        resourceTencentCloudElasticsearchSecurityGroup(),
+			"tencentcloud_elasticsearch_logstash":                              resourceTencentCloudElasticsearchLogstash(),
+			"tencentcloud_elasticsearch_logstash_pipeline":                     resourceTencentCloudElasticsearchLogstashPipeline(),
+			"tencentcloud_elasticsearch_restart_logstash_instance_operation":   resourceTencentCloudElasticsearchRestartLogstashInstanceOperation(),
+			"tencentcloud_elasticsearch_start_logstash_pipeline_operation":     resourceTencentCloudElasticsearchStartLogstashPipelineOperation(),
+			"tencentcloud_elasticsearch_stop_logstash_pipeline_operation":      resourceTencentCloudElasticsearchStopLogstashPipelineOperation(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),
