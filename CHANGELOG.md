@@ -1,3 +1,34 @@
+## 1.81.37 (October 18, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cam_account_summary` ([#2225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2225))
+* **New Data Source:** `tencentcloud_cam_list_attached_user_policy` ([#2220](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2220))
+* **New Data Source:** `tencentcloud_cam_oidc_config` ([#2227](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2227))
+* **New Data Source:** `tencentcloud_cam_policy_granting_service_access` ([#2225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2225))
+* **New Data Source:** `tencentcloud_cam_secret_last_used_time` ([#2225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2225))
+* **New Data Source:** `tencentcloud_dnspod_domain_analytics` ([#2221](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2221))
+* **New Data Source:** `tencentcloud_dnspod_domain_list` ([#2218](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2218))
+* **New Data Source:** `tencentcloud_kms_list_algorithms` ([#2222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2222))
+* **New Data Source:** `tencentcloud_kms_white_box_decrypt_key` ([#2222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2222))
+* **New Data Source:** `tencentcloud_kms_white_box_device_fingerprints` ([#2222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2222))
+* **New Resource:** `tencentcloud_cam_role_permission_boundary_attachment` ([#2226](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2226))
+* **New Resource:** `tencentcloud_cam_set_policy_version_config` ([#2225](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2225))
+* **New Resource:** `tencentcloud_cam_tag_role_attachment` ([#2220](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2220))
+* **New Resource:** `tencentcloud_elasticsearch_logstash` ([#2228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2228))
+* **New Resource:** `tencentcloud_elasticsearch_logstash_pipeline` ([#2228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2228))
+* **New Resource:** `tencentcloud_elasticsearch_restart_logstash_instance_operation` ([#2228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2228))
+* **New Resource:** `tencentcloud_elasticsearch_start_logstash_pipeline_operation` ([#2228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2228))
+* **New Resource:** `tencentcloud_elasticsearch_stop_logstash_pipeline_operation` ([#2228](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2228))
+* **New Resource:** `tencentcloud_kms_cloud_resource_attachment` ([#2222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2222))
+* **New Resource:** `tencentcloud_kms_overwrite_white_box_device_fingerprints` ([#2222](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2222))
+* **New Resource:** `tencentcloud_organization_quit_organization_operation` ([#2229](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2229))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_auth_attachment: Support OIDC config. ([#2227](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2227))
+* tencentcloud_ckafka_instance: Support api `UpdateRoleConsoleLogin` ([#2220](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2220))
+
 ## 1.81.36 (October 13, 2023)
 
 FEATURES:
