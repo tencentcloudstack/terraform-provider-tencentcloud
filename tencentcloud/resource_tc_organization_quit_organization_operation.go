@@ -54,9 +54,8 @@ func resourceTencentCloudOrganizationQuitOrganizationOperationCreate(d *schema.R
 	logId := getLogId(contextNil)
 
 	var (
-		request  = organization.NewQuitOrganizationRequest()
-		response = organization.NewQuitOrganizationResponse()
-		orgId    uint64
+		request = organization.NewQuitOrganizationRequest()
+		orgId   uint64
 	)
 	if v, _ := d.GetOk("org_id"); v != nil {
 		request.OrgId = helper.IntUint64(v.(int))
@@ -69,7 +68,6 @@ func resourceTencentCloudOrganizationQuitOrganizationOperationCreate(d *schema.R
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
