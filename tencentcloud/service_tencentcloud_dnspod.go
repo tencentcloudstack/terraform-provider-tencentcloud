@@ -205,6 +205,9 @@ func (me *DnspodService) DescribeDnspodDomainListByFilter(ctx context.Context, p
 		if k == "ProjectId" {
 			request.ProjectId = v.(*int64)
 		}
+		if k == "Tags" {
+			request.Tags = v.([]*dnspod.TagItemFilter)
+		}
 	}
 
 	ratelimit.Check(request.GetAction())

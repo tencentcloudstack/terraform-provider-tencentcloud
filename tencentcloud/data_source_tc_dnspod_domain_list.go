@@ -19,6 +19,10 @@ data "tencentcloud_dnspod_domain_list" "domain_list" {
 	record_count_begin = 0
 	record_count_end = 100
 	project_id = -1
+	tags {
+		tag_key = "created_by"
+		tag_value = ["terraform"]
+	}
 }
 
 ```
@@ -124,6 +128,27 @@ func dataSourceTencentCloudDnspodDomainList() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Project ID.",
+			},
+
+			"tags": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Tag description list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Field to be filtered.",
+						},
+						"tag_value": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Required:    true,
+							Description: "Filter value of the field.",
+						},
+					},
+				},
 			},
 
 			"domain_list": {
@@ -268,6 +293,12 @@ func dataSourceTencentCloudDnspodDomainList() *schema.Resource {
 				},
 			},
 
+			// "tags": {
+			// 	Type:        schema.TypeMap,
+			// 	Optional:    true,
+			// 	Description: "Tag description list.",
+			// },
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -342,6 +373,30 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOkExists("project_id"); ok {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
+	}
+
+	// tags := helper.GetTagsFilter(d, "tags")
+	if v, ok := d.GetOk("tags"); ok {
+		tagsSet := v.([]interface{})
+		tmpSet := make([]*dnspod.TagItemFilter, 0, len(tagsSet))
+
+		for _, item := range tagsSet {
+			filter := dnspod.TagItemFilter{}
+			filterMap := item.(map[string]interface{})
+
+			if v, ok := filterMap["tag_key"]; ok {
+				filter.TagKey = helper.String(v.(string))
+			}
+
+			if v, ok := filterMap["tag_value"]; ok {
+				valuesSet := v.(*schema.Set).List()
+				filter.TagValue = helper.InterfacesStringsPoint(valuesSet)
+			}
+
+			tmpSet = append(tmpSet, &filter)
+		}
+
+		paramMap["Tags"] = tmpSet
 	}
 
 	service := DnspodService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -452,6 +507,25 @@ func dataSourceTencentCloudDnspodDomainListRead(d *schema.ResourceData, meta int
 
 			if domainListItem.Owner != nil {
 				domainListItemMap["owner"] = domainListItem.Owner
+			}
+
+			if domainListItem.TagList != nil {
+				tagListList := []interface{}{}
+				for _, tagList := range domainListItem.TagList {
+					tagListMap := map[string]interface{}{}
+
+					if tagList.TagKey != nil {
+						tagListMap["tag_key"] = tagList.TagKey
+					}
+
+					if tagList.TagValue != nil {
+						tagListMap["tag_value"] = tagList.TagValue
+					}
+
+					tagListList = append(tagListList, tagListMap)
+				}
+
+				domainListItemMap["tag_list"] = []interface{}{tagListList}
 			}
 
 			ids = append(ids, strconv.FormatUint(*domainListItem.DomainId, 10))

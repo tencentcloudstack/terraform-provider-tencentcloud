@@ -38,6 +38,10 @@ data "tencentcloud_dnspod_domain_list" "domain_list" {
 	record_count_begin = 0
 	record_count_end = 100
 	project_id = -1
+	tags {
+		tag_key = "created_by"
+		tag_value = ["terraform"]
+	}
 }
 
 `
