@@ -148,15 +148,15 @@ func dataSourceTencentCloudCamPolicyGrantingServiceAccessRead(d *schema.Resource
 		groupId   string
 	)
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("target_uin"); v != nil {
+	if v, _ := d.GetOkExists("target_uin"); v != nil {
 		paramMap["TargetUin"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("role_id"); v != nil {
+	if v, _ := d.GetOkExists("role_id"); v != nil {
 		paramMap["RoleId"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("group_id"); v != nil {
+	if v, _ := d.GetOkExists("group_id"); v != nil {
 		paramMap["GroupId"] = helper.IntUint64(v.(int))
 	}
 

@@ -96,11 +96,11 @@ func dataSourceTencentCloudCamListEntitiesForPolicyRead(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("policy_id"); v != nil {
+	if v, _ := d.GetOkExists("policy_id"); v != nil {
 		paramMap["PolicyId"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("rp"); v != nil {
+	if v, _ := d.GetOkExists("rp"); v != nil {
 		paramMap["Rp"] = helper.IntUint64(v.(int))
 	}
 
