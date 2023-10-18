@@ -158,6 +158,10 @@ output "identity_key" {
   value = data.tencentcloud_cam_oidc_config.oidc_config.identity_key
 }
 
+output "identity_url" {
+  value = data.tencentcloud_cam_oidc_config.oidc_config.identity_url
+}
+
 ```
 
 */
@@ -205,11 +209,13 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 			"auto_create_oidc_config": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Creating an identity provider.",
 			},
 			"auto_create_client_id": {
 				Type:     schema.TypeSet,
 				Optional: true,
+				Computed: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -218,6 +224,7 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 			"auto_install_pod_identity_webhook_addon": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Creating the PodIdentityWebhook component.",
 			},
 			"tke_default_issuer": {

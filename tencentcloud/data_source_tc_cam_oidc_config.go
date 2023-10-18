@@ -12,6 +12,10 @@ output "identity_key" {
   value = data.tencentcloud_cam_oidc_config.oidc_config.identity_key
 }
 
+output "identity_url" {
+  value = data.tencentcloud_cam_oidc_config.oidc_config.identity_url
+}
+
 ```
 */
 package tencentcloud
