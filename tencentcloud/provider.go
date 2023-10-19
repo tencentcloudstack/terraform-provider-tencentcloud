@@ -1175,6 +1175,11 @@ DNSPOD
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
 	tencentcloud_dnspod_domain_analytics
+	tencentcloud_dnspod_domain_log_list
+	tencentcloud_dnspod_record_analytics
+	tencentcloud_dnspod_record_line_list
+	tencentcloud_dnspod_record_list
+	tencentcloud_dnspod_record_type
 
 PrivateDNS
   Resource

@@ -21,6 +21,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
@@ -228,11 +229,11 @@ func dataSourceTencentCloudDnspodRecordAnalyticsRead(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		domain string
+		domain    string
 		aliasData []*dnspod.SubdomainAliasAnalyticsItem
 		data      []*dnspod.DomainAnalyticsDetail
 		info      *dnspod.SubdomainAnalyticsInfo
-		e error
+		e         error
 	)
 
 	paramMap := make(map[string]interface{})

@@ -18,6 +18,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
@@ -122,10 +123,10 @@ func dataSourceTencentCloudDnspodRecordLineListRead(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		domain string
-		lineList []*dnspod.LineInfo
-		lineGroupList      []*dnspod.LineGroupInfo
-		e error
+		domain        string
+		lineList      []*dnspod.LineInfo
+		lineGroupList []*dnspod.LineGroupInfo
+		e             error
 	)
 
 	paramMap := make(map[string]interface{})
@@ -211,7 +212,7 @@ func dataSourceTencentCloudDnspodRecordLineListRead(d *schema.ResourceData, meta
 	if ok && output.(string) != "" {
 		e = writeToFile(output.(string), map[string]interface{}{
 			"line_list":       lineList,
-			"line_group_list":       lineGroupList,
+			"line_group_list": lineGroupList,
 		})
 		if e != nil {
 			return e
