@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 resource "tencentcloud_dlc_add_users_to_work_group_attachment" "add_users_to_work_group_attachment" {
   add_info {
-		work_group_id = 122
-		user_ids =
-
+    work_group_id = 23184
+    user_ids = [100032676511]
   }
+}
 }
 ```
 
@@ -26,12 +26,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudDlcAddUsersToWorkGroupAttachment() *schema.Resource {
@@ -79,7 +80,6 @@ func resourceTencentCloudDlcAddUsersToWorkGroupAttachmentCreate(d *schema.Resour
 
 	var (
 		request     = dlc.NewAddUsersToWorkGroupRequest()
-		response    = dlc.NewAddUsersToWorkGroupResponse()
 		workGroupId string
 		ids         []string
 	)
@@ -107,7 +107,6 @@ func resourceTencentCloudDlcAddUsersToWorkGroupAttachmentCreate(d *schema.Resour
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
