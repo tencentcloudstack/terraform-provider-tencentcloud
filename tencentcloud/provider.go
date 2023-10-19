@@ -3474,6 +3474,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
+			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
