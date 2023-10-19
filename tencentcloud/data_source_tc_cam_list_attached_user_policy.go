@@ -139,15 +139,15 @@ func dataSourceTencentCloudCamListAttachedUserPolicyRead(d *schema.ResourceData,
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("target_uin"); v != nil {
+	if v, _ := d.GetOkExists("target_uin"); v != nil {
 		paramMap["TargetUin"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("attach_type"); v != nil {
+	if v, _ := d.GetOkExists("attach_type"); v != nil {
 		paramMap["AttachType"] = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("strategy_type"); v != nil {
+	if v, _ := d.GetOkExists("strategy_type"); v != nil {
 		paramMap["StrategyType"] = helper.IntUint64(v.(int))
 	}
 

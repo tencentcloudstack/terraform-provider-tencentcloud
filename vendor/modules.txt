@@ -1163,7 +1163,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.726
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.539
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.765
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
@@ -1178,7 +1178,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.762
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.699
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.762
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.760

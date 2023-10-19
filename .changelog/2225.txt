@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_cam_set_policy_version_config
+```
+
+```release-note:new-data-source
+tencentcloud_cam_account_summary
+```
+
+```release-note:new-data-source
+tencentcloud_cam_policy_granting_service_access
+```
+
+```release-note:new-data-source
+tencentcloud_cam_secret_last_used_time
+```

@@ -1719,3 +1719,198 @@ func (me *CamService) DeleteCamTagRoleById(ctx context.Context, roleName, roleId
 
 	return
 }
+
+func (me *CamService) DescribeCamRolePermissionBoundaryAttachmentById(ctx context.Context, roleId string, policyId string) (RolePermissionBoundaryAttachment *cam.GetRolePermissionBoundaryResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewGetRolePermissionBoundaryRequest()
+	request.RoleId = &roleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetRolePermissionBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil {
+		return
+	}
+	if *response.Response.PolicyId != helper.StrToInt64(policyId) {
+		return
+	}
+	RolePermissionBoundaryAttachment = response.Response
+	return
+}
+
+func (me *CamService) DeleteCamRolePermissionBoundaryAttachmentById(ctx context.Context, roleId string, roleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeleteRolePermissionsBoundaryRequest()
+	if roleId == "" {
+		request.RoleName = &roleName
+	} else {
+		request.RoleId = &roleId
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DeleteRolePermissionsBoundary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CamService) DescribeCamSecretLastUsedTimeByFilter(ctx context.Context, param map[string]interface{}) (SecretLastUsedTime []*cam.SecretIdLastUsed, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewGetSecurityLastUsedRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecretIdList" {
+			request.SecretIdList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetSecurityLastUsed(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.SecretIdLastUsedRows) < 1 {
+		return
+	}
+	SecretLastUsedTime = append(SecretLastUsedTime, response.Response.SecretIdLastUsedRows...)
+	return
+}
+
+func (me *CamService) DescribeCamPolicyGrantingServiceAccessByFilter(ctx context.Context, param map[string]interface{}) (PolicyGrantingServiceAccess []*cam.ListGrantServiceAccessNode, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewListPoliciesGrantingServiceAccessRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TargetUin" {
+			request.TargetUin = v.(*uint64)
+		}
+		if k == "RoleId" {
+			request.RoleId = v.(*uint64)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*uint64)
+		}
+		if k == "ServiceType" {
+			request.ServiceType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListPoliciesGrantingServiceAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.List) < 1 {
+		return
+	}
+	PolicyGrantingServiceAccess = response.Response.List
+	return
+}
+
+func (me *CamService) DescribeCamSetPolicyVersionById(ctx context.Context, policyId, versionId string) (SetPolicyVersion *cam.PolicyVersionItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewListPolicyVersionsRequest()
+	request.PolicyId = helper.StrToUint64Point(policyId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().ListPolicyVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Versions) < 1 {
+		return
+	}
+	for _, v := range response.Response.Versions {
+		if *v.IsDefaultVersion == int64(1) && *v.VersionId == helper.StrToUInt64(versionId) {
+			SetPolicyVersion = v
+		}
+	}
+
+	return
+}
+
+func (me *CamService) DescribeCamAccountSummaryByFilter(ctx context.Context) (AccountSummary *cam.GetAccountSummaryResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewGetAccountSummaryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().GetAccountSummary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	AccountSummary = response.Response
+	return
+}

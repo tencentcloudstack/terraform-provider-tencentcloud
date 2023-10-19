@@ -147,12 +147,42 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_at
 }
 ```
 
+### Use OIDC Config
+
+```hcl
+resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
+  cluster_id                              = tencentcloud_kubernetes_cluster.managed_cluster.id
+  use_tke_default                         = true
+  auto_create_discovery_anonymous_auth    = true
+  auto_create_oidc_config                 = true
+  auto_install_pod_identity_webhook_addon = true
+}
+
+data "tencentcloud_cam_oidc_config" "oidc_config" {
+  name = tencentcloud_kubernetes_cluster.managed_cluster.id
+  depends_on = [
+    tencentcloud_kubernetes_auth_attachment.test_auth_attach
+  ]
+}
+
+output "identity_key" {
+  value = data.tencentcloud_cam_oidc_config.oidc_config.identity_key
+}
+
+output "identity_url" {
+  value = data.tencentcloud_cam_oidc_config.oidc_config.identity_url
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
 * `cluster_id` - (Required, String) ID of clusters.
+* `auto_create_client_id` - (Optional, Set: [`String`]) Creating ClientId of the identity provider.
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
+* `auto_create_oidc_config` - (Optional, Bool) Creating an identity provider.
+* `auto_install_pod_identity_webhook_addon` - (Optional, Bool) Creating the PodIdentityWebhook component. if `auto_create_oidc_config` is true, this field must set true.
 * `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field.
 * `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field.
 * `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri.
