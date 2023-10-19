@@ -1033,6 +1033,13 @@ Oceanus
 	tencentcloud_oceanus_savepoint_list
 	tencentcloud_oceanus_system_resource
 	tencentcloud_oceanus_work_spaces
+	tencentcloud_oceanus_clusters
+	tencentcloud_oceanus_tree_jobs
+
+  Resource
+	tencentcloud_oceanus_job
+	tencentcloud_oceanus_resource
+	tencentcloud_oceanus_resource_config
 
 Virtual Private Cloud(VPC)
   Data Source
@@ -2026,6 +2033,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_savepoint_list":                      dataSourceTencentCloudOceanusSavepointList(),
 			"tencentcloud_oceanus_system_resource":                     dataSourceTencentCloudOceanusSystemResource(),
 			"tencentcloud_oceanus_work_spaces":                         dataSourceTencentCloudOceanusWorkSpaces(),
+			"tencentcloud_oceanus_clusters":                            dataSourceTencentCloudOceanusClusters(),
+			"tencentcloud_oceanus_tree_jobs":                           dataSourceTencentCloudOceanusTreeJobs(),
 			"tencentcloud_vpn_customer_gateways":                       dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                                dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                          dataSourceTencentCloudVpnGatewayRoutes(),
@@ -2654,6 +2663,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway":                                         resourceTencentCloudNatGateway(),
 			"tencentcloud_nat_gateway_snat":                                    resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_nat_refresh_nat_dc_route":                            resourceTencentCloudNatRefreshNatDcRoute(),
+			"tencentcloud_oceanus_job":                                         resourceTencentCloudOceanusJob(),
+			"tencentcloud_oceanus_resource":                                    resourceTencentCloudOceanusResource(),
+			"tencentcloud_oceanus_resource_config":                             resourceTencentCloudOceanusResourceConfig(),
 			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
 			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),

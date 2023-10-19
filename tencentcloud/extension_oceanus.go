@@ -25,3 +25,49 @@ var WORK_SPACES_ORDER_TYPE = []int{
 	WORK_SPACES_ORDER_TYPE_3,
 	WORK_SPACES_ORDER_TYPE_4,
 }
+
+const (
+	JOB_TYPE_1 = 1
+	JOB_TYPE_2 = 2
+)
+
+var JOB_TYPE = []int{
+	JOB_TYPE_1,
+	JOB_TYPE_2,
+}
+
+const (
+	CLUSTER_TYPE_1 = 1
+	CLUSTER_TYPE_2 = 2
+)
+
+var CLUSTER_TYPE = []int{
+	CLUSTER_TYPE_1,
+	CLUSTER_TYPE_2,
+}
+
+const (
+	CU_MEM_2  = 2
+	CU_MEM_4  = 4
+	CU_MEM_8  = 8
+	CU_MEM_16 = 16
+)
+
+var CU_MEM = []int{
+	CU_MEM_2,
+	CU_MEM_4,
+	CU_MEM_8,
+	CU_MEM_16,
+}
+
+const (
+	CLUSTER_ORDER_TYPE_1 = 1
+	CLUSTER_ORDER_TYPE_2 = 2
+	CLUSTER_ORDER_TYPE_3 = 3
+)
+
+var CLUSTER_ORDER_TYPE = []int{
+	CLUSTER_ORDER_TYPE_1,
+	CLUSTER_ORDER_TYPE_2,
+	CLUSTER_ORDER_TYPE_3,
+}
