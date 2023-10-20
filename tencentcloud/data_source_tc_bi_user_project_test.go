@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -test.run TestAccTencentCloudBiUserProjectDataSource_basic -v
@@ -16,7 +17,7 @@ func TestAccTencentCloudBiUserProjectDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBiUserProjectDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_bi_user_project.user_project"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_bi_user_project.user_project", "list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_bi_user_project.user_project", "list.0.area_code"),
