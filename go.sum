@@ -866,6 +866,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.762 h1:ixDQ
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.762/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.763 h1:N+/GDFRlTSgufNGIotPcPRe1+tF0H94K0z11cleqhDg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.763/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.764 h1:EAvbtmpLuMg47FVVrr6DaezfOJSjkLskhde1ttuRpg8=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.764/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.765 h1:Du0gzA7g0eBDbw8bxBqecm8eSuJacWSkjBCI2Lc3ry8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.765/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
@@ -914,6 +916,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651 h1:Ohb
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651/go.mod h1:HLqsSgUnwgkE+XecQajekinjz1B7S+1U1J66puH4jpQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734 h1:VJli3mzhAiwmA949M0eIgp6KLJsPuCtpQ20UBdNI9mY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734/go.mod h1:H2gtCj02D5k7h0JttS9RMoRgkJ8m9qia/9RlMjbvT0o=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.764 h1:Od3RTVQMQzeSEwToxUCPzZMF+5TMVH30R2ZLO9h0B8M=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.764/go.mod h1:K+Jg+65mur5Wq4qFzLcmDfMZdIk95qgarQV+BtarJp4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758 h1:lsuwM6CNu1aKpHOmsA7dizDxd4gCOBNvT25+yQNPGx8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758/go.mod h1:OklPo0yw4wKOYDAtXgmtUJCzGdvYooaqKchviSg84Ro=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.763 h1:Qfsu2gRG+rguebyfKqoBrfxBkzxazQymQtdf4Azl9ow=
