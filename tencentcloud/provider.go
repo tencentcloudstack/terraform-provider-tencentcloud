@@ -561,6 +561,16 @@ Global Application Acceleration(GAAP)
 	tencentcloud_gaap_proxy_statistics
 	tencentcloud_gaap_proxy_group_statistics
 	tencentcloud_gaap_real_servers_status
+	tencentcloud_gaap_rule_real_servers
+	tencentcloud_gaap_resources_by_tag
+	tencentcloud_gaap_region_and_price
+	tencentcloud_gaap_proxy_and_statistics_listeners
+	tencentcloud_gaap_proxies_status
+	tencentcloud_gaap_listener_statistics
+	tencentcloud_gaap_listener_real_servers
+	tencentcloud_gaap_group_and_statistics_proxy
+	tencentcloud_gaap_domain_error_page_infos
+	tencentcloud_gaap_check_proxy_create
 
   Resource
     tencentcloud_gaap_proxy
@@ -2188,6 +2198,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_proxy_group_statistics":                 dataSourceTencentCloudGaapProxyGroupStatistics(),
 			"tencentcloud_gaap_proxy_statistics":                       dataSourceTencentCloudGaapProxyStatistics(),
 			"tencentcloud_gaap_real_servers_status":                    dataSourceTencentCloudGaapRealServersStatus(),
+			"tencentcloud_gaap_rule_real_servers":                      dataSourceTencentCloudGaapRuleRealServers(),
+			"tencentcloud_gaap_resources_by_tag":                       dataSourceTencentCloudGaapResourcesByTag(),
+			"tencentcloud_gaap_region_and_price":                       dataSourceTencentCloudGaapRegionAndPrice(),
+			"tencentcloud_gaap_proxy_and_statistics_listeners":         dataSourceTencentCloudGaapProxyAndStatisticsListeners(),
+			"tencentcloud_gaap_proxies_status":                         dataSourceTencentCloudGaapProxiesStatus(),
+			"tencentcloud_gaap_listener_statistics":                    dataSourceTencentCloudGaapListenerStatistics(),
+			"tencentcloud_gaap_listener_real_servers":                  dataSourceTencentCloudGaapListenerRealServers(),
+			"tencentcloud_gaap_group_and_statistics_proxy":             dataSourceTencentCloudGaapGroupAndStatisticsProxy(),
+			"tencentcloud_gaap_domain_error_page_infos":                dataSourceTencentCloudGaapDomainErrorPageInfos(),
+			"tencentcloud_gaap_check_proxy_create":                     dataSourceTencentCloudGaapCheckProxyCreate(),
 			"tencentcloud_ssl_certificates":                            dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_ssl_describe_certificate":                    dataSourceTencentCloudSslDescribeCertificate(),
 			"tencentcloud_ssl_describe_companies":                      dataSourceTencentCloudSslDescribeCompanies(),

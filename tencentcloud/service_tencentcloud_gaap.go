@@ -3674,3 +3674,423 @@ func (me *GaapService) DescribeGaapRealServersStatusByFilter(ctx context.Context
 
 	return
 }
+
+func (me *GaapService) DescribeGaapRuleRealServersByFilter(ctx context.Context, param map[string]interface{}) (ruleRealServers []*gaap.RealServer, bindRealServers []*gaap.BindRealServer, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeRuleRealServersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RuleId" {
+			request.RuleId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseGaapClient().DescribeRuleRealServers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RealServerSet) < 1 {
+			break
+		}
+
+		ruleRealServers = append(ruleRealServers, response.Response.RealServerSet...)
+		if len(response.Response.BindRealServerSet) > 0 {
+			bindRealServers = append(bindRealServers, response.Response.BindRealServerSet...)
+		}
+		if len(response.Response.RealServerSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *GaapService) DescribeGaapResourcesByTagByFilter(ctx context.Context, param map[string]interface{}) (resourcesByTag []*gaap.TagResourceInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeResourcesByTagRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TagKey" {
+			request.TagKey = v.(*string)
+		}
+		if k == "TagValue" {
+			request.TagValue = v.(*string)
+		}
+		if k == "ResourceType" {
+			request.ResourceType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeResourcesByTag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ResourceSet) < 1 {
+		return
+	}
+	resourcesByTag = append(resourcesByTag, response.Response.ResourceSet...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapRegionAndPriceByFilter(ctx context.Context, param map[string]interface{}) (regionAndPrice []*gaap.RegionDetail, bandwidthUnitPrice []*gaap.BandwidthPriceGradient, currency *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeRegionAndPriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IPAddressVersion" {
+			request.IPAddressVersion = v.(*string)
+		}
+		if k == "PackageType" {
+			request.PackageType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeRegionAndPrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	if len(response.Response.DestRegionSet) > 0 {
+		regionAndPrice = append(regionAndPrice, response.Response.DestRegionSet...)
+	}
+	if len(response.Response.BandwidthUnitPrice) > 0 {
+		bandwidthUnitPrice = append(bandwidthUnitPrice, response.Response.BandwidthUnitPrice...)
+	}
+	currency = response.Response.Currency
+	return
+}
+
+func (me *GaapService) DescribeGaapProxyAndStatisticsListenersByFilter(ctx context.Context, param map[string]interface{}) (proxyAndStatisticsListeners []*gaap.ProxySimpleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeProxyAndStatisticsListenersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeProxyAndStatisticsListeners(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ProxySet) < 1 {
+		return
+	}
+	proxyAndStatisticsListeners = append(proxyAndStatisticsListeners, response.Response.ProxySet...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapProxiesStatusByFilter(ctx context.Context, param map[string]interface{}) (proxiesStatus []*gaap.ProxyStatus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeProxiesStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "ProxyIds" {
+			request.ProxyIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeProxiesStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.InstanceStatusSet) < 1 {
+		return
+	}
+	proxiesStatus = append(proxiesStatus, response.Response.InstanceStatusSet...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapListenerStatisticsByFilter(ctx context.Context, param map[string]interface{}) (listenerStatistics []*gaap.MetricStatisticsInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeListenerStatisticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ListenerId" {
+			request.ListenerId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "MetricNames" {
+			request.MetricNames = v.([]*string)
+		}
+		if k == "Granularity" {
+			request.Granularity = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeListenerStatistics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.StatisticsData) < 1 {
+		return
+	}
+	listenerStatistics = append(listenerStatistics, response.Response.StatisticsData...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapListenerRealServersByFilter(ctx context.Context, param map[string]interface{}) (listenerRealServers []*gaap.RealServer, bindRealServers []*gaap.BindRealServer, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeListenerRealServersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ListenerId" {
+			request.ListenerId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeListenerRealServers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RealServerSet) < 1 {
+		return
+	}
+	listenerRealServers = append(listenerRealServers, response.Response.RealServerSet...)
+	bindRealServers = append(bindRealServers, response.Response.BindRealServerSet...)
+	return
+}
+
+func (me *GaapService) DescribeGaapGroupAndStatisticsProxyByFilter(ctx context.Context, param map[string]interface{}) (groupAndStatisticsProxy []*gaap.GroupStatisticsInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeGroupAndStatisticsProxyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeGroupAndStatisticsProxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.GroupSet) < 1 {
+		return
+	}
+	groupAndStatisticsProxy = append(groupAndStatisticsProxy, response.Response.GroupSet...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapDomainErrorPageInfosByFilter(ctx context.Context, param map[string]interface{}) (domainErrorPageInfos []*gaap.DomainErrorPageInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewDescribeDomainErrorPageInfoByIdsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ErrorPageIds" {
+			request.ErrorPageIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeDomainErrorPageInfoByIds(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ErrorPageSet) < 1 {
+		return
+	}
+	domainErrorPageInfos = append(domainErrorPageInfos, response.Response.ErrorPageSet...)
+
+	return
+}
+
+func (me *GaapService) DescribeGaapCheckProxyCreate(ctx context.Context, param map[string]interface{}) (checkProxyCreate *uint64, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = gaap.NewCheckProxyCreateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AccessRegion" {
+			request.AccessRegion = v.(*string)
+		}
+		if k == "RealServerRegion" {
+			request.RealServerRegion = v.(*string)
+		}
+		if k == "Bandwidth" {
+			request.Bandwidth = v.(*uint64)
+		}
+		if k == "Concurrent" {
+			request.Concurrent = v.(*uint64)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+		if k == "IPAddressVersion" {
+			request.IPAddressVersion = v.(*string)
+		}
+		if k == "NetworkType" {
+			request.NetworkType = v.(*string)
+		}
+		if k == "PackageType" {
+			request.PackageType = v.(*string)
+		}
+		if k == "Http3Supported" {
+			request.Http3Supported = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().CheckProxyCreate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	checkProxyCreate = response.Response.CheckFlag
+
+	return
+}
