@@ -15,31 +15,28 @@ Use this data source to query detailed information of dnspod record_list
 
 ```hcl
 data "tencentcloud_dnspod_record_list" "record_list" {
-  domain              = "dnspod.cn"
-  domain_id           = 123
-  sub_domain          = "www"
-  record_type         =
-  record_line         =
-  group_id            =
-  keyword             = "keyword_demo"
+  domain = "iac-tf.cloud"
+  # domain_id = 123
+  # sub_domain = "www"
+  record_type = ["A", "NS", "CNAME", "NS", "AAAA"]
+  # record_line = [""]
+  group_id            = []
+  keyword             = ""
   sort_field          = "UPDATED_ON"
   sort_type           = "DESC"
-  record_value        = "129.29.29.29"
-  record_status       =
+  record_value        = "bicycle.dnspod.net"
+  record_status       = ["ENABLE"]
   weight_begin        = 0
   weight_end          = 100
   mx_begin            = 0
   mx_end              = 10
   ttl_begin           = 1
-  ttl_end             = 600
-  updated_at_begin    = "2023-09-07 00:00:00 +0000 UTC"
-  updated_at_end      = "2023-09-07 00:00:00 +0000 UTC"
-  remark              = "remark_demo"
+  ttl_end             = 864000
+  updated_at_begin    = "2021-09-07"
+  updated_at_end      = "2023-12-07"
+  remark              = ""
   is_exact_sub_domain = true
-  project_id          = -1
-  tags = {
-    "createdBy" = "terraform"
-  }
+  # project_id = -1
 }
 ```
 
@@ -64,7 +61,6 @@ The following arguments are supported:
 * `sort_field` - (Optional, String) Sorting field, supporting NAME, LINE, TYPE, VALUE, WEIGHT, MX, TTL, UPDATED_ON fields. NAME: The host header of the resolution record LINE: The resolution record line TYPE: The resolution record type VALUE: The resolution record value WEIGHT: The weight MX: MX priority TTL: The resolution record cache time UPDATED_ON: The resolution record update time.
 * `sort_type` - (Optional, String) Sorting method, ascending: ASC, descending: DESC. The default value is ASC.
 * `sub_domain` - (Optional, String) Retrieve resolution records based on the host header of the resolution record. Fuzzy matching is used by default. You can set the IsExactSubdomain parameter to true for precise searching.
-* `tags` - (Optional, Map) Tag description list.
 * `ttl_begin` - (Optional, Int) The starting point of the resolution record TTL query interval.
 * `ttl_end` - (Optional, Int) The endpoint of the resolution record TTL query interval.
 * `updated_at_begin` - (Optional, String) The starting point of the resolution record update time query interval.

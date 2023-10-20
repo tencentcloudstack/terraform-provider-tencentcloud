@@ -9,9 +9,7 @@ import (
 func TestAccTencentCloudDnspodRecordTypeDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -26,6 +24,6 @@ const testAccDnspodRecordTypeDataSource = `
 
 data "tencentcloud_dnspod_record_type" "record_type" {
   domain_grade = "DP_FREE"
-  }
+}
 
 `

@@ -5,15 +5,12 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dnspod_record_analytics" "record_analytics" {
-  domain = "dnspod.cn"
-  start_date = "2023-09-07 00:00:00 +0000 UTC"
-  end_date = "2023-09-07 00:00:00 +0000 UTC"
+  domain = "iac-tf.cloud"
+  start_date = "2023-09-07"
+  end_date = "2023-11-07"
   subdomain = "www"
   dns_format = "HOUR"
-  domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
+  # domain_id = 123
 }
 ```
 */
@@ -206,11 +203,6 @@ func dataSourceTencentCloudDnspodRecordAnalytics() *schema.Resource {
 				},
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,

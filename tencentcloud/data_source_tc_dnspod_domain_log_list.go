@@ -5,11 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dnspod_domain_log_list" "domain_log_list" {
-  domain = "dnspod.cn"
+  domain = "iac-tf.cloud"
   domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 ```
 */
@@ -50,11 +47,6 @@ func dataSourceTencentCloudDnspodDomainLogList() *schema.Resource {
 				Description: "Domain Operation Log List. Note: This field may return null, indicating that no valid value can be obtained.",
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,

@@ -9,9 +9,7 @@ import (
 func TestAccTencentCloudDnspodDomainLogListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -25,11 +23,8 @@ func TestAccTencentCloudDnspodDomainLogListDataSource_basic(t *testing.T) {
 const testAccDnspodDomainLogListDataSource = `
 
 data "tencentcloud_dnspod_domain_log_list" "domain_log_list" {
-  domain = "dnspod.cn"
-  domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
+  domain = "iac-tf.cloud"
+  # domain_id = 123
 }
 
 `
