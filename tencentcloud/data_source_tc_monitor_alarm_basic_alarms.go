@@ -273,11 +273,11 @@ func dataSourceTencentCloudMonitorAlarmBasicAlarmsRead(d *schema.ResourceData, m
 		paramMap["Module"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("start_time"); v != nil {
+	if v, ok := d.GetOkExists("start_time"); ok {
 		paramMap["StartTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("end_time"); v != nil {
+	if v, ok := d.GetOkExists("end_time"); ok {
 		paramMap["EndTime"] = helper.IntInt64(v.(int))
 	}
 
