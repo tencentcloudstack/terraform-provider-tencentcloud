@@ -1828,6 +1828,7 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_user
 	tencentcloud_dlc_add_users_to_work_group_attachment
 	tencentcloud_dlc_store_location_config
+	tencentcloud_dlc_suspend_resume_data_engine
 
 WeData
   Data Source
@@ -3462,10 +3463,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_target":                                     resourceTencentCloudEbEventTarget(),
 			"tencentcloud_eb_put_events":                                       resourceTencentCloudEbPutEvents(),
 			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
-			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
 			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
+			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
+			"tencentcloud_dlc_suspend_resume_data_engine":                      resourceTencentCloudDlcSuspendResumeDataEngine(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
