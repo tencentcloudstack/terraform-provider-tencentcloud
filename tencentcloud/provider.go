@@ -253,7 +253,6 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_set_policy_version_config
 	tencentcloud_cam_user_permission_boundary_attachment
 	tencentcloud_cam_role_permission_boundary_attachment
-	tencentcloud_organization_quit_organization_operation
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -1482,9 +1481,11 @@ Tencent Cloud Organization (TCO)
 	tencentcloud_organization_instance
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
+	tencentcloud_organization_org_identity
 	tencentcloud_organization_org_member_email
 	tencentcloud_organization_org_member_auth_identity_attachment
 	tencentcloud_organization_policy_sub_account_attachment
+	tencentcloud_organization_quit_organization_operation
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -3208,6 +3209,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tat_invocation_command_attachment":                   resourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
+			"tencentcloud_organization_org_identity":                           resourceTencentCloudOrganizationOrgIdentity(),
 			"tencentcloud_organization_org_member_email":                       resourceTencentCloudOrganizationOrgMemberEmail(),
 			"tencentcloud_organization_instance":                               resourceTencentCloudOrganizationOrganization(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
@@ -3444,7 +3446,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
-			"tencentcloud_organization_org_identity":                           resourceTencentCloudOrganizationOrgIdentity(),
 		},
 
 		ConfigureFunc: providerConfigure,

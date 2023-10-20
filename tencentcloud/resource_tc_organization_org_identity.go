@@ -5,15 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_org_identity" "org_identity" {
-  identity_alias_name = &lt;nil&gt;
+  identity_alias_name = "example-iac-test"
   identity_policy {
-		policy_id = &lt;nil&gt;
-		policy_name = &lt;nil&gt;
-		policy_type = &lt;nil&gt;
-		policy_document = &lt;nil&gt;
-
+    policy_id = 1
+    policy_name = "AdministratorAccess"
+    policy_type = 2
   }
-  description = &lt;nil&gt;
+  description = "iac-test"
 }
 ```
 
@@ -30,11 +28,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudOrganizationOrgIdentity() *schema.Resource {
@@ -234,32 +233,28 @@ func resourceTencentCloudOrganizationOrgIdentityUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	if d.HasChange("identity_policy") {
-		if v, ok := d.GetOk("identity_policy"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				identityPolicy := organization.IdentityPolicy{}
-				if v, ok := dMap["policy_id"]; ok {
-					identityPolicy.PolicyId = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["policy_name"]; ok {
-					identityPolicy.PolicyName = helper.String(v.(string))
-				}
-				if v, ok := dMap["policy_type"]; ok {
-					identityPolicy.PolicyType = helper.IntUint64(v.(int))
-				}
-				if v, ok := dMap["policy_document"]; ok {
-					identityPolicy.PolicyDocument = helper.String(v.(string))
-				}
-				request.IdentityPolicy = append(request.IdentityPolicy, &identityPolicy)
+	if v, ok := d.GetOk("identity_policy"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			identityPolicy := organization.IdentityPolicy{}
+			if v, ok := dMap["policy_id"]; ok {
+				identityPolicy.PolicyId = helper.IntUint64(v.(int))
 			}
+			if v, ok := dMap["policy_name"]; ok {
+				identityPolicy.PolicyName = helper.String(v.(string))
+			}
+			if v, ok := dMap["policy_type"]; ok {
+				identityPolicy.PolicyType = helper.IntUint64(v.(int))
+			}
+			if v, ok := dMap["policy_document"]; ok {
+				identityPolicy.PolicyDocument = helper.String(v.(string))
+			}
+			request.IdentityPolicy = append(request.IdentityPolicy, &identityPolicy)
 		}
 	}
 
-	if d.HasChange("description") {
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

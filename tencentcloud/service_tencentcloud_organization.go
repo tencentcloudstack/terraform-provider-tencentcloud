@@ -631,18 +631,30 @@ func (me *OrganizationService) DescribeOrganizationOrgIdentityById(ctx context.C
 	}()
 
 	ratelimit.Check(request.GetAction())
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	var tmp []*organization.OrgIdentity
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().ListOrganizationIdentity(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	response, err := me.client.UseOrganizationClient().ListOrganizationIdentity(request)
-	if err != nil {
-		errRet = err
-		return
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		tmp = append(tmp, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if response == nil || response.Response == nil || len(response.Response.Items) < 1 {
-		return
-	}
-	for _, item := range response.Response.Items {
+	for _, item := range tmp {
 		if *item.IdentityId == helper.StrToInt64(identityId) {
 			orgIdentity = item
 		}
