@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_cam_service_linked_role" "service_linked_role" {
   qcs_service_name = ["cvm.qcloud.com","ekslog.tke.cloud.tencent.com"]
-  custom_suffix = "x-1"
+  custom_suffix = "tf"
   description = "desc cam"
   tags = {
     "createdBy" = "terraform"
@@ -19,8 +19,10 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -39,13 +41,15 @@ func resourceTencentCloudCamServiceLinkedRole() *schema.Resource {
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Required:    true,
+				ForceNew:    true,
 				Description: "Authorization service, the Tencent Cloud service principal with this role attached.",
 			},
 
 			"custom_suffix": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "The custom suffix, based on the string you provide, is combined with the prefix provided by the service to form the full role name.",
+				ForceNew:    true,
+				Description: "The custom suffix, based on the string you provide, is combined with the prefix provided by the service to form the full role name. This field is not allowed to contain the character `_`.",
 			},
 
 			"description": {
@@ -59,6 +63,9 @@ func resourceTencentCloudCamServiceLinkedRole() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
 		},
 	}
 }
@@ -123,15 +130,14 @@ func resourceTencentCloudCamServiceLinkedRoleCreate(d *schema.ResourceData, meta
 	roleId = *response.Response.RoleId
 
 	d.SetId(roleId)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::cam:%s:uin/:RoleId/%s", region, roleId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
+	//ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	//if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+	//	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	//	resourceName := fmt.Sprintf("qcs::cam:%s:uin/:role/tencentcloudServiceRole/%s", "", roleId)
+	//	if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+	//		return err
+	//	}
+	//}
 	return resourceTencentCloudCamServiceLinkedRoleRead(d, meta)
 }
 
@@ -155,25 +161,40 @@ func resourceTencentCloudCamServiceLinkedRoleRead(d *schema.ResourceData, meta i
 		return fmt.Errorf("resource `serviceLinkedRole` %s does not exist", roleId)
 	}
 
-	// if qcsServiceName != "" {
-	// 	_ = d.Set("qcs_service_name", qcsServiceName)
-	// }
+	if serviceLinkedRole.PolicyDocument != nil {
+		var documentJson Document
+		err = json.Unmarshal([]byte(*serviceLinkedRole.PolicyDocument), &documentJson)
+		if err != nil {
+			return err
+		}
+		if documentJson.Statement != nil && len(documentJson.Statement) > 0 {
+			principal := documentJson.Statement[0].Principal
+			if principal.Service != nil && len(principal.Service) > 0 {
+				_ = d.Set("qcs_service_name", principal.Service)
+			}
+		}
+	}
 
-	// if customSuffix != "" {
-	// 	_ = d.Set("custom_suffix", customSuffix)
-	// }
+	if serviceLinkedRole.RoleName != nil {
+		roleName := strings.Split(*serviceLinkedRole.RoleName, "_")
+		if len(roleName) > 0 {
+			_ = d.Set("custom_suffix", roleName[len(roleName)-1])
+		}
+	}
 
 	if serviceLinkedRole.Description != nil {
 		_ = d.Set("description", serviceLinkedRole.Description)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "cam", "RoleId", tcClient.Region, roleId)
-	if err != nil {
-		return err
+	if serviceLinkedRole.Tags != nil {
+		tagsMap := map[string]interface{}{}
+		for _, tag := range serviceLinkedRole.Tags {
+			if tag.Key != nil && tag.Value != nil {
+				tagsMap[*tag.Key] = tag.Value
+			}
+		}
+		_ = d.Set("tags", tagsMap)
 	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -184,39 +205,31 @@ func resourceTencentCloudCamServiceLinkedRoleUpdate(d *schema.ResourceData, meta
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	request := cam.NewUpdateRoleDescriptionRequest()
 
 	roleId := d.Id()
 
-	request.RoleId = &roleId
-
-	if d.HasChange("qcs_service_name") {
-		return fmt.Errorf("`qcs_service_name` do not support change now.")
-	}
-
-	if d.HasChange("custom_suffix") {
-		return fmt.Errorf("`custom_suffix` do not support change now.")
-	}
-
 	if d.HasChange("description") {
+		request := cam.NewUpdateRoleDescriptionRequest()
+		request.RoleId = &roleId
+
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateRoleDescription(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateRoleDescription(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create cam serviceLinkedRole failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create cam serviceLinkedRole failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
@@ -224,7 +237,7 @@ func resourceTencentCloudCamServiceLinkedRoleUpdate(d *schema.ResourceData, meta
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cam", "RoleId", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("cam", "role/tencentcloudServiceRole", "", d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

@@ -13,3 +13,14 @@ var CAM_POLICY_CREATE_STRATEGY = []string{
 	CAM_POLICY_CREATE_STRATEGY_PRESET,
 	CAM_POLICY_CREATE_STRATEGY_NULL,
 }
+
+type Principal struct {
+	Service []string `json:"service"`
+}
+type Statement struct {
+	Principal Principal `json:"principal"`
+}
+type Document struct {
+	Version   string      `json:"version"`
+	Statement []Statement `json:"statement"`
+}
