@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Access Management(CAM)"
+subcategory: "Tencent Cloud Organization (TCO)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_organization_quit_organization_operation"
 sidebar_current: "docs-tencentcloud-resource-organization_quit_organization_operation"
