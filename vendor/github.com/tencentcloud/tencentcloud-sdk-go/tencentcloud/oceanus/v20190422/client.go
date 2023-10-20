@@ -59,8 +59,9 @@ func NewCheckSavepointRequest() (request *CheckSavepointRequest) {
 func NewCheckSavepointResponse() (response *CheckSavepointResponse) {
     response = &CheckSavepointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckSavepoint
@@ -109,8 +110,9 @@ func NewCopyJobsRequest() (request *CopyJobsRequest) {
 func NewCopyJobsResponse() (response *CopyJobsResponse) {
     response = &CopyJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CopyJobs
@@ -177,8 +179,9 @@ func NewCreateFolderRequest() (request *CreateFolderRequest) {
 func NewCreateFolderResponse() (response *CreateFolderResponse) {
     response = &CreateFolderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateFolder
@@ -231,8 +234,9 @@ func NewCreateJobRequest() (request *CreateJobRequest) {
 func NewCreateJobResponse() (response *CreateJobResponse) {
     response = &CreateJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateJob
@@ -321,8 +325,9 @@ func NewCreateJobConfigRequest() (request *CreateJobConfigRequest) {
 func NewCreateJobConfigResponse() (response *CreateJobConfigResponse) {
     response = &CreateJobConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateJobConfig
@@ -419,8 +424,9 @@ func NewCreateResourceRequest() (request *CreateResourceRequest) {
 func NewCreateResourceResponse() (response *CreateResourceResponse) {
     response = &CreateResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateResource
@@ -491,8 +497,9 @@ func NewCreateResourceConfigRequest() (request *CreateResourceConfigRequest) {
 func NewCreateResourceConfigResponse() (response *CreateResourceConfigResponse) {
     response = &CreateResourceConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateResourceConfig
@@ -541,6 +548,191 @@ func (c *Client) CreateResourceConfigWithContext(ctx context.Context, request *C
     return
 }
 
+func NewCreateWorkSpaceRequest() (request *CreateWorkSpaceRequest) {
+    request = &CreateWorkSpaceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "CreateWorkSpace")
+    
+    
+    return
+}
+
+func NewCreateWorkSpaceResponse() (response *CreateWorkSpaceResponse) {
+    response = &CreateWorkSpaceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateWorkSpace
+// 创建工作空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDITEMSPACENAME = "InvalidParameter.InvalidItemSpaceName"
+//  LIMITEXCEEDED_ITEMSPACELIMITEXCEEDED = "LimitExceeded.ItemSpaceLimitExceeded"
+//  LIMITEXCEEDED_WORKSPACELIMITEXCEEDED = "LimitExceeded.WorkSpaceLimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateWorkSpace(request *CreateWorkSpaceRequest) (response *CreateWorkSpaceResponse, err error) {
+    return c.CreateWorkSpaceWithContext(context.Background(), request)
+}
+
+// CreateWorkSpace
+// 创建工作空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDITEMSPACENAME = "InvalidParameter.InvalidItemSpaceName"
+//  LIMITEXCEEDED_ITEMSPACELIMITEXCEEDED = "LimitExceeded.ItemSpaceLimitExceeded"
+//  LIMITEXCEEDED_WORKSPACELIMITEXCEEDED = "LimitExceeded.WorkSpaceLimitExceeded"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateWorkSpaceWithContext(ctx context.Context, request *CreateWorkSpaceRequest) (response *CreateWorkSpaceResponse, err error) {
+    if request == nil {
+        request = NewCreateWorkSpaceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateWorkSpace require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateWorkSpaceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteFoldersRequest() (request *DeleteFoldersRequest) {
+    request = &DeleteFoldersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DeleteFolders")
+    
+    
+    return
+}
+
+func NewDeleteFoldersResponse() (response *DeleteFoldersResponse) {
+    response = &DeleteFoldersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteFolders
+// 作业列表删除文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DeleteFolders(request *DeleteFoldersRequest) (response *DeleteFoldersResponse, err error) {
+    return c.DeleteFoldersWithContext(context.Background(), request)
+}
+
+// DeleteFolders
+// 作业列表删除文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DeleteFoldersWithContext(ctx context.Context, request *DeleteFoldersRequest) (response *DeleteFoldersResponse, err error) {
+    if request == nil {
+        request = NewDeleteFoldersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteFolders require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteFoldersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteJobConfigsRequest() (request *DeleteJobConfigsRequest) {
+    request = &DeleteJobConfigsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "DeleteJobConfigs")
+    
+    
+    return
+}
+
+func NewDeleteJobConfigsResponse() (response *DeleteJobConfigsResponse) {
+    response = &DeleteJobConfigsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteJobConfigs
+// 删除作业配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_DRAFTCONFIGCANNOTDELETE = "FailedOperation.DraftConfigCanNotDelete"
+//  FAILEDOPERATION_JOBCONFIGONPUBLISH = "FailedOperation.JobConfigOnPublish"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DeleteJobConfigs(request *DeleteJobConfigsRequest) (response *DeleteJobConfigsResponse, err error) {
+    return c.DeleteJobConfigsWithContext(context.Background(), request)
+}
+
+// DeleteJobConfigs
+// 删除作业配置
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_DRAFTCONFIGCANNOTDELETE = "FailedOperation.DraftConfigCanNotDelete"
+//  FAILEDOPERATION_JOBCONFIGONPUBLISH = "FailedOperation.JobConfigOnPublish"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.DB"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_JOB = "ResourceNotFound.Job"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) DeleteJobConfigsWithContext(ctx context.Context, request *DeleteJobConfigsRequest) (response *DeleteJobConfigsResponse, err error) {
+    if request == nil {
+        request = NewDeleteJobConfigsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteJobConfigs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteJobConfigsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteJobsRequest() (request *DeleteJobsRequest) {
     request = &DeleteJobsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -555,8 +747,9 @@ func NewDeleteJobsRequest() (request *DeleteJobsRequest) {
 func NewDeleteJobsResponse() (response *DeleteJobsResponse) {
     response = &DeleteJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteJobs
@@ -627,8 +820,9 @@ func NewDeleteResourceConfigsRequest() (request *DeleteResourceConfigsRequest) {
 func NewDeleteResourceConfigsResponse() (response *DeleteResourceConfigsResponse) {
     response = &DeleteResourceConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResourceConfigs
@@ -699,8 +893,9 @@ func NewDeleteResourcesRequest() (request *DeleteResourcesRequest) {
 func NewDeleteResourcesResponse() (response *DeleteResourcesResponse) {
     response = &DeleteResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResources
@@ -765,8 +960,9 @@ func NewDeleteTableConfigRequest() (request *DeleteTableConfigRequest) {
 func NewDeleteTableConfigResponse() (response *DeleteTableConfigResponse) {
     response = &DeleteTableConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTableConfig
@@ -819,8 +1015,9 @@ func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
 func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
     response = &DescribeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusters
@@ -885,8 +1082,9 @@ func NewDescribeJobConfigsRequest() (request *DescribeJobConfigsRequest) {
 func NewDescribeJobConfigsResponse() (response *DescribeJobConfigsResponse) {
     response = &DescribeJobConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJobConfigs
@@ -953,8 +1151,9 @@ func NewDescribeJobSavepointRequest() (request *DescribeJobSavepointRequest) {
 func NewDescribeJobSavepointResponse() (response *DescribeJobSavepointResponse) {
     response = &DescribeJobSavepointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJobSavepoint
@@ -1007,8 +1206,9 @@ func NewDescribeJobSubmissionLogRequest() (request *DescribeJobSubmissionLogRequ
 func NewDescribeJobSubmissionLogResponse() (response *DescribeJobSubmissionLogResponse) {
     response = &DescribeJobSubmissionLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJobSubmissionLog
@@ -1077,8 +1277,9 @@ func NewDescribeJobsRequest() (request *DescribeJobsRequest) {
 func NewDescribeJobsResponse() (response *DescribeJobsResponse) {
     response = &DescribeJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJobs
@@ -1143,8 +1344,9 @@ func NewDescribeResourceConfigsRequest() (request *DescribeResourceConfigsReques
 func NewDescribeResourceConfigsResponse() (response *DescribeResourceConfigsResponse) {
     response = &DescribeResourceConfigsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceConfigs
@@ -1215,8 +1417,9 @@ func NewDescribeResourceRelatedJobsRequest() (request *DescribeResourceRelatedJo
 func NewDescribeResourceRelatedJobsResponse() (response *DescribeResourceRelatedJobsResponse) {
     response = &DescribeResourceRelatedJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceRelatedJobs
@@ -1277,8 +1480,9 @@ func NewDescribeResourcesRequest() (request *DescribeResourcesRequest) {
 func NewDescribeResourcesResponse() (response *DescribeResourcesResponse) {
     response = &DescribeResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResources
@@ -1343,8 +1547,9 @@ func NewDescribeSystemResourcesRequest() (request *DescribeSystemResourcesReques
 func NewDescribeSystemResourcesResponse() (response *DescribeSystemResourcesResponse) {
     response = &DescribeSystemResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSystemResources
@@ -1407,8 +1612,9 @@ func NewDescribeTreeJobsRequest() (request *DescribeTreeJobsRequest) {
 func NewDescribeTreeJobsResponse() (response *DescribeTreeJobsResponse) {
     response = &DescribeTreeJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTreeJobs
@@ -1461,8 +1667,9 @@ func NewDescribeTreeResourcesRequest() (request *DescribeTreeResourcesRequest) {
 func NewDescribeTreeResourcesResponse() (response *DescribeTreeResourcesResponse) {
     response = &DescribeTreeResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTreeResources
@@ -1521,8 +1728,9 @@ func NewDescribeWorkSpacesRequest() (request *DescribeWorkSpacesRequest) {
 func NewDescribeWorkSpacesResponse() (response *DescribeWorkSpacesResponse) {
     response = &DescribeWorkSpacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkSpaces
@@ -1577,8 +1785,9 @@ func NewFetchSqlGatewayStatementResultRequest() (request *FetchSqlGatewayStateme
 func NewFetchSqlGatewayStatementResultResponse() (response *FetchSqlGatewayStatementResultResponse) {
     response = &FetchSqlGatewayStatementResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FetchSqlGatewayStatementResult
@@ -1611,6 +1820,61 @@ func (c *Client) FetchSqlGatewayStatementResultWithContext(ctx context.Context, 
     return
 }
 
+func NewModifyFolderRequest() (request *ModifyFolderRequest) {
+    request = &ModifyFolderRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ModifyFolder")
+    
+    
+    return
+}
+
+func NewModifyFolderResponse() (response *ModifyFolderResponse) {
+    response = &ModifyFolderResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyFolder
+// 自定义树状结构页面拖拽文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) ModifyFolder(request *ModifyFolderRequest) (response *ModifyFolderResponse, err error) {
+    return c.ModifyFolderWithContext(context.Background(), request)
+}
+
+// ModifyFolder
+// 自定义树状结构页面拖拽文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  UNSUPPORTEDOPERATION_NOPERMISSIONACCESS = "UnsupportedOperation.NoPermissionAccess"
+func (c *Client) ModifyFolderWithContext(ctx context.Context, request *ModifyFolderRequest) (response *ModifyFolderResponse, err error) {
+    if request == nil {
+        request = NewModifyFolderRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyFolder require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyFolderResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyJobRequest() (request *ModifyJobRequest) {
     request = &ModifyJobRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1625,8 +1889,9 @@ func NewModifyJobRequest() (request *ModifyJobRequest) {
 func NewModifyJobResponse() (response *ModifyJobResponse) {
     response = &ModifyJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyJob
@@ -1709,6 +1974,69 @@ func (c *Client) ModifyJobWithContext(ctx context.Context, request *ModifyJobReq
     return
 }
 
+func NewModifyWorkSpaceRequest() (request *ModifyWorkSpaceRequest) {
+    request = &ModifyWorkSpaceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("oceanus", APIVersion, "ModifyWorkSpace")
+    
+    
+    return
+}
+
+func NewModifyWorkSpaceResponse() (response *ModifyWorkSpaceResponse) {
+    response = &ModifyWorkSpaceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyWorkSpace
+// 修改工作空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATEDSPACENAME = "InvalidParameter.DuplicatedSpaceName"
+//  INVALIDPARAMETER_INVALIDITEMSPACENAME = "InvalidParameter.InvalidItemSpaceName"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyWorkSpace(request *ModifyWorkSpaceRequest) (response *ModifyWorkSpaceResponse, err error) {
+    return c.ModifyWorkSpaceWithContext(context.Background(), request)
+}
+
+// ModifyWorkSpace
+// 修改工作空间
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_DUPLICATEDSPACENAME = "InvalidParameter.DuplicatedSpaceName"
+//  INVALIDPARAMETER_INVALIDITEMSPACENAME = "InvalidParameter.InvalidItemSpaceName"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyWorkSpaceWithContext(ctx context.Context, request *ModifyWorkSpaceRequest) (response *ModifyWorkSpaceResponse, err error) {
+    if request == nil {
+        request = NewModifyWorkSpaceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyWorkSpace require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyWorkSpaceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRunJobsRequest() (request *RunJobsRequest) {
     request = &RunJobsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1723,8 +2051,9 @@ func NewRunJobsRequest() (request *RunJobsRequest) {
 func NewRunJobsResponse() (response *RunJobsResponse) {
     response = &RunJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunJobs
@@ -1823,8 +2152,9 @@ func NewRunSqlGatewayStatementRequest() (request *RunSqlGatewayStatementRequest)
 func NewRunSqlGatewayStatementResponse() (response *RunSqlGatewayStatementResponse) {
     response = &RunSqlGatewayStatementResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunSqlGatewayStatement
@@ -1871,8 +2201,9 @@ func NewStopJobsRequest() (request *StopJobsRequest) {
 func NewStopJobsResponse() (response *StopJobsResponse) {
     response = &StopJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopJobs
@@ -1947,8 +2278,9 @@ func NewTriggerJobSavepointRequest() (request *TriggerJobSavepointRequest) {
 func NewTriggerJobSavepointResponse() (response *TriggerJobSavepointResponse) {
     response = &TriggerJobSavepointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TriggerJobSavepoint
