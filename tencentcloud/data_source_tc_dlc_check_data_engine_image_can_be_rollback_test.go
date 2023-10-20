@@ -16,7 +16,8 @@ func TestAccTencentCloudDlcCheckDataEngineImageCanBeRollbackDataSource_basic(t *
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcCheckDataEngineImageCanBeRollbackDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dlc_check_data_engine_image_can_be_rollback.check_data_engine_image_can_be_rollback")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dlc_check_data_engine_image_can_be_rollback.check_data_engine_image_can_be_rollback"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dlc_check_data_engine_image_can_be_rollback.check_data_engine_image_can_be_rollback", "data_engine_id", "DataEngine-public-1308919341")),
 			},
 		},
 	})
