@@ -35,7 +35,6 @@ The following arguments are supported:
 * `concurrent` - (Required, Int) The upper limit of chanproxynel concurrency, representing the number of simultaneous online connections, in tens of thousands.
 * `real_server_region` - (Required, String) The origin area of the proxy. The value can be obtained through the interface DescribeDestRegions.
 * `group_id` - (Optional, String) If creating a proxy under a proxy group, you need to fill in the ID of the proxy group.
-* `http3_supported` - (Optional, Int) This field is obsolete. When IPAddressVersion is IPv4, the created proxy supports Http3.0 by default; When it is IPv6, Http3.0 is not supported by default.
 * `ip_address_version` - (Optional, String) IP version, can be taken as IPv4 or IPv6, with a default value of IPv4.
 * `network_type` - (Optional, String) Network type, can take values &amp;#39;normal&amp;#39;, &amp;#39;cn2&amp;#39;, default value normal.
 * `package_type` - (Optional, String) Channel package type. Thunder represents the standard proxy group, Accelerator represents the game accelerator proxy, and CrossBorder represents the cross-border proxy.

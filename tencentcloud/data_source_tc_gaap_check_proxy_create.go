@@ -78,12 +78,6 @@ func dataSourceTencentCloudGaapCheckProxyCreate() *schema.Resource {
 				Description: "Channel package type. Thunder represents the standard proxy group, Accelerator represents the game accelerator proxy, and CrossBorder represents the cross-border proxy.",
 			},
 
-			"http3_supported": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "This field is obsolete. When IPAddressVersion is IPv4, the created proxy supports Http3.0 by default; When it is IPv6, Http3.0 is not supported by default.",
-			},
-
 			"check_flag": {
 				Computed:    true,
 				Type:        schema.TypeInt,
@@ -138,10 +132,6 @@ func dataSourceTencentCloudGaapCheckProxyCreateRead(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("package_type"); ok {
 		paramMap["PackageType"] = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("http3_supported"); v != nil {
-		paramMap["Http3Supported"] = helper.IntInt64(v.(int))
 	}
 
 	service := GaapService{client: meta.(*TencentCloudClient).apiV3Conn}

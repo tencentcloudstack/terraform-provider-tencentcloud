@@ -32,6 +32,5 @@ data "tencentcloud_gaap_check_proxy_create" "check_proxy_create" {
   ip_address_version = "IPv4"
   network_type = "normal"
   package_type = "Thunder"
-  http3_supported = 0
 }
 `
