@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a bi project_user_role
 
+~> **NOTE:** You cannot use `tencentcloud_bi_user_role` and `tencentcloud_bi_project_user_role` at the same time to modify the `phone_number` and `email` of the same user.
+
 ## Example Usage
 
 ```hcl
@@ -50,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 bi project_user_role can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_bi_project_user_role.project_user_role project_user_role_id
+terraform import tencentcloud_bi_project_user_role.project_user_role projectId#userId
 ```
 
