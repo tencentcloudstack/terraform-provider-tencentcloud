@@ -1,5 +1,5 @@
 ---
-subcategory: "Waf"
+subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_attack_log_histogram"
 sidebar_current: "docs-tencentcloud-datasource-waf_attack_log_histogram"

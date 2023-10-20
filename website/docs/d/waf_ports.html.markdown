@@ -1,5 +1,5 @@
 ---
-subcategory: "Waf"
+subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_ports"
 sidebar_current: "docs-tencentcloud-datasource-waf_ports"

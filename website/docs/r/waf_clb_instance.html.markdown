@@ -1,5 +1,5 @@
 ---
-subcategory: "Waf"
+subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_clb_instance"
 sidebar_current: "docs-tencentcloud-resource-waf_clb_instance"
@@ -45,6 +45,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
+* `qps_limit` - (Optional, Int) QPS Limit. Only `elastic_mode` is 1, can be set.
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
 

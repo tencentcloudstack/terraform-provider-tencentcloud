@@ -1,5 +1,5 @@
 ---
-subcategory: "Cfw"
+subcategory: "Cloud Firewall(CFW)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cfw_address_template"
 sidebar_current: "docs-tencentcloud-resource-cfw_address_template"

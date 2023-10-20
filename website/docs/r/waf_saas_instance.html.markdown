@@ -1,5 +1,5 @@
 ---
-subcategory: "Waf"
+subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_saas_instance"
 sidebar_current: "docs-tencentcloud-resource-waf_saas_instance"
@@ -46,6 +46,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
+* `qps_limit` - (Optional, Int) QPS Limit. Only `elastic_mode` is 1, can be set.
 * `real_region` - (Optional, String) region. If Region is `ap-guangzhou`, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If Region is `ap-seoul`, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
