@@ -21,11 +21,12 @@ terraform import tencentcloud_dlc_suspend_resume_data_engine.suspend_resume_data
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDlcSuspendResumeDataEngine() *schema.Resource {
@@ -62,7 +63,6 @@ func resourceTencentCloudDlcSuspendResumeDataEngineCreate(d *schema.ResourceData
 
 	var (
 		request        = dlc.NewSuspendResumeDataEngineRequest()
-		response       = dlc.NewSuspendResumeDataEngineResponse()
 		dataEngineName string
 	)
 	if v, ok := d.GetOk("data_engine_name"); ok {
@@ -81,7 +81,6 @@ func resourceTencentCloudDlcSuspendResumeDataEngineCreate(d *schema.ResourceData
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
