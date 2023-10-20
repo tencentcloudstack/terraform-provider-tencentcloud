@@ -465,6 +465,7 @@ func (me *DnspodService) DescribeDnspodRecordListByFilter(ctx context.Context, p
 			request.RecordLine = v.([]*string)
 		}
 		if k == "GroupId" {
+			request.GroupId = v.([]*uint64)
 		}
 		if k == "Keyword" {
 			request.Keyword = v.(*string)
