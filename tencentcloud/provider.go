@@ -1821,9 +1821,13 @@ EventBridge(EB)
 	tencentcloud_eb_event_connector
 
 Data Lake Compute(DLC)
+  Data Source
+	tencentcloud_dlc_check_data_engine_image_can_be_rollback
   Resource
 	tencentcloud_dlc_work_group
 	tencentcloud_dlc_user
+	tencentcloud_dlc_add_users_to_work_group_attachment
+	tencentcloud_dlc_store_location_config
 
 WeData
   Data Source
@@ -2657,6 +2661,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_list_attached_user_policy":               dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
+			"tencentcloud_dlc_check_data_engine_image_can_be_rollback": dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3459,6 +3464,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
 			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
+			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
+			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),

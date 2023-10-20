@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dlc_store_location_config
+```
+
+```release-note:new-resource
+tencentcloud_dlc_add_users_to_work_group_attachment
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_check_data_engine_image_can_be_rollback
+```
