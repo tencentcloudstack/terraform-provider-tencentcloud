@@ -31,6 +31,7 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -186,6 +187,7 @@ type TencentCloudClient struct {
 	wafConn            *waf.Client
 	cfwConn            *cfw.Client
 	trocketConn        *trocket.Client
+	biConn             *bi.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1305,6 +1307,20 @@ func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
 	me.trocketConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.trocketConn
+}
+
+// UseBiClient returns bi client for service
+func (me *TencentCloudClient) UseBiClient() *bi.Client {
+	if me.biConn != nil {
+		return me.biConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.biConn, _ = bi.NewClient(me.Credential, me.Region, cpf)
+	me.biConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.biConn
 }
 
 func getEnvDefault(key string, defVal int) int {
