@@ -19,8 +19,6 @@ resource "tencentcloud_bi_datasource_cloud" "datasource_cloud" {
   uniq_vpc_id = ""
   region_id = ""
   extra_param = ""
-  instance_id = ""
-  prod_db_name = ""
   data_origin = "abc"
   data_origin_project_id = "abc"
   data_origin_datasource_id = "abc"
@@ -143,18 +141,6 @@ func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
 				Description: "Extended parameters.",
 			},
 
-			"instance_id": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Instance id.",
-			},
-
-			"prod_db_name": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Datasource product name.",
-			},
-
 			"data_origin": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -243,14 +229,6 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 		request.ExtraParam = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("prod_db_name"); ok {
-		request.ProdDbName = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("data_origin"); ok {
 		request.DataOrigin = helper.String(v.(string))
 	}
@@ -324,10 +302,6 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 		_ = d.Set("db_user", datasourceCloud.DbUser)
 	}
 
-	// if datasourceCloud.DbPwd != nil {
-	// 	_ = d.Set("db_pwd", datasourceCloud.DbPwd)
-	// }
-
 	if datasourceCloud.DbName != nil {
 		_ = d.Set("db_name", datasourceCloud.DbName)
 	}
@@ -363,14 +337,6 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 	if datasourceCloud.ExtraParam != nil {
 		_ = d.Set("extra_param", datasourceCloud.ExtraParam)
 	}
-
-	// if datasourceCloud.InstanceId != nil {
-	// 	_ = d.Set("instance_id", datasourceCloud.InstanceId)
-	// }
-
-	// if datasourceCloud.ProdDbName != nil {
-	// 	_ = d.Set("prod_db_name", datasourceCloud.ProdDbName)
-	// }
 
 	if datasourceCloud.DataOrigin != nil {
 		_ = d.Set("data_origin", datasourceCloud.DataOrigin)
@@ -482,18 +448,6 @@ func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta in
 	if d.HasChange("extra_param") {
 		if v, ok := d.GetOk("extra_param"); ok {
 			request.ExtraParam = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("instance_id") {
-		if v, ok := d.GetOk("instance_id"); ok {
-			request.InstanceId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("prod_db_name") {
-		if v, ok := d.GetOk("prod_db_name"); ok {
-			request.ProdDbName = helper.String(v.(string))
 		}
 	}
 

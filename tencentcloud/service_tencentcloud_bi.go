@@ -42,6 +42,23 @@ func (me *BiService) DescribeBiDatasourceCloudById(ctx context.Context, id uint6
 	return
 }
 
+func (me *BiService) DescribeBiDatasourceCloudVipVportById(ctx context.Context, dbType string) (vip, vport string, errRet error) {
+	// logId := getLogId(ctx)
+
+	switch dbType {
+	case "string":
+
+	case "int64":
+
+	case "uint64":
+
+	case "float64":
+
+	}
+
+	return
+}
+
 func (me *BiService) DeleteBiDatasourceCloudById(ctx context.Context, id uint64) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -185,10 +202,10 @@ func (me *BiService) DeleteBiUserRoleById(ctx context.Context, userId string) (e
 	return
 }
 
-func (me *BiService) DescribeBiProjectUserRoleById(ctx context.Context, projectId int64, userId string) (projectUserRole *bi.UserIdAndUserName, errRet error) {
+func (me *BiService) DescribeBiProjectUserRoleById(ctx context.Context, projectId int64, userId string) (projectUserRole *bi.UserRoleListDataUserRoleInfo, errRet error) {
 	logId := getLogId(ctx)
 
-	request := bi.NewDescribeUserProjectListRequest()
+	request := bi.NewDescribeUserRoleProjectListRequest()
 	request.ProjectId = &projectId
 
 	defer func() {
@@ -206,7 +223,7 @@ func (me *BiService) DescribeBiProjectUserRoleById(ctx context.Context, projectI
 	for {
 		request.PageNo = &offset
 		request.PageSize = &limit
-		response, err := me.client.UseBiClient().DescribeUserProjectList(request)
+		response, err := me.client.UseBiClient().DescribeUserRoleProjectList(request)
 		if err != nil {
 			errRet = err
 			return
@@ -382,6 +399,57 @@ func (me *BiService) DeleteBiDatasourceById(ctx context.Context, projectId uint6
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *BiService) DescribeBiUserProjectByFilter(ctx context.Context, param map[string]interface{}) (userProject []*bi.UserIdAndUserName, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = bi.NewDescribeUserProjectListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+		if k == "AllPage" {
+			request.AllPage = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.PageNo = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseBiClient().DescribeUserProjectList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data.List) < 1 {
+			break
+		}
+		userProject = append(userProject, response.Response.Data.List...)
+		if len(response.Response.Data.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
 
 	return
 }

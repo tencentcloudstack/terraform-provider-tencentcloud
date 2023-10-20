@@ -5,25 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_bi_datasource" "datasource" {
-  db_host = "1.2.3.4"
-  db_port = 3306
-  service_type = "Own"
-  db_type = "Database type."
-  charset = "utf8"
-  db_user = "root"
-  db_pwd = "abc"
-  db_name = "abc"
-  source_name = "abc"
-  project_id = 123
-  catalog = "presto"
-  data_origin = "abc"
-  data_origin_project_id = "abc"
-  data_origin_datasource_id = "abc"
-  extra_param = ""
-  uniq_vpc_id = ""
-  vip = ""
-  vport = ""
-  vpc_id = ""
+  charset     = "utf8"
+  db_host     = "bj-cdb-1lxqg5r6.sql.tencentcdb.com"
+  db_name     = "tf-test"
+  db_port     = 63694
+  db_type     = "MYSQL"
+  db_pwd      = "ABc123,,,"
+  db_user     = "root"
+  project_id  = 11015030
+  source_name = "tf-source-name"
 }
 ```
 
@@ -72,12 +62,6 @@ func resourceTencentCloudBiDatasource() *schema.Resource {
 				Description: "Port.",
 			},
 
-			"service_type": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "Own or Cloud.",
-			},
-
 			"db_type": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -121,6 +105,13 @@ func resourceTencentCloudBiDatasource() *schema.Resource {
 				Description: "Project id.",
 			},
 
+			"service_type": {
+				Optional:    true,
+				Default:     "{\"Type\":\"Own\"}",
+				Type:        schema.TypeString,
+				Description: "Own or Cloud, default: `Own`.",
+			},
+
 			"catalog": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -145,28 +136,10 @@ func resourceTencentCloudBiDatasource() *schema.Resource {
 				Description: "Third-party datasource project id, this parameter can be ignored.",
 			},
 
-			"extra_param": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Extended parameters.",
-			},
-
 			"uniq_vpc_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Tencent cloud private network unified identity.",
-			},
-
-			"vip": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Private network ip.",
-			},
-
-			"vport": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Private network port.",
 			},
 
 			"vpc_id": {
@@ -247,20 +220,8 @@ func resourceTencentCloudBiDatasourceCreate(d *schema.ResourceData, meta interfa
 		request.DataOriginDatasourceId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("extra_param"); ok {
-		request.ExtraParam = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("uniq_vpc_id"); ok {
 		request.UniqVpcId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("vip"); ok {
-		request.Vip = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("vport"); ok {
-		request.Vport = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
@@ -378,21 +339,9 @@ func resourceTencentCloudBiDatasourceRead(d *schema.ResourceData, meta interface
 		_ = d.Set("data_origin_datasource_id", datasource.DataOriginDatasourceId)
 	}
 
-	if datasource.ExtraParam != nil {
-		_ = d.Set("extra_param", datasource.ExtraParam)
-	}
-
 	if datasource.UniqVpcId != nil {
 		_ = d.Set("uniq_vpc_id", datasource.UniqVpcId)
 	}
-
-	// if datasource.Vip != nil {
-	// 	_ = d.Set("vip", datasource.Vip)
-	// }
-
-	// if datasource.Vport != nil {
-	// 	_ = d.Set("vport", datasource.Vport)
-	// }
 
 	if datasource.VpcId != nil {
 		_ = d.Set("vpc_id", datasource.VpcId)
@@ -474,20 +423,8 @@ func resourceTencentCloudBiDatasourceUpdate(d *schema.ResourceData, meta interfa
 		request.DataOriginDatasourceId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("extra_param"); ok {
-		request.ExtraParam = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("uniq_vpc_id"); ok {
 		request.UniqVpcId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("vip"); ok {
-		request.Vip = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("vport"); ok {
-		request.Vport = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {

@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a bi project_user_role
 
+~> **NOTE:** You cannot use `tencentcloud_bi_user_role` and `tencentcloud_bi_project_user_role` at the same time to modify the `phone_number` and `email` of the same user.
+
 Example Usage
 
 ```hcl
@@ -20,7 +22,7 @@ Import
 bi project_user_role can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_bi_project_user_role.project_user_role project_user_role_id
+terraform import tencentcloud_bi_project_user_role.project_user_role projectId#userId
 ```
 */
 package tencentcloud
@@ -184,9 +186,13 @@ func resourceTencentCloudBiProjectUserRoleRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("project_id", projectIdInt)
 
-	// if userRole.RoleIdList != nil {
-	// 	_ = d.Set("role_id_list", projectUserRole.RoleIdList)
-	// }
+	if userRole.RoleList != nil {
+		var roles []*int64
+		for _, v := range userRole.RoleList {
+			roles = append(roles, v.RoleId)
+		}
+		_ = d.Set("role_id_list", roles)
+	}
 
 	if userRole.UserId != nil {
 		_ = d.Set("user_id", userRole.UserId)

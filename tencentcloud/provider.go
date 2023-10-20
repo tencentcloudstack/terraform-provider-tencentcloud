@@ -1902,12 +1902,13 @@ Cwp
 Business Intelligence(BI)
   Data Source
 	tencentcloud_bi_project
+	tencentcloud_bi_user_project
 
   Resource
 	tencentcloud_bi_project
 	tencentcloud_bi_user_role
 	tencentcloud_bi_project_user_role
-	tencentcloud_bi_datasource_cloud
+	tencentcloud_bi_datasource
 	tencentcloud_bi_embed_token
 	tencentcloud_bi_embed_interval
 */
@@ -2694,6 +2695,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
 			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
 			"tencentcloud_bi_project":                                  dataSourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_project":                             dataSourceTencentCloudBiUserProject(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
