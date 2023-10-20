@@ -1199,6 +1199,11 @@ DNSPOD
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
 	tencentcloud_dnspod_domain_analytics
+	tencentcloud_dnspod_domain_log_list
+	tencentcloud_dnspod_record_analytics
+	tencentcloud_dnspod_record_line_list
+	tencentcloud_dnspod_record_list
+	tencentcloud_dnspod_record_type
 
 PrivateDNS
   Resource
@@ -2476,6 +2481,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_records":                              dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_dnspod_domain_list":                          dataSourceTencentCloudDnspodDomainList(),
 			"tencentcloud_dnspod_domain_analytics":                     dataSourceTencentCloudDnspodDomainAnalytics(),
+			"tencentcloud_dnspod_domain_log_list":                      dataSourceTencentCloudDnspodDomainLogList(),
+			"tencentcloud_dnspod_record_analytics":                     dataSourceTencentCloudDnspodRecordAnalytics(),
+			"tencentcloud_dnspod_record_line_list":                     dataSourceTencentCloudDnspodRecordLineList(),
+			"tencentcloud_dnspod_record_list":                          dataSourceTencentCloudDnspodRecordList(),
+			"tencentcloud_dnspod_record_type":                          dataSourceTencentCloudDnspodRecordType(),
 			"tencentcloud_tat_command":                                 dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                 dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                         dataSourceTencentCloudTatInvokerRecords(),
