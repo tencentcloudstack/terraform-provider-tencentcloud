@@ -1,3 +1,50 @@
+## 1.81.38 (October 20, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_check_data_engine_image_can_be_rollback` ([#2233](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2233))
+* **New Data Source:** `tencentcloud_dnspod_domain_log_list` ([#2235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2235))
+* **New Data Source:** `tencentcloud_dnspod_record_analytics` ([#2235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2235))
+* **New Data Source:** `tencentcloud_dnspod_record_line_list` ([#2235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2235))
+* **New Data Source:** `tencentcloud_dnspod_record_list` ([#2235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2235))
+* **New Data Source:** `tencentcloud_dnspod_record_type` ([#2235](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2235))
+* **New Data Source:** `tencentcloud_gaap_check_proxy_create` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_domain_error_page_infos` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_group_and_statistics_proxy` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_listener_real_servers` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_listener_statistics` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_proxies_status` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_proxy_and_statistics_listeners` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_region_and_price` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_resources_by_tag` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_gaap_rule_real_servers` ([#2238](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2238))
+* **New Data Source:** `tencentcloud_monitor_alarm_basic_alarms` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Data Source:** `tencentcloud_monitor_alarm_basic_metric` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Data Source:** `tencentcloud_monitor_alarm_conditions_template` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Data Source:** `tencentcloud_monitor_alarm_history` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Data Source:** `tencentcloud_monitor_alarm_metric` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Data Source:** `tencentcloud_monitor_grafana_plugin_overviews` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_dlc_add_users_to_work_group_attachment` ([#2233](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2233))
+* **New Resource:** `tencentcloud_dlc_store_location_config` ([#2233](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2233))
+* **New Resource:** `tencentcloud_dlc_suspend_resume_data_engine` ([#2240](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2240))
+* **New Resource:** `tencentcloud_monitor_alarm_policy_set_default` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_dns_config` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_env_config` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_sso_cam_config` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_sso_config` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_version_upgrade` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_monitor_grafana_whitelist_config` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+* **New Resource:** `tencentcloud_organization_org_identity` ([#2237](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2237))
+
+ENHANCEMENTS:
+
+* tencentcloud_cam_service_linked_role: Support `import` function and Fix issues when update service role ([#2236](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2236))
+* tencentcloud_monitor_grafana_instance: Support modifying `enable_internet` ([#2212](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2212))
+
+BUG FIXES:
+
+* resource/tencentcloud_cam_group: fix cam group modify error ([#2232](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2232))
+
 ## 1.81.37 (October 18, 2023)
 
 FEATURES:

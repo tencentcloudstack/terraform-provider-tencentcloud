@@ -1750,3 +1750,424 @@ func (me *MonitorService) DescribeMonitorTmpGrafanaConfigById(ctx context.Contex
 	tmpGrafanaConfig = response.Response
 	return
 }
+
+func (me *MonitorService) DescribeMonitorGrafanaPluginOverviewsByFilter(ctx context.Context, param map[string]interface{}) (pluginOverviews []*monitor.GrafanaPlugin, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePluginOverviewsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePluginOverviews(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.PluginSet == nil {
+		return nil, nil
+	}
+
+	pluginOverviews = response.Response.PluginSet
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaDnsConfigById(ctx context.Context, instanceId string) (grafanaDnsConfig *monitor.DescribeDNSConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDescribeDNSConfigRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeDNSConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	grafanaDnsConfig = response.Response
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaEnvConfigById(ctx context.Context, instanceId string) (grafanaEnvConfig *monitor.DescribeGrafanaEnvironmentsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDescribeGrafanaEnvironmentsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaEnvironments(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	grafanaEnvConfig = response.Response
+	return
+}
+
+func (me *MonitorService) DescribeMonitorGrafanaWhitelistConfigById(ctx context.Context, instanceId string) (grafanaWhitelistConfig *monitor.DescribeGrafanaWhiteListResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDescribeGrafanaWhiteListRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaWhiteList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	grafanaWhitelistConfig = response.Response
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmHistoryByFilter(ctx context.Context, param map[string]interface{}) (alarmHistory []*monitor.AlarmHistory, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAlarmHistoriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "MonitorTypes" {
+			request.MonitorTypes = v.([]*string)
+		}
+		if k == "AlarmObject" {
+			request.AlarmObject = v.(*string)
+		}
+		if k == "AlarmStatus" {
+			request.AlarmStatus = v.([]*string)
+		}
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*int64)
+		}
+		if k == "InstanceGroupIds" {
+			request.InstanceGroupIds = v.([]*int64)
+		}
+		if k == "Namespaces" {
+			request.Namespaces = v.([]*monitor.MonitorTypeNamespace)
+		}
+		if k == "MetricNames" {
+			request.MetricNames = v.([]*string)
+		}
+		if k == "PolicyName" {
+			request.PolicyName = v.(*string)
+		}
+		if k == "Content" {
+			request.Content = v.(*string)
+		}
+		if k == "ReceiverUids" {
+			request.ReceiverUids = v.([]*int64)
+		}
+		if k == "ReceiverGroups" {
+			request.ReceiverGroups = v.([]*int64)
+		}
+		if k == "PolicyIds" {
+			request.PolicyIds = v.([]*string)
+		}
+		if k == "AlarmLevels" {
+			request.AlarmLevels = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 1
+		limit  int64 = 20
+	)
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseMonitorClient().DescribeAlarmHistories(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Histories) < 1 {
+			break
+		}
+		alarmHistory = append(alarmHistory, response.Response.Histories...)
+		if len(response.Response.Histories) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmBasicAlarmsByFilter(ctx context.Context, param map[string]interface{}) (alarms []*monitor.DescribeBasicAlarmListAlarms, warning *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeBasicAlarmListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "OccurTimeOrder" {
+			request.OccurTimeOrder = v.(*string)
+		}
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*int64)
+		}
+		if k == "ViewNames" {
+			request.ViewNames = v.([]*string)
+		}
+		if k == "AlarmStatus" {
+			request.AlarmStatus = v.([]*int64)
+		}
+		if k == "ObjLike" {
+			request.ObjLike = v.(*string)
+		}
+		if k == "InstanceGroupIds" {
+			request.InstanceGroupIds = v.([]*int64)
+		}
+		if k == "MetricNames" {
+			request.MetricNames = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMonitorClient().DescribeBasicAlarmList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Alarms) < 1 {
+			break
+		}
+		alarms = append(alarms, response.Response.Alarms...)
+		warning = response.Response.Warning
+		if len(response.Response.Alarms) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmBasicMetricByFilter(ctx context.Context, param map[string]interface{}) (metric []*monitor.MetricSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeBaseMetricsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "MetricName" {
+			request.MetricName = v.(*string)
+		}
+		if k == "Dimensions" {
+			request.Dimensions = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeBaseMetrics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.MetricSet) < 1 {
+		return
+	}
+
+	metric = response.Response.MetricSet
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmConditionsTemplateByFilter(ctx context.Context, param map[string]interface{}) (alarmConditionsTemplate []*monitor.TemplateGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeConditionsTemplateListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "ViewName" {
+			request.ViewName = v.(*string)
+		}
+		if k == "GroupName" {
+			request.GroupName = v.(*string)
+		}
+		if k == "GroupID" {
+			request.GroupID = v.(*string)
+		}
+		if k == "UpdateTimeOrder" {
+			request.UpdateTimeOrder = v.(*string)
+		}
+		if k == "PolicyCountOrder" {
+			request.PolicyCountOrder = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMonitorClient().DescribeConditionsTemplateList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.TemplateGroupList) < 1 {
+			break
+		}
+		alarmConditionsTemplate = append(alarmConditionsTemplate, response.Response.TemplateGroupList...)
+		if len(response.Response.TemplateGroupList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmMetricByFilter(ctx context.Context, param map[string]interface{}) (alarmMetric []*monitor.Metric, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAlarmMetricsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "MonitorType" {
+			request.MonitorType = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribeAlarmMetrics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Metrics) < 1 {
+		return
+	}
+
+	alarmMetric = response.Response.Metrics
+
+	return
+}

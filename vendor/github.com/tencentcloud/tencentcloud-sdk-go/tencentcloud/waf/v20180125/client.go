@@ -59,8 +59,9 @@ func NewAddAntiFakeUrlRequest() (request *AddAntiFakeUrlRequest) {
 func NewAddAntiFakeUrlResponse() (response *AddAntiFakeUrlResponse) {
     response = &AddAntiFakeUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddAntiFakeUrl
@@ -113,8 +114,9 @@ func NewAddAntiInfoLeakRulesRequest() (request *AddAntiInfoLeakRulesRequest) {
 func NewAddAntiInfoLeakRulesResponse() (response *AddAntiInfoLeakRulesResponse) {
     response = &AddAntiInfoLeakRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddAntiInfoLeakRules
@@ -155,6 +157,93 @@ func (c *Client) AddAntiInfoLeakRulesWithContext(ctx context.Context, request *A
     return
 }
 
+func NewAddAttackWhiteRuleRequest() (request *AddAttackWhiteRuleRequest) {
+    request = &AddAttackWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "AddAttackWhiteRule")
+    
+    
+    return
+}
+
+func NewAddAttackWhiteRuleResponse() (response *AddAttackWhiteRuleResponse) {
+    response = &AddAttackWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AddAttackWhiteRule
+// 供用户控制台调用，增加Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddAttackWhiteRule(request *AddAttackWhiteRuleRequest) (response *AddAttackWhiteRuleResponse, err error) {
+    return c.AddAttackWhiteRuleWithContext(context.Background(), request)
+}
+
+// AddAttackWhiteRule
+// 供用户控制台调用，增加Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AddAttackWhiteRuleWithContext(ctx context.Context, request *AddAttackWhiteRuleRequest) (response *AddAttackWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewAddAttackWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddAttackWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddAttackWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAddCustomRuleRequest() (request *AddCustomRuleRequest) {
     request = &AddCustomRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -169,8 +258,9 @@ func NewAddCustomRuleRequest() (request *AddCustomRuleRequest) {
 func NewAddCustomRuleResponse() (response *AddCustomRuleResponse) {
     response = &AddCustomRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddCustomRule
@@ -223,8 +313,9 @@ func NewAddCustomWhiteRuleRequest() (request *AddCustomWhiteRuleRequest) {
 func NewAddCustomWhiteRuleResponse() (response *AddCustomWhiteRuleResponse) {
     response = &AddCustomWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddCustomWhiteRule
@@ -279,8 +370,9 @@ func NewAddDomainWhiteRuleRequest() (request *AddDomainWhiteRuleRequest) {
 func NewAddDomainWhiteRuleResponse() (response *AddDomainWhiteRuleResponse) {
     response = &AddDomainWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddDomainWhiteRule
@@ -337,8 +429,9 @@ func NewAddSpartaProtectionRequest() (request *AddSpartaProtectionRequest) {
 func NewAddSpartaProtectionResponse() (response *AddSpartaProtectionResponse) {
     response = &AddSpartaProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddSpartaProtection
@@ -357,6 +450,7 @@ func NewAddSpartaProtectionResponse() (response *AddSpartaProtectionResponse) {
 //  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
 //  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
 //  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
+//  INVALIDPARAMETER_XFFRESETPARAMETERERR = "InvalidParameter.XFFResetParameterErr"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -388,6 +482,7 @@ func (c *Client) AddSpartaProtection(request *AddSpartaProtectionRequest) (respo
 //  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
 //  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
 //  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
+//  INVALIDPARAMETER_XFFRESETPARAMETERERR = "InvalidParameter.XFFResetParameterErr"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -429,8 +524,9 @@ func NewCreateAccessExportRequest() (request *CreateAccessExportRequest) {
 func NewCreateAccessExportResponse() (response *CreateAccessExportResponse) {
     response = &CreateAccessExportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccessExport
@@ -515,8 +611,9 @@ func NewCreateHostRequest() (request *CreateHostRequest) {
 func NewCreateHostResponse() (response *CreateHostResponse) {
     response = &CreateHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateHost
@@ -587,8 +684,9 @@ func NewDeleteAccessExportRequest() (request *DeleteAccessExportRequest) {
 func NewDeleteAccessExportResponse() (response *DeleteAccessExportResponse) {
     response = &DeleteAccessExportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccessExport
@@ -673,8 +771,9 @@ func NewDeleteAntiFakeUrlRequest() (request *DeleteAntiFakeUrlRequest) {
 func NewDeleteAntiFakeUrlResponse() (response *DeleteAntiFakeUrlResponse) {
     response = &DeleteAntiFakeUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAntiFakeUrl
@@ -682,6 +781,7 @@ func NewDeleteAntiFakeUrlResponse() (response *DeleteAntiFakeUrlResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAntiFakeUrl(request *DeleteAntiFakeUrlRequest) (response *DeleteAntiFakeUrlResponse, err error) {
     return c.DeleteAntiFakeUrlWithContext(context.Background(), request)
@@ -692,6 +792,7 @@ func (c *Client) DeleteAntiFakeUrl(request *DeleteAntiFakeUrlRequest) (response 
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteAntiFakeUrlWithContext(ctx context.Context, request *DeleteAntiFakeUrlRequest) (response *DeleteAntiFakeUrlResponse, err error) {
     if request == nil {
@@ -723,8 +824,9 @@ func NewDeleteAntiInfoLeakRuleRequest() (request *DeleteAntiInfoLeakRuleRequest)
 func NewDeleteAntiInfoLeakRuleResponse() (response *DeleteAntiInfoLeakRuleResponse) {
     response = &DeleteAntiInfoLeakRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAntiInfoLeakRule
@@ -773,8 +875,9 @@ func NewDeleteAttackDownloadRecordRequest() (request *DeleteAttackDownloadRecord
 func NewDeleteAttackDownloadRecordResponse() (response *DeleteAttackDownloadRecordResponse) {
     response = &DeleteAttackDownloadRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAttackDownloadRecord
@@ -813,6 +916,93 @@ func (c *Client) DeleteAttackDownloadRecordWithContext(ctx context.Context, requ
     return
 }
 
+func NewDeleteAttackWhiteRuleRequest() (request *DeleteAttackWhiteRuleRequest) {
+    request = &DeleteAttackWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DeleteAttackWhiteRule")
+    
+    
+    return
+}
+
+func NewDeleteAttackWhiteRuleResponse() (response *DeleteAttackWhiteRuleResponse) {
+    response = &DeleteAttackWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAttackWhiteRule
+// 供用户控制台调用，删除Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAttackWhiteRule(request *DeleteAttackWhiteRuleRequest) (response *DeleteAttackWhiteRuleResponse, err error) {
+    return c.DeleteAttackWhiteRuleWithContext(context.Background(), request)
+}
+
+// DeleteAttackWhiteRule
+// 供用户控制台调用，删除Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAttackWhiteRuleWithContext(ctx context.Context, request *DeleteAttackWhiteRuleRequest) (response *DeleteAttackWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewDeleteAttackWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAttackWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAttackWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteCCRuleRequest() (request *DeleteCCRuleRequest) {
     request = &DeleteCCRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -827,8 +1017,9 @@ func NewDeleteCCRuleRequest() (request *DeleteCCRuleRequest) {
 func NewDeleteCCRuleResponse() (response *DeleteCCRuleResponse) {
     response = &DeleteCCRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCCRule
@@ -877,8 +1068,9 @@ func NewDeleteCustomRuleRequest() (request *DeleteCustomRuleRequest) {
 func NewDeleteCustomRuleResponse() (response *DeleteCustomRuleResponse) {
     response = &DeleteCustomRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCustomRule
@@ -927,8 +1119,9 @@ func NewDeleteCustomWhiteRuleRequest() (request *DeleteCustomWhiteRuleRequest) {
 func NewDeleteCustomWhiteRuleResponse() (response *DeleteCustomWhiteRuleResponse) {
     response = &DeleteCustomWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCustomWhiteRule
@@ -979,8 +1172,9 @@ func NewDeleteDomainWhiteRulesRequest() (request *DeleteDomainWhiteRulesRequest)
 func NewDeleteDomainWhiteRulesResponse() (response *DeleteDomainWhiteRulesResponse) {
     response = &DeleteDomainWhiteRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDomainWhiteRules
@@ -1035,8 +1229,9 @@ func NewDeleteDownloadRecordRequest() (request *DeleteDownloadRecordRequest) {
 func NewDeleteDownloadRecordResponse() (response *DeleteDownloadRecordResponse) {
     response = &DeleteDownloadRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDownloadRecord
@@ -1083,8 +1278,9 @@ func NewDeleteHostRequest() (request *DeleteHostRequest) {
 func NewDeleteHostResponse() (response *DeleteHostResponse) {
     response = &DeleteHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteHost
@@ -1159,8 +1355,9 @@ func NewDeleteIpAccessControlRequest() (request *DeleteIpAccessControlRequest) {
 func NewDeleteIpAccessControlResponse() (response *DeleteIpAccessControlResponse) {
     response = &DeleteIpAccessControlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteIpAccessControl
@@ -1215,8 +1412,9 @@ func NewDeleteSessionRequest() (request *DeleteSessionRequest) {
 func NewDeleteSessionResponse() (response *DeleteSessionResponse) {
     response = &DeleteSessionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSession
@@ -1225,6 +1423,7 @@ func NewDeleteSessionResponse() (response *DeleteSessionResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_SESSIONINUSED = "FailedOperation.SessionInUsed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSession(request *DeleteSessionRequest) (response *DeleteSessionResponse, err error) {
     return c.DeleteSessionWithContext(context.Background(), request)
@@ -1236,6 +1435,7 @@ func (c *Client) DeleteSession(request *DeleteSessionRequest) (response *DeleteS
 // 可能返回的错误码:
 //  FAILEDOPERATION_SESSIONINUSED = "FailedOperation.SessionInUsed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSessionWithContext(ctx context.Context, request *DeleteSessionRequest) (response *DeleteSessionResponse, err error) {
     if request == nil {
@@ -1267,8 +1467,9 @@ func NewDeleteSpartaProtectionRequest() (request *DeleteSpartaProtectionRequest)
 func NewDeleteSpartaProtectionResponse() (response *DeleteSpartaProtectionResponse) {
     response = &DeleteSpartaProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSpartaProtection
@@ -1321,8 +1522,9 @@ func NewDescribeAccessExportsRequest() (request *DescribeAccessExportsRequest) {
 func NewDescribeAccessExportsResponse() (response *DescribeAccessExportsResponse) {
     response = &DescribeAccessExportsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccessExports
@@ -1407,8 +1609,9 @@ func NewDescribeAccessFastAnalysisRequest() (request *DescribeAccessFastAnalysis
 func NewDescribeAccessFastAnalysisResponse() (response *DescribeAccessFastAnalysisResponse) {
     response = &DescribeAccessFastAnalysisResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccessFastAnalysis
@@ -1493,8 +1696,9 @@ func NewDescribeAccessHistogramRequest() (request *DescribeAccessHistogramReques
 func NewDescribeAccessHistogramResponse() (response *DescribeAccessHistogramResponse) {
     response = &DescribeAccessHistogramResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccessHistogram
@@ -1589,8 +1793,9 @@ func NewDescribeAccessIndexRequest() (request *DescribeAccessIndexRequest) {
 func NewDescribeAccessIndexResponse() (response *DescribeAccessIndexResponse) {
     response = &DescribeAccessIndexResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccessIndex
@@ -1675,8 +1880,9 @@ func NewDescribeAntiFakeRulesRequest() (request *DescribeAntiFakeRulesRequest) {
 func NewDescribeAntiFakeRulesResponse() (response *DescribeAntiFakeRulesResponse) {
     response = &DescribeAntiFakeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAntiFakeRules
@@ -1725,8 +1931,9 @@ func NewDescribeAntiFakeUrlRequest() (request *DescribeAntiFakeUrlRequest) {
 func NewDescribeAntiFakeUrlResponse() (response *DescribeAntiFakeUrlResponse) {
     response = &DescribeAntiFakeUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAntiFakeUrl
@@ -1773,8 +1980,9 @@ func NewDescribeAntiInfoLeakRulesRequest() (request *DescribeAntiInfoLeakRulesRe
 func NewDescribeAntiInfoLeakRulesResponse() (response *DescribeAntiInfoLeakRulesResponse) {
     response = &DescribeAntiInfoLeakRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAntiInfoLeakRules
@@ -1829,8 +2037,9 @@ func NewDescribeAntiInfoLeakageRulesRequest() (request *DescribeAntiInfoLeakageR
 func NewDescribeAntiInfoLeakageRulesResponse() (response *DescribeAntiInfoLeakageRulesResponse) {
     response = &DescribeAntiInfoLeakageRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAntiInfoLeakageRules
@@ -1838,6 +2047,7 @@ func NewDescribeAntiInfoLeakageRulesResponse() (response *DescribeAntiInfoLeakag
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 func (c *Client) DescribeAntiInfoLeakageRules(request *DescribeAntiInfoLeakageRulesRequest) (response *DescribeAntiInfoLeakageRulesResponse, err error) {
     return c.DescribeAntiInfoLeakageRulesWithContext(context.Background(), request)
 }
@@ -1847,6 +2057,7 @@ func (c *Client) DescribeAntiInfoLeakageRules(request *DescribeAntiInfoLeakageRu
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 func (c *Client) DescribeAntiInfoLeakageRulesWithContext(ctx context.Context, request *DescribeAntiInfoLeakageRulesRequest) (response *DescribeAntiInfoLeakageRulesResponse, err error) {
     if request == nil {
         request = NewDescribeAntiInfoLeakageRulesRequest()
@@ -1877,8 +2088,9 @@ func NewDescribeAttackOverviewRequest() (request *DescribeAttackOverviewRequest)
 func NewDescribeAttackOverviewResponse() (response *DescribeAttackOverviewResponse) {
     response = &DescribeAttackOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAttackOverview
@@ -1949,6 +2161,150 @@ func (c *Client) DescribeAttackOverviewWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeAttackTypeRequest() (request *DescribeAttackTypeRequest) {
+    request = &DescribeAttackTypeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeAttackType")
+    
+    
+    return
+}
+
+func NewDescribeAttackTypeResponse() (response *DescribeAttackTypeResponse) {
+    response = &DescribeAttackTypeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAttackType
+// 查询指定域名TOP N攻击类型
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeAttackType(request *DescribeAttackTypeRequest) (response *DescribeAttackTypeResponse, err error) {
+    return c.DescribeAttackTypeWithContext(context.Background(), request)
+}
+
+// DescribeAttackType
+// 查询指定域名TOP N攻击类型
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeAttackTypeWithContext(ctx context.Context, request *DescribeAttackTypeRequest) (response *DescribeAttackTypeResponse, err error) {
+    if request == nil {
+        request = NewDescribeAttackTypeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAttackType require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAttackTypeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAttackWhiteRuleRequest() (request *DescribeAttackWhiteRuleRequest) {
+    request = &DescribeAttackWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeAttackWhiteRule")
+    
+    
+    return
+}
+
+func NewDescribeAttackWhiteRuleResponse() (response *DescribeAttackWhiteRuleResponse) {
+    response = &DescribeAttackWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAttackWhiteRule
+// 获取用户规则白名单列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAttackWhiteRule(request *DescribeAttackWhiteRuleRequest) (response *DescribeAttackWhiteRuleResponse, err error) {
+    return c.DescribeAttackWhiteRuleWithContext(context.Background(), request)
+}
+
+// DescribeAttackWhiteRule
+// 获取用户规则白名单列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAttackWhiteRuleWithContext(ctx context.Context, request *DescribeAttackWhiteRuleRequest) (response *DescribeAttackWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeAttackWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAttackWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAttackWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAutoDenyIPRequest() (request *DescribeAutoDenyIPRequest) {
     request = &DescribeAutoDenyIPRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1963,8 +2319,9 @@ func NewDescribeAutoDenyIPRequest() (request *DescribeAutoDenyIPRequest) {
 func NewDescribeAutoDenyIPResponse() (response *DescribeAutoDenyIPResponse) {
     response = &DescribeAutoDenyIPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAutoDenyIP
@@ -2021,8 +2378,9 @@ func NewDescribeBatchIpAccessControlRequest() (request *DescribeBatchIpAccessCon
 func NewDescribeBatchIpAccessControlResponse() (response *DescribeBatchIpAccessControlResponse) {
     response = &DescribeBatchIpAccessControlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBatchIpAccessControl
@@ -2069,8 +2427,9 @@ func NewDescribeCCRuleRequest() (request *DescribeCCRuleRequest) {
 func NewDescribeCCRuleResponse() (response *DescribeCCRuleResponse) {
     response = &DescribeCCRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCRule
@@ -2117,8 +2476,9 @@ func NewDescribeCCRuleListRequest() (request *DescribeCCRuleListRequest) {
 func NewDescribeCCRuleListResponse() (response *DescribeCCRuleListResponse) {
     response = &DescribeCCRuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCRuleList
@@ -2153,6 +2513,67 @@ func (c *Client) DescribeCCRuleListWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeCertificateVerifyResultRequest() (request *DescribeCertificateVerifyResultRequest) {
+    request = &DescribeCertificateVerifyResultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeCertificateVerifyResult")
+    
+    
+    return
+}
+
+func NewDescribeCertificateVerifyResultResponse() (response *DescribeCertificateVerifyResultResponse) {
+    response = &DescribeCertificateVerifyResultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCertificateVerifyResult
+// 获取证书的检查结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeCertificateVerifyResult(request *DescribeCertificateVerifyResultRequest) (response *DescribeCertificateVerifyResultResponse, err error) {
+    return c.DescribeCertificateVerifyResultWithContext(context.Background(), request)
+}
+
+// DescribeCertificateVerifyResult
+// 获取证书的检查结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeCertificateVerifyResultWithContext(ctx context.Context, request *DescribeCertificateVerifyResultRequest) (response *DescribeCertificateVerifyResultResponse, err error) {
+    if request == nil {
+        request = NewDescribeCertificateVerifyResultRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCertificateVerifyResult require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCertificateVerifyResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCiphersDetailRequest() (request *DescribeCiphersDetailRequest) {
     request = &DescribeCiphersDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2167,8 +2588,9 @@ func NewDescribeCiphersDetailRequest() (request *DescribeCiphersDetailRequest) {
 func NewDescribeCiphersDetailResponse() (response *DescribeCiphersDetailResponse) {
     response = &DescribeCiphersDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCiphersDetail
@@ -2253,8 +2675,9 @@ func NewDescribeCustomRuleListRequest() (request *DescribeCustomRuleListRequest)
 func NewDescribeCustomRuleListResponse() (response *DescribeCustomRuleListResponse) {
     response = &DescribeCustomRuleListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCustomRuleList
@@ -2262,6 +2685,7 @@ func NewDescribeCustomRuleListResponse() (response *DescribeCustomRuleListRespon
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCustomRuleList(request *DescribeCustomRuleListRequest) (response *DescribeCustomRuleListResponse, err error) {
@@ -2273,6 +2697,7 @@ func (c *Client) DescribeCustomRuleList(request *DescribeCustomRuleListRequest) 
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCustomRuleListWithContext(ctx context.Context, request *DescribeCustomRuleListRequest) (response *DescribeCustomRuleListResponse, err error) {
@@ -2305,8 +2730,9 @@ func NewDescribeCustomWhiteRuleRequest() (request *DescribeCustomWhiteRuleReques
 func NewDescribeCustomWhiteRuleResponse() (response *DescribeCustomWhiteRuleResponse) {
     response = &DescribeCustomWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCustomWhiteRule
@@ -2359,8 +2785,9 @@ func NewDescribeDomainCountInfoRequest() (request *DescribeDomainCountInfoReques
 func NewDescribeDomainCountInfoResponse() (response *DescribeDomainCountInfoResponse) {
     response = &DescribeDomainCountInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainCountInfo
@@ -2445,8 +2872,9 @@ func NewDescribeDomainDetailsClbRequest() (request *DescribeDomainDetailsClbRequ
 func NewDescribeDomainDetailsClbResponse() (response *DescribeDomainDetailsClbResponse) {
     response = &DescribeDomainDetailsClbResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainDetailsClb
@@ -2531,8 +2959,9 @@ func NewDescribeDomainDetailsSaasRequest() (request *DescribeDomainDetailsSaasRe
 func NewDescribeDomainDetailsSaasResponse() (response *DescribeDomainDetailsSaasResponse) {
     response = &DescribeDomainDetailsSaasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainDetailsSaas
@@ -2603,6 +3032,61 @@ func (c *Client) DescribeDomainDetailsSaasWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeDomainRulesRequest() (request *DescribeDomainRulesRequest) {
+    request = &DescribeDomainRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeDomainRules")
+    
+    
+    return
+}
+
+func NewDescribeDomainRulesResponse() (response *DescribeDomainRulesResponse) {
+    response = &DescribeDomainRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDomainRules
+// 拉取域名的防护规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MYSQLDBOPERATIONFAILED = "FailedOperation.MysqlDBOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeDomainRules(request *DescribeDomainRulesRequest) (response *DescribeDomainRulesResponse, err error) {
+    return c.DescribeDomainRulesWithContext(context.Background(), request)
+}
+
+// DescribeDomainRules
+// 拉取域名的防护规则列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MYSQLDBOPERATIONFAILED = "FailedOperation.MysqlDBOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
+func (c *Client) DescribeDomainRulesWithContext(ctx context.Context, request *DescribeDomainRulesRequest) (response *DescribeDomainRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDomainRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDomainRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDomainRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDomainVerifyResultRequest() (request *DescribeDomainVerifyResultRequest) {
     request = &DescribeDomainVerifyResultRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2617,8 +3101,9 @@ func NewDescribeDomainVerifyResultRequest() (request *DescribeDomainVerifyResult
 func NewDescribeDomainVerifyResultResponse() (response *DescribeDomainVerifyResultResponse) {
     response = &DescribeDomainVerifyResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainVerifyResult
@@ -2677,8 +3162,9 @@ func NewDescribeDomainWhiteRulesRequest() (request *DescribeDomainWhiteRulesRequ
 func NewDescribeDomainWhiteRulesResponse() (response *DescribeDomainWhiteRulesResponse) {
     response = &DescribeDomainWhiteRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainWhiteRules
@@ -2729,8 +3215,9 @@ func NewDescribeDomainsRequest() (request *DescribeDomainsRequest) {
 func NewDescribeDomainsResponse() (response *DescribeDomainsResponse) {
     response = &DescribeDomainsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomains
@@ -2815,8 +3302,9 @@ func NewDescribeFindDomainListRequest() (request *DescribeFindDomainListRequest)
 func NewDescribeFindDomainListResponse() (response *DescribeFindDomainListResponse) {
     response = &DescribeFindDomainListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFindDomainList
@@ -2901,8 +3389,9 @@ func NewDescribeFlowTrendRequest() (request *DescribeFlowTrendRequest) {
 func NewDescribeFlowTrendResponse() (response *DescribeFlowTrendResponse) {
     response = &DescribeFlowTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFlowTrend
@@ -2947,6 +3436,63 @@ func (c *Client) DescribeFlowTrendWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeHistogramRequest() (request *DescribeHistogramRequest) {
+    request = &DescribeHistogramRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeHistogram")
+    
+    
+    return
+}
+
+func NewDescribeHistogramResponse() (response *DescribeHistogramResponse) {
+    response = &DescribeHistogramResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeHistogram
+// 查询多种条件的聚类分析
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeHistogram(request *DescribeHistogramRequest) (response *DescribeHistogramResponse, err error) {
+    return c.DescribeHistogramWithContext(context.Background(), request)
+}
+
+// DescribeHistogram
+// 查询多种条件的聚类分析
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+func (c *Client) DescribeHistogramWithContext(ctx context.Context, request *DescribeHistogramRequest) (response *DescribeHistogramResponse, err error) {
+    if request == nil {
+        request = NewDescribeHistogramRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeHistogram require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeHistogramResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeHostRequest() (request *DescribeHostRequest) {
     request = &DescribeHostRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2961,8 +3507,9 @@ func NewDescribeHostRequest() (request *DescribeHostRequest) {
 func NewDescribeHostResponse() (response *DescribeHostResponse) {
     response = &DescribeHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHost
@@ -3033,8 +3580,9 @@ func NewDescribeHostLimitRequest() (request *DescribeHostLimitRequest) {
 func NewDescribeHostLimitResponse() (response *DescribeHostLimitResponse) {
     response = &DescribeHostLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostLimit
@@ -3105,8 +3653,9 @@ func NewDescribeHostsRequest() (request *DescribeHostsRequest) {
 func NewDescribeHostsResponse() (response *DescribeHostsResponse) {
     response = &DescribeHostsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHosts
@@ -3177,8 +3726,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -3263,8 +3813,9 @@ func NewDescribeIpAccessControlRequest() (request *DescribeIpAccessControlReques
 func NewDescribeIpAccessControlResponse() (response *DescribeIpAccessControlResponse) {
     response = &DescribeIpAccessControlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIpAccessControl
@@ -3313,8 +3864,9 @@ func NewDescribeIpHitItemsRequest() (request *DescribeIpHitItemsRequest) {
 func NewDescribeIpHitItemsResponse() (response *DescribeIpHitItemsResponse) {
     response = &DescribeIpHitItemsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIpHitItems
@@ -3351,6 +3903,59 @@ func (c *Client) DescribeIpHitItemsWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeObjectsRequest() (request *DescribeObjectsRequest) {
+    request = &DescribeObjectsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeObjects")
+    
+    
+    return
+}
+
+func NewDescribeObjectsResponse() (response *DescribeObjectsResponse) {
+    response = &DescribeObjectsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeObjects
+// 查看防护对象列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeObjects(request *DescribeObjectsRequest) (response *DescribeObjectsResponse, err error) {
+    return c.DescribeObjectsWithContext(context.Background(), request)
+}
+
+// DescribeObjects
+// 查看防护对象列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeObjectsWithContext(ctx context.Context, request *DescribeObjectsRequest) (response *DescribeObjectsResponse, err error) {
+    if request == nil {
+        request = NewDescribeObjectsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeObjects require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeObjectsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePeakPointsRequest() (request *DescribePeakPointsRequest) {
     request = &DescribePeakPointsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3365,8 +3970,9 @@ func NewDescribePeakPointsRequest() (request *DescribePeakPointsRequest) {
 func NewDescribePeakPointsResponse() (response *DescribePeakPointsResponse) {
     response = &DescribePeakPointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePeakPoints
@@ -3451,8 +4057,9 @@ func NewDescribePeakValueRequest() (request *DescribePeakValueRequest) {
 func NewDescribePeakValueResponse() (response *DescribePeakValueResponse) {
     response = &DescribePeakValueResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePeakValue
@@ -3537,8 +4144,9 @@ func NewDescribePolicyStatusRequest() (request *DescribePolicyStatusRequest) {
 func NewDescribePolicyStatusResponse() (response *DescribePolicyStatusResponse) {
     response = &DescribePolicyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePolicyStatus
@@ -3587,8 +4195,9 @@ func NewDescribePortsRequest() (request *DescribePortsRequest) {
 func NewDescribePortsResponse() (response *DescribePortsResponse) {
     response = &DescribePortsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePorts
@@ -3635,8 +4244,9 @@ func NewDescribeRuleLimitRequest() (request *DescribeRuleLimitRequest) {
 func NewDescribeRuleLimitResponse() (response *DescribeRuleLimitResponse) {
     response = &DescribeRuleLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleLimit
@@ -3687,8 +4297,9 @@ func NewDescribeSessionRequest() (request *DescribeSessionRequest) {
 func NewDescribeSessionResponse() (response *DescribeSessionResponse) {
     response = &DescribeSessionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSession
@@ -3723,6 +4334,55 @@ func (c *Client) DescribeSessionWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeSpartaProtectionInfoRequest() (request *DescribeSpartaProtectionInfoRequest) {
+    request = &DescribeSpartaProtectionInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeSpartaProtectionInfo")
+    
+    
+    return
+}
+
+func NewDescribeSpartaProtectionInfoResponse() (response *DescribeSpartaProtectionInfoResponse) {
+    response = &DescribeSpartaProtectionInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeSpartaProtectionInfo
+// waf斯巴达-获取防护域名信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeSpartaProtectionInfo(request *DescribeSpartaProtectionInfoRequest) (response *DescribeSpartaProtectionInfoResponse, err error) {
+    return c.DescribeSpartaProtectionInfoWithContext(context.Background(), request)
+}
+
+// DescribeSpartaProtectionInfo
+// waf斯巴达-获取防护域名信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeSpartaProtectionInfoWithContext(ctx context.Context, request *DescribeSpartaProtectionInfoRequest) (response *DescribeSpartaProtectionInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribeSpartaProtectionInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeSpartaProtectionInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeSpartaProtectionInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTlsVersionRequest() (request *DescribeTlsVersionRequest) {
     request = &DescribeTlsVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3737,8 +4397,9 @@ func NewDescribeTlsVersionRequest() (request *DescribeTlsVersionRequest) {
 func NewDescribeTlsVersionResponse() (response *DescribeTlsVersionResponse) {
     response = &DescribeTlsVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTlsVersion
@@ -3807,6 +4468,59 @@ func (c *Client) DescribeTlsVersionWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeTopAttackDomainRequest() (request *DescribeTopAttackDomainRequest) {
+    request = &DescribeTopAttackDomainRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeTopAttackDomain")
+    
+    
+    return
+}
+
+func NewDescribeTopAttackDomainResponse() (response *DescribeTopAttackDomainResponse) {
+    response = &DescribeTopAttackDomainResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTopAttackDomain
+// 查询Top5的攻击域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeTopAttackDomain(request *DescribeTopAttackDomainRequest) (response *DescribeTopAttackDomainResponse, err error) {
+    return c.DescribeTopAttackDomainWithContext(context.Background(), request)
+}
+
+// DescribeTopAttackDomain
+// 查询Top5的攻击域名
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) DescribeTopAttackDomainWithContext(ctx context.Context, request *DescribeTopAttackDomainRequest) (response *DescribeTopAttackDomainResponse, err error) {
+    if request == nil {
+        request = NewDescribeTopAttackDomainRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTopAttackDomain require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTopAttackDomainResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeUserCdcClbWafRegionsRequest() (request *DescribeUserCdcClbWafRegionsRequest) {
     request = &DescribeUserCdcClbWafRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3821,33 +4535,18 @@ func NewDescribeUserCdcClbWafRegionsRequest() (request *DescribeUserCdcClbWafReg
 func NewDescribeUserCdcClbWafRegionsResponse() (response *DescribeUserCdcClbWafRegionsResponse) {
     response = &DescribeUserCdcClbWafRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserCdcClbWafRegions
 // 在CDC场景下，负载均衡型WAF的添加、编辑域名配置的时候，需要展示CDC负载均衡型WAF（cdc-clb-waf)支持的地域列表，通过DescribeUserCdcClbWafRegions既可以获得当前对客户已经开放的地域列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
-//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCESSOLDOUT = "ResourcesSoldOut"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeUserCdcClbWafRegions(request *DescribeUserCdcClbWafRegionsRequest) (response *DescribeUserCdcClbWafRegionsResponse, err error) {
     return c.DescribeUserCdcClbWafRegionsWithContext(context.Background(), request)
 }
@@ -3856,25 +4555,9 @@ func (c *Client) DescribeUserCdcClbWafRegions(request *DescribeUserCdcClbWafRegi
 // 在CDC场景下，负载均衡型WAF的添加、编辑域名配置的时候，需要展示CDC负载均衡型WAF（cdc-clb-waf)支持的地域列表，通过DescribeUserCdcClbWafRegions既可以获得当前对客户已经开放的地域列表
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
-//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  LIMITEXCEEDED = "LimitExceeded"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  RESOURCESSOLDOUT = "ResourcesSoldOut"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DescribeUserCdcClbWafRegionsWithContext(ctx context.Context, request *DescribeUserCdcClbWafRegionsRequest) (response *DescribeUserCdcClbWafRegionsResponse, err error) {
     if request == nil {
         request = NewDescribeUserCdcClbWafRegionsRequest()
@@ -3905,8 +4588,9 @@ func NewDescribeUserClbWafRegionsRequest() (request *DescribeUserClbWafRegionsRe
 func NewDescribeUserClbWafRegionsResponse() (response *DescribeUserClbWafRegionsResponse) {
     response = &DescribeUserClbWafRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserClbWafRegions
@@ -3981,8 +4665,9 @@ func NewDescribeUserDomainInfoRequest() (request *DescribeUserDomainInfoRequest)
 func NewDescribeUserDomainInfoResponse() (response *DescribeUserDomainInfoResponse) {
     response = &DescribeUserDomainInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserDomainInfo
@@ -4053,6 +4738,156 @@ func (c *Client) DescribeUserDomainInfoWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeUserLevelRequest() (request *DescribeUserLevelRequest) {
+    request = &DescribeUserLevelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeUserLevel")
+    
+    
+    return
+}
+
+func NewDescribeUserLevelResponse() (response *DescribeUserLevelResponse) {
+    response = &DescribeUserLevelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUserLevel
+// 获取用户防护规则等级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeUserLevel(request *DescribeUserLevelRequest) (response *DescribeUserLevelResponse, err error) {
+    return c.DescribeUserLevelWithContext(context.Background(), request)
+}
+
+// DescribeUserLevel
+// 获取用户防护规则等级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeUserLevelWithContext(ctx context.Context, request *DescribeUserLevelRequest) (response *DescribeUserLevelResponse, err error) {
+    if request == nil {
+        request = NewDescribeUserLevelRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUserLevel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUserLevelResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeUserSignatureRuleRequest() (request *DescribeUserSignatureRuleRequest) {
+    request = &DescribeUserSignatureRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeUserSignatureRule")
+    
+    
+    return
+}
+
+func NewDescribeUserSignatureRuleResponse() (response *DescribeUserSignatureRuleResponse) {
+    response = &DescribeUserSignatureRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUserSignatureRule
+// 获取用户特征规则列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeUserSignatureRule(request *DescribeUserSignatureRuleRequest) (response *DescribeUserSignatureRuleResponse, err error) {
+    return c.DescribeUserSignatureRuleWithContext(context.Background(), request)
+}
+
+// DescribeUserSignatureRule
+// 获取用户特征规则列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeUserSignatureRuleWithContext(ctx context.Context, request *DescribeUserSignatureRuleRequest) (response *DescribeUserSignatureRuleResponse, err error) {
+    if request == nil {
+        request = NewDescribeUserSignatureRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUserSignatureRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUserSignatureRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeVipInfoRequest() (request *DescribeVipInfoRequest) {
     request = &DescribeVipInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4067,8 +4902,9 @@ func NewDescribeVipInfoRequest() (request *DescribeVipInfoRequest) {
 func NewDescribeVipInfoResponse() (response *DescribeVipInfoResponse) {
     response = &DescribeVipInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVipInfo
@@ -4153,8 +4989,9 @@ func NewDescribeWafAutoDenyRulesRequest() (request *DescribeWafAutoDenyRulesRequ
 func NewDescribeWafAutoDenyRulesResponse() (response *DescribeWafAutoDenyRulesResponse) {
     response = &DescribeWafAutoDenyRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWafAutoDenyRules
@@ -4201,8 +5038,9 @@ func NewDescribeWafAutoDenyStatusRequest() (request *DescribeWafAutoDenyStatusRe
 func NewDescribeWafAutoDenyStatusResponse() (response *DescribeWafAutoDenyStatusResponse) {
     response = &DescribeWafAutoDenyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWafAutoDenyStatus
@@ -4251,8 +5089,9 @@ func NewDescribeWafInfoRequest() (request *DescribeWafInfoRequest) {
 func NewDescribeWafInfoResponse() (response *DescribeWafInfoResponse) {
     response = &DescribeWafInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWafInfo
@@ -4331,8 +5170,9 @@ func NewDescribeWafThreatenIntelligenceRequest() (request *DescribeWafThreatenIn
 func NewDescribeWafThreatenIntelligenceResponse() (response *DescribeWafThreatenIntelligenceResponse) {
     response = &DescribeWafThreatenIntelligenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWafThreatenIntelligence
@@ -4369,6 +5209,81 @@ func (c *Client) DescribeWafThreatenIntelligenceWithContext(ctx context.Context,
     return
 }
 
+func NewDescribeWebshellStatusRequest() (request *DescribeWebshellStatusRequest) {
+    request = &DescribeWebshellStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeWebshellStatus")
+    
+    
+    return
+}
+
+func NewDescribeWebshellStatusResponse() (response *DescribeWebshellStatusResponse) {
+    response = &DescribeWebshellStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeWebshellStatus
+// 获取域名的webshell状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeWebshellStatus(request *DescribeWebshellStatusRequest) (response *DescribeWebshellStatusResponse, err error) {
+    return c.DescribeWebshellStatusWithContext(context.Background(), request)
+}
+
+// DescribeWebshellStatus
+// 获取域名的webshell状态
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeWebshellStatusWithContext(ctx context.Context, request *DescribeWebshellStatusRequest) (response *DescribeWebshellStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeWebshellStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeWebshellStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeWebshellStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewFreshAntiFakeUrlRequest() (request *FreshAntiFakeUrlRequest) {
     request = &FreshAntiFakeUrlRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4383,8 +5298,9 @@ func NewFreshAntiFakeUrlRequest() (request *FreshAntiFakeUrlRequest) {
 func NewFreshAntiFakeUrlResponse() (response *FreshAntiFakeUrlResponse) {
     response = &FreshAntiFakeUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FreshAntiFakeUrl
@@ -4431,8 +5347,9 @@ func NewGenerateDealsAndPayNewRequest() (request *GenerateDealsAndPayNewRequest)
 func NewGenerateDealsAndPayNewResponse() (response *GenerateDealsAndPayNewResponse) {
     response = &GenerateDealsAndPayNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GenerateDealsAndPayNew
@@ -4519,8 +5436,9 @@ func NewGetAttackDownloadRecordsRequest() (request *GetAttackDownloadRecordsRequ
 func NewGetAttackDownloadRecordsResponse() (response *GetAttackDownloadRecordsResponse) {
     response = &GetAttackDownloadRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetAttackDownloadRecords
@@ -4573,8 +5491,9 @@ func NewGetAttackHistogramRequest() (request *GetAttackHistogramRequest) {
 func NewGetAttackHistogramResponse() (response *GetAttackHistogramResponse) {
     response = &GetAttackHistogramResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetAttackHistogram
@@ -4637,8 +5556,9 @@ func NewGetAttackTotalCountRequest() (request *GetAttackTotalCountRequest) {
 func NewGetAttackTotalCountResponse() (response *GetAttackTotalCountResponse) {
     response = &GetAttackTotalCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetAttackTotalCount
@@ -4701,8 +5621,9 @@ func NewGetInstanceQpsLimitRequest() (request *GetInstanceQpsLimitRequest) {
 func NewGetInstanceQpsLimitResponse() (response *GetInstanceQpsLimitResponse) {
     response = &GetInstanceQpsLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetInstanceQpsLimit
@@ -4765,8 +5686,9 @@ func NewModifyAccessPeriodRequest() (request *ModifyAccessPeriodRequest) {
 func NewModifyAccessPeriodResponse() (response *ModifyAccessPeriodResponse) {
     response = &ModifyAccessPeriodResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccessPeriod
@@ -4851,8 +5773,9 @@ func NewModifyAntiFakeUrlRequest() (request *ModifyAntiFakeUrlRequest) {
 func NewModifyAntiFakeUrlResponse() (response *ModifyAntiFakeUrlResponse) {
     response = &ModifyAntiFakeUrlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAntiFakeUrl
@@ -4899,8 +5822,9 @@ func NewModifyAntiFakeUrlStatusRequest() (request *ModifyAntiFakeUrlStatusReques
 func NewModifyAntiFakeUrlStatusResponse() (response *ModifyAntiFakeUrlStatusResponse) {
     response = &ModifyAntiFakeUrlStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAntiFakeUrlStatus
@@ -4951,8 +5875,9 @@ func NewModifyAntiInfoLeakRuleStatusRequest() (request *ModifyAntiInfoLeakRuleSt
 func NewModifyAntiInfoLeakRuleStatusResponse() (response *ModifyAntiInfoLeakRuleStatusResponse) {
     response = &ModifyAntiInfoLeakRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAntiInfoLeakRuleStatus
@@ -4999,8 +5924,9 @@ func NewModifyAntiInfoLeakRulesRequest() (request *ModifyAntiInfoLeakRulesReques
 func NewModifyAntiInfoLeakRulesResponse() (response *ModifyAntiInfoLeakRulesResponse) {
     response = &ModifyAntiInfoLeakRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAntiInfoLeakRules
@@ -5047,8 +5973,9 @@ func NewModifyApiAnalyzeStatusRequest() (request *ModifyApiAnalyzeStatusRequest)
 func NewModifyApiAnalyzeStatusResponse() (response *ModifyApiAnalyzeStatusResponse) {
     response = &ModifyApiAnalyzeStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyApiAnalyzeStatus
@@ -5095,8 +6022,9 @@ func NewModifyAreaBanStatusRequest() (request *ModifyAreaBanStatusRequest) {
 func NewModifyAreaBanStatusResponse() (response *ModifyAreaBanStatusResponse) {
     response = &ModifyAreaBanStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAreaBanStatus
@@ -5129,6 +6057,93 @@ func (c *Client) ModifyAreaBanStatusWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyAttackWhiteRuleRequest() (request *ModifyAttackWhiteRuleRequest) {
+    request = &ModifyAttackWhiteRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyAttackWhiteRule")
+    
+    
+    return
+}
+
+func NewModifyAttackWhiteRuleResponse() (response *ModifyAttackWhiteRuleResponse) {
+    response = &ModifyAttackWhiteRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAttackWhiteRule
+// 供用户控制台调用，修改Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAttackWhiteRule(request *ModifyAttackWhiteRuleRequest) (response *ModifyAttackWhiteRuleResponse, err error) {
+    return c.ModifyAttackWhiteRuleWithContext(context.Background(), request)
+}
+
+// ModifyAttackWhiteRule
+// 供用户控制台调用，修改Tiga规则引擎白名单。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyAttackWhiteRuleWithContext(ctx context.Context, request *ModifyAttackWhiteRuleRequest) (response *ModifyAttackWhiteRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyAttackWhiteRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAttackWhiteRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAttackWhiteRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyBotStatusRequest() (request *ModifyBotStatusRequest) {
     request = &ModifyBotStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5143,14 +6158,16 @@ func NewModifyBotStatusRequest() (request *ModifyBotStatusRequest) {
 func NewModifyBotStatusResponse() (response *ModifyBotStatusResponse) {
     response = &ModifyBotStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBotStatus
 // Bot_V2 bot总开关更新
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_ERRCODENOPURCHASED = "AuthFailure.ErrCodeNoPurchased"
 //  INTERNALERROR = "InternalError"
 func (c *Client) ModifyBotStatus(request *ModifyBotStatusRequest) (response *ModifyBotStatusResponse, err error) {
     return c.ModifyBotStatusWithContext(context.Background(), request)
@@ -5160,6 +6177,7 @@ func (c *Client) ModifyBotStatus(request *ModifyBotStatusRequest) (response *Mod
 // Bot_V2 bot总开关更新
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_ERRCODENOPURCHASED = "AuthFailure.ErrCodeNoPurchased"
 //  INTERNALERROR = "InternalError"
 func (c *Client) ModifyBotStatusWithContext(ctx context.Context, request *ModifyBotStatusRequest) (response *ModifyBotStatusResponse, err error) {
     if request == nil {
@@ -5191,8 +6209,9 @@ func NewModifyCustomRuleRequest() (request *ModifyCustomRuleRequest) {
 func NewModifyCustomRuleResponse() (response *ModifyCustomRuleResponse) {
     response = &ModifyCustomRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCustomRule
@@ -5267,8 +6286,9 @@ func NewModifyCustomRuleStatusRequest() (request *ModifyCustomRuleStatusRequest)
 func NewModifyCustomRuleStatusResponse() (response *ModifyCustomRuleStatusResponse) {
     response = &ModifyCustomRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCustomRuleStatus
@@ -5319,8 +6339,9 @@ func NewModifyCustomWhiteRuleRequest() (request *ModifyCustomWhiteRuleRequest) {
 func NewModifyCustomWhiteRuleResponse() (response *ModifyCustomWhiteRuleResponse) {
     response = &ModifyCustomWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCustomWhiteRule
@@ -5373,8 +6394,9 @@ func NewModifyCustomWhiteRuleStatusRequest() (request *ModifyCustomWhiteRuleStat
 func NewModifyCustomWhiteRuleStatusResponse() (response *ModifyCustomWhiteRuleStatusResponse) {
     response = &ModifyCustomWhiteRuleStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCustomWhiteRuleStatus
@@ -5425,8 +6447,9 @@ func NewModifyDomainIpv6StatusRequest() (request *ModifyDomainIpv6StatusRequest)
 func NewModifyDomainIpv6StatusResponse() (response *ModifyDomainIpv6StatusResponse) {
     response = &ModifyDomainIpv6StatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainIpv6Status
@@ -5513,8 +6536,9 @@ func NewModifyDomainWhiteRuleRequest() (request *ModifyDomainWhiteRuleRequest) {
 func NewModifyDomainWhiteRuleResponse() (response *ModifyDomainWhiteRuleResponse) {
     response = &ModifyDomainWhiteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainWhiteRule
@@ -5569,8 +6593,9 @@ func NewModifyDomainsCLSStatusRequest() (request *ModifyDomainsCLSStatusRequest)
 func NewModifyDomainsCLSStatusResponse() (response *ModifyDomainsCLSStatusResponse) {
     response = &ModifyDomainsCLSStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainsCLSStatus
@@ -5657,8 +6682,9 @@ func NewModifyHostRequest() (request *ModifyHostRequest) {
 func NewModifyHostResponse() (response *ModifyHostResponse) {
     response = &ModifyHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHost
@@ -5731,8 +6757,9 @@ func NewModifyHostFlowModeRequest() (request *ModifyHostFlowModeRequest) {
 func NewModifyHostFlowModeResponse() (response *ModifyHostFlowModeResponse) {
     response = &ModifyHostFlowModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHostFlowMode
@@ -5803,8 +6830,9 @@ func NewModifyHostModeRequest() (request *ModifyHostModeRequest) {
 func NewModifyHostModeResponse() (response *ModifyHostModeResponse) {
     response = &ModifyHostModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHostMode
@@ -5877,8 +6905,9 @@ func NewModifyHostStatusRequest() (request *ModifyHostStatusRequest) {
 func NewModifyHostStatusResponse() (response *ModifyHostStatusResponse) {
     response = &ModifyHostStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyHostStatus
@@ -5953,8 +6982,9 @@ func NewModifyInstanceElasticModeRequest() (request *ModifyInstanceElasticModeRe
 func NewModifyInstanceElasticModeResponse() (response *ModifyInstanceElasticModeResponse) {
     response = &ModifyInstanceElasticModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceElasticMode
@@ -6039,8 +7069,9 @@ func NewModifyInstanceNameRequest() (request *ModifyInstanceNameRequest) {
 func NewModifyInstanceNameResponse() (response *ModifyInstanceNameResponse) {
     response = &ModifyInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceName
@@ -6097,8 +7128,9 @@ func NewModifyInstanceQpsLimitRequest() (request *ModifyInstanceQpsLimitRequest)
 func NewModifyInstanceQpsLimitResponse() (response *ModifyInstanceQpsLimitResponse) {
     response = &ModifyInstanceQpsLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceQpsLimit
@@ -6155,8 +7187,9 @@ func NewModifyInstanceRenewFlagRequest() (request *ModifyInstanceRenewFlagReques
 func NewModifyInstanceRenewFlagResponse() (response *ModifyInstanceRenewFlagResponse) {
     response = &ModifyInstanceRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceRenewFlag
@@ -6227,6 +7260,110 @@ func (c *Client) ModifyInstanceRenewFlagWithContext(ctx context.Context, request
     return
 }
 
+func NewModifyModuleStatusRequest() (request *ModifyModuleStatusRequest) {
+    request = &ModifyModuleStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyModuleStatus")
+    
+    
+    return
+}
+
+func NewModifyModuleStatusResponse() (response *ModifyModuleStatusResponse) {
+    response = &ModifyModuleStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyModuleStatus
+// 设置某个domain下基础安全模块的开关
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) ModifyModuleStatus(request *ModifyModuleStatusRequest) (response *ModifyModuleStatusResponse, err error) {
+    return c.ModifyModuleStatusWithContext(context.Background(), request)
+}
+
+// ModifyModuleStatus
+// 设置某个domain下基础安全模块的开关
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) ModifyModuleStatusWithContext(ctx context.Context, request *ModifyModuleStatusRequest) (response *ModifyModuleStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyModuleStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyModuleStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyModuleStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyObjectRequest() (request *ModifyObjectRequest) {
+    request = &ModifyObjectRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyObject")
+    
+    
+    return
+}
+
+func NewModifyObjectResponse() (response *ModifyObjectResponse) {
+    response = &ModifyObjectResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyObject
+// 修改防护对象
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyObject(request *ModifyObjectRequest) (response *ModifyObjectResponse, err error) {
+    return c.ModifyObjectWithContext(context.Background(), request)
+}
+
+// ModifyObject
+// 修改防护对象
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyObjectWithContext(ctx context.Context, request *ModifyObjectRequest) (response *ModifyObjectResponse, err error) {
+    if request == nil {
+        request = NewModifyObjectRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyObject require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyObjectResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyProtectionStatusRequest() (request *ModifyProtectionStatusRequest) {
     request = &ModifyProtectionStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6241,8 +7378,9 @@ func NewModifyProtectionStatusRequest() (request *ModifyProtectionStatusRequest)
 func NewModifyProtectionStatusResponse() (response *ModifyProtectionStatusResponse) {
     response = &ModifyProtectionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyProtectionStatus
@@ -6295,8 +7433,9 @@ func NewModifySpartaProtectionRequest() (request *ModifySpartaProtectionRequest)
 func NewModifySpartaProtectionResponse() (response *ModifySpartaProtectionResponse) {
     response = &ModifySpartaProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySpartaProtection
@@ -6381,8 +7520,9 @@ func NewModifySpartaProtectionModeRequest() (request *ModifySpartaProtectionMode
 func NewModifySpartaProtectionModeResponse() (response *ModifySpartaProtectionModeResponse) {
     response = &ModifySpartaProtectionModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySpartaProtectionMode
@@ -6441,6 +7581,134 @@ func (c *Client) ModifySpartaProtectionModeWithContext(ctx context.Context, requ
     return
 }
 
+func NewModifyUserLevelRequest() (request *ModifyUserLevelRequest) {
+    request = &ModifyUserLevelRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyUserLevel")
+    
+    
+    return
+}
+
+func NewModifyUserLevelResponse() (response *ModifyUserLevelResponse) {
+    response = &ModifyUserLevelResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyUserLevel
+// 修改用户防护规则等级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserLevel(request *ModifyUserLevelRequest) (response *ModifyUserLevelResponse, err error) {
+    return c.ModifyUserLevelWithContext(context.Background(), request)
+}
+
+// ModifyUserLevel
+// 修改用户防护规则等级
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserLevelWithContext(ctx context.Context, request *ModifyUserLevelRequest) (response *ModifyUserLevelResponse, err error) {
+    if request == nil {
+        request = NewModifyUserLevelRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyUserLevel require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyUserLevelResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyUserSignatureRuleRequest() (request *ModifyUserSignatureRuleRequest) {
+    request = &ModifyUserSignatureRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyUserSignatureRule")
+    
+    
+    return
+}
+
+func NewModifyUserSignatureRuleResponse() (response *ModifyUserSignatureRuleResponse) {
+    response = &ModifyUserSignatureRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyUserSignatureRule
+// 修改用户防护规则，开启关闭具体的某条规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserSignatureRule(request *ModifyUserSignatureRuleRequest) (response *ModifyUserSignatureRuleResponse, err error) {
+    return c.ModifyUserSignatureRuleWithContext(context.Background(), request)
+}
+
+// ModifyUserSignatureRule
+// 修改用户防护规则，开启关闭具体的某条规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyUserSignatureRuleWithContext(ctx context.Context, request *ModifyUserSignatureRuleRequest) (response *ModifyUserSignatureRuleResponse, err error) {
+    if request == nil {
+        request = NewModifyUserSignatureRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyUserSignatureRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyUserSignatureRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyWafAutoDenyRulesRequest() (request *ModifyWafAutoDenyRulesRequest) {
     request = &ModifyWafAutoDenyRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6455,8 +7723,9 @@ func NewModifyWafAutoDenyRulesRequest() (request *ModifyWafAutoDenyRulesRequest)
 func NewModifyWafAutoDenyRulesResponse() (response *ModifyWafAutoDenyRulesResponse) {
     response = &ModifyWafAutoDenyRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWafAutoDenyRules
@@ -6503,8 +7772,9 @@ func NewModifyWafAutoDenyStatusRequest() (request *ModifyWafAutoDenyStatusReques
 func NewModifyWafAutoDenyStatusResponse() (response *ModifyWafAutoDenyStatusResponse) {
     response = &ModifyWafAutoDenyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWafAutoDenyStatus
@@ -6553,8 +7823,9 @@ func NewModifyWafThreatenIntelligenceRequest() (request *ModifyWafThreatenIntell
 func NewModifyWafThreatenIntelligenceResponse() (response *ModifyWafThreatenIntelligenceResponse) {
     response = &ModifyWafThreatenIntelligenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWafThreatenIntelligence
@@ -6599,6 +7870,81 @@ func (c *Client) ModifyWafThreatenIntelligenceWithContext(ctx context.Context, r
     return
 }
 
+func NewModifyWebshellStatusRequest() (request *ModifyWebshellStatusRequest) {
+    request = &ModifyWebshellStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "ModifyWebshellStatus")
+    
+    
+    return
+}
+
+func NewModifyWebshellStatusResponse() (response *ModifyWebshellStatusResponse) {
+    response = &ModifyWebshellStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyWebshellStatus
+// 设置域名的webshell状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyWebshellStatus(request *ModifyWebshellStatusRequest) (response *ModifyWebshellStatusResponse, err error) {
+    return c.ModifyWebshellStatusWithContext(context.Background(), request)
+}
+
+// ModifyWebshellStatus
+// 设置域名的webshell状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) ModifyWebshellStatusWithContext(ctx context.Context, request *ModifyWebshellStatusRequest) (response *ModifyWebshellStatusResponse, err error) {
+    if request == nil {
+        request = NewModifyWebshellStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyWebshellStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyWebshellStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewPostAttackDownloadTaskRequest() (request *PostAttackDownloadTaskRequest) {
     request = &PostAttackDownloadTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6613,8 +7959,9 @@ func NewPostAttackDownloadTaskRequest() (request *PostAttackDownloadTaskRequest)
 func NewPostAttackDownloadTaskResponse() (response *PostAttackDownloadTaskResponse) {
     response = &PostAttackDownloadTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PostAttackDownloadTask
@@ -6667,8 +8014,9 @@ func NewRefreshAccessCheckResultRequest() (request *RefreshAccessCheckResultRequ
 func NewRefreshAccessCheckResultResponse() (response *RefreshAccessCheckResultResponse) {
     response = &RefreshAccessCheckResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RefreshAccessCheckResult
@@ -6721,8 +8069,9 @@ func NewSearchAccessLogRequest() (request *SearchAccessLogRequest) {
 func NewSearchAccessLogResponse() (response *SearchAccessLogResponse) {
     response = &SearchAccessLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchAccessLog
@@ -6815,8 +8164,9 @@ func NewSearchAttackLogRequest() (request *SearchAttackLogRequest) {
 func NewSearchAttackLogResponse() (response *SearchAttackLogResponse) {
     response = &SearchAttackLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SearchAttackLog
@@ -6879,8 +8229,9 @@ func NewSwitchDomainRulesRequest() (request *SwitchDomainRulesRequest) {
 func NewSwitchDomainRulesResponse() (response *SwitchDomainRulesResponse) {
     response = &SwitchDomainRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchDomainRules
@@ -6939,8 +8290,9 @@ func NewSwitchElasticModeRequest() (request *SwitchElasticModeRequest) {
 func NewSwitchElasticModeResponse() (response *SwitchElasticModeResponse) {
     response = &SwitchElasticModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchElasticMode
@@ -6993,8 +8345,9 @@ func NewUpsertCCRuleRequest() (request *UpsertCCRuleRequest) {
 func NewUpsertCCRuleResponse() (response *UpsertCCRuleResponse) {
     response = &UpsertCCRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpsertCCRule
@@ -7043,8 +8396,9 @@ func NewUpsertIpAccessControlRequest() (request *UpsertIpAccessControlRequest) {
 func NewUpsertIpAccessControlResponse() (response *UpsertIpAccessControlResponse) {
     response = &UpsertIpAccessControlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpsertIpAccessControl
@@ -7101,8 +8455,9 @@ func NewUpsertSessionRequest() (request *UpsertSessionRequest) {
 func NewUpsertSessionResponse() (response *UpsertSessionResponse) {
     response = &UpsertSessionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpsertSession

@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_cam_service_linked_role: Support `import` function and Fix issues when update service role
+```

@@ -63,11 +63,19 @@ func TestAccTencentCloudCamGroup_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "remark", "test"),
 				),
 			}, {
-				Config: testAccCamGroup_update,
+				Config: testAccCamGroup_update_name,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamGroupExists("tencentcloud_cam_group.group_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "name", "cam-group-test2"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "remark", "test-update"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "remark", "test"),
+				),
+			},
+			{
+				Config: testAccCamGroup_update_all,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCamGroupExists("tencentcloud_cam_group.group_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "name", "cam-group-test3"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_group.group_basic", "remark", "test3"),
 				),
 			},
 			{
@@ -133,9 +141,16 @@ resource "tencentcloud_cam_group" "group_basic" {
 }
 `
 
-const testAccCamGroup_update = `
+const testAccCamGroup_update_name = `
 resource "tencentcloud_cam_group" "group_basic" {
   name   = "cam-group-test2"
-  remark = "test-update"
+  remark = "test"
+}
+`
+
+const testAccCamGroup_update_all = `
+resource "tencentcloud_cam_group" "group_basic" {
+  name   = "cam-group-test3"
+  remark = "test3"
 }
 `

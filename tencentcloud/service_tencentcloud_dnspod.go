@@ -289,3 +289,295 @@ func (me *DnspodService) DescribeDnspodDomainAnalyticsByFilter(ctx context.Conte
 
 	return
 }
+
+func (me *DnspodService) DescribeDnspodDomainLogListByFilter(ctx context.Context, param map[string]interface{}) (domain_log_list []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeDomainLogListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "DomainId" {
+			request.DomainId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDnsPodClient().DescribeDomainLogList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LogList) < 1 {
+			break
+		}
+		domain_log_list = append(domain_log_list, response.Response.LogList...)
+		if len(response.Response.LogList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodRecordAnalyticsByFilter(ctx context.Context, param map[string]interface{}) (alias_data []*dnspod.SubdomainAliasAnalyticsItem, data []*dnspod.DomainAnalyticsDetail, info *dnspod.SubdomainAnalyticsInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeSubdomainAnalyticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "Subdomain" {
+			request.Subdomain = v.(*string)
+		}
+		if k == "DnsFormat" {
+			request.DnsFormat = v.(*string)
+		}
+		if k == "DomainId" {
+			request.DomainId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDnsPodClient().DescribeSubdomainAnalytics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	alias_data = response.Response.AliasData
+	data = response.Response.Data
+	info = response.Response.Info
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodRecordLineListByFilter(ctx context.Context, param map[string]interface{}) (line_list []*dnspod.LineInfo, line_group_list []*dnspod.LineGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeRecordLineListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "DomainGrade" {
+			request.DomainGrade = v.(*string)
+		}
+		if k == "DomainId" {
+			request.DomainId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeRecordLineList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	line_list = response.Response.LineList
+	line_group_list = response.Response.LineGroupList
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodRecordListByFilter(ctx context.Context, param map[string]interface{}) (record_list []*dnspod.RecordListItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeRecordFilterListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "DomainId" {
+			request.DomainId = v.(*uint64)
+		}
+		if k == "SubDomain" {
+			request.SubDomain = v.(*string)
+		}
+		if k == "RecordType" {
+			request.RecordType = v.([]*string)
+		}
+		if k == "RecordLine" {
+			request.RecordLine = v.([]*string)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.([]*uint64)
+		}
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+		if k == "SortField" {
+			request.SortField = v.(*string)
+		}
+		if k == "SortType" {
+			request.SortType = v.(*string)
+		}
+		if k == "RecordValue" {
+			request.RecordValue = v.(*string)
+		}
+		if k == "RecordStatus" {
+			request.RecordStatus = v.([]*string)
+		}
+		if k == "WeightBegin" {
+			request.WeightBegin = v.(*uint64)
+		}
+		if k == "WeightEnd" {
+			request.WeightEnd = v.(*uint64)
+		}
+		if k == "MXBegin" {
+			request.MXBegin = v.(*uint64)
+		}
+		if k == "MXEnd" {
+			request.MXEnd = v.(*uint64)
+		}
+		if k == "TTLBegin" {
+			request.TTLBegin = v.(*uint64)
+		}
+		if k == "TTLEnd" {
+			request.TTLEnd = v.(*uint64)
+		}
+		if k == "UpdatedAtBegin" {
+			request.UpdatedAtBegin = v.(*string)
+		}
+		if k == "UpdatedAtEnd" {
+			request.UpdatedAtEnd = v.(*string)
+		}
+		if k == "Remark" {
+			request.Remark = v.(*string)
+		}
+		if k == "IsExactSubDomain" {
+			request.IsExactSubDomain = v.(*bool)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDnsPodClient().DescribeRecordFilterList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RecordList) < 1 {
+			break
+		}
+		record_list = append(record_list, response.Response.RecordList...)
+		if len(response.Response.RecordList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodRecordTypeByFilter(ctx context.Context, param map[string]interface{}) (type_list []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dnspod.NewDescribeRecordTypeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DomainGrade" {
+			request.DomainGrade = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeRecordType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TypeList) < 1 {
+		return
+	}
+	type_list = append(type_list, response.Response.TypeList...)
+
+	return
+}
