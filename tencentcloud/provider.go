@@ -1909,6 +1909,7 @@ Business Intelligence(BI)
 	tencentcloud_bi_user_role
 	tencentcloud_bi_project_user_role
 	tencentcloud_bi_datasource
+	tencentcloud_bi_datasource_cloud
 	tencentcloud_bi_embed_token
 	tencentcloud_bi_embed_interval
 */

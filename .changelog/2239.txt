@@ -23,6 +23,10 @@ tencentcloud_bi_datasource
 ```
 
 ```release-note:new-resource
+tencentcloud_bi_datasource_cloud
+```
+
+```release-note:new-resource
 tencentcloud_bi_embed_token
 ```
 

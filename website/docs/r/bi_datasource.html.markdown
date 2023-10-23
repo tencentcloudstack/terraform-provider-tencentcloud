@@ -36,7 +36,7 @@ The following arguments are supported:
 * `db_name` - (Required, String) Database name.
 * `db_port` - (Required, Int) Port.
 * `db_pwd` - (Required, String) Password.
-* `db_type` - (Required, String) MYSQL.
+* `db_type` - (Required, String) `MYSQL`, `MSSQL`, `POSTGRE`, `ORACLE`, `CLICKHOUSE`, `TIDB`, `HIVE`, `PRESTO`.
 * `db_user` - (Required, String) User name.
 * `project_id` - (Required, Int) Project id.
 * `source_name` - (Required, String) Datasource name in BI.

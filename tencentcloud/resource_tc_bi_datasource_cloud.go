@@ -5,40 +5,33 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_bi_datasource_cloud" "datasource_cloud" {
-  service_type = "Cloud"
-  db_type = "Database type."
-  charset = "utf8"
-  db_user = "root"
-  db_pwd = "abc"
-  db_name = "abc"
-  source_name = "abc"
-  project_id = "123"
-  vip = "1.2.3.4"
-  vport = "3306"
-  vpc_id = ""
-  uniq_vpc_id = ""
-  region_id = ""
-  extra_param = ""
-  data_origin = "abc"
-  data_origin_project_id = "abc"
-  data_origin_datasource_id = "abc"
+  charset    = "utf8"
+  db_name    = "bi_dev"
+  db_type    = "MYSQL"
+  db_user    = "root"
+  project_id = "11015056"
+  db_pwd     = "xxxxxx"
+  service_type {
+    instance_id = "cdb-12viotu5"
+    region     = "ap-guangzhou"
+    type       = "Cloud"
+  }
+  source_name = "tf-test1"
+  vip         = "10.0.0.4"
+  vport       = "3306"
+  region_id   = "gz"
+  vpc_id      = 5292713
 }
-```
-
-Import
-
-bi datasource_cloud can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_bi_datasource_cloud.datasource_cloud datasource_cloud_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -52,20 +45,38 @@ func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
 		Read:   resourceTencentCloudBiDatasourceCloudRead,
 		Update: resourceTencentCloudBiDatasourceCloudUpdate,
 		Delete: resourceTencentCloudBiDatasourceCloudDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"service_type": {
 				Required:    true,
-				Type:        schema.TypeString,
-				Description: "Own or Cloud.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Service type, Own or Cloud.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Service type, Cloud.",
+						},
+						"instance_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Instance Id.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Region.",
+						},
+					},
+				},
 			},
 
 			"db_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "MYSQL.",
+				Description: "`MYSQL`, `TDSQL-C_MYSQL`, `TDSQL_MYSQL`, `MSSQL`, `POSTGRESQL`, `MARIADB`.",
 			},
 
 			"charset": {
@@ -118,7 +129,7 @@ func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
 			},
 
 			"vpc_id": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Vpc identification.",
 			},
@@ -137,6 +148,7 @@ func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
 
 			"extra_param": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Extended parameters.",
 			},
@@ -169,12 +181,18 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request  = bi.NewCreateDatasourceCloudRequest()
-		response = bi.NewCreateDatasourceCloudResponse()
-		id       int64
+		request   = bi.NewCreateDatasourceCloudRequest()
+		response  = bi.NewCreateDatasourceCloudResponse()
+		projectId string
+		id        int64
 	)
-	if v, ok := d.GetOk("service_type"); ok {
-		request.ServiceType = helper.String(v.(string))
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_type"); ok {
+		v, o := helper.MapToString(dMap)
+		if !o {
+			return fmt.Errorf("ServiceType `%s` format error", dMap)
+		}
+		request.ServiceType = &v
 	}
 
 	if v, ok := d.GetOk("db_type"); ok {
@@ -202,6 +220,7 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
+		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
 	}
 
@@ -257,7 +276,7 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 	}
 
 	id = *response.Response.Data.Id
-	d.SetId(strconv.FormatInt(id, 10))
+	d.SetId(strings.Join([]string{projectId, strconv.FormatInt(id, 10)}, FILED_SP))
 
 	return resourceTencentCloudBiDatasourceCloudRead(d, meta)
 }
@@ -272,10 +291,16 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 
 	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	id := d.Id()
-	idint, _ := strconv.Atoi(id)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	projectIdInt, _ := strconv.ParseInt(projectId, 10, 64)
+	id := idSplit[1]
+	idInt, _ := strconv.ParseInt(id, 10, 64)
 
-	datasourceCloud, err := service.DescribeBiDatasourceCloudById(ctx, uint64(idint))
+	datasourceCloud, err := service.DescribeBiDatasourceCloudById(ctx, uint64(projectIdInt), uint64(idInt))
 	if err != nil {
 		return err
 	}
@@ -287,7 +312,12 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 	}
 
 	if datasourceCloud.ServiceType != nil {
-		_ = d.Set("service_type", datasourceCloud.ServiceType)
+		v, err := helper.JsonToMap(*datasourceCloud.ServiceType)
+		if err != nil {
+			return fmt.Errorf("ServiceType `%v` format error", *datasourceCloud.ServiceType)
+		}
+
+		_ = d.Set("service_type", []interface{}{v})
 	}
 
 	if datasourceCloud.DbType != nil {
@@ -361,87 +391,69 @@ func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta in
 
 	request := bi.NewModifyDatasourceCloudRequest()
 
-	id := d.Id()
-	idint, _ := strconv.Atoi(id)
-	idUint64 := uint64(idint)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	id := idSplit[1]
+	idInt, _ := strconv.ParseInt(id, 10, 64)
+	idUint64 := uint64(idInt)
 
 	request.Id = &idUint64
+	request.ProjectId = &projectId
 
-	if d.HasChange("service_type") {
-		if v, ok := d.GetOk("service_type"); ok {
-			request.ServiceType = helper.String(v.(string))
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_type"); ok {
+		v, o := helper.MapToString(dMap)
+		if !o {
+			return fmt.Errorf("ServiceType `%s` format error", dMap)
 		}
+		request.ServiceType = &v
 	}
 
-	if d.HasChange("db_type") {
-		if v, ok := d.GetOk("db_type"); ok {
-			request.DbType = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("db_type"); ok {
+		request.DbType = helper.String(v.(string))
 	}
 
-	if d.HasChange("charset") {
-		if v, ok := d.GetOk("charset"); ok {
-			request.Charset = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("charset"); ok {
+		request.Charset = helper.String(v.(string))
 	}
 
-	if d.HasChange("db_user") {
-		if v, ok := d.GetOk("db_user"); ok {
-			request.DbUser = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("db_user"); ok {
+		request.DbUser = helper.String(v.(string))
 	}
 
-	if d.HasChange("db_pwd") {
-		if v, ok := d.GetOk("db_pwd"); ok {
-			request.DbPwd = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("db_pwd"); ok {
+		request.DbPwd = helper.String(v.(string))
 	}
 
-	if d.HasChange("db_name") {
-		if v, ok := d.GetOk("db_name"); ok {
-			request.DbName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("db_name"); ok {
+		request.DbName = helper.String(v.(string))
 	}
 
-	if d.HasChange("source_name") {
-		if v, ok := d.GetOk("source_name"); ok {
-			request.SourceName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("source_name"); ok {
+		request.SourceName = helper.String(v.(string))
 	}
 
-	if d.HasChange("project_id") {
-		if v, ok := d.GetOk("project_id"); ok {
-			request.ProjectId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("vip"); ok {
+		request.Vip = helper.String(v.(string))
 	}
 
-	if d.HasChange("vip") {
-		if v, ok := d.GetOk("vip"); ok {
-			request.Vip = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("vport"); ok {
+		request.Vport = helper.String(v.(string))
 	}
 
-	if d.HasChange("vport") {
-		if v, ok := d.GetOk("vport"); ok {
-			request.Vport = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("region_id"); ok {
+		request.RegionId = helper.String(v.(string))
 	}
 
-	if d.HasChange("vpc_id") {
-		if v, ok := d.GetOk("vpc_id"); ok {
-			request.VpcId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VpcId = helper.String(v.(string))
 	}
 
 	if d.HasChange("uniq_vpc_id") {
 		if v, ok := d.GetOk("uniq_vpc_id"); ok {
 			request.UniqVpcId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("region_id") {
-		if v, ok := d.GetOk("region_id"); ok {
-			request.RegionId = helper.String(v.(string))
 		}
 	}
 
@@ -494,10 +506,16 @@ func resourceTencentCloudBiDatasourceCloudDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id := d.Id()
-	idint, _ := strconv.Atoi(id)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	projectIdInt, _ := strconv.ParseInt(projectId, 10, 64)
+	id := idSplit[1]
+	idInt, _ := strconv.ParseInt(id, 10, 64)
 
-	if err := service.DeleteBiDatasourceCloudById(ctx, uint64(idint)); err != nil {
+	if err := service.DeleteBiDatasourceCloudById(ctx, uint64(projectIdInt), uint64(idInt)); err != nil {
 		return err
 	}
 

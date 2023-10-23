@@ -13,11 +13,11 @@ type BiService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *BiService) DescribeBiDatasourceCloudById(ctx context.Context, id uint64) (datasourceCloud *bi.DatasourceInfo, errRet error) {
+func (me *BiService) DescribeBiDatasourceCloudById(ctx context.Context, projectId, id uint64) (datasourceCloud *bi.DatasourceInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := bi.NewDescribeDatasourceListRequest()
-	// request.ProjectId = &projectId
+	request.ProjectId = &projectId
 
 	defer func() {
 		if errRet != nil {
@@ -27,42 +27,44 @@ func (me *BiService) DescribeBiDatasourceCloudById(ctx context.Context, id uint6
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseBiClient().DescribeDatasourceList(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.PageNo = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseBiClient().DescribeDatasourceList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Data.List) < 1 {
-		return
+		if response == nil || len(response.Response.Data.List) < 1 {
+			break
+		}
+		for _, v := range response.Response.Data.List {
+			if *v.Id == id {
+				datasourceCloud = v
+				return
+			}
+		}
+		if len(response.Response.Data.List) < int(limit) {
+			break
+		}
+
+		offset += limit
 	}
 
-	datasourceCloud = response.Response.Data.List[0]
 	return
 }
 
-func (me *BiService) DescribeBiDatasourceCloudVipVportById(ctx context.Context, dbType string) (vip, vport string, errRet error) {
-	// logId := getLogId(ctx)
-
-	switch dbType {
-	case "string":
-
-	case "int64":
-
-	case "uint64":
-
-	case "float64":
-
-	}
-
-	return
-}
-
-func (me *BiService) DeleteBiDatasourceCloudById(ctx context.Context, id uint64) (errRet error) {
+func (me *BiService) DeleteBiDatasourceCloudById(ctx context.Context, projectId, id uint64) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := bi.NewDeleteDatasourceRequest()
+	request.ProjectId = &projectId
 	request.Id = &id
 
 	defer func() {

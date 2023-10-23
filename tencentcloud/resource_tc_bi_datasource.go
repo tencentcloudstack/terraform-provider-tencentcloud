@@ -65,7 +65,7 @@ func resourceTencentCloudBiDatasource() *schema.Resource {
 			"db_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "MYSQL.",
+				Description: "`MYSQL`, `MSSQL`, `POSTGRE`, `ORACLE`, `CLICKHOUSE`, `TIDB`, `HIVE`, `PRESTO`.",
 			},
 
 			"charset": {

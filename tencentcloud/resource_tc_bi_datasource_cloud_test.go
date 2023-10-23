@@ -16,12 +16,9 @@ func TestAccTencentCloudNeedFixBiDatasourceCloudResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBiDatasourceCloud,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_bi_datasource_cloud.datasource_cloud", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_bi_datasource_cloud.datasource_cloud",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_bi_datasource_cloud.datasource_cloud", "id"),
+				),
 			},
 		},
 	})
@@ -30,25 +27,21 @@ func TestAccTencentCloudNeedFixBiDatasourceCloudResource_basic(t *testing.T) {
 const testAccBiDatasourceCloud = `
 
 resource "tencentcloud_bi_datasource_cloud" "datasource_cloud" {
-  service_type = "Cloud"
-  db_type = "Database type."
-  charset = "utf8"
-  db_user = "root"
-  db_pwd = "abc"
-  db_name = "abc"
-  source_name = "abc"
-  project_id = "123"
-  vip = "1.2.3.4"
-  vport = "3306"
-  vpc_id = ""
-  uniq_vpc_id = ""
-  region_id = ""
-  extra_param = ""
-  instance_id = ""
-  prod_db_name = ""
-  data_origin = "abc"
-  data_origin_project_id = "abc"
-  data_origin_datasource_id = "abc"
+  charset    = "utf8"
+  db_name    = "bi_dev"
+  db_type    = "MYSQL"
+  db_user    = "root"
+  project_id = "11015056"
+  db_pwd     = "xxxxxx"
+  service_type {
+    instance_id = "cdb-12viotu5"
+    region     = "ap-guangzhou"
+    type       = "Cloud"
+  }
+  source_name = "tf-test1"
+  vip         = "10.0.0.4"
+  vport       = "3306"
+  region_id   = "gz"
+  vpc_id      = 5292713
 }
-
 `
