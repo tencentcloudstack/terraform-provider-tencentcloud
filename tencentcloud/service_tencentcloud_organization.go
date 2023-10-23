@@ -685,3 +685,71 @@ func (me *OrganizationService) DeleteOrganizationOrgIdentityById(ctx context.Con
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationOrgMemberPolicyById(ctx context.Context, policyId string, uins []int64) (orgMemberPolicy *organization.OrgMemberPolicy, errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDescribeOrganizationMemberPoliciesRequest()
+	request.MemberUin =
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	var tmp []*organization.OrgMemberPolicy
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeOrganizationMemberPolicies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		tmp = append(tmp, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+	}
+	for _, item := range tmp {
+		if *item.IdentityId == helper.StrToInt64(identityId) {
+			orgIdentity = item
+		}
+	}
+	return
+}
+
+func (me *OrganizationService) DeleteOrganizationOrgMemberPolicyById(ctx context.Context, policyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := organization.NewDeleteOrganizationMembersPolicyRequest()
+	request.PolicyId = &policyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOrganizationClient().DeleteOrganizationMembersPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
