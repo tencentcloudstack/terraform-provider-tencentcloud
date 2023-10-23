@@ -1292,7 +1292,11 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
+<<<<<<< HEAD
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.771
+=======
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.770
+>>>>>>> 188a4e4a4d47d5df3f48098ed5babd61f1c3032d
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
