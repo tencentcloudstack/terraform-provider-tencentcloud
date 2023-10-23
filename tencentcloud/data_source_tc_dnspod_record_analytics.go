@@ -323,7 +323,10 @@ func dataSourceTencentCloudDnspodRecordAnalyticsRead(d *schema.ResourceData, met
 		}
 
 		// ids = append(ids, *info.Domain)
-		_ = d.Set("info", subdomainAnalyticsInfoMap)
+		e = helper.SetMapInterfaces(d, "info", subdomainAnalyticsInfoMap)
+		if e != nil {
+			return e
+		}
 	}
 
 	if aliasData != nil {
