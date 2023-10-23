@@ -10,7 +10,7 @@ func TestAccTencentCloudOrganizationOrgMemberPolicyAttachmentResource_basic(t *t
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			testAccPreCheckCommon(t, ACCOUNT_TYPE_ORGANIZATION)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
