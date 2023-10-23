@@ -16,6 +16,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
@@ -129,7 +130,7 @@ func dataSourceTencentCloudDlcDescribeUserInfo() *schema.Resource {
 												"operation": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE . note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
+													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE. note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
 												},
 												"policy_type": {
 													Type:        schema.TypeString,
@@ -237,7 +238,7 @@ func dataSourceTencentCloudDlcDescribeUserInfo() *schema.Resource {
 												"operation": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE . note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
+													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE. note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
 												},
 												"policy_type": {
 													Type:        schema.TypeString,
@@ -398,7 +399,7 @@ func dataSourceTencentCloudDlcDescribeUserInfo() *schema.Resource {
 												"operation": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE . note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
+													Description: "Authorized permission operations provide different operations for different levels of authentication. administrator permissions: ALL, default is ALL if left blank; data connection level authentication: CREATE; database level authentication: ALL, CREATE, ALTER, DROP; data table permissions: ALL, SELECT, INSERT, ALTER, DELETE, DROP, UPDATE. note: under data table permissions, only SELECT operations are supported when the specified data source is not COSDataCatalog.",
 												},
 												"policy_type": {
 													Type:        schema.TypeString,

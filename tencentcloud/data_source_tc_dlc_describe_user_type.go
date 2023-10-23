@@ -13,6 +13,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -25,7 +26,7 @@ func dataSourceTencentCloudDlcDescribeUserType() *schema.Resource {
 			"user_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "User id (uin), if left blank, it defaults to the caller’s sub-uin.",
+				Description: "User id (uin), if left blank, it defaults to the caller's sub-uin.",
 			},
 
 			"user_type": {
