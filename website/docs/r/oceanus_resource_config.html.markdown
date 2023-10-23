@@ -14,20 +14,19 @@ Provides a resource to create a oceanus resource_config
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_oceanus_resource_config" "resource_config" {
-  resource_id = "resource-xxx"
+resource "tencentcloud_oceanus_resource_config" "example" {
+  resource_id = "resource-8y9lzcuz"
   resource_loc {
     storage_type = 1
     param {
-      bucket = "scs-online-1257058945"
-      path   = "251008563/100000006047/flink-cos-fs-hadoop-oceanus-1-20210304112"
-      region = "ap-chengdu"
+      bucket = "keep-terraform-1257058945"
+      path   = "OceanusResource/junit-4.13.2.jar"
+      region = "ap-guangzhou"
     }
-
   }
-  remark        = "xxx"
-  auto_delete   = 1
-  work_space_id = "space-xxx"
+
+  remark        = "remark."
+  work_space_id = "space-2idq8wbr"
 }
 ```
 

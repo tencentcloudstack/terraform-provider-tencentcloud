@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_oceanus_resource_related_job" "example" {
-  resource_id                    = "resource-abd503yt"
+  resource_id                    = "resource-8y9lzcuz"
   desc_by_job_config_create_time = 0
   resource_config_version        = 1
-  work_space_id                  = "space-bshmbms5"
+  work_space_id                  = "space-2idq8wbr"
 }
 ```
 */
@@ -98,7 +98,7 @@ func dataSourceTencentCloudOceanusResourceRelatedJobRead(d *schema.ResourceData,
 		paramMap["ResourceId"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("d_e_s_c_by_job_config_create_time"); v != nil {
+	if v, _ := d.GetOk("desc_by_job_config_create_time"); v != nil {
 		paramMap["DESCByJobConfigCreateTime"] = helper.IntInt64(v.(int))
 	}
 

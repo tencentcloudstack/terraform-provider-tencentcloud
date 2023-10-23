@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudOceanusResourceRelatedJobDataSource_basic -v
-func TestAccTencentCloudOceanusResourceRelatedJobDataSource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixOceanusResourceRelatedJobDataSource_basic -v
+func TestAccTencentCloudNeedFixOceanusResourceRelatedJobDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -31,9 +31,9 @@ func TestAccTencentCloudOceanusResourceRelatedJobDataSource_basic(t *testing.T) 
 
 const testAccOceanusResourceRelatedJobDataSource = `
 data "tencentcloud_oceanus_resource_related_job" "example" {
-  resource_id                    = "resource-xxx"
+  resource_id                    = "resource-8y9lzcuz"
   desc_by_job_config_create_time = 0
   resource_config_version        = 1
-  work_space_id                  = "space-bshmbms5"
+  work_space_id                  = "space-2idq8wbr"
 }
 `

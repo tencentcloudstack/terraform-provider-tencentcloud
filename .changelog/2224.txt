@@ -19,7 +19,7 @@ tencentcloud_oceanus_clusters
 ```
 
 ```release-note:new-data-source
-tencentcloud_oceanus_tree_jobs
+tencentcloud_oceanus_tree_resources
 ```
 
 ```release-note:new-resource

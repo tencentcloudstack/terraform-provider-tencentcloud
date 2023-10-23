@@ -1070,7 +1070,7 @@ Oceanus
 	tencentcloud_oceanus_system_resource
 	tencentcloud_oceanus_work_spaces
 	tencentcloud_oceanus_clusters
-	tencentcloud_oceanus_tree_jobs
+	tencentcloud_oceanus_tree_resources
 
   Resource
 	tencentcloud_oceanus_job
@@ -2084,7 +2084,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_system_resource":                     dataSourceTencentCloudOceanusSystemResource(),
 			"tencentcloud_oceanus_work_spaces":                         dataSourceTencentCloudOceanusWorkSpaces(),
 			"tencentcloud_oceanus_clusters":                            dataSourceTencentCloudOceanusClusters(),
-			"tencentcloud_oceanus_tree_jobs":                           dataSourceTencentCloudOceanusTreeJobs(),
+			"tencentcloud_oceanus_tree_resources":                      dataSourceTencentCloudOceanusTreeResources(),
 			"tencentcloud_vpn_customer_gateways":                       dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                                dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                          dataSourceTencentCloudVpnGatewayRoutes(),

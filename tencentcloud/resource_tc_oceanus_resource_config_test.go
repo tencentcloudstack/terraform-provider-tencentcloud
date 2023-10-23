@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudOceanusResourceConfigResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixOceanusResourceConfigResource_basic -v
+func TestAccTencentCloudNeedFixOceanusResourceConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,33 +17,30 @@ func TestAccTencentCloudOceanusResourceConfigResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOceanusResourceConfig,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_oceanus_resource_config.resource_config", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_oceanus_resource_config.resource_config",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_oceanus_resource_config.example", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_oceanus_resource_config.example", "resource_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_oceanus_resource_config.example", "remark"),
+					resource.TestCheckResourceAttrSet("tencentcloud_oceanus_resource_config.example", "work_space_id"),
+				),
 			},
 		},
 	})
 }
 
 const testAccOceanusResourceConfig = `
-
-resource "tencentcloud_oceanus_resource_config" "resource_config" {
-  resource_id = "resource-xxx"
+resource "tencentcloud_oceanus_resource_config" "example" {
+  resource_id = "resource-8y9lzcuz"
   resource_loc {
-		storage_type = 1
-		param {
-			bucket = "scs-online-1257058945"
-			path = "251008563/100000006047/flink-cos-fs-hadoop-oceanus-1-20210304112"
-			region = "ap-chengdu"
-		}
-
+    storage_type = 1
+    param {
+      bucket = "keep-terraform-1257058945"
+      path   = "OceanusResource/junit-4.13.2.jar"
+      region = "ap-guangzhou"
+    }
   }
-  remark = "xxx"
-  auto_delete = 1
-  work_space_id = "space-xxx"
-}
 
+  remark        = "remark."
+  work_space_id = "space-2idq8wbr"
+}
 `

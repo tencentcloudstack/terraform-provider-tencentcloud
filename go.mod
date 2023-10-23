@@ -106,7 +106,7 @@ require (
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.770
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.771
 )
 
 require (

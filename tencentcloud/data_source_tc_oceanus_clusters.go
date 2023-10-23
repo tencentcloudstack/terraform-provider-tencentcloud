@@ -17,7 +17,7 @@ data "tencentcloud_oceanus_clusters" "example" {
   order_type  = 1
   filters {
     name   = "name"
-    values = []
+    values = ["tf_example"]
   }
   work_space_id = "space-2idq8wbr"
 }
@@ -353,6 +353,9 @@ func dataSourceTencentCloudOceanusClusters() *schema.Resource {
 							Type:        schema.TypeList,
 							Computed:    true,
 							Description: "Session cluster information.Note: This field may return null, indicating that no valid values can be obtained.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{},
+							},
 						},
 						"arch_generation": {
 							Type:        schema.TypeInt,

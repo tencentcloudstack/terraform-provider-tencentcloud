@@ -27,7 +27,7 @@ data "tencentcloud_oceanus_clusters" "example" {
   order_type  = 1
   filters {
     name   = "name"
-    values = []
+    values = ["tf_example"]
   }
   work_space_id = "space-2idq8wbr"
 }

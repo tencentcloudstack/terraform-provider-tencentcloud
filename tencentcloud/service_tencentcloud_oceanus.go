@@ -513,3 +513,39 @@ func (me *OceanusService) DescribeOceanusTreeJobsByFilter(ctx context.Context, p
 	treeJobs = response.Response
 	return
 }
+
+func (me *OceanusService) DescribeOceanusTreeResourcesByFilter(ctx context.Context, param map[string]interface{}) (treeResources *oceanus.DescribeTreeResourcesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = oceanus.NewDescribeTreeResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "WorkSpaceId" {
+			request.WorkSpaceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DescribeTreeResources(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	treeResources = response.Response
+	return
+}

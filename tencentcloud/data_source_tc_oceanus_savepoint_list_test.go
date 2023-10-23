@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudOceanusSavepointListDataSource_basic -v
-func TestAccTencentCloudOceanusSavepointListDataSource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixOceanusSavepointListDataSource_basic -v
+func TestAccTencentCloudNeedFixOceanusSavepointListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -29,7 +29,7 @@ func TestAccTencentCloudOceanusSavepointListDataSource_basic(t *testing.T) {
 
 const testAccOceanusSavepointListDataSource = `
 data "tencentcloud_oceanus_savepoint_list" "example" {
-  job_id        = "cql-asdf5678"
-  work_space_id = "space-1327"
+  job_id        = "cql-314rw6w0"
+  work_space_id = "space-2idq8wbr"
 }
 `

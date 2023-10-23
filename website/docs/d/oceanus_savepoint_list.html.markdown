@@ -15,8 +15,8 @@ Use this data source to query detailed information of oceanus savepoint_list
 
 ```hcl
 data "tencentcloud_oceanus_savepoint_list" "example" {
-  job_id        = "cql-asdf5678"
-  work_space_id = "space-bshmbms5"
+  job_id        = "cql-314rw6w0"
+  work_space_id = "space-2idq8wbr"
 }
 ```
 

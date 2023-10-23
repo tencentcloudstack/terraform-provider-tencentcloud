@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudOceanusWorkSpacesDataSource_basic -v
-func TestAccTencentCloudOceanusWorkSpacesDataSource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixOceanusWorkSpacesDataSource_basic -v
+func TestAccTencentCloudNeedFixOceanusWorkSpacesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

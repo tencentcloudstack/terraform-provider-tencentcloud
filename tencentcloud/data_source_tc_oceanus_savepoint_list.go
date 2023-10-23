@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_oceanus_savepoint_list" "example" {
-  job_id        = "cql-asdf5678"
-  work_space_id = "space-bshmbms5"
+  job_id        = "cql-314rw6w0"
+  work_space_id = "space-2idq8wbr"
 }
 ```
 */
@@ -35,6 +35,12 @@ func dataSourceTencentCloudOceanusSavepointList() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Workspace SerialId.",
 			},
+			//"record_types": {
+			//	Optional:    true,
+			//	Type:        schema.TypeList,
+			//	Elem:        &schema.Schema{Type: schema.TypeInt},
+			//	Description: "RecordTypes. 1 is triggering the savepoint, 2 is the checkpoint, and 3 is stopping the triggered savepoint",
+			//},
 			"savepoint": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -143,6 +149,15 @@ func dataSourceTencentCloudOceanusSavepointListRead(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("work_space_id"); ok {
 		paramMap["WorkSpaceId"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("record_types"); ok {
+		recordTypesList := v.([]interface{})
+		for _, item := range recordTypesList {
+			recordTypesList = append(recordTypesList, item.(int))
+		}
+
+		paramMap["RecordTypes"] = recordTypesList
 	}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
