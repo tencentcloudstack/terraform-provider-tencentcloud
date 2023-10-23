@@ -96,7 +96,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.770
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f

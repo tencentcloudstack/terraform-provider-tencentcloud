@@ -37,6 +37,20 @@ resource "tencentcloud_waf_clb_instance" "example" {
 }
 ```
 
+### Set waf ultimate_clb instance qps limit
+
+```hcl
+resource "tencentcloud_waf_clb_instance" "example" {
+  goods_category  = "ultimate_clb"
+  instance_name   = "tf-example-clb-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  qps_limit       = 200000
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -45,7 +59,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
-* `qps_limit` - (Optional, Int) QPS Limit. Only `elastic_mode` is 1, can be set.
+* `qps_limit` - (Optional, Int) QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
 

@@ -26,6 +26,20 @@ resource "tencentcloud_waf_clb_instance" "example" {
   elastic_mode    = 1
 }
 ```
+
+Set waf ultimate_clb instance qps limit
+
+```hcl
+resource "tencentcloud_waf_clb_instance" "example" {
+  goods_category  = "ultimate_clb"
+  instance_name   = "tf-example-clb-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  qps_limit       = 200000
+}
+```
 */
 package tencentcloud
 
@@ -92,8 +106,8 @@ func resourceTencentCloudWafClbInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "QPS Limit. Only `elastic_mode` is 1, can be set.",
+				ValidateFunc: validateIntegerMin(10000),
+				Description:  "QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.",
 			},
 			//"domain_pkg_count": {
 			//	Optional:     true,
@@ -380,6 +394,10 @@ func resourceTencentCloudWafClbInstanceRead(d *schema.ResourceData, meta interfa
 
 	if instanceInfo.Mode != nil {
 		_ = d.Set("elastic_mode", instanceInfo.Mode)
+	}
+
+	if instanceInfo.ElasticBilling != nil {
+		_ = d.Set("qps_limit", instanceInfo.ElasticBilling)
 	}
 
 	//if instanceInfo.DomainPkg != nil {

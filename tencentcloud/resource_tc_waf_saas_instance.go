@@ -27,6 +27,21 @@ resource "tencentcloud_waf_saas_instance" "example" {
   real_region     = "gz"
 }
 ```
+
+Set waf ultimate_saas instance qps limit
+
+```hcl
+resource "tencentcloud_waf_saas_instance" "example" {
+  goods_category  = "ultimate_saas"
+  instance_name   = "tf-example-saas-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  real_region     = "gz"
+  qps_limit       = 200000
+}
+```
 */
 package tencentcloud
 
@@ -93,8 +108,8 @@ func resourceTencentCloudWafSaasInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "QPS Limit. Only `elastic_mode` is 1, can be set.",
+				ValidateFunc: validateIntegerMin(10000),
+				Description:  "QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.",
 			},
 			"real_region": {
 				Optional:     true,
@@ -414,6 +429,10 @@ func resourceTencentCloudWafSaasInstanceRead(d *schema.ResourceData, meta interf
 
 	if instanceInfo.Mode != nil {
 		_ = d.Set("elastic_mode", instanceInfo.Mode)
+	}
+
+	if instanceInfo.ElasticBilling != nil {
+		_ = d.Set("qps_limit", instanceInfo.ElasticBilling)
 	}
 
 	if instanceInfo.Region != nil {
