@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_organization_org_member_policy_attachment
+```
