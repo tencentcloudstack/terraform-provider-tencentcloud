@@ -2673,6 +2673,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback": dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
+			"tencentcloud_dlc_describe_user_type":                      dataSourceTencentCloudDlcDescribeUserType(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
