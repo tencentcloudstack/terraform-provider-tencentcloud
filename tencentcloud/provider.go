@@ -1842,7 +1842,7 @@ WeData
   Resource
 	tencentcloud_wedata_rule_template
 
-Waf
+Web Application Firewall(WAF)
   Data Source
     tencentcloud_waf_ciphers
     tencentcloud_waf_tls_versions
@@ -1867,7 +1867,7 @@ Waf
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
 
-Cfw
+Cloud Firewall(CFW)
   Data Source
 	tencentcloud_cfw_nat_fw_switches
 	tencentcloud_cfw_vpc_fw_switches
