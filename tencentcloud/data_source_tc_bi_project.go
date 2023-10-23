@@ -233,7 +233,7 @@ func dataSourceTencentCloudBiProjectRead(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("page_no"); v != nil {
+	if v, ok := d.GetOkExists("page_no"); ok {
 		paramMap["PageNo"] = helper.IntUint64(v.(int))
 	}
 
@@ -241,7 +241,7 @@ func dataSourceTencentCloudBiProjectRead(d *schema.ResourceData, meta interface{
 		paramMap["Keyword"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("all_page"); v != nil {
+	if v, ok := d.GetOkExists("all_page"); ok {
 		paramMap["AllPage"] = helper.Bool(v.(bool))
 	}
 
