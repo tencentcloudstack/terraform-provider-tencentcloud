@@ -45,7 +45,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.765
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.770
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -53,7 +53,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.726
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.768
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.765
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
@@ -66,9 +66,9 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.734
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.764
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.758
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.763
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.770
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.751
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762

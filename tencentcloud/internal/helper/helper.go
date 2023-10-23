@@ -245,3 +245,23 @@ func IsEmptyStr(s *string) bool {
 	}
 	return *s == ""
 }
+
+func MapToString(param map[string]interface{}) (string, bool) {
+	data, err := json.Marshal(param)
+	if err != nil {
+		return "", false
+	}
+
+	return string(data), true
+}
+
+func JsonToMap(str string) (map[string]interface{}, error) {
+	var temp map[string]interface{}
+
+	err := json.Unmarshal([]byte(str), &temp)
+	if err != nil {
+		return nil, err
+	}
+
+	return temp, nil
+}

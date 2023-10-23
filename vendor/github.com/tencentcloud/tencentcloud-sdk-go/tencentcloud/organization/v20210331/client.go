@@ -59,8 +59,9 @@ func NewAddOrganizationMemberEmailRequest() (request *AddOrganizationMemberEmail
 func NewAddOrganizationMemberEmailResponse() (response *AddOrganizationMemberEmailResponse) {
     response = &AddOrganizationMemberEmailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddOrganizationMemberEmail
@@ -127,8 +128,9 @@ func NewAddOrganizationNodeRequest() (request *AddOrganizationNodeRequest) {
 func NewAddOrganizationNodeResponse() (response *AddOrganizationNodeResponse) {
     response = &AddOrganizationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddOrganizationNode
@@ -191,8 +193,9 @@ func NewBindOrganizationMemberAuthAccountRequest() (request *BindOrganizationMem
 func NewBindOrganizationMemberAuthAccountResponse() (response *BindOrganizationMemberAuthAccountResponse) {
     response = &BindOrganizationMemberAuthAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindOrganizationMemberAuthAccount
@@ -255,8 +258,9 @@ func NewCancelOrganizationMemberAuthAccountRequest() (request *CancelOrganizatio
 func NewCancelOrganizationMemberAuthAccountResponse() (response *CancelOrganizationMemberAuthAccountResponse) {
     response = &CancelOrganizationMemberAuthAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelOrganizationMemberAuthAccount
@@ -315,8 +319,9 @@ func NewCreateOrganizationRequest() (request *CreateOrganizationRequest) {
 func NewCreateOrganizationResponse() (response *CreateOrganizationResponse) {
     response = &CreateOrganizationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOrganization
@@ -361,6 +366,67 @@ func (c *Client) CreateOrganizationWithContext(ctx context.Context, request *Cre
     return
 }
 
+func NewCreateOrganizationIdentityRequest() (request *CreateOrganizationIdentityRequest) {
+    request = &CreateOrganizationIdentityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "CreateOrganizationIdentity")
+    
+    
+    return
+}
+
+func NewCreateOrganizationIdentityResponse() (response *CreateOrganizationIdentityResponse) {
+    response = &CreateOrganizationIdentityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOrganizationIdentity
+// 添加组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETPOLICYDETAIL = "FailedOperation.GetPolicyDetail"
+//  FAILEDOPERATION_ORGANIZATIONIDENTITYNAMEUSED = "FailedOperation.OrganizationIdentityNameUsed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_IDENTITYEXCEEDLIMIT = "LimitExceeded.IdentityExceedLimit"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  RESOURCENOTFOUND_POLICYNOTEXIST = "ResourceNotFound.PolicyNotExist"
+func (c *Client) CreateOrganizationIdentity(request *CreateOrganizationIdentityRequest) (response *CreateOrganizationIdentityResponse, err error) {
+    return c.CreateOrganizationIdentityWithContext(context.Background(), request)
+}
+
+// CreateOrganizationIdentity
+// 添加组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETPOLICYDETAIL = "FailedOperation.GetPolicyDetail"
+//  FAILEDOPERATION_ORGANIZATIONIDENTITYNAMEUSED = "FailedOperation.OrganizationIdentityNameUsed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_IDENTITYEXCEEDLIMIT = "LimitExceeded.IdentityExceedLimit"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  RESOURCENOTFOUND_POLICYNOTEXIST = "ResourceNotFound.PolicyNotExist"
+func (c *Client) CreateOrganizationIdentityWithContext(ctx context.Context, request *CreateOrganizationIdentityRequest) (response *CreateOrganizationIdentityResponse, err error) {
+    if request == nil {
+        request = NewCreateOrganizationIdentityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOrganizationIdentity require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOrganizationIdentityResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateOrganizationMemberRequest() (request *CreateOrganizationMemberRequest) {
     request = &CreateOrganizationMemberRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -375,8 +441,9 @@ func NewCreateOrganizationMemberRequest() (request *CreateOrganizationMemberRequ
 func NewCreateOrganizationMemberResponse() (response *CreateOrganizationMemberResponse) {
     response = &CreateOrganizationMemberResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOrganizationMember
@@ -495,8 +562,9 @@ func NewCreateOrganizationMemberAuthIdentityRequest() (request *CreateOrganizati
 func NewCreateOrganizationMemberAuthIdentityResponse() (response *CreateOrganizationMemberAuthIdentityResponse) {
     response = &CreateOrganizationMemberAuthIdentityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOrganizationMemberAuthIdentity
@@ -557,8 +625,9 @@ func NewCreateOrganizationMemberPolicyRequest() (request *CreateOrganizationMemb
 func NewCreateOrganizationMemberPolicyResponse() (response *CreateOrganizationMemberPolicyResponse) {
     response = &CreateOrganizationMemberPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOrganizationMemberPolicy
@@ -605,6 +674,69 @@ func (c *Client) CreateOrganizationMemberPolicyWithContext(ctx context.Context, 
     return
 }
 
+func NewCreateOrganizationMembersPolicyRequest() (request *CreateOrganizationMembersPolicyRequest) {
+    request = &CreateOrganizationMembersPolicyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "CreateOrganizationMembersPolicy")
+    
+    
+    return
+}
+
+func NewCreateOrganizationMembersPolicyResponse() (response *CreateOrganizationMembersPolicyResponse) {
+    response = &CreateOrganizationMembersPolicyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateOrganizationMembersPolicy
+// 创建组织成员访问策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEPOLICY = "FailedOperation.CreatePolicy"
+//  FAILEDOPERATION_MEMBERPOLICYNAMEEXIST = "FailedOperation.MemberPolicyNameExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERIDENTITYNOTEXIST = "ResourceNotFound.MemberIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateOrganizationMembersPolicy(request *CreateOrganizationMembersPolicyRequest) (response *CreateOrganizationMembersPolicyResponse, err error) {
+    return c.CreateOrganizationMembersPolicyWithContext(context.Background(), request)
+}
+
+// CreateOrganizationMembersPolicy
+// 创建组织成员访问策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEPOLICY = "FailedOperation.CreatePolicy"
+//  FAILEDOPERATION_MEMBERPOLICYNAMEEXIST = "FailedOperation.MemberPolicyNameExist"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_MEMBERIDENTITYNOTEXIST = "ResourceNotFound.MemberIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONMEMBERNOTEXIST = "ResourceNotFound.OrganizationMemberNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateOrganizationMembersPolicyWithContext(ctx context.Context, request *CreateOrganizationMembersPolicyRequest) (response *CreateOrganizationMembersPolicyResponse, err error) {
+    if request == nil {
+        request = NewCreateOrganizationMembersPolicyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateOrganizationMembersPolicy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateOrganizationMembersPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteOrganizationRequest() (request *DeleteOrganizationRequest) {
     request = &DeleteOrganizationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -619,8 +751,9 @@ func NewDeleteOrganizationRequest() (request *DeleteOrganizationRequest) {
 func NewDeleteOrganizationResponse() (response *DeleteOrganizationResponse) {
     response = &DeleteOrganizationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOrganization
@@ -671,6 +804,63 @@ func (c *Client) DeleteOrganizationWithContext(ctx context.Context, request *Del
     return
 }
 
+func NewDeleteOrganizationIdentityRequest() (request *DeleteOrganizationIdentityRequest) {
+    request = &DeleteOrganizationIdentityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "DeleteOrganizationIdentity")
+    
+    
+    return
+}
+
+func NewDeleteOrganizationIdentityResponse() (response *DeleteOrganizationIdentityResponse) {
+    response = &DeleteOrganizationIdentityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteOrganizationIdentity
+// 删除组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONIDENTITYINUSED = "FailedOperation.OrganizationIdentityInUsed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONIDENTITYNOTEXIST = "ResourceNotFound.OrganizationIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+func (c *Client) DeleteOrganizationIdentity(request *DeleteOrganizationIdentityRequest) (response *DeleteOrganizationIdentityResponse, err error) {
+    return c.DeleteOrganizationIdentityWithContext(context.Background(), request)
+}
+
+// DeleteOrganizationIdentity
+// 删除组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ORGANIZATIONIDENTITYINUSED = "FailedOperation.OrganizationIdentityInUsed"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONIDENTITYNOTEXIST = "ResourceNotFound.OrganizationIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+func (c *Client) DeleteOrganizationIdentityWithContext(ctx context.Context, request *DeleteOrganizationIdentityRequest) (response *DeleteOrganizationIdentityResponse, err error) {
+    if request == nil {
+        request = NewDeleteOrganizationIdentityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteOrganizationIdentity require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteOrganizationIdentityResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteOrganizationMemberAuthIdentityRequest() (request *DeleteOrganizationMemberAuthIdentityRequest) {
     request = &DeleteOrganizationMemberAuthIdentityRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -685,8 +875,9 @@ func NewDeleteOrganizationMemberAuthIdentityRequest() (request *DeleteOrganizati
 func NewDeleteOrganizationMemberAuthIdentityResponse() (response *DeleteOrganizationMemberAuthIdentityResponse) {
     response = &DeleteOrganizationMemberAuthIdentityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOrganizationMemberAuthIdentity
@@ -743,8 +934,9 @@ func NewDeleteOrganizationMembersRequest() (request *DeleteOrganizationMembersRe
 func NewDeleteOrganizationMembersResponse() (response *DeleteOrganizationMembersResponse) {
     response = &DeleteOrganizationMembersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOrganizationMembers
@@ -819,8 +1011,9 @@ func NewDeleteOrganizationMembersPolicyRequest() (request *DeleteOrganizationMem
 func NewDeleteOrganizationMembersPolicyResponse() (response *DeleteOrganizationMembersPolicyResponse) {
     response = &DeleteOrganizationMembersPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOrganizationMembersPolicy
@@ -875,8 +1068,9 @@ func NewDeleteOrganizationNodesRequest() (request *DeleteOrganizationNodesReques
 func NewDeleteOrganizationNodesResponse() (response *DeleteOrganizationNodesResponse) {
     response = &DeleteOrganizationNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOrganizationNodes
@@ -935,8 +1129,9 @@ func NewDescribeOrganizationRequest() (request *DescribeOrganizationRequest) {
 func NewDescribeOrganizationResponse() (response *DescribeOrganizationResponse) {
     response = &DescribeOrganizationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganization
@@ -989,8 +1184,9 @@ func NewDescribeOrganizationAuthNodeRequest() (request *DescribeOrganizationAuth
 func NewDescribeOrganizationAuthNodeResponse() (response *DescribeOrganizationAuthNodeResponse) {
     response = &DescribeOrganizationAuthNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationAuthNode
@@ -1041,8 +1237,9 @@ func NewDescribeOrganizationFinancialByMemberRequest() (request *DescribeOrganiz
 func NewDescribeOrganizationFinancialByMemberResponse() (response *DescribeOrganizationFinancialByMemberResponse) {
     response = &DescribeOrganizationFinancialByMemberResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationFinancialByMember
@@ -1091,8 +1288,9 @@ func NewDescribeOrganizationFinancialByMonthRequest() (request *DescribeOrganiza
 func NewDescribeOrganizationFinancialByMonthResponse() (response *DescribeOrganizationFinancialByMonthResponse) {
     response = &DescribeOrganizationFinancialByMonthResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationFinancialByMonth
@@ -1141,8 +1339,9 @@ func NewDescribeOrganizationFinancialByProductRequest() (request *DescribeOrgani
 func NewDescribeOrganizationFinancialByProductResponse() (response *DescribeOrganizationFinancialByProductResponse) {
     response = &DescribeOrganizationFinancialByProductResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationFinancialByProduct
@@ -1191,8 +1390,9 @@ func NewDescribeOrganizationMemberAuthAccountsRequest() (request *DescribeOrgani
 func NewDescribeOrganizationMemberAuthAccountsResponse() (response *DescribeOrganizationMemberAuthAccountsResponse) {
     response = &DescribeOrganizationMemberAuthAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationMemberAuthAccounts
@@ -1243,8 +1443,9 @@ func NewDescribeOrganizationMemberAuthIdentitiesRequest() (request *DescribeOrga
 func NewDescribeOrganizationMemberAuthIdentitiesResponse() (response *DescribeOrganizationMemberAuthIdentitiesResponse) {
     response = &DescribeOrganizationMemberAuthIdentitiesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationMemberAuthIdentities
@@ -1295,8 +1496,9 @@ func NewDescribeOrganizationMemberEmailBindRequest() (request *DescribeOrganizat
 func NewDescribeOrganizationMemberEmailBindResponse() (response *DescribeOrganizationMemberEmailBindResponse) {
     response = &DescribeOrganizationMemberEmailBindResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationMemberEmailBind
@@ -1369,8 +1571,9 @@ func NewDescribeOrganizationMemberPoliciesRequest() (request *DescribeOrganizati
 func NewDescribeOrganizationMemberPoliciesResponse() (response *DescribeOrganizationMemberPoliciesResponse) {
     response = &DescribeOrganizationMemberPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationMemberPolicies
@@ -1423,8 +1626,9 @@ func NewDescribeOrganizationMembersRequest() (request *DescribeOrganizationMembe
 func NewDescribeOrganizationMembersResponse() (response *DescribeOrganizationMembersResponse) {
     response = &DescribeOrganizationMembersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationMembers
@@ -1479,8 +1683,9 @@ func NewDescribeOrganizationNodesRequest() (request *DescribeOrganizationNodesRe
 func NewDescribeOrganizationNodesResponse() (response *DescribeOrganizationNodesResponse) {
     response = &DescribeOrganizationNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationNodes
@@ -1531,8 +1736,9 @@ func NewListOrganizationIdentityRequest() (request *ListOrganizationIdentityRequ
 func NewListOrganizationIdentityResponse() (response *ListOrganizationIdentityResponse) {
     response = &ListOrganizationIdentityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListOrganizationIdentity
@@ -1583,8 +1789,9 @@ func NewMoveOrganizationNodeMembersRequest() (request *MoveOrganizationNodeMembe
 func NewMoveOrganizationNodeMembersResponse() (response *MoveOrganizationNodeMembersResponse) {
     response = &MoveOrganizationNodeMembersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MoveOrganizationNodeMembers
@@ -1641,8 +1848,9 @@ func NewQuitOrganizationRequest() (request *QuitOrganizationRequest) {
 func NewQuitOrganizationResponse() (response *QuitOrganizationResponse) {
     response = &QuitOrganizationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // QuitOrganization
@@ -1707,6 +1915,65 @@ func (c *Client) QuitOrganizationWithContext(ctx context.Context, request *QuitO
     return
 }
 
+func NewUpdateOrganizationIdentityRequest() (request *UpdateOrganizationIdentityRequest) {
+    request = &UpdateOrganizationIdentityRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("organization", APIVersion, "UpdateOrganizationIdentity")
+    
+    
+    return
+}
+
+func NewUpdateOrganizationIdentityResponse() (response *UpdateOrganizationIdentityResponse) {
+    response = &UpdateOrganizationIdentityResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateOrganizationIdentity
+// 更新组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETPOLICYDETAIL = "FailedOperation.GetPolicyDetail"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONIDENTITYNOTEXIST = "ResourceNotFound.OrganizationIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  RESOURCENOTFOUND_POLICYNOTEXIST = "ResourceNotFound.PolicyNotExist"
+func (c *Client) UpdateOrganizationIdentity(request *UpdateOrganizationIdentityRequest) (response *UpdateOrganizationIdentityResponse, err error) {
+    return c.UpdateOrganizationIdentityWithContext(context.Background(), request)
+}
+
+// UpdateOrganizationIdentity
+// 更新组织身份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_GETPOLICYDETAIL = "FailedOperation.GetPolicyDetail"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_ORGANIZATIONIDENTITYNOTEXIST = "ResourceNotFound.OrganizationIdentityNotExist"
+//  RESOURCENOTFOUND_ORGANIZATIONNOTEXIST = "ResourceNotFound.OrganizationNotExist"
+//  RESOURCENOTFOUND_POLICYNOTEXIST = "ResourceNotFound.PolicyNotExist"
+func (c *Client) UpdateOrganizationIdentityWithContext(ctx context.Context, request *UpdateOrganizationIdentityRequest) (response *UpdateOrganizationIdentityResponse, err error) {
+    if request == nil {
+        request = NewUpdateOrganizationIdentityRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateOrganizationIdentity require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateOrganizationIdentityResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateOrganizationMemberRequest() (request *UpdateOrganizationMemberRequest) {
     request = &UpdateOrganizationMemberRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1721,8 +1988,9 @@ func NewUpdateOrganizationMemberRequest() (request *UpdateOrganizationMemberRequ
 func NewUpdateOrganizationMemberResponse() (response *UpdateOrganizationMemberResponse) {
     response = &UpdateOrganizationMemberResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateOrganizationMember
@@ -1829,8 +2097,9 @@ func NewUpdateOrganizationMemberEmailBindRequest() (request *UpdateOrganizationM
 func NewUpdateOrganizationMemberEmailBindResponse() (response *UpdateOrganizationMemberEmailBindResponse) {
     response = &UpdateOrganizationMemberEmailBindResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateOrganizationMemberEmailBind
@@ -1895,8 +2164,9 @@ func NewUpdateOrganizationNodeRequest() (request *UpdateOrganizationNodeRequest)
 func NewUpdateOrganizationNodeResponse() (response *UpdateOrganizationNodeResponse) {
     response = &UpdateOrganizationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateOrganizationNode

@@ -253,7 +253,6 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_set_policy_version_config
 	tencentcloud_cam_user_permission_boundary_attachment
 	tencentcloud_cam_role_permission_boundary_attachment
-	tencentcloud_organization_quit_organization_operation
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -562,6 +561,16 @@ Global Application Acceleration(GAAP)
 	tencentcloud_gaap_proxy_statistics
 	tencentcloud_gaap_proxy_group_statistics
 	tencentcloud_gaap_real_servers_status
+	tencentcloud_gaap_rule_real_servers
+	tencentcloud_gaap_resources_by_tag
+	tencentcloud_gaap_region_and_price
+	tencentcloud_gaap_proxy_and_statistics_listeners
+	tencentcloud_gaap_proxies_status
+	tencentcloud_gaap_listener_statistics
+	tencentcloud_gaap_listener_real_servers
+	tencentcloud_gaap_group_and_statistics_proxy
+	tencentcloud_gaap_domain_error_page_infos
+	tencentcloud_gaap_check_proxy_create
 
   Resource
     tencentcloud_gaap_proxy
@@ -722,6 +731,11 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_policy_groups
 	tencentcloud_monitor_product_namespace
 	tencentcloud_monitor_alarm_notices
+	tencentcloud_monitor_alarm_history
+	tencentcloud_monitor_alarm_metric
+	tencentcloud_monitor_alarm_basic_alarms
+	tencentcloud_monitor_alarm_basic_metric
+	tencentcloud_monitor_alarm_conditions_template
 
   Resource
     tencentcloud_monitor_policy_group
@@ -730,6 +744,7 @@ Cloud Monitor(Monitor)
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
 	tencentcloud_monitor_alarm_notice
+	tencentcloud_monitor_alarm_policy_set_default
 
 
 Managed Service for Prometheus(TMP)
@@ -751,6 +766,9 @@ Managed Service for Prometheus(TMP)
 	tencentcloud_monitor_tmp_tke_basic_config
 
 TencentCloud Managed Service for Grafana(TCMG)
+  Data Source
+	tencentcloud_monitor_grafana_plugin_overviews
+
   Resource
 	tencentcloud_monitor_grafana_instance
 	tencentcloud_monitor_grafana_integration
@@ -758,6 +776,12 @@ TencentCloud Managed Service for Grafana(TCMG)
 	tencentcloud_monitor_grafana_plugin
 	tencentcloud_monitor_grafana_sso_account
 	tencentcloud_monitor_tmp_grafana_config
+	tencentcloud_monitor_grafana_dns_config
+	tencentcloud_monitor_grafana_env_config
+	tencentcloud_monitor_grafana_whitelist_config
+	tencentcloud_monitor_grafana_sso_cam_config
+	tencentcloud_monitor_grafana_sso_config
+	tencentcloud_monitor_grafana_version_upgrade
 
 TencentDB for PostgreSQL(PostgreSQL)
   Data Source
@@ -1175,6 +1199,11 @@ DNSPOD
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
 	tencentcloud_dnspod_domain_analytics
+	tencentcloud_dnspod_domain_log_list
+	tencentcloud_dnspod_record_analytics
+	tencentcloud_dnspod_record_line_list
+	tencentcloud_dnspod_record_list
+	tencentcloud_dnspod_record_type
 
 PrivateDNS
   Resource
@@ -1482,9 +1511,11 @@ Tencent Cloud Organization (TCO)
 	tencentcloud_organization_instance
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
+	tencentcloud_organization_org_identity
 	tencentcloud_organization_org_member_email
 	tencentcloud_organization_org_member_auth_identity_attachment
 	tencentcloud_organization_policy_sub_account_attachment
+	tencentcloud_organization_quit_organization_operation
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -1795,9 +1826,14 @@ EventBridge(EB)
 	tencentcloud_eb_event_connector
 
 Data Lake Compute(DLC)
+  Data Source
+	tencentcloud_dlc_check_data_engine_image_can_be_rollback
   Resource
 	tencentcloud_dlc_work_group
 	tencentcloud_dlc_user
+	tencentcloud_dlc_add_users_to_work_group_attachment
+	tencentcloud_dlc_store_location_config
+	tencentcloud_dlc_suspend_resume_data_engine
 
 WeData
   Data Source
@@ -2172,6 +2208,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_proxy_group_statistics":                 dataSourceTencentCloudGaapProxyGroupStatistics(),
 			"tencentcloud_gaap_proxy_statistics":                       dataSourceTencentCloudGaapProxyStatistics(),
 			"tencentcloud_gaap_real_servers_status":                    dataSourceTencentCloudGaapRealServersStatus(),
+			"tencentcloud_gaap_rule_real_servers":                      dataSourceTencentCloudGaapRuleRealServers(),
+			"tencentcloud_gaap_resources_by_tag":                       dataSourceTencentCloudGaapResourcesByTag(),
+			"tencentcloud_gaap_region_and_price":                       dataSourceTencentCloudGaapRegionAndPrice(),
+			"tencentcloud_gaap_proxy_and_statistics_listeners":         dataSourceTencentCloudGaapProxyAndStatisticsListeners(),
+			"tencentcloud_gaap_proxies_status":                         dataSourceTencentCloudGaapProxiesStatus(),
+			"tencentcloud_gaap_listener_statistics":                    dataSourceTencentCloudGaapListenerStatistics(),
+			"tencentcloud_gaap_listener_real_servers":                  dataSourceTencentCloudGaapListenerRealServers(),
+			"tencentcloud_gaap_group_and_statistics_proxy":             dataSourceTencentCloudGaapGroupAndStatisticsProxy(),
+			"tencentcloud_gaap_domain_error_page_infos":                dataSourceTencentCloudGaapDomainErrorPageInfos(),
+			"tencentcloud_gaap_check_proxy_create":                     dataSourceTencentCloudGaapCheckProxyCreate(),
 			"tencentcloud_ssl_certificates":                            dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_ssl_describe_certificate":                    dataSourceTencentCloudSslDescribeCertificate(),
 			"tencentcloud_ssl_describe_companies":                      dataSourceTencentCloudSslDescribeCompanies(),
@@ -2231,6 +2277,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_policy_groups":                       dataSourceTencentMonitorPolicyGroups(),
 			"tencentcloud_monitor_product_namespace":                   dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_monitor_alarm_notices":                       dataSourceTencentMonitorAlarmNotices(),
+			"tencentcloud_monitor_alarm_metric":                        dataSourceTencentCloudMonitorAlarmMetric(),
+			"tencentcloud_monitor_alarm_history":                       dataSourceTencentCloudMonitorAlarmHistory(),
+			"tencentcloud_monitor_alarm_basic_alarms":                  dataSourceTencentCloudMonitorAlarmBasicAlarms(),
+			"tencentcloud_monitor_alarm_basic_metric":                  dataSourceTencentCloudMonitorAlarmBasicMetric(),
+			"tencentcloud_monitor_alarm_conditions_template":           dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
+			"tencentcloud_monitor_grafana_plugin_overviews":            dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
 			"tencentcloud_elasticsearch_instances":                     dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                        dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                        dataSourceTencentCloudPostgresqlSpecinfos(),
@@ -2429,6 +2481,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_records":                              dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_dnspod_domain_list":                          dataSourceTencentCloudDnspodDomainList(),
 			"tencentcloud_dnspod_domain_analytics":                     dataSourceTencentCloudDnspodDomainAnalytics(),
+			"tencentcloud_dnspod_domain_log_list":                      dataSourceTencentCloudDnspodDomainLogList(),
+			"tencentcloud_dnspod_record_analytics":                     dataSourceTencentCloudDnspodRecordAnalytics(),
+			"tencentcloud_dnspod_record_line_list":                     dataSourceTencentCloudDnspodRecordLineList(),
+			"tencentcloud_dnspod_record_list":                          dataSourceTencentCloudDnspodRecordList(),
+			"tencentcloud_dnspod_record_type":                          dataSourceTencentCloudDnspodRecordType(),
 			"tencentcloud_tat_command":                                 dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                 dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                         dataSourceTencentCloudTatInvokerRecords(),
@@ -2615,6 +2672,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_list_attached_user_policy":               dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
+			"tencentcloud_dlc_check_data_engine_image_can_be_rollback": dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2906,6 +2964,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_binding_receiver":                            resourceTencentCloudMonitorBindingAlarmReceiver(),
 			"tencentcloud_monitor_alarm_policy":                                resourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_notice":                                resourceTencentCloudMonitorAlarmNotice(),
+			"tencentcloud_monitor_alarm_policy_set_default":                    resourceTencentCloudMonitorAlarmPolicySetDefault(),
 			"tencentcloud_monitor_tmp_instance":                                resourceTencentCloudMonitorTmpInstance(),
 			"tencentcloud_monitor_tmp_cvm_agent":                               resourceTencentCloudMonitorTmpCvmAgent(),
 			"tencentcloud_monitor_tmp_scrape_job":                              resourceTencentCloudMonitorTmpScrapeJob(),
@@ -2927,6 +2986,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_grafana_plugin":                              resourceTencentCloudMonitorGrafanaPlugin(),
 			"tencentcloud_monitor_grafana_sso_account":                         resourceTencentCloudMonitorGrafanaSsoAccount(),
 			"tencentcloud_monitor_tmp_grafana_config":                          resourceTencentCloudMonitorTmpGrafanaConfig(),
+			"tencentcloud_monitor_grafana_dns_config":                          resourceTencentCloudMonitorGrafanaDnsConfig(),
+			"tencentcloud_monitor_grafana_env_config":                          resourceTencentCloudMonitorGrafanaEnvConfig(),
+			"tencentcloud_monitor_grafana_whitelist_config":                    resourceTencentCloudMonitorGrafanaWhitelistConfig(),
+			"tencentcloud_monitor_grafana_sso_cam_config":                      resourceTencentCloudMonitorGrafanaSsoCamConfig(),
+			"tencentcloud_monitor_grafana_sso_config":                          resourceTencentCloudMonitorGrafanaSsoConfig(),
+			"tencentcloud_monitor_grafana_version_upgrade":                     resourceTencentCloudMonitorGrafanaVersionUpgrade(),
 			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                        resourceTencentCloudElasticsearchSecurityGroup(),
@@ -3208,6 +3273,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tat_invocation_command_attachment":                   resourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                               resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                             resourceTencentCloudOrganizationOrgMember(),
+			"tencentcloud_organization_org_identity":                           resourceTencentCloudOrganizationOrgIdentity(),
 			"tencentcloud_organization_org_member_email":                       resourceTencentCloudOrganizationOrgMemberEmail(),
 			"tencentcloud_organization_instance":                               resourceTencentCloudOrganizationOrganization(),
 			"tencentcloud_organization_policy_sub_account_attachment":          resourceTencentCloudOrganizationPolicySubAccountAttachment(),
@@ -3407,8 +3473,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_target":                                     resourceTencentCloudEbEventTarget(),
 			"tencentcloud_eb_put_events":                                       resourceTencentCloudEbPutEvents(),
 			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
-			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
+			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
+			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
+			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
+			"tencentcloud_dlc_suspend_resume_data_engine":                      resourceTencentCloudDlcSuspendResumeDataEngine(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),

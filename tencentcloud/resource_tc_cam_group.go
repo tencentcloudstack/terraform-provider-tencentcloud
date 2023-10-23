@@ -184,17 +184,21 @@ func resourceTencentCloudCamGroupUpdate(d *schema.ResourceData, meta interface{}
 	request.GroupId = &groupIdInt64
 	changeFlag := false
 
-	if d.HasChange("remark") {
-		request.Remark = helper.String(d.Get("remark").(string))
-		changeFlag = true
+	mutableArgs := []string{"name", "remark"}
 
-	}
-	if d.HasChange("name") {
-		request.GroupName = helper.String(d.Get("name").(string))
-		changeFlag = true
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			changeFlag = true
+			break
+		}
 	}
 
 	if changeFlag {
+		request.GroupName = helper.String(d.Get("name").(string))
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+		}
+
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateGroup(request)
 
