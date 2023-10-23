@@ -336,3 +336,70 @@ func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, p
 	describeUserInfo = response.Response.UserInfo
 	return
 }
+
+func (me *DlcService) DescribeDlcDataEngineById(ctx context.Context, dataEngineId string) (dataEngine *dlc.DataEngineInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewDescribeDataEnginesRequest()
+	request. = &dataEngineId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeDataEngines(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DataEngineInfo) < 1 {
+		return
+	}
+
+	dataEngine = response.Response.DataEngineInfo[0]
+	return
+}
+
+func (me *DlcService) DeleteDlcDataEngineById(ctx context.Context, dataEngineId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewDeleteDataEngineRequest()
+	request.DataEngineId = &dataEngineId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DeleteDataEngine(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DlcService) DlcDataEngineStateRefreshFunc(dataEngineId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDataEngine(ctx, dataEngineId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.State), nil
+	}
+}

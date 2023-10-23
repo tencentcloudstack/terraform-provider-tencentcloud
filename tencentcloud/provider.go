@@ -3499,6 +3499,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_put_events":                                       resourceTencentCloudEbPutEvents(),
 			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
+			"tencentcloud_dlc_data_engine":                                     resourceTencentCloudDlcDataEngine(),
 			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
 			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
 			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
