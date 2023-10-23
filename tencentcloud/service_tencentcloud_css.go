@@ -640,30 +640,6 @@ func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, doma
 	return
 }
 
-func (me *CssService) DeleteCssCommonMixById(ctx context.Context, mixStreamSessionId string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := css.NewCancelCommonMixStreamRequest()
-	request.MixStreamSessionId = &mixStreamSessionId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCssClient().CancelCommonMixStream(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
-}
-
 func (me *CssService) DescribeCssLiveDomainCertByFilter(ctx context.Context, param map[string]interface{}) (LiveDomainCert *css.DomainCertInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)

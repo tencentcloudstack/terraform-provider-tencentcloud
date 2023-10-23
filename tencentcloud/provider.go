@@ -1457,6 +1457,10 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_project_status_config
 
 Cloud Streaming Services(CSS)
+  Data Source
+	tencentcloud_css_domains
+	tencentcloud_css_live_domain_cert
+
   Resource
     tencentcloud_css_watermark
 	tencentcloud_css_watermark_rule_attachment
@@ -1468,11 +1472,6 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_play_domain_cert_attachment
 	tencentcloud_css_play_auth_key_config
 	tencentcloud_css_push_auth_key_config
-	tencentcloud_css_common_mix
-
-  Data Source
-	tencentcloud_css_domains
-	tencentcloud_css_live_domain_cert
 
 Performance Testing Service(PTS)
   Data Source
@@ -3260,7 +3259,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_play_domain_cert_attachment":                     resourceTencentCloudCssPlayDomainCertAttachment(),
 			"tencentcloud_css_play_auth_key_config":                            resourceTencentCloudCssPlayAuthKeyConfig(),
 			"tencentcloud_css_push_auth_key_config":                            resourceTencentCloudCssPushAuthKeyConfig(),
-			"tencentcloud_css_common_mix":                                      resourceTencentCloudCssCommonMix(),
 			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),
