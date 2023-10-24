@@ -73,11 +73,11 @@ func resourceTencentCloudBiEmbedIntervalCreate(d *schema.ResourceData, meta inte
 		response = bi.NewApplyEmbedIntervalResponse()
 		biToken  string
 	)
-	if v, _ := d.GetOk("project_id"); v != nil {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("page_id"); v != nil {
+	if v, ok := d.GetOkExists("page_id"); ok {
 		request.PageId = helper.IntUint64(v.(int))
 	}
 

@@ -140,11 +140,11 @@ func dataSourceTencentCloudBiUserProjectRead(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("project_id"); v != nil {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("all_page"); v != nil {
+	if v, ok := d.GetOkExists("all_page"); ok {
 		paramMap["AllPage"] = helper.Bool(v.(bool))
 	}
 

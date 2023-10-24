@@ -106,11 +106,11 @@ func resourceTencentCloudBiEmbedTokenCreate(d *schema.ResourceData, meta interfa
 		response = bi.NewCreateEmbedTokenResponse()
 		pageId   int
 	)
-	if v, _ := d.GetOk("project_id"); v != nil {
+	if v, ok := d.GetOkExists("project_id"); ok {
 		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("page_id"); v != nil {
+	if v, ok := d.GetOkExists("page_id"); ok {
 		pageId = v.(int)
 		request.PageId = helper.IntUint64(v.(int))
 	}
