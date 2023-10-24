@@ -1898,6 +1898,20 @@ Cwp
   Resource
 	tencentcloud_cwp_license_order
 	tencentcloud_cwp_license_bind_attachment
+
+Business Intelligence(BI)
+  Data Source
+	tencentcloud_bi_project
+	tencentcloud_bi_user_project
+
+  Resource
+	tencentcloud_bi_project
+	tencentcloud_bi_user_role
+	tencentcloud_bi_project_user_role
+	tencentcloud_bi_datasource
+	tencentcloud_bi_datasource_cloud
+	tencentcloud_bi_embed_token_apply
+	tencentcloud_bi_embed_interval_apply
 */
 package tencentcloud
 
@@ -2681,6 +2695,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_user_type":                      dataSourceTencentCloudDlcDescribeUserType(),
 			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
 			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
+			"tencentcloud_bi_project":                                  dataSourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_project":                             dataSourceTencentCloudBiUserProject(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3522,6 +3538,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
+			"tencentcloud_bi_project":                                          resourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_role":                                        resourceTencentCloudBiUserRole(),
+			"tencentcloud_bi_project_user_role":                                resourceTencentCloudBiProjectUserRole(),
+			"tencentcloud_bi_datasource":                                       resourceTencentCloudBiDatasource(),
+			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
+			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
+			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
 		},
 
 		ConfigureFunc: providerConfigure,

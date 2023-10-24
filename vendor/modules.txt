@@ -1089,6 +1089,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.770
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.760
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
