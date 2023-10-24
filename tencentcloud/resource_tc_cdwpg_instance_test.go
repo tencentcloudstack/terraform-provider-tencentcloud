@@ -26,9 +26,10 @@ func TestAccTencentCloudCdwpgInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cdwpg_instance.instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_cdwpg_instance.instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"admin_password"},
 			},
 		},
 	})
