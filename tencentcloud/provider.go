@@ -1915,6 +1915,10 @@ Business Intelligence(BI)
 	tencentcloud_bi_datasource_cloud
 	tencentcloud_bi_embed_token_apply
 	tencentcloud_bi_embed_interval_apply
+
+CDWPG
+  Resource
+	tencentcloud_cdwpg_instance
 */
 package tencentcloud
 
@@ -3551,6 +3555,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
 			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
+			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
