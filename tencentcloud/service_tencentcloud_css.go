@@ -638,3 +638,38 @@ func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, doma
 
 	return
 }
+
+func (me *CssService) DescribeCssBackupStreamByFilter(ctx context.Context, param map[string]interface{}) (backup_stream []*css.BackupStreamGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeBackupStreamListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StreamName" {
+			request.StreamName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCssClient().DescribeBackupStreamList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.StreamInfoList) < 1 {
+		return
+	}
+
+	backup_stream = response.Response.StreamInfoList
+
+	return
+}

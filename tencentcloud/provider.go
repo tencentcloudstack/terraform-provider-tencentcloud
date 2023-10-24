@@ -2562,6 +2562,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_proxy_node":                          dataSourceTencentCloudCynosdbProxyNode(),
 			"tencentcloud_cynosdb_proxy_version":                       dataSourceTencentCloudCynosdbProxyVersion(),
 			"tencentcloud_css_domains":                                 dataSourceTencentCloudCssDomains(),
+			"tencentcloud_css_backup_stream":							dataSourceTencentCloudCssBackupStream(),
 			"tencentcloud_chdfs_access_groups":                         dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                          dataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_chdfs_file_systems":                          dataSourceTencentCloudChdfsFileSystems(),
