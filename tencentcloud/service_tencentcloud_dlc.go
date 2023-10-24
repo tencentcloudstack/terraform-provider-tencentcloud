@@ -203,3 +203,136 @@ func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context, st
 	storeLocationConfig = response.Response
 	return
 }
+
+func (me *DlcService) DescribeDlcDescribeUserTypeByFilter(ctx context.Context, param map[string]interface{}) (describeUserType *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeUserTypeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "UserId" {
+			request.UserId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeUserType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.UserType == nil {
+		return
+	}
+
+	describeUserType = response.Response.UserType
+	return
+}
+func (me *DlcService) DescribeDlcDescribeUserRolesByFilter(ctx context.Context, param map[string]interface{}) (describeUserRoles []*dlc.UserRole, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeUserRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Fuzzy" {
+			request.Fuzzy = v.(*string)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "Sorting" {
+			request.Sorting = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDlcClient().DescribeUserRoles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.UserRoles) < 1 {
+			break
+		}
+		describeUserRoles = append(describeUserRoles, response.Response.UserRoles...)
+		if len(response.Response.UserRoles) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, param map[string]interface{}) (describeUserInfo *dlc.UserDetailInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeUserInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "UserId" {
+			request.UserId = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*dlc.Filter)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "Sorting" {
+			request.Sorting = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeUserInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.UserInfo == nil {
+		return
+	}
+	describeUserInfo = response.Response.UserInfo
+	return
+}

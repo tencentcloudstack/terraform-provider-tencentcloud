@@ -1828,7 +1828,11 @@ EventBridge(EB)
 
 Data Lake Compute(DLC)
   Data Source
+	tencentcloud_dlc_describe_user_type
+	tencentcloud_dlc_describe_user_info
+	tencentcloud_dlc_describe_user_roles
 	tencentcloud_dlc_check_data_engine_image_can_be_rollback
+
   Resource
 	tencentcloud_dlc_work_group
 	tencentcloud_dlc_user
@@ -2674,6 +2678,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback": dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
+			"tencentcloud_dlc_describe_user_type":                      dataSourceTencentCloudDlcDescribeUserType(),
+			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
+			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
