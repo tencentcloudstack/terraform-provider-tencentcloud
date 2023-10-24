@@ -133,6 +133,17 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Optional:    true,
 				Description: "Additional config for specific secret types in JSON string format.",
 			},
+			"version_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Version of secret. The maximum length is 64 bytes. The version_id can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.",
+			},
+			"secret_string": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "default",
+				Description: "The string text of secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -193,7 +204,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		request.AdditionalConfig = helper.String(v.(string))
 	}
 
-	request.SecretString = helper.String("default")
+	if v, ok := d.GetOk("secret_string"); ok {
+		request.SecretString = helper.String(v.(string))
+	}
+
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().CreateSecret(request)
 		if e != nil {
@@ -296,6 +310,19 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("is_enabled", false)
 	}
 
+	var secretVersionInfo *SecretVersionInfo
+	versionId := "SSM_Current"
+	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		secretVersionInfo, inErr = ssmService.DescribeSecretVersion(ctx, secretName, versionId)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		return nil
+	})
+
+	_ = d.Set("version_id", secretVersionInfo.versionId)
+	_ = d.Set("secret_string", secretVersionInfo.secretString)
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
@@ -346,6 +373,30 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
+	}
+
+	if d.HasChange("secret_string") {
+		versionId := "SSM_Current"
+		param := make(map[string]interface{})
+		param["secret_name"] = secretName
+		param["version_id"] = versionId
+
+		if v, ok := d.GetOk("secret_string"); ok {
+			param["secret_string"] = v.(string)
+		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := ssmService.UpdateSecret(ctx, param)
+			if e != nil {
+				return retryError(e)
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	if d.HasChange("is_enabled") {

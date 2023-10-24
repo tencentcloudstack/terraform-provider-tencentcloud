@@ -91,6 +91,7 @@ The following arguments are supported:
 * `is_enabled` - (Optional, Bool) Specify whether to enable secret. Default value is `true`.
 * `kms_key_id` - (Optional, String, ForceNew) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
 * `recovery_window_in_days` - (Optional, Int) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
+* `secret_string` - (Optional, String) The string text of secret. secret_binary and secret_string must be set only one, and the maximum support is 4096 bytes. When secret status is `Disabled`, this field will not update anymore.
 * `secret_type` - (Optional, Int) Type of secret. `0`: user-defined secret. `4`: redis secret.
 * `tags` - (Optional, Map) Tags of secret.
 
@@ -100,6 +101,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `status` - Status of secret.
+* `version_id` - Version of secret. The maximum length is 64 bytes. The version_id can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.
 
 
 ## Import
