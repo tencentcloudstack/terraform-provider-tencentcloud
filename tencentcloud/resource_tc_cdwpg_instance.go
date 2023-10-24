@@ -123,11 +123,6 @@ func resourceTencentCloudCdwpgInstance() *schema.Resource {
 							Required:    true,
 							Description: "Time Unit,Generally h and mNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
-						"pay_mode": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "Pay mode. 0: postpaid, 1: prepaid.",
-						},
 						"charge_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -240,9 +235,6 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 		}
 		if v, ok := dMap["time_unit"]; ok {
 			chargeProperties.TimeUnit = helper.String(v.(string))
-		}
-		if v, ok := dMap["pay_mode"]; ok {
-			chargeProperties.PayMode = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["charge_type"]; ok {
 			chargeProperties.ChargeType = helper.String(v.(string))
@@ -374,10 +366,6 @@ func resourceTencentCloudCdwpgInstanceRead(d *schema.ResourceData, meta interfac
 
 		if instance.ChargeProperties.TimeUnit != nil {
 			chargePropertiesMap["time_unit"] = instance.ChargeProperties.TimeUnit
-		}
-
-		if instance.ChargeProperties.PayMode != nil {
-			chargePropertiesMap["pay_mode"] = instance.ChargeProperties.PayMode
 		}
 
 		if instance.ChargeProperties.ChargeType != nil {
