@@ -26,6 +26,14 @@ func TestAccTencentCloudCdwpgInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccCdwpgInstanceUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cdwpg_instance.instance", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "instance_name", "test_pg_update"),
+					resource.TestCheckResourceAttr("tencentcloud_cdwpg_instance.instance", "tags.tagKey", "tagValueUpdate"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_cdwpg_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -73,6 +81,48 @@ resource "tencentcloud_cdwpg_instance" "instance" {
 	}
 	tags = {
 	  "tagKey" = "tagValue"
+	}
+}
+`
+
+const testAccCdwpgInstanceUpdate = `
+resource "tencentcloud_cdwpg_instance" "instance" {
+	instance_name  = "test_pg_update"
+	zone           = "ap-guangzhou-6"
+	user_vpc_id    = "vpc-axrsmmrv"
+	user_subnet_id = "subnet-o6qcrhzo"
+	charge_properties {
+	  renew_flag  = 0
+	  time_span   = 1
+	  time_unit   = "h"
+	  charge_type = "POSTPAID_BY_HOUR"
+  
+	}
+	admin_password = "bWJSZDVtVmZkNExJ"
+	resources {
+	  spec_name = "S_4_16_H_CN"
+	  count     = 2
+	  disk_spec {
+		disk_type  = "CLOUD_HSSD"
+		disk_size  = 200
+		disk_count = 1
+	  }
+	  type = "cn"
+  
+	}
+	resources {
+	  spec_name = "S_4_16_H_CN"
+	  count     = 2
+	  disk_spec {
+		disk_type  = "CLOUD_HSSD"
+		disk_size  = 20
+		disk_count = 10
+	  }
+	  type = "dn"
+  
+	}
+	tags = {
+	  "tagKey" = "tagValueUpdate"
 	}
 }
 `
