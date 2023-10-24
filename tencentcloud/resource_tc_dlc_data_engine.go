@@ -8,42 +8,20 @@ resource "tencentcloud_dlc_data_engine" "data_engine" {
   engine_type = "spark"
   data_engine_name = "testSpark"
   cluster_type = "spark_cu"
-  mode = 2
+  mode = 1
   auto_resume = false
+  size = 16
+  pay_mode = 0
   min_clusters = 1
-  max_clusters = 10
+  max_clusters = 1
   default_data_engine = false
-  cidr_block = "192.0.2.1/24"
-  message = "test spark"
-  pay_mode = 1
-  time_span = 3600
-  time_unit = "m"
-  auto_renew = 0
+  cidr_block = "10.255.0.0/16"
+  message = "test spark1"
+  time_span = 1
+  time_unit = "h"
   auto_suspend = false
   crontab_resume_suspend = 0
-  crontab_resume_suspend_strategy {
-		resume_time = "1000000-08:00:00"
-		suspend_time = ""
-		suspend_strategy =
-
-  }
-  engine_exec_type = "SQL"
-  max_concurrency = 5
-  tolerable_queue_time = 0
-  auto_suspend_time = 10
-  resource_type = "Standard_CU"
-  data_engine_config_pairs =
-  image_version_name = ""
-  main_cluster_name = "testSpark"
-  elastic_switch = false
-  elastic_limit = 0
-  session_resource_template {
-		driver_size = "small"
-		executor_size = "small"
-		executor_nums = 1
-		executor_max_numbers = 1
-
-  }
+  engine_exec_type = "BATCH"
 }
 ```
 
@@ -60,12 +38,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"time"
 )
 
 func resourceTencentCloudDlcDataEngine() *schema.Resource {
@@ -108,6 +87,12 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 				Description: "Whether to automatically start the cluster, prepay not support.",
 			},
 
+			"size": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Cluster size. Required when updating.",
+			},
+
 			"min_clusters": {
 				Optional:    true,
 				Type:        schema.TypeInt,
@@ -117,7 +102,7 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 			"max_clusters": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Engine max cluster size,  MaxClusters less than or equal to 10 and MaxClusters bigger than MinClusters.",
+				Description: "Engine max cluster size, MaxClusters less than or equal to 10 and MaxClusters bigger than MinClusters.",
 			},
 
 			"default_data_engine": {
@@ -176,6 +161,7 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 
 			"crontab_resume_suspend_strategy": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Engine auto suspend strategy, when AutoSuspend is true, CrontabResumeSuspend must stop.",
@@ -208,6 +194,7 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 
 			"max_concurrency": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Maximum number of concurrent tasks in a single cluster, default 5.",
 			},
@@ -220,12 +207,14 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 
 			"auto_suspend_time": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Cluster automatic suspension time, default 10 minutes.",
 			},
 
 			"resource_type": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Engine resource type not match, only support: Standard_CU/Memory_CU(only BATCH ExecType).",
 			},
@@ -252,6 +241,7 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 
 			"image_version_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster image version name. Such as SuperSQL-P 1.1; SuperSQL-S 3.2, etc., do not upload, and create a cluster with the latest mirror version by default.",
 			},
@@ -276,6 +266,7 @@ func resourceTencentCloudDlcDataEngine() *schema.Resource {
 
 			"session_resource_template": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "For spark Batch ExecType, cluster session resource configuration template.",
@@ -315,9 +306,9 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 
 	var (
-		request      = dlc.NewCreateDataEngineRequest()
-		response     = dlc.NewCreateDataEngineResponse()
-		dataEngineId string
+		request        = dlc.NewCreateDataEngineRequest()
+		response       = dlc.NewCreateDataEngineResponse()
+		dataEngineId   string
 		dataEngineName string
 	)
 	if v, ok := d.GetOk("engine_type"); ok {
@@ -325,7 +316,7 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	}
 
 	if v, ok := d.GetOk("data_engine_name"); ok {
-		dataEngineName=v.(string)
+		dataEngineName = v.(string)
 		request.DataEngineName = helper.String(v.(string))
 	}
 
@@ -339,6 +330,10 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOkExists("auto_resume"); ok {
 		request.AutoResume = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("size"); ok {
+		request.Size = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOkExists("min_clusters"); ok {
@@ -481,14 +476,35 @@ func resourceTencentCloudDlcDataEngineCreate(d *schema.ResourceData, meta interf
 	}
 
 	dataEngineId = *response.Response.DataEngineId
-	d.SetId(dataEngineName+FILED_SP+dataEngineId)
+	d.SetId(dataEngineName + FILED_SP + dataEngineId)
 
-	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	conf := BuildStateChangeConf([]string{}, []string{2}, 5*readRetryTimeout, time.Second, service.DlcDataEngineStateRefreshFunc(d.Id(), []string{}))
-
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+	describeRequest := dlc.NewDescribeDataEngineRequest()
+	describeRequest.DataEngineName = helper.String(dataEngineName)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().DescribeDataEngine(describeRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, describeRequest.GetAction(),
+				describeRequest.ToJsonString(), result.ToJsonString())
+		}
+		if result == nil || result.Response == nil || result.Response.DataEngine == nil {
+			e = fmt.Errorf("[DEBUG]%s api[%s] resopse is null, request body [%s], response body [%s]\n", logId,
+				describeRequest.GetAction(), describeRequest.ToJsonString(), result.ToJsonString())
+			log.Println(e)
+			return resource.RetryableError(e)
+		}
+		if *result.Response.DataEngine.State != int64(2) && *result.Response.DataEngine.State != int64(1) {
+			e = fmt.Errorf("[DEBUG]%s api[%s] status [%v] not ready , request body [%s], response body [%s]\n",
+				logId, describeRequest.GetAction(), *result.Response.DataEngine.State, describeRequest.ToJsonString(), result.ToJsonString())
+			log.Println(e)
+			return resource.RetryableError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create dlc dataEngine failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudDlcDataEngineRead(d, meta)
@@ -504,9 +520,12 @@ func resourceTencentCloudDlcDataEngineRead(d *schema.ResourceData, meta interfac
 
 	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	dataEngineId := d.Id()
-
-	dataEngine, err := service.DescribeDlcDataEngineById(ctx, dataEngineId)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	dataEngineName := idSplit[0]
+	dataEngine, err := service.DescribeDlcDataEngineByName(ctx, dataEngineName)
 	if err != nil {
 		return err
 	}
@@ -557,22 +576,6 @@ func resourceTencentCloudDlcDataEngineRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("message", dataEngine.Message)
 	}
 
-	if dataEngine.PayMode != nil {
-		_ = d.Set("pay_mode", dataEngine.PayMode)
-	}
-
-	if dataEngine.TimeSpan != nil {
-		_ = d.Set("time_span", dataEngine.TimeSpan)
-	}
-
-	if dataEngine.TimeUnit != nil {
-		_ = d.Set("time_unit", dataEngine.TimeUnit)
-	}
-
-	if dataEngine.AutoRenew != nil {
-		_ = d.Set("auto_renew", dataEngine.AutoRenew)
-	}
-
 	if dataEngine.AutoSuspend != nil {
 		_ = d.Set("auto_suspend", dataEngine.AutoSuspend)
 	}
@@ -619,16 +622,8 @@ func resourceTencentCloudDlcDataEngineRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("resource_type", dataEngine.ResourceType)
 	}
 
-	if dataEngine. != nil {
-		_ = d.Set("data_engine_config_pairs", dataEngine.DataEngineConfigPairs)
-	}
-
 	if dataEngine.ImageVersionName != nil {
 		_ = d.Set("image_version_name", dataEngine.ImageVersionName)
-	}
-
-	if dataEngine.MainClusterName != nil {
-		_ = d.Set("main_cluster_name", dataEngine.MainClusterName)
 	}
 
 	if dataEngine.ElasticSwitch != nil {
@@ -672,11 +667,16 @@ func resourceTencentCloudDlcDataEngineUpdate(d *schema.ResourceData, meta interf
 
 	request := dlc.NewUpdateDataEngineRequest()
 
-	dataEngineId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	dataEngineName := idSplit[0]
+	request.DataEngineName = &dataEngineName
 
-	request.DataEngineId = &dataEngineId
-
-	immutableArgs := []string{"engine_type", "data_engine_name", "cluster_type", "mode", "auto_resume", "min_clusters", "max_clusters", "default_data_engine", "cidr_block", "message", "pay_mode", "time_span", "time_unit", "auto_renew", "auto_suspend", "crontab_resume_suspend", "crontab_resume_suspend_strategy", "engine_exec_type", "max_concurrency", "tolerable_queue_time", "auto_suspend_time", "resource_type", "data_engine_config_pairs", "image_version_name", "main_cluster_name", "elastic_switch", "elastic_limit", "session_resource_template"}
+	immutableArgs := []string{"engine_type", "data_engine_name", "cluster_type", "mode", "default_data_engine", "cidr_block",
+		"pay_mode", "time_span", "time_unit", "auto_renew", "engine_exec_type", "tolerable_queue_time",
+		"resource_type", "data_engine_config_pairs", "image_version_name", "main_cluster_name"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -684,34 +684,24 @@ func resourceTencentCloudDlcDataEngineUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("data_engine_name") {
-		if v, ok := d.GetOk("data_engine_name"); ok {
-			request.DataEngineName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOkExists("auto_resume"); ok {
+		request.AutoResume = helper.Bool(v.(bool))
 	}
 
-	if d.HasChange("auto_resume") {
-		if v, ok := d.GetOkExists("auto_resume"); ok {
-			request.AutoResume = helper.Bool(v.(bool))
-		}
+	if v, ok := d.GetOkExists("size"); ok {
+		request.Size = helper.IntInt64(v.(int))
 	}
 
-	if d.HasChange("min_clusters") {
-		if v, ok := d.GetOkExists("min_clusters"); ok {
-			request.MinClusters = helper.IntInt64(v.(int))
-		}
+	if v, ok := d.GetOkExists("min_clusters"); ok {
+		request.MinClusters = helper.IntInt64(v.(int))
 	}
 
-	if d.HasChange("max_clusters") {
-		if v, ok := d.GetOkExists("max_clusters"); ok {
-			request.MaxClusters = helper.IntInt64(v.(int))
-		}
+	if v, ok := d.GetOkExists("max_clusters"); ok {
+		request.MaxClusters = helper.IntInt64(v.(int))
 	}
 
-	if d.HasChange("message") {
-		if v, ok := d.GetOk("message"); ok {
-			request.Message = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("message"); ok {
+		request.Message = helper.String(v.(string))
 	}
 
 	if d.HasChange("auto_suspend") {
@@ -805,12 +795,33 @@ func resourceTencentCloudDlcDataEngineUpdate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	conf := BuildStateChangeConf([]string{}, []string{"2"}, 5*readRetryTimeout, time.Second, service.DlcDataEngineStateRefreshFunc(d.Id(), []string{}))
-
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+	describeRequest := dlc.NewDescribeDataEngineRequest()
+	describeRequest.DataEngineName = helper.String(dataEngineName)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().DescribeDataEngine(describeRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, describeRequest.GetAction(),
+				describeRequest.ToJsonString(), result.ToJsonString())
+		}
+		if result == nil || result.Response == nil || result.Response.DataEngine == nil {
+			e = fmt.Errorf("[DEBUG]%s api[%s] resopse is null, request body [%s], response body [%s]\n", logId,
+				request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Println(e)
+			return resource.RetryableError(e)
+		}
+		if *result.Response.DataEngine.State != int64(2) && *result.Response.DataEngine.State != int64(1) {
+			e = fmt.Errorf("[DEBUG]%s api[%s] status [%v] not ready , request body [%s], response body [%s]\n",
+				logId, describeRequest.GetAction(), *result.Response.DataEngine.State, describeRequest.ToJsonString(), result.ToJsonString())
+			log.Println(e)
+			return resource.RetryableError(e)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update dlc dataEngine failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudDlcDataEngineRead(d, meta)
@@ -824,9 +835,13 @@ func resourceTencentCloudDlcDataEngineDelete(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	dataEngineId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	dataEngineName := idSplit[0]
 
-	if err := service.DeleteDlcDataEngineById(ctx, dataEngineId); err != nil {
+	if err := service.DeleteDlcDataEngineByName(ctx, dataEngineName); err != nil {
 		return err
 	}
 

@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDlcDataEngineResource_basic(t *testing.T) {
@@ -15,12 +16,53 @@ func TestAccTencentCloudDlcDataEngineResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcDataEngine,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_data_engine.data_engine", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_data_engine.data_engine", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "engine_type", "spark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "data_engine_name", "testSpark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "cluster_type", "spark_cu"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "auto_resume", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "size", "16"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "pay_mode", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "min_clusters", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "max_clusters", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "default_data_engine", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "cidr_block", "10.255.0.0/16"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "message", "test spark1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "time_span", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "time_unit", "h"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "auto_suspend", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "crontab_resume_suspend", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "engine_exec_type", "BATCH"),
+				),
+			}, {
+				Config: testAccDlcDataEngineUpdate,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_data_engine.data_engine", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "engine_type", "spark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "data_engine_name", "testSpark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "cluster_type", "spark_cu"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "auto_resume", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "size", "16"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "pay_mode", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "min_clusters", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "max_clusters", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "default_data_engine", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "cidr_block", "10.255.0.0/16"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "message", "test spark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "time_span", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "time_unit", "h"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "auto_suspend", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "crontab_resume_suspend", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_data_engine.data_engine", "engine_exec_type", "BATCH"),
+				),
 			},
+
 			{
-				ResourceName:      "tencentcloud_dlc_data_engine.data_engine",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_dlc_data_engine.data_engine",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"pay_mode", "size", "time_span", "time_unit"},
 			},
 		},
 	})
@@ -32,42 +74,43 @@ resource "tencentcloud_dlc_data_engine" "data_engine" {
   engine_type = "spark"
   data_engine_name = "testSpark"
   cluster_type = "spark_cu"
-  mode = 2
+  mode = 1
   auto_resume = false
+  size = 16
+  pay_mode = 0
   min_clusters = 1
-  max_clusters = 10
+  max_clusters = 1
   default_data_engine = false
-  cidr_block = "192.0.2.1/24"
-  message = "test spark"
-  pay_mode = 1
-  time_span = 3600
-  time_unit = "m"
-  auto_renew = 0
+  cidr_block = "10.255.0.0/16"
+  message = "test spark1"
+  time_span = 1
+  time_unit = "h"
   auto_suspend = false
   crontab_resume_suspend = 0
-  crontab_resume_suspend_strategy {
-		resume_time = "1000000-08:00:00"
-		suspend_time = ""
-		suspend_strategy = 
+  engine_exec_type = "BATCH"
+}
 
-  }
-  engine_exec_type = "SQL"
-  max_concurrency = 5
-  tolerable_queue_time = 0
-  auto_suspend_time = 10
-  resource_type = "Standard_CU"
-  data_engine_config_pairs = 
-  image_version_name = ""
-  main_cluster_name = "testSpark"
-  elastic_switch = false
-  elastic_limit = 0
-  session_resource_template {
-		driver_size = "small"
-		executor_size = "small"
-		executor_nums = 1
-		executor_max_numbers = 1
+`
+const testAccDlcDataEngineUpdate = `
 
-  }
+resource "tencentcloud_dlc_data_engine" "data_engine" {
+  engine_type = "spark"
+  data_engine_name = "testSpark"
+  cluster_type = "spark_cu"
+  mode = 1
+  auto_resume = false
+  size = 16
+  pay_mode = 0
+  min_clusters = 1
+  max_clusters = 1
+  default_data_engine = false
+  cidr_block = "10.255.0.0/16"
+  message = "test spark"
+  time_span = 1
+  time_unit = "h"
+  auto_suspend = false
+  crontab_resume_suspend = 0
+  engine_exec_type = "BATCH"
 }
 
 `

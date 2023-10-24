@@ -337,12 +337,14 @@ func (me *DlcService) DescribeDlcDescribeUserInfoByFilter(ctx context.Context, p
 	return
 }
 
-func (me *DlcService) DescribeDlcDataEngineById(ctx context.Context, dataEngineId string) (dataEngine *dlc.DataEngineInfo, errRet error) {
+func (me *DlcService) DescribeDlcDataEngineByName(ctx context.Context, dataEngineName string) (dataEngine *dlc.DataEngineInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dlc.NewDescribeDataEnginesRequest()
-	request. = &dataEngineId
-
+	item := &dlc.Filter{
+		Name:   helper.String("data-engine-name"),
+		Values: []*string{helper.String(dataEngineName)}}
+	request.Filters = []*dlc.Filter{item}
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
@@ -358,19 +360,19 @@ func (me *DlcService) DescribeDlcDataEngineById(ctx context.Context, dataEngineI
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.DataEngineInfo) < 1 {
+	if response == nil || response.Response == nil || len(response.Response.DataEngines) < 1 {
 		return
 	}
 
-	dataEngine = response.Response.DataEngineInfo[0]
+	dataEngine = response.Response.DataEngines[0]
 	return
 }
 
-func (me *DlcService) DeleteDlcDataEngineById(ctx context.Context, dataEngineId string) (errRet error) {
+func (me *DlcService) DeleteDlcDataEngineByName(ctx context.Context, dataEngineName string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := dlc.NewDeleteDataEngineRequest()
-	request.DataEngineId = &dataEngineId
+	request.DataEngineNames = []*string{&dataEngineName}
 
 	defer func() {
 		if errRet != nil {
@@ -389,17 +391,36 @@ func (me *DlcService) DeleteDlcDataEngineById(ctx context.Context, dataEngineId 
 
 	return
 }
+func (me *DlcService) DescribeDlcCheckDataEngineImageCanBeUpgradeByFilter(ctx context.Context, param map[string]interface{}) (checkDataEngineImageCanBeUpgrade *dlc.CheckDataEngineImageCanBeUpgradeResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewCheckDataEngineImageCanBeUpgradeRequest()
+	)
 
-func (me *DlcService) DlcDataEngineStateRefreshFunc(dataEngineId string, failStates []string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		ctx := contextNil
-
-		object, err := me.DescribeDataEngine(ctx, dataEngineId)
-
-		if err != nil {
-			return nil, "", err
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
+	}()
 
-		return object, helper.PString(object.State), nil
+	for k, v := range param {
+		if k == "DataEngineId" {
+			request.DataEngineId = v.(*string)
+		}
 	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().CheckDataEngineImageCanBeUpgrade(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	checkDataEngineImageCanBeUpgrade = response.Response
+	return
 }
