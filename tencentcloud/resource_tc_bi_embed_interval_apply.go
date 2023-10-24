@@ -4,7 +4,7 @@ Provides a resource to create a bi embed_interval
 Example Usage
 
 ```hcl
-resource "tencentcloud_bi_embed_interval" "embed_interval" {
+resource "tencentcloud_bi_embed_interval_apply" "embed_interval" {
   project_id = 11015030
   page_id    = 10520483
   bi_token   = "4192d65b-d674-4117-9a59-xxxxxxxxx"
@@ -24,11 +24,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiEmbedInterval() *schema.Resource {
+func resourceTencentCloudBiEmbedIntervalApply() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudBiEmbedIntervalCreate,
-		Read:   resourceTencentCloudBiEmbedIntervalRead,
-		Delete: resourceTencentCloudBiEmbedIntervalDelete,
+		Create: resourceTencentCloudBiEmbedIntervalApplyCreate,
+		Read:   resourceTencentCloudBiEmbedIntervalApplyRead,
+		Delete: resourceTencentCloudBiEmbedIntervalApplyDelete,
 
 		Schema: map[string]*schema.Schema{
 			"project_id": {
@@ -62,8 +62,8 @@ func resourceTencentCloudBiEmbedInterval() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudBiEmbedIntervalCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_interval.create")()
+func resourceTencentCloudBiEmbedIntervalApplyCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_interval_apply.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -111,18 +111,18 @@ func resourceTencentCloudBiEmbedIntervalCreate(d *schema.ResourceData, meta inte
 
 	d.SetId(biToken)
 
-	return resourceTencentCloudBiEmbedIntervalRead(d, meta)
+	return resourceTencentCloudBiEmbedIntervalApplyRead(d, meta)
 }
 
-func resourceTencentCloudBiEmbedIntervalRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_interval.read")()
+func resourceTencentCloudBiEmbedIntervalApplyRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_interval_apply.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudBiEmbedIntervalDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_interval.delete")()
+func resourceTencentCloudBiEmbedIntervalApplyDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_interval_apply.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

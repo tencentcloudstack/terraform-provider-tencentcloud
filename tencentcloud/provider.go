@@ -1910,8 +1910,8 @@ Business Intelligence(BI)
 	tencentcloud_bi_project_user_role
 	tencentcloud_bi_datasource
 	tencentcloud_bi_datasource_cloud
-	tencentcloud_bi_embed_token
-	tencentcloud_bi_embed_interval
+	tencentcloud_bi_embed_token_apply
+	tencentcloud_bi_embed_interval_apply
 */
 package tencentcloud
 
@@ -3543,8 +3543,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_project_user_role":                                resourceTencentCloudBiProjectUserRole(),
 			"tencentcloud_bi_datasource":                                       resourceTencentCloudBiDatasource(),
 			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
-			"tencentcloud_bi_embed_token":                                      resourceTencentCloudBiEmbedToken(),
-			"tencentcloud_bi_embed_interval":                                   resourceTencentCloudBiEmbedInterval(),
+			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
+			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
 		},
 
 		ConfigureFunc: providerConfigure,

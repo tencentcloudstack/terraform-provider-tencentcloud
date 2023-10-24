@@ -4,7 +4,7 @@ Provides a resource to create a bi embed_token
 Example Usage
 
 ```hcl
-resource "tencentcloud_bi_embed_token" "embed_token" {
+resource "tencentcloud_bi_embed_token_apply" "embed_token" {
   project_id   = 11015030
   page_id      = 10520483
   scope        = "page"
@@ -25,11 +25,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiEmbedToken() *schema.Resource {
+func resourceTencentCloudBiEmbedTokenApply() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudBiEmbedTokenCreate,
-		Read:   resourceTencentCloudBiEmbedTokenRead,
-		Delete: resourceTencentCloudBiEmbedTokenDelete,
+		Create: resourceTencentCloudBiEmbedTokenApplyCreate,
+		Read:   resourceTencentCloudBiEmbedTokenApplyRead,
+		Delete: resourceTencentCloudBiEmbedTokenApplyDelete,
 
 		Schema: map[string]*schema.Schema{
 			"project_id": {
@@ -95,8 +95,8 @@ func resourceTencentCloudBiEmbedToken() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudBiEmbedTokenCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token.create")()
+func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -163,18 +163,18 @@ func resourceTencentCloudBiEmbedTokenCreate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	return resourceTencentCloudBiEmbedTokenRead(d, meta)
+	return resourceTencentCloudBiEmbedTokenApplyRead(d, meta)
 }
 
-func resourceTencentCloudBiEmbedTokenRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token.read")()
+func resourceTencentCloudBiEmbedTokenApplyRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudBiEmbedTokenDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token.delete")()
+func resourceTencentCloudBiEmbedTokenApplyDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

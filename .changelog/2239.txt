@@ -27,10 +27,10 @@ tencentcloud_bi_datasource_cloud
 ```
 
 ```release-note:new-resource
-tencentcloud_bi_embed_token
+tencentcloud_bi_embed_token_apply
 ```
 
 ```release-note:new-resource
-tencentcloud_bi_embed_interval
+tencentcloud_bi_embed_interval_apply
 ```
 

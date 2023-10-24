@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixBiEmbedTokenResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixBiEmbedTokenApplyResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,7 +16,7 @@ func TestAccTencentCloudNeedFixBiEmbedTokenResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBiEmbedToken,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_bi_embed_token.embed_token", "id")),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_bi_embed_token_apply.embed_token", "id")),
 			},
 		},
 	})
@@ -24,7 +24,7 @@ func TestAccTencentCloudNeedFixBiEmbedTokenResource_basic(t *testing.T) {
 
 const testAccBiEmbedToken = `
 
-resource "tencentcloud_bi_embed_token" "embed_token" {
+resource "tencentcloud_bi_embed_token_apply" "embed_token" {
   project_id   = 11015030
   page_id      = 10520483
   scope        = "page"
