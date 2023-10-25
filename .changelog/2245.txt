@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_dlc_check_data_engine_image_can_be_upgrade
+```
+
+```release-note:new-resource
+tencentcloud_dlc_data_engine
+```
+
+```release-note:new-resource
+tencentcloud_dlc_rollback_data_engine_image_operation
+```

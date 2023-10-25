@@ -33,12 +33,14 @@ import (
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+	cdwpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg/v20201230"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -189,6 +191,8 @@ type TencentCloudClient struct {
 	cfwConn            *cfw.Client
 	oceanusConn        *oceanus.Client
 	trocketConn        *trocket.Client
+	biConn             *bi.Client
+	cdwpgConn          *cdwpg.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1321,6 +1325,34 @@ func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
 	me.trocketConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.trocketConn
+}
+
+// UseBiClient returns bi client for service
+func (me *TencentCloudClient) UseBiClient() *bi.Client {
+	if me.biConn != nil {
+		return me.biConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.biConn, _ = bi.NewClient(me.Credential, me.Region, cpf)
+	me.biConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.biConn
+}
+
+// UseCdwpgClient returns cdwpg client for service
+func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
+	if me.cdwpgConn != nil {
+		return me.cdwpgConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdwpgConn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
+	me.cdwpgConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwpgConn
 }
 
 func getEnvDefault(key string, defVal int) int {

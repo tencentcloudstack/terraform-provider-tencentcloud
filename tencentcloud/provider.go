@@ -1537,8 +1537,8 @@ Tencent Cloud Organization (TCO)
 	tencentcloud_organization_org_identity
 	tencentcloud_organization_org_member_email
 	tencentcloud_organization_org_member_auth_identity_attachment
-	tencentcloud_organization_policy_sub_account_attachment
 	tencentcloud_organization_org_member_policy_attachment
+	tencentcloud_organization_policy_sub_account_attachment
 	tencentcloud_organization_quit_organization_operation
 
 TDSQL-C for PostgreSQL(TDCPG)
@@ -1851,10 +1851,17 @@ EventBridge(EB)
 
 Data Lake Compute(DLC)
   Data Source
+	tencentcloud_dlc_describe_user_type
+	tencentcloud_dlc_describe_user_info
+	tencentcloud_dlc_describe_user_roles
 	tencentcloud_dlc_check_data_engine_image_can_be_rollback
+	tencentcloud_dlc_check_data_engine_image_can_be_upgrade
+
   Resource
 	tencentcloud_dlc_work_group
 	tencentcloud_dlc_user
+	tencentcloud_dlc_data_engine
+	tencentcloud_dlc_rollback_data_engine_image_operation
 	tencentcloud_dlc_add_users_to_work_group_attachment
 	tencentcloud_dlc_store_location_config
 	tencentcloud_dlc_suspend_resume_data_engine
@@ -1917,6 +1924,24 @@ Cwp
   Resource
 	tencentcloud_cwp_license_order
 	tencentcloud_cwp_license_bind_attachment
+
+Business Intelligence(BI)
+  Data Source
+	tencentcloud_bi_project
+	tencentcloud_bi_user_project
+
+  Resource
+	tencentcloud_bi_project
+	tencentcloud_bi_user_role
+	tencentcloud_bi_project_user_role
+	tencentcloud_bi_datasource
+	tencentcloud_bi_datasource_cloud
+	tencentcloud_bi_embed_token_apply
+	tencentcloud_bi_embed_interval_apply
+
+CDWPG
+  Resource
+	tencentcloud_cdwpg_instance
 */
 package tencentcloud
 
@@ -2706,6 +2731,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_secret_last_used_time":                   dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":          dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback": dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
+			"tencentcloud_dlc_check_data_engine_image_can_be_upgrade":  dataSourceTencentCloudDlcCheckDataEngineImageCanBeUpgrade(),
+			"tencentcloud_dlc_describe_user_type":                      dataSourceTencentCloudDlcDescribeUserType(),
+			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
+			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
+			"tencentcloud_bi_project":                                  dataSourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_project":                             dataSourceTencentCloudBiUserProject(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3517,10 +3548,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_put_events":                                       resourceTencentCloudEbPutEvents(),
 			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
+			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
+			"tencentcloud_dlc_data_engine":                                     resourceTencentCloudDlcDataEngine(),
+			"tencentcloud_dlc_suspend_resume_data_engine":                      resourceTencentCloudDlcSuspendResumeDataEngine(),
+			"tencentcloud_dlc_rollback_data_engine_image_operation":            resourceTencentCloudDlcRollbackDataEngineImageOperation(),
 			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
 			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
-			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
-			"tencentcloud_dlc_suspend_resume_data_engine":                      resourceTencentCloudDlcSuspendResumeDataEngine(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
@@ -3556,6 +3589,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
+			"tencentcloud_bi_project":                                          resourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_role":                                        resourceTencentCloudBiUserRole(),
+			"tencentcloud_bi_project_user_role":                                resourceTencentCloudBiProjectUserRole(),
+			"tencentcloud_bi_datasource":                                       resourceTencentCloudBiDatasource(),
+			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
+			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
+			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
+			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
