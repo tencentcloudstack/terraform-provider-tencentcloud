@@ -2738,6 +2738,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_user_type":                      dataSourceTencentCloudDlcDescribeUserType(),
 			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
 			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
+			"tencentcloud_dlc_describe_data_engine":                    dataSourceTencentCloudDlcDescribeDataEngine(),
 			"tencentcloud_bi_project":                                  dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                             dataSourceTencentCloudBiUserProject(),
 		},
