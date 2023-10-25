@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDlcModifyDataEngineDescriptionOperationResource_basic(t *testing.T) {
@@ -15,7 +16,10 @@ func TestAccTencentCloudDlcModifyDataEngineDescriptionOperationResource_basic(t 
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcModifyDataEngineDescriptionOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_modify_data_engine_description_operation.modify_data_engine_description_operation", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dlc_modify_data_engine_description_operation.modify_data_engine_description_operation", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_modify_data_engine_description_operation.modify_data_engine_description_operation", "data_engine_name", "iac-test-spark"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_modify_data_engine_description_operation.modify_data_engine_description_operation", "message", "test")),
 			},
 		},
 	})
