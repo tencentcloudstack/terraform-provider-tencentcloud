@@ -15,7 +15,9 @@ func TestAccTencentCloudDlcDescribeDataEngineDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcDescribeDataEngineDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dlc_describe_data_engine.describe_data_engine")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dlc_describe_data_engine.describe_data_engine"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dlc_describe_data_engine.describe_data_engine", "data_engine_name", "iac-test-spark"),
+				),
 			},
 		},
 	})

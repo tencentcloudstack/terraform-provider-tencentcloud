@@ -1854,6 +1854,8 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_describe_user_type
 	tencentcloud_dlc_describe_user_info
 	tencentcloud_dlc_describe_user_roles
+	tencentcloud_dlc_describe_data_engine
+	tencentcloud_dlc_describe_data_engine_image_versions
 	tencentcloud_dlc_check_data_engine_image_can_be_rollback
 	tencentcloud_dlc_check_data_engine_image_can_be_upgrade
 
@@ -2739,6 +2741,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_user_info":                      dataSourceTencentCloudDlcDescribeUserInfo(),
 			"tencentcloud_dlc_describe_user_roles":                     dataSourceTencentCloudDlcDescribeUserRoles(),
 			"tencentcloud_dlc_describe_data_engine":                    dataSourceTencentCloudDlcDescribeDataEngine(),
+			"tencentcloud_dlc_describe_data_engine_image_versions":     dataSourceTencentCloudDlcDescribeDataEngineImageVersions(),
 			"tencentcloud_bi_project":                                  dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                             dataSourceTencentCloudBiUserProject(),
 		},

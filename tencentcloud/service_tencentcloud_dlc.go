@@ -424,3 +424,36 @@ func (me *DlcService) DescribeDlcCheckDataEngineImageCanBeUpgradeByFilter(ctx co
 	checkDataEngineImageCanBeUpgrade = response.Response
 	return
 }
+func (me *DlcService) DescribeDlcDataEngineImageVersionsByFilter(ctx context.Context, param map[string]interface{}) (describeDataEngineImageVersions []*dlc.DataEngineImageVersion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeDataEngineImageVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EngineType" {
+			request.EngineType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeDataEngineImageVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.ImageParentVersions) < 1 {
+		return
+	}
+	describeDataEngineImageVersions = append(describeDataEngineImageVersions, response.Response.ImageParentVersions...)
+	return
+}
