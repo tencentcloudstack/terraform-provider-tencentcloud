@@ -3570,6 +3570,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_modify_user_typ_operation":                       resourceTencentCloudDlcModifyUserTypOperation(),
 			"tencentcloud_dlc_renew_data_engine_operation":                     resourceTencentCloudDlcRenewDataEngineOperation(),
 			"tencentcloud_dlc_modify_data_engine_description_operation":        resourceTencentCloudDlcModifyDataEngineDescriptionOperation(),
+			"tencentcloud_dlc_modify_user_typ_operation":                       resourceTencentCloudDlcModifyUserTypOperation(),
+			"tencentcloud_dlc_renew_data_engine_operation":                     resourceTencentCloudDlcRenewDataEngineOperation(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
