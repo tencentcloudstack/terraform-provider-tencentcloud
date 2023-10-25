@@ -29,6 +29,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -114,6 +116,16 @@ func resourceTencentCloudOceanusResource() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Workspace serialId.",
 			},
+			"resource_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Resource ID.",
+			},
+			"version": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Resource Version.",
+			},
 		},
 	}
 }
@@ -127,6 +139,7 @@ func resourceTencentCloudOceanusResourceCreate(d *schema.ResourceData, meta inte
 		request    = oceanus.NewCreateResourceRequest()
 		response   = oceanus.NewCreateResourceResponse()
 		resourceId string
+		version    string
 	)
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "resource_loc"); ok {
@@ -202,7 +215,9 @@ func resourceTencentCloudOceanusResourceCreate(d *schema.ResourceData, meta inte
 	}
 
 	resourceId = *response.Response.ResourceId
-	d.SetId(resourceId)
+	versionInt := *response.Response.Version
+	version = strconv.FormatInt(versionInt, 10)
+	d.SetId(strings.Join([]string{resourceId, version}, FILED_SP))
 
 	return resourceTencentCloudOceanusResourceRead(d, meta)
 }
@@ -212,13 +227,19 @@ func resourceTencentCloudOceanusResourceRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = OceanusService{client: meta.(*TencentCloudClient).apiV3Conn}
-		resourceId = d.Id()
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = OceanusService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 
-	resourceItem, err := service.DescribeOceanusResourceById(ctx, resourceId)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	resourceId := idSplit[0]
+	version := idSplit[1]
+
+	resourceItem, err := service.DescribeOceanusResourceConfigById(ctx, resourceId, version)
 	if err != nil {
 		return err
 	}
@@ -228,6 +249,9 @@ func resourceTencentCloudOceanusResourceRead(d *schema.ResourceData, meta interf
 		log.Printf("[WARN]%s resource `OceanusResource` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("resource_id", resourceItem.ResourceId)
+	_ = d.Set("version", resourceItem.Version)
 
 	if resourceItem.ResourceLoc != nil {
 		resourceLocMap := map[string]interface{}{}
@@ -261,14 +285,6 @@ func resourceTencentCloudOceanusResourceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("resource_type", resourceItem.ResourceType)
 	}
 
-	if resourceItem.Remark != nil {
-		_ = d.Set("remark", resourceItem.Remark)
-	}
-
-	if resourceItem.Name != nil {
-		_ = d.Set("name", resourceItem.Name)
-	}
-
 	return nil
 }
 
@@ -292,11 +308,16 @@ func resourceTencentCloudOceanusResourceDelete(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = OceanusService{client: meta.(*TencentCloudClient).apiV3Conn}
-		resourceId = d.Id()
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = OceanusService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	resourceId := idSplit[0]
 
 	if err := service.DeleteOceanusResourceById(ctx, resourceId); err != nil {
 		return err

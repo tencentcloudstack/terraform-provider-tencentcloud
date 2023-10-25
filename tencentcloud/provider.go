@@ -1070,12 +1070,21 @@ Oceanus
 	tencentcloud_oceanus_system_resource
 	tencentcloud_oceanus_work_spaces
 	tencentcloud_oceanus_clusters
+	tencentcloud_oceanus_tree_jobs
 	tencentcloud_oceanus_tree_resources
+	tencentcloud_oceanus_job_submission_log
+	tencentcloud_oceanus_check_savepoint
 
   Resource
 	tencentcloud_oceanus_job
+	tencentcloud_oceanus_job_config
+	tencentcloud_oceanus_job_copy
+	tencentcloud_oceanus_run_job
+	tencentcloud_oceanus_stop_job
+	tencentcloud_oceanus_trigger_job_savepoint
 	tencentcloud_oceanus_resource
 	tencentcloud_oceanus_resource_config
+	tencentcloud_oceanus_work_space
 
 Virtual Private Cloud(VPC)
   Data Source
@@ -2085,7 +2094,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_system_resource":                     dataSourceTencentCloudOceanusSystemResource(),
 			"tencentcloud_oceanus_work_spaces":                         dataSourceTencentCloudOceanusWorkSpaces(),
 			"tencentcloud_oceanus_clusters":                            dataSourceTencentCloudOceanusClusters(),
+			"tencentcloud_oceanus_tree_jobs":                           dataSourceTencentCloudOceanusTreeJobs(),
 			"tencentcloud_oceanus_tree_resources":                      dataSourceTencentCloudOceanusTreeResources(),
+			"tencentcloud_oceanus_job_submission_log":                  dataSourceTencentCloudOceanusJobSubmissionLog(),
+			"tencentcloud_oceanus_check_savepoint":                     dataSourceTencentCloudOceanusCheckSavepoint(),
 			"tencentcloud_vpn_customer_gateways":                       dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                                dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                          dataSourceTencentCloudVpnGatewayRoutes(),
@@ -2743,8 +2755,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway_snat":                                    resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_nat_refresh_nat_dc_route":                            resourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_oceanus_job":                                         resourceTencentCloudOceanusJob(),
+			"tencentcloud_oceanus_job_config":                                  resourceTencentCloudOceanusJobConfig(),
+			"tencentcloud_oceanus_job_copy":                                    resourceTencentCloudOceanusJobCopy(),
+			"tencentcloud_oceanus_run_job":                                     resourceTencentCloudOceanusRunJob(),
+			"tencentcloud_oceanus_stop_job":                                    resourceTencentCloudOceanusStopJob(),
+			"tencentcloud_oceanus_trigger_job_savepoint":                       resourceTencentCloudOceanusTriggerJobSavepoint(),
 			"tencentcloud_oceanus_resource":                                    resourceTencentCloudOceanusResource(),
 			"tencentcloud_oceanus_resource_config":                             resourceTencentCloudOceanusResourceConfig(),
+			"tencentcloud_oceanus_work_space":                                  resourceTencentCloudOceanusWorkSpace(),
 			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
 			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),

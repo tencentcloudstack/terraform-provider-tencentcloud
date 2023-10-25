@@ -494,6 +494,10 @@ func (me *OceanusService) DescribeOceanusTreeJobsByFilter(ctx context.Context, p
 		if k == "WorkSpaceId" {
 			request.WorkSpaceId = v.(*string)
 		}
+
+		if k == "Filters" {
+			request.Filters = v.([]*oceanus.Filter)
+		}
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -547,5 +551,237 @@ func (me *OceanusService) DescribeOceanusTreeResourcesByFilter(ctx context.Conte
 	}
 
 	treeResources = response.Response
+	return
+}
+
+func (me *OceanusService) DescribeOceanusJobSubmissionLogByFilter(ctx context.Context, param map[string]interface{}) (jobSubmissionLog *oceanus.DescribeJobSubmissionLogResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = oceanus.NewDescribeJobSubmissionLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "JobId" {
+			request.JobId = v.(*string)
+		}
+
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+
+		if k == "RunningOrderId" {
+			request.RunningOrderId = v.(*int64)
+		}
+
+		if k == "Keyword" {
+			request.Keyword = v.(*string)
+		}
+
+		if k == "OrderType" {
+			request.OrderType = v.(*string)
+		}
+
+		if k == "Cursor" {
+			request.Cursor = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	request.Limit = common.Int64Ptr(100)
+	response, err := me.client.UseOceanusClient().DescribeJobSubmissionLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	jobSubmissionLog = response.Response
+
+	return
+}
+
+func (me *OceanusService) DescribeOceanusCheckSavepointByFilter(ctx context.Context, param map[string]interface{}) (CheckSavepoint *oceanus.CheckSavepointResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = oceanus.NewCheckSavepointRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "JobId" {
+			request.JobId = v.(*string)
+		}
+
+		if k == "SerialId" {
+			request.SerialId = v.(*string)
+		}
+
+		if k == "RecordType" {
+			request.RecordType = v.(*int64)
+		}
+
+		if k == "SavepointPath" {
+			request.SavepointPath = v.(*string)
+		}
+
+		if k == "WorkSpaceId" {
+			request.WorkSpaceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().CheckSavepoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	CheckSavepoint = response.Response
+	return
+}
+
+func (me *OceanusService) DescribeOceanusWorkSpaceById(ctx context.Context, workSpaceName string) (WorkSpace *oceanus.WorkSpaceSetItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDescribeWorkSpacesRequest()
+	request.Filters = []*oceanus.Filter{
+		{
+			Name:   common.StringPtr("WorkSpaceName"),
+			Values: common.StringPtrs([]string{workSpaceName}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DescribeWorkSpaces(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.WorkSpaceSetItem) != 1 {
+		return
+	}
+
+	WorkSpace = response.Response.WorkSpaceSetItem[0]
+	return
+}
+
+func (me *OceanusService) DeleteOceanusWorkSpaceById(ctx context.Context, workSpaceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDeleteWorkSpaceRequest()
+	request.WorkSpaceId = &workSpaceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DeleteWorkSpace(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *OceanusService) DescribeOceanusJobConfigById(ctx context.Context, jobId, version string) (JobConfig *oceanus.JobConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDescribeJobConfigsRequest()
+	request.JobId = &jobId
+	versionInt, _ := strconv.ParseUint(version, 10, 64)
+	request.JobConfigVersions = common.Uint64Ptrs([]uint64{versionInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DescribeJobConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.JobConfigSet) != 1 {
+		return
+	}
+
+	JobConfig = response.Response.JobConfigSet[0]
+	return
+}
+
+func (me *OceanusService) DeleteOceanusJobConfigById(ctx context.Context, jobId, version string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDeleteJobConfigsRequest()
+	request.JobId = &jobId
+	versionInt, _ := strconv.ParseInt(version, 10, 64)
+	request.JobConfigVersions = common.Int64Ptrs([]int64{versionInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DeleteJobConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }

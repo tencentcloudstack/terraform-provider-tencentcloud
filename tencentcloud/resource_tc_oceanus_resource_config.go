@@ -4,8 +4,26 @@ Provides a resource to create a oceanus resource_config
 Example Usage
 
 ```hcl
+resource "tencentcloud_oceanus_resource" "example" {
+  resource_loc {
+    storage_type = 1
+    param {
+      bucket = "keep-terraform-1257058945"
+      path   = "OceanusResource/junit-4.13.1.jar"
+      region = "ap-guangzhou"
+    }
+  }
+
+  resource_type          = 1
+  remark                 = "remark."
+  name                   = "tf_example"
+  resource_config_remark = "config remark."
+  folder_id              = "folder-7ctl246z"
+  work_space_id          = "space-2idq8wbr"
+}
+
 resource "tencentcloud_oceanus_resource_config" "example" {
-  resource_id = "resource-8y9lzcuz"
+  resource_id = tencentcloud_oceanus_resource.example.resource_id
   resource_loc {
     storage_type = 1
     param {
@@ -15,7 +33,7 @@ resource "tencentcloud_oceanus_resource_config" "example" {
     }
   }
 
-  remark        = "remark."
+  remark        = "config remark."
   work_space_id = "space-2idq8wbr"
 }
 ```
@@ -97,6 +115,11 @@ func resourceTencentCloudOceanusResourceConfig() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Workspace SerialId.",
+			},
+			"version": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Resource Config Version.",
 			},
 		},
 	}
@@ -247,6 +270,10 @@ func resourceTencentCloudOceanusResourceConfigRead(d *schema.ResourceData, meta 
 		_ = d.Set("remark", resourceConfig.Remark)
 	}
 
+	if resourceConfig.Version != nil {
+		_ = d.Set("version", resourceConfig.Version)
+	}
+
 	return nil
 }
 
@@ -254,7 +281,7 @@ func resourceTencentCloudOceanusResourceConfigUpdate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_oceanus_resource_config.update")()
 	defer inconsistentCheck(d, meta)()
 
-	immutableArgs := []string{"resource_id", "resource_loc", "remark", "auto_delete", "work_space_id"}
+	immutableArgs := []string{"resource_id", "resource_loc", "remark", "work_space_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
