@@ -90,7 +90,7 @@ func dataSourceTencentCloudOceanusCheckSavepointRead(d *schema.ResourceData, met
 		serialId = v.(string)
 	}
 
-	if v, _ := d.GetOkExists("record_type"); v != nil {
+	if v, ok := d.GetOkExists("record_type"); ok {
 		paramMap["RecordType"] = helper.IntInt64(v.(int))
 	}
 

@@ -167,15 +167,15 @@ func dataSourceTencentCloudOceanusJobSubmissionLogRead(d *schema.ResourceData, m
 		jobId = v.(string)
 	}
 
-	if v, _ := d.GetOkExists("start_time"); v != nil {
+	if v, ok := d.GetOkExists("start_time"); ok {
 		paramMap["StartTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOkExists("end_time"); v != nil {
+	if v, ok := d.GetOkExists("end_time"); ok {
 		paramMap["EndTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOkExists("running_order_id"); v != nil {
+	if v, ok := d.GetOkExists("running_order_id"); ok {
 		paramMap["RunningOrderId"] = helper.IntInt64(v.(int))
 	}
 

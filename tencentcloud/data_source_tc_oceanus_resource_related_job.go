@@ -98,11 +98,11 @@ func dataSourceTencentCloudOceanusResourceRelatedJobRead(d *schema.ResourceData,
 		paramMap["ResourceId"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOkExists("desc_by_job_config_create_time"); v != nil {
+	if v, ok := d.GetOkExists("desc_by_job_config_create_time"); ok {
 		paramMap["DESCByJobConfigCreateTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOkExists("resource_config_version"); v != nil {
+	if v, ok := d.GetOkExists("resource_config_version"); ok {
 		paramMap["ResourceConfigVersion"] = helper.IntInt64(v.(int))
 	}
 
