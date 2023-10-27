@@ -2,7 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -391,6 +394,36 @@ func (me *DlcService) DeleteDlcDataEngineByName(ctx context.Context, dataEngineN
 
 	return
 }
+func (me *DlcService) DescribeDlcDataEngineById(ctx context.Context, dataEngineId string) (dataEngine *dlc.DataEngineInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewDescribeDataEnginesRequest()
+	item := &dlc.Filter{
+		Name:   helper.String("engine-id"),
+		Values: []*string{helper.String(dataEngineId)}}
+	request.Filters = []*dlc.Filter{item}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeDataEngines(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.DataEngines) < 1 {
+		return
+	}
+
+	dataEngine = response.Response.DataEngines[0]
+	return
+}
 func (me *DlcService) DescribeDlcCheckDataEngineImageCanBeUpgradeByFilter(ctx context.Context, param map[string]interface{}) (checkDataEngineImageCanBeUpgrade *dlc.CheckDataEngineImageCanBeUpgradeResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -569,4 +602,26 @@ func (me *DlcService) DescribeDlcDescribeWorkGroupInfoByFilter(ctx context.Conte
 	describeWorkGroupInfo = response.Response.WorkGroupInfo
 
 	return
+}
+func (me *DlcService) DlcRestartDataEngineStateRefreshFunc(dataEngineId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		dataEngine, err := me.DescribeDlcDataEngineById(context.Background(), dataEngineId)
+		if err != nil {
+			return nil, "", err
+		}
+
+		request := dlc.NewDescribeDataEngineRequest()
+		request.DataEngineName = dataEngine.DataEngineName
+		response, err := me.client.UseDlcClient().DescribeDataEngine(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if response == nil || response.Response == nil || response.Response.DataEngine == nil {
+			return nil, "", fmt.Errorf("not found instance")
+		}
+
+		return response.Response.DataEngine, helper.Int64ToStr(*response.Response.DataEngine.State), nil
+	}
 }
