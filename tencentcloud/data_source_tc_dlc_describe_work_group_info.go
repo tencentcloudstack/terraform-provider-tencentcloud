@@ -494,7 +494,7 @@ func dataSourceTencentCloudDlcDescribeWorkGroupInfoRead(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("work_group_id"); v != nil {
+	if v, _ := d.GetOkExists("work_group_id"); v != nil {
 		paramMap["WorkGroupId"] = helper.IntInt64(v.(int))
 	}
 
