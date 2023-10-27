@@ -94,11 +94,11 @@ func resourceTencentCloudDlcRenewDataEngineCreate(d *schema.ResourceData, meta i
 		request.DataEngineName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("time_span"); v != nil {
+	if v, _ := d.GetOkExists("time_span"); v != nil {
 		request.TimeSpan = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("pay_mode"); v != nil {
+	if v, _ := d.GetOkExists("pay_mode"); v != nil {
 		request.PayMode = helper.IntInt64(v.(int))
 	}
 
@@ -106,7 +106,7 @@ func resourceTencentCloudDlcRenewDataEngineCreate(d *schema.ResourceData, meta i
 		request.TimeUnit = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("renew_flag"); v != nil {
+	if v, _ := d.GetOkExists("renew_flag"); v != nil {
 		request.RenewFlag = helper.IntInt64(v.(int))
 	}
 
