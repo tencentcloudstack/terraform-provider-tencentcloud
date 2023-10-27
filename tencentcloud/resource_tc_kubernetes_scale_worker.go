@@ -3,6 +3,8 @@ Provide a resource to increase instance to cluster
 
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 
+~> **NOTE:** Import Node: Currently, only one node can be imported at a time.
+
 Example Usage
 
 ```hcl
@@ -104,18 +106,17 @@ package tencentcloud
 
 import (
 	"context"
-	"crypto/md5"
 	"fmt"
 	"log"
 	"strings"
 	"time"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudTkeScaleWorker() *schema.Resource {
@@ -123,6 +124,17 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 		Create: resourceTencentCloudTkeScaleWorkerCreate,
 		Read:   resourceTencentCloudTkeScaleWorkerRead,
 		Delete: resourceTencentCloudTkeScaleWorkerDelete,
+		Importer: &schema.ResourceImporter{
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importFlag = true
+				err := resourceTencentCloudTkeScaleWorkerRead(d, m)
+				if err != nil {
+					return nil, fmt.Errorf("failed to import resource")
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Type:        schema.TypeString,
@@ -336,20 +348,8 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	md := md5.New()
-
-	if _, err = md.Write([]byte(clusterId)); err != nil {
-		return err
-	}
-
-	instanceIdJoin := strings.Join(instanceIds, "#")
-
-	if _, err = md.Write([]byte(instanceIdJoin)); err != nil {
-		return err
-	}
-
-	id := fmt.Sprintf("TkeScaleWorker.%x", md.Sum(nil))
-
+	//修改id设置,不符合id规则
+	id := clusterId + FILED_SP + strings.Join(instanceIds, FILED_SP)
 	d.SetId(id)
 
 	//wait for LANIP
@@ -362,44 +362,53 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_kubernetes_scale_worker.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
+	ctx := context.WithValue(context.TODO(), logIdKey, getLogId(contextNil))
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	clusterId := d.Get("cluster_id").(string)
+	var (
+		items                  = strings.Split(d.Id(), FILED_SP)
+		oldWorkerInstancesList = d.Get("worker_instances_list").([]interface{})
+		instanceMap            = make(map[string]bool)
+		clusterId              = ""
+	)
+
+	if importFlag {
+		clusterId = items[0]
+		if len(items[1:]) >= 2 {
+			return fmt.Errorf("only one additional configuration of virtual machines is now supported now, " +
+				"so should be 1")
+		}
+		infoMap := map[string]interface{}{
+			"instance_id": items[1],
+		}
+		oldWorkerInstancesList = append(oldWorkerInstancesList, infoMap)
+	} else {
+		clusterId = d.Get("cluster_id").(string)
+	}
+
 	if clusterId == "" {
 		return fmt.Errorf("tke.`cluster_id` is empty.")
 	}
 
-	_, has, err := service.DescribeCluster(ctx, clusterId)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, has, err = service.DescribeCluster(ctx, clusterId)
-			if err != nil {
-				return retryError(err)
-			}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		_, has, err := service.DescribeCluster(ctx, clusterId)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if !has {
+			d.SetId("")
 			return nil
-		})
-	}
-
+		}
+		return nil
+	})
 	if err != nil {
-		return nil
+		return err
 	}
-	// The cluster has been deleted
-	if !has {
-		d.SetId("")
-		return nil
-	}
-
-	oldWorkerInstancesList := d.Get("worker_instances_list").([]interface{})
-
-	instanceMap := make(map[string]bool)
 
 	for _, v := range oldWorkerInstancesList {
-
 		infoMap, ok := v.(map[string]interface{})
-
 		if !ok || infoMap["instance_id"] == nil {
 			return fmt.Errorf("worker_instances_list is broken.")
 		}
@@ -407,20 +416,16 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		if !ok || instanceId == "" {
 			return fmt.Errorf("worker_instances_list.instance_id is broken.")
 		}
-
 		if instanceMap[instanceId] {
-			log.Printf("[WARN]The same instance id exists in the list")
+			continue
 		}
-
 		instanceMap[instanceId] = true
-
 	}
 
 	_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			_, workers, err = service.DescribeClusterInstances(ctx, clusterId)
-
 			if e, ok := err.(*errors.TencentCloudSDKError); ok {
 				if e.GetCode() == "InternalError.ClusterNotFound" {
 					return nil
@@ -432,30 +437,191 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 			return nil
 		})
 	}
-
 	if err != nil {
 		return err
 	}
 
 	newWorkerInstancesList := make([]map[string]interface{}, 0, len(workers))
 	labelsMap := make(map[string]string)
-	for _, cvm := range workers {
+	instanceIds := make([]*string, 0)
+	for sub, cvm := range workers {
 		if _, ok := instanceMap[cvm.InstanceId]; !ok {
 			continue
 		}
+		instanceIds = append(instanceIds, &workers[sub].InstanceId)
 		tempMap := make(map[string]interface{})
 		tempMap["instance_id"] = cvm.InstanceId
 		tempMap["instance_role"] = cvm.InstanceRole
 		tempMap["instance_state"] = cvm.InstanceState
 		tempMap["failed_reason"] = cvm.FailedReason
 		tempMap["lan_ip"] = cvm.LanIp
+
 		newWorkerInstancesList = append(newWorkerInstancesList, tempMap)
+		if cvm.InstanceAdvancedSettings != nil {
+			if cvm.InstanceAdvancedSettings.Labels != nil {
+				for _, v := range cvm.InstanceAdvancedSettings.Labels {
+					labelsMap[helper.PString(v.Name)] = helper.PString(v.Value)
+				}
+			}
 
-		labels := cvm.InstanceAdvancedSettings.Labels
+			_ = d.Set("unschedulable", helper.PInt64(cvm.InstanceAdvancedSettings.Unschedulable))
 
-		for _, v := range labels {
-			labelsMap[*v.Name] = *v.Value
+			if importFlag {
+				_ = d.Set("docker_graph_path", helper.PString(cvm.InstanceAdvancedSettings.DockerGraphPath))
+				_ = d.Set("desired_pod_num", helper.PInt64(cvm.InstanceAdvancedSettings.DesiredPodNumber))
+				_ = d.Set("mount_target", helper.PString(cvm.InstanceAdvancedSettings.MountTarget))
+			}
+
+			if cvm.InstanceAdvancedSettings.DataDisks != nil && len(cvm.InstanceAdvancedSettings.DataDisks) > 0 {
+				dataDisks := make([]interface{}, 0, len(cvm.InstanceAdvancedSettings.DataDisks))
+				for i := range cvm.InstanceAdvancedSettings.DataDisks {
+					item := cvm.InstanceAdvancedSettings.DataDisks[i]
+					disk := make(map[string]interface{})
+					disk["disk_type"] = helper.PString(item.DiskType)
+					disk["disk_size"] = helper.PInt64(item.DiskSize)
+					disk["file_system"] = helper.PString(item.FileSystem)
+					disk["auto_format_and_mount"] = helper.PBool(item.AutoFormatAndMount)
+					disk["mount_target"] = helper.PString(item.MountTarget)
+					disk["disk_partition"] = helper.PString(item.MountTarget)
+					dataDisks = append(dataDisks, disk)
+				}
+				if importFlag {
+					_ = d.Set("data_disk", dataDisks)
+				}
+			}
+
+			if cvm.InstanceAdvancedSettings.GPUArgs != nil {
+				setting := cvm.InstanceAdvancedSettings.GPUArgs
+
+				var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
+				gpuArgs := map[string]interface{}{
+					"mig_enable": helper.PBool(setting.MIGEnable),
+				}
+
+				if !isDriverEmpty(setting.Driver) {
+					driverEmptyFlag = true
+					driver := map[string]interface{}{
+						"version": helper.PString(setting.Driver.Version),
+						"name":    helper.PString(setting.Driver.Name),
+					}
+					gpuArgs["driver"] = driver
+				}
+
+				if !isCUDAEmpty(setting.CUDA) {
+					cudaEmptyFlag = true
+					cuda := map[string]interface{}{
+						"version": helper.PString(setting.CUDA.Version),
+						"name":    helper.PString(setting.CUDA.Name),
+					}
+					gpuArgs["cuda"] = cuda
+				}
+
+				if !isCUDNNEmpty(setting.CUDNN) {
+					cudnnEmptyFlag = true
+					cudnn := map[string]interface{}{
+						"version":  helper.PString(setting.CUDNN.Version),
+						"name":     helper.PString(setting.CUDNN.Name),
+						"doc_name": helper.PString(setting.CUDNN.DocName),
+						"dev_name": helper.PString(setting.CUDNN.DevName),
+					}
+					gpuArgs["cudnn"] = cudnn
+				}
+
+				if !isCustomDriverEmpty(setting.CustomDriver) {
+					customDriverEmptyFlag = true
+					customDriver := map[string]interface{}{
+						"address": helper.PString(setting.CustomDriver.Address),
+					}
+					gpuArgs["custom_driver"] = customDriver
+				}
+
+				if importFlag {
+					if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
+						_ = d.Set("gpu_args", []interface{}{gpuArgs})
+					}
+
+				}
+			}
 		}
+	}
+
+	//worker_config
+	var instances []*cvm.Instance
+	var errRet error
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	instanceList := make([]interface{}, 0, len(instances))
+	for _, instance := range instances {
+		mapping := map[string]interface{}{
+			"count":                               1,
+			"instance_charge_type_prepaid_period": 1,
+			"instance_type":                       helper.PString(instance.InstanceType),
+			"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
+			"availability_zone":                   helper.PString(instance.Placement.Zone),
+			"instance_name":                       helper.PString(instance.InstanceName),
+			"instance_charge_type":                helper.PString(instance.InstanceChargeType),
+			"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
+			"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
+			"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
+			"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
+			"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
+			"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
+			"img_id":                              helper.PString(instance.ImageId),
+		}
+
+		if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
+			mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
+		} else {
+			mapping["instance_charge_type_prepaid_renew_flag"] = ""
+		}
+		if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
+			mapping["public_ip_assigned"] = true
+		}
+
+		if instance.CamRoleName != nil {
+			mapping["cam_role_name"] = instance.CamRoleName
+		}
+		if instance.LoginSettings != nil {
+			if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
+				mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
+			}
+			if instance.LoginSettings.Password != nil {
+				mapping["password"] = helper.PString(instance.LoginSettings.Password)
+			}
+		}
+		if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
+			mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
+		}
+		if instance.HpcClusterId != nil {
+			mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
+		}
+
+		dataDisks := make([]interface{}, 0, len(instance.DataDisks))
+		for _, v := range instance.DataDisks {
+			dataDisk := map[string]interface{}{
+				"disk_type":   helper.PString(v.DiskType),
+				"disk_size":   helper.PInt64(v.DiskSize),
+				"snapshot_id": helper.PString(v.DiskId),
+				"encrypt":     helper.PBool(v.Encrypt),
+				"kms_key_id":  helper.PString(v.KmsKeyId),
+			}
+			dataDisks = append(dataDisks, dataDisk)
+		}
+
+		mapping["data_disk"] = dataDisks
+		instanceList = append(instanceList, mapping)
+	}
+	if importFlag {
+		_ = d.Set("worker_config", instanceList)
 	}
 
 	// The machines I generated was deleted by others.
@@ -464,9 +630,11 @@ func resourceTencentCloudTkeScaleWorkerRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
+	_ = d.Set("cluster_id", clusterId)
 	_ = d.Set("labels", labelsMap)
+	_ = d.Set("worker_instances_list", newWorkerInstancesList)
 
-	return d.Set("worker_instances_list", newWorkerInstancesList)
+	return nil
 }
 func resourceTencentCloudTkeScaleWorkerDelete(d *schema.ResourceData, meta interface{}) error {
 
