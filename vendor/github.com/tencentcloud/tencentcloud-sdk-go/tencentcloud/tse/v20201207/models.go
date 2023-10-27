@@ -95,6 +95,24 @@ type BoundK8SInfo struct {
 	// 服务同步模式，all为全量同步，demand为按需同步
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SyncMode *string `json:"SyncMode,omitnil" name:"SyncMode"`
+
+	// 绑定的kubernetes集群所在地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BindRegion *string `json:"BindRegion,omitnil" name:"BindRegion"`
+}
+
+type CLBMultiRegion struct {
+	// 是否启用多可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLBMultiZoneFlag *bool `json:"CLBMultiZoneFlag,omitnil" name:"CLBMultiZoneFlag"`
+
+	// 主可用区信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLBMasterZone *string `json:"CLBMasterZone,omitnil" name:"CLBMasterZone"`
+
+	// 备可用区信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLBSlaveZone *string `json:"CLBSlaveZone,omitnil" name:"CLBSlaveZone"`
 }
 
 type CertificateInfo struct {
@@ -229,9 +247,13 @@ type CloudNativeAPIGatewayConfig struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitnil" name:"Description"`
 
-	// 负载均衡的规格类型，传 "SLA" 表示性能容量型，返回空为共享型
+	// 负载均衡的规格类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaType *string `json:"SlaType,omitnil" name:"SlaType"`
+
+	// clb规格名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SlaName *string `json:"SlaName,omitnil" name:"SlaName"`
 
 	// clb vip
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -1285,6 +1307,10 @@ func (r *CreateCloudNativeAPIGatewayServiceRequest) FromJsonString(s string) err
 
 // Predefined struct for user
 type CreateCloudNativeAPIGatewayServiceResponseParams struct {
+	// 网关服务创建结果
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *CreateGatewayServiceResult `json:"Result,omitnil" name:"Result"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
 }
@@ -1577,6 +1603,12 @@ func (r *CreateEngineResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *CreateEngineResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateGatewayServiceResult struct {
+	// 网关服务ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceId *string `json:"ServiceId,omitnil" name:"ServiceId"`
 }
 
 // Predefined struct for user
@@ -3261,13 +3293,29 @@ type DescribeInstanceRegionInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
 
-	// 内网的网络信息
+	// 客户端内网的网络信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntranetVpcInfos []*VpcInfo `json:"IntranetVpcInfos,omitnil" name:"IntranetVpcInfos"`
+
+	// 控制台内网的网络信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConsoleIntranetVpcInfos []*VpcInfo `json:"ConsoleIntranetVpcInfos,omitnil" name:"ConsoleIntranetVpcInfos"`
 
 	// 是否开公网
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableClientInternet *bool `json:"EnableClientInternet,omitnil" name:"EnableClientInternet"`
+
+	// 限流客户端内网的网络信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LimiterIntranetVpcInfos []*VpcInfo `json:"LimiterIntranetVpcInfos,omitnil" name:"LimiterIntranetVpcInfos"`
+
+	// 是否为主地域，仅在服务治理中心多地域有效
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MainRegion *bool `json:"MainRegion,omitnil" name:"MainRegion"`
+
+	// 该地域所在的EKS集群
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EKSClusterID *string `json:"EKSClusterID,omitnil" name:"EKSClusterID"`
 }
 
 // Predefined struct for user
@@ -3652,6 +3700,10 @@ type DescribeSREInstanceAccessAddressResponseParams struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LimiterAddressInfos []*PolarisLimiterAddress `json:"LimiterAddressInfos,omitnil" name:"LimiterAddressInfos"`
 
+	// InternetAddress 的公网 CLB 多可用区信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil" name:"CLBMultiRegion"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
 }
@@ -3929,6 +3981,12 @@ type EngineRegionInfo struct {
 
 	// 集群网络信息
 	VpcInfos []*VpcInfo `json:"VpcInfos,omitnil" name:"VpcInfos"`
+
+	// 是否为主地域
+	MainRegion *bool `json:"MainRegion,omitnil" name:"MainRegion"`
+
+	// 引擎规格ID
+	SpecId *string `json:"SpecId,omitnil" name:"SpecId"`
 }
 
 type EnvAddressInfo struct {
@@ -3952,6 +4010,10 @@ type EnvAddressInfo struct {
 	// 客户端公网带宽
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetBandWidth *int64 `json:"InternetBandWidth,omitnil" name:"InternetBandWidth"`
+
+	// 客户端公网CLB多可用区信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLBMultiRegion *CLBMultiRegion `json:"CLBMultiRegion,omitnil" name:"CLBMultiRegion"`
 }
 
 type EnvInfo struct {
@@ -4046,6 +4108,14 @@ type InstancePort struct {
 	// 监听的 https 端口范围。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpsPort *string `json:"HttpsPort,omitnil" name:"HttpsPort"`
+
+	// 监听的 tcp 端口范围。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TcpPort *string `json:"TcpPort,omitnil" name:"TcpPort"`
+
+	// 监听的 udp 端口范围。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UdpPort *string `json:"UdpPort,omitnil" name:"UdpPort"`
 }
 
 type InstanceTagInfo struct {
@@ -4069,7 +4139,7 @@ type InternetConfig struct {
 	// 负载均衡描述
 	Description *string `json:"Description,omitnil" name:"Description"`
 
-	// 负载均衡的规格类型，传 "SLA" 表示性能容量型，不传为共享型。
+	// 负载均衡的规格类型，支持clb.c2.medium、clb.c3.small、clb.c3.medium、clb.c4.small、clb.c4.medium、clb.c4.large、clb.c4.xlarge，不传为共享型。
 	SlaType *string `json:"SlaType,omitnil" name:"SlaType"`
 
 	// 负载均衡是否多可用区
@@ -4336,81 +4406,110 @@ type KongServices struct {
 
 type KongTarget struct {
 	// Host
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Host *string `json:"Host,omitnil" name:"Host"`
 
 	// 端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *int64 `json:"Port,omitnil" name:"Port"`
 
 	// 权重
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Weight *int64 `json:"Weight,omitnil" name:"Weight"`
 
 	// 健康状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Health *string `json:"Health,omitnil" name:"Health"`
 
 	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
 
 	// Target的来源
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Source *string `json:"Source,omitnil" name:"Source"`
 }
 
 type KongUpstreamInfo struct {
 	// IP或域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Host *string `json:"Host,omitnil" name:"Host"`
 
 	// 端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *int64 `json:"Port,omitnil" name:"Port"`
 
 	// 服务来源ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceID *string `json:"SourceID,omitnil" name:"SourceID"`
 
 	// 命名空间
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Namespace *string `json:"Namespace,omitnil" name:"Namespace"`
 
 	// 服务（注册中心或Kubernetes中的服务）名字
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceName *string `json:"ServiceName,omitnil" name:"ServiceName"`
 
 	// 服务后端类型是IPList时提供
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
 
 	// 服务来源类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceType *string `json:"SourceType,omitnil" name:"SourceType"`
 
 	// SCF函数类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScfType *string `json:"ScfType,omitnil" name:"ScfType"`
 
 	// SCF函数命名空间
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScfNamespace *string `json:"ScfNamespace,omitnil" name:"ScfNamespace"`
 
 	// SCF函数名
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScfLambdaName *string `json:"ScfLambdaName,omitnil" name:"ScfLambdaName"`
 
 	// SCF函数版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ScfLambdaQualifier *string `json:"ScfLambdaQualifier,omitnil" name:"ScfLambdaQualifier"`
 
 	// 冷启动时间，单位秒
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlowStart *int64 `json:"SlowStart,omitnil" name:"SlowStart"`
 
 	// 负载均衡算法，默认为 round-robin，还支持 least-connections，consisten_hashing
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Algorithm *string `json:"Algorithm,omitnil" name:"Algorithm"`
 
 	// CVM弹性伸缩组ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoScalingGroupID *string `json:"AutoScalingGroupID,omitnil" name:"AutoScalingGroupID"`
 
 	// CVM弹性伸缩组端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoScalingCvmPort *uint64 `json:"AutoScalingCvmPort,omitnil" name:"AutoScalingCvmPort"`
 
 	// CVM弹性伸缩组使用的CVM TAT命令状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoScalingTatCmdStatus *string `json:"AutoScalingTatCmdStatus,omitnil" name:"AutoScalingTatCmdStatus"`
 
 	// CVM弹性伸缩组生命周期挂钩状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoScalingHookStatus *string `json:"AutoScalingHookStatus,omitnil" name:"AutoScalingHookStatus"`
 
 	// 服务来源的名字
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SourceName *string `json:"SourceName,omitnil" name:"SourceName"`
 
 	// 精确的服务来源类型，新建服务来源时候传入的类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RealSourceType *string `json:"RealSourceType,omitnil" name:"RealSourceType"`
+
+	// upstream健康状态HEALTHY（健康）, UNHEALTHY（异常）, HEALTHCHECKS_OFF（未开启）和NONE（不支持健康检查）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthStatus *string `json:"HealthStatus,omitnil" name:"HealthStatus"`
 }
 
 type ListCloudNativeAPIGatewayResult struct {
@@ -4501,6 +4600,117 @@ func (r *ModifyCloudNativeAPIGatewayCanaryRuleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCloudNativeAPIGatewayCanaryRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayCertificateRequestParams struct {
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+
+	// 证书id
+	Id *string `json:"Id,omitnil" name:"Id"`
+
+	// 证书名称，即将废弃
+	//
+	// Deprecated: Name is deprecated.
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 证书私钥，CertSource为native时必填。
+	Key *string `json:"Key,omitnil" name:"Key"`
+
+	// 证书pem格式，CertSource为native时必填。
+	Crt *string `json:"Crt,omitnil" name:"Crt"`
+
+	// 绑定的域名，即将废弃
+	//
+	// Deprecated: BindDomains is deprecated.
+	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+
+	// ssl平台证书 Id，CertSource为ssl时必填。
+	CertId *string `json:"CertId,omitnil" name:"CertId"`
+
+	// 证书来源
+	// - ssl (ssl平台证书)，默认值
+	// - native (kong自定义证书) 
+	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+}
+
+type ModifyCloudNativeAPIGatewayCertificateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关ID
+	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+
+	// 证书id
+	Id *string `json:"Id,omitnil" name:"Id"`
+
+	// 证书名称，即将废弃
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 证书私钥，CertSource为native时必填。
+	Key *string `json:"Key,omitnil" name:"Key"`
+
+	// 证书pem格式，CertSource为native时必填。
+	Crt *string `json:"Crt,omitnil" name:"Crt"`
+
+	// 绑定的域名，即将废弃
+	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+
+	// ssl平台证书 Id，CertSource为ssl时必填。
+	CertId *string `json:"CertId,omitnil" name:"CertId"`
+
+	// 证书来源
+	// - ssl (ssl平台证书)，默认值
+	// - native (kong自定义证书) 
+	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayCertificateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayCertificateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Id")
+	delete(f, "Name")
+	delete(f, "Key")
+	delete(f, "Crt")
+	delete(f, "BindDomains")
+	delete(f, "CertId")
+	delete(f, "CertSource")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCloudNativeAPIGatewayCertificateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCloudNativeAPIGatewayCertificateResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyCloudNativeAPIGatewayCertificateResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCloudNativeAPIGatewayCertificateResponseParams `json:"Response"`
+}
+
+func (r *ModifyCloudNativeAPIGatewayCertificateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCloudNativeAPIGatewayCertificateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5207,6 +5417,24 @@ type NetworkAccessControl struct {
 	CidrBlackList []*string `json:"CidrBlackList,omitnil" name:"CidrBlackList"`
 }
 
+type PolarisCLSTopicInfo struct {
+	// 日志集ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogSetId *string `json:"LogSetId,omitnil" name:"LogSetId"`
+
+	// 日志集名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogSetName *string `json:"LogSetName,omitnil" name:"LogSetName"`
+
+	// 日志主题ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicId *string `json:"TopicId,omitnil" name:"TopicId"`
+
+	// 日志主题名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicName *string `json:"TopicName,omitnil" name:"TopicName"`
+}
+
 type PolarisLimiterAddress struct {
 	// VPC接入IP列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -5359,6 +5587,10 @@ type SREInstance struct {
 	// 引擎实例是否开启客户端内网访问地址
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EnableClientIntranet *bool `json:"EnableClientIntranet,omitnil" name:"EnableClientIntranet"`
+
+	// 存储额外配置选项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StorageOption []*StorageOption `json:"StorageOption,omitnil" name:"StorageOption"`
 }
 
 type ServiceGovernanceInfo struct {
@@ -5385,6 +5617,24 @@ type ServiceGovernanceInfo struct {
 
 	// 服务治理限流server引擎绑定的网络信息
 	LimiterVpcInfos []*VpcInfo `json:"LimiterVpcInfos,omitnil" name:"LimiterVpcInfos"`
+
+	// 引擎关联CLS日志主题信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CLSTopics []*PolarisCLSTopicInfo `json:"CLSTopics,omitnil" name:"CLSTopics"`
+}
+
+type StorageOption struct {
+	// 存储对象，分为snap和txn两种
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 存储类型，分为三类CLOUD_PREMIUM/CLOUD_SSD/CLOUD_SSD_PLUS，分别对应高性能云硬盘、SSD云硬盘、增强型SSD云硬盘
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 存储容量，[50, 3200]的范围
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Capacity *uint64 `json:"Capacity,omitnil" name:"Capacity"`
 }
 
 // Predefined struct for user
@@ -5612,6 +5862,78 @@ func (r *UpdateEngineInternetAccessResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateEngineInternetAccessResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateUpstreamTargetsRequestParams struct {
+	// 网关实例ID
+	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+
+	// 服务名称或ID
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 实例列表
+	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
+}
+
+type UpdateUpstreamTargetsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实例ID
+	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+
+	// 服务名称或ID
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 实例列表
+	Targets []*KongTarget `json:"Targets,omitnil" name:"Targets"`
+}
+
+func (r *UpdateUpstreamTargetsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUpstreamTargetsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayId")
+	delete(f, "Name")
+	delete(f, "Targets")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateUpstreamTargetsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateUpstreamTargetsResponseParams struct {
+	// 是否更新成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitnil" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type UpdateUpstreamTargetsResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateUpstreamTargetsResponseParams `json:"Response"`
+}
+
+func (r *UpdateUpstreamTargetsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateUpstreamTargetsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

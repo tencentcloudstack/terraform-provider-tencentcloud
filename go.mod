@@ -46,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.773
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.775
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -93,7 +93,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.758
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.755
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.772
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
@@ -107,8 +107,8 @@ require (
 
 require (
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.773
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.775
 )
 
 require (

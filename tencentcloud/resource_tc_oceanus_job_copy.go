@@ -118,7 +118,7 @@ func resourceTencentCloudOceanusJobCopyCreate(d *schema.ResourceData, meta inter
 		copyJobItem.TargetFolderId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("job_type"); ok {
+	if v, ok := d.GetOkExists("job_type"); ok {
 		copyJobItem.JobType = helper.IntInt64(v.(int))
 	}
 

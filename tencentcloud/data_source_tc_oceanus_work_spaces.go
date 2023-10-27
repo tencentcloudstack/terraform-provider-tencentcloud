@@ -323,7 +323,7 @@ func dataSourceTencentCloudOceanusWorkSpacesRead(d *schema.ResourceData, meta in
 	)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("order_type"); v != nil {
+	if v, _ := d.GetOkExists("order_type"); v != nil {
 		paramMap["OrderType"] = helper.IntInt64(v.(int))
 	}
 
