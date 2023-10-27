@@ -522,7 +522,7 @@ func dataSourceTencentCloudOceanusClustersRead(d *schema.ResourceData, meta inte
 		paramMap["ClusterIds"] = helper.InterfacesStringsPoint(clusterIdsSet)
 	}
 
-	if v, _ := d.GetOkExists("order_type"); v != nil {
+	if v, ok := d.GetOkExists("order_type"); ok {
 		paramMap["OrderType"] = helper.IntInt64(v.(int))
 	}
 
