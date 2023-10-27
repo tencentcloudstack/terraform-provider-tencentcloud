@@ -1873,6 +1873,9 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_modify_data_engine_description_operation
 	tencentcloud_dlc_modify_user_typ_operation
 	tencentcloud_dlc_renew_data_engine_operation
+	tencentcloud_dlc_restart_data_engine_operation
+	tencentcloud_dlc_switch_data_engine_image_operation
+	tencentcloud_dlc_upgrade_data_engine_image_operation
 
 WeData
   Data Source
@@ -3567,14 +3570,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_rollback_data_engine_image_operation":            resourceTencentCloudDlcRollbackDataEngineImageOperation(),
 			"tencentcloud_dlc_add_users_to_work_group_attachment":              resourceTencentCloudDlcAddUsersToWorkGroupAttachment(),
 			"tencentcloud_dlc_store_location_config":                           resourceTencentCloudDlcStoreLocationConfig(),
-			"tencentcloud_dlc_modify_user_typ_operation":                       resourceTencentCloudDlcModifyUserTypOperation(),
-			"tencentcloud_dlc_renew_data_engine_operation":                     resourceTencentCloudDlcRenewDataEngineOperation(),
 			"tencentcloud_dlc_modify_data_engine_description_operation":        resourceTencentCloudDlcModifyDataEngineDescriptionOperation(),
 			"tencentcloud_dlc_modify_user_typ_operation":                       resourceTencentCloudDlcModifyUserTypOperation(),
 			"tencentcloud_dlc_renew_data_engine_operation":                     resourceTencentCloudDlcRenewDataEngineOperation(),
 			"tencentcloud_dlc_restart_data_engine_operation":                   resourceTencentCloudDlcRestartDataEngineOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
-			"tencentcloud_dlc_update_data_engine_config_operation":             resourceTencentCloudDlcUpdateDataEngineConfigOperation(),
+			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
