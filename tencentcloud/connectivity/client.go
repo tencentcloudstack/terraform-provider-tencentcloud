@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
+
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
 
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -187,6 +189,7 @@ type TencentCloudClient struct {
 	wedataConn         *wedata.Client
 	wafConn            *waf.Client
 	cfwConn            *cfw.Client
+	oceanusConn        *oceanus.Client
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
@@ -1295,6 +1298,19 @@ func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
 	me.cfwConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cfwConn
+}
+
+func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
+	if me.oceanusConn != nil {
+		return me.oceanusConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.oceanusConn, _ = oceanus.NewClient(me.Credential, me.Region, cpf)
+	me.oceanusConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.oceanusConn
 }
 
 // UseTrocketClient returns trocket client for service
