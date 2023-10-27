@@ -424,3 +424,149 @@ func (me *DlcService) DescribeDlcCheckDataEngineImageCanBeUpgradeByFilter(ctx co
 	checkDataEngineImageCanBeUpgrade = response.Response
 	return
 }
+func (me *DlcService) DescribeDlcDataEngineImageVersionsByFilter(ctx context.Context, param map[string]interface{}) (describeDataEngineImageVersions []*dlc.DataEngineImageVersion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeDataEngineImageVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EngineType" {
+			request.EngineType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeDataEngineImageVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.ImageParentVersions) < 1 {
+		return
+	}
+	describeDataEngineImageVersions = append(describeDataEngineImageVersions, response.Response.ImageParentVersions...)
+	return
+}
+func (me *DlcService) DescribeDlcDataEnginePythonSparkImagesByFilter(ctx context.Context, param map[string]interface{}) (describeDataEnginePythonSparkImages []*dlc.PythonSparkImage, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeDataEnginePythonSparkImagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ChildImageVersionId" {
+			request.ChildImageVersionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeDataEnginePythonSparkImages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.PythonSparkImages) < 1 {
+		return
+	}
+	describeDataEnginePythonSparkImages = append(describeDataEnginePythonSparkImages, response.Response.PythonSparkImages...)
+
+	return
+}
+func (me *DlcService) DescribeDlcDescribeEngineUsageInfoByFilter(ctx context.Context, param map[string]interface{}) (describeEngineUsageInfo *dlc.DescribeEngineUsageInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeEngineUsageInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineId" {
+			request.DataEngineId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeEngineUsageInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	describeEngineUsageInfo = response.Response
+	return
+}
+func (me *DlcService) DescribeDlcDescribeWorkGroupInfoByFilter(ctx context.Context, param map[string]interface{}) (describeWorkGroupInfo *dlc.WorkGroupDetailInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeWorkGroupInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "WorkGroupId" {
+			request.WorkGroupId = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*dlc.Filter)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "Sorting" {
+			request.Sorting = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeWorkGroupInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.WorkGroupInfo == nil {
+		return
+	}
+	describeWorkGroupInfo = response.Response.WorkGroupInfo
+
+	return
+}
