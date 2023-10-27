@@ -9,13 +9,6 @@ resource "tencentcloud_dlc_upgrade_data_engine_image_operation" "upgrade_data_en
 }
 ```
 
-Import
-
-dlc upgrade_data_engine_image_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_upgrade_data_engine_image_operation.upgrade_data_engine_image_operation upgrade_data_engine_image_operation_id
-```
 */
 package tencentcloud
 

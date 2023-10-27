@@ -10,13 +10,6 @@ resource "tencentcloud_dlc_suspend_resume_data_engine" "suspend_resume_data_engi
 }
 ```
 
-Import
-
-dlc suspend_resume_data_engine can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_suspend_resume_data_engine.suspend_resume_data_engine suspend_resume_data_engine_id
-```
 */
 package tencentcloud
 

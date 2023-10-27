@@ -35,11 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dlc switch_data_engine_image_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_switch_data_engine_image_operation.switch_data_engine_image_operation switch_data_engine_image_operation_id
-```
-

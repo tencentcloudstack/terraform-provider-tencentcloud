@@ -33,11 +33,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dlc upgrade_data_engine_image_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_upgrade_data_engine_image_operation.upgrade_data_engine_image_operation upgrade_data_engine_image_operation_id
-```
-

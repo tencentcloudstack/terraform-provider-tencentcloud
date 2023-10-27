@@ -35,11 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dlc suspend_resume_data_engine can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_suspend_resume_data_engine.suspend_resume_data_engine suspend_resume_data_engine_id
-```
-
