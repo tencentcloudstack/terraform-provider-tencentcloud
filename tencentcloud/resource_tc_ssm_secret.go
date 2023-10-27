@@ -126,7 +126,7 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Type of secret. `0`: user-defined secret. `4`: redis secret.",
+				Description: "Type of secret. `0`: user-defined secret. `4`: redis secret. Default is `0`.",
 			},
 			"additional_config": {
 				Type:        schema.TypeString,
@@ -171,6 +171,7 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		secretInfo    *SecretInfo
 		outErr, inErr error
 		secretName    string
+		secretType    int
 	)
 
 	if v, ok := d.GetOk("secret_name"); ok {
@@ -186,6 +187,7 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	}
 
 	if v, ok := d.GetOkExists("secret_type"); ok {
+		secretType = v.(int)
 		request.SecretType = helper.IntUint64(v.(int))
 	}
 
@@ -193,7 +195,10 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		request.AdditionalConfig = helper.String(v.(string))
 	}
 
-	request.SecretString = helper.String("default")
+	if secretType == 0 {
+		request.VersionId = helper.String("default")
+		request.SecretString = helper.String("default")
+	}
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().CreateSecret(request)
 		if e != nil {
@@ -212,6 +217,20 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 
 	secretName = *response.Response.SecretName
 	d.SetId(secretName)
+
+	//delete default version info
+	if secretType == 0 {
+		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr = ssmService.DeleteSecretVersion(ctx, secretName, "default")
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if outErr != nil {
+			return outErr
+		}
+	}
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
