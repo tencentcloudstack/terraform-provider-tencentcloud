@@ -10,13 +10,6 @@ resource "tencentcloud_dlc_restart_data_engine_operation" "restart_data_engine" 
 }
 ```
 
-Import
-
-dlc restart_data_engine can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_restart_data_engine_operation.restart_data_engine restart_data_engine_id
-```
 */
 package tencentcloud
 
