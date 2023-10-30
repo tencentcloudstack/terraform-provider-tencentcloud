@@ -1861,6 +1861,7 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_describe_work_group_info
 	tencentcloud_dlc_check_data_engine_image_can_be_rollback
 	tencentcloud_dlc_check_data_engine_image_can_be_upgrade
+	tencentcloud_dlc_check_data_engine_config_pairs_validity
 
   Resource
 	tencentcloud_dlc_work_group
@@ -2751,6 +2752,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_data_engine_python_spark_images": dataSourceTencentCloudDlcDescribeDataEnginePythonSparkImages(),
 			"tencentcloud_dlc_describe_engine_usage_info":               dataSourceTencentCloudDlcDescribeEngineUsageInfo(),
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
+			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 		},
@@ -3576,6 +3578,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_restart_data_engine_operation":                   resourceTencentCloudDlcRestartDataEngineOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
+			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
