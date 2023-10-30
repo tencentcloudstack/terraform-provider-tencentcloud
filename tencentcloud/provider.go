@@ -1909,6 +1909,14 @@ Web Application Firewall(WAF)
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
 
+Wedata
+  Data Source
+    tencentcloud_wedata_data_source_list
+    tencentcloud_wedata_data_source_info_list
+    tencentcloud_wedata_data_source_without_info
+  Resource
+    tencentcloud_wedata_datasource
+
 Cloud Firewall(CFW)
   Data Source
 	tencentcloud_cfw_nat_fw_switches
@@ -2723,6 +2731,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_total_count":                       dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
+			"tencentcloud_wedata_data_source_info_list":                 dataSourceTencentCloudWedataDataSourceInfoList(),
+			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_cfw_nat_fw_switches":                          dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         dataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -3585,6 +3596,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
