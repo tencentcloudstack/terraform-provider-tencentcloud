@@ -1877,6 +1877,10 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_restart_data_engine_operation
 	tencentcloud_dlc_switch_data_engine_image_operation
 	tencentcloud_dlc_upgrade_data_engine_image_operation
+	tencentcloud_dlc_bind_work_groups_to_user_attachment
+	tencentcloud_dlc_attach_work_group_policy_attachment
+	tencentcloud_dlc_update_data_engine_config_operation
+	tencentcloud_dlc_user_data_engine_config
 
 WeData
   Data Source
