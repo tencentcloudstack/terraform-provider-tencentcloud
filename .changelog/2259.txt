@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_dlc_bind_work_groups_to_user_attachment
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_check_data_engine_config_pairs_validity
+```
