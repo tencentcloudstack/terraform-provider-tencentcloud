@@ -25,3 +25,11 @@ tencentcloud_dlc_detach_work_group_policy_operation
 ```release-note:new-data-source
 tencentcloud_dlc_check_data_engine_config_pairs_validity
 ```
+
+```release-note:enhancement
+tencentcloud_dlc_describe_user_info: Fix policy set type
+```
+
+```release-note:enhancement
+tencentcloud_dlc_describe_work_group_info: Fix policy set type
+```
