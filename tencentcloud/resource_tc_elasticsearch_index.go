@@ -173,8 +173,7 @@ func resourceTencentCloudElasticsearchIndexRead(d *schema.ResourceData, meta int
 			settingsMap := v.(map[string]interface{})
 
 			if v, ok := settingsMap["index.number_of_replicas"]; ok {
-				switch v.(type) {
-				case string:
+				if _, ok := v.(string); ok {
 					intValue, err := strconv.Atoi(v.(string))
 					if err != nil {
 						return err
@@ -184,8 +183,7 @@ func resourceTencentCloudElasticsearchIndexRead(d *schema.ResourceData, meta int
 
 			}
 			if v, ok := settingsMap["index.number_of_shards"]; ok {
-				switch v.(type) {
-				case string:
+				if _, ok := v.(string); ok {
 					intValue, err := strconv.Atoi(v.(string))
 					if err != nil {
 						return err
@@ -250,10 +248,16 @@ func resourceTencentCloudElasticsearchIndexUpdate(d *schema.ResourceData, meta i
 			value := op.Value
 			path := string(op.Path)
 			if operationType == "remove" {
-				setMapLinkKey(result, path, value)
+				err := setMapLinkKey(result, path, value)
+				if err != nil {
+					return err
+				}
 			}
 			if operationType == "add" || operationType == "replace" {
-				setMapLinkKey(result, path, value)
+				err := setMapLinkKey(result, path, value)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		resultJson, err := json.Marshal(result)
