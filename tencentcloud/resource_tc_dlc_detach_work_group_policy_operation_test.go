@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestAccTencentCloudDlcAttachWorkGroupPolicyAttachmentResource_basic(t *testing.T) {
+func TestAccTencentCloudDlcDetachWorkGroupPolicyOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -14,11 +14,11 @@ func TestAccTencentCloudDlcAttachWorkGroupPolicyAttachmentResource_basic(t *test
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDlcAttachWorkGroupPolicyAttachment,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_attach_work_group_policy_attachment.attach_work_group_policy_attachment", "id")),
+				Config: testAccDlcDetachWorkGroupPolicyOperation,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_dlc_attach_work_group_policy_attachment.attach_work_group_policy_attachment",
+				ResourceName:      "tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -26,9 +26,9 @@ func TestAccTencentCloudDlcAttachWorkGroupPolicyAttachmentResource_basic(t *test
 	})
 }
 
-const testAccDlcAttachWorkGroupPolicyAttachment = `
+const testAccDlcDetachWorkGroupPolicyOperation = `
 
-resource "tencentcloud_dlc_attach_work_group_policy_attachment" "attach_work_group_policy_attachment" {
+resource "tencentcloud_dlc_detach_work_group_policy_operation" "detach_work_group_policy_operation" {
   work_group_id = 122
   policy_set {
 		database = "*"

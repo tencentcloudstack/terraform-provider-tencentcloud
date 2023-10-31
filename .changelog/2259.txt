@@ -3,17 +3,24 @@ tencentcloud_dlc_bind_work_groups_to_user_attachment
 ```
 
 ```release-note:new-resource
-tencentcloud_dlc_attach_work_group_policy_attachment
-```
-
-```release-note:new-resource
-tencentcloud_dlc_update_data_engine_config_operation
-```
-
-```release-note:new-resource
 tencentcloud_dlc_user_data_engine_config
 ```
 
+```release-note:new-resource
+tencentcloud_dlc_attach_user_policy_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_detach_user_policy_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_attach_work_group_policy_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_detach_work_group_policy_operation
+```
 
 ```release-note:new-data-source
 tencentcloud_dlc_check_data_engine_config_pairs_validity
