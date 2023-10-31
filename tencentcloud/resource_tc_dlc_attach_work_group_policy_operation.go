@@ -157,7 +157,7 @@ func resourceTencentCloudDlcAttachWorkGroupPolicyOperationCreate(d *schema.Resou
 		request     = dlc.NewAttachWorkGroupPolicyRequest()
 		workGroupId string
 	)
-	if v, _ := d.GetOk("work_group_id"); v != nil {
+	if v, _ := d.GetOkExists("work_group_id"); v != nil {
 		workGroupId = helper.IntToStr(v.(int))
 		request.WorkGroupId = helper.IntInt64(v.(int))
 	}
