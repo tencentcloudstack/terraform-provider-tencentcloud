@@ -48,7 +48,7 @@ resource "tencentcloud_dlc_detach_work_group_policy_operation" "detach_work_grou
     source = "WORKGROUP"
     mode = "COMMON"
     operator = "100032669045"
-    id = 102535
+    id = 102608
   }
 }
 `

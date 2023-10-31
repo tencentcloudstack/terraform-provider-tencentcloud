@@ -49,7 +49,7 @@ resource "tencentcloud_dlc_detach_user_policy_operation" "detach_user_policy_ope
    source = "USER"
    mode = "COMMON"
    operator = "100032669045"
-   id = 102533
+   id = 102606
  }
 }
 
