@@ -2375,7 +2375,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
-			"tencentcloud_elasticsearch_instances":                      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
