@@ -183,10 +183,10 @@ func (me *DlcService) DescribeDlcCheckDataEngineImageCanBeRollbackByFilter(ctx c
 	return
 }
 
-func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context, storeLocationId string) (storeLocationConfig *dlc.DescribeStoreLocationResponseParams, errRet error) {
+func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context) (storeLocationConfig *dlc.DescribeAdvancedStoreLocationResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
-	request := dlc.NewDescribeStoreLocationRequest()
+	request := dlc.NewDescribeAdvancedStoreLocationRequest()
 
 	defer func() {
 		if errRet != nil {
@@ -196,13 +196,16 @@ func (me *DlcService) DescribeDlcStoreLocationConfigById(ctx context.Context, st
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseDlcClient().DescribeStoreLocation(request)
+	response, err := me.client.UseDlcClient().DescribeAdvancedStoreLocation(request)
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response == nil || response.Response == nil {
+		return
+	}
 	storeLocationConfig = response.Response
 	return
 }
