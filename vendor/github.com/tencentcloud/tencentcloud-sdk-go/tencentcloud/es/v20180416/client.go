@@ -59,8 +59,9 @@ func NewCreateIndexRequest() (request *CreateIndexRequest) {
 func NewCreateIndexResponse() (response *CreateIndexResponse) {
     response = &CreateIndexResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateIndex
@@ -123,14 +124,16 @@ func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
 func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
     response = &CreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstance
 // 创建指定规格的ES集群实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
@@ -179,6 +182,7 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 // 创建指定规格的ES集群实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
 //  FAILEDOPERATION_DISKCOUNTPARAMERROR = "FailedOperation.DiskCountParamError"
@@ -249,23 +253,124 @@ func NewCreateLogstashInstanceRequest() (request *CreateLogstashInstanceRequest)
 func NewCreateLogstashInstanceResponse() (response *CreateLogstashInstanceResponse) {
     response = &CreateLogstashInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateLogstashInstance
 // 用于创建Logstash实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
+//  AUTHFAILURE_UNAUTHDESCRIBEINSTANCES = "AuthFailure.UnAuthDescribeInstances"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLOSEDATATIER = "FailedOperation.CloseDataTier"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_ESDICTIONARYINFOERROR = "FailedOperation.EsDictionaryInfoError"
+//  FAILEDOPERATION_FILENAMEERROR = "FailedOperation.FileNameError"
+//  FAILEDOPERATION_FILESIZEERROR = "FailedOperation.FileSizeError"
+//  FAILEDOPERATION_GETTAGINFOERROR = "FailedOperation.GetTagInfoError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NODENUMANDZONEERROR = "FailedOperation.NodeNumAndZoneError"
+//  FAILEDOPERATION_PASSWORD = "FailedOperation.Password"
+//  FAILEDOPERATION_REFUNDERROR = "FailedOperation.RefundError"
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
+//  FAILEDOPERATION_TRADESIGNERROR = "FailedOperation.TradeSignError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_GC = "InvalidParameter.GC"
+//  INVALIDPARAMETER_INVALIDAUTOVOUCHER = "InvalidParameter.InvalidAutoVoucher"
+//  INVALIDPARAMETER_INVALIDBACKENDS = "InvalidParameter.InvalidBackends"
+//  INVALIDPARAMETER_INVALIDDEPLOYMODE = "InvalidParameter.InvalidDeployMode"
+//  INVALIDPARAMETER_INVALIDDISKENHANCE = "InvalidParameter.InvalidDiskEnhance"
+//  INVALIDPARAMETER_INVALIDDNS = "InvalidParameter.InvalidDns"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDINDEXMETAJSON = "InvalidParameter.InvalidIndexMetaJson"
+//  INVALIDPARAMETER_INVALIDINDEXNAME = "InvalidParameter.InvalidIndexName"
+//  INVALIDPARAMETER_INVALIDINDEXOPTIONSFIELD = "InvalidParameter.InvalidIndexOptionsField"
+//  INVALIDPARAMETER_INVALIDINDEXPOLICYFIELD = "InvalidParameter.InvalidIndexPolicyField"
+//  INVALIDPARAMETER_INVALIDINDEXSETTINGSFIELD = "InvalidParameter.InvalidIndexSettingsField"
+//  INVALIDPARAMETER_INVALIDINDEXTYPE = "InvalidParameter.InvalidIndexType"
+//  INVALIDPARAMETER_INVALIDINSTANCEOPERATIONDURATIONS = "InvalidParameter.InvalidInstanceOperationDurations"
+//  INVALIDPARAMETER_INVALIDLOGTYPE = "InvalidParameter.InvalidLogType"
+//  INVALIDPARAMETER_INVALIDLOGSTASHVERSION = "InvalidParameter.InvalidLogstashVersion"
+//  INVALIDPARAMETER_INVALIDNODENAMES = "InvalidParameter.InvalidNodeNames"
+//  INVALIDPARAMETER_INVALIDNODETYPESTORAGEINFO = "InvalidParameter.InvalidNodeTypeStorageInfo"
+//  INVALIDPARAMETER_INVALIDOPERATIONDURATION = "InvalidParameter.InvalidOperationDuration"
+//  INVALIDPARAMETER_INVALIDPARA = "InvalidParameter.InvalidPara"
+//  INVALIDPARAMETER_INVALIDRESTARTMODE = "InvalidParameter.InvalidRestartMode"
+//  INVALIDPARAMETER_INVALIDRESTARTTYPE = "InvalidParameter.InvalidRestartType"
+//  INVALIDPARAMETER_INVALIDSAMPLEJSON = "InvalidParameter.InvalidSampleJson"
+//  INVALIDPARAMETER_INVALIDSECURITYGROUPIDS = "InvalidParameter.InvalidSecurityGroupIds"
+//  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
+//  INVALIDPARAMETER_INVALIDTARGETINDEXNAME = "InvalidParameter.InvalidTargetIndexName"
+//  INVALIDPARAMETER_INVALIDTARGETNODETYPES = "InvalidParameter.InvalidTargetNodeTypes"
+//  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
+//  INVALIDPARAMETER_INVALIDTRACEUUID = "InvalidParameter.InvalidTraceUuid"
+//  INVALIDPARAMETER_INVALIDTYPE = "InvalidParameter.InvalidType"
+//  INVALIDPARAMETER_INVALIDUPDATEMETAJSON = "InvalidParameter.InvalidUpdateMetaJson"
+//  INVALIDPARAMETER_INVALIDVOUCHERIDS = "InvalidParameter.InvalidVoucherIds"
+//  INVALIDPARAMETERVALUE_CHARGEPERIOD = "InvalidParameterValue.ChargePeriod"
+//  INVALIDPARAMETERVALUE_CHARGETYPE = "InvalidParameterValue.ChargeType"
+//  INVALIDPARAMETERVALUE_CHECKONLY = "InvalidParameterValue.CheckOnly"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  INVALIDPARAMETERVALUE_ENABLEDOUBLEENI = "InvalidParameterValue.EnableDoubleEni"
+//  INVALIDPARAMETERVALUE_ESPORT = "InvalidParameterValue.EsPort"
+//  INVALIDPARAMETERVALUE_ESVIP = "InvalidParameterValue.EsVip"
+//  INVALIDPARAMETERVALUE_INSTALLBUNDLELIST = "InvalidParameterValue.InstallBundleList"
+//  INVALIDPARAMETERVALUE_INSTALLPLUGINLIST = "InvalidParameterValue.InstallPluginList"
+//  INVALIDPARAMETERVALUE_INVALIDJDK = "InvalidParameterValue.InvalidJDK"
+//  INVALIDPARAMETERVALUE_PLUGINTYPE = "InvalidParameterValue.PluginType"
+//  INVALIDPARAMETERVALUE_REMOVEBUNDLELIST = "InvalidParameterValue.RemoveBundleList"
+//  INVALIDPARAMETERVALUE_REMOVEPLUGINLIST = "InvalidParameterValue.RemovePluginList"
+//  INVALIDPARAMETERVALUE_RENEWFLAG = "InvalidParameterValue.RenewFlag"
+//  INVALIDPARAMETERVALUE_TARGETPATH = "InvalidParameterValue.TargetPath"
+//  INVALIDPARAMETERVALUE_TIMEUNIT = "InvalidParameterValue.TimeUnit"
+//  INVALIDPARAMETERVALUE_UPGRADEMODE = "InvalidParameterValue.UpgradeMode"
+//  LIMITEXCEEDED_CLUSTERNUM = "LimitExceeded.ClusterNum"
+//  LIMITEXCEEDED_DIAGNOSECOUNT = "LimitExceeded.DiagnoseCount"
+//  LIMITEXCEEDED_DISKCOUNT = "LimitExceeded.DiskCount"
+//  LIMITEXCEEDED_NODENUMORINDICES = "LimitExceeded.NodeNumOrIndices"
+//  LIMITEXCEEDED_PLUGININSTALL = "LimitExceeded.PluginInstall"
+//  REGIONERROR = "RegionError"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DIAGNOSE = "ResourceInUse.Diagnose"
+//  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
+//  RESOURCEINSUFFICIENT_CVMQUOTA = "ResourceInsufficient.CVMQuota"
 //  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  RESOURCENOTFOUND_ACCOUNTINFONOTFOUND = "ResourceNotFound.AccountInfoNotFound"
+//  RESOURCENOTFOUND_BARADMETRICNOTFOUND = "ResourceNotFound.BaradMetricNotFound"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  RESOURCENOTFOUND_CLBNOTFOUND = "ResourceNotFound.CLBNotFound"
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+//  RESOURCENOTFOUND_DIAGNOSENOTFOUND = "ResourceNotFound.DiagnoseNotFound"
+//  RESOURCENOTFOUND_KMSNOTFOUND = "ResourceNotFound.KMSNotFound"
+//  RESOURCENOTFOUND_STSNOTFOUND = "ResourceNotFound.STSNotFound"
+//  RESOURCENOTFOUND_SECURITYGROUPNOTFOUND = "ResourceNotFound.SecurityGroupNotFound"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  RESOURCENOTFOUND_VPCINFONOTFOUND = "ResourceNotFound.VPCInfoNotFound"
+//  UNSUPPORTEDOPERATION_AUDITSTATUSCONFLICT = "UnsupportedOperation.AuditStatusConflict"
+//  UNSUPPORTEDOPERATION_COSBACKUP = "UnsupportedOperation.CosBackUp"
+//  UNSUPPORTEDOPERATION_DIAGNOSEJOB = "UnsupportedOperation.DiagnoseJob"
+//  UNSUPPORTEDOPERATION_DIAGNOSENOTOPEN = "UnsupportedOperation.DiagnoseNotOpen"
+//  UNSUPPORTEDOPERATION_DISKUSE = "UnsupportedOperation.DiskUse"
+//  UNSUPPORTEDOPERATION_EDITLISTLENGTH = "UnsupportedOperation.EditListLength"
+//  UNSUPPORTEDOPERATION_MIGRATE = "UnsupportedOperation.Migrate"
+//  UNSUPPORTEDOPERATION_PASSLOGSTASHID = "UnsupportedOperation.PassLogstashId"
+//  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_PROTOCOL = "UnsupportedOperation.Protocol"
+//  UNSUPPORTEDOPERATION_READRATE = "UnsupportedOperation.ReadRate"
+//  UNSUPPORTEDOPERATION_RESTARTMODE = "UnsupportedOperation.RestartMode"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+//  UNSUPPORTEDOPERATION_UPDATEDISKENCRYPT = "UnsupportedOperation.UpdateDiskEncrypt"
+//  UNSUPPORTEDOPERATION_UPDATEDISKTYPE = "UnsupportedOperation.UpdateDiskType"
+//  UNSUPPORTEDOPERATION_UPDATENODENUMANDNODETYPE = "UnsupportedOperation.UpdateNodeNumAndNodeType"
+//  UNSUPPORTEDOPERATION_WEBSERVICETYPE = "UnsupportedOperation.WebServiceType"
+//  UNSUPPORTEDOPERATION_WRITERATE = "UnsupportedOperation.WriteRate"
 func (c *Client) CreateLogstashInstance(request *CreateLogstashInstanceRequest) (response *CreateLogstashInstanceResponse, err error) {
     return c.CreateLogstashInstanceWithContext(context.Background(), request)
 }
@@ -274,15 +379,115 @@ func (c *Client) CreateLogstashInstance(request *CreateLogstashInstanceRequest) 
 // 用于创建Logstash实例
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_UNAUTHCREATEINSTANCE = "AuthFailure.UnAuthCreateInstance"
+//  AUTHFAILURE_UNAUTHDESCRIBEINSTANCES = "AuthFailure.UnAuthDescribeInstances"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnAuthorizedOperation"
+//  FAILEDOPERATION_CLOSEDATATIER = "FailedOperation.CloseDataTier"
 //  FAILEDOPERATION_CLUSTERRESOURCELIMITERROR = "FailedOperation.ClusterResourceLimitError"
+//  FAILEDOPERATION_ESDICTIONARYINFOERROR = "FailedOperation.EsDictionaryInfoError"
+//  FAILEDOPERATION_FILENAMEERROR = "FailedOperation.FileNameError"
+//  FAILEDOPERATION_FILESIZEERROR = "FailedOperation.FileSizeError"
+//  FAILEDOPERATION_GETTAGINFOERROR = "FailedOperation.GetTagInfoError"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
+//  FAILEDOPERATION_NODENUMANDZONEERROR = "FailedOperation.NodeNumAndZoneError"
+//  FAILEDOPERATION_PASSWORD = "FailedOperation.Password"
+//  FAILEDOPERATION_REFUNDERROR = "FailedOperation.RefundError"
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
+//  FAILEDOPERATION_TRADESIGNERROR = "FailedOperation.TradeSignError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_GC = "InvalidParameter.GC"
+//  INVALIDPARAMETER_INVALIDAUTOVOUCHER = "InvalidParameter.InvalidAutoVoucher"
+//  INVALIDPARAMETER_INVALIDBACKENDS = "InvalidParameter.InvalidBackends"
+//  INVALIDPARAMETER_INVALIDDEPLOYMODE = "InvalidParameter.InvalidDeployMode"
+//  INVALIDPARAMETER_INVALIDDISKENHANCE = "InvalidParameter.InvalidDiskEnhance"
+//  INVALIDPARAMETER_INVALIDDNS = "InvalidParameter.InvalidDns"
+//  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
+//  INVALIDPARAMETER_INVALIDINDEXMETAJSON = "InvalidParameter.InvalidIndexMetaJson"
+//  INVALIDPARAMETER_INVALIDINDEXNAME = "InvalidParameter.InvalidIndexName"
+//  INVALIDPARAMETER_INVALIDINDEXOPTIONSFIELD = "InvalidParameter.InvalidIndexOptionsField"
+//  INVALIDPARAMETER_INVALIDINDEXPOLICYFIELD = "InvalidParameter.InvalidIndexPolicyField"
+//  INVALIDPARAMETER_INVALIDINDEXSETTINGSFIELD = "InvalidParameter.InvalidIndexSettingsField"
+//  INVALIDPARAMETER_INVALIDINDEXTYPE = "InvalidParameter.InvalidIndexType"
+//  INVALIDPARAMETER_INVALIDINSTANCEOPERATIONDURATIONS = "InvalidParameter.InvalidInstanceOperationDurations"
+//  INVALIDPARAMETER_INVALIDLOGTYPE = "InvalidParameter.InvalidLogType"
+//  INVALIDPARAMETER_INVALIDLOGSTASHVERSION = "InvalidParameter.InvalidLogstashVersion"
+//  INVALIDPARAMETER_INVALIDNODENAMES = "InvalidParameter.InvalidNodeNames"
+//  INVALIDPARAMETER_INVALIDNODETYPESTORAGEINFO = "InvalidParameter.InvalidNodeTypeStorageInfo"
+//  INVALIDPARAMETER_INVALIDOPERATIONDURATION = "InvalidParameter.InvalidOperationDuration"
+//  INVALIDPARAMETER_INVALIDPARA = "InvalidParameter.InvalidPara"
+//  INVALIDPARAMETER_INVALIDRESTARTMODE = "InvalidParameter.InvalidRestartMode"
+//  INVALIDPARAMETER_INVALIDRESTARTTYPE = "InvalidParameter.InvalidRestartType"
+//  INVALIDPARAMETER_INVALIDSAMPLEJSON = "InvalidParameter.InvalidSampleJson"
+//  INVALIDPARAMETER_INVALIDSECURITYGROUPIDS = "InvalidParameter.InvalidSecurityGroupIds"
+//  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
+//  INVALIDPARAMETER_INVALIDTARGETINDEXNAME = "InvalidParameter.InvalidTargetIndexName"
+//  INVALIDPARAMETER_INVALIDTARGETNODETYPES = "InvalidParameter.InvalidTargetNodeTypes"
+//  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
+//  INVALIDPARAMETER_INVALIDTRACEUUID = "InvalidParameter.InvalidTraceUuid"
+//  INVALIDPARAMETER_INVALIDTYPE = "InvalidParameter.InvalidType"
+//  INVALIDPARAMETER_INVALIDUPDATEMETAJSON = "InvalidParameter.InvalidUpdateMetaJson"
+//  INVALIDPARAMETER_INVALIDVOUCHERIDS = "InvalidParameter.InvalidVoucherIds"
+//  INVALIDPARAMETERVALUE_CHARGEPERIOD = "InvalidParameterValue.ChargePeriod"
+//  INVALIDPARAMETERVALUE_CHARGETYPE = "InvalidParameterValue.ChargeType"
+//  INVALIDPARAMETERVALUE_CHECKONLY = "InvalidParameterValue.CheckOnly"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  INVALIDPARAMETERVALUE_ENABLEDOUBLEENI = "InvalidParameterValue.EnableDoubleEni"
+//  INVALIDPARAMETERVALUE_ESPORT = "InvalidParameterValue.EsPort"
+//  INVALIDPARAMETERVALUE_ESVIP = "InvalidParameterValue.EsVip"
+//  INVALIDPARAMETERVALUE_INSTALLBUNDLELIST = "InvalidParameterValue.InstallBundleList"
+//  INVALIDPARAMETERVALUE_INSTALLPLUGINLIST = "InvalidParameterValue.InstallPluginList"
+//  INVALIDPARAMETERVALUE_INVALIDJDK = "InvalidParameterValue.InvalidJDK"
+//  INVALIDPARAMETERVALUE_PLUGINTYPE = "InvalidParameterValue.PluginType"
+//  INVALIDPARAMETERVALUE_REMOVEBUNDLELIST = "InvalidParameterValue.RemoveBundleList"
+//  INVALIDPARAMETERVALUE_REMOVEPLUGINLIST = "InvalidParameterValue.RemovePluginList"
+//  INVALIDPARAMETERVALUE_RENEWFLAG = "InvalidParameterValue.RenewFlag"
+//  INVALIDPARAMETERVALUE_TARGETPATH = "InvalidParameterValue.TargetPath"
+//  INVALIDPARAMETERVALUE_TIMEUNIT = "InvalidParameterValue.TimeUnit"
+//  INVALIDPARAMETERVALUE_UPGRADEMODE = "InvalidParameterValue.UpgradeMode"
+//  LIMITEXCEEDED_CLUSTERNUM = "LimitExceeded.ClusterNum"
+//  LIMITEXCEEDED_DIAGNOSECOUNT = "LimitExceeded.DiagnoseCount"
+//  LIMITEXCEEDED_DISKCOUNT = "LimitExceeded.DiskCount"
+//  LIMITEXCEEDED_NODENUMORINDICES = "LimitExceeded.NodeNumOrIndices"
+//  LIMITEXCEEDED_PLUGININSTALL = "LimitExceeded.PluginInstall"
+//  REGIONERROR = "RegionError"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINUSE_DIAGNOSE = "ResourceInUse.Diagnose"
+//  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
+//  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
+//  RESOURCEINSUFFICIENT_CVMQUOTA = "ResourceInsufficient.CVMQuota"
 //  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
+//  RESOURCENOTFOUND_ACCOUNTINFONOTFOUND = "ResourceNotFound.AccountInfoNotFound"
+//  RESOURCENOTFOUND_BARADMETRICNOTFOUND = "ResourceNotFound.BaradMetricNotFound"
+//  RESOURCENOTFOUND_CAMINFONOTFOUND = "ResourceNotFound.CAMInfoNotFound"
+//  RESOURCENOTFOUND_CLBNOTFOUND = "ResourceNotFound.CLBNotFound"
+//  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
+//  RESOURCENOTFOUND_DIAGNOSENOTFOUND = "ResourceNotFound.DiagnoseNotFound"
+//  RESOURCENOTFOUND_KMSNOTFOUND = "ResourceNotFound.KMSNotFound"
+//  RESOURCENOTFOUND_STSNOTFOUND = "ResourceNotFound.STSNotFound"
+//  RESOURCENOTFOUND_SECURITYGROUPNOTFOUND = "ResourceNotFound.SecurityGroupNotFound"
+//  RESOURCENOTFOUND_TRADECGWNOTFOUND = "ResourceNotFound.TradeCgwNotFound"
+//  RESOURCENOTFOUND_VPCINFONOTFOUND = "ResourceNotFound.VPCInfoNotFound"
+//  UNSUPPORTEDOPERATION_AUDITSTATUSCONFLICT = "UnsupportedOperation.AuditStatusConflict"
+//  UNSUPPORTEDOPERATION_COSBACKUP = "UnsupportedOperation.CosBackUp"
+//  UNSUPPORTEDOPERATION_DIAGNOSEJOB = "UnsupportedOperation.DiagnoseJob"
+//  UNSUPPORTEDOPERATION_DIAGNOSENOTOPEN = "UnsupportedOperation.DiagnoseNotOpen"
+//  UNSUPPORTEDOPERATION_DISKUSE = "UnsupportedOperation.DiskUse"
+//  UNSUPPORTEDOPERATION_EDITLISTLENGTH = "UnsupportedOperation.EditListLength"
+//  UNSUPPORTEDOPERATION_MIGRATE = "UnsupportedOperation.Migrate"
+//  UNSUPPORTEDOPERATION_PASSLOGSTASHID = "UnsupportedOperation.PassLogstashId"
+//  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_PROTOCOL = "UnsupportedOperation.Protocol"
+//  UNSUPPORTEDOPERATION_READRATE = "UnsupportedOperation.ReadRate"
+//  UNSUPPORTEDOPERATION_RESTARTMODE = "UnsupportedOperation.RestartMode"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
+//  UNSUPPORTEDOPERATION_UPDATEDISKENCRYPT = "UnsupportedOperation.UpdateDiskEncrypt"
+//  UNSUPPORTEDOPERATION_UPDATEDISKTYPE = "UnsupportedOperation.UpdateDiskType"
+//  UNSUPPORTEDOPERATION_UPDATENODENUMANDNODETYPE = "UnsupportedOperation.UpdateNodeNumAndNodeType"
+//  UNSUPPORTEDOPERATION_WEBSERVICETYPE = "UnsupportedOperation.WebServiceType"
+//  UNSUPPORTEDOPERATION_WRITERATE = "UnsupportedOperation.WriteRate"
 func (c *Client) CreateLogstashInstanceWithContext(ctx context.Context, request *CreateLogstashInstanceRequest) (response *CreateLogstashInstanceResponse, err error) {
     if request == nil {
         request = NewCreateLogstashInstanceRequest()
@@ -313,8 +518,9 @@ func NewDeleteIndexRequest() (request *DeleteIndexRequest) {
 func NewDeleteIndexResponse() (response *DeleteIndexResponse) {
     response = &DeleteIndexResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteIndex
@@ -373,8 +579,9 @@ func NewDeleteInstanceRequest() (request *DeleteInstanceRequest) {
 func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
     response = &DeleteInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInstance
@@ -437,8 +644,9 @@ func NewDeleteLogstashInstanceRequest() (request *DeleteLogstashInstanceRequest)
 func NewDeleteLogstashInstanceResponse() (response *DeleteLogstashInstanceResponse) {
     response = &DeleteLogstashInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLogstashInstance
@@ -491,8 +699,9 @@ func NewDeleteLogstashPipelinesRequest() (request *DeleteLogstashPipelinesReques
 func NewDeleteLogstashPipelinesResponse() (response *DeleteLogstashPipelinesResponse) {
     response = &DeleteLogstashPipelinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteLogstashPipelines
@@ -529,6 +738,69 @@ func (c *Client) DeleteLogstashPipelinesWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeDiagnoseRequest() (request *DescribeDiagnoseRequest) {
+    request = &DescribeDiagnoseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeDiagnose")
+    
+    
+    return
+}
+
+func NewDescribeDiagnoseResponse() (response *DescribeDiagnoseResponse) {
+    response = &DescribeDiagnoseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDiagnose
+// 查询智能运维诊断结果报告
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  RESOURCENOTFOUND_DIAGNOSENOTFOUND = "ResourceNotFound.DiagnoseNotFound"
+//  UNSUPPORTEDOPERATION_DIAGNOSENOTOPEN = "UnsupportedOperation.DiagnoseNotOpen"
+func (c *Client) DescribeDiagnose(request *DescribeDiagnoseRequest) (response *DescribeDiagnoseResponse, err error) {
+    return c.DescribeDiagnoseWithContext(context.Background(), request)
+}
+
+// DescribeDiagnose
+// 查询智能运维诊断结果报告
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETER_INVALIDTIMEPARAM = "InvalidParameter.InvalidTimeParam"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  RESOURCENOTFOUND_DIAGNOSENOTFOUND = "ResourceNotFound.DiagnoseNotFound"
+//  UNSUPPORTEDOPERATION_DIAGNOSENOTOPEN = "UnsupportedOperation.DiagnoseNotOpen"
+func (c *Client) DescribeDiagnoseWithContext(ctx context.Context, request *DescribeDiagnoseRequest) (response *DescribeDiagnoseResponse, err error) {
+    if request == nil {
+        request = NewDescribeDiagnoseRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDiagnose require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDiagnoseResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeIndexListRequest() (request *DescribeIndexListRequest) {
     request = &DescribeIndexListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -543,8 +815,9 @@ func NewDescribeIndexListRequest() (request *DescribeIndexListRequest) {
 func NewDescribeIndexListResponse() (response *DescribeIndexListResponse) {
     response = &DescribeIndexListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIndexList
@@ -603,8 +876,9 @@ func NewDescribeIndexMetaRequest() (request *DescribeIndexMetaRequest) {
 func NewDescribeIndexMetaResponse() (response *DescribeIndexMetaResponse) {
     response = &DescribeIndexMetaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIndexMeta
@@ -665,14 +939,16 @@ func NewDescribeInstanceLogsRequest() (request *DescribeInstanceLogsRequest) {
 func NewDescribeInstanceLogsResponse() (response *DescribeInstanceLogsResponse) {
     response = &DescribeInstanceLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLogs
 // 查询用户该地域下符合条件的ES集群的日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -692,6 +968,7 @@ func (c *Client) DescribeInstanceLogs(request *DescribeInstanceLogsRequest) (res
 // 查询用户该地域下符合条件的ES集群的日志
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTTIMEOUT = "FailedOperation.RequestTimeOut"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -733,8 +1010,9 @@ func NewDescribeInstanceOperationsRequest() (request *DescribeInstanceOperations
 func NewDescribeInstanceOperationsResponse() (response *DescribeInstanceOperationsResponse) {
     response = &DescribeInstanceOperationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceOperations
@@ -777,6 +1055,63 @@ func (c *Client) DescribeInstanceOperationsWithContext(ctx context.Context, requ
     return
 }
 
+func NewDescribeInstancePluginListRequest() (request *DescribeInstancePluginListRequest) {
+    request = &DescribeInstancePluginListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "DescribeInstancePluginList")
+    
+    
+    return
+}
+
+func NewDescribeInstancePluginListResponse() (response *DescribeInstancePluginListResponse) {
+    response = &DescribeInstancePluginListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeInstancePluginList
+// 查询实例插件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+func (c *Client) DescribeInstancePluginList(request *DescribeInstancePluginListRequest) (response *DescribeInstancePluginListResponse, err error) {
+    return c.DescribeInstancePluginListWithContext(context.Background(), request)
+}
+
+// DescribeInstancePluginList
+// 查询实例插件列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+func (c *Client) DescribeInstancePluginListWithContext(ctx context.Context, request *DescribeInstancePluginListRequest) (response *DescribeInstancePluginListResponse, err error) {
+    if request == nil {
+        request = NewDescribeInstancePluginListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeInstancePluginList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeInstancePluginListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
     request = &DescribeInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -791,8 +1126,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -873,8 +1209,9 @@ func NewDescribeLogstashInstanceLogsRequest() (request *DescribeLogstashInstance
 func NewDescribeLogstashInstanceLogsResponse() (response *DescribeLogstashInstanceLogsResponse) {
     response = &DescribeLogstashInstanceLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogstashInstanceLogs
@@ -923,8 +1260,9 @@ func NewDescribeLogstashInstanceOperationsRequest() (request *DescribeLogstashIn
 func NewDescribeLogstashInstanceOperationsResponse() (response *DescribeLogstashInstanceOperationsResponse) {
     response = &DescribeLogstashInstanceOperationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogstashInstanceOperations
@@ -975,8 +1313,9 @@ func NewDescribeLogstashInstancesRequest() (request *DescribeLogstashInstancesRe
 func NewDescribeLogstashInstancesResponse() (response *DescribeLogstashInstancesResponse) {
     response = &DescribeLogstashInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogstashInstances
@@ -1027,8 +1366,9 @@ func NewDescribeLogstashPipelinesRequest() (request *DescribeLogstashPipelinesRe
 func NewDescribeLogstashPipelinesResponse() (response *DescribeLogstashPipelinesResponse) {
     response = &DescribeLogstashPipelinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLogstashPipelines
@@ -1077,8 +1417,9 @@ func NewDescribeViewsRequest() (request *DescribeViewsRequest) {
 func NewDescribeViewsResponse() (response *DescribeViewsResponse) {
     response = &DescribeViewsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeViews
@@ -1086,9 +1427,11 @@ func NewDescribeViewsResponse() (response *DescribeViewsResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) DescribeViews(request *DescribeViewsRequest) (response *DescribeViewsResponse, err error) {
     return c.DescribeViewsWithContext(context.Background(), request)
@@ -1099,9 +1442,11 @@ func (c *Client) DescribeViews(request *DescribeViewsRequest) (response *Describ
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+//  UNSUPPORTEDOPERATION_INSTANCETYPEERROR = "UnsupportedOperation.InstanceTypeError"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) DescribeViewsWithContext(ctx context.Context, request *DescribeViewsRequest) (response *DescribeViewsResponse, err error) {
     if request == nil {
@@ -1133,8 +1478,9 @@ func NewDiagnoseInstanceRequest() (request *DiagnoseInstanceRequest) {
 func NewDiagnoseInstanceResponse() (response *DiagnoseInstanceResponse) {
     response = &DiagnoseInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DiagnoseInstance
@@ -1187,6 +1533,65 @@ func (c *Client) DiagnoseInstanceWithContext(ctx context.Context, request *Diagn
     return
 }
 
+func NewGetDiagnoseSettingsRequest() (request *GetDiagnoseSettingsRequest) {
+    request = &GetDiagnoseSettingsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("es", APIVersion, "GetDiagnoseSettings")
+    
+    
+    return
+}
+
+func NewGetDiagnoseSettingsResponse() (response *GetDiagnoseSettingsResponse) {
+    response = &GetDiagnoseSettingsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetDiagnoseSettings
+// 查看智能运维配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+func (c *Client) GetDiagnoseSettings(request *GetDiagnoseSettingsRequest) (response *GetDiagnoseSettingsResponse, err error) {
+    return c.GetDiagnoseSettingsWithContext(context.Background(), request)
+}
+
+// GetDiagnoseSettings
+// 查看智能运维配置
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
+//  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+//  INVALIDPARAMETER_INVALIDREGION = "InvalidParameter.InvalidRegion"
+//  INVALIDPARAMETERVALUE_CONFIGINFO = "InvalidParameterValue.ConfigInfo"
+//  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+func (c *Client) GetDiagnoseSettingsWithContext(ctx context.Context, request *GetDiagnoseSettingsRequest) (response *GetDiagnoseSettingsResponse, err error) {
+    if request == nil {
+        request = NewGetDiagnoseSettingsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetDiagnoseSettings require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetDiagnoseSettingsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetRequestTargetNodeTypesRequest() (request *GetRequestTargetNodeTypesRequest) {
     request = &GetRequestTargetNodeTypesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1201,8 +1606,9 @@ func NewGetRequestTargetNodeTypesRequest() (request *GetRequestTargetNodeTypesRe
 func NewGetRequestTargetNodeTypesResponse() (response *GetRequestTargetNodeTypesResponse) {
     response = &GetRequestTargetNodeTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetRequestTargetNodeTypes
@@ -1259,8 +1665,9 @@ func NewModifyEsVipSecurityGroupRequest() (request *ModifyEsVipSecurityGroupRequ
 func NewModifyEsVipSecurityGroupResponse() (response *ModifyEsVipSecurityGroupResponse) {
     response = &ModifyEsVipSecurityGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyEsVipSecurityGroup
@@ -1317,14 +1724,16 @@ func NewRestartInstanceRequest() (request *RestartInstanceRequest) {
 func NewRestartInstanceResponse() (response *RestartInstanceResponse) {
     response = &RestartInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartInstance
 // 重启ES集群实例(用于系统版本更新等操作)
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
@@ -1345,6 +1754,7 @@ func (c *Client) RestartInstance(request *RestartInstanceRequest) (response *Res
 // 重启ES集群实例(用于系统版本更新等操作)
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDESVERSION = "InvalidParameter.InvalidEsVersion"
@@ -1387,8 +1797,9 @@ func NewRestartKibanaRequest() (request *RestartKibanaRequest) {
 func NewRestartKibanaResponse() (response *RestartKibanaResponse) {
     response = &RestartKibanaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartKibana
@@ -1447,8 +1858,9 @@ func NewRestartLogstashInstanceRequest() (request *RestartLogstashInstanceReques
 func NewRestartLogstashInstanceResponse() (response *RestartLogstashInstanceResponse) {
     response = &RestartLogstashInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartLogstashInstance
@@ -1503,14 +1915,16 @@ func NewRestartNodesRequest() (request *RestartNodesRequest) {
 func NewRestartNodesResponse() (response *RestartNodesResponse) {
     response = &RestartNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartNodes
 // 用于重启集群节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -1520,6 +1934,7 @@ func NewRestartNodesResponse() (response *RestartNodesResponse) {
 //  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
@@ -1535,6 +1950,7 @@ func (c *Client) RestartNodes(request *RestartNodesRequest) (response *RestartNo
 // 用于重启集群节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
@@ -1544,6 +1960,7 @@ func (c *Client) RestartNodes(request *RestartNodesRequest) (response *RestartNo
 //  INVALIDPARAMETER_INVALIDSUBNETUIDLIST = "InvalidParameter.InvalidSubnetUidList"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
@@ -1581,8 +1998,9 @@ func NewSaveAndDeployLogstashPipelineRequest() (request *SaveAndDeployLogstashPi
 func NewSaveAndDeployLogstashPipelineResponse() (response *SaveAndDeployLogstashPipelineResponse) {
     response = &SaveAndDeployLogstashPipelineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SaveAndDeployLogstashPipeline
@@ -1629,8 +2047,9 @@ func NewStartLogstashPipelinesRequest() (request *StartLogstashPipelinesRequest)
 func NewStartLogstashPipelinesResponse() (response *StartLogstashPipelinesResponse) {
     response = &StartLogstashPipelinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartLogstashPipelines
@@ -1681,8 +2100,9 @@ func NewStopLogstashPipelinesRequest() (request *StopLogstashPipelinesRequest) {
 func NewStopLogstashPipelinesResponse() (response *StopLogstashPipelinesResponse) {
     response = &StopLogstashPipelinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopLogstashPipelines
@@ -1733,8 +2153,9 @@ func NewUpdateDiagnoseSettingsRequest() (request *UpdateDiagnoseSettingsRequest)
 func NewUpdateDiagnoseSettingsResponse() (response *UpdateDiagnoseSettingsResponse) {
     response = &UpdateDiagnoseSettingsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateDiagnoseSettings
@@ -1793,8 +2214,9 @@ func NewUpdateDictionariesRequest() (request *UpdateDictionariesRequest) {
 func NewUpdateDictionariesResponse() (response *UpdateDictionariesResponse) {
     response = &UpdateDictionariesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateDictionaries
@@ -1815,6 +2237,7 @@ func NewUpdateDictionariesResponse() (response *UpdateDictionariesResponse) {
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) UpdateDictionaries(request *UpdateDictionariesRequest) (response *UpdateDictionariesResponse, err error) {
     return c.UpdateDictionariesWithContext(context.Background(), request)
@@ -1838,6 +2261,7 @@ func (c *Client) UpdateDictionaries(request *UpdateDictionariesRequest) (respons
 //  UNSUPPORTEDOPERATION_CLUSTERSTATENOREPLICATION = "UnsupportedOperation.ClusterStateNoReplication"
 //  UNSUPPORTEDOPERATION_CLUSTERSTATEUNHEALTH = "UnsupportedOperation.ClusterStateUnHealth"
 //  UNSUPPORTEDOPERATION_PLUGIN = "UnsupportedOperation.Plugin"
+//  UNSUPPORTEDOPERATION_STATUSNOTNORMAL = "UnsupportedOperation.StatusNotNormal"
 //  UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 func (c *Client) UpdateDictionariesWithContext(ctx context.Context, request *UpdateDictionariesRequest) (response *UpdateDictionariesResponse, err error) {
     if request == nil {
@@ -1869,8 +2293,9 @@ func NewUpdateIndexRequest() (request *UpdateIndexRequest) {
 func NewUpdateIndexResponse() (response *UpdateIndexResponse) {
     response = &UpdateIndexResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateIndex
@@ -1935,8 +2360,9 @@ func NewUpdateInstanceRequest() (request *UpdateInstanceRequest) {
 func NewUpdateInstanceResponse() (response *UpdateInstanceResponse) {
     response = &UpdateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateInstance
@@ -2000,6 +2426,7 @@ func NewUpdateInstanceResponse() (response *UpdateInstanceResponse) {
 //  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
 //  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
@@ -2085,6 +2512,7 @@ func (c *Client) UpdateInstance(request *UpdateInstanceRequest) (response *Updat
 //  RESOURCEINUSE_ORDER = "ResourceInUse.Order"
 //  RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
 //  RESOURCEINSUFFICIENT_CVM = "ResourceInsufficient.CVM"
+//  RESOURCEINSUFFICIENT_SUBNET = "ResourceInsufficient.Subnet"
 //  RESOURCEINSUFFICIENT_SUBNETIP = "ResourceInsufficient.SubnetIp"
 //  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
@@ -2135,8 +2563,9 @@ func NewUpdateJdkRequest() (request *UpdateJdkRequest) {
 func NewUpdateJdkResponse() (response *UpdateJdkResponse) {
     response = &UpdateJdkResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateJdk
@@ -2201,8 +2630,9 @@ func NewUpdateLogstashInstanceRequest() (request *UpdateLogstashInstanceRequest)
 func NewUpdateLogstashInstanceResponse() (response *UpdateLogstashInstanceResponse) {
     response = &UpdateLogstashInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateLogstashInstance
@@ -2291,8 +2721,9 @@ func NewUpdateLogstashPipelineDescRequest() (request *UpdateLogstashPipelineDesc
 func NewUpdateLogstashPipelineDescResponse() (response *UpdateLogstashPipelineDescResponse) {
     response = &UpdateLogstashPipelineDescResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateLogstashPipelineDesc
@@ -2343,8 +2774,9 @@ func NewUpdatePluginsRequest() (request *UpdatePluginsRequest) {
 func NewUpdatePluginsResponse() (response *UpdatePluginsResponse) {
     response = &UpdatePluginsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdatePlugins
@@ -2362,6 +2794,7 @@ func NewUpdatePluginsResponse() (response *UpdatePluginsResponse) {
 //  INVALIDPARAMETERVALUE_PLUGINTYPE = "InvalidParameterValue.PluginType"
 //  LIMITEXCEEDED_PLUGININSTALL = "LimitExceeded.PluginInstall"
 //  LIMITEXCEEDED_UPDATEITEMLIMIT = "LimitExceeded.UpdateItemLimit"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
@@ -2387,6 +2820,7 @@ func (c *Client) UpdatePlugins(request *UpdatePluginsRequest) (response *UpdateP
 //  INVALIDPARAMETERVALUE_PLUGINTYPE = "InvalidParameterValue.PluginType"
 //  LIMITEXCEEDED_PLUGININSTALL = "LimitExceeded.PluginInstall"
 //  LIMITEXCEEDED_UPDATEITEMLIMIT = "LimitExceeded.UpdateItemLimit"
+//  RESOURCENOTFOUND_CLUSTERINFONOTFOUND = "ResourceNotFound.ClusterInfoNotFound"
 //  RESOURCENOTFOUND_COSINFONOTFOUND = "ResourceNotFound.CosInfoNotFound"
 //  RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
 //  RESOURCENOTFOUND_WHITELISTNOTFOUND = "ResourceNotFound.WhiteListNotFound"
@@ -2423,8 +2857,9 @@ func NewUpdateRequestTargetNodeTypesRequest() (request *UpdateRequestTargetNodeT
 func NewUpdateRequestTargetNodeTypesResponse() (response *UpdateRequestTargetNodeTypesResponse) {
     response = &UpdateRequestTargetNodeTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRequestTargetNodeTypes
@@ -2485,14 +2920,16 @@ func NewUpgradeInstanceRequest() (request *UpgradeInstanceRequest) {
 func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
     response = &UpgradeInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeInstance
 // 升级ES集群版本
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -2523,6 +2960,7 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 // 升级ES集群版本
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_ERRORCLUSTERSTATE = "FailedOperation.ErrorClusterState"
 //  FAILEDOPERATION_NOPAYMENT = "FailedOperation.NoPayment"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -2575,8 +3013,9 @@ func NewUpgradeLicenseRequest() (request *UpgradeLicenseRequest) {
 func NewUpgradeLicenseResponse() (response *UpgradeLicenseResponse) {
     response = &UpgradeLicenseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeLicense
