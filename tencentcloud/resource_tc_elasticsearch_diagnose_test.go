@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudEsDiagnoseResource_basic(t *testing.T) {
+func TestAccTencentCloudElasticsearchDiagnoseResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -14,7 +14,7 @@ func TestAccTencentCloudEsDiagnoseResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEsDiagnose,
+				Config: testAccElasticsearchDiagnose,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_diagnose.diagnose", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_diagnose.diagnose", "diagnose_job_metas.#"),
@@ -22,7 +22,7 @@ func TestAccTencentCloudEsDiagnoseResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccEsDiagnoseUpdate,
+				Config: testAccElasticsearchDiagnoseUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_diagnose.diagnose", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_diagnose.diagnose", "diagnose_job_metas.#"),
@@ -38,14 +38,14 @@ func TestAccTencentCloudEsDiagnoseResource_basic(t *testing.T) {
 	})
 }
 
-const testAccEsDiagnose = `
+const testAccElasticsearchDiagnose = `
 resource "tencentcloud_elasticsearch_diagnose" "diagnose" {
 	instance_id = "es-nni6pm4s"
 	cron_time = "15:00:00"
 }
 `
 
-const testAccEsDiagnoseUpdate = `
+const testAccElasticsearchDiagnoseUpdate = `
 resource "tencentcloud_elasticsearch_diagnose" "diagnose" {
 	instance_id = "es-nni6pm4s"
 	cron_time = "16:00:00"

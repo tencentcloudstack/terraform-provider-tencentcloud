@@ -85,7 +85,7 @@ func resourceTencentCloudElasticsearchDiagnose() *schema.Resource {
 }
 
 func resourceTencentCloudElasticsearchDiagnoseCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_es_diagnose.create")()
+	defer logElapsed("resource.tencentcloud_elasticsearch_diagnose.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -105,7 +105,7 @@ func resourceTencentCloudElasticsearchDiagnoseCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudElasticsearchDiagnoseRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_es_diagnose.read")()
+	defer logElapsed("resource.tencentcloud_elasticsearch_diagnose.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -152,7 +152,7 @@ func resourceTencentCloudElasticsearchDiagnoseRead(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudElasticsearchDiagnoseUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_es_diagnose.update")()
+	defer logElapsed("resource.tencentcloud_elasticsearch_diagnose.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -183,7 +183,7 @@ func resourceTencentCloudElasticsearchDiagnoseUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudElasticsearchDiagnoseDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_es_diagnose.delete")()
+	defer logElapsed("resource.tencentcloud_elasticsearch_diagnose.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
