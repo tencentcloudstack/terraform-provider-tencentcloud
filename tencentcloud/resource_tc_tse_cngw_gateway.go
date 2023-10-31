@@ -249,6 +249,16 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 							Computed:    true,
 							Description: "Https port range.",
 						},
+						"tcp_port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Tcp port range.",
+						},
+						"udp_port": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Udp port range.",
+						},
 					},
 				},
 			},
@@ -505,15 +515,20 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 			instancePortMap["https_port"] = cngwGateway.InstancePort.HttpsPort
 		}
 
+		if cngwGateway.InstancePort.TcpPort != nil {
+			instancePortMap["tcp_port"] = cngwGateway.InstancePort.TcpPort
+		}
+
+		if cngwGateway.InstancePort.UdpPort != nil {
+			instancePortMap["udp_port"] = cngwGateway.InstancePort.UdpPort
+		}
+
 		_ = d.Set("instance_port", []interface{}{instancePortMap})
 	}
 
 	if cngwGateway.PublicIpAddresses != nil {
-
-		addresses := make([]*string, len(cngwGateway.PublicIpAddresses))
-
+		addresses := make([]*string, 0)
 		addresses = append(addresses, cngwGateway.PublicIpAddresses...)
-
 		_ = d.Set("public_ip_addresses", addresses)
 	}
 

@@ -1,5 +1,5 @@
 ---
-subcategory: "Waf"
+subcategory: "Web Application Firewall(WAF)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_waf_anti_info_leak"
 sidebar_current: "docs-tencentcloud-resource-waf_anti_info_leak"

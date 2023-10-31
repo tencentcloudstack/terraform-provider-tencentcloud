@@ -91,7 +91,7 @@ The following arguments are supported:
 * `is_enabled` - (Optional, Bool) Specify whether to enable secret. Default value is `true`.
 * `kms_key_id` - (Optional, String, ForceNew) KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.
 * `recovery_window_in_days` - (Optional, Int) Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.
-* `secret_type` - (Optional, Int) Type of secret. `0`: user-defined secret. `4`: redis secret.
+* `secret_type` - (Optional, Int) Type of secret. `0`: user-defined secret. `4`: redis secret. Default is `0`.
 * `tags` - (Optional, Map) Tags of secret.
 
 ## Attributes Reference

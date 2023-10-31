@@ -106,6 +106,8 @@ In addition to all arguments above, the following attributes are exported:
 * `instance_port` - Port information that the instance listens to.
   * `http_port` - Http port range.
   * `https_port` - Https port range.
+  * `tcp_port` - Tcp port range.
+  * `udp_port` - Udp port range.
 * `public_ip_addresses` - Public IP address list.
 
 

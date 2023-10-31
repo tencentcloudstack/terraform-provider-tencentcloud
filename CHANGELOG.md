@@ -1,3 +1,76 @@
+## 1.81.40 (October 27, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_describe_data_engine` ([#2250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2250))
+* **New Data Source:** `tencentcloud_dlc_describe_data_engine_image_versions` ([#2250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2250))
+* **New Data Source:** `tencentcloud_dlc_describe_data_engine_python_spark_images` ([#2250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2250))
+* **New Data Source:** `tencentcloud_dlc_describe_engine_usage_info` ([#2250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2250))
+* **New Data Source:** `tencentcloud_dlc_describe_work_group_info` ([#2250](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2250))
+* **New Data Source:** `tencentcloud_oceanus_check_savepoint` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_clusters` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_job_submission_log` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_resource_related_job` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_savepoint_list` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_system_resource` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_tree_jobs` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_tree_resources` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Data Source:** `tencentcloud_oceanus_work_spaces` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_dlc_modify_data_engine_description_operation` ([#2251](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2251))
+* **New Resource:** `tencentcloud_dlc_modify_user_typ_operation` ([#2251](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2251))
+* **New Resource:** `tencentcloud_dlc_renew_data_engine_operation` ([#2251](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2251))
+* **New Resource:** `tencentcloud_oceanus_job` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_job_config` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_job_copy` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_resource` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_resource_config` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_run_job` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_stop_job` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_trigger_job_savepoint` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+* **New Resource:** `tencentcloud_oceanus_work_space` ([#2224](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2224))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_scale_worker: set up the node and import it into Terraform ([#2246](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2246))
+* tencentcloud_ssm_secret: Remove default version while `secret_type` is 0 ([#2256](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2256))
+* tencentcloud_tse_cngw_gateway: Add computed `instance_port.tcp_port` and `instance_port.udp_port` ([#2255](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2255))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_cluster_attachment: fix the null pointer issue in data_disk ([#2246](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2246))
+
+## 1.81.39 (October 25, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_bi_project` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Data Source:** `tencentcloud_bi_user_project` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Data Source:** `tencentcloud_dlc_check_data_engine_image_can_be_upgrade` ([#2245](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2245))
+* **New Data Source:** `tencentcloud_dlc_describe_user_info` ([#2244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2244))
+* **New Data Source:** `tencentcloud_dlc_describe_user_roles` ([#2244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2244))
+* **New Data Source:** `tencentcloud_dlc_describe_user_type` ([#2244](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2244))
+* **New Resource:** `tencentcloud_bi_datasource` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_datasource_cloud` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_embed_interval_apply` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_embed_token_apply` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_project` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_project_user_role` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_bi_user_role` ([#2239](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2239))
+* **New Resource:** `tencentcloud_cdwpg_instance` ([#2248](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2248))
+* **New Resource:** `tencentcloud_dlc_data_engine` ([#2245](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2245))
+* **New Resource:** `tencentcloud_dlc_rollback_data_engine_image_operation` ([#2245](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2245))
+* **New Resource:** `tencentcloud_organization_org_member_policy_attachment` ([#2243](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2243))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_waf_clb_instance: support set `qps_limit` ([#2234](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2234))
+* resource/tencentcloud_waf_saas_instance: support set `qps_limit` ([#2234](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2234))
+* tencentcloud_cam_service_linked_role: Set `custom_suffix` computed ([#2247](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2247))
+
+BUG FIXES:
+
+* data-source/tencentcloud_dnspod_record_analytics: Fix set info error. ([#2242](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2242))
+
 ## 1.81.38 (October 20, 2023)
 
 FEATURES:

@@ -31,6 +31,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.763
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi v1.0.770
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
@@ -45,7 +46,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.770
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.775
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -92,11 +93,11 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.758
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.755
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.772
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.755
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.759
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.771
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
@@ -104,7 +105,11 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/hashicorp/go-uuid v1.0.3
+require (
+	github.com/hashicorp/go-uuid v1.0.3
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.775
+)
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect

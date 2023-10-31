@@ -9,8 +9,8 @@ Create a basic waf premium saas instance
 
 ```hcl
 resource "tencentcloud_waf_saas_instance" "example" {
-  goods_category   = "premium_saas"
-  instance_name    = "tf-example-saas-waf"
+  goods_category = "premium_saas"
+  instance_name  = "tf-example-saas-waf"
 }
 ```
 
@@ -18,13 +18,28 @@ Create a complete waf ultimate_saas instance
 
 ```hcl
 resource "tencentcloud_waf_saas_instance" "example" {
-  goods_category   = "ultimate_saas"
-  instance_name    = "tf-example-saas-waf"
-  time_span        = 1
-  time_unit        = "m"
-  auto_renew_flag  = 1
-  elastic_mode     = 1
-  real_region      = "gz"
+  goods_category  = "ultimate_saas"
+  instance_name   = "tf-example-saas-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  real_region     = "gz"
+}
+```
+
+Set waf ultimate_saas instance qps limit
+
+```hcl
+resource "tencentcloud_waf_saas_instance" "example" {
+  goods_category  = "ultimate_saas"
+  instance_name   = "tf-example-saas-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  real_region     = "gz"
+  qps_limit       = 200000
 }
 ```
 */
@@ -88,6 +103,13 @@ func resourceTencentCloudWafSaasInstance() *schema.Resource {
 				Default:      ELASTIC_MODE_0,
 				ValidateFunc: validateAllowedIntValue(ELASTIC_MODE),
 				Description:  "Is elastic billing enabled, 1: enable, 0: disable.",
+			},
+			"qps_limit": {
+				Optional:     true,
+				Computed:     true,
+				Type:         schema.TypeInt,
+				ValidateFunc: validateIntegerMin(10000),
+				Description:  "QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.",
 			},
 			"real_region": {
 				Optional:     true,
@@ -338,6 +360,33 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 				log.Printf("[CRITAL]%s update waf saas instance elastic mode failed, reason:%+v", logId, err)
 				return err
 			}
+
+			// set qpsLimit
+			if v, ok = d.GetOkExists("qps_limit"); ok {
+				qpsLimit := v.(int)
+				modifyInstanceQpsLimitRequest := waf.NewModifyInstanceQpsLimitRequest()
+				modifyInstanceQpsLimitRequest.InstanceId = &instanceId
+				modifyInstanceQpsLimitRequest.QpsLimit = helper.IntInt64(qpsLimit)
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceQpsLimit(modifyInstanceQpsLimitRequest)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceQpsLimitRequest.GetAction(), modifyInstanceQpsLimitRequest.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s update waf clb instance qpsLimit failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		} else {
+			if _, ok = d.GetOkExists("qps_limit"); ok {
+				return fmt.Errorf("If `elastic_mode` is 0, not support set `qps_limit`.")
+			}
 		}
 	}
 
@@ -380,6 +429,10 @@ func resourceTencentCloudWafSaasInstanceRead(d *schema.ResourceData, meta interf
 
 	if instanceInfo.Mode != nil {
 		_ = d.Set("elastic_mode", instanceInfo.Mode)
+	}
+
+	if instanceInfo.ElasticBilling != nil {
+		_ = d.Set("qps_limit", instanceInfo.ElasticBilling)
 	}
 
 	if instanceInfo.Region != nil {
@@ -428,6 +481,7 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 		modifyInstanceRenewFlagRequest = waf.NewModifyInstanceRenewFlagRequest()
 		newSwitchElasticModeRequest    = waf.NewSwitchElasticModeRequest()
 		instanceId                     = d.Id()
+		elasticMode                    int
 	)
 
 	immutableArgs := []string{"goods_category", "time_span", "time_unit", "domain_pkg_count", "qps_pkg_count"}
@@ -503,6 +557,40 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 				log.Printf("[CRITAL]%s update waf saas instance elastic mode failed, reason:%+v", logId, err)
 				return err
 			}
+		}
+	}
+
+	if v, ok := d.GetOkExists("elastic_mode"); ok {
+		elasticMode = v.(int)
+	}
+
+	if elasticMode == ELASTIC_MODE_1 {
+		if d.HasChange("qps_limit") {
+			if v, ok := d.GetOkExists("qps_limit"); ok {
+				qpsLimit := v.(int)
+				modifyInstanceQpsLimitRequest := waf.NewModifyInstanceQpsLimitRequest()
+				modifyInstanceQpsLimitRequest.InstanceId = &instanceId
+				modifyInstanceQpsLimitRequest.QpsLimit = helper.IntInt64(qpsLimit)
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceQpsLimit(modifyInstanceQpsLimitRequest)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceQpsLimitRequest.GetAction(), modifyInstanceQpsLimitRequest.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s update waf clb instance qpsLimit failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		}
+	} else {
+		if _, ok := d.GetOkExists("qps_limit"); ok {
+			return fmt.Errorf("If `elastic_mode` is 0, not support set `qps_limit`.")
 		}
 	}
 
