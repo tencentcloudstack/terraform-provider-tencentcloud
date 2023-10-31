@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_dlc_store_location_config
+```
