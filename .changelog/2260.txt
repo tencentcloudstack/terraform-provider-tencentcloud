@@ -13,3 +13,15 @@ tencentcloud_wedata_data_source_without_info
 ```release-note:new-resource
 tencentcloud_wedata_datasource
 ```
+
+```release-note:new-resource
+tencentcloud_wedata_function
+```
+
+```release-note:new-resource
+tencentcloud_wedata_resource
+```
+
+```release-note:new-resource
+tencentcloud_wedata_script
+```

@@ -328,3 +328,188 @@ func (me *WedataService) DeleteWedataDatasourceById(ctx context.Context, datasou
 
 	return
 }
+
+func (me *WedataService) DescribeWedataFunctionById(ctx context.Context, functionId, funcType, funcName, projectId string) (function *wedata.OrganizationalFunction, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeOrganizationalFunctionsRequest()
+	request.Type = &funcType
+	request.Name = &funcName
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeOrganizationalFunctions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Content) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.Content {
+		if *item.FuncId == functionId {
+			function = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *WedataService) DeleteWedataFunctionById(ctx context.Context, functionId, projectId, clusterIdentifier string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteCustomFunctionRequest()
+	request.FunctionId = &functionId
+	request.ProjectId = &projectId
+	request.ClusterIdentifier = &clusterIdentifier
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteCustomFunction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataResourceById(ctx context.Context, projectId, filePath, resourceId string) (resourceInfo *wedata.ResourcePathTree, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeResourceManagePathTreesRequest()
+	request.ProjectId = &projectId
+	request.FilePath = &filePath
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeResourceManagePathTrees(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Data) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.Data {
+		if *item.ResourceId == resourceId {
+			resourceInfo = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *WedataService) DeleteWedataResourceById(ctx context.Context, projectId, resourceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteResourceFileRequest()
+	request.ProjectId = &projectId
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteResourceFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataScriptById(ctx context.Context, projectId, filePath string) (fileInfo *wedata.UserFileInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewGetFileInfoRequest()
+	request.ProjectId = &projectId
+	request.FilePath = &filePath
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().GetFileInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	fileInfo = response.Response.UserFileInfo
+	return
+}
+
+func (me *WedataService) DeleteWedataScriptById(ctx context.Context, projectId, resourceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteFileRequest()
+	request.ProjectId = &projectId
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

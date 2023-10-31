@@ -1916,6 +1916,9 @@ Wedata
     tencentcloud_wedata_data_source_without_info
   Resource
     tencentcloud_wedata_datasource
+    tencentcloud_wedata_function
+    tencentcloud_wedata_resource
+    tencentcloud_wedata_script
 
 Cloud Firewall(CFW)
   Data Source
@@ -3597,6 +3600,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
 			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
+			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
+			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
+			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
