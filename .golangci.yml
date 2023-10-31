@@ -31,7 +31,7 @@ run:
   modules-download-mode: vendor
   timeout: 15m
   # The default concurrency value is the number of available CPU.
-  concurrency: 2
+  concurrency: 10 
   # Allow multiple parallel golangci-lint instances running.
   # If false (default) - golangci-lint acquires file lock on start.
   allow-parallel-runners: false
