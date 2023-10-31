@@ -330,7 +330,7 @@ func resourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 															"fill_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The fill mode, which indicates how a video is resized when the video’s original aspect ratio is different from the target aspect ratio. Valid values:stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding.black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars.white: Keep the image’s original aspect ratio and fill the blank space with white bars.gauss: Keep the image’s original aspect ratio and apply Gaussian blur to the blank space.Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
+																Description: "The fill mode, which indicates how a video is resized when the video's original aspect ratio is different from the target aspect ratio. Valid values:stretch: Stretch the image frame by frame to fill the entire screen. The video image may become squashed or stretched after transcoding.black: Keep the image&#39;s original aspect ratio and fill the blank space with black bars.white: Keep the image's original aspect ratio and fill the blank space with white bars.gauss: Keep the image's original aspect ratio and apply Gaussian blur to the blank space.Default value: black.Note: Only `stretch` and `black` are supported for adaptive bitrate streaming.",
 															},
 															"vcrf": {
 																Type:        schema.TypeInt,
@@ -523,12 +523,12 @@ func resourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The TSC type. Valid values:`TEHD-100`: TSC-100 (video TSC). `TEHD-200`: TSC-200 (audio TSC). If this parameter is left blank, no modification will be made.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The TSC type. Valid values:`TEHD-100`: TSC-100 (video TSC). `TEHD-200`: TSC-200 (audio TSC). If this parameter is left blank, no modification will be made.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"max_video_bitrate": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "The maximum video bitrate. If this parameter is not specified, no modifications will be made.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The maximum video bitrate. If this parameter is not specified, no modifications will be made.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 														},
 													},
@@ -543,32 +543,32 @@ func resourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 															"path": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The URL of the subtitles to add to the video.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The URL of the subtitles to add to the video.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"stream_index": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "The subtitle track to add to the video. If both `Path` and `StreamIndex` are specified, `Path` will be used. You need to specify at least one of the two parameters.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The subtitle track to add to the video. If both `Path` and `StreamIndex` are specified, `Path` will be used. You need to specify at least one of the two parameters.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"font_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The font. Valid values:`hei.ttf`: Heiti.`song.ttf`: Songti.`simkai.ttf`: Kaiti.`arial.ttf`: Arial.The default is `hei.ttf`.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The font. Valid values:`hei.ttf`: Heiti.`song.ttf`: Songti.`simkai.ttf`: Kaiti.`arial.ttf`: Arial.The default is `hei.ttf`.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"font_size": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The font size (pixels). If this is not specified, the font size in the subtitle file will be used.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The font size (pixels). If this is not specified, the font size in the subtitle file will be used.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"font_color": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The font color in 0xRRGGBB format. Default value: 0xFFFFFF (white).Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The font color in 0xRRGGBB format. Default value: 0xFFFFFF (white).Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"font_alpha": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "The text transparency. Value range: 0-1.`0`: Fully transparent.`1`: Fully opaque.Default value: 1.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The text transparency. Value range: 0-1.`0`: Fully transparent.`1`: Fully opaque.Default value: 1.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 														},
 													},
@@ -665,24 +665,24 @@ func resourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 												"std_ext_info": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "An extended field for transcoding.Note: This field may return·null, indicating that no valid values can be obtained.",
+													Description: "An extended field for transcoding.Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"add_on_subtitles": {
 													Type:        schema.TypeList,
 													Optional:    true,
-													Description: "The subtitle file to add.Note: This field may return·null, indicating that no valid values can be obtained.",
+													Description: "The subtitle file to add.Note: This field may return null, indicating that no valid values can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The mode. Valid values:`subtitle-stream`: Add a subtitle track.`close-caption-708`: Embed CEA-708 subtitles in SEI frames.`close-caption-608`: Embed CEA-608 subtitles in SEI frames.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The mode. Valid values:`subtitle-stream`: Add a subtitle track.`close-caption-708`: Embed CEA-708 subtitles in SEI frames.`close-caption-608`: Embed CEA-608 subtitles in SEI frames.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"subtitle": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: "The subtitle file.Note: This field may return·null, indicating that no valid values can be obtained.",
+																Description: "The subtitle file.Note: This field may return null, indicating that no valid values can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"type": {
@@ -2391,19 +2391,19 @@ func resourceTencentCloudMpsProcessMediaOperation() *schema.Resource {
 									"add_on_subtitles": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "The subtitle file to add.Note: This field may return·null, indicating that no valid values can be obtained.",
+										Description: "The subtitle file to add.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The mode. Valid values:`subtitle-stream`: Add a subtitle track.`close-caption-708`: Embed CEA-708 subtitles in SEI frames.`close-caption-608`: Embed CEA-608 subtitles in SEI frames.Note: This field may return·null, indicating that no valid values can be obtained.",
+													Description: "The mode. Valid values:`subtitle-stream`: Add a subtitle track.`close-caption-708`: Embed CEA-708 subtitles in SEI frames.`close-caption-608`: Embed CEA-608 subtitles in SEI frames.Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"subtitle": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "The subtitle file.Note: This field may return·null, indicating that no valid values can be obtained.",
+													Description: "The subtitle file.Note: This field may return null, indicating that no valid values can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
