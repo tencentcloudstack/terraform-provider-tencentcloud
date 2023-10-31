@@ -1,21 +1,30 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodRecordGroupResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodRecordGroup,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dnspod_record_group.record_group", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record_group.record_group", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record_group.record_group", "group_name", "group_demo"),
+				),
+			},
+			{
+				Config: testAccDnspodRecordGroupUp,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record_group.record_group", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record_group.record_group", "group_name", "group_demo2"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_dnspod_record_group.record_group",
@@ -29,12 +38,19 @@ func TestAccTencentCloudDnspodRecordGroupResource_basic(t *testing.T) {
 const testAccDnspodRecordGroup = `
 
 resource "tencentcloud_dnspod_record_group" "record_group" {
-  domain = "dnspod.cn"
-  group_name = "group_name_demo"
-  domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
+  domain = "iac-tf.cloud"
+  group_name = "group_demo"
+  # domain_id = 123
+}
+
+`
+
+const testAccDnspodRecordGroupUp = `
+
+resource "tencentcloud_dnspod_record_group" "record_group" {
+  domain = "iac-tf.cloud"
+  group_name = "group_demo2"
+  # domain_id = 123
 }
 
 `

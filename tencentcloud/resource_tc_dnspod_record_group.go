@@ -6,11 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_dnspod_record_group" "record_group" {
   domain = "dnspod.cn"
-  group_name = "group_name_demo"
+  group_name = "group_demo"
   domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 ```
 
@@ -27,12 +24,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDnspodRecordGroup() *schema.Resource {
@@ -63,10 +61,10 @@ func resourceTencentCloudDnspodRecordGroup() *schema.Resource {
 				Description: "Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.",
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
+			"group_id": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Group ID.",
 			},
 		},
 	}
@@ -81,8 +79,8 @@ func resourceTencentCloudDnspodRecordGroupCreate(d *schema.ResourceData, meta in
 	var (
 		request  = dnspod.NewCreateRecordGroupRequest()
 		response = dnspod.NewCreateRecordGroupResponse()
-		groupId uint64
-		domain string
+		groupId  uint64
+		domain   string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		request.Domain = helper.String(v.(string))
@@ -114,17 +112,6 @@ func resourceTencentCloudDnspodRecordGroupCreate(d *schema.ResourceData, meta in
 
 	groupId = *response.Response.GroupId
 	d.SetId(strings.Join([]string{domain, helper.UInt64ToStr(groupId)}, FILED_SP))
-	// d.SetId(helper.UInt64ToStr(groupId))
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::dnspod:%s:uin/:domainId/%s", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 
 	return resourceTencentCloudDnspodRecordGroupRead(d, meta)
 }
@@ -157,9 +144,7 @@ func resourceTencentCloudDnspodRecordGroupRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	if recordGroup.GroupType != nil {
-		_ = d.Set("group_type", recordGroup.GroupType)
-	}
+	_ = d.Set("domain", domain)
 
 	if recordGroup.GroupName != nil {
 		_ = d.Set("group_name", recordGroup.GroupName)
@@ -169,13 +154,9 @@ func resourceTencentCloudDnspodRecordGroupRead(d *schema.ResourceData, meta inte
 		_ = d.Set("group_id", recordGroup.GroupId)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "dnspod", "domainId", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
+	// if recordGroup.GroupType != nil {
+	// 	_ = d.Set("group_type", recordGroup.GroupType)
+	// }
 
 	return nil
 }
@@ -187,13 +168,14 @@ func resourceTencentCloudDnspodRecordGroupUpdate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	request := dnspod.NewModifyRecordGroupRequest()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("tencentcloud_dnspod_record_group id is broken, id is %s", d.Id())
+	}
+	request.Domain = helper.String(idSplit[0])
+	request.GroupId = helper.StrToUint64Point(idSplit[1])
 
-	groupId := d.Id()
-
-	// request.GroupId = &groupId
-	request.GroupId = helper.StrToUint64Point(groupId)
-
-	immutableArgs := []string{"domain", "group_name", "domain_id"}
+	immutableArgs := []string{"domain", "domain_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -201,22 +183,16 @@ func resourceTencentCloudDnspodRecordGroupUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	if d.HasChange("domain") {
-		if v, ok := d.GetOk("domain"); ok {
-			request.Domain = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("domain"); ok {
+		request.Domain = helper.String(v.(string))
 	}
 
-	if d.HasChange("group_name") {
-		if v, ok := d.GetOk("group_name"); ok {
-			request.GroupName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("group_name"); ok {
+		request.GroupName = helper.String(v.(string))
 	}
 
-	if d.HasChange("domain_id") {
-		if v, ok := d.GetOkExists("domain_id"); ok {
-			request.DomainId = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOkExists("domain_id"); ok {
+		request.DomainId = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -233,18 +209,6 @@ func resourceTencentCloudDnspodRecordGroupUpdate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("dnspod", "domainId", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudDnspodRecordGroupRead(d, meta)
 }
 
@@ -256,9 +220,14 @@ func resourceTencentCloudDnspodRecordGroupDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DnspodService{client: meta.(*TencentCloudClient).apiV3Conn}
-	groupId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("tencentcloud_dnspod_record_group id is broken, id is %s", d.Id())
+	}
+	domain := idSplit[0]
+	groupId := helper.StrToUInt64(idSplit[1])
 
-	if err := service.DeleteDnspodRecordGroupById(ctx, helper.StrToUint64Point(groupId)); err != nil {
+	if err := service.DeleteDnspodRecordGroupById(ctx, domain, groupId); err != nil {
 		return err
 	}
 

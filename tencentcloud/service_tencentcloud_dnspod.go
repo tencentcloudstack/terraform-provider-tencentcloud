@@ -615,11 +615,12 @@ func (me *DnspodService) DescribeDnspodRecordGroupById(ctx context.Context, doma
 	return
 }
 
-func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, groupId *uint64) (errRet error) {
+func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, domain string, groupId uint64) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := dnspod.NewDeleteRecordGroupRequest()
-	request.GroupId = groupId
+	request.Domain = &domain
+	request.GroupId = &groupId
 
 	defer func() {
 		if errRet != nil {

@@ -1195,6 +1195,7 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
     tencentcloud_dnspod_record
+	tencentcloud_dnspod_record_group
   Data Source
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
@@ -3161,6 +3162,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
+			"tencentcloud_dnspod_record_group":                                 resourceTencentCloudDnspodRecordGroup(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
