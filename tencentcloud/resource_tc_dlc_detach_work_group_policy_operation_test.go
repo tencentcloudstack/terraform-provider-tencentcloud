@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDlcDetachWorkGroupPolicyOperationResource_basic(t *testing.T) {
@@ -15,12 +16,19 @@ func TestAccTencentCloudDlcDetachWorkGroupPolicyOperationResource_basic(t *testi
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcDetachWorkGroupPolicyOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "id"),
+					resource.TestCheckResourceAttr("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "work_group_id", "23184"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.#"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.database"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.catalog"),
+					resource.TestCheckResourceAttr("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.table", ""),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.operation"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.policy_type"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.re_auth"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.source"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.mode"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.operator"),
+					resource.TestCheckResourceAttrSet("ttencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation", "policy_set.0.id")),
 			},
 		},
 	})
@@ -29,27 +37,18 @@ func TestAccTencentCloudDlcDetachWorkGroupPolicyOperationResource_basic(t *testi
 const testAccDlcDetachWorkGroupPolicyOperation = `
 
 resource "tencentcloud_dlc_detach_work_group_policy_operation" "detach_work_group_policy_operation" {
-  work_group_id = 122
+  work_group_id = 23184
   policy_set {
-		database = "*"
-		catalog = "*"
-		table = "*"
-		operation = "ALL"
-		policy_type = "ADMIN"
-		function = "*"
-		view = "*"
-		column = "*"
-		data_engine = "*"
-		re_auth = false
-		source = "USER"
-		mode = "COMMON"
-		operator = "admin"
-		create_time = ""
-		source_id = 
-		source_name = ""
-		id = 1
-
+    database = "test_iac_keep"
+    catalog = "DataLakeCatalog"
+    table = ""
+    operation = "ASSAYER"
+    policy_type = "DATABASE"
+    re_auth = false
+    source = "WORKGROUP"
+    mode = "COMMON"
+    operator = "100032669045"
+    id = 102535
   }
 }
-
 `

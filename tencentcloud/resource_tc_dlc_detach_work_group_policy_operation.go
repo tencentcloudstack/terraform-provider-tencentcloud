@@ -5,46 +5,32 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dlc_detach_work_group_policy_operation" "detach_work_group_policy_operation" {
-  work_group_id = 122
+  work_group_id = 23184
   policy_set {
-		database = "*"
-		catalog = "*"
-		table = "*"
-		operation = "ALL"
-		policy_type = "ADMIN"
-		function = "*"
-		view = "*"
-		column = "*"
-		data_engine = "*"
-		re_auth = false
-		source = "USER"
-		mode = "COMMON"
-		operator = "admin"
-		create_time = ""
-		source_id =
-		source_name = ""
-		id = 1
-
+    database = "test_iac_keep"
+    catalog = "DataLakeCatalog"
+    table = ""
+    operation = "ASSAYER"
+    policy_type = "DATABASE"
+    re_auth = false
+    source = "WORKGROUP"
+    mode = "COMMON"
+    operator = "100032669045"
+    id = 102535
   }
 }
 ```
 
-Import
-
-dlc detach_work_group_policy_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_detach_work_group_policy_operation.detach_work_group_policy_operation detach_work_group_policy_operation_id
-```
 */
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDlcDetachWorkGroupPolicyOperation() *schema.Resource {
@@ -170,7 +156,6 @@ func resourceTencentCloudDlcDetachWorkGroupPolicyOperationCreate(d *schema.Resou
 
 	var (
 		request     = dlc.NewDetachWorkGroupPolicyRequest()
-		response    = dlc.NewDetachWorkGroupPolicyResponse()
 		workGroupId string
 	)
 	if v, _ := d.GetOk("work_group_id"); v != nil {
@@ -244,7 +229,6 @@ func resourceTencentCloudDlcDetachWorkGroupPolicyOperationCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
