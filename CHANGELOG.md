@@ -1,3 +1,67 @@
+## 1.81.41 (November 1, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_css_backup_stream` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_monitor_report` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_pad_templates` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_pull_stream_task_status` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_stream_monitor_list` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_time_shift_record_detail` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_time_shift_stream_list` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_watermarks` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_css_xp2p_detail_info_list` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Data Source:** `tencentcloud_dlc_check_data_engine_config_pairs_validity` ([#2259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2259))
+* **New Data Source:** `tencentcloud_elasticsearch_diagnose` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_instance_logs` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_instance_operations` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_instance_plugin_list` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_logstash_instance_logs` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_logstash_instance_operations` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_elasticsearch_views` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Data Source:** `tencentcloud_mps_media_meta_data` ([#2263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2263))
+* **New Data Source:** `tencentcloud_mps_parse_live_stream_process_notification` ([#2263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2263))
+* **New Data Source:** `tencentcloud_mps_parse_notification` ([#2263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2263))
+* **New Resource:** `tencentcloud_css_backup_stream` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_callback_rule_attachment` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_callback_template` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_domain_referer` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_enable_optimal_switching` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_pad_rule_attachment` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_pad_template` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_record_rule_attachment` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_snapshot_rule_attachment` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_snapshot_template` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_stream_monitor` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_timeshift_rule_attachment` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_css_timeshift_template` ([#2265](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2265))
+* **New Resource:** `tencentcloud_dlc_bind_work_groups_to_user_attachment` ([#2259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2259))
+* **New Resource:** `tencentcloud_dlc_restart_data_engine_operation` ([#2257](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2257))
+* **New Resource:** `tencentcloud_dlc_switch_data_engine_image_operation` ([#2257](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2257))
+* **New Resource:** `tencentcloud_dlc_upgrade_data_engine_image_operation` ([#2257](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2257))
+* **New Resource:** `tencentcloud_dlc_user_data_engine_config` ([#2259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2259))
+* **New Resource:** `tencentcloud_dnspod_record_group` ([#2249](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2249))
+* **New Resource:** `tencentcloud_elasticsearch_diagnose` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_diagnose_instance` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_index` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_restart_instance_operation` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_restart_kibana_operation` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_restart_nodes_operation` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_elasticsearch_update_plugins_operation` ([#2264](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2264))
+* **New Resource:** `tencentcloud_gaap_global_domain` ([#2267](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2267))
+* **New Resource:** `tencentcloud_gaap_global_domain_dns` ([#2267](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2267))
+* **New Resource:** `tencentcloud_mps_process_media_operation` ([#2263](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2263))
+
+ENHANCEMENTS:
+
+* tencentcloud_dlc_store_location_config: Support api `ModifyAdvancedStoreLocation` and `DescribeAdvancedStoreLocation`, replace `CreateStoreLocation` and `DescribeStoreLocation` ([#2262](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2262))
+* tencentcloud_vpn_ssl_server: Support modify attributes ([#2266](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2266))
+
+BUG FIXES:
+
+* tencentcloud_dlc_describe_user_info: Fix policy set type ([#2259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2259))
+* tencentcloud_dlc_describe_work_group_info: Fix policy set type ([#2259](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2259))
+
 ## 1.81.40 (October 27, 2023)
 
 FEATURES:
