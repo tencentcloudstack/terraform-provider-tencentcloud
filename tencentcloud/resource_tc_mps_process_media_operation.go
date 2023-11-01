@@ -2781,7 +2781,7 @@ func resourceTencentCloudMpsProcessMediaOperationCreate(d *schema.ResourceData, 
 		request.OutputDir = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("schedule_id"); v != nil {
+	if v, ok := d.GetOkExists("schedule_id"); v != nil && ok{
 		request.ScheduleId = helper.IntInt64(v.(int))
 	}
 
@@ -4105,7 +4105,7 @@ func resourceTencentCloudMpsProcessMediaOperationCreate(d *schema.ResourceData, 
 		request.TaskNotifyConfig = &taskNotifyConfig
 	}
 
-	if v, _ := d.GetOk("tasks_priority"); v != nil {
+	if v, ok := d.GetOkExists("tasks_priority"); v != nil && ok{
 		request.TasksPriority = helper.IntInt64(v.(int))
 	}
 
