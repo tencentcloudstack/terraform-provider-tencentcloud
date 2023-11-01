@@ -64,7 +64,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.771
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.764

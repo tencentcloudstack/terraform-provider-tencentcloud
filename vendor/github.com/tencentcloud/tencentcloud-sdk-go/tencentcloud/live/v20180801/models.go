@@ -424,6 +424,59 @@ func (r *AuthenticateDomainOwnerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type BackupStreamDetailData struct {
+	// 推流域名。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DomainName *string `json:"DomainName,omitnil" name:"DomainName"`
+
+	// 推流路径。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AppName *string `json:"AppName,omitnil" name:"AppName"`
+
+	//  UTC 格式，例如：2018-06-29T19:00:00Z。
+	// 注意：和北京时间相差8小时。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PublishTime *string `json:"PublishTime,omitnil" name:"PublishTime"`
+
+	// 推流唯一标识。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpstreamSequence *string `json:"UpstreamSequence,omitnil" name:"UpstreamSequence"`
+
+	// 推流来源。示例：
+	// 直推流；
+	// 拉流转推(1234)；
+	// 注意：拉流转推来源括号中为拉流转推的任务 
+	//  ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SourceFrom *string `json:"SourceFrom,omitnil" name:"SourceFrom"`
+
+	// 主备标识。
+	// 当前流为主流：1，
+	// 当前流为备流: 0。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MasterFlag *int64 `json:"MasterFlag,omitnil" name:"MasterFlag"`
+}
+
+type BackupStreamGroupInfo struct {
+	// 流名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+
+	// 主备流信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BackupList []*BackupStreamDetailData `json:"BackupList,omitnil" name:"BackupList"`
+
+	// 是否对该流开启了择优调度。
+	// 0 - 未开启。
+	// 1 - 已开启。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OptimalEnable *int64 `json:"OptimalEnable,omitnil" name:"OptimalEnable"`
+
+	// 域名分组的分组名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HostGroupName *string `json:"HostGroupName,omitnil" name:"HostGroupName"`
+}
+
 type BandwidthInfo struct {
 	// 返回格式：
 	// 使用UTC格式时间，
@@ -522,7 +575,7 @@ type CallBackTemplateInfo struct {
 	// 断流回调 URL。
 	StreamEndNotifyUrl *string `json:"StreamEndNotifyUrl,omitnil" name:"StreamEndNotifyUrl"`
 
-	// 录制回调 URL。
+	// 录制文件回调 URL。
 	RecordNotifyUrl *string `json:"RecordNotifyUrl,omitnil" name:"RecordNotifyUrl"`
 
 	// 截图回调 URL。
@@ -1034,9 +1087,13 @@ type CreateLiveCallbackTemplateRequestParams struct {
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
 	StreamEndNotifyUrl *string `json:"StreamEndNotifyUrl,omitnil" name:"StreamEndNotifyUrl"`
 
-	// 录制回调 URL，
+	// 录制文件回调 URL，
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
 	RecordNotifyUrl *string `json:"RecordNotifyUrl,omitnil" name:"RecordNotifyUrl"`
+
+	// 录制状态回调 URL ，
+	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
+	RecordStatusNotifyUrl *string `json:"RecordStatusNotifyUrl,omitnil" name:"RecordStatusNotifyUrl"`
 
 	// 截图回调 URL，
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
@@ -1081,9 +1138,13 @@ type CreateLiveCallbackTemplateRequest struct {
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
 	StreamEndNotifyUrl *string `json:"StreamEndNotifyUrl,omitnil" name:"StreamEndNotifyUrl"`
 
-	// 录制回调 URL，
+	// 录制文件回调 URL，
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
 	RecordNotifyUrl *string `json:"RecordNotifyUrl,omitnil" name:"RecordNotifyUrl"`
+
+	// 录制状态回调 URL ，
+	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
+	RecordStatusNotifyUrl *string `json:"RecordStatusNotifyUrl,omitnil" name:"RecordStatusNotifyUrl"`
 
 	// 截图回调 URL，
 	// 相关协议文档：[事件消息通知](/document/product/267/32744)。
@@ -1124,6 +1185,7 @@ func (r *CreateLiveCallbackTemplateRequest) FromJsonString(s string) error {
 	delete(f, "StreamBeginNotifyUrl")
 	delete(f, "StreamEndNotifyUrl")
 	delete(f, "RecordNotifyUrl")
+	delete(f, "RecordStatusNotifyUrl")
 	delete(f, "SnapshotNotifyUrl")
 	delete(f, "PornCensorshipNotifyUrl")
 	delete(f, "CallbackKey")
@@ -1447,6 +1509,12 @@ type CreateLivePullStreamTaskRequestParams struct {
 	// 示例: ignore_region  用于忽略传入地域, 内部按负载分配。
 	ExtraCmd *string `json:"ExtraCmd,omitnil" name:"ExtraCmd"`
 
+	// 自定义任务 ID。
+	// 注：
+	// 1. 该自定义 ID 为可选参数，如果传入，请确保该账号下传入的 ID 唯一。
+	// 2. 该自定义 ID 用于防止重复发起请求时产生重复任务。后面也可以用 SpecifyTaskId 来修改或删除任务。
+	SpecifyTaskId *string `json:"SpecifyTaskId,omitnil" name:"SpecifyTaskId"`
+
 	// 任务描述，限制 512 字节。
 	Comment *string `json:"Comment,omitnil" name:"Comment"`
 
@@ -1587,6 +1655,12 @@ type CreateLivePullStreamTaskRequest struct {
 	// 示例: ignore_region  用于忽略传入地域, 内部按负载分配。
 	ExtraCmd *string `json:"ExtraCmd,omitnil" name:"ExtraCmd"`
 
+	// 自定义任务 ID。
+	// 注：
+	// 1. 该自定义 ID 为可选参数，如果传入，请确保该账号下传入的 ID 唯一。
+	// 2. 该自定义 ID 用于防止重复发起请求时产生重复任务。后面也可以用 SpecifyTaskId 来修改或删除任务。
+	SpecifyTaskId *string `json:"SpecifyTaskId,omitnil" name:"SpecifyTaskId"`
+
 	// 任务描述，限制 512 字节。
 	Comment *string `json:"Comment,omitnil" name:"Comment"`
 
@@ -1655,6 +1729,7 @@ func (r *CreateLivePullStreamTaskRequest) FromJsonString(s string) error {
 	delete(f, "VodRefreshType")
 	delete(f, "CallbackUrl")
 	delete(f, "ExtraCmd")
+	delete(f, "SpecifyTaskId")
 	delete(f, "Comment")
 	delete(f, "ToUrl")
 	delete(f, "BackupSourceType")
@@ -4760,7 +4835,10 @@ func (r *DeleteScreenshotTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAllStreamPlayInfoListRequestParams struct {
-	// 查询时间点，精确到分钟粒度，支持最近1个月的数据查询，数据延迟为5分钟左右，如果要查询实时的数据，建议传递5分钟前的时间点，格式为yyyy-mm-dd HH:MM:00。（只精确至分钟，秒数填00）。
+	// 查询时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近1个月的数据查询，数据延迟为5分钟左右，如果要查询实时的数据，建议传递5分钟前的整点时间点。
 	QueryTime *string `json:"QueryTime,omitnil" name:"QueryTime"`
 
 	// 播放域名列表，若不填，表示总体数据。
@@ -4770,7 +4848,10 @@ type DescribeAllStreamPlayInfoListRequestParams struct {
 type DescribeAllStreamPlayInfoListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 查询时间点，精确到分钟粒度，支持最近1个月的数据查询，数据延迟为5分钟左右，如果要查询实时的数据，建议传递5分钟前的时间点，格式为yyyy-mm-dd HH:MM:00。（只精确至分钟，秒数填00）。
+	// 查询时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近1个月的数据查询，数据延迟为5分钟左右，如果要查询实时的数据，建议传递5分钟前的整点时间点。
 	QueryTime *string `json:"QueryTime,omitnil" name:"QueryTime"`
 
 	// 播放域名列表，若不填，表示总体数据。
@@ -4893,6 +4974,64 @@ func (r *DescribeAreaBillBandwidthAndFluxListResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAreaBillBandwidthAndFluxListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupStreamListRequestParams struct {
+	// 流名称，用于精确查询。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+}
+
+type DescribeBackupStreamListRequest struct {
+	*tchttp.BaseRequest
+	
+	// 流名称，用于精确查询。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+}
+
+func (r *DescribeBackupStreamListRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupStreamListRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StreamName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupStreamListRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupStreamListResponseParams struct {
+	// 主备流分组信息列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StreamInfoList []*BackupStreamGroupInfo `json:"StreamInfoList,omitnil" name:"StreamInfoList"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeBackupStreamListResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupStreamListResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupStreamListResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupStreamListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9690,10 +9829,16 @@ func (r *DescribePullStreamConfigsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribePushBandwidthAndFluxListRequestParams struct {
-	// 起始时间点，格式为 yyyy-mm-dd HH:MM:SS。
+	// 查询开始时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近三年的查询，查询开始和结束时间跨度不支持超过31天。
 	StartTime *string `json:"StartTime,omitnil" name:"StartTime"`
 
-	// 结束时间点，格式为 yyyy-mm-dd HH:MM:SS，起始和结束时间跨度不支持超过31天。
+	// 查询结束时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近三年的查询，查询开始和结束时间跨度不支持超过31天。
 	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
 
 	// 域名，可以填多个，若不填，表示总体数据。
@@ -9732,10 +9877,16 @@ type DescribePushBandwidthAndFluxListRequestParams struct {
 type DescribePushBandwidthAndFluxListRequest struct {
 	*tchttp.BaseRequest
 	
-	// 起始时间点，格式为 yyyy-mm-dd HH:MM:SS。
+	// 查询开始时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近三年的查询，查询开始和结束时间跨度不支持超过31天。
 	StartTime *string `json:"StartTime,omitnil" name:"StartTime"`
 
-	// 结束时间点，格式为 yyyy-mm-dd HH:MM:SS，起始和结束时间跨度不支持超过31天。
+	// 查询结束时间点，精确到分钟粒度，接口查询支持两种时间格式：
+	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/267/38543#:~:text=I-,ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F,-ISO%20%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F)。
+	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
+	// 支持最近三年的查询，查询开始和结束时间跨度不支持超过31天。
 	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
 
 	// 域名，可以填多个，若不填，表示总体数据。
@@ -9798,13 +9949,19 @@ func (r *DescribePushBandwidthAndFluxListRequest) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribePushBandwidthAndFluxListResponseParams struct {
-	// 峰值带宽所在时间点，格式为 yyyy-mm-dd HH:MM:SS。
+	// 峰值带宽所在时间点，
+	// 使用UTC格式时间，
+	// 例如：2019-01-08T10:00:00Z。
+	// 注意：北京时间值为 UTC 时间值 + 8 小时，格式按照 ISO 8601 标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
 	PeakBandwidthTime *string `json:"PeakBandwidthTime,omitnil" name:"PeakBandwidthTime"`
 
 	// 峰值带宽，单位是 Mbps。
 	PeakBandwidth *float64 `json:"PeakBandwidth,omitnil" name:"PeakBandwidth"`
 
-	// 95峰值带宽所在时间点，格式为 yyyy-mm-dd HH:MM:SS。
+	// 95峰值带宽所在时间点，
+	// 使用UTC格式时间，
+	// 例如：2019-01-08T10:00:00Z。
+	// 注意：北京时间值为 UTC 时间值 + 8 小时，格式按照 ISO 8601 标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#I)。
 	P95PeakBandwidthTime *string `json:"P95PeakBandwidthTime,omitnil" name:"P95PeakBandwidthTime"`
 
 	// 95峰值带宽，单位是 Mbps。
@@ -9941,7 +10098,7 @@ type DescribeScreenShotSheetNumListRequestParams struct {
 	// 结束时间点，接口查询支持两种时间格式：
 	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见IOS日期格式说明文档: https://cloud.tencent.com/document/product/266/11732#I
 	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
-	// 支持查询最近1年的数据。
+	// 支持最近三个月的查询，查询开始和结束时间跨度不支持超过31天。
 	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
 
 	// 地域信息，可选值包括Mainland，Oversea，前者是查询中国大陆范围内的数据，后者是除中国大陆范围之外的数据，若不传该参数，则查询所有地区的数据。
@@ -9965,7 +10122,7 @@ type DescribeScreenShotSheetNumListRequest struct {
 	// 结束时间点，接口查询支持两种时间格式：
 	// 1）YYYY-MM-DDThh:mm:ssZ：UTC时间格式，详见IOS日期格式说明文档: https://cloud.tencent.com/document/product/266/11732#I
 	// 2）YYYY-MM-DD hh:mm:ss：使用此格式时，默认代表北京时间。
-	// 支持查询最近1年的数据。
+	// 支持最近三个月的查询，查询开始和结束时间跨度不支持超过31天。
 	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
 
 	// 地域信息，可选值包括Mainland，Oversea，前者是查询中国大陆范围内的数据，后者是除中国大陆范围之外的数据，若不传该参数，则查询所有地区的数据。
@@ -11333,6 +11490,78 @@ func (r *EnableLiveDomainResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type EnableOptimalSwitchingRequestParams struct {
+	// 针对该流 ID 启用择优调度。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+
+	// 启用开关，默认为启用。
+	// 0 - 禁用。
+	// 1 - 启用。
+	EnableSwitch *int64 `json:"EnableSwitch,omitnil" name:"EnableSwitch"`
+
+	// 要启用自动择优的流所属的域名分组名称。
+	HostGroupName *string `json:"HostGroupName,omitnil" name:"HostGroupName"`
+}
+
+type EnableOptimalSwitchingRequest struct {
+	*tchttp.BaseRequest
+	
+	// 针对该流 ID 启用择优调度。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+
+	// 启用开关，默认为启用。
+	// 0 - 禁用。
+	// 1 - 启用。
+	EnableSwitch *int64 `json:"EnableSwitch,omitnil" name:"EnableSwitch"`
+
+	// 要启用自动择优的流所属的域名分组名称。
+	HostGroupName *string `json:"HostGroupName,omitnil" name:"HostGroupName"`
+}
+
+func (r *EnableOptimalSwitchingRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableOptimalSwitchingRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "StreamName")
+	delete(f, "EnableSwitch")
+	delete(f, "HostGroupName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableOptimalSwitchingRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableOptimalSwitchingResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type EnableOptimalSwitchingResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableOptimalSwitchingResponseParams `json:"Response"`
+}
+
+func (r *EnableOptimalSwitchingResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableOptimalSwitchingResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type FlvSpecialParam struct {
 	// 是否开启边录边传，仅flv格式有效。
 	UploadInRecording *bool `json:"UploadInRecording,omitnil" name:"UploadInRecording"`
@@ -11519,6 +11748,7 @@ type GroupProIspDataInfo struct {
 type HlsSpecialParam struct {
 	// HLS续流超时时间。
 	// 取值范围[0，1800]。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	FlowContinueDuration *uint64 `json:"FlowContinueDuration,omitnil" name:"FlowContinueDuration"`
 }
 
@@ -11861,8 +12091,11 @@ type ModifyLiveCallbackTemplateRequestParams struct {
 	// 断流回调 URL。
 	StreamEndNotifyUrl *string `json:"StreamEndNotifyUrl,omitnil" name:"StreamEndNotifyUrl"`
 
-	// 录制回调 URL。
+	// 录制文件回调 URL。
 	RecordNotifyUrl *string `json:"RecordNotifyUrl,omitnil" name:"RecordNotifyUrl"`
+
+	// 录制状态回调 URL 。
+	RecordStatusNotifyUrl *string `json:"RecordStatusNotifyUrl,omitnil" name:"RecordStatusNotifyUrl"`
 
 	// 截图回调 URL。
 	SnapshotNotifyUrl *string `json:"SnapshotNotifyUrl,omitnil" name:"SnapshotNotifyUrl"`
@@ -11899,8 +12132,11 @@ type ModifyLiveCallbackTemplateRequest struct {
 	// 断流回调 URL。
 	StreamEndNotifyUrl *string `json:"StreamEndNotifyUrl,omitnil" name:"StreamEndNotifyUrl"`
 
-	// 录制回调 URL。
+	// 录制文件回调 URL。
 	RecordNotifyUrl *string `json:"RecordNotifyUrl,omitnil" name:"RecordNotifyUrl"`
+
+	// 录制状态回调 URL 。
+	RecordStatusNotifyUrl *string `json:"RecordStatusNotifyUrl,omitnil" name:"RecordStatusNotifyUrl"`
 
 	// 截图回调 URL。
 	SnapshotNotifyUrl *string `json:"SnapshotNotifyUrl,omitnil" name:"SnapshotNotifyUrl"`
@@ -11937,6 +12173,7 @@ func (r *ModifyLiveCallbackTemplateRequest) FromJsonString(s string) error {
 	delete(f, "StreamBeginNotifyUrl")
 	delete(f, "StreamEndNotifyUrl")
 	delete(f, "RecordNotifyUrl")
+	delete(f, "RecordStatusNotifyUrl")
 	delete(f, "SnapshotNotifyUrl")
 	delete(f, "PornCensorshipNotifyUrl")
 	delete(f, "CallbackKey")
@@ -12479,6 +12716,15 @@ type ModifyLivePullStreamTaskRequestParams struct {
 	// 1. 单位：秒，配合FileIndex使用。
 	OffsetTime *int64 `json:"OffsetTime,omitnil" name:"OffsetTime"`
 
+	// 指定任务 ID 修改任务。
+	// 
+	// 注意：该自定义任务 ID 只有在创建任务时指定了，才可在此处修改时使用。否则请使用系统返回的任务 ID。
+	SpecifyTaskId *string `json:"SpecifyTaskId,omitnil" name:"SpecifyTaskId"`
+
+	// 目标 Url。
+	// 换目标地址，会断流重推到新地址。
+	ToUrl *string `json:"ToUrl,omitnil" name:"ToUrl"`
+
 	// 任务备注。
 	Comment *string `json:"Comment,omitnil" name:"Comment"`
 
@@ -12582,6 +12828,15 @@ type ModifyLivePullStreamTaskRequest struct {
 	// 1. 单位：秒，配合FileIndex使用。
 	OffsetTime *int64 `json:"OffsetTime,omitnil" name:"OffsetTime"`
 
+	// 指定任务 ID 修改任务。
+	// 
+	// 注意：该自定义任务 ID 只有在创建任务时指定了，才可在此处修改时使用。否则请使用系统返回的任务 ID。
+	SpecifyTaskId *string `json:"SpecifyTaskId,omitnil" name:"SpecifyTaskId"`
+
+	// 目标 Url。
+	// 换目标地址，会断流重推到新地址。
+	ToUrl *string `json:"ToUrl,omitnil" name:"ToUrl"`
+
 	// 任务备注。
 	Comment *string `json:"Comment,omitnil" name:"Comment"`
 
@@ -12641,6 +12896,8 @@ func (r *ModifyLivePullStreamTaskRequest) FromJsonString(s string) error {
 	delete(f, "CallbackUrl")
 	delete(f, "FileIndex")
 	delete(f, "OffsetTime")
+	delete(f, "SpecifyTaskId")
+	delete(f, "ToUrl")
 	delete(f, "Comment")
 	delete(f, "BackupSourceType")
 	delete(f, "BackupSourceUrl")
@@ -15111,6 +15368,81 @@ type StreamOnlineInfo struct {
 	// 1 - 有延播。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PushToDelay *int64 `json:"PushToDelay,omitnil" name:"PushToDelay"`
+}
+
+// Predefined struct for user
+type SwitchBackupStreamRequestParams struct {
+	// 推流域名。
+	PushDomainName *string `json:"PushDomainName,omitnil" name:"PushDomainName"`
+
+	// 应用名称。
+	AppName *string `json:"AppName,omitnil" name:"AppName"`
+
+	// 流名称。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+
+	// 查询接口获取到该流所有在推的上行 Sequence。指定要切到的目标上行 Sequence。
+	UpstreamSequence *string `json:"UpstreamSequence,omitnil" name:"UpstreamSequence"`
+}
+
+type SwitchBackupStreamRequest struct {
+	*tchttp.BaseRequest
+	
+	// 推流域名。
+	PushDomainName *string `json:"PushDomainName,omitnil" name:"PushDomainName"`
+
+	// 应用名称。
+	AppName *string `json:"AppName,omitnil" name:"AppName"`
+
+	// 流名称。
+	StreamName *string `json:"StreamName,omitnil" name:"StreamName"`
+
+	// 查询接口获取到该流所有在推的上行 Sequence。指定要切到的目标上行 Sequence。
+	UpstreamSequence *string `json:"UpstreamSequence,omitnil" name:"UpstreamSequence"`
+}
+
+func (r *SwitchBackupStreamRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SwitchBackupStreamRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PushDomainName")
+	delete(f, "AppName")
+	delete(f, "StreamName")
+	delete(f, "UpstreamSequence")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SwitchBackupStreamRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type SwitchBackupStreamResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type SwitchBackupStreamResponse struct {
+	*tchttp.BaseResponse
+	Response *SwitchBackupStreamResponseParams `json:"Response"`
+}
+
+func (r *SwitchBackupStreamResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *SwitchBackupStreamResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type TaskStatusInfo struct {

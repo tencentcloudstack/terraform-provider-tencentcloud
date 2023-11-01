@@ -1508,8 +1508,30 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_play_domain_cert_attachment
 	tencentcloud_css_play_auth_key_config
 	tencentcloud_css_push_auth_key_config
+	tencentcloud_css_backup_stream
+	tencentcloud_css_callback_rule_attachment
+	tencentcloud_css_callback_template
+	tencentcloud_css_domain_referer
+	tencentcloud_css_enable_optimal_switching
+	tencentcloud_css_record_rule_attachment
+	tencentcloud_css_snapshot_rule_attachment
+	tencentcloud_css_snapshot_template
+	tencentcloud_css_pad_template
+	tencentcloud_css_pad_rule_attachment
+	tencentcloud_css_timeshift_template
+	tencentcloud_css_timeshift_rule_attachment
+	tencentcloud_css_stream_monitor
   Data Source
 	tencentcloud_css_domains
+	tencentcloud_css_backup_stream
+	tencentcloud_css_monitor_report
+	tencentcloud_css_pad_templates
+	tencentcloud_css_pull_stream_task_status
+	tencentcloud_css_stream_monitor_list
+	tencentcloud_css_time_shift_record_detail
+	tencentcloud_css_time_shift_stream_list
+	tencentcloud_css_watermarks
+	tencentcloud_css_xp2p_detail_info_list
 
 Performance Testing Service(PTS)
   Data Source
@@ -2664,6 +2686,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_proxy_node":                           dataSourceTencentCloudCynosdbProxyNode(),
 			"tencentcloud_cynosdb_proxy_version":                        dataSourceTencentCloudCynosdbProxyVersion(),
 			"tencentcloud_css_domains":                                  dataSourceTencentCloudCssDomains(),
+			"tencentcloud_css_backup_stream":                            dataSourceTencentCloudCssBackupStream(),
+			"tencentcloud_css_deliver_log_down_list":                    dataSourceTencentCloudCssDeliverLogDownList(),
+			"tencentcloud_css_monitor_report":                           dataSourceTencentCloudCssMonitorReport(),
+			"tencentcloud_css_pad_templates":                            dataSourceTencentCloudCssPadTemplates(),
+			"tencentcloud_css_pull_stream_task_status":                  dataSourceTencentCloudCssPullStreamTaskStatus(),
+			"tencentcloud_css_stream_monitor_list":                      dataSourceTencentCloudCssStreamMonitorList(),
+			"tencentcloud_css_time_shift_record_detail":                 dataSourceTencentCloudCssTimeShiftRecordDetail(),
+			"tencentcloud_css_time_shift_stream_list":                   dataSourceTencentCloudCssTimeShiftStreamList(),
+			"tencentcloud_css_watermarks":                               dataSourceTencentCloudCssWatermarks(),
+			"tencentcloud_css_xp2p_detail_info_list":                    dataSourceTencentCloudCssXp2pDetailInfoList(),
 			"tencentcloud_chdfs_access_groups":                          dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                           dataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_chdfs_file_systems":                           dataSourceTencentCloudChdfsFileSystems(),
@@ -3390,6 +3422,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_play_domain_cert_attachment":                     resourceTencentCloudCssPlayDomainCertAttachment(),
 			"tencentcloud_css_play_auth_key_config":                            resourceTencentCloudCssPlayAuthKeyConfig(),
 			"tencentcloud_css_push_auth_key_config":                            resourceTencentCloudCssPushAuthKeyConfig(),
+			"tencentcloud_css_backup_stream":                                   resourceTencentCloudCssBackupStream(),
+			"tencentcloud_css_callback_rule_attachment":                        resourceTencentCloudCssCallbackRuleAttachment(),
+			"tencentcloud_css_callback_template":                               resourceTencentCloudCssCallbackTemplate(),
+			"tencentcloud_css_domain_referer":                                  resourceTencentCloudCssDomainReferer(),
+			"tencentcloud_css_enable_optimal_switching":                        resourceTencentCloudCssEnableOptimalSwitching(),
+			"tencentcloud_css_record_rule_attachment":                          resourceTencentCloudCssRecordRuleAttachment(),
+			"tencentcloud_css_record_template":                                 resourceTencentCloudCssRecordTemplate(),
+			"tencentcloud_css_snapshot_rule_attachment":                        resourceTencentCloudCssSnapshotRuleAttachment(),
+			"tencentcloud_css_snapshot_template":                               resourceTencentCloudCssSnapshotTemplate(),
+			"tencentcloud_css_pad_template":                                    resourceTencentCloudCssPadTemplate(),
+			"tencentcloud_css_pad_rule_attachment":                             resourceTencentCloudCssPadRuleAttachment(),
+			"tencentcloud_css_timeshift_template":                              resourceTencentCloudCssTimeshiftTemplate(),
+			"tencentcloud_css_timeshift_rule_attachment":                       resourceTencentCloudCssTimeshiftRuleAttachment(),
+			"tencentcloud_css_stream_monitor":                                  resourceTencentCloudCssStreamMonitor(),
 			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),

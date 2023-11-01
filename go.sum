@@ -910,6 +910,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729 h1:
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729/go.mod h1:lLoyD7Z6OQQDFxDGGTe8wmirhUFZ36l5OaxzP75853Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756 h1:uwlWCqnsEXlafj/SixOJyyJojgEsjxkGtVOFGRhKk5I=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756/go.mod h1:MWQuFxqztpy6xLJ/XXuAxjBXcjpCLbyN42P3eub1yEs=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777 h1:8nSy6GAXc4lHj7jpSimcM2eM1wE1r7PQJM9WVzY82+U=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777/go.mod h1:Nsd3yEpXQqXrWbN3mJbrk+A2KcdxHVW5xIRFAyIvlAE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672 h1:sR3MyM9RBw1PNRdWoBrtK+2M9Qbb0i6DfQSrvZ4/4os=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672/go.mod h1:o3rBKhtfIJfw4BG22M0CQVLQAc0WqIsbyRI/EW52Ka0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651 h1:Ohb58H6gIlTcd73CF+goUlEdNJ2CYkYUHTYxV/M4UL4=

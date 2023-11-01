@@ -1196,7 +1196,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.777
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.672
