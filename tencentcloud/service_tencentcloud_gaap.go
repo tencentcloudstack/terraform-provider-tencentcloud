@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -4093,4 +4094,322 @@ func (me *GaapService) DescribeGaapCheckProxyCreate(ctx context.Context, param m
 	checkProxyCreate = response.Response.CheckFlag
 
 	return
+}
+
+func (me *GaapService) DescribeGaapProxyGroupById(ctx context.Context, groupId string) (proxyGroup *gaap.ProxyGroupDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeProxyGroupDetailsRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeProxyGroupDetails(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	proxyGroup = response.Response.ProxyGroupDetail
+
+	return
+}
+
+func (me *GaapService) DescribeGaapProxyGroupProxies(ctx context.Context, groupId string) (proxies []*gaap.ProxyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeProxiesRequest()
+	request.Filters = append(request.Filters, &gaap.Filter{
+		Name:   helper.String("GroupId"),
+		Values: []*string{helper.String(groupId)},
+	})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseGaapClient().DescribeProxies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ProxySet) < 1 {
+			break
+		}
+
+		proxies = append(proxies, response.Response.ProxySet...)
+
+		if len(response.Response.ProxySet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+	return
+}
+
+func (me *GaapService) DeleteGaapProxyGroupById(ctx context.Context, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDeleteProxyGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DeleteProxyGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *GaapService) DescribeGaapGlobalDomainById(ctx context.Context, domainId string, projectId int) (globalDomain *gaap.Domain, errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeGlobalDomainsRequest()
+	request.Filters = []*gaap.Filter{
+		{
+			Name:   helper.String("DomainId"),
+			Values: []*string{&domainId},
+		},
+	}
+	request.ProjectId = helper.IntInt64(projectId)
+	request.Offset = helper.IntUint64(0)
+	request.Limit = helper.IntUint64(10)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeGlobalDomains(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Domains) < 1 {
+		return
+	}
+
+	globalDomain = response.Response.Domains[0]
+	return
+}
+
+func (me *GaapService) DomainInstanceStateRefreshFunc(instanceId string, projectId int, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeGaapGlobalDomainById(ctx, instanceId, projectId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.UInt64ToStr(*object.Status), nil
+	}
+}
+
+func (me *GaapService) DisableGlobalDomain(ctx context.Context, domainId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDisableGlobalDomainRequest()
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DisableGlobalDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *GaapService) DeleteGaapGlobalDomainById(ctx context.Context, domainId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDeleteGlobalDomainRequest()
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DeleteGlobalDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *GaapService) DescribeGaapGlobalDomainDnsById(ctx context.Context, domainId string, params map[string]interface{}) (globalDomainDns *gaap.GlobalDns, errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDescribeGlobalDomainDnsRequest()
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DescribeGlobalDomainDns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GlobalDnsList) < 1 {
+		return
+	}
+	var (
+		dnsRecordId                           *uint64
+		accessProxyIdList                     []string
+		countryAreaNationCountryInnerCodeList []string
+	)
+	if v, ok := params["DnsRecordId"]; ok {
+		dnsRecordId = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := params["AccessList"]; ok {
+		accessProxyIdList = v.([]string)
+	}
+
+	if v, ok := params["CountryAreaList"]; ok {
+		countryAreaNationCountryInnerCodeList = v.([]string)
+	}
+
+	for _, item := range response.Response.GlobalDnsList {
+		if dnsRecordId != nil && *dnsRecordId == *item.DnsRecordId {
+			globalDomainDns = item
+			break
+		}
+
+		if len(accessProxyIdList) > 0 && len(countryAreaNationCountryInnerCodeList) > 0 {
+			tmpAccessProxyIdList := make([]string, 0)
+			tmpCountryAreaNationCountryInnerCodeList := make([]string, 0)
+			for _, item := range item.AccessList {
+				tmpAccessProxyIdList = append(tmpAccessProxyIdList, *item.ProxyId)
+			}
+			for _, item := range item.CountryAreaList {
+				tmpCountryAreaNationCountryInnerCodeList = append(tmpCountryAreaNationCountryInnerCodeList, *item.NationCountryInnerCode)
+			}
+			accessProxyIdListEqual := ListEqual(tmpAccessProxyIdList, accessProxyIdList)
+			countryAreaNationCountryInnerCodeListEqual := ListEqual(tmpCountryAreaNationCountryInnerCodeList, countryAreaNationCountryInnerCodeList)
+			if accessProxyIdListEqual && countryAreaNationCountryInnerCodeListEqual {
+				globalDomainDns = item
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *GaapService) GlobalDomainDnsStateRefreshFunc(domainId string, dnsRecordId int, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		params := make(map[string]interface{})
+		params["DnsRecordId"] = dnsRecordId
+		object, err := me.DescribeGaapGlobalDomainDnsById(ctx, domainId, params)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}
+
+func (me *GaapService) DeleteGaapGlobalDomainDnsById(ctx context.Context, dnsRecordId int) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewDeleteGlobalDomainDnsRequest()
+	request.DnsRecordId = helper.IntUint64(dnsRecordId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().DeleteGlobalDomainDns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func ListEqual(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	sort.Strings(a)
+	sort.Strings(b)
+
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
 }

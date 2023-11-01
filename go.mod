@@ -61,7 +61,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.762
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.760
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.771
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.756
