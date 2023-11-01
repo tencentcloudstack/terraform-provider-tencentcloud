@@ -597,6 +597,8 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_policy
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
+	tencentcloud_gaap_global_domain_dns
+	tencentcloud_gaap_global_domain
 
 Key Management Service(KMS)
   Data Source
@@ -3032,6 +3034,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_security_policy":                                resourceTencentCloudGaapSecurityPolicy(),
 			"tencentcloud_gaap_security_rule":                                  resourceTencentCloudGaapSecurityRule(),
 			"tencentcloud_gaap_domain_error_page":                              resourceTencentCloudGaapDomainErrorPageInfo(),
+			"tencentcloud_gaap_global_domain_dns":                              resourceTencentCloudGaapGlobalDomainDns(),
+			"tencentcloud_gaap_global_domain":                                  resourceTencentCloudGaapGlobalDomain(),
 			"tencentcloud_ssl_certificate":                                     resourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                 resourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                resourceTencentCloudSSLFreeCertificate(),
