@@ -84,6 +84,10 @@ type AIRecognitionTemplateItem struct {
 	// 语音关键词识别控制参数。
 	AsrWordsConfigure *AsrWordsConfigureInfo `json:"AsrWordsConfigure,omitnil" name:"AsrWordsConfigure"`
 
+	// 语音翻译控制参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TranslateConfigure *TranslateConfigureInfo `json:"TranslateConfigure,omitnil" name:"TranslateConfigure"`
+
 	// 模板创建时间，使用 [ISO 日期格式](https://cloud.tencent.com/document/product/862/37710#52)。
 	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
 
@@ -364,6 +368,10 @@ type AiAnalysisResult struct {
 	// 视频内容分析集锦任务的查询结果，当任务类型为 Highlight时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HighlightTask *AiAnalysisTaskHighlightResult `json:"HighlightTask,omitnil" name:"HighlightTask"`
+
+	// 视频内容分析去水印任务的查询结果，当任务类型为 DeLogo 时有效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DeLogoTask *AiAnalysisTaskDelLogoResult `json:"DeLogoTask,omitnil" name:"DeLogoTask"`
 }
 
 type AiAnalysisTaskClassificationInput struct {
@@ -429,6 +437,37 @@ type AiAnalysisTaskCoverResult struct {
 	// 智能封面任务输出。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Output *AiAnalysisTaskCoverOutput `json:"Output,omitnil" name:"Output"`
+}
+
+type AiAnalysisTaskDelLogoInput struct {
+	// 视频智能去水印模板 ID。
+	Definition *uint64 `json:"Definition,omitnil" name:"Definition"`
+}
+
+type AiAnalysisTaskDelLogoOutput struct {
+	// 去水印后文件的路径。
+	Path *string `json:"Path,omitnil" name:"Path"`
+
+	// 去水印后文件的存储位置。
+	OutputStorage *TaskOutputStorage `json:"OutputStorage,omitnil" name:"OutputStorage"`
+}
+
+type AiAnalysisTaskDelLogoResult struct {
+	// 任务状态，有 PROCESSING，SUCCESS 和 FAIL 三种。
+	Status *string `json:"Status,omitnil" name:"Status"`
+
+	// 错误码，0：成功，其他值：失败。
+	ErrCode *int64 `json:"ErrCode,omitnil" name:"ErrCode"`
+
+	// 错误信息。
+	Message *string `json:"Message,omitnil" name:"Message"`
+
+	// 智能去水印任务输入。
+	Input *AiAnalysisTaskDelLogoInput `json:"Input,omitnil" name:"Input"`
+
+	// 智能去水印任务输出。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Output *AiAnalysisTaskDelLogoOutput `json:"Output,omitnil" name:"Output"`
 }
 
 type AiAnalysisTaskFrameTagInput struct {
@@ -651,6 +690,12 @@ type AiRecognitionResult struct {
 	// TransTextRecognition 时有效。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TransTextTask *AiRecognitionTaskTransTextResult `json:"TransTextTask,omitnil" name:"TransTextTask"`
+
+	// 物体识别结果，当Type 为
+	// 
+	// ObjectRecognition 时有效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ObjectTask *AiRecognitionTaskObjectResult `json:"ObjectTask,omitnil" name:"ObjectTask"`
 }
 
 type AiRecognitionTaskAsrFullTextResult struct {
@@ -862,6 +907,56 @@ type AiRecognitionTaskFaceSegmentItem struct {
 type AiRecognitionTaskInput struct {
 	// 视频智能识别模板 ID 。
 	Definition *uint64 `json:"Definition,omitnil" name:"Definition"`
+}
+
+type AiRecognitionTaskObjectResult struct {
+	// 任务状态，有 PROCESSING，SUCCESS 和 FAIL 三种。
+	Status *string `json:"Status,omitnil" name:"Status"`
+
+	// 错误码，0：成功，其他值：失败。
+	ErrCode *int64 `json:"ErrCode,omitnil" name:"ErrCode"`
+
+	// 错误信息。
+	Message *string `json:"Message,omitnil" name:"Message"`
+
+	// 物体识别任务输入信息。
+	Input *AiRecognitionTaskObjectResultInput `json:"Input,omitnil" name:"Input"`
+
+	// 物体识别任务输出信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Output *AiRecognitionTaskObjectResultOutput `json:"Output,omitnil" name:"Output"`
+}
+
+type AiRecognitionTaskObjectResultInput struct {
+	// 物体识别模板 ID。
+	Definition *int64 `json:"Definition,omitnil" name:"Definition"`
+}
+
+type AiRecognitionTaskObjectResultItem struct {
+	// 识别的物体名称。
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 物体出现的片段列表。
+	SegmentSet []*AiRecognitionTaskObjectSeqmentItem `json:"SegmentSet,omitnil" name:"SegmentSet"`
+}
+
+type AiRecognitionTaskObjectResultOutput struct {
+	// 智能物体识别结果集。
+	ResultSet []*AiRecognitionTaskObjectResultItem `json:"ResultSet,omitnil" name:"ResultSet"`
+}
+
+type AiRecognitionTaskObjectSeqmentItem struct {
+	// 识别片段起始的偏移时间，单位：秒。
+	StartTimeOffset *float64 `json:"StartTimeOffset,omitnil" name:"StartTimeOffset"`
+
+	// 识别片段终止的偏移时间，单位：秒。
+	EndTimeOffset *float64 `json:"EndTimeOffset,omitnil" name:"EndTimeOffset"`
+
+	// 识别片段置信度。取值：0~100。
+	Confidence *float64 `json:"Confidence,omitnil" name:"Confidence"`
+
+	// 识别结果的区域坐标。数组包含 4 个元素 [x1,y1,x2,y2]，依次表示区域左上点、右下点的横纵坐标。
+	AreaCoordSet []*int64 `json:"AreaCoordSet,omitnil" name:"AreaCoordSet"`
 }
 
 type AiRecognitionTaskOcrFullTextResult struct {
@@ -3352,6 +3447,9 @@ type CreateInput struct {
 
 	// 延播平滑吐流配置信息。
 	ResilientStream *ResilientStreamConf `json:"ResilientStream,omitnil" name:"ResilientStream"`
+
+	// 绑定的输入安全组 ID。 
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 type CreateInputHLSPullSettings struct {
@@ -3434,6 +3532,9 @@ type CreateOutputInfo struct {
 
 	// 最大拉流并发数，最大4，默认4。
 	MaxConcurrent *uint64 `json:"MaxConcurrent,omitnil" name:"MaxConcurrent"`
+
+	// 绑定的输入安全组 ID。 
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 type CreateOutputInfoRTPSettings struct {
@@ -6284,6 +6385,10 @@ type DescribeInput struct {
 	// 延播平滑吐流配置信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResilientStream *ResilientStreamConf `json:"ResilientStream,omitnil" name:"ResilientStream"`
+
+	// 绑定的输入安全组 ID。	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 type DescribeInputHLSPullSettings struct {
@@ -6462,6 +6567,10 @@ type DescribeOutput struct {
 
 	// 最大拉流并发数，最大为4，默认4。
 	MaxConcurrent *uint64 `json:"MaxConcurrent,omitnil" name:"MaxConcurrent"`
+
+	// 绑定的安全组 ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 type DescribeOutputHLSPullServerUrl struct {
@@ -9523,7 +9632,7 @@ type ImageWatermarkInput struct {
 	// 水印的宽度。支持 %、px 两种格式：
 	// <li>当字符串以 % 结尾，表示水印 Width 为视频宽度的百分比大小，如 10% 表示 Width 为视频宽度的 10%；</li>
 	// <li>当字符串以 px 结尾，表示水印 Width 单位为像素，如 100px 表示 Width 为 100 像素。取值范围为[8, 4096]。</li>
-	// 默认值：10%。
+	// 当宽高都不填或者为0时，默认为 10%。
 	Width *string `json:"Width,omitnil" name:"Width"`
 
 	// 水印的高度。支持 %、px 两种格式：
@@ -9551,7 +9660,6 @@ type ImageWatermarkInputForUpdate struct {
 	// 水印的高度。支持 %、px 两种格式：
 	// <li>当字符串以 % 结尾，表示水印 Height 为视频高度的百分比大小，如 10% 表示 Height 为视频高度的 10%；</li>
 	// <li>当字符串以 px 结尾，表示水印 Height 单位为像素，如 100px 表示 Height 为 100 像素。取值范围为0或[8, 4096]。</li>
-	// 默认值：0px，表示 Height 按照原始水印图片的宽高比缩放。
 	Height *string `json:"Height,omitnil" name:"Height"`
 
 	// 水印重复类型。使用场景：水印为动态图像。取值范围：
@@ -11660,6 +11768,9 @@ type ModifyInput struct {
 
 	// 延播平滑吐流配置信息。
 	ResilientStream *ResilientStreamConf `json:"ResilientStream,omitnil" name:"ResilientStream"`
+
+	// 绑定的输入安全组 ID。 仅支持关联一组安全组。
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 type ModifyOutputInfo struct {
@@ -11690,6 +11801,9 @@ type ModifyOutputInfo struct {
 
 	// 最大拉流并发数，最大4，默认4。
 	MaxConcurrent *uint64 `json:"MaxConcurrent,omitnil" name:"MaxConcurrent"`
+
+	// 绑定的安全组 ID。 仅支持关联一组安全组。	
+	SecurityGroupIds []*string `json:"SecurityGroupIds,omitnil" name:"SecurityGroupIds"`
 }
 
 // Predefined struct for user
@@ -12889,9 +13003,11 @@ type OutputAddress struct {
 
 type OutputSRTSourceAddressResp struct {
 	// 监听IP。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ip *string `json:"Ip,omitnil" name:"Ip"`
 
 	// 监听端口。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *int64 `json:"Port,omitnil" name:"Port"`
 }
 
@@ -14151,9 +14267,11 @@ type SRTSourceAddressReq struct {
 
 type SRTSourceAddressResp struct {
 	// 对端IP。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ip *string `json:"Ip,omitnil" name:"Ip"`
 
 	// 对端端口。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Port *int64 `json:"Port,omitnil" name:"Port"`
 }
 

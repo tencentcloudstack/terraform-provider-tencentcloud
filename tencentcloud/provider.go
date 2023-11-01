@@ -1735,6 +1735,9 @@ Media Processing Service(MPS)
   Data Source
 	tencentcloud_mps_schedules
 	tencentcloud_mps_tasks
+	tencentcloud_mps_parse_live_stream_process_notification
+	tencentcloud_mps_parse_notification
+	tencentcloud_mps_media_meta_data
 
   Resource
 	tencentcloud_mps_workflow
@@ -1763,6 +1766,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_event
 	tencentcloud_mps_manage_task_operation
 	tencentcloud_mps_execute_function_operation
+	tencentcloud_mps_process_media_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -2516,6 +2520,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_upgrade_price":                        dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_mps_schedules":                                dataSourceTencentCloudMpsSchedules(),
 			"tencentcloud_mps_tasks":                                    dataSourceTencentCloudMpsTasks(),
+			"tencentcloud_mps_parse_live_stream_process_notification":   dataSourceTencentCloudMpsParseLiveStreamProcessNotification(),
+			"tencentcloud_mps_parse_notification":                       dataSourceTencentCloudMpsParseNotification(),
+			"tencentcloud_mps_media_meta_data":                          dataSourceTencentCloudMpsMediaMetaData(),
 			"tencentcloud_tdcpg_clusters":                               dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                              dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                               dataSourceTencentCloudCatProbeData(),
@@ -3496,6 +3503,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
 			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
 			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
+			"tencentcloud_mps_process_media_operation":                         resourceTencentCloudMpsProcessMediaOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),

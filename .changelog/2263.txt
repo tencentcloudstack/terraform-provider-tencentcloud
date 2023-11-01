@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_mps_media_meta_data
+```
+
+```release-note:new-data-source
+tencentcloud_mps_parse_notification
+```
+
+```release-note:new-data-source
+tencentcloud_mps_parse_live_stream_process_notification
+```
+
+```release-note:new-resource
+tencentcloud_mps_process_media_operation
+```
