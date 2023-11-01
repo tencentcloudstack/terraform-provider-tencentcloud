@@ -60,7 +60,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.762
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.762
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.777
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.760
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
@@ -109,6 +109,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.3
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg v1.0.772
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus v1.0.775
+	github.com/wI2L/jsondiff v0.3.0
 )
 
 require (
@@ -295,6 +296,9 @@ require (
 	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
 	github.com/tetafro/godot v1.4.11 // indirect
+	github.com/tidwall/gjson v1.17.0 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/timakin/bodyclose v0.0.0-20221125081123-e39cf3fc478e // indirect
 	github.com/timonwong/loggercheck v0.9.4 // indirect
 	github.com/tomarrell/wrapcheck/v2 v2.8.1 // indirect

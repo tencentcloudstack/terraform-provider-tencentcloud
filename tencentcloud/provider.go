@@ -528,6 +528,13 @@ Domain
 Elasticsearch Service(ES)
   Data Source
     tencentcloud_elasticsearch_instances
+	tencentcloud_elasticsearch_instance_logs
+	tencentcloud_elasticsearch_instance_operations
+	tencentcloud_elasticsearch_logstash_instance_logs
+	tencentcloud_elasticsearch_logstash_instance_operations
+	tencentcloud_elasticsearch_views
+	tencentcloud_elasticsearch_diagnose
+	tencentcloud_elasticsearch_instance_plugin_list
 
   Resource
     tencentcloud_elasticsearch_instance
@@ -537,6 +544,13 @@ Elasticsearch Service(ES)
 	tencentcloud_elasticsearch_restart_logstash_instance_operation
 	tencentcloud_elasticsearch_start_logstash_pipeline_operation
 	tencentcloud_elasticsearch_stop_logstash_pipeline_operation
+	tencentcloud_elasticsearch_index
+	tencentcloud_elasticsearch_restart_instance_operation
+	tencentcloud_elasticsearch_restart_nodes_operation
+	tencentcloud_elasticsearch_restart_kibana_operation
+	tencentcloud_elasticsearch_diagnose
+	tencentcloud_elasticsearch_diagnose_instance
+	tencentcloud_elasticsearch_update_plugins_operation
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -2244,6 +2258,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_resources":                                dataSourceTencentCloudClbResources(),
 			"tencentcloud_clb_target_group_list":                        dataSourceTencentCloudClbTargetGroupList(),
 			"tencentcloud_clb_target_health":                            dataSourceTencentCloudClbTargetHealth(),
+			"tencentcloud_elasticsearch_instances":                      dataSourceTencentCloudElasticsearchInstances(),
+			"tencentcloud_elasticsearch_instance_logs":                  dataSourceTencentCloudElasticsearchInstanceLogs(),
+			"tencentcloud_elasticsearch_instance_operations":            dataSourceTencentCloudElasticsearchInstanceOperations(),
+			"tencentcloud_elasticsearch_logstash_instance_logs":         dataSourceTencentCloudElasticsearchLogstashInstanceLogs(),
+			"tencentcloud_elasticsearch_logstash_instance_operations":   dataSourceTencentCloudElasticsearchLogstashInstanceOperations(),
+			"tencentcloud_elasticsearch_views":                          dataSourceTencentCloudElasticsearchViews(),
+			"tencentcloud_elasticsearch_diagnose":                       dataSourceTencentCloudElasticsearchDiagnose(),
+			"tencentcloud_elasticsearch_instance_plugin_list":           dataSourceTencentCloudElasticsearchInstancePluginList(),
 			"tencentcloud_mongodb_zone_config":                          dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                            dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_mongodb_instance_backups":                     dataSourceTencentCloudMongodbInstanceBackups(),
@@ -2356,7 +2378,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
-			"tencentcloud_elasticsearch_instances":                      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
@@ -3096,6 +3117,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_restart_logstash_instance_operation":   resourceTencentCloudElasticsearchRestartLogstashInstanceOperation(),
 			"tencentcloud_elasticsearch_start_logstash_pipeline_operation":     resourceTencentCloudElasticsearchStartLogstashPipelineOperation(),
 			"tencentcloud_elasticsearch_stop_logstash_pipeline_operation":      resourceTencentCloudElasticsearchStopLogstashPipelineOperation(),
+			"tencentcloud_elasticsearch_index":                                 resourceTencentCloudElasticsearchIndex(),
+			"tencentcloud_elasticsearch_restart_instance_operation":            resourceTencentCloudElasticsearchRestartInstanceOperation(),
+			"tencentcloud_elasticsearch_restart_kibana_operation":              resourceTencentCloudElasticsearchRestartKibanaOperation(),
+			"tencentcloud_elasticsearch_restart_nodes_operation":               resourceTencentCloudElasticsearchRestartNodesOperation(),
+			"tencentcloud_elasticsearch_diagnose":                              resourceTencentCloudElasticsearchDiagnose(),
+			"tencentcloud_elasticsearch_diagnose_instance":                     resourceTencentCloudElasticsearchDiagnoseInstance(),
+			"tencentcloud_elasticsearch_update_plugins_operation":              resourceTencentCloudElasticsearchUpdatePluginsOperation(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),
