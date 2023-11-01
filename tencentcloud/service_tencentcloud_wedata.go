@@ -513,3 +513,120 @@ func (me *WedataService) DeleteWedataScriptById(ctx context.Context, projectId, 
 
 	return
 }
+
+func (me *WedataService) DescribeWedataDqRuleById(ctx context.Context, projectId, ruleId string) (dqRule *wedata.Rule, errRet error) {
+	logId := getLogId(ctx)
+	request := wedata.NewDescribeRuleRequest()
+	request.ProjectId = &projectId
+	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
+	request.RuleId = &ruleIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	dqRule = response.Response.Data
+	return
+}
+
+func (me *WedataService) DeleteWedataDqRuleById(ctx context.Context, projectId, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteRuleRequest()
+	request.ProjectId = &projectId
+	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
+	request.RuleId = &ruleIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataDqRuleTemplateById(ctx context.Context, projectId, templateId string) (dqRuleTemplate *wedata.RuleTemplate, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeRuleTemplateRequest()
+	request.ProjectId = &projectId
+	TemplateIdInt, _ := strconv.ParseUint(templateId, 10, 64)
+	request.TemplateId = &TemplateIdInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeRuleTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	dqRuleTemplate = response.Response.Data
+	return
+}
+
+func (me *WedataService) DeleteWedataDqRuleTemplateById(ctx context.Context, projectId, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteRuleTemplateRequest()
+	request.ProjectId = &projectId
+	TemplateIdInt, _ := strconv.ParseUint(templateId, 10, 64)
+	request.Ids = common.Uint64Ptrs([]uint64{TemplateIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteRuleTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
