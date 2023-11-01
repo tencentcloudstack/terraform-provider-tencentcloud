@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	elasticsearch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -404,4 +405,492 @@ func (me *ElasticsearchService) UpdateLogstashInstance(ctx context.Context, inst
 		return e
 	}
 	return nil
+}
+
+func (me *ElasticsearchService) UpdateJdk(ctx context.Context, instanceId string, params map[string]interface{}) error {
+	logId := getLogId(ctx)
+
+	request := es.NewUpdateJdkRequest()
+	request.InstanceId = helper.String(instanceId)
+	if v, ok := params["Jdk"]; ok {
+		request.Jdk = helper.String(v.(string))
+	}
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEsClient().UpdateJdk(request)
+	if err != nil {
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return err
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchInstanceLogsByFilter(ctx context.Context, param map[string]interface{}) (elasticsearchInstanceLogs []*es.InstanceLog, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeInstanceLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "LogType" {
+			request.LogType = v.(*uint64)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeInstanceLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceLogList) < 1 {
+			break
+		}
+		elasticsearchInstanceLogs = append(elasticsearchInstanceLogs, response.Response.InstanceLogList...)
+		if len(response.Response.InstanceLogList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchInstanceOperationsByFilter(ctx context.Context, param map[string]interface{}) (instanceOperations []*elasticsearch.Operation, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeInstanceOperationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeInstanceOperations(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Operations) < 1 {
+			break
+		}
+		instanceOperations = append(instanceOperations, response.Response.Operations...)
+		if len(response.Response.Operations) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchLogstashInstanceLogsByFilter(ctx context.Context, param map[string]interface{}) (logstashInstanceLogs []*elasticsearch.InstanceLog, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeLogstashInstanceLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "LogType" {
+			request.LogType = v.(*uint64)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeLogstashInstanceLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceLogList) < 1 {
+			break
+		}
+		logstashInstanceLogs = append(logstashInstanceLogs, response.Response.InstanceLogList...)
+		if len(response.Response.InstanceLogList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchLogstashInstanceOperationsByFilter(ctx context.Context, param map[string]interface{}) (logstashInstanceOperations []*elasticsearch.Operation, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeLogstashInstanceOperationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeLogstashInstanceOperations(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Operations) < 1 {
+			break
+		}
+		logstashInstanceOperations = append(logstashInstanceOperations, response.Response.Operations...)
+		if len(response.Response.Operations) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchViewsByFilter(ctx context.Context, param map[string]interface{}) (clusterView *elasticsearch.ClusterView, nodesViews []*elasticsearch.NodeView, kibanasViews []*elasticsearch.KibanaView, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeViewsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEsClient().DescribeViews(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	clusterView = response.Response.ClusterView
+	nodesViews = response.Response.NodesView
+	kibanasViews = response.Response.KibanasView
+
+	return
+}
+
+func (me *ElasticsearchService) ElasticsearchInstanceRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeInstanceById(ctx, instanceId)
+		log.Printf("object: %v, err: %v", object, err)
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil {
+			return &es.InstanceInfo{}, "-99", nil
+		}
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchDictionariesById(ctx context.Context, instanceId string) (Dictionaries *elasticsearch.DiagnoseResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := es.NewDescribeDiagnoseRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEsClient().DescribeDiagnose(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DiagnoseResults) < 1 {
+		return
+	}
+
+	Dictionaries = response.Response.DiagnoseResults[0]
+	return
+}
+
+func (me *ElasticsearchService) UpdateDiagnoseSettings(ctx context.Context, instanceId string, params map[string]interface{}) error {
+	logId := getLogId(ctx)
+	request := es.NewUpdateDiagnoseSettingsRequest()
+	request.InstanceId = helper.String(instanceId)
+
+	for k, v := range params {
+		if k == "Status" {
+			request.Status = helper.IntInt64(v.(int))
+		}
+		if k == "CronTime" {
+			request.CronTime = helper.String(v.(string))
+		}
+	}
+	ratelimit.Check(request.GetAction())
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseEsClient().UpdateDiagnoseSettings(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update es Diagnose failed, reason:%+v", logId, err)
+		return err
+	}
+	return nil
+}
+
+func (me *ElasticsearchService) GetDiagnoseSettingsById(ctx context.Context, instanceId string) (diagnoseSettings *es.GetDiagnoseSettingsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := es.NewGetDiagnoseSettingsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEsClient().GetDiagnoseSettings(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	diagnoseSettings = response.Response
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchDiagnoseByFilter(ctx context.Context, param map[string]interface{}) (diagnose []*elasticsearch.DiagnoseResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeDiagnoseRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = helper.String(v.(string))
+		}
+		if k == "Date" {
+			request.Date = helper.String(v.(string))
+		}
+		if k == "Limit" {
+			request.Limit = helper.IntInt64(v.(int))
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEsClient().DescribeDiagnose(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.DiagnoseResults) < 1 {
+		return
+	}
+	diagnose = append(diagnose, response.Response.DiagnoseResults...)
+
+	return
+}
+
+func (me *ElasticsearchService) DescribeElasticsearchInstancePluginListByFilter(ctx context.Context, param map[string]interface{}) (InstancePluginList []*elasticsearch.DescribeInstancePluginInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = es.NewDescribeInstancePluginListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+		if k == "PluginType" {
+			request.PluginType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeInstancePluginList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.PluginList) < 1 {
+			break
+		}
+		InstancePluginList = append(InstancePluginList, response.Response.PluginList...)
+		if len(response.Response.PluginList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
 }

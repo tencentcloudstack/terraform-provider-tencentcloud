@@ -15,7 +15,8 @@ Provides a resource to create a dlc store_location_config
 
 ```hcl
 resource "tencentcloud_dlc_store_location_config" "store_location_config" {
-  store_location = "cosn://cos-xxxxx-xxx/test/"
+  store_location = "cosn://bucketname/"
+  enable         = 1
 }
 ```
 
@@ -23,7 +24,8 @@ resource "tencentcloud_dlc_store_location_config" "store_location_config" {
 
 The following arguments are supported:
 
-* `store_location` - (Required, String) Calculate the results of the COS path, such as: cosn: // bucketName/.
+* `enable` - (Required, Int) Whether to enable advanced settings: 0-no, 1-yes.
+* `store_location` - (Required, String) The calculation results are stored in the cos path, such as: cosn://bucketname/.
 
 ## Attributes Reference
 

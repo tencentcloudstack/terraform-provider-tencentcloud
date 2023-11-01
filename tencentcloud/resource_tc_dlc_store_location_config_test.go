@@ -17,12 +17,15 @@ func TestAccTencentCloudDlcStoreLocationConfigResource_basic(t *testing.T) {
 			{
 				Config: testAccDlcStoreLocationConfig,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_store_location_config.store_location_config", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "store_location", "cosn://cos-lock-1308919341/test/")),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "store_location", "cosn://cos-lock-1308919341/test/"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "enable", "1"),
+				),
 			},
 			{
 				Config: testAccDlcStoreLocationConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_store_location_config.store_location_config", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "store_location", "cosn://cos-lock-1308919341/")),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "store_location", "cosn://cos-lock-1308919341/"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_store_location_config.store_location_config", "enable", "1")),
 			},
 			{
 				ResourceName:      "tencentcloud_dlc_store_location_config.store_location_config",
@@ -37,6 +40,7 @@ const testAccDlcStoreLocationConfig = `
 
 resource "tencentcloud_dlc_store_location_config" "store_location_config" {
   store_location = "cosn://cos-lock-1308919341/test/"
+  enable = 1
 }
 
 `
@@ -44,6 +48,7 @@ const testAccDlcStoreLocationConfigUpdate = `
 
 resource "tencentcloud_dlc_store_location_config" "store_location_config" {
   store_location = "cosn://cos-lock-1308919341/"
+  enable = 1
 }
 
 `

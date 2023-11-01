@@ -5,7 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dlc_store_location_config" "store_location_config" {
-  store_location = "cosn://cos-xxxxx-xxx/test/"
+  store_location = "cosn://bucketname/"
+  enable = 1
 }
 ```
 
@@ -42,7 +43,13 @@ func resourceTencentCloudDlcStoreLocationConfig() *schema.Resource {
 			"store_location": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Calculate the results of the COS path, such as: cosn: // bucketName/.",
+				Description: "The calculation results are stored in the cos path, such as: cosn://bucketname/.",
+			},
+
+			"enable": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether to enable advanced settings: 0-no, 1-yes.",
 			},
 		},
 	}
@@ -65,9 +72,7 @@ func resourceTencentCloudDlcStoreLocationConfigRead(d *schema.ResourceData, meta
 
 	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	storeLocationConfigId := d.Id()
-
-	storeLocationConfig, err := service.DescribeDlcStoreLocationConfigById(ctx, storeLocationConfigId)
+	storeLocationConfig, err := service.DescribeDlcStoreLocationConfigById(ctx)
 	if err != nil {
 		return err
 	}
@@ -82,6 +87,9 @@ func resourceTencentCloudDlcStoreLocationConfigRead(d *schema.ResourceData, meta
 		_ = d.Set("store_location", storeLocationConfig.StoreLocation)
 	}
 
+	if storeLocationConfig.Enable != nil {
+		_ = d.Set("enable", storeLocationConfig.Enable)
+	}
 	return nil
 }
 
@@ -91,18 +99,20 @@ func resourceTencentCloudDlcStoreLocationConfigUpdate(d *schema.ResourceData, me
 
 	logId := getLogId(contextNil)
 
-	request := dlc.NewCreateStoreLocationRequest()
+	request := dlc.NewModifyAdvancedStoreLocationRequest()
 
-	var (
-		storeLocationId string
-	)
+	var storeLocation string
 	if v, ok := d.GetOk("store_location"); ok {
-		storeLocationId = v.(string)
+		storeLocation = v.(string)
 		request.StoreLocation = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("enable"); ok {
+		request.Enable = helper.IntUint64(v.(int))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().CreateStoreLocation(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().ModifyAdvancedStoreLocation(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -115,8 +125,7 @@ func resourceTencentCloudDlcStoreLocationConfigUpdate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(storeLocationId)
-
+	d.SetId(storeLocation)
 	return resourceTencentCloudDlcStoreLocationConfigRead(d, meta)
 }
 

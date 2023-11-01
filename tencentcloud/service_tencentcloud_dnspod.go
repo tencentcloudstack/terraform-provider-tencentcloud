@@ -581,3 +581,61 @@ func (me *DnspodService) DescribeDnspodRecordTypeByFilter(ctx context.Context, p
 
 	return
 }
+func (me *DnspodService) DescribeDnspodRecordGroupById(ctx context.Context, domain string, groupId uint64) (recordGroup *dnspod.RecordGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeRecordGroupListRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeRecordGroupList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GroupList) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.GroupList {
+		if *item.GroupId == groupId {
+			recordGroup = item
+			return
+		}
+	}
+	return
+}
+
+func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, domain string, groupId uint64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDeleteRecordGroupRequest()
+	request.Domain = &domain
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DeleteRecordGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

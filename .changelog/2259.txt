@@ -1,0 +1,19 @@
+```release-note:new-resource
+tencentcloud_dlc_bind_work_groups_to_user_attachment
+```
+
+```release-note:new-resource
+tencentcloud_dlc_user_data_engine_config
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_check_data_engine_config_pairs_validity
+```
+
+```release-note:bug
+tencentcloud_dlc_describe_user_info: Fix policy set type
+```
+
+```release-note:bug
+tencentcloud_dlc_describe_work_group_info: Fix policy set type
+```

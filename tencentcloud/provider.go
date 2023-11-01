@@ -528,6 +528,13 @@ Domain
 Elasticsearch Service(ES)
   Data Source
     tencentcloud_elasticsearch_instances
+	tencentcloud_elasticsearch_instance_logs
+	tencentcloud_elasticsearch_instance_operations
+	tencentcloud_elasticsearch_logstash_instance_logs
+	tencentcloud_elasticsearch_logstash_instance_operations
+	tencentcloud_elasticsearch_views
+	tencentcloud_elasticsearch_diagnose
+	tencentcloud_elasticsearch_instance_plugin_list
 
   Resource
     tencentcloud_elasticsearch_instance
@@ -537,6 +544,13 @@ Elasticsearch Service(ES)
 	tencentcloud_elasticsearch_restart_logstash_instance_operation
 	tencentcloud_elasticsearch_start_logstash_pipeline_operation
 	tencentcloud_elasticsearch_stop_logstash_pipeline_operation
+	tencentcloud_elasticsearch_index
+	tencentcloud_elasticsearch_restart_instance_operation
+	tencentcloud_elasticsearch_restart_nodes_operation
+	tencentcloud_elasticsearch_restart_kibana_operation
+	tencentcloud_elasticsearch_diagnose
+	tencentcloud_elasticsearch_diagnose_instance
+	tencentcloud_elasticsearch_update_plugins_operation
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -1218,6 +1232,7 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
     tencentcloud_dnspod_record
+    tencentcloud_dnspod_record_group
   Data Source
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
@@ -1735,6 +1750,9 @@ Media Processing Service(MPS)
   Data Source
 	tencentcloud_mps_schedules
 	tencentcloud_mps_tasks
+	tencentcloud_mps_parse_live_stream_process_notification
+	tencentcloud_mps_parse_notification
+	tencentcloud_mps_media_meta_data
 
   Resource
 	tencentcloud_mps_workflow
@@ -1763,6 +1781,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_event
 	tencentcloud_mps_manage_task_operation
 	tencentcloud_mps_execute_function_operation
+	tencentcloud_mps_process_media_operation
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1861,6 +1880,7 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_describe_work_group_info
 	tencentcloud_dlc_check_data_engine_image_can_be_rollback
 	tencentcloud_dlc_check_data_engine_image_can_be_upgrade
+	tencentcloud_dlc_check_data_engine_config_pairs_validity
 
   Resource
 	tencentcloud_dlc_work_group
@@ -1876,6 +1896,8 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_restart_data_engine_operation
 	tencentcloud_dlc_switch_data_engine_image_operation
 	tencentcloud_dlc_upgrade_data_engine_image_operation
+	tencentcloud_dlc_user_data_engine_config
+	tencentcloud_dlc_bind_work_groups_to_user_attachment
 
 WeData
   Data Source
@@ -2253,6 +2275,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_resources":                                dataSourceTencentCloudClbResources(),
 			"tencentcloud_clb_target_group_list":                        dataSourceTencentCloudClbTargetGroupList(),
 			"tencentcloud_clb_target_health":                            dataSourceTencentCloudClbTargetHealth(),
+			"tencentcloud_elasticsearch_instances":                      dataSourceTencentCloudElasticsearchInstances(),
+			"tencentcloud_elasticsearch_instance_logs":                  dataSourceTencentCloudElasticsearchInstanceLogs(),
+			"tencentcloud_elasticsearch_instance_operations":            dataSourceTencentCloudElasticsearchInstanceOperations(),
+			"tencentcloud_elasticsearch_logstash_instance_logs":         dataSourceTencentCloudElasticsearchLogstashInstanceLogs(),
+			"tencentcloud_elasticsearch_logstash_instance_operations":   dataSourceTencentCloudElasticsearchLogstashInstanceOperations(),
+			"tencentcloud_elasticsearch_views":                          dataSourceTencentCloudElasticsearchViews(),
+			"tencentcloud_elasticsearch_diagnose":                       dataSourceTencentCloudElasticsearchDiagnose(),
+			"tencentcloud_elasticsearch_instance_plugin_list":           dataSourceTencentCloudElasticsearchInstancePluginList(),
 			"tencentcloud_mongodb_zone_config":                          dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                            dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_mongodb_instance_backups":                     dataSourceTencentCloudMongodbInstanceBackups(),
@@ -2365,7 +2395,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
-			"tencentcloud_elasticsearch_instances":                      dataSourceTencentCloudElasticsearchInstances(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
@@ -2529,6 +2558,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_upgrade_price":                        dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_mps_schedules":                                dataSourceTencentCloudMpsSchedules(),
 			"tencentcloud_mps_tasks":                                    dataSourceTencentCloudMpsTasks(),
+			"tencentcloud_mps_parse_live_stream_process_notification":   dataSourceTencentCloudMpsParseLiveStreamProcessNotification(),
+			"tencentcloud_mps_parse_notification":                       dataSourceTencentCloudMpsParseNotification(),
+			"tencentcloud_mps_media_meta_data":                          dataSourceTencentCloudMpsMediaMetaData(),
 			"tencentcloud_tdcpg_clusters":                               dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                              dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                               dataSourceTencentCloudCatProbeData(),
@@ -2767,6 +2799,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_data_engine_python_spark_images": dataSourceTencentCloudDlcDescribeDataEnginePythonSparkImages(),
 			"tencentcloud_dlc_describe_engine_usage_info":               dataSourceTencentCloudDlcDescribeEngineUsageInfo(),
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
+			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 		},
@@ -3105,6 +3138,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_restart_logstash_instance_operation":   resourceTencentCloudElasticsearchRestartLogstashInstanceOperation(),
 			"tencentcloud_elasticsearch_start_logstash_pipeline_operation":     resourceTencentCloudElasticsearchStartLogstashPipelineOperation(),
 			"tencentcloud_elasticsearch_stop_logstash_pipeline_operation":      resourceTencentCloudElasticsearchStopLogstashPipelineOperation(),
+			"tencentcloud_elasticsearch_index":                                 resourceTencentCloudElasticsearchIndex(),
+			"tencentcloud_elasticsearch_restart_instance_operation":            resourceTencentCloudElasticsearchRestartInstanceOperation(),
+			"tencentcloud_elasticsearch_restart_kibana_operation":              resourceTencentCloudElasticsearchRestartKibanaOperation(),
+			"tencentcloud_elasticsearch_restart_nodes_operation":               resourceTencentCloudElasticsearchRestartNodesOperation(),
+			"tencentcloud_elasticsearch_diagnose":                              resourceTencentCloudElasticsearchDiagnose(),
+			"tencentcloud_elasticsearch_diagnose_instance":                     resourceTencentCloudElasticsearchDiagnoseInstance(),
+			"tencentcloud_elasticsearch_update_plugins_operation":              resourceTencentCloudElasticsearchUpdatePluginsOperation(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),
@@ -3266,6 +3306,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
+			"tencentcloud_dnspod_record_group":                                 resourceTencentCloudDnspodRecordGroup(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
@@ -3512,6 +3553,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_word_sample":                                     resourceTencentCloudMpsWordSample(),
 			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
 			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
+			"tencentcloud_mps_process_media_operation":                         resourceTencentCloudMpsProcessMediaOperation(),
 			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
@@ -3590,8 +3632,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_modify_user_typ_operation":                       resourceTencentCloudDlcModifyUserTypOperation(),
 			"tencentcloud_dlc_renew_data_engine_operation":                     resourceTencentCloudDlcRenewDataEngineOperation(),
 			"tencentcloud_dlc_restart_data_engine_operation":                   resourceTencentCloudDlcRestartDataEngineOperation(),
+			"tencentcloud_dlc_attach_user_policy_operation":                    resourceTencentCloudDlcAttachUserPolicyOperation(),
+			"tencentcloud_dlc_detach_user_policy_operation":                    resourceTencentCloudDlcDetachUserPolicyOperation(),
+			"tencentcloud_dlc_attach_work_group_policy_operation":              resourceTencentCloudDlcAttachWorkGroupPolicyOperation(),
+			"tencentcloud_dlc_detach_work_group_policy_operation":              resourceTencentCloudDlcDetachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
+			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
+			"tencentcloud_dlc_user_data_engine_config":                         resourceTencentCloudDlcUserDataEngineConfig(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
