@@ -137,11 +137,11 @@ func dataSourceTencentCloudCssTimeShiftStreamListRead(d *schema.ResourceData, me
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, _ := d.GetOk("start_time"); v != nil {
+	if v, ok := d.GetOkExists("start_time"); ok {
 		paramMap["StartTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("end_time"); v != nil {
+	if v, ok := d.GetOkExists("end_time"); ok {
 		paramMap["EndTime"] = helper.IntInt64(v.(int))
 	}
 

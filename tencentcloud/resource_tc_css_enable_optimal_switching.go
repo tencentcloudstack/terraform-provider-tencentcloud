@@ -12,6 +12,14 @@ resource "tencentcloud_css_enable_optimal_switching" "enable_optimal_switching" 
   host_group_name = "test-group"
 }
 ```
+
+Import
+
+css domain can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_css_enable_optimal_switching.enable_optimal_switching streamName
+```
 */
 package tencentcloud
 

@@ -127,11 +127,11 @@ func dataSourceTencentCloudCssTimeShiftRecordDetailRead(d *schema.ResourceData, 
 		paramMap["StreamName"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("start_time"); v != nil {
+	if v, ok := d.GetOkExists("start_time"); ok {
 		paramMap["StartTime"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("end_time"); v != nil {
+	if v, ok := d.GetOkExists("end_time"); ok {
 		paramMap["EndTime"] = helper.IntInt64(v.(int))
 	}
 
@@ -139,7 +139,7 @@ func dataSourceTencentCloudCssTimeShiftRecordDetailRead(d *schema.ResourceData, 
 		paramMap["DomainGroup"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("trans_code_id"); v != nil {
+	if v, ok := d.GetOkExists("trans_code_id"); ok {
 		paramMap["TransCodeId"] = helper.IntUint64(v.(int))
 	}
 
