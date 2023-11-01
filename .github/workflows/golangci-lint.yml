@@ -40,4 +40,4 @@ jobs:
           version: v1.45.2
           working-directory: ./tencentcloud
           args: --new-from-rev=master -v
-          #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=master -v
+          #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
