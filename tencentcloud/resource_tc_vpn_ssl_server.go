@@ -45,6 +45,7 @@ func resourceTencentCloudVpnSslServer() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpnSslServerCreate,
 		Read:   resourceTencentCloudVpnSslServerRead,
+		Update: resourceTencentCloudVpnSslServerUpdate,
 		Delete: resourceTencentCloudVpnSslServerDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -60,13 +61,11 @@ func resourceTencentCloudVpnSslServer() *schema.Resource {
 			"ssl_vpn_server_name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The name of ssl vpn server to be created.",
 			},
 			"local_address": {
 				Type:        schema.TypeList,
 				Required:    true,
-				ForceNew:    true,
 				Description: "List of local CIDR.",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -75,38 +74,32 @@ func resourceTencentCloudVpnSslServer() *schema.Resource {
 			"remote_address": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Remote CIDR for client.",
 			},
 			"ssl_vpn_protocol": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The protocol of ssl vpn. Default value: UDP.",
 			},
 			"ssl_vpn_port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The port of ssl vpn. Default value: 1194.",
 			},
 			"integrity_algorithm": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The integrity algorithm. Valid values: SHA1, MD5 and NONE. Default value: NONE.",
 			},
 			"encrypt_algorithm": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				Description: "The encrypt algorithm. Valid values: AES-128-CBC, AES-192-CBC, AES-256-CBC, NONE." +
 					"Default value: NONE.",
 			},
 			"compress": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     FALSE,
 				Description: "need compressed. Default value: False.",
 			},
@@ -213,24 +206,16 @@ func resourceTencentCloudVpnSslServerRead(d *schema.ResourceData, meta interface
 		_ = d.Set("ssl_vpn_server_name", info.SslVpnServerName)
 		_ = d.Set("local_address", helper.StringsInterfaces(info.LocalAddress))
 		_ = d.Set("remote_address", info.RemoteAddress)
-		if _, ok := d.GetOk("ssl_vpn_protocol"); ok {
-			_ = d.Set("ssl_vpn_protocol", info.SslVpnProtocol)
-		}
-		if _, ok := d.GetOk("ssl_vpn_port"); ok {
-			_ = d.Set("ssl_vpn_port", info.SslVpnPort)
-		}
-		if _, ok := d.GetOk("integrity_algorithm"); ok {
-			_ = d.Set("integrity_algorithm", info.IntegrityAlgorithm)
-		}
-		if _, ok := d.GetOk("encrypt_algorithm"); ok {
-			_ = d.Set("encrypt_algorithm", info.EncryptAlgorithm)
-		}
-		if _, ok := d.GetOk("compress"); ok {
-			compress := *info.Compress
-			_ = d.Set("compress", false)
-			if compress != 0 {
-				_ = d.Set("compress", true)
-			}
+		_ = d.Set("ssl_vpn_protocol", info.SslVpnProtocol)
+		_ = d.Set("ssl_vpn_port", info.SslVpnPort)
+		_ = d.Set("integrity_algorithm", info.IntegrityAlgorithm)
+
+		_ = d.Set("encrypt_algorithm", info.EncryptAlgorithm)
+
+		compress := *info.Compress
+		_ = d.Set("compress", false)
+		if compress != 0 {
+			_ = d.Set("compress", true)
 		}
 		return nil
 	})
@@ -238,6 +223,90 @@ func resourceTencentCloudVpnSslServerRead(d *schema.ResourceData, meta interface
 		return err
 	}
 	return nil
+}
+
+func resourceTencentCloudVpnSslServerUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpn_ssl_server.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	var (
+		vpcService = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request    = vpc.NewModifyVpnGatewaySslServerRequest()
+	)
+
+	sslServerId := d.Id()
+	request.SslVpnServerId = helper.String(sslServerId)
+
+	needChange := false
+	mutableArgs := []string{
+		"ssl_vpn_server_name", "local_address", "remote_address", "ssl_vpn_protocol",
+		"ssl_vpn_port", "integrity_algorithm", "encrypt_algorithm", "compress",
+	}
+
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	if needChange {
+
+		if v, ok := d.GetOk("ssl_vpn_server_name"); ok {
+			request.SslVpnServerName = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("local_address"); ok {
+			address := v.([]interface{})
+			request.LocalAddress = helper.InterfacesStringsPoint(address)
+		}
+		if v, ok := d.GetOk("remote_address"); ok {
+			request.RemoteAddress = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("ssl_vpn_protocol"); ok {
+			request.SslVpnProtocol = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("ssl_vpn_port"); ok {
+			request.SslVpnPort = helper.IntInt64(v.(int))
+		}
+		if v, ok := d.GetOk("integrity_algorithm"); ok {
+			request.IntegrityAlgorithm = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("encrypt_algorithm"); ok {
+			request.EncryptAlgorithm = helper.String(v.(string))
+		}
+		if v, ok := d.GetOkExists("compress"); ok {
+			request.Compress = helper.Bool(v.(bool))
+		}
+	}
+
+	var (
+		taskId *int64
+	)
+	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, err := vpcService.client.UseVpcClient().ModifyVpnGatewaySslServer(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			return retryError(err, InternalError)
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		taskId = response.Response.TaskId
+		return nil
+	}); err != nil {
+		return err
+	}
+
+	err := vpcService.DescribeVpcTaskResult(ctx, helper.String(helper.Int64ToStr(*taskId)))
+	if err != nil {
+		return err
+	}
+
+	return resourceTencentCloudVpnSslServerRead(d, meta)
 }
 
 func resourceTencentCloudVpnSslServerDelete(d *schema.ResourceData, meta interface{}) error {

@@ -412,7 +412,7 @@ type Address struct {
 	// eip是否支持直通模式。true表示eip支持直通模式，false表示资源不支持直通模式
 	IsEipDirectConnection *bool `json:"IsEipDirectConnection,omitnil" name:"IsEipDirectConnection"`
 
-	// EIP 资源类型，包括CalcIP、WanIP、EIP和AnycastEIP、高防EIP。其中：`CalcIP` 表示设备 IP，`WanIP` 表示普通公网 IP，`EIP` 表示弹性公网 IP，`AnycastEip` 表示加速 EIP，`AntiDDoSEIP`表示高防EIP。
+	// EIP 资源类型，包括CalcIP、WanIP、EIP和AnycastEIP、高防EIP。其中：`CalcIP` 表示设备 IP，`WanIP` 表示普通公网 IP，`EIP` 表示弹性公网 IP，`AnycastEIP` 表示加速 EIP，`AntiDDoSEIP`表示高防EIP。
 	AddressType *string `json:"AddressType,omitnil" name:"AddressType"`
 
 	// eip是否在解绑后自动释放。true表示eip将会在解绑后自动释放，false表示eip在解绑后不会自动释放
@@ -1996,6 +1996,39 @@ type BatchModifySnapshotPolicy struct {
 	KeepTime *uint64 `json:"KeepTime,omitnil" name:"KeepTime"`
 }
 
+type BgpConfig struct {
+	// BGP隧道网段。
+	TunnelCidr *string `json:"TunnelCidr,omitnil" name:"TunnelCidr"`
+
+	// 云端BGP地址。必须从BGP隧道网段内分配。
+	LocalBgpIp *string `json:"LocalBgpIp,omitnil" name:"LocalBgpIp"`
+
+	// 用户端BGP地址。必须从BGP隧道网段内分配。
+	RemoteBgpIp *string `json:"RemoteBgpIp,omitnil" name:"RemoteBgpIp"`
+}
+
+type BgpConfigAndAsn struct {
+	// BGP通道CIDR
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TunnelCidr *string `json:"TunnelCidr,omitnil" name:"TunnelCidr"`
+
+	// 本端BGP IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalBgpIp *string `json:"LocalBgpIp,omitnil" name:"LocalBgpIp"`
+
+	// 对端BGP IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RemoteBgpIp *string `json:"RemoteBgpIp,omitnil" name:"RemoteBgpIp"`
+
+	// 本端BGP ASN号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LocalBgpAsn *string `json:"LocalBgpAsn,omitnil" name:"LocalBgpAsn"`
+
+	// 对端BGP ASN号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RemoteBgpAsn *string `json:"RemoteBgpAsn,omitnil" name:"RemoteBgpAsn"`
+}
+
 type CCN struct {
 	// 云联网唯一ID
 	CcnId *string `json:"CcnId,omitnil" name:"CcnId"`
@@ -3250,6 +3283,9 @@ type CreateCustomerGatewayRequestParams struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
 	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+
+	// BGP ASN。ASN取值范围为1- 4294967295，其中139341、45090和58835不可用。
+	BgpAsn *int64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 type CreateCustomerGatewayRequest struct {
@@ -3263,6 +3299,9 @@ type CreateCustomerGatewayRequest struct {
 
 	// 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]
 	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+
+	// BGP ASN。ASN取值范围为1- 4294967295，其中139341、45090和58835不可用。
+	BgpAsn *int64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 func (r *CreateCustomerGatewayRequest) ToJsonString() string {
@@ -3280,6 +3319,7 @@ func (r *CreateCustomerGatewayRequest) FromJsonString(s string) error {
 	delete(f, "CustomerGatewayName")
 	delete(f, "IpAddress")
 	delete(f, "Tags")
+	delete(f, "BgpAsn")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCustomerGatewayRequest has unknown keys!", "")
 	}
@@ -5817,12 +5857,63 @@ func (r *CreateVpcEndPointServiceWhiteListResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type CreateVpcPeeringConnectionRequestParams struct {
+	// 本端VPC唯一ID。
+	SourceVpcId *string `json:"SourceVpcId,omitnil" name:"SourceVpcId"`
 
+	// 对等连接名称。
+	PeeringConnectionName *string `json:"PeeringConnectionName,omitnil" name:"PeeringConnectionName"`
+
+	// 对端VPC唯一ID。
+	DestinationVpcId *string `json:"DestinationVpcId,omitnil" name:"DestinationVpcId"`
+
+	// 对端用户UIN。
+	DestinationUin *string `json:"DestinationUin,omitnil" name:"DestinationUin"`
+
+	// 对端地域。
+	DestinationRegion *string `json:"DestinationRegion,omitnil" name:"DestinationRegion"`
+
+	// 带宽上限，单位Mbps。
+	Bandwidth *int64 `json:"Bandwidth,omitnil" name:"Bandwidth"`
+
+	// 互通类型，VPC_PEER：VPC间互通；VPC_BM_PEER：VPC与黑石网络互通。
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 计费模式，日峰值POSTPAID_BY_DAY_MAX，月95POSTPAID_BY_MONTH_95。
+	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
+
+	// 服务分级：PT、AU、AG。
+	QosLevel *string `json:"QosLevel,omitnil" name:"QosLevel"`
 }
 
 type CreateVpcPeeringConnectionRequest struct {
 	*tchttp.BaseRequest
 	
+	// 本端VPC唯一ID。
+	SourceVpcId *string `json:"SourceVpcId,omitnil" name:"SourceVpcId"`
+
+	// 对等连接名称。
+	PeeringConnectionName *string `json:"PeeringConnectionName,omitnil" name:"PeeringConnectionName"`
+
+	// 对端VPC唯一ID。
+	DestinationVpcId *string `json:"DestinationVpcId,omitnil" name:"DestinationVpcId"`
+
+	// 对端用户UIN。
+	DestinationUin *string `json:"DestinationUin,omitnil" name:"DestinationUin"`
+
+	// 对端地域。
+	DestinationRegion *string `json:"DestinationRegion,omitnil" name:"DestinationRegion"`
+
+	// 带宽上限，单位Mbps。
+	Bandwidth *int64 `json:"Bandwidth,omitnil" name:"Bandwidth"`
+
+	// 互通类型，VPC_PEER：VPC间互通；VPC_BM_PEER：VPC与黑石网络互通。
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 计费模式，日峰值POSTPAID_BY_DAY_MAX，月95POSTPAID_BY_MONTH_95。
+	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
+
+	// 服务分级：PT、AU、AG。
+	QosLevel *string `json:"QosLevel,omitnil" name:"QosLevel"`
 }
 
 func (r *CreateVpcPeeringConnectionRequest) ToJsonString() string {
@@ -5837,7 +5928,15 @@ func (r *CreateVpcPeeringConnectionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "SourceVpcId")
+	delete(f, "PeeringConnectionName")
+	delete(f, "DestinationVpcId")
+	delete(f, "DestinationUin")
+	delete(f, "DestinationRegion")
+	delete(f, "Bandwidth")
+	delete(f, "Type")
+	delete(f, "ChargeType")
+	delete(f, "QosLevel")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcPeeringConnectionRequest has unknown keys!", "")
 	}
@@ -5846,6 +5945,10 @@ func (r *CreateVpcPeeringConnectionRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpcPeeringConnectionResponseParams struct {
+	// 对等连接ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
 }
@@ -5958,6 +6061,14 @@ func (r *CreateVpcResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CreateVpnConnRoute struct {
+	// 目的端IDC网段
+	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil" name:"DestinationCidrBlock"`
+
+	// 优先级；可选值0，100。
+	Priority *uint64 `json:"Priority,omitnil" name:"Priority"`
+}
+
 // Predefined struct for user
 type CreateVpnConnectionRequestParams struct {
 	// VPN网关实例ID。
@@ -6011,6 +6122,12 @@ type CreateVpnConnectionRequestParams struct {
 
 	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
 	DpdAction *string `json:"DpdAction,omitnil" name:"DpdAction"`
+
+	// 创建通道路由信息。
+	Route *CreateVpnConnRoute `json:"Route,omitnil" name:"Route"`
+
+	// BGP配置。
+	BgpConfig *BgpConfig `json:"BgpConfig,omitnil" name:"BgpConfig"`
 }
 
 type CreateVpnConnectionRequest struct {
@@ -6067,6 +6184,12 @@ type CreateVpnConnectionRequest struct {
 
 	// DPD超时后的动作。默认为clear。dpdEnable为1（开启）时有效。可取值为clear（断开）和restart（重试）
 	DpdAction *string `json:"DpdAction,omitnil" name:"DpdAction"`
+
+	// 创建通道路由信息。
+	Route *CreateVpnConnRoute `json:"Route,omitnil" name:"Route"`
+
+	// BGP配置。
+	BgpConfig *BgpConfig `json:"BgpConfig,omitnil" name:"BgpConfig"`
 }
 
 func (r *CreateVpnConnectionRequest) ToJsonString() string {
@@ -6098,6 +6221,8 @@ func (r *CreateVpnConnectionRequest) FromJsonString(s string) error {
 	delete(f, "DpdEnable")
 	delete(f, "DpdTimeout")
 	delete(f, "DpdAction")
+	delete(f, "Route")
+	delete(f, "BgpConfig")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnConnectionRequest has unknown keys!", "")
 	}
@@ -6618,6 +6743,9 @@ type CustomerGateway struct {
 
 	// 创建时间
 	CreatedTime *string `json:"CreatedTime,omitnil" name:"CreatedTime"`
+
+	// BGP ASN。
+	BgpAsn *uint64 `json:"BgpAsn,omitnil" name:"BgpAsn"`
 }
 
 type CustomerGatewayVendor struct {
@@ -12649,6 +12777,12 @@ type DescribeNetworkAclsRequestParams struct {
 
 	// 返回数量，默认为20，最小值为1，最大值为100。
 	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 排序字段。支持：NetworkAclId,NetworkAclName,CreatedTime
+	OrderField *string `json:"OrderField,omitnil" name:"OrderField"`
+
+	// 排序方法。顺序：ASC，倒序：DESC。
+	OrderDirection *string `json:"OrderDirection,omitnil" name:"OrderDirection"`
 }
 
 type DescribeNetworkAclsRequest struct {
@@ -12668,6 +12802,12 @@ type DescribeNetworkAclsRequest struct {
 
 	// 返回数量，默认为20，最小值为1，最大值为100。
 	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 排序字段。支持：NetworkAclId,NetworkAclName,CreatedTime
+	OrderField *string `json:"OrderField,omitnil" name:"OrderField"`
+
+	// 排序方法。顺序：ASC，倒序：DESC。
+	OrderDirection *string `json:"OrderDirection,omitnil" name:"OrderDirection"`
 }
 
 func (r *DescribeNetworkAclsRequest) ToJsonString() string {
@@ -12686,6 +12826,8 @@ func (r *DescribeNetworkAclsRequest) FromJsonString(s string) error {
 	delete(f, "NetworkAclIds")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeNetworkAclsRequest has unknown keys!", "")
 	}
@@ -15254,6 +15396,12 @@ func (r *DescribeVpcPeeringConnectionsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeVpcPeeringConnectionsResponseParams struct {
+	// 满足条件的对等连接实例个数。
+	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 对等连接实例列表。
+	PeerConnectionSet []*PeerConnection `json:"PeerConnectionSet,omitnil" name:"PeerConnectionSet"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
 }
@@ -18408,56 +18556,73 @@ func (r *HaVipDisassociateAddressIpResponse) FromJsonString(s string) error {
 
 type IKEOptionsSpecification struct {
 	// 加密算法，可选值：'3DES-CBC', 'AES-CBC-128', 'AES-CBS-192', 'AES-CBC-256', 'DES-CBC'，'SM4', 默认为3DES-CBC
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	PropoEncryAlgorithm *string `json:"PropoEncryAlgorithm,omitnil" name:"PropoEncryAlgorithm"`
 
 	// 认证算法：可选值：'MD5', 'SHA1'，'SHA-256' 默认为MD5
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	PropoAuthenAlgorithm *string `json:"PropoAuthenAlgorithm,omitnil" name:"PropoAuthenAlgorithm"`
 
 	// 协商模式：可选值：'AGGRESSIVE', 'MAIN'，默认为MAIN
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ExchangeMode *string `json:"ExchangeMode,omitnil" name:"ExchangeMode"`
 
 	// 本端标识类型：可选值：'ADDRESS', 'FQDN'，默认为ADDRESS
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalIdentity *string `json:"LocalIdentity,omitnil" name:"LocalIdentity"`
 
 	// 对端标识类型：可选值：'ADDRESS', 'FQDN'，默认为ADDRESS
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteIdentity *string `json:"RemoteIdentity,omitnil" name:"RemoteIdentity"`
 
 	// 本端标识，当LocalIdentity选为ADDRESS时，LocalAddress必填。localAddress默认为vpn网关公网IP
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalAddress *string `json:"LocalAddress,omitnil" name:"LocalAddress"`
 
 	// 对端标识，当RemoteIdentity选为ADDRESS时，RemoteAddress必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteAddress *string `json:"RemoteAddress,omitnil" name:"RemoteAddress"`
 
 	// 本端标识，当LocalIdentity选为FQDN时，LocalFqdnName必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalFqdnName *string `json:"LocalFqdnName,omitnil" name:"LocalFqdnName"`
 
 	// 对端标识，当remoteIdentity选为FQDN时，RemoteFqdnName必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteFqdnName *string `json:"RemoteFqdnName,omitnil" name:"RemoteFqdnName"`
 
 	// DH group，指定IKE交换密钥时使用的DH组，可选值：'GROUP1', 'GROUP2', 'GROUP5', 'GROUP14', 'GROUP24'，
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DhGroupName *string `json:"DhGroupName,omitnil" name:"DhGroupName"`
 
 	// IKE SA Lifetime，单位：秒，设置IKE SA的生存周期，取值范围：60-604800
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IKESaLifetimeSeconds *uint64 `json:"IKESaLifetimeSeconds,omitnil" name:"IKESaLifetimeSeconds"`
 
 	// IKE版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IKEVersion *string `json:"IKEVersion,omitnil" name:"IKEVersion"`
 }
 
 type IPSECOptionsSpecification struct {
 	// 加密算法，可选值：'3DES-CBC', 'AES-CBC-128', 'AES-CBC-192', 'AES-CBC-256', 'DES-CBC', 'SM4', 'NULL'， 默认为AES-CBC-128
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil" name:"EncryptAlgorithm"`
 
 	// 认证算法：可选值：'MD5', 'SHA1'，'SHA-256' 默认为
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntegrityAlgorith *string `json:"IntegrityAlgorith,omitnil" name:"IntegrityAlgorith"`
 
 	// IPsec SA lifetime(s)：单位秒，取值范围：180-604800
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPSECSaLifetimeSeconds *uint64 `json:"IPSECSaLifetimeSeconds,omitnil" name:"IPSECSaLifetimeSeconds"`
 
 	// PFS：可选值：'NULL', 'DH-GROUP1', 'DH-GROUP2', 'DH-GROUP5', 'DH-GROUP14', 'DH-GROUP24'，默认为NULL
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	PfsDhGroup *string `json:"PfsDhGroup,omitnil" name:"PfsDhGroup"`
 
 	// IPsec SA lifetime(KB)：单位KB，取值范围：2560-604800
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IPSECSaLifetimeTraffic *uint64 `json:"IPSECSaLifetimeTraffic,omitnil" name:"IPSECSaLifetimeTraffic"`
 }
 
@@ -22249,12 +22414,33 @@ func (r *ModifyVpcEndPointServiceWhiteListResponse) FromJsonString(s string) err
 
 // Predefined struct for user
 type ModifyVpcPeeringConnectionRequestParams struct {
+	// 对等连接ID。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
 
+	// 对等连接名称。
+	PeeringConnectionName *string `json:"PeeringConnectionName,omitnil" name:"PeeringConnectionName"`
+
+	// 带宽上限，单位Mbps。
+	Bandwidth *int64 `json:"Bandwidth,omitnil" name:"Bandwidth"`
+
+	// 计费模式，日峰值POSTPAID_BY_DAY_MAX，月95 POSTPAID_BY_MONTH_95。
+	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
 }
 
 type ModifyVpcPeeringConnectionRequest struct {
 	*tchttp.BaseRequest
 	
+	// 对等连接ID。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
+
+	// 对等连接名称。
+	PeeringConnectionName *string `json:"PeeringConnectionName,omitnil" name:"PeeringConnectionName"`
+
+	// 带宽上限，单位Mbps。
+	Bandwidth *int64 `json:"Bandwidth,omitnil" name:"Bandwidth"`
+
+	// 计费模式，日峰值POSTPAID_BY_DAY_MAX，月95 POSTPAID_BY_MONTH_95。
+	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
 }
 
 func (r *ModifyVpcPeeringConnectionRequest) ToJsonString() string {
@@ -22269,7 +22455,10 @@ func (r *ModifyVpcPeeringConnectionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "PeeringConnectionId")
+	delete(f, "PeeringConnectionName")
+	delete(f, "Bandwidth")
+	delete(f, "ChargeType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpcPeeringConnectionRequest has unknown keys!", "")
 	}
@@ -22637,6 +22826,133 @@ func (r *ModifyVpnGatewayRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type ModifyVpnGatewaySslServerRequestParams struct {
+	// SSL-VPN SERVER 实例ID
+	SslVpnServerId *string `json:"SslVpnServerId,omitnil" name:"SslVpnServerId"`
+
+	// SSL-VPN SERVER NAME
+	SslVpnServerName *string `json:"SslVpnServerName,omitnil" name:"SslVpnServerName"`
+
+	// 本端地址
+	LocalAddress []*string `json:"LocalAddress,omitnil" name:"LocalAddress"`
+
+	// 客户端地址
+	RemoteAddress *string `json:"RemoteAddress,omitnil" name:"RemoteAddress"`
+
+	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil" name:"SslVpnProtocol"`
+
+	// SSL VPN服务端监听协议端口。
+	SslVpnPort *int64 `json:"SslVpnPort,omitnil" name:"SslVpnPort"`
+
+	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil" name:"EncryptAlgorithm"`
+
+	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil" name:"IntegrityAlgorithm"`
+
+	// 是否支持压缩。当前仅支持不支持压缩。默认False
+	Compress *bool `json:"Compress,omitnil" name:"Compress"`
+
+	// 是否开启SSO认证，默认False
+	SsoEnabled *bool `json:"SsoEnabled,omitnil" name:"SsoEnabled"`
+
+	// SAML-DATA
+	SamlData *string `json:"SamlData,omitnil" name:"SamlData"`
+}
+
+type ModifyVpnGatewaySslServerRequest struct {
+	*tchttp.BaseRequest
+	
+	// SSL-VPN SERVER 实例ID
+	SslVpnServerId *string `json:"SslVpnServerId,omitnil" name:"SslVpnServerId"`
+
+	// SSL-VPN SERVER NAME
+	SslVpnServerName *string `json:"SslVpnServerName,omitnil" name:"SslVpnServerName"`
+
+	// 本端地址
+	LocalAddress []*string `json:"LocalAddress,omitnil" name:"LocalAddress"`
+
+	// 客户端地址
+	RemoteAddress *string `json:"RemoteAddress,omitnil" name:"RemoteAddress"`
+
+	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	SslVpnProtocol *string `json:"SslVpnProtocol,omitnil" name:"SslVpnProtocol"`
+
+	// SSL VPN服务端监听协议端口。
+	SslVpnPort *int64 `json:"SslVpnPort,omitnil" name:"SslVpnPort"`
+
+	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitnil" name:"EncryptAlgorithm"`
+
+	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitnil" name:"IntegrityAlgorithm"`
+
+	// 是否支持压缩。当前仅支持不支持压缩。默认False
+	Compress *bool `json:"Compress,omitnil" name:"Compress"`
+
+	// 是否开启SSO认证，默认False
+	SsoEnabled *bool `json:"SsoEnabled,omitnil" name:"SsoEnabled"`
+
+	// SAML-DATA
+	SamlData *string `json:"SamlData,omitnil" name:"SamlData"`
+}
+
+func (r *ModifyVpnGatewaySslServerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyVpnGatewaySslServerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SslVpnServerId")
+	delete(f, "SslVpnServerName")
+	delete(f, "LocalAddress")
+	delete(f, "RemoteAddress")
+	delete(f, "SslVpnProtocol")
+	delete(f, "SslVpnPort")
+	delete(f, "EncryptAlgorithm")
+	delete(f, "IntegrityAlgorithm")
+	delete(f, "Compress")
+	delete(f, "SsoEnabled")
+	delete(f, "SamlData")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpnGatewaySslServerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyVpnGatewaySslServerResponseParams struct {
+	// 异步任务TASKID
+	TaskId *int64 `json:"TaskId,omitnil" name:"TaskId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyVpnGatewaySslServerResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyVpnGatewaySslServerResponseParams `json:"Response"`
+}
+
+func (r *ModifyVpnGatewaySslServerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyVpnGatewaySslServerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type NatDirectConnectGatewayRoute struct {
 	// 子网的 `IPv4` `CIDR`
 	DestinationCidrBlock *string `json:"DestinationCidrBlock,omitnil" name:"DestinationCidrBlock"`
@@ -22882,10 +23198,10 @@ type NetworkAcl struct {
 	// 网络ACL关联的子网数组。
 	SubnetSet []*Subnet `json:"SubnetSet,omitnil" name:"SubnetSet"`
 
-	// 网络ACl入站规则。
+	// 该参数仅对三元组ACL有效，网络ACl入站规则。
 	IngressEntries []*NetworkAclEntry `json:"IngressEntries,omitnil" name:"IngressEntries"`
 
-	// 网络ACL出站规则。
+	// 该参数仅对三元组ACL有效，网络ACL出站规则。
 	EgressEntries []*NetworkAclEntry `json:"EgressEntries,omitnil" name:"EgressEntries"`
 
 	// 网络ACL类型。三元组：'TRIPLE'   五元组：'QUINTUPLE'
@@ -23135,6 +23451,64 @@ func (r *NotifyRoutesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type PeerConnection struct {
+	// 本端VPC唯一ID。
+	SourceVpcId *string `json:"SourceVpcId,omitnil" name:"SourceVpcId"`
+
+	// 对端VPC唯一ID。
+	PeerVpcId *string `json:"PeerVpcId,omitnil" name:"PeerVpcId"`
+
+	// 对等连接唯一ID。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
+
+	// 对等连接名称。
+	PeeringConnectionName *string `json:"PeeringConnectionName,omitnil" name:"PeeringConnectionName"`
+
+	// 对等连接状态，PENDING，投放中；ACTIVE，使用中；REJECTED，已拒绝‘DELETED，已删除；FAILED，失败；EXPIRED，已过期；ISOLATED，隔离中。
+	State *string `json:"State,omitnil" name:"State"`
+
+	// 是否是新控制器，true: 是NewAfc；false:不是。
+	IsNgw *bool `json:"IsNgw,omitnil" name:"IsNgw"`
+
+	// 对等连接带宽值。
+	Bandwidth *int64 `json:"Bandwidth,omitnil" name:"Bandwidth"`
+
+	// 本端地域。
+	SourceRegion *string `json:"SourceRegion,omitnil" name:"SourceRegion"`
+
+	// 对端地域。
+	DestinationRegion *string `json:"DestinationRegion,omitnil" name:"DestinationRegion"`
+
+	// 创建时间。
+	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
+
+	// 本端APPID。
+	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+
+	// 对端APPID。
+	PeerAppId *int64 `json:"PeerAppId,omitnil" name:"PeerAppId"`
+
+	// 计费类型，POSTPAID_BY_DAY_MAX：日峰值计费；POSTPAID_BY_MONTH_95：月95计费。
+	ChargeType *string `json:"ChargeType,omitnil" name:"ChargeType"`
+
+	// 本端UIN。
+	SourceUin *int64 `json:"SourceUin,omitnil" name:"SourceUin"`
+
+	// 对端UIN。
+	DestinationUin *int64 `json:"DestinationUin,omitnil" name:"DestinationUin"`
+
+	// 资源标签数据。
+	TagSet []*Tag `json:"TagSet,omitnil" name:"TagSet"`
+
+	// 服务分级：PT、AU、AG。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QosLevel *string `json:"QosLevel,omitnil" name:"QosLevel"`
+
+	// 互通类型，VPC_PEER：VPC间互通；VPC_BM_PEER：VPC与黑石网络互通。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil" name:"Type"`
+}
+
 type Price struct {
 	// 实例价格。
 	InstancePrice *ItemPrice `json:"InstancePrice,omitnil" name:"InstancePrice"`
@@ -23343,12 +23717,15 @@ func (r *RejectAttachCcnInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RejectVpcPeeringConnectionRequestParams struct {
-
+	// 对等连接唯一ID。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
 }
 
 type RejectVpcPeeringConnectionRequest struct {
 	*tchttp.BaseRequest
 	
+	// 对等连接唯一ID。
+	PeeringConnectionId *string `json:"PeeringConnectionId,omitnil" name:"PeeringConnectionId"`
 }
 
 func (r *RejectVpcPeeringConnectionRequest) ToJsonString() string {
@@ -23363,7 +23740,7 @@ func (r *RejectVpcPeeringConnectionRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "PeeringConnectionId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RejectVpcPeeringConnectionRequest has unknown keys!", "")
 	}
@@ -24711,7 +25088,9 @@ type Route struct {
 	GatewayType *string `json:"GatewayType,omitnil" name:"GatewayType"`
 
 	// 下一跳地址，这里只需要指定不同下一跳类型的网关ID，系统会自动匹配到下一跳地址。
-	// 特殊说明：GatewayType为NORMAL_CVM时，GatewayId填写实例的内网IP。
+	// 特殊说明：
+	// GatewayType为NORMAL_CVM时，GatewayId填写实例的内网IP。
+	// GatewayType为EIP时，GatewayId填写0。
 	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
 
 	// 路由策略ID。IPv4路由策略ID是有意义的值，IPv6路由策略是无意义的值0。后续建议完全使用字符串唯一ID `RouteItemId`操作路由策略。
@@ -24735,6 +25114,7 @@ type Route struct {
 	RouteTableId *string `json:"RouteTableId,omitnil" name:"RouteTableId"`
 
 	// 目的IPv6网段，取值不能在私有网络网段内，例如：2402:4e00:1000:810b::/64。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DestinationIpv6CidrBlock *string `json:"DestinationIpv6CidrBlock,omitnil" name:"DestinationIpv6CidrBlock"`
 
 	// 路由唯一策略ID。
@@ -24928,9 +25308,11 @@ type SecurityGroupPolicySet struct {
 
 type SecurityPolicyDatabase struct {
 	// 本端网段
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	LocalCidrBlock *string `json:"LocalCidrBlock,omitnil" name:"LocalCidrBlock"`
 
 	// 对端网段
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemoteCidrBlock []*string `json:"RemoteCidrBlock,omitnil" name:"RemoteCidrBlock"`
 }
 
@@ -26119,6 +26501,10 @@ type VpnConnection struct {
 	// 协商类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NegotiationType *string `json:"NegotiationType,omitnil" name:"NegotiationType"`
+
+	// Bgp配置信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BgpConfig *BgpConfigAndAsn `json:"BgpConfig,omitnil" name:"BgpConfig"`
 }
 
 type VpnGateway struct {
