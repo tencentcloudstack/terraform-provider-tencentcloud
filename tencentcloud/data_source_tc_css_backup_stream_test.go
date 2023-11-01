@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudCssBackupStreamDataSource_basic(t *testing.T) {
@@ -24,7 +25,7 @@ func TestAccTencentCloudCssBackupStreamDataSource_basic(t *testing.T) {
 const testAccCssBackupStreamDataSource = `
 
 data "tencentcloud_css_backup_stream" "backup_stream" {
-  stream_name = ""
+  stream_name = "live"
 }
 
 `

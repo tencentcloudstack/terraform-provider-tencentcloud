@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_css_backup_stream" "backup_stream" {
-  stream_name = ""
+  stream_name = "live"
 }
 ```
 */
@@ -13,6 +13,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
