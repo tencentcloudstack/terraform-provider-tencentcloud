@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version-file: .go-version
-          cache: true
+          cache: false 
 
       # Runs a set of commands using the runners shell
       - name: golangci-lint
@@ -39,5 +39,5 @@ jobs:
         with:
           version: v1.45.2
           working-directory: ./tencentcloud
-          args: --new-from-rev=master -v
-          #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=master -v
+          args: --new-from-rev=origin/master -v
+          #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v
