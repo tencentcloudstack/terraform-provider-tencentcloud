@@ -51,7 +51,7 @@ func resourceTencentCloudCssSnapshotTemplate() *schema.Resource {
 			"template_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Template name. Maximum length: 255 bytes. Only Chinese, English, numbers, &amp;amp;#39;_&amp;amp;#39;, &amp;amp;#39;-&amp;amp;#39; are supported.",
+				Description: "Template name. Maximum length: 255 bytes. Only Chinese, English, numbers, `_`, `-` are supported.",
 			},
 
 			"cos_app_id": {
@@ -75,7 +75,7 @@ func resourceTencentCloudCssSnapshotTemplate() *schema.Resource {
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Description information. Maximum length: 1024 bytes. Only Chinese, English, numbers, &amp;amp;#39;_&amp;amp;#39;, &amp;amp;#39;-&amp;amp;#39; are supported.",
+				Description: "Description information. Maximum length: 1024 bytes. Only `Chinese`, `English`, `numbers`, `_`, `-` are supported.",
 			},
 
 			"snapshot_interval": {

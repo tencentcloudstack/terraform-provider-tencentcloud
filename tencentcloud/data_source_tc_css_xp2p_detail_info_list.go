@@ -119,7 +119,7 @@ func dataSourceTencentCloudCssXp2pDetailInfoList() *schema.Resource {
 						"app_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "AppId。Note: This field may return null, indicating that no valid value is available.",
+							Description: "AppId. Note: This field may return null, indicating that no valid value is available.",
 						},
 					},
 				},

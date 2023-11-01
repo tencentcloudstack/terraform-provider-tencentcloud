@@ -51,13 +51,13 @@ func resourceTencentCloudCssCallbackTemplate() *schema.Resource {
 			"template_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Template name.Maximum length: 255 bytes. Only Chinese, English, numbers, &amp;amp;#39;_&amp;amp;#39;, &amp;amp;#39;-&amp;amp;#39; are supported.",
+				Description: "Template name.Maximum length: 255 bytes. Only `Chinese`, `English`, `numbers`, `_`, `-` are supported.",
 			},
 
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Description information.Maximum length: 1024 bytes.Only Chinese, English, numbers, &amp;amp;#39;_&amp;amp;#39;, &amp;amp;#39;-&amp;amp;#39; are supported.",
+				Description: "Description information.Maximum length: 1024 bytes.Only `Chinese`, `English`, `numbers`, `_`, `-` are supported.",
 			},
 
 			"stream_begin_notify_url": {
@@ -99,7 +99,7 @@ func resourceTencentCloudCssCallbackTemplate() *schema.Resource {
 			"push_exception_notify_url": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: " Streaming Exception Callback URL .",
+				Description: "Streaming Exception Callback URL.",
 			},
 		},
 	}

@@ -1505,8 +1505,30 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_play_domain_cert_attachment
 	tencentcloud_css_play_auth_key_config
 	tencentcloud_css_push_auth_key_config
+	tencentcloud_css_backup_stream
+	tencentcloud_css_callback_rule_attachment
+	tencentcloud_css_callback_template
+	tencentcloud_css_domain_referer
+	tencentcloud_css_enable_optimal_switching
+	tencentcloud_css_record_rule_attachment
+	tencentcloud_css_snapshot_rule_attachment
+	tencentcloud_css_snapshot_template
+	tencentcloud_css_pad_template
+	tencentcloud_css_pad_rule_attachment
+	tencentcloud_css_timeshift_template
+	tencentcloud_css_timeshift_rule_attachment
+	tencentcloud_css_stream_monitor
   Data Source
 	tencentcloud_css_domains
+	tencentcloud_css_backup_stream
+	tencentcloud_css_monitor_report
+	tencentcloud_css_pad_templates
+	tencentcloud_css_pull_stream_task_status
+	tencentcloud_css_stream_monitor_list
+	tencentcloud_css_time_shift_record_detail
+	tencentcloud_css_time_shift_stream_list
+	tencentcloud_css_watermarks
+	tencentcloud_css_xp2p_detail_info_list
 
 Performance Testing Service(PTS)
   Data Source

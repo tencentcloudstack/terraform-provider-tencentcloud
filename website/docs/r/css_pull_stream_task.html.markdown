@@ -34,7 +34,7 @@ The following arguments are supported:
 * `app_name` - (Required, String) push app name.
 * `domain_name` - (Required, String) push domain name.
 * `end_time` - (Required, String) task end time.
-* `source_type` - (Required, String) &amp;#39;PullLivePushLive&amp;#39;: SourceUrls live type, &amp;#39;PullVodPushLive&amp;#39;: SourceUrls vod type.
+* `source_type` - (Required, String) `PullLivePushLive`: SourceUrls live type, `PullVodPushLive`: SourceUrls vod type.
 * `source_urls` - (Required, Set: [`String`]) Pull Source media, SourceType=PullLivePushLive only 1 value, SourceType=PullLivePushLive can input multi values.
 * `start_time` - (Required, String) task begin time.
 * `stream_name` - (Required, String) push stream name.
@@ -51,7 +51,7 @@ The following arguments are supported:
 * `status` - (Optional, String) task enable or disable.
 * `to_url` - (Optional, String) full target push url, DomainName, AppName, StreamName field must be empty.
 * `vod_loop_times` - (Optional, Int) loop time for vod.
-* `vod_refresh_type` - (Optional, String) vod refresh method. &amp;#39;ImmediateNewSource&amp;#39;: switch to new source at once, &amp;#39;ContinueBreakPoint&amp;#39;: switch to new source while old source finish.
+* `vod_refresh_type` - (Optional, String) vod refresh method. `ImmediateNewSource`: switch to new source at once, `ContinueBreakPoint`: switch to new source while old source finish.
 * `watermark_list` - (Optional, List) watermark list, max 4 setting.
 
 The `watermark_list` object supports the following:

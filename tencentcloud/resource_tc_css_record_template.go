@@ -110,7 +110,7 @@ func resourceTencentCloudCssRecordTemplate() *schema.Resource {
 			"template_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Template name. Only Chinese, English, numbers, &amp;amp;#39;_&amp;amp;#39;, &amp;amp;#39;-&amp;amp;#39; are supported.",
+				Description: "Template name. Only `Chinese`, `English`, `numbers`, `_`, `-` are supported.",
 			},
 
 			"description": {
@@ -129,12 +129,12 @@ func resourceTencentCloudCssRecordTemplate() *schema.Resource {
 						"record_interval": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Recording interval.  Unit: second, default: 1800.  Value range: 30-7200.  This parameter is invalid for HLS. When recording HLS, a file is generated from streaming to streaming. .",
+							Description: "Recording interval.  Unit: second, default: 1800.  Value range: 30-7200.  This parameter is invalid for HLS. When recording HLS, a file is generated from streaming to streaming.",
 						},
 						"storage_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Recording storage duration.  Unit: second. Value range: 0 - 1500 days.  0: indicates permanent storage. .",
+							Description: "Recording storage duration.  Unit: second. Value range: 0 - 1500 days.  0: indicates permanent storage.",
 						},
 						"enable": {
 							Type:        schema.TypeInt,
@@ -144,7 +144,7 @@ func resourceTencentCloudCssRecordTemplate() *schema.Resource {
 						"vod_sub_app_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: " The ID of the vodSub app. .",
+							Description: " The ID of the vodSub app.",
 						},
 						"vod_file_name": {
 							Type:        schema.TypeString,
@@ -205,7 +205,7 @@ func resourceTencentCloudCssRecordTemplate() *schema.Resource {
 						"procedure": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Task flow. Note: This field may return null, indicating that no valid value can be obtained. .",
+							Description: "Task flow. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"storage_mode": {
 							Type:        schema.TypeString,
@@ -215,7 +215,7 @@ func resourceTencentCloudCssRecordTemplate() *schema.Resource {
 						"class_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Classification of on-demand applications. Note: This field may return null, indicating that no valid value can be obtained. .",
+							Description: "Classification of on-demand applications. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},

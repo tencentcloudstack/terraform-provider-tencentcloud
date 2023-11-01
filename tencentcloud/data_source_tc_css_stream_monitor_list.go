@@ -59,7 +59,7 @@ func dataSourceTencentCloudCssStreamMonitorList() *schema.Resource {
 									"output_stream_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The name of the output stream for the monitoring task.If not specified, the system will generate a name automatically.The name should be within 256 bytes and can only contain letters, numbers, &amp;#39;-&amp;#39;, &amp;#39;_&amp;#39;, and &amp;#39;.&amp;#39; characters.Note: This field may return null, indicating that no valid value is available.",
+										Description: "The name of the output stream for the monitoring task.If not specified, the system will generate a name automatically.The name should be within 256 bytes and can only contain letters, numbers, `-`, `_`, and `.` characters.Note: This field may return null, indicating that no valid value is available.",
 									},
 									"output_domain": {
 										Type:        schema.TypeString,
@@ -69,7 +69,7 @@ func dataSourceTencentCloudCssStreamMonitorList() *schema.Resource {
 									"output_app": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The playback path for the monitoring task.It should be within 32 bytes and can only contain letters, numbers, &amp;#39;-&amp;#39;, &amp;#39;_&amp;#39;, and &amp;#39;.&amp;#39; characters.Note: This field may return null, indicating that no valid value is available.",
+										Description: "The playback path for the monitoring task.It should be within 32 bytes and can only contain letters, numbers, `-`, `_`, and `.` characters.Note: This field may return null, indicating that no valid value is available.",
 									},
 								},
 							},
@@ -83,7 +83,7 @@ func dataSourceTencentCloudCssStreamMonitorList() *schema.Resource {
 									"input_stream_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The name of the input stream for the monitoring task.It should be within 256 bytes and can only contain letters, numbers, &amp;#39;-&amp;#39;, &amp;#39;_&amp;#39;, and &amp;#39;.&amp;#39; characters.Note: This field may return null, indicating that no valid value is available.",
+										Description: "The name of the input stream for the monitoring task.It should be within 256 bytes and can only contain letters, numbers, `-`, `_`, and `.` characters.Note: This field may return null, indicating that no valid value is available.",
 									},
 									"input_domain": {
 										Type:        schema.TypeString,
@@ -93,7 +93,7 @@ func dataSourceTencentCloudCssStreamMonitorList() *schema.Resource {
 									"input_app": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The push path for the input stream to be monitored.It should be within 32 bytes and can only contain letters, numbers, &amp;#39;-&amp;#39;, &amp;#39;_&amp;#39;, and &amp;#39;.&amp;#39; characters.Note: This field may return null, indicating that no valid value is available.",
+										Description: "The push path for the input stream to be monitored.It should be within 32 bytes and can only contain letters, numbers, `-`, `_`, and `.` characters.Note: This field may return null, indicating that no valid value is available.",
 									},
 									"input_url": {
 										Type:        schema.TypeString,

@@ -176,7 +176,7 @@ func resourceTencentCloudCssStreamMonitor() *schema.Resource {
 			"ocr_language": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Intelligent text recognition language settings：ocr language.0: close.1. Chinese,English.",
+				Description: "Intelligent text recognition language settings: ocr language.0: close.1. Chinese,English.",
 			},
 
 			"ai_asr_input_index_list": {
