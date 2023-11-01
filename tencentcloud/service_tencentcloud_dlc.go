@@ -628,3 +628,122 @@ func (me *DlcService) DlcRestartDataEngineStateRefreshFunc(dataEngineId string, 
 		return response.Response.DataEngine, helper.Int64ToStr(*response.Response.DataEngine.State), nil
 	}
 }
+
+func (me *DlcService) DeleteDlcAttachWorkGroupPolicyAttachmentById(ctx context.Context, workGroupId string, requestSet []*dlc.Policy) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewDetachWorkGroupPolicyRequest()
+	request.WorkGroupId = helper.StrToInt64Point(workGroupId)
+	request.PolicySet = requestSet
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DetachWorkGroupPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *DlcService) DeleteDlcBindWorkGroupsToUserById(ctx context.Context, userId string, workIds []*int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewUnbindWorkGroupsFromUserRequest()
+	request.AddInfo = &dlc.WorkGroupIdSetOfUserId{
+		UserId:       &userId,
+		WorkGroupIds: workIds,
+	}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().UnbindWorkGroupsFromUser(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *DlcService) DescribeDlcUserDataEngineConfigById(ctx context.Context, dataEngineId string) (userDataEngineConfig *dlc.DataEngineConfigInstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dlc.NewDescribeUserDataEngineConfigRequest()
+	request.Filters = []*dlc.Filter{
+		{Name: helper.String("engine-id"), Values: []*string{&dataEngineId}},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().DescribeUserDataEngineConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.DataEngineConfigInstanceInfos) < 1 {
+		return
+	}
+
+	userDataEngineConfig = response.Response.DataEngineConfigInstanceInfos[0]
+	return
+}
+
+func (me *DlcService) DescribeDlcCheckDataEngineConfigPairsValidityByFilter(ctx context.Context, param map[string]interface{}) (checkDataEngineConfigPairsValidity *dlc.CheckDataEngineConfigPairsValidityResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewCheckDataEngineConfigPairsValidityRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ChildImageVersionId" {
+			request.ChildImageVersionId = v.(*string)
+		}
+		if k == "DataEngineConfigPairs" {
+			request.DataEngineConfigPairs = v.([]*dlc.DataEngineConfigPair)
+		}
+		if k == "ImageVersionId" {
+			request.ImageVersionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDlcClient().CheckDataEngineConfigPairsValidity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	checkDataEngineConfigPairsValidity = response.Response
+	return
+}

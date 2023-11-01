@@ -651,7 +651,7 @@ func dataSourceTencentCloudDlcDescribeUserInfoRead(d *schema.ResourceData, meta 
 					policySetList = append(policySetList, policySetMap)
 				}
 
-				dataPolicyInfoMap["policy_set"] = []interface{}{policySetList}
+				dataPolicyInfoMap["policy_set"] = policySetList
 			}
 
 			if userInfo.DataPolicyInfo.TotalCount != nil {
@@ -874,7 +874,7 @@ func dataSourceTencentCloudDlcDescribeUserInfoRead(d *schema.ResourceData, meta 
 					policySetList = append(policySetList, policySetMap)
 				}
 
-				rowFilterInfoMap["policy_set"] = []interface{}{policySetList}
+				rowFilterInfoMap["policy_set"] = policySetList
 			}
 
 			if userInfo.RowFilterInfo.TotalCount != nil {

@@ -683,7 +683,7 @@ func dataSourceTencentCloudDlcDescribeWorkGroupInfoRead(d *schema.ResourceData, 
 					policySetList = append(policySetList, policySetMap)
 				}
 
-				dataPolicyInfoMap["policy_set"] = []interface{}{policySetList}
+				dataPolicyInfoMap["policy_set"] = policySetList
 			}
 
 			if workGroupInfo.DataPolicyInfo.TotalCount != nil {
@@ -772,7 +772,7 @@ func dataSourceTencentCloudDlcDescribeWorkGroupInfoRead(d *schema.ResourceData, 
 					policySetList = append(policySetList, policySetMap)
 				}
 
-				enginePolicyInfoMap["policy_set"] = []interface{}{policySetList}
+				enginePolicyInfoMap["policy_set"] = policySetList
 			}
 
 			if workGroupInfo.EnginePolicyInfo.TotalCount != nil {
@@ -865,7 +865,7 @@ func dataSourceTencentCloudDlcDescribeWorkGroupInfoRead(d *schema.ResourceData, 
 					policySetList = append(policySetList, policySetMap)
 				}
 
-				rowFilterInfoMap["policy_set"] = []interface{}{policySetList}
+				rowFilterInfoMap["policy_set"] = policySetList
 			}
 
 			if workGroupInfo.RowFilterInfo.TotalCount != nil {
