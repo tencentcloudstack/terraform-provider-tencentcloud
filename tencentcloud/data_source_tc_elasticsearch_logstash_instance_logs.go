@@ -125,7 +125,7 @@ func dataSourceTencentCloudElasticsearchLogstashInstanceLogsRead(d *schema.Resou
 		paramMap["InstanceId"] = helper.String(instanceId)
 	}
 
-	if v, ok := d.GetOkExists("log_type"); ok{
+	if v, ok := d.GetOkExists("log_type"); ok {
 		paramMap["LogType"] = helper.IntUint64(v.(int))
 	}
 
