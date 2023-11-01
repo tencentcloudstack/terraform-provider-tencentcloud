@@ -7,16 +7,15 @@ Example Usage
 resource "tencentcloud_dnspod_record_group" "record_group" {
   domain = "dnspod.cn"
   group_name = "group_demo"
-  domain_id = 123
 }
 ```
 
 Import
 
-dnspod record_group can be imported using the id, e.g.
+dnspod record_group can be imported using the domain#groupId, e.g.
 
 ```
-terraform import tencentcloud_dnspod_record_group.record_group record_group_id
+terraform import tencentcloud_dnspod_record_group.record_group domain#groupId
 ```
 */
 package tencentcloud
@@ -55,12 +54,6 @@ func resourceTencentCloudDnspodRecordGroup() *schema.Resource {
 				Description: "Record Group Name.",
 			},
 
-			"domain_id": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.",
-			},
-
 			"group_id": {
 				Computed:    true,
 				Type:        schema.TypeInt,
@@ -91,9 +84,9 @@ func resourceTencentCloudDnspodRecordGroupCreate(d *schema.ResourceData, meta in
 		request.GroupName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("domain_id"); ok {
-		request.DomainId = helper.IntUint64(v.(int))
-	}
+	// if v, ok := d.GetOkExists("domain_id"); ok {
+	// 	request.DomainId = helper.IntUint64(v.(int))
+	// }
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().CreateRecordGroup(request)
@@ -175,7 +168,7 @@ func resourceTencentCloudDnspodRecordGroupUpdate(d *schema.ResourceData, meta in
 	request.Domain = helper.String(idSplit[0])
 	request.GroupId = helper.StrToUint64Point(idSplit[1])
 
-	immutableArgs := []string{"domain", "domain_id"}
+	immutableArgs := []string{"domain"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -183,16 +176,8 @@ func resourceTencentCloudDnspodRecordGroupUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	if v, ok := d.GetOk("domain"); ok {
-		request.Domain = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("group_name"); ok {
 		request.GroupName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("domain_id"); ok {
-		request.DomainId = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

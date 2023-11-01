@@ -40,7 +40,6 @@ const testAccDnspodRecordGroup = `
 resource "tencentcloud_dnspod_record_group" "record_group" {
   domain = "iac-tf.cloud"
   group_name = "group_demo"
-  # domain_id = 123
 }
 
 `
@@ -50,7 +49,6 @@ const testAccDnspodRecordGroupUp = `
 resource "tencentcloud_dnspod_record_group" "record_group" {
   domain = "iac-tf.cloud"
   group_name = "group_demo2"
-  # domain_id = 123
 }
 
 `

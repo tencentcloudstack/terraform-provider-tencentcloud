@@ -17,7 +17,6 @@ Provides a resource to create a dnspod record_group
 resource "tencentcloud_dnspod_record_group" "record_group" {
   domain     = "dnspod.cn"
   group_name = "group_demo"
-  domain_id  = 123
 }
 ```
 
@@ -27,7 +26,6 @@ The following arguments are supported:
 
 * `domain` - (Required, String) Domain.
 * `group_name` - (Required, String) Record Group Name.
-* `domain_id` - (Optional, Int) Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.
 
 ## Attributes Reference
 
@@ -39,9 +37,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-dnspod record_group can be imported using the id, e.g.
+dnspod record_group can be imported using the domain#groupId, e.g.
 
 ```
-terraform import tencentcloud_dnspod_record_group.record_group record_group_id
+terraform import tencentcloud_dnspod_record_group.record_group domain#groupId
 ```
 

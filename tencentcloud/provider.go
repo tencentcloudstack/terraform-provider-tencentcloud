@@ -1218,7 +1218,7 @@ DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
     tencentcloud_dnspod_record
-	tencentcloud_dnspod_record_group
+    tencentcloud_dnspod_record_group
   Data Source
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
