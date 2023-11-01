@@ -125,7 +125,7 @@ func dataSourceTencentCloudElasticsearchLogstashInstanceLogsRead(d *schema.Resou
 		paramMap["InstanceId"] = helper.String(instanceId)
 	}
 
-	if v, _ := d.GetOk("log_type"); v != nil {
+	if v, ok := d.GetOkExists("log_type"); ok{
 		paramMap["LogType"] = helper.IntUint64(v.(int))
 	}
 
@@ -141,7 +141,7 @@ func dataSourceTencentCloudElasticsearchLogstashInstanceLogsRead(d *schema.Resou
 		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("order_by_type"); v != nil {
+	if v, ok := d.GetOkExists("order_by_type"); ok {
 		paramMap["OrderByType"] = helper.IntUint64(v.(int))
 	}
 

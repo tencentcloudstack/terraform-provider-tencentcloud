@@ -95,6 +95,9 @@ func resourceTencentCloudElasticsearchDiagnoseCreate(d *schema.ResourceData, met
 	service := ElasticsearchService{client: meta.(*TencentCloudClient).apiV3Conn}
 	params := make(map[string]interface{})
 	params["Status"] = 0
+	if v, ok := d.GetOk("cron_time"); ok {
+		params["CronTime"] = v.(string)
+	}
 	err := service.UpdateDiagnoseSettings(ctx, instanceId, params)
 	if err != nil {
 		return err

@@ -534,6 +534,7 @@ Elasticsearch Service(ES)
 	tencentcloud_elasticsearch_logstash_instance_operations
 	tencentcloud_elasticsearch_views
 	tencentcloud_elasticsearch_diagnose
+	tencentcloud_elasticsearch_instance_plugin_list
 
   Resource
     tencentcloud_elasticsearch_instance
@@ -549,6 +550,7 @@ Elasticsearch Service(ES)
 	tencentcloud_elasticsearch_restart_kibana_operation
 	tencentcloud_elasticsearch_diagnose
 	tencentcloud_elasticsearch_diagnose_instance
+	tencentcloud_elasticsearch_update_plugins_operation
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -2263,6 +2265,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_logstash_instance_operations":   dataSourceTencentCloudElasticsearchLogstashInstanceOperations(),
 			"tencentcloud_elasticsearch_views":                          dataSourceTencentCloudElasticsearchViews(),
 			"tencentcloud_elasticsearch_diagnose":                       dataSourceTencentCloudElasticsearchDiagnose(),
+			"tencentcloud_elasticsearch_instance_plugin_list":           dataSourceTencentCloudElasticsearchInstancePluginList(),
 			"tencentcloud_mongodb_zone_config":                          dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                            dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_mongodb_instance_backups":                     dataSourceTencentCloudMongodbInstanceBackups(),
@@ -3120,6 +3123,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_restart_nodes_operation":               resourceTencentCloudElasticsearchRestartNodesOperation(),
 			"tencentcloud_elasticsearch_diagnose":                              resourceTencentCloudElasticsearchDiagnose(),
 			"tencentcloud_elasticsearch_diagnose_instance":                     resourceTencentCloudElasticsearchDiagnoseInstance(),
+			"tencentcloud_elasticsearch_update_plugins_operation":              resourceTencentCloudElasticsearchUpdatePluginsOperation(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),

@@ -22,6 +22,10 @@ tencentcloud_elasticsearch_views
 tencentcloud_elasticsearch_diagnose
 ```
 
+```release-note:new-data-source
+tencentcloud_elasticsearch_instance_plugin_list
+```
+
 ```release-note:new-resource
 tencentcloud_elasticsearch_index
 ```
@@ -44,4 +48,8 @@ tencentcloud_elasticsearch_diagnose
 
 ```release-note:new-resource
 tencentcloud_elasticsearch_diagnose_instance
+```
+
+```release-note:new-resource
+tencentcloud_elasticsearch_update_plugins_operation
 ```
