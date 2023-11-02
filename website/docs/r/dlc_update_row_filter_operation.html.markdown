@@ -67,11 +67,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dlc update_row_filter_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_update_row_filter_operation.update_row_filter_operation update_row_filter_operation_id
-```
-
