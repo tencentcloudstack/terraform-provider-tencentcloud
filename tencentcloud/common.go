@@ -73,8 +73,6 @@ var retryableErrorCode = []string{
 	"ClientError.NetworkError",
 	"ClientError.HttpStatusCodeError",
 	// common
-	"FailedOperation",
-	"TradeUnknownError",
 	"RequestLimitExceeded",
 	"ResourceInUse",
 	"ResourceUnavailable",
