@@ -1894,34 +1894,35 @@ EventBridge(EB)
 
 Data Lake Compute(DLC)
   Data Source
-    tencentcloud_dlc_describe_user_type
-    tencentcloud_dlc_describe_user_info
-    tencentcloud_dlc_describe_user_roles
-    tencentcloud_dlc_describe_data_engine
-    tencentcloud_dlc_describe_data_engine_image_versions
-    tencentcloud_dlc_describe_data_engine_python_spark_images
-    tencentcloud_dlc_describe_engine_usage_info
-    tencentcloud_dlc_describe_work_group_info
-    tencentcloud_dlc_check_data_engine_image_can_be_rollback
-    tencentcloud_dlc_check_data_engine_image_can_be_upgrade
-    tencentcloud_dlc_check_data_engine_config_pairs_validity
+	tencentcloud_dlc_describe_user_type
+	tencentcloud_dlc_describe_user_info
+	tencentcloud_dlc_describe_user_roles
+	tencentcloud_dlc_describe_data_engine
+	tencentcloud_dlc_describe_data_engine_image_versions
+	tencentcloud_dlc_describe_data_engine_python_spark_images
+	tencentcloud_dlc_describe_engine_usage_info
+	tencentcloud_dlc_describe_work_group_info
+	tencentcloud_dlc_check_data_engine_image_can_be_rollback
+	tencentcloud_dlc_check_data_engine_image_can_be_upgrade
+	tencentcloud_dlc_check_data_engine_config_pairs_validity
 
   Resource
-    tencentcloud_dlc_work_group
-    tencentcloud_dlc_user
-    tencentcloud_dlc_data_engine
-    tencentcloud_dlc_rollback_data_engine_image_operation
-    tencentcloud_dlc_add_users_to_work_group_attachment
-    tencentcloud_dlc_store_location_config
-    tencentcloud_dlc_suspend_resume_data_engine
-    tencentcloud_dlc_modify_data_engine_description_operation
-    tencentcloud_dlc_modify_user_typ_operation
-    tencentcloud_dlc_renew_data_engine_operation
-    tencentcloud_dlc_restart_data_engine_operation
-    tencentcloud_dlc_switch_data_engine_image_operation
-    tencentcloud_dlc_upgrade_data_engine_image_operation
-    tencentcloud_dlc_user_data_engine_config
-    tencentcloud_dlc_bind_work_groups_to_user_attachment
+	tencentcloud_dlc_work_group
+	tencentcloud_dlc_user
+	tencentcloud_dlc_data_engine
+	tencentcloud_dlc_rollback_data_engine_image_operation
+	tencentcloud_dlc_add_users_to_work_group_attachment
+	tencentcloud_dlc_store_location_config
+	tencentcloud_dlc_suspend_resume_data_engine
+	tencentcloud_dlc_modify_data_engine_description_operation
+	tencentcloud_dlc_modify_user_typ_operation
+	tencentcloud_dlc_renew_data_engine_operation
+	tencentcloud_dlc_restart_data_engine_operation
+	tencentcloud_dlc_switch_data_engine_image_operation
+	tencentcloud_dlc_upgrade_data_engine_image_operation
+	tencentcloud_dlc_user_data_engine_config
+	tencentcloud_dlc_update_row_filter_operation
+	tencentcloud_dlc_bind_work_groups_to_user_attachment
 
 WeData
   Data Source
@@ -3674,6 +3675,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
+			"tencentcloud_dlc_update_row_filter_operation":                     resourceTencentCloudDlcUpdateRowFilterOperation(),
 			"tencentcloud_dlc_user_data_engine_config":                         resourceTencentCloudDlcUserDataEngineConfig(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
