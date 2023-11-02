@@ -1921,6 +1921,7 @@ Data Lake Compute(DLC)
 	tencentcloud_dlc_switch_data_engine_image_operation
 	tencentcloud_dlc_upgrade_data_engine_image_operation
 	tencentcloud_dlc_user_data_engine_config
+	tencentcloud_dlc_update_row_filter_operation
 	tencentcloud_dlc_bind_work_groups_to_user_attachment
 
 WeData
@@ -3673,6 +3674,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
+			"tencentcloud_dlc_update_row_filter_operation":                     resourceTencentCloudDlcUpdateRowFilterOperation(),
 			"tencentcloud_dlc_user_data_engine_config":                         resourceTencentCloudDlcUserDataEngineConfig(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
