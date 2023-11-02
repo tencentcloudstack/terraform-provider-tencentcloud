@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_gaap_global_domain_dns
+```
+
+```release-note:new-resource
+tencentcloud_gaap_global_domain
+```
