@@ -1,20 +1,20 @@
 ---
 subcategory: "Data Lake Compute(DLC)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_dlc_update_row_filter"
-sidebar_current: "docs-tencentcloud-resource-dlc_update_row_filter"
+page_title: "TencentCloud: tencentcloud_dlc_update_row_filter_operation"
+sidebar_current: "docs-tencentcloud-resource-dlc_update_row_filter_operation"
 description: |-
-  Provides a resource to create a dlc update_row_filter
+  Provides a resource to create a dlc update_row_filter_operation
 ---
 
-# tencentcloud_dlc_update_row_filter
+# tencentcloud_dlc_update_row_filter_operation
 
-Provides a resource to create a dlc update_row_filter
+Provides a resource to create a dlc update_row_filter_operation
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_update_row_filter" "update_row_filter" {
+resource "tencentcloud_dlc_update_row_filter_operation" "update_row_filter_operation" {
   policy_id = 103704
   policy {
     database    = "test_iac_keep"
@@ -69,9 +69,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-dlc update_row_filter can be imported using the id, e.g.
+dlc update_row_filter_operation can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dlc_update_row_filter.update_row_filter update_row_filter_id
+terraform import tencentcloud_dlc_update_row_filter_operation.update_row_filter_operation update_row_filter_operation_id
 ```
 

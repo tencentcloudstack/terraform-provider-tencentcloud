@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a dlc update_row_filter
+Provides a resource to create a dlc update_row_filter_operation
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dlc_update_row_filter" "update_row_filter" {
+resource "tencentcloud_dlc_update_row_filter_operation" "update_row_filter_operation" {
   policy_id = 103704
   policy {
 		database = "test_iac_keep"
@@ -20,15 +20,14 @@ resource "tencentcloud_dlc_update_row_filter" "update_row_filter" {
         re_auth = false
   }
 }
-
 ```
 
 Import
 
-dlc update_row_filter can be imported using the id, e.g.
+dlc update_row_filter_operation can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dlc_update_row_filter.update_row_filter update_row_filter_id
+terraform import tencentcloud_dlc_update_row_filter_operation.update_row_filter_operation update_row_filter_operation_id
 ```
 */
 package tencentcloud
@@ -42,11 +41,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDlcUpdateRowFilter() *schema.Resource {
+func resourceTencentCloudDlcUpdateRowFilterOperation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDlcUpdateRowFilterCreate,
-		Read:   resourceTencentCloudDlcUpdateRowFilterRead,
-		Delete: resourceTencentCloudDlcUpdateRowFilterDelete,
+		Create: resourceTencentCloudDlcUpdateRowFilterOperationCreate,
+		Read:   resourceTencentCloudDlcUpdateRowFilterOperationRead,
+		Delete: resourceTencentCloudDlcUpdateRowFilterOperationDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -158,8 +157,8 @@ func resourceTencentCloudDlcUpdateRowFilter() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudDlcUpdateRowFilterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_update_row_filter.create")()
+func resourceTencentCloudDlcUpdateRowFilterOperationCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dlc_update_row_filter_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -245,18 +244,18 @@ func resourceTencentCloudDlcUpdateRowFilterCreate(d *schema.ResourceData, meta i
 
 	d.SetId(policyId)
 
-	return resourceTencentCloudDlcUpdateRowFilterRead(d, meta)
+	return resourceTencentCloudDlcUpdateRowFilterOperationRead(d, meta)
 }
 
-func resourceTencentCloudDlcUpdateRowFilterRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_update_row_filter.read")()
+func resourceTencentCloudDlcUpdateRowFilterOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dlc_update_row_filter_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudDlcUpdateRowFilterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dlc_update_row_filter.delete")()
+func resourceTencentCloudDlcUpdateRowFilterOperationDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dlc_update_row_filter_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
