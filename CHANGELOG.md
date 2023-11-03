@@ -1,3 +1,16 @@
+## 1.81.42 (November 3, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dlc_update_row_filter_operation` ([#2270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2270))
+* **New Resource:** `tencentcloud_dnspod_domain_alias` ([#2273](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2273))
+
+ENHANCEMENTS:
+
+* tencentcloud_instance: Support set create timeout. ([#2276](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2276))
+* tencentcloud_mysql_backup_policy: Support instance binlog setting. ([#2272](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2272))
+* tencentcloud_nat_gateway: Support create standard nat ([#2275](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2275))
+
 ## 1.81.41 (November 1, 2023)
 
 FEATURES:
