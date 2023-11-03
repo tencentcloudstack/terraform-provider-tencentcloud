@@ -23,7 +23,7 @@ resource "tencentcloud_dnspod_snapshot" "snapshot" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String) Domain name.
+* `domain` - (Required, String, ForceNew) Domain name.
 
 ## Attributes Reference
 

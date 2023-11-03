@@ -42,6 +42,7 @@ func resourceTencentCloudDnspodSnapshot() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Domain name.",
 			},

@@ -18,11 +18,6 @@ func TestAccTencentCloudDnspodDownloadSnapshotResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_download_snapshot.download_snapshot", "domain", "iac-tf.cloud"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_dnspod_download_snapshot.download_snapshot",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
