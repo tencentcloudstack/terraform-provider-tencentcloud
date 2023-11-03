@@ -30,8 +30,8 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          #go-version-file: .go-version
-          go-version: '1.21'
+          go-version-file: .go-version
+          #go-version: '1.21'
           cache: false 
 
       # Runs a set of commands using the runners shell
