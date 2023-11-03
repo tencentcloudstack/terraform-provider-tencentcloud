@@ -36,7 +36,6 @@ func resourceTencentCloudDnspodDomainAlias() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDnspodDomainAliasCreate,
 		Read:   resourceTencentCloudDnspodDomainAliasRead,
-		Update: resourceTencentCloudDnspodDomainAliasUpdate,
 		Delete: resourceTencentCloudDnspodDomainAliasDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -145,23 +144,6 @@ func resourceTencentCloudDnspodDomainAliasRead(d *schema.ResourceData, meta inte
 	}
 
 	return nil
-}
-
-func resourceTencentCloudDnspodDomainAliasUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dnspod_domain_alias.update")()
-	defer inconsistentCheck(d, meta)()
-
-	// logId := getLogId(contextNil)
-
-	immutableArgs := []string{"domain_alias", "domain"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	return resourceTencentCloudDnspodDomainAliasRead(d, meta)
 }
 
 func resourceTencentCloudDnspodDomainAliasDelete(d *schema.ResourceData, meta interface{}) error {
