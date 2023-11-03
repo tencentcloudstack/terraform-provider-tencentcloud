@@ -22,12 +22,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDnspodSnapshot() *schema.Resource {
@@ -55,7 +56,7 @@ func resourceTencentCloudDnspodSnapshotCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request    = dnspod.NewCreateSnapshotRequest()
+		request = dnspod.NewCreateSnapshotRequest()
 		// response   = dnspod.NewCreateSnapshotResponse()
 		// domain string
 		// snapshotId string

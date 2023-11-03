@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodDownloadSnapshotResource_basic(t *testing.T) {
@@ -13,7 +14,9 @@ func TestAccTencentCloudDnspodDownloadSnapshotResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodDownloadSnapshot,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dnspod_download_snapshot.download_snapshot", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_download_snapshot.download_snapshot", "domain", "iac-tf.cloud"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_dnspod_download_snapshot.download_snapshot",
@@ -27,9 +30,8 @@ func TestAccTencentCloudDnspodDownloadSnapshotResource_basic(t *testing.T) {
 const testAccDnspodDownloadSnapshot = `
 
 resource "tencentcloud_dnspod_download_snapshot" "download_snapshot" {
-  domain = "dnspod.cn"
+  domain = "iac-tf.cloud"
   snapshot_id = "456"
-  domain_id = 123
 }
 
 `

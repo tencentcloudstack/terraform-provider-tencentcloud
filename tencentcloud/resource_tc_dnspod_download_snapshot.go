@@ -7,7 +7,6 @@ Example Usage
 resource "tencentcloud_dnspod_download_snapshot" "download_snapshot" {
   domain = "dnspod.cn"
   snapshot_id = "456"
-  domain_id = 123
 }
 ```
 
@@ -24,11 +23,12 @@ package tencentcloud
 import (
 	"strings"
 
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDnspodDownloadSnapshot() *schema.Resource {
@@ -64,9 +64,9 @@ func resourceTencentCloudDnspodDownloadSnapshotCreate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dnspod.NewDownloadSnapshotRequest()
+		request = dnspod.NewDownloadSnapshotRequest()
 		// response = dnspod.NewDownloadSnapshotResponse()
-		domain   string
+		domain     string
 		snapshotId string
 	)
 	if v, ok := d.GetOk("domain"); ok {

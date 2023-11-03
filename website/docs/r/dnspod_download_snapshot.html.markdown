@@ -17,7 +17,6 @@ Provides a resource to create a dnspod download_snapshot
 resource "tencentcloud_dnspod_download_snapshot" "download_snapshot" {
   domain      = "dnspod.cn"
   snapshot_id = "456"
-  domain_id   = 123
 }
 ```
 
