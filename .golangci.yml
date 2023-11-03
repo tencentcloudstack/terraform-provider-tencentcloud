@@ -10,17 +10,17 @@ issues:
 linters:
   disable-all: true
   enable:
-    - deadcode
+    #- deadcode
     - errcheck
     - gofmt
     - gosimple
     - ineffassign
     - misspell
     - staticcheck
-    - structcheck
+    #- structcheck
     - unconvert
     - unused
-    - varcheck
+    #- varcheck
     - vet
 
 linters-settings:
