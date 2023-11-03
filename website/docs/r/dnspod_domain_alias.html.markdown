@@ -24,8 +24,8 @@ resource "tencentcloud_dnspod_domain_alias" "domain_alias" {
 
 The following arguments are supported:
 
-* `domain_alias` - (Required, String) Domain alias.
-* `domain` - (Required, String) Domain.
+* `domain_alias` - (Required, String, ForceNew) Domain alias.
+* `domain` - (Required, String, ForceNew) Domain.
 
 ## Attributes Reference
 

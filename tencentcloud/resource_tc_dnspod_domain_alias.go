@@ -43,12 +43,14 @@ func resourceTencentCloudDnspodDomainAlias() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"domain_alias": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Domain alias.",
 			},
 
 			"domain": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Domain.",
 			},
