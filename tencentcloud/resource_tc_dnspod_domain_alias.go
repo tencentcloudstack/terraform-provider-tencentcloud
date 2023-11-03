@@ -7,7 +7,6 @@ Example Usage
 resource "tencentcloud_dnspod_domain_alias" "domain_alias" {
   domain_alias = "dnspod.com"
   domain = "dnspod.cn"
-  domain_id = 123
 }
 ```
 
@@ -16,7 +15,7 @@ Import
 dnspod domain_alias can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dnspod_domain_alias.domain_alias domain_alias_id
+terraform import tencentcloud_dnspod_domain_alias.domain_alias domain#domain_alias_id
 ```
 */
 package tencentcloud
@@ -54,6 +53,12 @@ func resourceTencentCloudDnspodDomainAlias() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Domain.",
 			},
+
+			"domain_alias_id": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Domain alias ID.",
+			},
 		},
 	}
 }
@@ -67,16 +72,15 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 	var (
 		request       = dnspod.NewCreateDomainAliasRequest()
 		response      = dnspod.NewCreateDomainAliasResponse()
-		// domainAlias   string
 		domain string
 		domainAliasId int64
 	)
 	if v, ok := d.GetOk("domain_alias"); ok {
-		domain = v.(string)
 		request.DomainAlias = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("domain"); ok {
+		domain = v.(string)
 		request.Domain = helper.String(v.(string))
 	}
 
@@ -134,6 +138,10 @@ func resourceTencentCloudDnspodDomainAliasRead(d *schema.ResourceData, meta inte
 
 	if domainAliasInfo.DomainAlias != nil {
 		_ = d.Set("domain_alias", domainAliasInfo.DomainAlias)
+	}
+
+	if domainAliasInfo.Id != nil {
+		_ = d.Set("domain_alias_id", domainAliasInfo.Id)
 	}
 
 	return nil

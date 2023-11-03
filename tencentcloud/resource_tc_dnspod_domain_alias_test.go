@@ -14,8 +14,18 @@ func TestAccTencentCloudDnspodDomainAliasResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodDomainAlias,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dnspod_domain_alias.domain_alias", "id")),
+				Check:  resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain_alias", "iac-tf-alias.cloud"),
+				),
 			},
+			// {
+			// 	Config: testAccDnspodDomainAliasUp,
+			// 	Check: resource.ComposeTestCheckFunc(
+			// 		resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain", "iac-tf.cloud"),
+			// 		resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain_alias", "iac-tf-alias2.cloud"),
+			// 	),
+			// },
 			{
 				ResourceName:      "tencentcloud_dnspod_domain_alias.domain_alias",
 				ImportState:       true,
@@ -28,12 +38,17 @@ func TestAccTencentCloudDnspodDomainAliasResource_basic(t *testing.T) {
 const testAccDnspodDomainAlias = `
 
 resource "tencentcloud_dnspod_domain_alias" "domain_alias" {
-  domain_alias = "dnspod.com"
-  domain = "dnspod.cn"
-  domain_id = 123
-  tags = {
-    "createdBy" = "terraform"
-  }
+  domain = "iac-tf.cloud"
+  domain_alias = "iac-tf-alias.cloud"
 }
 
 `
+
+// const testAccDnspodDomainAliasUp = `
+
+// resource "tencentcloud_dnspod_domain_alias" "domain_alias" {
+//   domain_alias = "iac-tf-alias2.cloud"
+//   domain = "iac-tf.cloud"
+// }
+
+// `

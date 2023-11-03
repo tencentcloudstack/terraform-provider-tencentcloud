@@ -666,12 +666,12 @@ func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, doma
 	}
 
 	for _, item := range response.Response.DomainAliasList {
-		if *item.DomainAliasId == domainAliasId {
+		if *item.Id == domainAliasId {
 			domainAliasInfo = item
 			return
 		}
 	}
-	
+
 	return
 }
 
