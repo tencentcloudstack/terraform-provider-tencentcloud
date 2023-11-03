@@ -65,26 +65,29 @@ resource "tencentcloud_instance" "cvm_postpaid" {
 
 // Create a PREPAID CVM instance
 resource "tencentcloud_instance" "cvm_prepaid" {
-  instance_name              = "cvm_prepaid"
-  availability_zone          = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
-  instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
-  system_disk_type           = "CLOUD_PREMIUM"
-  system_disk_size           = 50
-  hostname                   = "user"
-  project_id                 = 0
-  vpc_id                     = tencentcloud_vpc.app.id
-  subnet_id                  = tencentcloud_subnet.app.id
-  instance_charge_type       = "PREPAID"
-  instance_charge_type_prepaid_period = 1
+  timeouts {
+    create = "30m"
+  }
+  instance_name                           = "cvm_prepaid"
+  availability_zone                       = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+  image_id                                = data.tencentcloud_images.my_favorite_image.images.0.image_id
+  instance_type                           = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+  system_disk_type                        = "CLOUD_PREMIUM"
+  system_disk_size                        = 50
+  hostname                                = "user"
+  project_id                              = 0
+  vpc_id                                  = tencentcloud_vpc.app.id
+  subnet_id                               = tencentcloud_subnet.app.id
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
   instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
-	encrypt = false
+    encrypt        = false
   }
   force_delete = true
-  tags = {
+  tags         = {
     tagKey = "tagValue"
   }
 }
@@ -127,7 +130,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"image_id": {
 				Type:        schema.TypeString,
@@ -765,7 +770,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	//get system disk ID and data disk ID
 	var systemDiskId string
 	var dataDiskIds []string
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
