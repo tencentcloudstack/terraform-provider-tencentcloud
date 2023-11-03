@@ -67,10 +67,10 @@ resource "tencentcloud_nat_gateway" "example" {
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
+  nat_product_version = 2
   tags = {
     tf_tag_key = "tf_tag_value"
   }
-
   lifecycle {
     ignore_changes = [
       // standard nat will set default values for bandwidth and max_concurrent
