@@ -640,12 +640,11 @@ func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, domain
 	return
 }
 
-func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, domainAlias string, domainAliasId string) (domain_alias *dnspod.DomainAliasInfo, errRet error) {
+func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, domain string, domainAlias string) (domainAliasInfo *dnspod.DomainAliasInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dnspod.NewDescribeDomainAliasListRequest()
-	request.DomainAlias = &domainAlias
-	request.DomainAliasId = &domainAliasId
+	request.Domain = &domain
 
 	defer func() {
 		if errRet != nil {
@@ -655,7 +654,7 @@ func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, doma
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseDnspodClient().DescribeDomainAliasList(request)
+	response, err := me.client.UseDnsPodClient().DescribeDomainAliasList(request)
 	if err != nil {
 		errRet = err
 		return
@@ -666,16 +665,16 @@ func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, doma
 		return
 	}
 
-	domain_alias = response.Response.DomainAliasInfo[0]
+	domainAliasInfo = response.Response.DomainAliasInfo[0]
 	return
 }
 
-func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domainAlias string, domainAliasId string) (errRet error) {
+func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain string, domainAlias string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := dnspod.NewDeleteDomainAliasRequest()
+	request.Domain = &domain
 	request.DomainAlias = &domainAlias
-	request.DomainAliasId = &domainAliasId
 
 	defer func() {
 		if errRet != nil {
@@ -685,7 +684,7 @@ func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseDnspodClient().DeleteDomainAlias(request)
+	response, err := me.client.UseDnsPodClient().DeleteDomainAlias(request)
 	if err != nil {
 		errRet = err
 		return

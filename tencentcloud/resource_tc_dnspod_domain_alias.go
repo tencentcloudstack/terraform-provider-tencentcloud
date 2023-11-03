@@ -54,12 +54,6 @@ func resourceTencentCloudDnspodDomainAlias() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Domain.",
 			},
-
-			"domain_id": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.",
-			},
 		},
 	}
 }
@@ -73,10 +67,12 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 	var (
 		request       = dnspod.NewCreateDomainAliasRequest()
 		response      = dnspod.NewCreateDomainAliasResponse()
-		domainAlias   string
-		domainAliasId string
+		// domainAlias   string
+		domain string
+		domainAliasId int64
 	)
 	if v, ok := d.GetOk("domain_alias"); ok {
+		domain = v.(string)
 		request.DomainAlias = helper.String(v.(string))
 	}
 
@@ -84,12 +80,8 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 		request.Domain = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("domain_id"); ok {
-		request.DomainId = helper.IntInt64(v.(int))
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnspodClient().CreateDomainAlias(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().CreateDomainAlias(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -105,7 +97,7 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 
 	domainAliasId = *response.Response.DomainAliasId
 	// d.SetId(helper.String(domainAlias))
-	d.SetId(strings.Join([]string{domain, helper.UInt64ToStr(groupId)}, FILED_SP))
+	d.SetId(strings.Join([]string{domain, helper.Int64ToStr(domainAliasId)}, FILED_SP))
 
 	return resourceTencentCloudDnspodDomainAliasRead(d, meta)
 }
@@ -124,30 +116,24 @@ func resourceTencentCloudDnspodDomainAliasRead(d *schema.ResourceData, meta inte
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	domainAlias := idSplit[0]
+	domain := idSplit[0]
 	domainAliasId := idSplit[1]
 
-	domain_alias, err := service.DescribeDnspodDomainAliasById(ctx, domainAlias, domainAliasId)
+	domainAlias, err := service.DescribeDnspodDomainAliasById(ctx, domain, domainAliasId)
 	if err != nil {
 		return err
 	}
 
-	if domain_alias == nil {
+	if domainAlias == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `DnspodDomain_alias` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `DnspodDomainAlias` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if domain_alias.DomainAlias != nil {
-		_ = d.Set("domain_alias", domain_alias.DomainAlias)
-	}
+	_ = d.Set("domain", domain)
 
-	if domain_alias.Domain != nil {
-		_ = d.Set("domain", domain_alias.Domain)
-	}
-
-	if domain_alias.DomainId != nil {
-		_ = d.Set("domain_id", domain_alias.DomainId)
+	if domainAlias.DomainAlias != nil {
+		_ = d.Set("domain_alias", domainAlias.DomainAlias)
 	}
 
 	return nil
@@ -159,7 +145,7 @@ func resourceTencentCloudDnspodDomainAliasUpdate(d *schema.ResourceData, meta in
 
 	logId := getLogId(contextNil)
 
-	immutableArgs := []string{"domain_alias", "domain", "domain_id"}
+	immutableArgs := []string{"domain_alias", "domain"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
