@@ -117,14 +117,14 @@ func resourceTencentCloudDnspodDomainAliasRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	domain := idSplit[0]
-	domainAliasId := idSplit[1]
+	domainAliasId := helper.StrToInt64(idSplit[1])
 
-	domainAlias, err := service.DescribeDnspodDomainAliasById(ctx, domain, domainAliasId)
+	domainAliasInfo, err := service.DescribeDnspodDomainAliasById(ctx, domain, domainAliasId)
 	if err != nil {
 		return err
 	}
 
-	if domainAlias == nil {
+	if domainAliasInfo == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `DnspodDomainAlias` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -132,8 +132,8 @@ func resourceTencentCloudDnspodDomainAliasRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("domain", domain)
 
-	if domainAlias.DomainAlias != nil {
-		_ = d.Set("domain_alias", domainAlias.DomainAlias)
+	if domainAliasInfo.DomainAlias != nil {
+		_ = d.Set("domain_alias", domainAliasInfo.DomainAlias)
 	}
 
 	return nil
@@ -143,7 +143,7 @@ func resourceTencentCloudDnspodDomainAliasUpdate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_dnspod_domain_alias.update")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	// logId := getLogId(contextNil)
 
 	immutableArgs := []string{"domain_alias", "domain"}
 
@@ -169,7 +169,7 @@ func resourceTencentCloudDnspodDomainAliasDelete(d *schema.ResourceData, meta in
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	domainAlias := idSplit[0]
-	domainAliasId := idSplit[1]
+	domainAliasId := helper.StrToInt64(idSplit[1])
 
 	if err := service.DeleteDnspodDomainAliasById(ctx, domainAlias, domainAliasId); err != nil {
 		return err

@@ -19,8 +19,6 @@ jobs:
   golangci-lint:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    env:
-      GOLANGCI_LINT_CACHE: lint-cache
  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -40,8 +38,8 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          #version: v1.45.2
-          version: v1.54
+          version: v1.45.2
+          #version: v1.54
           working-directory: ./tencentcloud
           args: --new-from-rev=origin/master -v
           #args: --enable-all --max-same-issues=0 --max-issues-per-linter=0 --new-from-rev=origin/master -v

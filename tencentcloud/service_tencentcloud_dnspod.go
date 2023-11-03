@@ -640,7 +640,7 @@ func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, domain
 	return
 }
 
-func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, domain string, domainAlias string) (domainAliasInfo *dnspod.DomainAliasInfo, errRet error) {
+func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, domain string, domainAliasId int64) (domainAliasInfo *dnspod.DomainAliasInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dnspod.NewDescribeDomainAliasListRequest()
@@ -661,20 +661,26 @@ func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, doma
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.DomainAliasInfo) < 1 {
+	if len(response.Response.DomainAliasList) < 1 {
 		return
 	}
 
-	domainAliasInfo = response.Response.DomainAliasInfo[0]
+	for _, item := range response.Response.DomainAliasList {
+		if *item.DomainAliasId == domainAliasId {
+			domainAliasInfo = item
+			return
+		}
+	}
+	
 	return
 }
 
-func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain string, domainAlias string) (errRet error) {
+func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain string, domainAliasId int64) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := dnspod.NewDeleteDomainAliasRequest()
 	request.Domain = &domain
-	request.DomainAlias = &domainAlias
+	request.DomainAliasId = &domainAliasId
 
 	defer func() {
 		if errRet != nil {
