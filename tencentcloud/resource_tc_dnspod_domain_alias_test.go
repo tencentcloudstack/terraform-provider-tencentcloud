@@ -14,7 +14,7 @@ func TestAccTencentCloudDnspodDomainAliasResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodDomainAlias,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_domain_alias.domain_alias", "domain_alias", "iac-tf-alias.cloud"),
 				),

@@ -1233,8 +1233,10 @@ MapReduce(EMR)
 DNSPOD
   Resource
     tencentcloud_dnspod_domain_instance
+    tencentcloud_dnspod_domain_alias
     tencentcloud_dnspod_record
     tencentcloud_dnspod_record_group
+
   Data Source
     tencentcloud_dnspod_records
     tencentcloud_dnspod_domain_list
@@ -1242,7 +1244,7 @@ DNSPOD
     tencentcloud_dnspod_domain_log_list
     tencentcloud_dnspod_record_analytics
     tencentcloud_dnspod_record_line_list
-	# tencentcloud_dnspod_record_list
+	tencentcloud_dnspod_record_list
     tencentcloud_dnspod_record_type
 
 PrivateDNS

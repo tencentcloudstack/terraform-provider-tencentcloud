@@ -72,7 +72,7 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 	var (
 		request       = dnspod.NewCreateDomainAliasRequest()
 		response      = dnspod.NewCreateDomainAliasResponse()
-		domain string
+		domain        string
 		domainAliasId int64
 	)
 	if v, ok := d.GetOk("domain_alias"); ok {
