@@ -699,3 +699,86 @@ func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain
 
 	return
 }
+
+func (me *DnspodService) DescribeDnspodSnapshotById(ctx context.Context, domain string, snapshotId string) (snapshot *dnspod.SnapshotInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeSnapshotListRequest()
+	request.Domain = &domain
+	// request.SnapshotId = &snapshotId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeSnapshotList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SnapshotList) < 1 {
+		return
+	}
+
+	snapshot = response.Response.SnapshotList[0]
+	return
+}
+
+func (me *DnspodService) DeleteDnspodSnapshotById(ctx context.Context, snapshotId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDeleteSnapshotRequest()
+	request.SnapshotId = &snapshotId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DeleteSnapshot(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DnspodService) DescribeDnspodSnapshotConfigById(ctx context.Context, domain string) (snapshotConfig *dnspod.SnapshotConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeSnapshotConfigRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeSnapshotConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.SnapshotConfig == nil {
+		return
+	}
+
+	snapshotConfig = response.Response.SnapshotConfig
+	return
+}
