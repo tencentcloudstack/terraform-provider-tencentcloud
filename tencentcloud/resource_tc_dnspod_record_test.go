@@ -29,6 +29,7 @@ func TestAccTencentCloudDnspodRecord(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "A"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
 				),
 			},
 			{
@@ -124,5 +125,6 @@ resource "tencentcloud_dnspod_record" "demo" {
   record_line="默认"
   value="1.2.3.9"
   sub_domain="demo"
+  remark="terraform-test"
 }
 `
