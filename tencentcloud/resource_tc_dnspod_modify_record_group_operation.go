@@ -32,24 +32,28 @@ func resourceTencentCloudDnspodModifyRecordGroupOperation() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Domain.",
 			},
 
 			"group_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Record Group ID.",
 			},
 
 			"record_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Record ID, multiple IDs are separated by a vertical line |.",
 			},
 
 			"domain_id": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Domain ID. The parameter DomainId has a higher priority than the parameter Domain. If the parameter DomainId is passed, the parameter Domain will be ignored. You can find all Domains and DomainIds through the DescribeDomainList interface.",
 			},
