@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodModifyDomainOwnerResource_basic(t *testing.T) {
@@ -13,22 +14,22 @@ func TestAccTencentCloudDnspodModifyDomainOwnerResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodModifyDomainOwner,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_domain_owner_operation.modify_domain_owner", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_domain_owner_operation.modify_domain_owner", "account", "xxxxxxxxx"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_domain_owner_operation.modify_domain_owner", "domain_id", 123),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_domain_owner_operation.modify_domain_owner", "domain_id", "123"),
 				),
 			},
 		},
 	})
 }
 
-const testAccDnspodModify_domain_owner = `
+const testAccDnspodModifyDomainOwner = `
 
 resource "tencentcloud_dnspod_modify_domain_owner_operation" "modify_domain_owner" {
   domain = "dnspod.cn"
   account = "xxxxxxxxx"
-  domain_id = 123
+  domain_id = "123"
 }
 
 `

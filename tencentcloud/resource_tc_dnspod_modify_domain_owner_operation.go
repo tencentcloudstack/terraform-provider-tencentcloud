@@ -14,11 +14,12 @@ resource "tencentcloud_dnspod_modify_domain_owner_operation" "modify_domain_owne
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDnspodModifyDomainOwnerOperation() *schema.Resource {
@@ -58,9 +59,9 @@ func resourceTencentCloudDnspodModifyDomainOwnerOperationCreate(d *schema.Resour
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dnspod.NewModifyDomainOwnerRequest()
+		request = dnspod.NewModifyDomainOwnerRequest()
 		// response = dnspod.NewModifyDomainOwnerResponse()
-		domain   string
+		domain string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)

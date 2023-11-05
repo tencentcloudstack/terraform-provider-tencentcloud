@@ -15,12 +15,13 @@ resource "tencentcloud_dnspod_modify_record_group_operation" "modify_record_grou
 package tencentcloud
 
 import (
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudDnspodModifyRecordGroupOperation() *schema.Resource {
@@ -62,11 +63,11 @@ func resourceTencentCloudDnspodModifyRecordGroupOperationCreate(d *schema.Resour
 	logId := getLogId(contextNil)
 
 	var (
-		request = dnspod.NewModifyRecordToGroupRequest()
+		request  = dnspod.NewModifyRecordToGroupRequest()
 		domain   string
 		recordId string
 	)
-	
+
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
 		request.Domain = helper.String(v.(string))
@@ -80,11 +81,11 @@ func resourceTencentCloudDnspodModifyRecordGroupOperationCreate(d *schema.Resour
 	if v, ok := d.GetOkExists("domain_id"); ok {
 		request.DomainId = helper.IntUint64(v.(int))
 	}
-	
+
 	if v, ok := d.GetOkExists("group_id"); ok {
 		request.GroupId = helper.IntUint64(v.(int))
 	}
-	
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyRecordToGroup(request)
 		if e != nil {

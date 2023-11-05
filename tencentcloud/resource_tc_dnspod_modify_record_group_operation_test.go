@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodModifyRecordGroupOperationResource_basic(t *testing.T) {
@@ -13,7 +14,7 @@ func TestAccTencentCloudDnspodModifyRecordGroupOperationResource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodModifyRecordGroupOperation,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_record_group_operation.modify_record_group", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_record_group_operation.modify_record_group", "group_id", 1),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_modify_record_group_operation.modify_record_group", "record_id", "234"),
