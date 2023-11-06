@@ -785,6 +785,7 @@ variable "engine_versions" {
     "3.6": "MONGO_36_WT",
     "4.0": "MONGO_40_WT",
     "4.2": "MONGO_42_WT"
+    "4.4": "MONGO_44_WT"
   }
 }
 variable "sg_id" {
@@ -804,7 +805,7 @@ locals {
   cluster_type = local.spec.0.cluster_type
   memory = local.spec.0.memory / 1024
   volume = local.spec.0.min_storage / 1024
-  engine_version = lookup(var.engine_versions, "4.0", local.spec.0.engine_version)
+  engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
   security_group_id = data.tencentcloud_security_group.foo.id
 }
 
@@ -814,7 +815,7 @@ locals {
   sharding_machine_type = local.sharding_spec.0.machine_type
   sharding_memory = local.sharding_spec.0.memory / 1024
   sharding_volume = local.sharding_spec.0.min_storage / 1024
-  sharding_engine_version = lookup(var.engine_versions, "4.0", local.sharding_spec.0.engine_version)
+  sharding_engine_version = lookup(var.engine_versions, local.sharding_spec.0.engine_version)
 }
 `
 
