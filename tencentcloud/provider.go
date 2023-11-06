@@ -1236,6 +1236,7 @@ DNSPOD
     tencentcloud_dnspod_domain_alias
     tencentcloud_dnspod_record
     tencentcloud_dnspod_record_group
+    tencentcloud_dnspod_custom_line
 
   Data Source
     tencentcloud_dnspod_records
@@ -3331,6 +3332,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_domain_alias":                                 resourceTencentCloudDnspodDomainAlias(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
 			"tencentcloud_dnspod_record_group":                                 resourceTencentCloudDnspodRecordGroup(),
+			"tencentcloud_dnspod_custom_line":                                  resourceTencentCloudDnspodCustomLine(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),

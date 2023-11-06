@@ -699,3 +699,63 @@ func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain
 
 	return
 }
+
+func (me *DnspodService) DescribeDnspodCustomLineById(ctx context.Context, domain string, name string) (customLineInfo *dnspod.CustomLineInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeDomainCustomLineListRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeDomainCustomLineList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.LineList == nil {
+		return
+	}
+
+	for _, item := range response.Response.LineList {
+		if *item.Name == name {
+			customLineInfo = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *DnspodService) DeleteDnspodCustomLineById(ctx context.Context, domain string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDeleteDomainCustomLineRequest()
+	request.Domain = &domain
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DeleteDomainCustomLine(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
