@@ -49,7 +49,7 @@ func resourceTencentCloudWedataScript() *schema.Resource {
 			"file_path": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Cos file path:/datastudio/project/projectId/..",
+				Description: "Cos file path:/datastudio/project/projectId/.",
 			},
 			"project_id": {
 				Type:        schema.TypeString,
@@ -130,6 +130,7 @@ func resourceTencentCloudWedataScriptCreate(d *schema.ResourceData, meta interfa
 	extraInfoStr := string(extraInfoBytes)
 	scriptRequestInfo.ExtraInfo = helper.String(extraInfoStr)
 
+	request.ScriptRequestInfo = &scriptRequestInfo
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().UploadContent(request)
 		if e != nil {
@@ -192,7 +193,7 @@ func resourceTencentCloudWedataScriptRead(d *schema.ResourceData, meta interface
 	}
 
 	if fileInfo.Region != nil {
-		_ = d.Set("bucket_name", fileInfo.Region)
+		_ = d.Set("region", fileInfo.Region)
 	}
 
 	if fileInfo.FileExtensionType != nil {

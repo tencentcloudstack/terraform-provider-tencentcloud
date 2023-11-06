@@ -18,8 +18,8 @@ resource "tencentcloud_wedata_baseline" "example" {
   project_id     = "1927766435649077248"
   baseline_name  = "tf_example"
   baseline_type  = "D"
-  create_uin     = "tf_user"
-  create_name    = "100028439226"
+  create_uin     = "100028439226"
+  create_name    = "tf_user"
   in_charge_uin  = "tf_user"
   in_charge_name = "100028439226"
   promise_tasks {
@@ -27,7 +27,7 @@ resource "tencentcloud_wedata_baseline" "example" {
     task_name           = "tf_demo_task"
     task_id             = "20231030145334153"
     task_cycle          = "D"
-    workflow_name       = "交易"
+    workflow_name       = "dataflow_mpp"
     workflow_id         = "e4dafb2e-76eb-11ee-bfeb-b8cef68a6637"
     task_in_charge_name = ";tf_user;"
   }

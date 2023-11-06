@@ -135,7 +135,7 @@ func resourceTencentCloudWedataResourceCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
+		if result == nil || len(result.Response.Data) == 0 {
 			e = fmt.Errorf("wedata resource not exists")
 			return resource.NonRetryableError(e)
 		}

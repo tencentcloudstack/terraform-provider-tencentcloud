@@ -214,8 +214,12 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, createCustomFunctionRequest.GetAction(), createCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
 
-		if result == nil {
+		if result == nil || result.Response.FunctionId == nil {
 			e = fmt.Errorf("wedata function not exists")
+			if result.Response.ErrorMessage != nil {
+				e = fmt.Errorf(*result.Response.ErrorMessage)
+			}
+
 			return resource.NonRetryableError(e)
 		}
 
@@ -542,8 +546,8 @@ func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta inter
 		}
 
 		return nil
-	})
 
+	})
 	if err != nil {
 		log.Printf("[CRITAL]%s update submit wedata function failed, reason:%+v", logId, err)
 		return err

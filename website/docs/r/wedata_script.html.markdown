@@ -29,7 +29,7 @@ The following arguments are supported:
 
 * `bucket_name` - (Optional, String) Cos bucket name.
 * `file_extension_type` - (Optional, String) File Extension Type:jar, sql, zip, py, sh, txt, di, dg, pyspark, kjb, ktr, csv.
-* `file_path` - (Optional, String) Cos file path:/datastudio/project/projectId/..
+* `file_path` - (Optional, String) Cos file path:/datastudio/project/projectId/.
 * `project_id` - (Optional, String) Project id.
 * `region` - (Optional, String) Cos region.
 

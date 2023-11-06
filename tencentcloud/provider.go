@@ -1953,22 +1953,15 @@ Web Application Firewall(WAF)
 
 Wedata
   Data Source
-    tencentcloud_wedata_data_source_list
-    tencentcloud_wedata_data_source_info_list
-    tencentcloud_wedata_data_source_without_info
 	tencentcloud_wedata_rule_templates
 
   Resource
-    tencentcloud_wedata_datasource
     tencentcloud_wedata_function
     tencentcloud_wedata_resource
     tencentcloud_wedata_script
     tencentcloud_wedata_dq_rule
     tencentcloud_wedata_rule_template
     tencentcloud_wedata_baseline
-    tencentcloud_wedata_integration_offline_task
-    tencentcloud_wedata_integration_realtime_task
-    tencentcloud_wedata_integration_task_node
 
 Cloud Firewall(CFW)
   Data Source
@@ -2804,9 +2797,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_total_count":                       dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
-			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
-			"tencentcloud_wedata_data_source_info_list":                 dataSourceTencentCloudWedataDataSourceInfoList(),
-			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_cfw_nat_fw_switches":                          dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         dataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -3703,15 +3693,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
-			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
 			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
 			"tencentcloud_wedata_dq_rule":                                      resourceTencentCloudWedataDqRule(),
 			"tencentcloud_wedata_baseline":                                     resourceTencentCloudWedataBaseline(),
-			"tencentcloud_wedata_integration_offline_task":                     resourceTencentCloudWedataIntegrationOfflineTask(),
-			"tencentcloud_wedata_integration_realtime_task":                    resourceTencentCloudWedataIntegrationRealtimeTask(),
-			"tencentcloud_wedata_integration_task_node":                        resourceTencentCloudWedataIntegrationTaskNode(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),

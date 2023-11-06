@@ -333,7 +333,7 @@ func (me *WedataService) DescribeWedataFunctionById(ctx context.Context, functio
 	logId := getLogId(ctx)
 
 	request := wedata.NewDescribeOrganizationalFunctionsRequest()
-	request.Type = &funcType
+	request.Type = common.StringPtr("FUNC_DEVELOP")
 	request.Name = &funcName
 	request.ProjectId = &projectId
 
@@ -358,9 +358,11 @@ func (me *WedataService) DescribeWedataFunctionById(ctx context.Context, functio
 	}
 
 	for _, item := range response.Response.Content {
-		if *item.FuncId == functionId {
-			function = item
-			break
+		if item.FuncId != nil {
+			if *item.FuncId == functionId {
+				function = item
+				break
+			}
 		}
 	}
 

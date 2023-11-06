@@ -93,6 +93,7 @@ func resourceTencentCloudWedataDqRule() *schema.Resource {
 			},
 			"quality_dim": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Rules belong to quality dimensions (1. accuracy, 2. uniqueness, 3. completeness, 4. consistency, 5. timeliness, 6. effectiveness).",
 			},
@@ -318,6 +319,7 @@ func resourceTencentCloudWedataDqRule() *schema.Resource {
 			},
 			"source_engine_types": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 				Description: "List of execution engines supported by this rule.",

@@ -8,8 +8,8 @@ resource "tencentcloud_wedata_baseline" "example" {
   project_id     = "1927766435649077248"
   baseline_name  = "tf_example"
   baseline_type  = "D"
-  create_uin     = "tf_user"
-  create_name    = "100028439226"
+  create_uin     = "100028439226"
+  create_name    = "tf_user"
   in_charge_uin  = "tf_user"
   in_charge_name = "100028439226"
   promise_tasks {
@@ -17,7 +17,7 @@ resource "tencentcloud_wedata_baseline" "example" {
     task_name           = "tf_demo_task"
     task_id             = "20231030145334153"
     task_cycle          = "D"
-    workflow_name       = "交易"
+    workflow_name       = "dataflow_mpp"
     workflow_id         = "e4dafb2e-76eb-11ee-bfeb-b8cef68a6637"
     task_in_charge_name = ";tf_user;"
   }
@@ -179,6 +179,7 @@ func resourceTencentCloudWedataBaseline() *schema.Resource {
 			},
 			"alarm_rule_dto": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Existing Alarm Rule Information.",
@@ -206,71 +207,84 @@ func resourceTencentCloudWedataBaseline() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"project_id": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Optional:    true,
 							Description: "Project NameNote: This field may return null, indicating no valid value.",
 						},
 						"creator_id": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Optional:    true,
 							Description: "Creator NameNote: This field may return null, indicating no valid value.",
 						},
 						"creator": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Optional:    true,
 							Description: "Creator UINNote: This field may return null, indicating no valid value.",
 						},
 						"rule_name": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Optional:    true,
 							Description: "Rule NameNote: This field may return null, indicating no valid value.",
 						},
 						"monitor_type": {
 							Type:        schema.TypeInt,
+							Computed:    true,
 							Optional:    true,
 							Description: "Monitoring Type, 1. Task, 2. Workflow, 3. Project, 4. Baseline (default is 1. Task)Note: This field may return null, indicating no valid value.",
 						},
 						"monitor_object_ids": {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
 							Optional:    true,
 							Description: "Monitoring ObjectsNote: This field may return null, indicating no valid value.",
 						},
 						"alarm_types": {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm Types, 1. Failure Alarm, 2. Timeout Alarm, 3. Success Alarm, 4. Baseline Violation, 5. Baseline Warning, 6. Baseline Task Failure (default is 1. Failure Alarm)Note: This field may return null, indicating no valid value.",
 						},
 						"alarm_level": {
 							Type:        schema.TypeInt,
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm Level, 1. Normal, 2. Important, 3. Urgent (default is 1. Normal)Note: This field may return null, indicating no valid value.",
 						},
 						"alarm_ways": {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm Methods, 1. Email, 2. SMS, 3. WeChat, 4. Voice, 5. Enterprise WeChat, 6. HTTP, 7. Enterprise WeChat Group; Alarm method code list (default is 1. Email)Note: This field may return null, indicating no valid value.",
 						},
 						"alarm_recipient_type": {
 							Type:        schema.TypeInt,
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm Recipient Type: 1. Specified Personnel, 2. Task Owner, 3. Duty Roster (default is 1. Specified Personnel)Note: This field may return null, indicating no valid value.",
 						},
 						"alarm_recipients": {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm RecipientsNote: This field may return null, indicating no valid value.",
 						},
 						"alarm_recipient_ids": {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
+							Computed:    true,
 							Optional:    true,
 							Description: "Alarm Recipient IDsNote: This field may return null, indicating no valid value.",
 						},
 						"ext_info": {
 							Type:        schema.TypeString,
+							Computed:    true,
 							Optional:    true,
 							Description: "Extended Information, 1. Estimated Runtime (default), 2. Estimated Completion Time, 3. Estimated Scheduling Time, 4. Incomplete within the Cycle; Value Types: 1. Specified Value, 2. Historical Average (default is 1. Specified Value)Note: This field may return null, indicating no valid value.",
 						},
