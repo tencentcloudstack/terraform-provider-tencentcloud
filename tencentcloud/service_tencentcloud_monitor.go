@@ -2171,3 +2171,310 @@ func (me *MonitorService) DescribeMonitorAlarmMetricByFilter(ctx context.Context
 
 	return
 }
+
+func (me *MonitorService) DescribeMonitorAlarmNoticeCallbacksByFilter(ctx context.Context) (alarmNoticeCallbacks []*monitor.URLNotice, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAlarmNoticeCallbacksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Module = helper.String("monitor")
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeAlarmNoticeCallbacks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.URLNotices) < 1 {
+		return
+	}
+
+	alarmNoticeCallbacks = response.Response.URLNotices
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmPolicyByFilter(ctx context.Context, param map[string]interface{}) (alarmPolicy []*monitor.AlarmPolicy, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAlarmPoliciesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "PolicyName" {
+			request.PolicyName = v.(*string)
+		}
+		if k == "MonitorTypes" {
+			request.MonitorTypes = v.([]*string)
+		}
+		if k == "Namespaces" {
+			request.Namespaces = v.([]*string)
+		}
+		if k == "Dimensions" {
+			request.Dimensions = v.(*string)
+		}
+		if k == "ReceiverUids" {
+			request.ReceiverUids = v.([]*int64)
+		}
+		if k == "ReceiverGroups" {
+			request.ReceiverGroups = v.([]*int64)
+		}
+		if k == "PolicyType" {
+			request.PolicyType = v.([]*string)
+		}
+		if k == "Field" {
+			request.Field = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*int64)
+		}
+		if k == "NoticeIds" {
+			request.NoticeIds = v.([]*string)
+		}
+		if k == "RuleTypes" {
+			request.RuleTypes = v.([]*string)
+		}
+		if k == "Enable" {
+			request.Enable = v.([]*int64)
+		}
+		if k == "NotBindingNoticeRule" {
+			request.NotBindingNoticeRule = v.(*int64)
+		}
+		if k == "InstanceGroupId" {
+			request.InstanceGroupId = v.(*int64)
+		}
+		if k == "NeedCorrespondence" {
+			request.NeedCorrespondence = v.(*int64)
+		}
+		if k == "TriggerTasks" {
+			request.TriggerTasks = v.([]*monitor.AlarmPolicyTriggerTask)
+		}
+		if k == "OneClickPolicyType" {
+			request.OneClickPolicyType = v.([]*string)
+		}
+		if k == "NotBindAll" {
+			request.NotBindAll = v.(*int64)
+		}
+		if k == "NotInstanceGroup" {
+			request.NotInstanceGroup = v.(*int64)
+		}
+		if k == "PromInsId" {
+			request.PromInsId = v.(*string)
+		}
+		if k == "ReceiverOnCallFormIDs" {
+			request.ReceiverOnCallFormIDs = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 1
+		limit  int64 = 20
+	)
+	for {
+		request.PageNumber = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseMonitorClient().DescribeAlarmPolicies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Policies) < 1 {
+			break
+		}
+		alarmPolicy = append(alarmPolicy, response.Response.Policies...)
+		if len(response.Response.Policies) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmAllNamespacesByFilter(ctx context.Context, param map[string]interface{}) (
+	qce, custom []*monitor.CommonNamespace, common []*monitor.CommonNamespaceNew, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeAllNamespacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SceneType" {
+			request.SceneType = v.(*string)
+		}
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "MonitorTypes" {
+			request.MonitorTypes = v.([]*string)
+		}
+		if k == "Ids" {
+			request.Ids = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeAllNamespaces(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	qce = response.Response.QceNamespacesNew
+	custom = response.Response.CustomNamespacesNew
+	common = response.Response.CommonNamespaces
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorAlarmMonitorTypeByFilter(ctx context.Context, param map[string]interface{}) (alarmMonitor *monitor.DescribeMonitorTypesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeMonitorTypesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Module = helper.String("monitor")
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeMonitorTypes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	alarmMonitor = response.Response
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorTmpRegionsByFilter(ctx context.Context, param map[string]interface{}) (tmpRegions []*monitor.PrometheusRegionItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "PayMode" {
+			request.PayMode = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusRegions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionSet) < 1 {
+		return
+	}
+	tmpRegions = response.Response.RegionSet
+
+	return
+}
+
+func (me *MonitorService) DescribeMonitorStatisticDataByFilter(ctx context.Context, param map[string]interface{}) (statisticData *monitor.DescribeStatisticDataResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribeStatisticDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Module" {
+			request.Module = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "MetricNames" {
+			request.MetricNames = v.([]*string)
+		}
+		if k == "Conditions" {
+			request.Conditions = v.([]*monitor.MidQueryCondition)
+		}
+		if k == "GroupBys" {
+			request.GroupBys = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeStatisticData(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	statisticData = response.Response
+
+	return
+}
