@@ -60,8 +60,7 @@ func resourceTencentCloudDnspodModifyDomainOwnerOperationCreate(d *schema.Resour
 
 	var (
 		request = dnspod.NewModifyDomainOwnerRequest()
-		// response = dnspod.NewModifyDomainOwnerResponse()
-		domain string
+		domain  string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
@@ -83,7 +82,6 @@ func resourceTencentCloudDnspodModifyDomainOwnerOperationCreate(d *schema.Resour
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
 		return nil
 	})
 	if err != nil {

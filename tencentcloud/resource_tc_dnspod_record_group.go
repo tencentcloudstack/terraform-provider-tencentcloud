@@ -84,10 +84,6 @@ func resourceTencentCloudDnspodRecordGroupCreate(d *schema.ResourceData, meta in
 		request.GroupName = helper.String(v.(string))
 	}
 
-	// if v, ok := d.GetOkExists("domain_id"); ok {
-	// 	request.DomainId = helper.IntUint64(v.(int))
-	// }
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().CreateRecordGroup(request)
 		if e != nil {
@@ -146,10 +142,6 @@ func resourceTencentCloudDnspodRecordGroupRead(d *schema.ResourceData, meta inte
 	if recordGroup.GroupId != nil {
 		_ = d.Set("group_id", recordGroup.GroupId)
 	}
-
-	// if recordGroup.GroupType != nil {
-	// 	_ = d.Set("group_type", recordGroup.GroupType)
-	// }
 
 	return nil
 }
