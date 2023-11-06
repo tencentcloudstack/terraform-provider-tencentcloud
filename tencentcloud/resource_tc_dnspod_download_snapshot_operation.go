@@ -88,9 +88,11 @@ func resourceTencentCloudDnspodDownloadSnapshotOperationCreate(d *schema.Resourc
 		return err
 	}
 
-	cosUrl = *response.Response.CosUrl
+	if response.Response.CosUrl != nil {
+		cosUrl = *response.Response.CosUrl
+		_ = d.Set("cos_url", cosUrl)
+	}
 
-	d.Set("cos_url", cosUrl)
 	d.SetId(strings.Join([]string{domain, snapshotId}, FILED_SP))
 
 	return resourceTencentCloudDnspodDownloadSnapshotOperationRead(d, meta)
