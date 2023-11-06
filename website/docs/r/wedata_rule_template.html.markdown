@@ -1,5 +1,5 @@
 ---
-subcategory: "WeData"
+subcategory: "Wedata"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_wedata_rule_template"
 sidebar_current: "docs-tencentcloud-resource-wedata_rule_template"

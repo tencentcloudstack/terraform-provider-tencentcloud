@@ -630,3 +630,234 @@ func (me *WedataService) DeleteWedataDqRuleTemplateById(ctx context.Context, pro
 
 	return
 }
+
+func (me *WedataService) DescribeWedataBaselineById(ctx context.Context, projectId, baselineId string) (baseline *wedata.BaselineDetailResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeBaselineByIdRequest()
+	request.ProjectId = &projectId
+	request.BaselineId = &baselineId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeBaselineById(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	baseline = response.Response.Data
+	return
+}
+
+func (me *WedataService) DeleteWedataBaselineById(ctx context.Context, projectId, baselineId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteBaselineRequest()
+	request.ProjectId = &projectId
+	request.BaselineId = &baselineId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteBaseline(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataIntegrationOfflineTaskById(ctx context.Context, projectId, taskId string) (integrationOfflineTask *wedata.DescribeIntegrationTaskResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeIntegrationTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+	request.TaskId = &taskId
+	request.TaskType = common.Uint64Ptr(202)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeIntegrationTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	integrationOfflineTask = response.Response
+	return
+}
+
+func (me *WedataService) DeleteWedataIntegrationOfflineTaskById(ctx context.Context, projectId, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := wedata.NewDeleteOfflineTaskRequest()
+	request.OperatorName = common.StringPtr("")
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+	request.VirtualFlag = common.BoolPtr(false)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteOfflineTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataIntegrationRealtimeTaskById(ctx context.Context, projectId, taskId string) (integrationRealtimeTask *wedata.DescribeIntegrationTaskResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeIntegrationTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+	request.TaskType = common.Uint64Ptr(201)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeIntegrationTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	integrationRealtimeTask = response.Response
+	return
+}
+
+func (me *WedataService) DeleteWedataIntegrationRealtimeTaskById(ctx context.Context, projectId, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := wedata.NewDeleteIntegrationTaskRequest()
+	request.ProjectId = &projectId
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteIntegrationTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WedataService) DescribeWedataIntegrationTaskNodeById(ctx context.Context, projectId, nodeId string) (integrationTaskNode *wedata.DescribeIntegrationNodeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDescribeIntegrationNodeRequest()
+	request.ProjectId = &projectId
+	request.Id = &nodeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DescribeIntegrationNode(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	integrationTaskNode = response.Response
+	return
+}
+
+func (me *WedataService) DeleteWedataIntegrationTaskNodeById(ctx context.Context, projectId, nodeId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := wedata.NewDeleteIntegrationNodeRequest()
+	request.ProjectId = &projectId
+	request.Id = &nodeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWedataClient().DeleteIntegrationNode(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
