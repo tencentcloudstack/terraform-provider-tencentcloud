@@ -45,6 +45,7 @@ func resourceTencentCloudDnspodCustomLine() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Domain.",
 			},
@@ -72,9 +73,8 @@ func resourceTencentCloudDnspodCustomLineCreate(d *schema.ResourceData, meta int
 
 	var (
 		request = dnspod.NewCreateDomainCustomLineRequest()
-		// response = dnspod.NewCreateDomainCustomLineResponse()
-		domain string
-		name   string
+		domain  string
+		name    string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
@@ -97,7 +97,6 @@ func resourceTencentCloudDnspodCustomLineCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
 		return nil
 	})
 	if err != nil {
@@ -105,7 +104,6 @@ func resourceTencentCloudDnspodCustomLineCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	// domain = *response.Response.Domain
 	d.SetId(strings.Join([]string{domain, name}, FILED_SP))
 
 	return resourceTencentCloudDnspodCustomLineRead(d, meta)
@@ -171,26 +169,14 @@ func resourceTencentCloudDnspodCustomLineUpdate(d *schema.ResourceData, meta int
 	request.Domain = &domain
 	request.Name = &name
 
-	immutableArgs := []string{"domain"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
+	if v, ok := d.GetOk("name"); ok {
+		newName = v.(string)
+		request.PreName = helper.String(name)
+		request.Name = helper.String(v.(string))
 	}
 
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			newName = v.(string)
-			request.PreName = helper.String(name)
-			request.Name = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("area") {
-		if v, ok := d.GetOk("area"); ok {
-			request.Area = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("area"); ok {
+		request.Area = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

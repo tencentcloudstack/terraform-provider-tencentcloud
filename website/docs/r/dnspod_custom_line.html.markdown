@@ -26,7 +26,7 @@ resource "tencentcloud_dnspod_custom_line" "custom_line" {
 The following arguments are supported:
 
 * `area` - (Required, String) The IP segment of custom line, split with `-`.
-* `domain` - (Required, String) Domain.
+* `domain` - (Required, String, ForceNew) Domain.
 * `name` - (Required, String) The Name of custom line.
 
 ## Attributes Reference
