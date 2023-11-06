@@ -101,7 +101,6 @@ func resourceTencentCloudDnspodDomainAliasCreate(d *schema.ResourceData, meta in
 	}
 
 	domainAliasId = *response.Response.DomainAliasId
-	// d.SetId(helper.String(domainAlias))
 	d.SetId(strings.Join([]string{domain, helper.Int64ToStr(domainAliasId)}, FILED_SP))
 
 	return resourceTencentCloudDnspodDomainAliasRead(d, meta)

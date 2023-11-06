@@ -1169,7 +1169,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.777
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.765
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.781
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414

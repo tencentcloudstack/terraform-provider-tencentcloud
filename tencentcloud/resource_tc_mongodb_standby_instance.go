@@ -290,13 +290,6 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 		return fmt.Errorf("[CRITAL] standBy instance zoneId must not same with father instance's")
 	}
 
-	// check security group info
-	if *masterInfo.MongoVersion == MONGODB_ENGINE_VERSION_4_WT {
-		if _, ok := d.GetOk("security_groups"); ok {
-			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
-		}
-	}
-
 	chargeType := d.Get("charge_type").(string)
 
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
