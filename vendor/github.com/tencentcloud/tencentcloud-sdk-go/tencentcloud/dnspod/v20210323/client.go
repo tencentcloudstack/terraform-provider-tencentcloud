@@ -59,8 +59,9 @@ func NewCheckRecordSnapshotRollbackRequest() (request *CheckRecordSnapshotRollba
 func NewCheckRecordSnapshotRollbackResponse() (response *CheckRecordSnapshotRollbackResponse) {
     response = &CheckRecordSnapshotRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckRecordSnapshotRollback
@@ -121,8 +122,9 @@ func NewCheckSnapshotRollbackRequest() (request *CheckSnapshotRollbackRequest) {
 func NewCheckSnapshotRollbackResponse() (response *CheckSnapshotRollbackResponse) {
     response = &CheckSnapshotRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckSnapshotRollback
@@ -181,8 +183,9 @@ func NewCreateDealRequest() (request *CreateDealRequest) {
 func NewCreateDealResponse() (response *CreateDealResponse) {
     response = &CreateDealResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDeal
@@ -417,8 +420,9 @@ func NewCreateDomainRequest() (request *CreateDomainRequest) {
 func NewCreateDomainResponse() (response *CreateDomainResponse) {
     response = &CreateDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDomain
@@ -497,8 +501,9 @@ func NewCreateDomainAliasRequest() (request *CreateDomainAliasRequest) {
 func NewCreateDomainAliasResponse() (response *CreateDomainAliasResponse) {
     response = &CreateDomainAliasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDomainAlias
@@ -585,8 +590,9 @@ func NewCreateDomainBatchRequest() (request *CreateDomainBatchRequest) {
 func NewCreateDomainBatchResponse() (response *CreateDomainBatchResponse) {
     response = &CreateDomainBatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDomainBatch
@@ -653,6 +659,123 @@ func (c *Client) CreateDomainBatchWithContext(ctx context.Context, request *Crea
     return
 }
 
+func NewCreateDomainCustomLineRequest() (request *CreateDomainCustomLineRequest) {
+    request = &CreateDomainCustomLineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dnspod", APIVersion, "CreateDomainCustomLine")
+    
+    
+    return
+}
+
+func NewCreateDomainCustomLineResponse() (response *CreateDomainCustomLineResponse) {
+    response = &CreateDomainCustomLineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDomainCustomLine
+// 创建域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateDomainCustomLine(request *CreateDomainCustomLineRequest) (response *CreateDomainCustomLineResponse, err error) {
+    return c.CreateDomainCustomLineWithContext(context.Background(), request)
+}
+
+// CreateDomainCustomLine
+// 创建域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) CreateDomainCustomLineWithContext(ctx context.Context, request *CreateDomainCustomLineRequest) (response *CreateDomainCustomLineResponse, err error) {
+    if request == nil {
+        request = NewCreateDomainCustomLineRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDomainCustomLine require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDomainCustomLineResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDomainGroupRequest() (request *CreateDomainGroupRequest) {
     request = &CreateDomainGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -667,8 +790,9 @@ func NewCreateDomainGroupRequest() (request *CreateDomainGroupRequest) {
 func NewCreateDomainGroupResponse() (response *CreateDomainGroupResponse) {
     response = &CreateDomainGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDomainGroup
@@ -733,8 +857,9 @@ func NewCreateRecordRequest() (request *CreateRecordRequest) {
 func NewCreateRecordResponse() (response *CreateRecordResponse) {
     response = &CreateRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRecord
@@ -881,8 +1006,9 @@ func NewCreateRecordBatchRequest() (request *CreateRecordBatchRequest) {
 func NewCreateRecordBatchResponse() (response *CreateRecordBatchResponse) {
     response = &CreateRecordBatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRecordBatch
@@ -963,8 +1089,9 @@ func NewCreateRecordGroupRequest() (request *CreateRecordGroupRequest) {
 func NewCreateRecordGroupResponse() (response *CreateRecordGroupResponse) {
     response = &CreateRecordGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRecordGroup
@@ -1027,8 +1154,9 @@ func NewCreateSnapshotRequest() (request *CreateSnapshotRequest) {
 func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
     response = &CreateSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSnapshot
@@ -1091,8 +1219,9 @@ func NewDeleteDomainRequest() (request *DeleteDomainRequest) {
 func NewDeleteDomainResponse() (response *DeleteDomainResponse) {
     response = &DeleteDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDomain
@@ -1161,8 +1290,9 @@ func NewDeleteDomainAliasRequest() (request *DeleteDomainAliasRequest) {
 func NewDeleteDomainAliasResponse() (response *DeleteDomainAliasResponse) {
     response = &DeleteDomainAliasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDomainAlias
@@ -1241,8 +1371,9 @@ func NewDeleteDomainBatchRequest() (request *DeleteDomainBatchRequest) {
 func NewDeleteDomainBatchResponse() (response *DeleteDomainBatchResponse) {
     response = &DeleteDomainBatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDomainBatch
@@ -1295,6 +1426,129 @@ func (c *Client) DeleteDomainBatchWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteDomainCustomLineRequest() (request *DeleteDomainCustomLineRequest) {
+    request = &DeleteDomainCustomLineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dnspod", APIVersion, "DeleteDomainCustomLine")
+    
+    
+    return
+}
+
+func NewDeleteDomainCustomLineResponse() (response *DeleteDomainCustomLineResponse) {
+    response = &DeleteDomainCustomLineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDomainCustomLine
+// 删除域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_IPAREA = "InvalidParameter.IpArea"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DELETEUSINGRECORDLINENOTALLOWED = "OperationDenied.DeleteUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteDomainCustomLine(request *DeleteDomainCustomLineRequest) (response *DeleteDomainCustomLineResponse, err error) {
+    return c.DeleteDomainCustomLineWithContext(context.Background(), request)
+}
+
+// DeleteDomainCustomLine
+// 删除域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_IPAREA = "InvalidParameter.IpArea"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DELETEUSINGRECORDLINENOTALLOWED = "OperationDenied.DeleteUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeleteDomainCustomLineWithContext(ctx context.Context, request *DeleteDomainCustomLineRequest) (response *DeleteDomainCustomLineResponse, err error) {
+    if request == nil {
+        request = NewDeleteDomainCustomLineRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDomainCustomLine require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDomainCustomLineResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteRecordRequest() (request *DeleteRecordRequest) {
     request = &DeleteRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1309,8 +1563,9 @@ func NewDeleteRecordRequest() (request *DeleteRecordRequest) {
 func NewDeleteRecordResponse() (response *DeleteRecordResponse) {
     response = &DeleteRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRecord
@@ -1411,8 +1666,9 @@ func NewDeleteRecordBatchRequest() (request *DeleteRecordBatchRequest) {
 func NewDeleteRecordBatchResponse() (response *DeleteRecordBatchResponse) {
     response = &DeleteRecordBatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRecordBatch
@@ -1481,8 +1737,9 @@ func NewDeleteRecordGroupRequest() (request *DeleteRecordGroupRequest) {
 func NewDeleteRecordGroupResponse() (response *DeleteRecordGroupResponse) {
     response = &DeleteRecordGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRecordGroup
@@ -1543,8 +1800,9 @@ func NewDeleteShareDomainRequest() (request *DeleteShareDomainRequest) {
 func NewDeleteShareDomainResponse() (response *DeleteShareDomainResponse) {
     response = &DeleteShareDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteShareDomain
@@ -1609,8 +1867,9 @@ func NewDeleteSnapshotRequest() (request *DeleteSnapshotRequest) {
 func NewDeleteSnapshotResponse() (response *DeleteSnapshotResponse) {
     response = &DeleteSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSnapshot
@@ -1622,6 +1881,7 @@ func NewDeleteSnapshotResponse() (response *DeleteSnapshotResponse) {
 //  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
 //  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
 //  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
@@ -1638,6 +1898,7 @@ func (c *Client) DeleteSnapshot(request *DeleteSnapshotRequest) (response *Delet
 //  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_OPERATEFAILED = "InvalidParameter.OperateFailed"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
 //  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
 //  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
@@ -1671,8 +1932,9 @@ func NewDescribeBatchTaskRequest() (request *DescribeBatchTaskRequest) {
 func NewDescribeBatchTaskResponse() (response *DescribeBatchTaskResponse) {
     response = &DescribeBatchTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBatchTask
@@ -1727,8 +1989,9 @@ func NewDescribeDomainRequest() (request *DescribeDomainRequest) {
 func NewDescribeDomainResponse() (response *DescribeDomainResponse) {
     response = &DescribeDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomain
@@ -1789,8 +2052,9 @@ func NewDescribeDomainAliasListRequest() (request *DescribeDomainAliasListReques
 func NewDescribeDomainAliasListResponse() (response *DescribeDomainAliasListResponse) {
     response = &DescribeDomainAliasListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainAliasList
@@ -1863,8 +2127,9 @@ func NewDescribeDomainAnalyticsRequest() (request *DescribeDomainAnalyticsReques
 func NewDescribeDomainAnalyticsResponse() (response *DescribeDomainAnalyticsResponse) {
     response = &DescribeDomainAnalyticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainAnalytics
@@ -1875,6 +2140,7 @@ func NewDescribeDomainAnalyticsResponse() (response *DescribeDomainAnalyticsResp
 //  FAILEDOPERATION_DOMAINNOTINSERVICE = "FailedOperation.DomainNotInService"
 //  FAILEDOPERATION_TEMPORARYERROR = "FailedOperation.TemporaryError"
 //  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
@@ -1891,6 +2157,7 @@ func (c *Client) DescribeDomainAnalytics(request *DescribeDomainAnalyticsRequest
 //  FAILEDOPERATION_DOMAINNOTINSERVICE = "FailedOperation.DomainNotInService"
 //  FAILEDOPERATION_TEMPORARYERROR = "FailedOperation.TemporaryError"
 //  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
 //  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
 //  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
 //  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
@@ -1911,6 +2178,101 @@ func (c *Client) DescribeDomainAnalyticsWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeDomainCustomLineListRequest() (request *DescribeDomainCustomLineListRequest) {
+    request = &DescribeDomainCustomLineListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dnspod", APIVersion, "DescribeDomainCustomLineList")
+    
+    
+    return
+}
+
+func NewDescribeDomainCustomLineListResponse() (response *DescribeDomainCustomLineListResponse) {
+    response = &DescribeDomainCustomLineListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDomainCustomLineList
+// 获取域名的自定义线路列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeDomainCustomLineList(request *DescribeDomainCustomLineListRequest) (response *DescribeDomainCustomLineListResponse, err error) {
+    return c.DescribeDomainCustomLineListWithContext(context.Background(), request)
+}
+
+// DescribeDomainCustomLineList
+// 获取域名的自定义线路列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DescribeDomainCustomLineListWithContext(ctx context.Context, request *DescribeDomainCustomLineListRequest) (response *DescribeDomainCustomLineListResponse, err error) {
+    if request == nil {
+        request = NewDescribeDomainCustomLineListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDomainCustomLineList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDomainCustomLineListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDomainFilterListRequest() (request *DescribeDomainFilterListRequest) {
     request = &DescribeDomainFilterListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1925,8 +2287,9 @@ func NewDescribeDomainFilterListRequest() (request *DescribeDomainFilterListRequ
 func NewDescribeDomainFilterListResponse() (response *DescribeDomainFilterListResponse) {
     response = &DescribeDomainFilterListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainFilterList
@@ -2001,8 +2364,9 @@ func NewDescribeDomainGroupListRequest() (request *DescribeDomainGroupListReques
 func NewDescribeDomainGroupListResponse() (response *DescribeDomainGroupListResponse) {
     response = &DescribeDomainGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainGroupList
@@ -2061,8 +2425,9 @@ func NewDescribeDomainListRequest() (request *DescribeDomainListRequest) {
 func NewDescribeDomainListResponse() (response *DescribeDomainListResponse) {
     response = &DescribeDomainListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainList
@@ -2137,8 +2502,9 @@ func NewDescribeDomainLogListRequest() (request *DescribeDomainLogListRequest) {
 func NewDescribeDomainLogListResponse() (response *DescribeDomainLogListResponse) {
     response = &DescribeDomainLogListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainLogList
@@ -2199,8 +2565,9 @@ func NewDescribeDomainPreviewRequest() (request *DescribeDomainPreviewRequest) {
 func NewDescribeDomainPreviewResponse() (response *DescribeDomainPreviewResponse) {
     response = &DescribeDomainPreviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainPreview
@@ -2261,8 +2628,9 @@ func NewDescribeDomainPurviewRequest() (request *DescribeDomainPurviewRequest) {
 func NewDescribeDomainPurviewResponse() (response *DescribeDomainPurviewResponse) {
     response = &DescribeDomainPurviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainPurview
@@ -2347,8 +2715,9 @@ func NewDescribeDomainShareInfoRequest() (request *DescribeDomainShareInfoReques
 func NewDescribeDomainShareInfoResponse() (response *DescribeDomainShareInfoResponse) {
     response = &DescribeDomainShareInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainShareInfo
@@ -2405,8 +2774,9 @@ func NewDescribeDomainWhoisRequest() (request *DescribeDomainWhoisRequest) {
 func NewDescribeDomainWhoisResponse() (response *DescribeDomainWhoisResponse) {
     response = &DescribeDomainWhoisResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDomainWhois
@@ -2467,8 +2837,9 @@ func NewDescribePackageDetailRequest() (request *DescribePackageDetailRequest) {
 func NewDescribePackageDetailResponse() (response *DescribePackageDetailResponse) {
     response = &DescribePackageDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePackageDetail
@@ -2563,8 +2934,9 @@ func NewDescribeRecordRequest() (request *DescribeRecordRequest) {
 func NewDescribeRecordResponse() (response *DescribeRecordResponse) {
     response = &DescribeRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecord
@@ -2655,8 +3027,9 @@ func NewDescribeRecordExistExceptDefaultNSRequest() (request *DescribeRecordExis
 func NewDescribeRecordExistExceptDefaultNSResponse() (response *DescribeRecordExistExceptDefaultNSResponse) {
     response = &DescribeRecordExistExceptDefaultNSResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordExistExceptDefaultNS
@@ -2753,8 +3126,9 @@ func NewDescribeRecordFilterListRequest() (request *DescribeRecordFilterListRequ
 func NewDescribeRecordFilterListResponse() (response *DescribeRecordFilterListResponse) {
     response = &DescribeRecordFilterListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordFilterList
@@ -2847,8 +3221,9 @@ func NewDescribeRecordGroupListRequest() (request *DescribeRecordGroupListReques
 func NewDescribeRecordGroupListResponse() (response *DescribeRecordGroupListResponse) {
     response = &DescribeRecordGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordGroupList
@@ -2909,8 +3284,9 @@ func NewDescribeRecordLineListRequest() (request *DescribeRecordLineListRequest)
 func NewDescribeRecordLineListResponse() (response *DescribeRecordLineListResponse) {
     response = &DescribeRecordLineListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordLineList
@@ -2997,8 +3373,9 @@ func NewDescribeRecordListRequest() (request *DescribeRecordListRequest) {
 func NewDescribeRecordListResponse() (response *DescribeRecordListResponse) {
     response = &DescribeRecordListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordList
@@ -3087,8 +3464,9 @@ func NewDescribeRecordSnapshotRollbackResultRequest() (request *DescribeRecordSn
 func NewDescribeRecordSnapshotRollbackResultResponse() (response *DescribeRecordSnapshotRollbackResultResponse) {
     response = &DescribeRecordSnapshotRollbackResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordSnapshotRollbackResult
@@ -3149,8 +3527,9 @@ func NewDescribeRecordTypeRequest() (request *DescribeRecordTypeRequest) {
 func NewDescribeRecordTypeResponse() (response *DescribeRecordTypeResponse) {
     response = &DescribeRecordTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordType
@@ -3233,8 +3612,9 @@ func NewDescribeSnapshotConfigRequest() (request *DescribeSnapshotConfigRequest)
 func NewDescribeSnapshotConfigResponse() (response *DescribeSnapshotConfigResponse) {
     response = &DescribeSnapshotConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotConfig
@@ -3295,8 +3675,9 @@ func NewDescribeSnapshotListRequest() (request *DescribeSnapshotListRequest) {
 func NewDescribeSnapshotListResponse() (response *DescribeSnapshotListResponse) {
     response = &DescribeSnapshotListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotList
@@ -3357,8 +3738,9 @@ func NewDescribeSnapshotRollbackResultRequest() (request *DescribeSnapshotRollba
 func NewDescribeSnapshotRollbackResultResponse() (response *DescribeSnapshotRollbackResultResponse) {
     response = &DescribeSnapshotRollbackResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotRollbackResult
@@ -3417,8 +3799,9 @@ func NewDescribeSnapshotRollbackTaskRequest() (request *DescribeSnapshotRollback
 func NewDescribeSnapshotRollbackTaskResponse() (response *DescribeSnapshotRollbackTaskResponse) {
     response = &DescribeSnapshotRollbackTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSnapshotRollbackTask
@@ -3479,8 +3862,9 @@ func NewDescribeSubdomainAnalyticsRequest() (request *DescribeSubdomainAnalytics
 func NewDescribeSubdomainAnalyticsResponse() (response *DescribeSubdomainAnalyticsResponse) {
     response = &DescribeSubdomainAnalyticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSubdomainAnalytics
@@ -3545,8 +3929,9 @@ func NewDescribeUserDetailRequest() (request *DescribeUserDetailRequest) {
 func NewDescribeUserDetailResponse() (response *DescribeUserDetailResponse) {
     response = &DescribeUserDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUserDetail
@@ -3605,8 +3990,9 @@ func NewDescribeVASStatisticRequest() (request *DescribeVASStatisticRequest) {
 func NewDescribeVASStatisticResponse() (response *DescribeVASStatisticResponse) {
     response = &DescribeVASStatisticResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVASStatistic
@@ -3701,8 +4087,9 @@ func NewDownloadSnapshotRequest() (request *DownloadSnapshotRequest) {
 func NewDownloadSnapshotResponse() (response *DownloadSnapshotResponse) {
     response = &DownloadSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadSnapshot
@@ -3751,6 +4138,123 @@ func (c *Client) DownloadSnapshotWithContext(ctx context.Context, request *Downl
     return
 }
 
+func NewModifyDomainCustomLineRequest() (request *ModifyDomainCustomLineRequest) {
+    request = &ModifyDomainCustomLineRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dnspod", APIVersion, "ModifyDomainCustomLine")
+    
+    
+    return
+}
+
+func NewModifyDomainCustomLineResponse() (response *ModifyDomainCustomLineResponse) {
+    response = &ModifyDomainCustomLineResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDomainCustomLine
+// 修改域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyDomainCustomLine(request *ModifyDomainCustomLineRequest) (response *ModifyDomainCustomLineResponse, err error) {
+    return c.ModifyDomainCustomLineWithContext(context.Background(), request)
+}
+
+// ModifyDomainCustomLine
+// 修改域名的自定义线路
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_LOGINAREANOTALLOWED = "FailedOperation.LoginAreaNotAllowed"
+//  FAILEDOPERATION_LOGINFAILED = "FailedOperation.LoginFailed"
+//  FAILEDOPERATION_UNKNOWERROR = "FailedOperation.UnknowError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_DOMAINIDINVALID = "InvalidParameter.DomainIdInvalid"
+//  INVALIDPARAMETER_DOMAININEFFECTORINVALIDATED = "InvalidParameter.DomainInEffectOrInvalidated"
+//  INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+//  INVALIDPARAMETER_DOMAINISALIASER = "InvalidParameter.DomainIsAliaser"
+//  INVALIDPARAMETER_INVALIDIP = "InvalidParameter.InvalidIp"
+//  INVALIDPARAMETER_IPALREADYEXIST = "InvalidParameter.IpAlreadyExist"
+//  INVALIDPARAMETER_LINEINUSE = "InvalidParameter.LineInUse"
+//  INVALIDPARAMETER_LINENAMEINVALID = "InvalidParameter.LineNameInvalid"
+//  INVALIDPARAMETER_LINENAMEINVALIDCHARACTER = "InvalidParameter.LineNameInvalidCharacter"
+//  INVALIDPARAMETER_LINENAMEOCCUPIED = "InvalidParameter.LineNameOccupied"
+//  INVALIDPARAMETER_LOGINTOKENIDERROR = "InvalidParameter.LoginTokenIdError"
+//  INVALIDPARAMETER_LOGINTOKENNOTEXISTS = "InvalidParameter.LoginTokenNotExists"
+//  INVALIDPARAMETER_LOGINTOKENVALIDATEFAILED = "InvalidParameter.LoginTokenValidateFailed"
+//  INVALIDPARAMETER_REQUESTIPLIMITED = "InvalidParameter.RequestIpLimited"
+//  INVALIDPARAMETER_USERNOTEXISTS = "InvalidParameter.UserNotExists"
+//  INVALIDPARAMETERVALUE_DOMAINNOTEXISTS = "InvalidParameterValue.DomainNotExists"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYIP = "InvalidParameterValue.IpAreaEmptyIp"
+//  INVALIDPARAMETERVALUE_IPAREAEMPTYLINENAME = "InvalidParameterValue.IpAreaEmptyLineName"
+//  INVALIDPARAMETERVALUE_USERIDINVALID = "InvalidParameterValue.UserIdInvalid"
+//  LIMITEXCEEDED_CUSTOMLINELIMITED = "LimitExceeded.CustomLineLimited"
+//  LIMITEXCEEDED_FAILEDLOGINLIMITEXCEEDED = "LimitExceeded.FailedLoginLimitExceeded"
+//  OPERATIONDENIED_DOMAINOWNERALLOWEDONLY = "OperationDenied.DomainOwnerAllowedOnly"
+//  OPERATIONDENIED_EDITUSINGRECORDLINENOTALLOWED = "OperationDenied.EditUsingRecordLineNotAllowed"
+//  OPERATIONDENIED_NOPERMISSIONTOOPERATEDOMAIN = "OperationDenied.NoPermissionToOperateDomain"
+//  OPERATIONDENIED_NOTAGENT = "OperationDenied.NotAgent"
+//  OPERATIONDENIED_NOTMANAGEDUSER = "OperationDenied.NotManagedUser"
+//  REQUESTLIMITEXCEEDED_REQUESTLIMITEXCEEDED = "RequestLimitExceeded.RequestLimitExceeded"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyDomainCustomLineWithContext(ctx context.Context, request *ModifyDomainCustomLineRequest) (response *ModifyDomainCustomLineResponse, err error) {
+    if request == nil {
+        request = NewModifyDomainCustomLineRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDomainCustomLine require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDomainCustomLineResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDomainLockRequest() (request *ModifyDomainLockRequest) {
     request = &ModifyDomainLockRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3765,8 +4269,9 @@ func NewModifyDomainLockRequest() (request *ModifyDomainLockRequest) {
 func NewModifyDomainLockResponse() (response *ModifyDomainLockResponse) {
     response = &ModifyDomainLockResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainLock
@@ -3859,8 +4364,9 @@ func NewModifyDomainOwnerRequest() (request *ModifyDomainOwnerRequest) {
 func NewModifyDomainOwnerResponse() (response *ModifyDomainOwnerResponse) {
     response = &ModifyDomainOwnerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainOwner
@@ -3943,8 +4449,9 @@ func NewModifyDomainRemarkRequest() (request *ModifyDomainRemarkRequest) {
 func NewModifyDomainRemarkResponse() (response *ModifyDomainRemarkResponse) {
     response = &ModifyDomainRemarkResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainRemark
@@ -4035,8 +4542,9 @@ func NewModifyDomainStatusRequest() (request *ModifyDomainStatusRequest) {
 func NewModifyDomainStatusResponse() (response *ModifyDomainStatusResponse) {
     response = &ModifyDomainStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainStatus
@@ -4103,8 +4611,9 @@ func NewModifyDomainUnlockRequest() (request *ModifyDomainUnlockRequest) {
 func NewModifyDomainUnlockResponse() (response *ModifyDomainUnlockResponse) {
     response = &ModifyDomainUnlockResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainUnlock
@@ -4197,8 +4706,9 @@ func NewModifyDynamicDNSRequest() (request *ModifyDynamicDNSRequest) {
 func NewModifyDynamicDNSResponse() (response *ModifyDynamicDNSResponse) {
     response = &ModifyDynamicDNSResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDynamicDNS
@@ -4333,8 +4843,9 @@ func NewModifyPackageAutoRenewRequest() (request *ModifyPackageAutoRenewRequest)
 func NewModifyPackageAutoRenewResponse() (response *ModifyPackageAutoRenewResponse) {
     response = &ModifyPackageAutoRenewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPackageAutoRenew
@@ -4573,8 +5084,9 @@ func NewModifyRecordRequest() (request *ModifyRecordRequest) {
 func NewModifyRecordResponse() (response *ModifyRecordResponse) {
     response = &ModifyRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecord
@@ -4727,8 +5239,9 @@ func NewModifyRecordBatchRequest() (request *ModifyRecordBatchRequest) {
 func NewModifyRecordBatchResponse() (response *ModifyRecordBatchResponse) {
     response = &ModifyRecordBatchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordBatch
@@ -4823,8 +5336,9 @@ func NewModifyRecordFieldsRequest() (request *ModifyRecordFieldsRequest) {
 func NewModifyRecordFieldsResponse() (response *ModifyRecordFieldsResponse) {
     response = &ModifyRecordFieldsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordFields
@@ -4975,8 +5489,9 @@ func NewModifyRecordGroupRequest() (request *ModifyRecordGroupRequest) {
 func NewModifyRecordGroupResponse() (response *ModifyRecordGroupResponse) {
     response = &ModifyRecordGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordGroup
@@ -5039,8 +5554,9 @@ func NewModifyRecordRemarkRequest() (request *ModifyRecordRemarkRequest) {
 func NewModifyRecordRemarkResponse() (response *ModifyRecordRemarkResponse) {
     response = &ModifyRecordRemarkResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordRemark
@@ -5137,8 +5653,9 @@ func NewModifyRecordStatusRequest() (request *ModifyRecordStatusRequest) {
 func NewModifyRecordStatusResponse() (response *ModifyRecordStatusResponse) {
     response = &ModifyRecordStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordStatus
@@ -5275,8 +5792,9 @@ func NewModifyRecordToGroupRequest() (request *ModifyRecordToGroupRequest) {
 func NewModifyRecordToGroupResponse() (response *ModifyRecordToGroupResponse) {
     response = &ModifyRecordToGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRecordToGroup
@@ -5339,8 +5857,9 @@ func NewModifySnapshotConfigRequest() (request *ModifySnapshotConfigRequest) {
 func NewModifySnapshotConfigResponse() (response *ModifySnapshotConfigResponse) {
     response = &ModifySnapshotConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySnapshotConfig
@@ -5405,8 +5924,9 @@ func NewModifySubdomainStatusRequest() (request *ModifySubdomainStatusRequest) {
 func NewModifySubdomainStatusResponse() (response *ModifySubdomainStatusResponse) {
     response = &ModifySubdomainStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifySubdomainStatus
@@ -5541,8 +6061,9 @@ func NewModifyVasAutoRenewStatusRequest() (request *ModifyVasAutoRenewStatusRequ
 func NewModifyVasAutoRenewStatusResponse() (response *ModifyVasAutoRenewStatusResponse) {
     response = &ModifyVasAutoRenewStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyVasAutoRenewStatus
@@ -5783,8 +6304,9 @@ func NewPayOrderWithBalanceRequest() (request *PayOrderWithBalanceRequest) {
 func NewPayOrderWithBalanceResponse() (response *PayOrderWithBalanceResponse) {
     response = &PayOrderWithBalanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // PayOrderWithBalance
@@ -6019,8 +6541,9 @@ func NewRollbackRecordSnapshotRequest() (request *RollbackRecordSnapshotRequest)
 func NewRollbackRecordSnapshotResponse() (response *RollbackRecordSnapshotResponse) {
     response = &RollbackRecordSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RollbackRecordSnapshot
@@ -6079,8 +6602,9 @@ func NewRollbackSnapshotRequest() (request *RollbackSnapshotRequest) {
 func NewRollbackSnapshotResponse() (response *RollbackSnapshotResponse) {
     response = &RollbackSnapshotResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RollbackSnapshot
