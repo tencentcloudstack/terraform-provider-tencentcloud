@@ -270,13 +270,6 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	tagService := TagService{client: client}
 	region := client.Region
 
-	// check security group info
-	if d.Get("engine_version").(string) == MONGODB_ENGINE_VERSION_4_WT {
-		if _, ok := d.GetOk("security_groups"); ok {
-			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
-		}
-	}
-
 	chargeType := d.Get("charge_type")
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
 		_, ok := d.GetOk("prepaid_period")
