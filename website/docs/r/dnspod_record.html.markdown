@@ -42,7 +42,8 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `monitor_status` - The D monitoring status of the record.
+* `monitor_status` - The monitoring status of the record.
+* `remark` - The Remark of record.
 
 
 ## Import

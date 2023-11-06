@@ -749,9 +749,13 @@ Cloud Monitor(Monitor)
     tencentcloud_monitor_alarm_notices
     tencentcloud_monitor_alarm_history
     tencentcloud_monitor_alarm_metric
+    tencentcloud_monitor_alarm_policy
     tencentcloud_monitor_alarm_basic_alarms
     tencentcloud_monitor_alarm_basic_metric
     tencentcloud_monitor_alarm_conditions_template
+    tencentcloud_monitor_alarm_notice_callbacks
+    tencentcloud_monitor_alarm_all_namespaces
+    tencentcloud_monitor_alarm_monitor_type
 
   Resource
     tencentcloud_monitor_policy_group
@@ -764,8 +768,11 @@ Cloud Monitor(Monitor)
 
 
 Managed Service for Prometheus(TMP)
+  Data Source
+    tencentcloud_monitor_tmp_regions
+
   Resource
-      tencentcloud_monitor_tmp_instance
+    tencentcloud_monitor_tmp_instance
     tencentcloud_monitor_tmp_alert_rule
     tencentcloud_monitor_tmp_exporter_integration
     tencentcloud_monitor_tmp_cvm_agent
@@ -1238,6 +1245,10 @@ DNSPOD
     tencentcloud_dnspod_record_group
     tencentcloud_dnspod_snapshot
     tencentcloud_dnspod_snapshot_config
+    tencentcloud_dnspod_modify_record_group_operation
+    tencentcloud_dnspod_modify_domain_owner_operation
+    tencentcloud_dnspod_download_snapshot_operation
+    tencentcloud_dnspod_custom_line
 
   Data Source
     tencentcloud_dnspod_records
@@ -1928,13 +1939,6 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_update_row_filter_operation
     tencentcloud_dlc_bind_work_groups_to_user_attachment
 
-WeData
-  Data Source
-    tencentcloud_wedata_rule_templates
-
-  Resource
-    tencentcloud_wedata_rule_template
-
 Web Application Firewall(WAF)
   Data Source
     tencentcloud_waf_ciphers
@@ -1959,6 +1963,18 @@ Web Application Firewall(WAF)
     tencentcloud_waf_saas_instance
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
+
+Wedata
+  Data Source
+	tencentcloud_wedata_rule_templates
+
+  Resource
+    tencentcloud_wedata_function
+    tencentcloud_wedata_resource
+    tencentcloud_wedata_script
+    tencentcloud_wedata_dq_rule
+    tencentcloud_wedata_rule_template
+    tencentcloud_wedata_baseline
 
 Cloud Firewall(CFW)
   Data Source
@@ -2406,11 +2422,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_product_namespace":                    dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_monitor_alarm_notices":                        dataSourceTencentMonitorAlarmNotices(),
 			"tencentcloud_monitor_alarm_metric":                         dataSourceTencentCloudMonitorAlarmMetric(),
+			"tencentcloud_monitor_alarm_policy":                         dataSourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_history":                        dataSourceTencentCloudMonitorAlarmHistory(),
 			"tencentcloud_monitor_alarm_basic_alarms":                   dataSourceTencentCloudMonitorAlarmBasicAlarms(),
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_alarm_notice_callbacks":               dataSourceTencentCloudMonitorAlarmNoticeCallbacks(),
+			"tencentcloud_monitor_alarm_all_namespaces":                 dataSourceTencentCloudMonitorAlarmAllNamespaces(),
+			"tencentcloud_monitor_alarm_monitor_type":                   dataSourceTencentCloudMonitorAlarmMonitorType(),
+			"tencentcloud_monitor_statistic_data":                       dataSourceTencentCloudMonitorStatisticData(),
+			"tencentcloud_monitor_tmp_regions":                          dataSourceTencentCloudMonitorTmpRegions(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
@@ -3335,6 +3357,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_record_group":                                 resourceTencentCloudDnspodRecordGroup(),
 			"tencentcloud_dnspod_snapshot":                                     resourceTencentCloudDnspodSnapshot(),
 			"tencentcloud_dnspod_snapshot_config":                              resourceTencentCloudDnspodSnapshotConfig(),
+			"tencentcloud_dnspod_modify_domain_owner_operation":                resourceTencentCloudDnspodModifyDomainOwnerOperation(),
+			"tencentcloud_dnspod_modify_record_group_operation":                resourceTencentCloudDnspodModifyRecordGroupOperation(),
+			"tencentcloud_dnspod_download_snapshot_operation":                  resourceTencentCloudDnspodDownloadSnapshotOperation(),
+			"tencentcloud_dnspod_custom_line":                                  resourceTencentCloudDnspodCustomLine(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
@@ -3692,6 +3718,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
+			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
+			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
+			"tencentcloud_wedata_dq_rule":                                      resourceTencentCloudWedataDqRule(),
+			"tencentcloud_wedata_baseline":                                     resourceTencentCloudWedataBaseline(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),

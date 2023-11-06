@@ -142,7 +142,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Set: func(v interface{}) int {
 				return helper.HashString(v.(string))
 			},
-			Description: "ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.",
+			Description: "ID of the security group.",
 		},
 		"password": {
 			Type:        schema.TypeString,

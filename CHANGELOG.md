@@ -1,3 +1,42 @@
+## 1.81.43 (November 6, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_monitor_alarm_notice_callbacks` ([#2282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2282))
+* **New Data Source:** `tencentcloud_monitor_alarm_policy` ([#2282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2282))
+* **New Resource:** `tencentcloud_dnspod_custom_line` ([#2280](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2280))
+* **New Resource:** `tencentcloud_dnspod_download_snapshot_operation` ([#2279](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2279))
+* **New Resource:** `tencentcloud_dnspod_modify_domain_owner_operation` ([#2279](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2279))
+* **New Resource:** `tencentcloud_dnspod_modify_record_group_operation` ([#2279](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2279))
+* **New Resource:** `tencentcloud_monitor_alarm_all_namespaces` ([#2282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2282))
+* **New Resource:** `tencentcloud_monitor_alarm_monitor_type` ([#2282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2282))
+* **New Resource:** `tencentcloud_monitor_tmp_regions` ([#2282](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2282))
+* **New Resource:** `tencentcloud_wedata_baseline` ([#2260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2260))
+* **New Resource:** `tencentcloud_wedata_dq_rule` ([#2260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2260))
+* **New Resource:** `tencentcloud_wedata_function` ([#2260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2260))
+* **New Resource:** `tencentcloud_wedata_resource` ([#2260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2260))
+* **New Resource:** `tencentcloud_wedata_script` ([#2260](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2260))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`) ([#2281](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2281))
+* resource/tencentcloud_mongodb_sharding_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`) ([#2281](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2281))
+* resource/tencentcloud_mongodb_standby_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`) ([#2281](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2281))
+* tencentcloud_dnspod_record: Support set `remark`. ([#2279](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2279))
+
+## 1.81.42 (November 3, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dlc_update_row_filter_operation` ([#2270](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2270))
+* **New Resource:** `tencentcloud_dnspod_domain_alias` ([#2273](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2273))
+
+ENHANCEMENTS:
+
+* tencentcloud_instance: Support set create timeout. ([#2276](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2276))
+* tencentcloud_mysql_backup_policy: Support instance binlog setting. ([#2272](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2272))
+* tencentcloud_nat_gateway: Support create standard nat ([#2275](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2275))
+
 ## 1.81.41 (November 1, 2023)
 
 FEATURES:

@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`)
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`)
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_standby_instance: Support `security_groups` (which `engine_version` is `MONGO_40_WT`)
+```
