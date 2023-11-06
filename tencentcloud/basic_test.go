@@ -776,6 +776,10 @@ data "tencentcloud_mongodb_zone_config" "zone_config" {
   available_zone = "ap-guangzhou-6"
 }
 
+data "tencentcloud_security_group" "foo" {
+  name = "default"
+}
+
 variable "engine_versions" {
   default = {
     "3.6": "MONGO_36_WT",
@@ -801,6 +805,7 @@ locals {
   memory = local.spec.0.memory / 1024
   volume = local.spec.0.min_storage / 1024
   engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
+  security_group_id = data.tencentcloud_security_group.foo.id
 }
 
 locals {
