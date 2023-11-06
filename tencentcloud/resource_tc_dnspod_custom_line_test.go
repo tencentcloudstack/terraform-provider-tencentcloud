@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodCustomLineResource_basic(t *testing.T) {
@@ -13,7 +14,7 @@ func TestAccTencentCloudDnspodCustomLineResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodCustomLine,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "name", "testline8"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "area", "6.6.6.1-6.6.6.3"),
@@ -21,7 +22,7 @@ func TestAccTencentCloudDnspodCustomLineResource_basic(t *testing.T) {
 			},
 			{
 				Config: testAccDnspodCustomLineUp,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "name", "testline9"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_custom_line.custom_line", "area", "6.6.6.1-6.6.6.2"),

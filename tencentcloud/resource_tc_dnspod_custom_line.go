@@ -16,7 +16,7 @@ Import
 dnspod custom_line can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dnspod_custom_line.custom_line custom_line_id
+terraform import tencentcloud_dnspod_custom_line.custom_line domain#name
 ```
 */
 package tencentcloud
@@ -24,12 +24,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudDnspodCustomLine() *schema.Resource {
@@ -70,10 +71,10 @@ func resourceTencentCloudDnspodCustomLineCreate(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dnspod.NewCreateDomainCustomLineRequest()
+		request = dnspod.NewCreateDomainCustomLineRequest()
 		// response = dnspod.NewCreateDomainCustomLineResponse()
-		domain   string
-		name     string
+		domain string
+		name   string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)

@@ -42,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 dnspod custom_line can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dnspod_custom_line.custom_line custom_line_id
+terraform import tencentcloud_dnspod_custom_line.custom_line domain#name
 ```
 
