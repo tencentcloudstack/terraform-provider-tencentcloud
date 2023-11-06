@@ -749,9 +749,13 @@ Cloud Monitor(Monitor)
     tencentcloud_monitor_alarm_notices
     tencentcloud_monitor_alarm_history
     tencentcloud_monitor_alarm_metric
+    tencentcloud_monitor_alarm_policy
     tencentcloud_monitor_alarm_basic_alarms
     tencentcloud_monitor_alarm_basic_metric
     tencentcloud_monitor_alarm_conditions_template
+    tencentcloud_monitor_alarm_notice_callbacks
+    tencentcloud_monitor_alarm_all_namespaces
+    tencentcloud_monitor_alarm_monitor_type
 
   Resource
     tencentcloud_monitor_policy_group
@@ -764,8 +768,11 @@ Cloud Monitor(Monitor)
 
 
 Managed Service for Prometheus(TMP)
+  Data Source
+    tencentcloud_monitor_tmp_regions
+
   Resource
-      tencentcloud_monitor_tmp_instance
+    tencentcloud_monitor_tmp_instance
     tencentcloud_monitor_tmp_alert_rule
     tencentcloud_monitor_tmp_exporter_integration
     tencentcloud_monitor_tmp_cvm_agent
@@ -2413,11 +2420,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_product_namespace":                    dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_monitor_alarm_notices":                        dataSourceTencentMonitorAlarmNotices(),
 			"tencentcloud_monitor_alarm_metric":                         dataSourceTencentCloudMonitorAlarmMetric(),
+			"tencentcloud_monitor_alarm_policy":                         dataSourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_history":                        dataSourceTencentCloudMonitorAlarmHistory(),
 			"tencentcloud_monitor_alarm_basic_alarms":                   dataSourceTencentCloudMonitorAlarmBasicAlarms(),
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_alarm_notice_callbacks":               dataSourceTencentCloudMonitorAlarmNoticeCallbacks(),
+			"tencentcloud_monitor_alarm_all_namespaces":                 dataSourceTencentCloudMonitorAlarmAllNamespaces(),
+			"tencentcloud_monitor_alarm_monitor_type":                   dataSourceTencentCloudMonitorAlarmMonitorType(),
+			"tencentcloud_monitor_statistic_data":                       dataSourceTencentCloudMonitorStatisticData(),
+			"tencentcloud_monitor_tmp_regions":                          dataSourceTencentCloudMonitorTmpRegions(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
