@@ -245,6 +245,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   volume         = local.volume
   engine_version = local.engine_version
   machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234"
@@ -264,6 +265,7 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   volume         = local.volume * 2
   engine_version = local.engine_version
   machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
   available_zone = "ap-guangzhou-3"
   project_id     = 0
   password       = "test1234update"
@@ -283,6 +285,7 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   volume         = local.volume
   engine_version = local.engine_version
   machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
   available_zone  = "ap-guangzhou-3"
   project_id      = 0
   password        = "test1234"
@@ -305,6 +308,7 @@ resource "tencentcloud_mongodb_instance" "mongodb_prepaid" {
   volume         = local.volume
   engine_version = local.engine_version
   machine_type   = local.machine_type
+  security_groups = [local.security_group_id]
   available_zone  = "ap-guangzhou-3"
   project_id      = 0
   password        = "test1234update"
