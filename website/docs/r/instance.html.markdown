@@ -75,6 +75,9 @@ resource "tencentcloud_instance" "cvm_postpaid" {
 
 // Create a PREPAID CVM instance
 resource "tencentcloud_instance" "cvm_prepaid" {
+  timeouts {
+    create = "30m"
+  }
   instance_name                           = "cvm_prepaid"
   availability_zone                       = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id                                = data.tencentcloud_images.my_favorite_image.images.0.image_id

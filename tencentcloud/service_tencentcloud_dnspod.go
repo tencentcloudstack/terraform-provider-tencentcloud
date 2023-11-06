@@ -639,3 +639,63 @@ func (me *DnspodService) DeleteDnspodRecordGroupById(ctx context.Context, domain
 
 	return
 }
+
+func (me *DnspodService) DescribeDnspodDomainAliasById(ctx context.Context, domain string, domainAliasId int64) (domainAliasInfo *dnspod.DomainAliasInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeDomainAliasListRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeDomainAliasList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DomainAliasList) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.DomainAliasList {
+		if *item.Id == domainAliasId {
+			domainAliasInfo = item
+			return
+		}
+	}
+
+	return
+}
+
+func (me *DnspodService) DeleteDnspodDomainAliasById(ctx context.Context, domain string, domainAliasId int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDeleteDomainAliasRequest()
+	request.Domain = &domain
+	request.DomainAliasId = &domainAliasId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DeleteDomainAlias(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -26,6 +26,9 @@ func TestAccTencentCloudMysqlBackupPolicyResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "retention_period", "56"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_time", "10:00-14:00"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period", "35"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "enable_binlog_standby", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_standby_days", "33"),
 				),
 			},
 			{
@@ -36,6 +39,9 @@ func TestAccTencentCloudMysqlBackupPolicyResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "retention_period", "80"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "backup_time", "06:00-10:00"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_period", "32"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "enable_binlog_standby", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_backup_policy.mysql_backup_policy", "binlog_standby_days", "31"),
 				),
 			},
 		},
@@ -112,6 +118,9 @@ resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
   mysql_id         = local.mysql_id
   retention_period = 56
   backup_time      = "10:00-14:00"
+  binlog_period         = 35
+  enable_binlog_standby = "on"
+  binlog_standby_days   = 33
 }`, CommonPresetMysql)
 }
 
@@ -122,5 +131,8 @@ resource "tencentcloud_mysql_backup_policy" "mysql_backup_policy" {
   mysql_id         = local.mysql_id
   retention_period = 80
   backup_time      = "06:00-10:00"
+  binlog_period         = 32
+  enable_binlog_standby = "off"
+  binlog_standby_days   = 31
 }`, CommonPresetMysql)
 }
