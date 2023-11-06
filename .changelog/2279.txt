@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_dnspod_modify_domain_owner_operation
+```
+
+```release-note:new-resource
+tencentcloud_dnspod_modify_record_group_operation
+```
+
+```release-note:new-resource
+tencentcloud_dnspod_download_snapshot_operation
+```
+
+```release-note:enhancement
+tencentcloud_dnspod_record: Support set `remark`.
+```
