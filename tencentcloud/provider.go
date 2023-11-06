@@ -1930,13 +1930,6 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_update_row_filter_operation
     tencentcloud_dlc_bind_work_groups_to_user_attachment
 
-WeData
-  Data Source
-    tencentcloud_wedata_rule_templates
-
-  Resource
-    tencentcloud_wedata_rule_template
-
 Web Application Firewall(WAF)
   Data Source
     tencentcloud_waf_ciphers
@@ -1961,6 +1954,18 @@ Web Application Firewall(WAF)
     tencentcloud_waf_saas_instance
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
+
+Wedata
+  Data Source
+	tencentcloud_wedata_rule_templates
+
+  Resource
+    tencentcloud_wedata_function
+    tencentcloud_wedata_resource
+    tencentcloud_wedata_script
+    tencentcloud_wedata_dq_rule
+    tencentcloud_wedata_rule_template
+    tencentcloud_wedata_baseline
 
 Cloud Firewall(CFW)
   Data Source
@@ -3696,6 +3701,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
+			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
+			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
+			"tencentcloud_wedata_dq_rule":                                      resourceTencentCloudWedataDqRule(),
+			"tencentcloud_wedata_baseline":                                     resourceTencentCloudWedataBaseline(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),

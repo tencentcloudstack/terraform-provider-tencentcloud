@@ -59,8 +59,9 @@ func NewBatchCreateIntegrationTaskAlarmsRequest() (request *BatchCreateIntegrati
 func NewBatchCreateIntegrationTaskAlarmsResponse() (response *BatchCreateIntegrationTaskAlarmsResponse) {
     response = &BatchCreateIntegrationTaskAlarmsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchCreateIntegrationTaskAlarms
@@ -107,8 +108,9 @@ func NewBatchDeleteIntegrationTasksRequest() (request *BatchDeleteIntegrationTas
 func NewBatchDeleteIntegrationTasksResponse() (response *BatchDeleteIntegrationTasksResponse) {
     response = &BatchDeleteIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteIntegrationTasks
@@ -157,8 +159,9 @@ func NewBatchDeleteOpsTasksRequest() (request *BatchDeleteOpsTasksRequest) {
 func NewBatchDeleteOpsTasksResponse() (response *BatchDeleteOpsTasksResponse) {
     response = &BatchDeleteOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteOpsTasks
@@ -205,8 +208,9 @@ func NewBatchDeleteTasksDsRequest() (request *BatchDeleteTasksDsRequest) {
 func NewBatchDeleteTasksDsResponse() (response *BatchDeleteTasksDsResponse) {
     response = &BatchDeleteTasksDsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteTasksDs
@@ -253,8 +257,9 @@ func NewBatchDeleteTasksNewRequest() (request *BatchDeleteTasksNewRequest) {
 func NewBatchDeleteTasksNewResponse() (response *BatchDeleteTasksNewResponse) {
     response = &BatchDeleteTasksNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchDeleteTasksNew
@@ -305,8 +310,9 @@ func NewBatchForceSuccessIntegrationTaskInstancesRequest() (request *BatchForceS
 func NewBatchForceSuccessIntegrationTaskInstancesResponse() (response *BatchForceSuccessIntegrationTaskInstancesResponse) {
     response = &BatchForceSuccessIntegrationTaskInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchForceSuccessIntegrationTaskInstances
@@ -353,8 +359,9 @@ func NewBatchKillIntegrationTaskInstancesRequest() (request *BatchKillIntegratio
 func NewBatchKillIntegrationTaskInstancesResponse() (response *BatchKillIntegrationTaskInstancesResponse) {
     response = &BatchKillIntegrationTaskInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchKillIntegrationTaskInstances
@@ -401,8 +408,9 @@ func NewBatchMakeUpIntegrationTasksRequest() (request *BatchMakeUpIntegrationTas
 func NewBatchMakeUpIntegrationTasksResponse() (response *BatchMakeUpIntegrationTasksResponse) {
     response = &BatchMakeUpIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchMakeUpIntegrationTasks
@@ -449,8 +457,9 @@ func NewBatchModifyOpsOwnersRequest() (request *BatchModifyOpsOwnersRequest) {
 func NewBatchModifyOpsOwnersResponse() (response *BatchModifyOpsOwnersResponse) {
     response = &BatchModifyOpsOwnersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchModifyOpsOwners
@@ -497,8 +506,9 @@ func NewBatchModifyOwnersNewRequest() (request *BatchModifyOwnersNewRequest) {
 func NewBatchModifyOwnersNewResponse() (response *BatchModifyOwnersNewResponse) {
     response = &BatchModifyOwnersNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchModifyOwnersNew
@@ -549,14 +559,16 @@ func NewBatchRerunIntegrationTaskInstancesRequest() (request *BatchRerunIntegrat
 func NewBatchRerunIntegrationTaskInstancesResponse() (response *BatchRerunIntegrationTaskInstancesResponse) {
     response = &BatchRerunIntegrationTaskInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchRerunIntegrationTaskInstances
 // 批量重跑集成任务实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchRerunIntegrationTaskInstances(request *BatchRerunIntegrationTaskInstancesRequest) (response *BatchRerunIntegrationTaskInstancesResponse, err error) {
     return c.BatchRerunIntegrationTaskInstancesWithContext(context.Background(), request)
@@ -566,6 +578,7 @@ func (c *Client) BatchRerunIntegrationTaskInstances(request *BatchRerunIntegrati
 // 批量重跑集成任务实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchRerunIntegrationTaskInstancesWithContext(ctx context.Context, request *BatchRerunIntegrationTaskInstancesRequest) (response *BatchRerunIntegrationTaskInstancesResponse, err error) {
     if request == nil {
@@ -597,14 +610,16 @@ func NewBatchResumeIntegrationTasksRequest() (request *BatchResumeIntegrationTas
 func NewBatchResumeIntegrationTasksResponse() (response *BatchResumeIntegrationTasksResponse) {
     response = &BatchResumeIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchResumeIntegrationTasks
 // 批量继续执行集成实时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchResumeIntegrationTasks(request *BatchResumeIntegrationTasksRequest) (response *BatchResumeIntegrationTasksResponse, err error) {
     return c.BatchResumeIntegrationTasksWithContext(context.Background(), request)
@@ -614,6 +629,7 @@ func (c *Client) BatchResumeIntegrationTasks(request *BatchResumeIntegrationTask
 // 批量继续执行集成实时任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchResumeIntegrationTasksWithContext(ctx context.Context, request *BatchResumeIntegrationTasksRequest) (response *BatchResumeIntegrationTasksResponse, err error) {
     if request == nil {
@@ -645,8 +661,9 @@ func NewBatchRunOpsTaskRequest() (request *BatchRunOpsTaskRequest) {
 func NewBatchRunOpsTaskResponse() (response *BatchRunOpsTaskResponse) {
     response = &BatchRunOpsTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchRunOpsTask
@@ -699,8 +716,9 @@ func NewBatchStartIntegrationTasksRequest() (request *BatchStartIntegrationTasks
 func NewBatchStartIntegrationTasksResponse() (response *BatchStartIntegrationTasksResponse) {
     response = &BatchStartIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchStartIntegrationTasks
@@ -747,14 +765,16 @@ func NewBatchStopIntegrationTasksRequest() (request *BatchStopIntegrationTasksRe
 func NewBatchStopIntegrationTasksResponse() (response *BatchStopIntegrationTasksResponse) {
     response = &BatchStopIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchStopIntegrationTasks
 // 批量停止集成任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchStopIntegrationTasks(request *BatchStopIntegrationTasksRequest) (response *BatchStopIntegrationTasksResponse, err error) {
     return c.BatchStopIntegrationTasksWithContext(context.Background(), request)
@@ -764,6 +784,7 @@ func (c *Client) BatchStopIntegrationTasks(request *BatchStopIntegrationTasksReq
 // 批量停止集成任务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) BatchStopIntegrationTasksWithContext(ctx context.Context, request *BatchStopIntegrationTasksRequest) (response *BatchStopIntegrationTasksResponse, err error) {
     if request == nil {
@@ -795,8 +816,9 @@ func NewBatchStopOpsTasksRequest() (request *BatchStopOpsTasksRequest) {
 func NewBatchStopOpsTasksResponse() (response *BatchStopOpsTasksResponse) {
     response = &BatchStopOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchStopOpsTasks
@@ -843,8 +865,9 @@ func NewBatchStopTasksNewRequest() (request *BatchStopTasksNewRequest) {
 func NewBatchStopTasksNewResponse() (response *BatchStopTasksNewResponse) {
     response = &BatchStopTasksNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchStopTasksNew
@@ -895,8 +918,9 @@ func NewBatchStopWorkflowsByIdsRequest() (request *BatchStopWorkflowsByIdsReques
 func NewBatchStopWorkflowsByIdsResponse() (response *BatchStopWorkflowsByIdsResponse) {
     response = &BatchStopWorkflowsByIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchStopWorkflowsByIds
@@ -943,8 +967,9 @@ func NewBatchSuspendIntegrationTasksRequest() (request *BatchSuspendIntegrationT
 func NewBatchSuspendIntegrationTasksResponse() (response *BatchSuspendIntegrationTasksResponse) {
     response = &BatchSuspendIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchSuspendIntegrationTasks
@@ -991,8 +1016,9 @@ func NewBatchUpdateIntegrationTasksRequest() (request *BatchUpdateIntegrationTas
 func NewBatchUpdateIntegrationTasksResponse() (response *BatchUpdateIntegrationTasksResponse) {
     response = &BatchUpdateIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BatchUpdateIntegrationTasks
@@ -1039,8 +1065,9 @@ func NewCheckAlarmRegularNameExistRequest() (request *CheckAlarmRegularNameExist
 func NewCheckAlarmRegularNameExistResponse() (response *CheckAlarmRegularNameExistResponse) {
     response = &CheckAlarmRegularNameExistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckAlarmRegularNameExist
@@ -1087,8 +1114,9 @@ func NewCheckDuplicateRuleNameRequest() (request *CheckDuplicateRuleNameRequest)
 func NewCheckDuplicateRuleNameResponse() (response *CheckDuplicateRuleNameResponse) {
     response = &CheckDuplicateRuleNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckDuplicateRuleName
@@ -1135,8 +1163,9 @@ func NewCheckDuplicateTemplateNameRequest() (request *CheckDuplicateTemplateName
 func NewCheckDuplicateTemplateNameResponse() (response *CheckDuplicateTemplateNameResponse) {
     response = &CheckDuplicateTemplateNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckDuplicateTemplateName
@@ -1183,8 +1212,9 @@ func NewCheckIntegrationNodeNameExistsRequest() (request *CheckIntegrationNodeNa
 func NewCheckIntegrationNodeNameExistsResponse() (response *CheckIntegrationNodeNameExistsResponse) {
     response = &CheckIntegrationNodeNameExistsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckIntegrationNodeNameExists
@@ -1231,8 +1261,9 @@ func NewCheckIntegrationTaskNameExistsRequest() (request *CheckIntegrationTaskNa
 func NewCheckIntegrationTaskNameExistsResponse() (response *CheckIntegrationTaskNameExistsResponse) {
     response = &CheckIntegrationTaskNameExistsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckIntegrationTaskNameExists
@@ -1279,8 +1310,9 @@ func NewCheckTaskNameExistRequest() (request *CheckTaskNameExistRequest) {
 func NewCheckTaskNameExistResponse() (response *CheckTaskNameExistResponse) {
     response = &CheckTaskNameExistResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckTaskNameExist
@@ -1327,8 +1359,9 @@ func NewCommitExportTaskRequest() (request *CommitExportTaskRequest) {
 func NewCommitExportTaskResponse() (response *CommitExportTaskResponse) {
     response = &CommitExportTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CommitExportTask
@@ -1375,8 +1408,9 @@ func NewCommitIntegrationTaskRequest() (request *CommitIntegrationTaskRequest) {
 func NewCommitIntegrationTaskResponse() (response *CommitIntegrationTaskResponse) {
     response = &CommitIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CommitIntegrationTask
@@ -1455,8 +1489,9 @@ func NewCommitRuleGroupExecResultRequest() (request *CommitRuleGroupExecResultRe
 func NewCommitRuleGroupExecResultResponse() (response *CommitRuleGroupExecResultResponse) {
     response = &CommitRuleGroupExecResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CommitRuleGroupExecResult
@@ -1535,8 +1570,9 @@ func NewCommitRuleGroupTaskRequest() (request *CommitRuleGroupTaskRequest) {
 func NewCommitRuleGroupTaskResponse() (response *CommitRuleGroupTaskResponse) {
     response = &CommitRuleGroupTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CommitRuleGroupTask
@@ -1583,8 +1619,9 @@ func NewCountOpsInstanceStateRequest() (request *CountOpsInstanceStateRequest) {
 func NewCountOpsInstanceStateResponse() (response *CountOpsInstanceStateResponse) {
     response = &CountOpsInstanceStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CountOpsInstanceState
@@ -1631,8 +1668,9 @@ func NewCreateBaselineRequest() (request *CreateBaselineRequest) {
 func NewCreateBaselineResponse() (response *CreateBaselineResponse) {
     response = &CreateBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBaseline
@@ -1691,12 +1729,13 @@ func NewCreateCustomFunctionRequest() (request *CreateCustomFunctionRequest) {
 func NewCreateCustomFunctionResponse() (response *CreateCustomFunctionResponse) {
     response = &CreateCustomFunctionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCustomFunction
-//  创建用户自定义函数
+// 创建用户自定义函数
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1705,7 +1744,7 @@ func (c *Client) CreateCustomFunction(request *CreateCustomFunctionRequest) (res
 }
 
 // CreateCustomFunction
-//  创建用户自定义函数
+// 创建用户自定义函数
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1739,8 +1778,9 @@ func NewCreateDataSourceRequest() (request *CreateDataSourceRequest) {
 func NewCreateDataSourceResponse() (response *CreateDataSourceResponse) {
     response = &CreateDataSourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDataSource
@@ -1777,6 +1817,55 @@ func (c *Client) CreateDataSourceWithContext(ctx context.Context, request *Creat
     return
 }
 
+func NewCreateDsFolderRequest() (request *CreateDsFolderRequest) {
+    request = &CreateDsFolderRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "CreateDsFolder")
+    
+    
+    return
+}
+
+func NewCreateDsFolderResponse() (response *CreateDsFolderResponse) {
+    response = &CreateDsFolderResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateDsFolder
+// 编排空间-创建文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateDsFolder(request *CreateDsFolderRequest) (response *CreateDsFolderResponse, err error) {
+    return c.CreateDsFolderWithContext(context.Background(), request)
+}
+
+// CreateDsFolder
+// 编排空间-创建文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) CreateDsFolderWithContext(ctx context.Context, request *CreateDsFolderRequest) (response *CreateDsFolderResponse, err error) {
+    if request == nil {
+        request = NewCreateDsFolderRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDsFolder require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDsFolderResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateFolderRequest() (request *CreateFolderRequest) {
     request = &CreateFolderRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1791,8 +1880,9 @@ func NewCreateFolderRequest() (request *CreateFolderRequest) {
 func NewCreateFolderResponse() (response *CreateFolderResponse) {
     response = &CreateFolderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateFolder
@@ -1843,8 +1933,9 @@ func NewCreateHiveTableRequest() (request *CreateHiveTableRequest) {
 func NewCreateHiveTableResponse() (response *CreateHiveTableResponse) {
     response = &CreateHiveTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateHiveTable
@@ -1891,8 +1982,9 @@ func NewCreateHiveTableByDDLRequest() (request *CreateHiveTableByDDLRequest) {
 func NewCreateHiveTableByDDLResponse() (response *CreateHiveTableByDDLResponse) {
     response = &CreateHiveTableByDDLResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateHiveTableByDDL
@@ -1943,8 +2035,9 @@ func NewCreateInLongAgentRequest() (request *CreateInLongAgentRequest) {
 func NewCreateInLongAgentResponse() (response *CreateInLongAgentResponse) {
     response = &CreateInLongAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInLongAgent
@@ -1991,8 +2084,9 @@ func NewCreateIntegrationNodeRequest() (request *CreateIntegrationNodeRequest) {
 func NewCreateIntegrationNodeResponse() (response *CreateIntegrationNodeResponse) {
     response = &CreateIntegrationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateIntegrationNode
@@ -2059,8 +2153,9 @@ func NewCreateIntegrationTaskRequest() (request *CreateIntegrationTaskRequest) {
 func NewCreateIntegrationTaskResponse() (response *CreateIntegrationTaskResponse) {
     response = &CreateIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateIntegrationTask
@@ -2139,8 +2234,9 @@ func NewCreateOfflineTaskRequest() (request *CreateOfflineTaskRequest) {
 func NewCreateOfflineTaskResponse() (response *CreateOfflineTaskResponse) {
     response = &CreateOfflineTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOfflineTask
@@ -2187,8 +2283,9 @@ func NewCreateOpsMakePlanRequest() (request *CreateOpsMakePlanRequest) {
 func NewCreateOpsMakePlanResponse() (response *CreateOpsMakePlanResponse) {
     response = &CreateOpsMakePlanResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOpsMakePlan
@@ -2235,8 +2332,9 @@ func NewCreateOrUpdateResourceRequest() (request *CreateOrUpdateResourceRequest)
 func NewCreateOrUpdateResourceResponse() (response *CreateOrUpdateResourceResponse) {
     response = &CreateOrUpdateResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateOrUpdateResource
@@ -2283,8 +2381,9 @@ func NewCreateResourcePathRequest() (request *CreateResourcePathRequest) {
 func NewCreateResourcePathResponse() (response *CreateResourcePathResponse) {
     response = &CreateResourcePathResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateResourcePath
@@ -2331,8 +2430,9 @@ func NewCreateRuleRequest() (request *CreateRuleRequest) {
 func NewCreateRuleResponse() (response *CreateRuleResponse) {
     response = &CreateRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRule
@@ -2383,8 +2483,9 @@ func NewCreateRuleTemplateRequest() (request *CreateRuleTemplateRequest) {
 func NewCreateRuleTemplateResponse() (response *CreateRuleTemplateResponse) {
     response = &CreateRuleTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRuleTemplate
@@ -2431,8 +2532,9 @@ func NewCreateTaskRequest() (request *CreateTaskRequest) {
 func NewCreateTaskResponse() (response *CreateTaskResponse) {
     response = &CreateTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTask
@@ -2483,8 +2585,9 @@ func NewCreateTaskAlarmRegularRequest() (request *CreateTaskAlarmRegularRequest)
 func NewCreateTaskAlarmRegularResponse() (response *CreateTaskAlarmRegularResponse) {
     response = &CreateTaskAlarmRegularResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTaskAlarmRegular
@@ -2547,8 +2650,9 @@ func NewCreateWorkflowRequest() (request *CreateWorkflowRequest) {
 func NewCreateWorkflowResponse() (response *CreateWorkflowResponse) {
     response = &CreateWorkflowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWorkflow
@@ -2599,8 +2703,9 @@ func NewDagInstancesRequest() (request *DagInstancesRequest) {
 func NewDagInstancesResponse() (response *DagInstancesResponse) {
     response = &DagInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DagInstances
@@ -2647,8 +2752,9 @@ func NewDeleteBaselineRequest() (request *DeleteBaselineRequest) {
 func NewDeleteBaselineResponse() (response *DeleteBaselineResponse) {
     response = &DeleteBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBaseline
@@ -2695,8 +2801,9 @@ func NewDeleteCustomFunctionRequest() (request *DeleteCustomFunctionRequest) {
 func NewDeleteCustomFunctionResponse() (response *DeleteCustomFunctionResponse) {
     response = &DeleteCustomFunctionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCustomFunction
@@ -2743,8 +2850,9 @@ func NewDeleteDataSourcesRequest() (request *DeleteDataSourcesRequest) {
 func NewDeleteDataSourcesResponse() (response *DeleteDataSourcesResponse) {
     response = &DeleteDataSourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDataSources
@@ -2781,6 +2889,55 @@ func (c *Client) DeleteDataSourcesWithContext(ctx context.Context, request *Dele
     return
 }
 
+func NewDeleteDsFolderRequest() (request *DeleteDsFolderRequest) {
+    request = &DeleteDsFolderRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DeleteDsFolder")
+    
+    
+    return
+}
+
+func NewDeleteDsFolderResponse() (response *DeleteDsFolderResponse) {
+    response = &DeleteDsFolderResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDsFolder
+// 编排空间-删除文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteDsFolder(request *DeleteDsFolderRequest) (response *DeleteDsFolderResponse, err error) {
+    return c.DeleteDsFolderWithContext(context.Background(), request)
+}
+
+// DeleteDsFolder
+// 编排空间-删除文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteDsFolderWithContext(ctx context.Context, request *DeleteDsFolderRequest) (response *DeleteDsFolderResponse, err error) {
+    if request == nil {
+        request = NewDeleteDsFolderRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDsFolder require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDsFolderResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteFileRequest() (request *DeleteFileRequest) {
     request = &DeleteFileRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2795,8 +2952,9 @@ func NewDeleteFileRequest() (request *DeleteFileRequest) {
 func NewDeleteFileResponse() (response *DeleteFileResponse) {
     response = &DeleteFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFile
@@ -2853,8 +3011,9 @@ func NewDeleteFilePathRequest() (request *DeleteFilePathRequest) {
 func NewDeleteFilePathResponse() (response *DeleteFilePathResponse) {
     response = &DeleteFilePathResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFilePath
@@ -2901,8 +3060,9 @@ func NewDeleteFolderRequest() (request *DeleteFolderRequest) {
 func NewDeleteFolderResponse() (response *DeleteFolderResponse) {
     response = &DeleteFolderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteFolder
@@ -2953,8 +3113,9 @@ func NewDeleteInLongAgentRequest() (request *DeleteInLongAgentRequest) {
 func NewDeleteInLongAgentResponse() (response *DeleteInLongAgentResponse) {
     response = &DeleteInLongAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteInLongAgent
@@ -3001,8 +3162,9 @@ func NewDeleteIntegrationNodeRequest() (request *DeleteIntegrationNodeRequest) {
 func NewDeleteIntegrationNodeResponse() (response *DeleteIntegrationNodeResponse) {
     response = &DeleteIntegrationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteIntegrationNode
@@ -3081,8 +3243,9 @@ func NewDeleteIntegrationTaskRequest() (request *DeleteIntegrationTaskRequest) {
 func NewDeleteIntegrationTaskResponse() (response *DeleteIntegrationTaskResponse) {
     response = &DeleteIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteIntegrationTask
@@ -3161,8 +3324,9 @@ func NewDeleteOfflineTaskRequest() (request *DeleteOfflineTaskRequest) {
 func NewDeleteOfflineTaskResponse() (response *DeleteOfflineTaskResponse) {
     response = &DeleteOfflineTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteOfflineTask
@@ -3209,8 +3373,9 @@ func NewDeleteProjectParamDsRequest() (request *DeleteProjectParamDsRequest) {
 func NewDeleteProjectParamDsResponse() (response *DeleteProjectParamDsResponse) {
     response = &DeleteProjectParamDsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteProjectParamDs
@@ -3261,8 +3426,9 @@ func NewDeleteResourceRequest() (request *DeleteResourceRequest) {
 func NewDeleteResourceResponse() (response *DeleteResourceResponse) {
     response = &DeleteResourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResource
@@ -3309,8 +3475,9 @@ func NewDeleteResourceFileRequest() (request *DeleteResourceFileRequest) {
 func NewDeleteResourceFileResponse() (response *DeleteResourceFileResponse) {
     response = &DeleteResourceFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResourceFile
@@ -3357,8 +3524,9 @@ func NewDeleteResourceFilesRequest() (request *DeleteResourceFilesRequest) {
 func NewDeleteResourceFilesResponse() (response *DeleteResourceFilesResponse) {
     response = &DeleteResourceFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteResourceFiles
@@ -3405,8 +3573,9 @@ func NewDeleteRuleRequest() (request *DeleteRuleRequest) {
 func NewDeleteRuleResponse() (response *DeleteRuleResponse) {
     response = &DeleteRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRule
@@ -3459,8 +3628,9 @@ func NewDeleteRuleTemplateRequest() (request *DeleteRuleTemplateRequest) {
 func NewDeleteRuleTemplateResponse() (response *DeleteRuleTemplateResponse) {
     response = &DeleteRuleTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRuleTemplate
@@ -3513,8 +3683,9 @@ func NewDeleteTaskAlarmRegularRequest() (request *DeleteTaskAlarmRegularRequest)
 func NewDeleteTaskAlarmRegularResponse() (response *DeleteTaskAlarmRegularResponse) {
     response = &DeleteTaskAlarmRegularResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTaskAlarmRegular
@@ -3577,8 +3748,9 @@ func NewDeleteTaskDsRequest() (request *DeleteTaskDsRequest) {
 func NewDeleteTaskDsResponse() (response *DeleteTaskDsResponse) {
     response = &DeleteTaskDsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTaskDs
@@ -3625,8 +3797,9 @@ func NewDeleteWorkflowByIdRequest() (request *DeleteWorkflowByIdRequest) {
 func NewDeleteWorkflowByIdResponse() (response *DeleteWorkflowByIdResponse) {
     response = &DeleteWorkflowByIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWorkflowById
@@ -3673,8 +3846,9 @@ func NewDeleteWorkflowNewRequest() (request *DeleteWorkflowNewRequest) {
 func NewDeleteWorkflowNewResponse() (response *DeleteWorkflowNewResponse) {
     response = &DeleteWorkflowNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWorkflowNew
@@ -3725,8 +3899,9 @@ func NewDescribeAlarmEventsRequest() (request *DescribeAlarmEventsRequest) {
 func NewDescribeAlarmEventsResponse() (response *DescribeAlarmEventsResponse) {
     response = &DescribeAlarmEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmEvents
@@ -3785,8 +3960,9 @@ func NewDescribeAlarmReceiverRequest() (request *DescribeAlarmReceiverRequest) {
 func NewDescribeAlarmReceiverResponse() (response *DescribeAlarmReceiverResponse) {
     response = &DescribeAlarmReceiverResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmReceiver
@@ -3843,20 +4019,16 @@ func NewDescribeAllByFolderNewRequest() (request *DescribeAllByFolderNewRequest)
 func NewDescribeAllByFolderNewResponse() (response *DescribeAllByFolderNewResponse) {
     response = &DescribeAllByFolderNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAllByFolderNew
 // 查询父目录下所有子文件夹+工作流
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllByFolderNew(request *DescribeAllByFolderNewRequest) (response *DescribeAllByFolderNewResponse, err error) {
     return c.DescribeAllByFolderNewWithContext(context.Background(), request)
 }
@@ -3865,12 +4037,7 @@ func (c *Client) DescribeAllByFolderNew(request *DescribeAllByFolderNewRequest) 
 // 查询父目录下所有子文件夹+工作流
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllByFolderNewWithContext(ctx context.Context, request *DescribeAllByFolderNewRequest) (response *DescribeAllByFolderNewResponse, err error) {
     if request == nil {
         request = NewDescribeAllByFolderNewRequest()
@@ -3901,20 +4068,16 @@ func NewDescribeAllTaskTypeRequest() (request *DescribeAllTaskTypeRequest) {
 func NewDescribeAllTaskTypeResponse() (response *DescribeAllTaskTypeResponse) {
     response = &DescribeAllTaskTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAllTaskType
 // 获取所有任务类型
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllTaskType(request *DescribeAllTaskTypeRequest) (response *DescribeAllTaskTypeResponse, err error) {
     return c.DescribeAllTaskTypeWithContext(context.Background(), request)
 }
@@ -3923,12 +4086,7 @@ func (c *Client) DescribeAllTaskType(request *DescribeAllTaskTypeRequest) (respo
 // 获取所有任务类型
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllTaskTypeWithContext(ctx context.Context, request *DescribeAllTaskTypeRequest) (response *DescribeAllTaskTypeResponse, err error) {
     if request == nil {
         request = NewDescribeAllTaskTypeRequest()
@@ -3959,20 +4117,16 @@ func NewDescribeAllUsedVersionSonRequest() (request *DescribeAllUsedVersionSonRe
 func NewDescribeAllUsedVersionSonResponse() (response *DescribeAllUsedVersionSonResponse) {
     response = &DescribeAllUsedVersionSonResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAllUsedVersionSon
 // 根据任务Id查找生产态子任务
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllUsedVersionSon(request *DescribeAllUsedVersionSonRequest) (response *DescribeAllUsedVersionSonResponse, err error) {
     return c.DescribeAllUsedVersionSonWithContext(context.Background(), request)
 }
@@ -3981,12 +4135,7 @@ func (c *Client) DescribeAllUsedVersionSon(request *DescribeAllUsedVersionSonReq
 // 根据任务Id查找生产态子任务
 //
 // 可能返回的错误码:
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAllUsedVersionSonWithContext(ctx context.Context, request *DescribeAllUsedVersionSonRequest) (response *DescribeAllUsedVersionSonResponse, err error) {
     if request == nil {
         request = NewDescribeAllUsedVersionSonRequest()
@@ -4017,8 +4166,9 @@ func NewDescribeBaselineAllTaskDagRequest() (request *DescribeBaselineAllTaskDag
 func NewDescribeBaselineAllTaskDagResponse() (response *DescribeBaselineAllTaskDagResponse) {
     response = &DescribeBaselineAllTaskDagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineAllTaskDag
@@ -4077,8 +4227,9 @@ func NewDescribeBaselineByIdRequest() (request *DescribeBaselineByIdRequest) {
 func NewDescribeBaselineByIdResponse() (response *DescribeBaselineByIdResponse) {
     response = &DescribeBaselineByIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineById
@@ -4137,8 +4288,9 @@ func NewDescribeBaselineInstanceDagRequest() (request *DescribeBaselineInstanceD
 func NewDescribeBaselineInstanceDagResponse() (response *DescribeBaselineInstanceDagResponse) {
     response = &DescribeBaselineInstanceDagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineInstanceDag
@@ -4197,8 +4349,9 @@ func NewDescribeBaselineInstanceGanttRequest() (request *DescribeBaselineInstanc
 func NewDescribeBaselineInstanceGanttResponse() (response *DescribeBaselineInstanceGanttResponse) {
     response = &DescribeBaselineInstanceGanttResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineInstanceGantt
@@ -4257,8 +4410,9 @@ func NewDescribeBaselineInstancesRequest() (request *DescribeBaselineInstancesRe
 func NewDescribeBaselineInstancesResponse() (response *DescribeBaselineInstancesResponse) {
     response = &DescribeBaselineInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselineInstances
@@ -4305,8 +4459,9 @@ func NewDescribeBaselinesRequest() (request *DescribeBaselinesRequest) {
 func NewDescribeBaselinesResponse() (response *DescribeBaselinesResponse) {
     response = &DescribeBaselinesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaselines
@@ -4365,8 +4520,9 @@ func NewDescribeBatchOperateTaskRequest() (request *DescribeBatchOperateTaskRequ
 func NewDescribeBatchOperateTaskResponse() (response *DescribeBatchOperateTaskResponse) {
     response = &DescribeBatchOperateTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBatchOperateTask
@@ -4415,8 +4571,9 @@ func NewDescribeBelongToRequest() (request *DescribeBelongToRequest) {
 func NewDescribeBelongToResponse() (response *DescribeBelongToResponse) {
     response = &DescribeBelongToResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBelongTo
@@ -4465,8 +4622,9 @@ func NewDescribeClusterNamespaceListRequest() (request *DescribeClusterNamespace
 func NewDescribeClusterNamespaceListResponse() (response *DescribeClusterNamespaceListResponse) {
     response = &DescribeClusterNamespaceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNamespaceList
@@ -4513,8 +4671,9 @@ func NewDescribeColumnLineageRequest() (request *DescribeColumnLineageRequest) {
 func NewDescribeColumnLineageResponse() (response *DescribeColumnLineageResponse) {
     response = &DescribeColumnLineageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeColumnLineage
@@ -4569,8 +4728,9 @@ func NewDescribeDataBasesRequest() (request *DescribeDataBasesRequest) {
 func NewDescribeDataBasesResponse() (response *DescribeDataBasesResponse) {
     response = &DescribeDataBasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataBases
@@ -4619,8 +4779,9 @@ func NewDescribeDataCheckStatRequest() (request *DescribeDataCheckStatRequest) {
 func NewDescribeDataCheckStatResponse() (response *DescribeDataCheckStatResponse) {
     response = &DescribeDataCheckStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataCheckStat
@@ -4673,8 +4834,9 @@ func NewDescribeDataObjectsRequest() (request *DescribeDataObjectsRequest) {
 func NewDescribeDataObjectsResponse() (response *DescribeDataObjectsResponse) {
     response = &DescribeDataObjectsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataObjects
@@ -4723,8 +4885,9 @@ func NewDescribeDataSourceInfoListRequest() (request *DescribeDataSourceInfoList
 func NewDescribeDataSourceInfoListResponse() (response *DescribeDataSourceInfoListResponse) {
     response = &DescribeDataSourceInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataSourceInfoList
@@ -4771,8 +4934,9 @@ func NewDescribeDataSourceListRequest() (request *DescribeDataSourceListRequest)
 func NewDescribeDataSourceListResponse() (response *DescribeDataSourceListResponse) {
     response = &DescribeDataSourceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataSourceList
@@ -4825,8 +4989,9 @@ func NewDescribeDataSourceWithoutInfoRequest() (request *DescribeDataSourceWitho
 func NewDescribeDataSourceWithoutInfoResponse() (response *DescribeDataSourceWithoutInfoResponse) {
     response = &DescribeDataSourceWithoutInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataSourceWithoutInfo
@@ -4879,8 +5044,9 @@ func NewDescribeDataTypesRequest() (request *DescribeDataTypesRequest) {
 func NewDescribeDataTypesResponse() (response *DescribeDataTypesResponse) {
     response = &DescribeDataTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataTypes
@@ -4945,8 +5111,9 @@ func NewDescribeDatabaseInfoListRequest() (request *DescribeDatabaseInfoListRequ
 func NewDescribeDatabaseInfoListResponse() (response *DescribeDatabaseInfoListResponse) {
     response = &DescribeDatabaseInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatabaseInfoList
@@ -4979,6 +5146,63 @@ func (c *Client) DescribeDatabaseInfoListWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeDatabaseMetasRequest() (request *DescribeDatabaseMetasRequest) {
+    request = &DescribeDatabaseMetasRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DescribeDatabaseMetas")
+    
+    
+    return
+}
+
+func NewDescribeDatabaseMetasResponse() (response *DescribeDatabaseMetasResponse) {
+    response = &DescribeDatabaseMetasResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDatabaseMetas
+// 查询数据库列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeDatabaseMetas(request *DescribeDatabaseMetasRequest) (response *DescribeDatabaseMetasResponse, err error) {
+    return c.DescribeDatabaseMetasWithContext(context.Background(), request)
+}
+
+// DescribeDatabaseMetas
+// 查询数据库列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeDatabaseMetasWithContext(ctx context.Context, request *DescribeDatabaseMetasRequest) (response *DescribeDatabaseMetasResponse, err error) {
+    if request == nil {
+        request = NewDescribeDatabaseMetasRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDatabaseMetas require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDatabaseMetasResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDatasourceRequest() (request *DescribeDatasourceRequest) {
     request = &DescribeDatasourceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4993,8 +5217,9 @@ func NewDescribeDatasourceRequest() (request *DescribeDatasourceRequest) {
 func NewDescribeDatasourceResponse() (response *DescribeDatasourceResponse) {
     response = &DescribeDatasourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatasource
@@ -5045,8 +5270,9 @@ func NewDescribeDependOpsTaskListRequest() (request *DescribeDependOpsTaskListRe
 func NewDescribeDependOpsTaskListResponse() (response *DescribeDependOpsTaskListResponse) {
     response = &DescribeDependOpsTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDependOpsTaskList
@@ -5095,8 +5321,9 @@ func NewDescribeDependOpsTasksRequest() (request *DescribeDependOpsTasksRequest)
 func NewDescribeDependOpsTasksResponse() (response *DescribeDependOpsTasksResponse) {
     response = &DescribeDependOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDependOpsTasks
@@ -5143,8 +5370,9 @@ func NewDescribeDependTaskListsRequest() (request *DescribeDependTaskListsReques
 func NewDescribeDependTaskListsResponse() (response *DescribeDependTaskListsResponse) {
     response = &DescribeDependTaskListsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDependTaskLists
@@ -5191,8 +5419,9 @@ func NewDescribeDependTasksNewRequest() (request *DescribeDependTasksNewRequest)
 func NewDescribeDependTasksNewResponse() (response *DescribeDependTasksNewResponse) {
     response = &DescribeDependTasksNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDependTasksNew
@@ -5243,8 +5472,9 @@ func NewDescribeDiagnosticInfoByBaselineIdRequest() (request *DescribeDiagnostic
 func NewDescribeDiagnosticInfoByBaselineIdResponse() (response *DescribeDiagnosticInfoByBaselineIdResponse) {
     response = &DescribeDiagnosticInfoByBaselineIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDiagnosticInfoByBaselineId
@@ -5303,8 +5533,9 @@ func NewDescribeDimensionScoreRequest() (request *DescribeDimensionScoreRequest)
 func NewDescribeDimensionScoreResponse() (response *DescribeDimensionScoreResponse) {
     response = &DescribeDimensionScoreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDimensionScore
@@ -5367,8 +5598,9 @@ func NewDescribeDrInstancePageRequest() (request *DescribeDrInstancePageRequest)
 func NewDescribeDrInstancePageResponse() (response *DescribeDrInstancePageResponse) {
     response = &DescribeDrInstancePageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDrInstancePage
@@ -5431,8 +5663,9 @@ func NewDescribeDrInstanceScriptContentRequest() (request *DescribeDrInstanceScr
 func NewDescribeDrInstanceScriptContentResponse() (response *DescribeDrInstanceScriptContentResponse) {
     response = &DescribeDrInstanceScriptContentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDrInstanceScriptContent
@@ -5495,8 +5728,9 @@ func NewDescribeDrSonInstanceRequest() (request *DescribeDrSonInstanceRequest) {
 func NewDescribeDrSonInstanceResponse() (response *DescribeDrSonInstanceResponse) {
     response = &DescribeDrSonInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDrSonInstance
@@ -5545,6 +5779,104 @@ func (c *Client) DescribeDrSonInstanceWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeDsFolderTreeRequest() (request *DescribeDsFolderTreeRequest) {
+    request = &DescribeDsFolderTreeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DescribeDsFolderTree")
+    
+    
+    return
+}
+
+func NewDescribeDsFolderTreeResponse() (response *DescribeDsFolderTreeResponse) {
+    response = &DescribeDsFolderTreeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDsFolderTree
+// 查询目录树
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDsFolderTree(request *DescribeDsFolderTreeRequest) (response *DescribeDsFolderTreeResponse, err error) {
+    return c.DescribeDsFolderTreeWithContext(context.Background(), request)
+}
+
+// DescribeDsFolderTree
+// 查询目录树
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDsFolderTreeWithContext(ctx context.Context, request *DescribeDsFolderTreeRequest) (response *DescribeDsFolderTreeResponse, err error) {
+    if request == nil {
+        request = NewDescribeDsFolderTreeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDsFolderTree require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDsFolderTreeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDsParentFolderTreeRequest() (request *DescribeDsParentFolderTreeRequest) {
+    request = &DescribeDsParentFolderTreeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "DescribeDsParentFolderTree")
+    
+    
+    return
+}
+
+func NewDescribeDsParentFolderTreeResponse() (response *DescribeDsParentFolderTreeResponse) {
+    response = &DescribeDsParentFolderTreeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDsParentFolderTree
+// 查询父目录树，用于工作流、任务定位
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDsParentFolderTree(request *DescribeDsParentFolderTreeRequest) (response *DescribeDsParentFolderTreeResponse, err error) {
+    return c.DescribeDsParentFolderTreeWithContext(context.Background(), request)
+}
+
+// DescribeDsParentFolderTree
+// 查询父目录树，用于工作流、任务定位
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeDsParentFolderTreeWithContext(ctx context.Context, request *DescribeDsParentFolderTreeRequest) (response *DescribeDsParentFolderTreeResponse, err error) {
+    if request == nil {
+        request = NewDescribeDsParentFolderTreeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDsParentFolderTree require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDsParentFolderTreeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEventRequest() (request *DescribeEventRequest) {
     request = &DescribeEventRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5559,8 +5891,9 @@ func NewDescribeEventRequest() (request *DescribeEventRequest) {
 func NewDescribeEventResponse() (response *DescribeEventResponse) {
     response = &DescribeEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEvent
@@ -5607,8 +5940,9 @@ func NewDescribeEventCasesRequest() (request *DescribeEventCasesRequest) {
 func NewDescribeEventCasesResponse() (response *DescribeEventCasesResponse) {
     response = &DescribeEventCasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventCases
@@ -5655,8 +5989,9 @@ func NewDescribeEventConsumeTasksRequest() (request *DescribeEventConsumeTasksRe
 func NewDescribeEventConsumeTasksResponse() (response *DescribeEventConsumeTasksResponse) {
     response = &DescribeEventConsumeTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventConsumeTasks
@@ -5703,8 +6038,9 @@ func NewDescribeEventDetailRequest() (request *DescribeEventDetailRequest) {
 func NewDescribeEventDetailResponse() (response *DescribeEventDetailResponse) {
     response = &DescribeEventDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventDetail
@@ -5751,8 +6087,9 @@ func NewDescribeEventIsAlarmTypesRequest() (request *DescribeEventIsAlarmTypesRe
 func NewDescribeEventIsAlarmTypesResponse() (response *DescribeEventIsAlarmTypesResponse) {
     response = &DescribeEventIsAlarmTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventIsAlarmTypes
@@ -5799,8 +6136,9 @@ func NewDescribeEventTypesRequest() (request *DescribeEventTypesRequest) {
 func NewDescribeEventTypesResponse() (response *DescribeEventTypesResponse) {
     response = &DescribeEventTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEventTypes
@@ -5847,8 +6185,9 @@ func NewDescribeEventsRequest() (request *DescribeEventsRequest) {
 func NewDescribeEventsResponse() (response *DescribeEventsResponse) {
     response = &DescribeEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEvents
@@ -5895,8 +6234,9 @@ func NewDescribeExecStrategyRequest() (request *DescribeExecStrategyRequest) {
 func NewDescribeExecStrategyResponse() (response *DescribeExecStrategyResponse) {
     response = &DescribeExecStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExecStrategy
@@ -5949,8 +6289,9 @@ func NewDescribeFathersRequest() (request *DescribeFathersRequest) {
 func NewDescribeFathersResponse() (response *DescribeFathersResponse) {
     response = &DescribeFathersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFathers
@@ -5958,9 +6299,6 @@ func NewDescribeFathersResponse() (response *DescribeFathersResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  UNAUTHORIZEDOPERATION_USERNOTINPROJECT = "UnauthorizedOperation.UserNotInProject"
 func (c *Client) DescribeFathers(request *DescribeFathersRequest) (response *DescribeFathersResponse, err error) {
     return c.DescribeFathersWithContext(context.Background(), request)
 }
@@ -5970,9 +6308,6 @@ func (c *Client) DescribeFathers(request *DescribeFathersRequest) (response *Des
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  UNAUTHORIZEDOPERATION_USERNOTINPROJECT = "UnauthorizedOperation.UserNotInProject"
 func (c *Client) DescribeFathersWithContext(ctx context.Context, request *DescribeFathersRequest) (response *DescribeFathersResponse, err error) {
     if request == nil {
         request = NewDescribeFathersRequest()
@@ -6003,8 +6338,9 @@ func NewDescribeFolderListRequest() (request *DescribeFolderListRequest) {
 func NewDescribeFolderListResponse() (response *DescribeFolderListResponse) {
     response = &DescribeFolderListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFolderList
@@ -6055,8 +6391,9 @@ func NewDescribeFolderWorkflowListRequest() (request *DescribeFolderWorkflowList
 func NewDescribeFolderWorkflowListResponse() (response *DescribeFolderWorkflowListResponse) {
     response = &DescribeFolderWorkflowListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFolderWorkflowList
@@ -6107,8 +6444,9 @@ func NewDescribeFunctionKindsRequest() (request *DescribeFunctionKindsRequest) {
 func NewDescribeFunctionKindsResponse() (response *DescribeFunctionKindsResponse) {
     response = &DescribeFunctionKindsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFunctionKinds
@@ -6155,8 +6493,9 @@ func NewDescribeFunctionTypesRequest() (request *DescribeFunctionTypesRequest) {
 func NewDescribeFunctionTypesResponse() (response *DescribeFunctionTypesResponse) {
     response = &DescribeFunctionTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeFunctionTypes
@@ -6203,8 +6542,9 @@ func NewDescribeInLongAgentListRequest() (request *DescribeInLongAgentListReques
 func NewDescribeInLongAgentListResponse() (response *DescribeInLongAgentListResponse) {
     response = &DescribeInLongAgentListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInLongAgentList
@@ -6251,8 +6591,9 @@ func NewDescribeInLongAgentTaskListRequest() (request *DescribeInLongAgentTaskLi
 func NewDescribeInLongAgentTaskListResponse() (response *DescribeInLongAgentTaskListResponse) {
     response = &DescribeInLongAgentTaskListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInLongAgentTaskList
@@ -6299,8 +6640,9 @@ func NewDescribeInLongAgentVpcListRequest() (request *DescribeInLongAgentVpcList
 func NewDescribeInLongAgentVpcListResponse() (response *DescribeInLongAgentVpcListResponse) {
     response = &DescribeInLongAgentVpcListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInLongAgentVpcList
@@ -6347,8 +6689,9 @@ func NewDescribeInLongTkeClusterListRequest() (request *DescribeInLongTkeCluster
 func NewDescribeInLongTkeClusterListResponse() (response *DescribeInLongTkeClusterListResponse) {
     response = &DescribeInLongTkeClusterListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInLongTkeClusterList
@@ -6395,8 +6738,9 @@ func NewDescribeInstanceByCycleRequest() (request *DescribeInstanceByCycleReques
 func NewDescribeInstanceByCycleResponse() (response *DescribeInstanceByCycleResponse) {
     response = &DescribeInstanceByCycleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceByCycle
@@ -6443,8 +6787,9 @@ func NewDescribeInstanceByCycleReportRequest() (request *DescribeInstanceByCycle
 func NewDescribeInstanceByCycleReportResponse() (response *DescribeInstanceByCycleReportResponse) {
     response = &DescribeInstanceByCycleReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceByCycleReport
@@ -6491,8 +6836,9 @@ func NewDescribeInstanceLastLogRequest() (request *DescribeInstanceLastLogReques
 func NewDescribeInstanceLastLogResponse() (response *DescribeInstanceLastLogResponse) {
     response = &DescribeInstanceLastLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLastLog
@@ -6539,8 +6885,9 @@ func NewDescribeInstanceListRequest() (request *DescribeInstanceListRequest) {
 func NewDescribeInstanceListResponse() (response *DescribeInstanceListResponse) {
     response = &DescribeInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceList
@@ -6587,8 +6934,9 @@ func NewDescribeInstanceLogRequest() (request *DescribeInstanceLogRequest) {
 func NewDescribeInstanceLogResponse() (response *DescribeInstanceLogResponse) {
     response = &DescribeInstanceLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLog
@@ -6635,8 +6983,9 @@ func NewDescribeInstanceLogDetailRequest() (request *DescribeInstanceLogDetailRe
 func NewDescribeInstanceLogDetailResponse() (response *DescribeInstanceLogDetailResponse) {
     response = &DescribeInstanceLogDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLogDetail
@@ -6683,8 +7032,9 @@ func NewDescribeInstanceLogFileRequest() (request *DescribeInstanceLogFileReques
 func NewDescribeInstanceLogFileResponse() (response *DescribeInstanceLogFileResponse) {
     response = &DescribeInstanceLogFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLogFile
@@ -6731,8 +7081,9 @@ func NewDescribeInstanceLogListRequest() (request *DescribeInstanceLogListReques
 func NewDescribeInstanceLogListResponse() (response *DescribeInstanceLogListResponse) {
     response = &DescribeInstanceLogListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLogList
@@ -6779,8 +7130,9 @@ func NewDescribeInstanceLogsRequest() (request *DescribeInstanceLogsRequest) {
 func NewDescribeInstanceLogsResponse() (response *DescribeInstanceLogsResponse) {
     response = &DescribeInstanceLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceLogs
@@ -6831,8 +7183,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -6879,8 +7232,9 @@ func NewDescribeInstancesInfoWithTaskInfoRequest() (request *DescribeInstancesIn
 func NewDescribeInstancesInfoWithTaskInfoResponse() (response *DescribeInstancesInfoWithTaskInfoResponse) {
     response = &DescribeInstancesInfoWithTaskInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesInfoWithTaskInfo
@@ -6927,8 +7281,9 @@ func NewDescribeIntegrationNodeRequest() (request *DescribeIntegrationNodeReques
 func NewDescribeIntegrationNodeResponse() (response *DescribeIntegrationNodeResponse) {
     response = &DescribeIntegrationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationNode
@@ -7007,8 +7362,9 @@ func NewDescribeIntegrationStatisticsRequest() (request *DescribeIntegrationStat
 func NewDescribeIntegrationStatisticsResponse() (response *DescribeIntegrationStatisticsResponse) {
     response = &DescribeIntegrationStatisticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatistics
@@ -7057,8 +7413,9 @@ func NewDescribeIntegrationStatisticsAgentStatusRequest() (request *DescribeInte
 func NewDescribeIntegrationStatisticsAgentStatusResponse() (response *DescribeIntegrationStatisticsAgentStatusResponse) {
     response = &DescribeIntegrationStatisticsAgentStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatisticsAgentStatus
@@ -7107,8 +7464,9 @@ func NewDescribeIntegrationStatisticsInstanceTrendRequest() (request *DescribeIn
 func NewDescribeIntegrationStatisticsInstanceTrendResponse() (response *DescribeIntegrationStatisticsInstanceTrendResponse) {
     response = &DescribeIntegrationStatisticsInstanceTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatisticsInstanceTrend
@@ -7157,8 +7515,9 @@ func NewDescribeIntegrationStatisticsRecordsTrendRequest() (request *DescribeInt
 func NewDescribeIntegrationStatisticsRecordsTrendResponse() (response *DescribeIntegrationStatisticsRecordsTrendResponse) {
     response = &DescribeIntegrationStatisticsRecordsTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatisticsRecordsTrend
@@ -7207,8 +7566,9 @@ func NewDescribeIntegrationStatisticsTaskStatusRequest() (request *DescribeInteg
 func NewDescribeIntegrationStatisticsTaskStatusResponse() (response *DescribeIntegrationStatisticsTaskStatusResponse) {
     response = &DescribeIntegrationStatisticsTaskStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatisticsTaskStatus
@@ -7257,8 +7617,9 @@ func NewDescribeIntegrationStatisticsTaskStatusTrendRequest() (request *Describe
 func NewDescribeIntegrationStatisticsTaskStatusTrendResponse() (response *DescribeIntegrationStatisticsTaskStatusTrendResponse) {
     response = &DescribeIntegrationStatisticsTaskStatusTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationStatisticsTaskStatusTrend
@@ -7307,8 +7668,9 @@ func NewDescribeIntegrationTaskRequest() (request *DescribeIntegrationTaskReques
 func NewDescribeIntegrationTaskResponse() (response *DescribeIntegrationTaskResponse) {
     response = &DescribeIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationTask
@@ -7387,8 +7749,9 @@ func NewDescribeIntegrationTasksRequest() (request *DescribeIntegrationTasksRequ
 func NewDescribeIntegrationTasksResponse() (response *DescribeIntegrationTasksResponse) {
     response = &DescribeIntegrationTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationTasks
@@ -7467,8 +7830,9 @@ func NewDescribeIntegrationVersionNodesInfoRequest() (request *DescribeIntegrati
 func NewDescribeIntegrationVersionNodesInfoResponse() (response *DescribeIntegrationVersionNodesInfoResponse) {
     response = &DescribeIntegrationVersionNodesInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeIntegrationVersionNodesInfo
@@ -7547,11 +7911,16 @@ func NewDescribeKafkaTopicInfoRequest() (request *DescribeKafkaTopicInfoRequest)
 func NewDescribeKafkaTopicInfoResponse() (response *DescribeKafkaTopicInfoResponse) {
     response = &DescribeKafkaTopicInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeKafkaTopicInfo
+// 没用到
+//
+// 
+//
 // 获取kafka的topic信息
 //
 // 可能返回的错误码:
@@ -7577,6 +7946,10 @@ func (c *Client) DescribeKafkaTopicInfo(request *DescribeKafkaTopicInfoRequest) 
 }
 
 // DescribeKafkaTopicInfo
+// 没用到
+//
+// 
+//
 // 获取kafka的topic信息
 //
 // 可能返回的错误码:
@@ -7627,8 +8000,9 @@ func NewDescribeMonitorsByPageRequest() (request *DescribeMonitorsByPageRequest)
 func NewDescribeMonitorsByPageResponse() (response *DescribeMonitorsByPageResponse) {
     response = &DescribeMonitorsByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMonitorsByPage
@@ -7681,8 +8055,9 @@ func NewDescribeOfflineTaskTokenRequest() (request *DescribeOfflineTaskTokenRequ
 func NewDescribeOfflineTaskTokenResponse() (response *DescribeOfflineTaskTokenResponse) {
     response = &DescribeOfflineTaskTokenResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOfflineTaskToken
@@ -7735,8 +8110,9 @@ func NewDescribeOperateOpsTaskDatasourceRequest() (request *DescribeOperateOpsTa
 func NewDescribeOperateOpsTaskDatasourceResponse() (response *DescribeOperateOpsTaskDatasourceResponse) {
     response = &DescribeOperateOpsTaskDatasourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOperateOpsTaskDatasource
@@ -7783,8 +8159,9 @@ func NewDescribeOperateOpsTaskDatasourceTypeRequest() (request *DescribeOperateO
 func NewDescribeOperateOpsTaskDatasourceTypeResponse() (response *DescribeOperateOpsTaskDatasourceTypeResponse) {
     response = &DescribeOperateOpsTaskDatasourceTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOperateOpsTaskDatasourceType
@@ -7831,8 +8208,9 @@ func NewDescribeOperateOpsTasksRequest() (request *DescribeOperateOpsTasksReques
 func NewDescribeOperateOpsTasksResponse() (response *DescribeOperateOpsTasksResponse) {
     response = &DescribeOperateOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOperateOpsTasks
@@ -7879,8 +8257,9 @@ func NewDescribeOperateTasksRequest() (request *DescribeOperateTasksRequest) {
 func NewDescribeOperateTasksResponse() (response *DescribeOperateTasksResponse) {
     response = &DescribeOperateTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOperateTasks
@@ -7927,8 +8306,9 @@ func NewDescribeOpsInstanceLogListRequest() (request *DescribeOpsInstanceLogList
 func NewDescribeOpsInstanceLogListResponse() (response *DescribeOpsInstanceLogListResponse) {
     response = &DescribeOpsInstanceLogListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpsInstanceLogList
@@ -7975,8 +8355,9 @@ func NewDescribeOpsMakePlanInstancesRequest() (request *DescribeOpsMakePlanInsta
 func NewDescribeOpsMakePlanInstancesResponse() (response *DescribeOpsMakePlanInstancesResponse) {
     response = &DescribeOpsMakePlanInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpsMakePlanInstances
@@ -8023,8 +8404,9 @@ func NewDescribeOpsMakePlanTasksRequest() (request *DescribeOpsMakePlanTasksRequ
 func NewDescribeOpsMakePlanTasksResponse() (response *DescribeOpsMakePlanTasksResponse) {
     response = &DescribeOpsMakePlanTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpsMakePlanTasks
@@ -8071,8 +8453,9 @@ func NewDescribeOpsMakePlansRequest() (request *DescribeOpsMakePlansRequest) {
 func NewDescribeOpsMakePlansResponse() (response *DescribeOpsMakePlansResponse) {
     response = &DescribeOpsMakePlansResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpsMakePlans
@@ -8119,8 +8502,9 @@ func NewDescribeOpsWorkflowsRequest() (request *DescribeOpsWorkflowsRequest) {
 func NewDescribeOpsWorkflowsResponse() (response *DescribeOpsWorkflowsResponse) {
     response = &DescribeOpsWorkflowsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOpsWorkflows
@@ -8167,8 +8551,9 @@ func NewDescribeOrganizationalFunctionsRequest() (request *DescribeOrganizationa
 func NewDescribeOrganizationalFunctionsResponse() (response *DescribeOrganizationalFunctionsResponse) {
     response = &DescribeOrganizationalFunctionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeOrganizationalFunctions
@@ -8215,8 +8600,9 @@ func NewDescribeProdTasksRequest() (request *DescribeProdTasksRequest) {
 func NewDescribeProdTasksResponse() (response *DescribeProdTasksResponse) {
     response = &DescribeProdTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProdTasks
@@ -8263,8 +8649,9 @@ func NewDescribeProjectRequest() (request *DescribeProjectRequest) {
 func NewDescribeProjectResponse() (response *DescribeProjectResponse) {
     response = &DescribeProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProject
@@ -8313,8 +8700,9 @@ func NewDescribeQualityScoreRequest() (request *DescribeQualityScoreRequest) {
 func NewDescribeQualityScoreResponse() (response *DescribeQualityScoreResponse) {
     response = &DescribeQualityScoreResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeQualityScore
@@ -8371,8 +8759,9 @@ func NewDescribeQualityScoreTrendRequest() (request *DescribeQualityScoreTrendRe
 func NewDescribeQualityScoreTrendResponse() (response *DescribeQualityScoreTrendResponse) {
     response = &DescribeQualityScoreTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeQualityScoreTrend
@@ -8431,8 +8820,9 @@ func NewDescribeRealTimeTaskInstanceNodeInfoRequest() (request *DescribeRealTime
 func NewDescribeRealTimeTaskInstanceNodeInfoResponse() (response *DescribeRealTimeTaskInstanceNodeInfoResponse) {
     response = &DescribeRealTimeTaskInstanceNodeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRealTimeTaskInstanceNodeInfo
@@ -8479,8 +8869,9 @@ func NewDescribeRealTimeTaskMetricOverviewRequest() (request *DescribeRealTimeTa
 func NewDescribeRealTimeTaskMetricOverviewResponse() (response *DescribeRealTimeTaskMetricOverviewResponse) {
     response = &DescribeRealTimeTaskMetricOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRealTimeTaskMetricOverview
@@ -8527,8 +8918,9 @@ func NewDescribeRealTimeTaskSpeedRequest() (request *DescribeRealTimeTaskSpeedRe
 func NewDescribeRealTimeTaskSpeedResponse() (response *DescribeRealTimeTaskSpeedResponse) {
     response = &DescribeRealTimeTaskSpeedResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRealTimeTaskSpeed
@@ -8575,8 +8967,9 @@ func NewDescribeRelatedInstancesRequest() (request *DescribeRelatedInstancesRequ
 func NewDescribeRelatedInstancesResponse() (response *DescribeRelatedInstancesResponse) {
     response = &DescribeRelatedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRelatedInstances
@@ -8623,8 +9016,9 @@ func NewDescribeResourceManagePathTreesRequest() (request *DescribeResourceManag
 func NewDescribeResourceManagePathTreesResponse() (response *DescribeResourceManagePathTreesResponse) {
     response = &DescribeResourceManagePathTreesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceManagePathTrees
@@ -8671,8 +9065,9 @@ func NewDescribeRuleRequest() (request *DescribeRuleRequest) {
 func NewDescribeRuleResponse() (response *DescribeRuleResponse) {
     response = &DescribeRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRule
@@ -8725,8 +9120,9 @@ func NewDescribeRuleDataSourcesRequest() (request *DescribeRuleDataSourcesReques
 func NewDescribeRuleDataSourcesResponse() (response *DescribeRuleDataSourcesResponse) {
     response = &DescribeRuleDataSourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleDataSources
@@ -8775,8 +9171,9 @@ func NewDescribeRuleDimStatRequest() (request *DescribeRuleDimStatRequest) {
 func NewDescribeRuleDimStatResponse() (response *DescribeRuleDimStatResponse) {
     response = &DescribeRuleDimStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleDimStat
@@ -8825,8 +9222,9 @@ func NewDescribeRuleExecDetailRequest() (request *DescribeRuleExecDetailRequest)
 func NewDescribeRuleExecDetailResponse() (response *DescribeRuleExecDetailResponse) {
     response = &DescribeRuleExecDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecDetail
@@ -8873,8 +9271,9 @@ func NewDescribeRuleExecExportResultRequest() (request *DescribeRuleExecExportRe
 func NewDescribeRuleExecExportResultResponse() (response *DescribeRuleExecExportResultResponse) {
     response = &DescribeRuleExecExportResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecExportResult
@@ -8921,8 +9320,9 @@ func NewDescribeRuleExecHistoryRequest() (request *DescribeRuleExecHistoryReques
 func NewDescribeRuleExecHistoryResponse() (response *DescribeRuleExecHistoryResponse) {
     response = &DescribeRuleExecHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecHistory
@@ -8973,8 +9373,9 @@ func NewDescribeRuleExecLogRequest() (request *DescribeRuleExecLogRequest) {
 func NewDescribeRuleExecLogResponse() (response *DescribeRuleExecLogResponse) {
     response = &DescribeRuleExecLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecLog
@@ -9023,8 +9424,9 @@ func NewDescribeRuleExecResultsRequest() (request *DescribeRuleExecResultsReques
 func NewDescribeRuleExecResultsResponse() (response *DescribeRuleExecResultsResponse) {
     response = &DescribeRuleExecResultsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecResults
@@ -9073,8 +9475,9 @@ func NewDescribeRuleExecResultsByPageRequest() (request *DescribeRuleExecResults
 func NewDescribeRuleExecResultsByPageResponse() (response *DescribeRuleExecResultsByPageResponse) {
     response = &DescribeRuleExecResultsByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecResultsByPage
@@ -9123,8 +9526,9 @@ func NewDescribeRuleExecStatRequest() (request *DescribeRuleExecStatRequest) {
 func NewDescribeRuleExecStatResponse() (response *DescribeRuleExecStatResponse) {
     response = &DescribeRuleExecStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleExecStat
@@ -9173,8 +9577,9 @@ func NewDescribeRuleGroupRequest() (request *DescribeRuleGroupRequest) {
 func NewDescribeRuleGroupResponse() (response *DescribeRuleGroupResponse) {
     response = &DescribeRuleGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroup
@@ -9225,8 +9630,9 @@ func NewDescribeRuleGroupExecResultsByPageRequest() (request *DescribeRuleGroupE
 func NewDescribeRuleGroupExecResultsByPageResponse() (response *DescribeRuleGroupExecResultsByPageResponse) {
     response = &DescribeRuleGroupExecResultsByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroupExecResultsByPage
@@ -9275,8 +9681,9 @@ func NewDescribeRuleGroupExecResultsByPageWithoutAuthRequest() (request *Describ
 func NewDescribeRuleGroupExecResultsByPageWithoutAuthResponse() (response *DescribeRuleGroupExecResultsByPageWithoutAuthResponse) {
     response = &DescribeRuleGroupExecResultsByPageWithoutAuthResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroupExecResultsByPageWithoutAuth
@@ -9325,8 +9732,9 @@ func NewDescribeRuleGroupSubscriptionRequest() (request *DescribeRuleGroupSubscr
 func NewDescribeRuleGroupSubscriptionResponse() (response *DescribeRuleGroupSubscriptionResponse) {
     response = &DescribeRuleGroupSubscriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroupSubscription
@@ -9373,8 +9781,9 @@ func NewDescribeRuleGroupTableRequest() (request *DescribeRuleGroupTableRequest)
 func NewDescribeRuleGroupTableResponse() (response *DescribeRuleGroupTableResponse) {
     response = &DescribeRuleGroupTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroupTable
@@ -9421,8 +9830,9 @@ func NewDescribeRuleGroupsByPageRequest() (request *DescribeRuleGroupsByPageRequ
 func NewDescribeRuleGroupsByPageResponse() (response *DescribeRuleGroupsByPageResponse) {
     response = &DescribeRuleGroupsByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleGroupsByPage
@@ -9489,8 +9899,9 @@ func NewDescribeRuleHistoryByPageRequest() (request *DescribeRuleHistoryByPageRe
 func NewDescribeRuleHistoryByPageResponse() (response *DescribeRuleHistoryByPageResponse) {
     response = &DescribeRuleHistoryByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleHistoryByPage
@@ -9539,8 +9950,9 @@ func NewDescribeRuleTablesByPageRequest() (request *DescribeRuleTablesByPageRequ
 func NewDescribeRuleTablesByPageResponse() (response *DescribeRuleTablesByPageResponse) {
     response = &DescribeRuleTablesByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleTablesByPage
@@ -9589,8 +10001,9 @@ func NewDescribeRuleTemplateRequest() (request *DescribeRuleTemplateRequest) {
 func NewDescribeRuleTemplateResponse() (response *DescribeRuleTemplateResponse) {
     response = &DescribeRuleTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleTemplate
@@ -9639,8 +10052,9 @@ func NewDescribeRuleTemplatesRequest() (request *DescribeRuleTemplatesRequest) {
 func NewDescribeRuleTemplatesResponse() (response *DescribeRuleTemplatesResponse) {
     response = &DescribeRuleTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleTemplates
@@ -9691,8 +10105,9 @@ func NewDescribeRuleTemplatesByPageRequest() (request *DescribeRuleTemplatesByPa
 func NewDescribeRuleTemplatesByPageResponse() (response *DescribeRuleTemplatesByPageResponse) {
     response = &DescribeRuleTemplatesByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRuleTemplatesByPage
@@ -9743,8 +10158,9 @@ func NewDescribeRulesRequest() (request *DescribeRulesRequest) {
 func NewDescribeRulesResponse() (response *DescribeRulesResponse) {
     response = &DescribeRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRules
@@ -9793,8 +10209,9 @@ func NewDescribeRulesByPageRequest() (request *DescribeRulesByPageRequest) {
 func NewDescribeRulesByPageResponse() (response *DescribeRulesByPageResponse) {
     response = &DescribeRulesByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRulesByPage
@@ -9845,8 +10262,9 @@ func NewDescribeScheduleInstanceRequest() (request *DescribeScheduleInstanceRequ
 func NewDescribeScheduleInstanceResponse() (response *DescribeScheduleInstanceResponse) {
     response = &DescribeScheduleInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScheduleInstance
@@ -9905,8 +10323,9 @@ func NewDescribeScheduleInstancesRequest() (request *DescribeScheduleInstancesRe
 func NewDescribeScheduleInstancesResponse() (response *DescribeScheduleInstancesResponse) {
     response = &DescribeScheduleInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeScheduleInstances
@@ -9953,8 +10372,9 @@ func NewDescribeSchedulerInstanceStatusRequest() (request *DescribeSchedulerInst
 func NewDescribeSchedulerInstanceStatusResponse() (response *DescribeSchedulerInstanceStatusResponse) {
     response = &DescribeSchedulerInstanceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSchedulerInstanceStatus
@@ -10001,8 +10421,9 @@ func NewDescribeSchedulerRunTimeInstanceCntByStatusRequest() (request *DescribeS
 func NewDescribeSchedulerRunTimeInstanceCntByStatusResponse() (response *DescribeSchedulerRunTimeInstanceCntByStatusResponse) {
     response = &DescribeSchedulerRunTimeInstanceCntByStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSchedulerRunTimeInstanceCntByStatus
@@ -10051,8 +10472,9 @@ func NewDescribeSchedulerTaskCntByStatusRequest() (request *DescribeSchedulerTas
 func NewDescribeSchedulerTaskCntByStatusResponse() (response *DescribeSchedulerTaskCntByStatusResponse) {
     response = &DescribeSchedulerTaskCntByStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSchedulerTaskCntByStatus
@@ -10099,8 +10521,9 @@ func NewDescribeSchedulerTaskTypeCntRequest() (request *DescribeSchedulerTaskTyp
 func NewDescribeSchedulerTaskTypeCntResponse() (response *DescribeSchedulerTaskTypeCntResponse) {
     response = &DescribeSchedulerTaskTypeCntResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSchedulerTaskTypeCnt
@@ -10147,8 +10570,9 @@ func NewDescribeSonInstancesRequest() (request *DescribeSonInstancesRequest) {
 func NewDescribeSonInstancesResponse() (response *DescribeSonInstancesResponse) {
     response = &DescribeSonInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSonInstances
@@ -10195,8 +10619,9 @@ func NewDescribeStandardRuleDetailInfoListRequest() (request *DescribeStandardRu
 func NewDescribeStandardRuleDetailInfoListResponse() (response *DescribeStandardRuleDetailInfoListResponse) {
     response = &DescribeStandardRuleDetailInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeStandardRuleDetailInfoList
@@ -10243,8 +10668,9 @@ func NewDescribeStatisticInstanceStatusTrendOpsRequest() (request *DescribeStati
 func NewDescribeStatisticInstanceStatusTrendOpsResponse() (response *DescribeStatisticInstanceStatusTrendOpsResponse) {
     response = &DescribeStatisticInstanceStatusTrendOpsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeStatisticInstanceStatusTrendOps
@@ -10291,8 +10717,9 @@ func NewDescribeStreamTaskLogListRequest() (request *DescribeStreamTaskLogListRe
 func NewDescribeStreamTaskLogListResponse() (response *DescribeStreamTaskLogListResponse) {
     response = &DescribeStreamTaskLogListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeStreamTaskLogList
@@ -10361,8 +10788,9 @@ func NewDescribeSuccessorOpsTaskInfosRequest() (request *DescribeSuccessorOpsTas
 func NewDescribeSuccessorOpsTaskInfosResponse() (response *DescribeSuccessorOpsTaskInfosResponse) {
     response = &DescribeSuccessorOpsTaskInfosResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSuccessorOpsTaskInfos
@@ -10431,8 +10859,9 @@ func NewDescribeTableInfoListRequest() (request *DescribeTableInfoListRequest) {
 func NewDescribeTableInfoListResponse() (response *DescribeTableInfoListResponse) {
     response = &DescribeTableInfoListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableInfoList
@@ -10479,8 +10908,9 @@ func NewDescribeTableLineageRequest() (request *DescribeTableLineageRequest) {
 func NewDescribeTableLineageResponse() (response *DescribeTableLineageResponse) {
     response = &DescribeTableLineageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableLineage
@@ -10535,8 +10965,9 @@ func NewDescribeTableQualityDetailsRequest() (request *DescribeTableQualityDetai
 func NewDescribeTableQualityDetailsResponse() (response *DescribeTableQualityDetailsResponse) {
     response = &DescribeTableQualityDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableQualityDetails
@@ -10597,8 +11028,9 @@ func NewDescribeTableSchemaInfoRequest() (request *DescribeTableSchemaInfoReques
 func NewDescribeTableSchemaInfoResponse() (response *DescribeTableSchemaInfoResponse) {
     response = &DescribeTableSchemaInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableSchemaInfo
@@ -10645,8 +11077,9 @@ func NewDescribeTableScoreTrendRequest() (request *DescribeTableScoreTrendReques
 func NewDescribeTableScoreTrendResponse() (response *DescribeTableScoreTrendResponse) {
     response = &DescribeTableScoreTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTableScoreTrend
@@ -10709,8 +11142,9 @@ func NewDescribeTaskAlarmRegulationsRequest() (request *DescribeTaskAlarmRegulat
 func NewDescribeTaskAlarmRegulationsResponse() (response *DescribeTaskAlarmRegulationsResponse) {
     response = &DescribeTaskAlarmRegulationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskAlarmRegulations
@@ -10775,24 +11209,16 @@ func NewDescribeTaskByCycleRequest() (request *DescribeTaskByCycleRequest) {
 func NewDescribeTaskByCycleResponse() (response *DescribeTaskByCycleResponse) {
     response = &DescribeTaskByCycleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskByCycle
 // 根据周期类型 查询所有任务
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTaskByCycle(request *DescribeTaskByCycleRequest) (response *DescribeTaskByCycleResponse, err error) {
     return c.DescribeTaskByCycleWithContext(context.Background(), request)
 }
@@ -10801,16 +11227,7 @@ func (c *Client) DescribeTaskByCycle(request *DescribeTaskByCycleRequest) (respo
 // 根据周期类型 查询所有任务
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTaskByCycleWithContext(ctx context.Context, request *DescribeTaskByCycleRequest) (response *DescribeTaskByCycleResponse, err error) {
     if request == nil {
         request = NewDescribeTaskByCycleRequest()
@@ -10841,8 +11258,9 @@ func NewDescribeTaskByCycleReportRequest() (request *DescribeTaskByCycleReportRe
 func NewDescribeTaskByCycleReportResponse() (response *DescribeTaskByCycleReportResponse) {
     response = &DescribeTaskByCycleReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskByCycleReport
@@ -10889,8 +11307,9 @@ func NewDescribeTaskByStatusReportRequest() (request *DescribeTaskByStatusReport
 func NewDescribeTaskByStatusReportResponse() (response *DescribeTaskByStatusReportResponse) {
     response = &DescribeTaskByStatusReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskByStatusReport
@@ -10937,8 +11356,9 @@ func NewDescribeTaskDetailRequest() (request *DescribeTaskDetailRequest) {
 func NewDescribeTaskDetailResponse() (response *DescribeTaskDetailResponse) {
     response = &DescribeTaskDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskDetail
@@ -10991,8 +11411,9 @@ func NewDescribeTaskInstanceRequest() (request *DescribeTaskInstanceRequest) {
 func NewDescribeTaskInstanceResponse() (response *DescribeTaskInstanceResponse) {
     response = &DescribeTaskInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskInstance
@@ -11041,8 +11462,9 @@ func NewDescribeTaskInstanceReportDetailRequest() (request *DescribeTaskInstance
 func NewDescribeTaskInstanceReportDetailResponse() (response *DescribeTaskInstanceReportDetailResponse) {
     response = &DescribeTaskInstanceReportDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskInstanceReportDetail
@@ -11089,8 +11511,9 @@ func NewDescribeTaskInstancesRequest() (request *DescribeTaskInstancesRequest) {
 func NewDescribeTaskInstancesResponse() (response *DescribeTaskInstancesResponse) {
     response = &DescribeTaskInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskInstances
@@ -11137,8 +11560,9 @@ func NewDescribeTaskLockStatusRequest() (request *DescribeTaskLockStatusRequest)
 func NewDescribeTaskLockStatusResponse() (response *DescribeTaskLockStatusResponse) {
     response = &DescribeTaskLockStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskLockStatus
@@ -11187,8 +11611,9 @@ func NewDescribeTaskReportRequest() (request *DescribeTaskReportRequest) {
 func NewDescribeTaskReportResponse() (response *DescribeTaskReportResponse) {
     response = &DescribeTaskReportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskReport
@@ -11235,8 +11660,9 @@ func NewDescribeTaskReportDetailListRequest() (request *DescribeTaskReportDetail
 func NewDescribeTaskReportDetailListResponse() (response *DescribeTaskReportDetailListResponse) {
     response = &DescribeTaskReportDetailListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskReportDetailList
@@ -11283,8 +11709,9 @@ func NewDescribeTaskRunHistoryRequest() (request *DescribeTaskRunHistoryRequest)
 func NewDescribeTaskRunHistoryResponse() (response *DescribeTaskRunHistoryResponse) {
     response = &DescribeTaskRunHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskRunHistory
@@ -11331,8 +11758,9 @@ func NewDescribeTaskScriptRequest() (request *DescribeTaskScriptRequest) {
 func NewDescribeTaskScriptResponse() (response *DescribeTaskScriptResponse) {
     response = &DescribeTaskScriptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTaskScript
@@ -11383,8 +11811,9 @@ func NewDescribeTasksByPageRequest() (request *DescribeTasksByPageRequest) {
 func NewDescribeTasksByPageResponse() (response *DescribeTasksByPageResponse) {
     response = &DescribeTasksByPageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTasksByPage
@@ -11435,8 +11864,9 @@ func NewDescribeTemplateDimCountRequest() (request *DescribeTemplateDimCountRequ
 func NewDescribeTemplateDimCountResponse() (response *DescribeTemplateDimCountResponse) {
     response = &DescribeTemplateDimCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTemplateDimCount
@@ -11485,8 +11915,9 @@ func NewDescribeTemplateHistoryRequest() (request *DescribeTemplateHistoryReques
 func NewDescribeTemplateHistoryResponse() (response *DescribeTemplateHistoryResponse) {
     response = &DescribeTemplateHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTemplateHistory
@@ -11535,8 +11966,9 @@ func NewDescribeThirdTaskRunLogRequest() (request *DescribeThirdTaskRunLogReques
 func NewDescribeThirdTaskRunLogResponse() (response *DescribeThirdTaskRunLogResponse) {
     response = &DescribeThirdTaskRunLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeThirdTaskRunLog
@@ -11583,8 +12015,9 @@ func NewDescribeTopTableStatRequest() (request *DescribeTopTableStatRequest) {
 func NewDescribeTopTableStatResponse() (response *DescribeTopTableStatResponse) {
     response = &DescribeTopTableStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTopTableStat
@@ -11633,8 +12066,9 @@ func NewDescribeTrendStatRequest() (request *DescribeTrendStatRequest) {
 func NewDescribeTrendStatResponse() (response *DescribeTrendStatResponse) {
     response = &DescribeTrendStatResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTrendStat
@@ -11683,8 +12117,9 @@ func NewDescribeWorkflowCanvasInfoRequest() (request *DescribeWorkflowCanvasInfo
 func NewDescribeWorkflowCanvasInfoResponse() (response *DescribeWorkflowCanvasInfoResponse) {
     response = &DescribeWorkflowCanvasInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowCanvasInfo
@@ -11733,8 +12168,9 @@ func NewDescribeWorkflowExecuteByIdRequest() (request *DescribeWorkflowExecuteBy
 func NewDescribeWorkflowExecuteByIdResponse() (response *DescribeWorkflowExecuteByIdResponse) {
     response = &DescribeWorkflowExecuteByIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowExecuteById
@@ -11781,8 +12217,9 @@ func NewDescribeWorkflowInfoByIdRequest() (request *DescribeWorkflowInfoByIdRequ
 func NewDescribeWorkflowInfoByIdResponse() (response *DescribeWorkflowInfoByIdResponse) {
     response = &DescribeWorkflowInfoByIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowInfoById
@@ -11829,8 +12266,9 @@ func NewDescribeWorkflowListByProjectIdRequest() (request *DescribeWorkflowListB
 func NewDescribeWorkflowListByProjectIdResponse() (response *DescribeWorkflowListByProjectIdResponse) {
     response = &DescribeWorkflowListByProjectIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowListByProjectId
@@ -11877,8 +12315,9 @@ func NewDescribeWorkflowOpsCanvasInfoRequest() (request *DescribeWorkflowOpsCanv
 func NewDescribeWorkflowOpsCanvasInfoResponse() (response *DescribeWorkflowOpsCanvasInfoResponse) {
     response = &DescribeWorkflowOpsCanvasInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowOpsCanvasInfo
@@ -11925,8 +12364,9 @@ func NewDescribeWorkflowTaskCountRequest() (request *DescribeWorkflowTaskCountRe
 func NewDescribeWorkflowTaskCountResponse() (response *DescribeWorkflowTaskCountResponse) {
     response = &DescribeWorkflowTaskCountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeWorkflowTaskCount
@@ -11973,8 +12413,9 @@ func NewDiagnosePlusRequest() (request *DiagnosePlusRequest) {
 func NewDiagnosePlusResponse() (response *DiagnosePlusResponse) {
     response = &DiagnosePlusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DiagnosePlus
@@ -12021,8 +12462,9 @@ func NewDryRunDIOfflineTaskRequest() (request *DryRunDIOfflineTaskRequest) {
 func NewDryRunDIOfflineTaskResponse() (response *DryRunDIOfflineTaskResponse) {
     response = &DryRunDIOfflineTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DryRunDIOfflineTask
@@ -12101,8 +12543,9 @@ func NewEditBaselineRequest() (request *EditBaselineRequest) {
 func NewEditBaselineResponse() (response *EditBaselineResponse) {
     response = &EditBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EditBaseline
@@ -12147,6 +12590,55 @@ func (c *Client) EditBaselineWithContext(ctx context.Context, request *EditBasel
     return
 }
 
+func NewFindAllFolderRequest() (request *FindAllFolderRequest) {
+    request = &FindAllFolderRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "FindAllFolder")
+    
+    
+    return
+}
+
+func NewFindAllFolderResponse() (response *FindAllFolderResponse) {
+    response = &FindAllFolderResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// FindAllFolder
+// 查找全部的文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) FindAllFolder(request *FindAllFolderRequest) (response *FindAllFolderResponse, err error) {
+    return c.FindAllFolderWithContext(context.Background(), request)
+}
+
+// FindAllFolder
+// 查找全部的文件夹
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) FindAllFolderWithContext(ctx context.Context, request *FindAllFolderRequest) (response *FindAllFolderResponse, err error) {
+    if request == nil {
+        request = NewFindAllFolderRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("FindAllFolder require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewFindAllFolderResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewForceSucInstancesRequest() (request *ForceSucInstancesRequest) {
     request = &ForceSucInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12161,8 +12653,9 @@ func NewForceSucInstancesRequest() (request *ForceSucInstancesRequest) {
 func NewForceSucInstancesResponse() (response *ForceSucInstancesResponse) {
     response = &ForceSucInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForceSucInstances
@@ -12171,13 +12664,7 @@ func NewForceSucInstancesResponse() (response *ForceSucInstancesResponse) {
 // 实例批量置成功
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED_USERNOTINWHITELISTERROR = "OperationDenied.UserNotInWhitelistError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ForceSucInstances(request *ForceSucInstancesRequest) (response *ForceSucInstancesResponse, err error) {
     return c.ForceSucInstancesWithContext(context.Background(), request)
 }
@@ -12188,13 +12675,7 @@ func (c *Client) ForceSucInstances(request *ForceSucInstancesRequest) (response 
 // 实例批量置成功
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED_USERNOTINWHITELISTERROR = "OperationDenied.UserNotInWhitelistError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ForceSucInstancesWithContext(ctx context.Context, request *ForceSucInstancesRequest) (response *ForceSucInstancesResponse, err error) {
     if request == nil {
         request = NewForceSucInstancesRequest()
@@ -12225,21 +12706,16 @@ func NewForceSucScheduleInstancesRequest() (request *ForceSucScheduleInstancesRe
 func NewForceSucScheduleInstancesResponse() (response *ForceSucScheduleInstancesResponse) {
     response = &ForceSucScheduleInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForceSucScheduleInstances
 // 实例强制成功
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED_USERNOTINWHITELISTERROR = "OperationDenied.UserNotInWhitelistError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ForceSucScheduleInstances(request *ForceSucScheduleInstancesRequest) (response *ForceSucScheduleInstancesResponse, err error) {
     return c.ForceSucScheduleInstancesWithContext(context.Background(), request)
 }
@@ -12248,13 +12724,7 @@ func (c *Client) ForceSucScheduleInstances(request *ForceSucScheduleInstancesReq
 // 实例强制成功
 //
 // 可能返回的错误码:
-//  AUTHFAILURE = "AuthFailure"
-//  AUTHFAILURE_SIGNATUREEXPIRE = "AuthFailure.SignatureExpire"
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  OPERATIONDENIED_USERNOTINWHITELISTERROR = "OperationDenied.UserNotInWhitelistError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ForceSucScheduleInstancesWithContext(ctx context.Context, request *ForceSucScheduleInstancesRequest) (response *ForceSucScheduleInstancesResponse, err error) {
     if request == nil {
         request = NewForceSucScheduleInstancesRequest()
@@ -12285,8 +12755,9 @@ func NewFreezeOpsTasksRequest() (request *FreezeOpsTasksRequest) {
 func NewFreezeOpsTasksResponse() (response *FreezeOpsTasksResponse) {
     response = &FreezeOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FreezeOpsTasks
@@ -12333,8 +12804,9 @@ func NewFreezeTasksRequest() (request *FreezeTasksRequest) {
 func NewFreezeTasksResponse() (response *FreezeTasksResponse) {
     response = &FreezeTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FreezeTasks
@@ -12385,8 +12857,9 @@ func NewFreezeTasksByMultiWorkflowRequest() (request *FreezeTasksByMultiWorkflow
 func NewFreezeTasksByMultiWorkflowResponse() (response *FreezeTasksByMultiWorkflowResponse) {
     response = &FreezeTasksByMultiWorkflowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FreezeTasksByMultiWorkflow
@@ -12437,8 +12910,9 @@ func NewFreezeTasksByWorkflowIdsRequest() (request *FreezeTasksByWorkflowIdsRequ
 func NewFreezeTasksByWorkflowIdsResponse() (response *FreezeTasksByWorkflowIdsResponse) {
     response = &FreezeTasksByWorkflowIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // FreezeTasksByWorkflowIds
@@ -12485,8 +12959,9 @@ func NewGenHiveTableDDLSqlRequest() (request *GenHiveTableDDLSqlRequest) {
 func NewGenHiveTableDDLSqlResponse() (response *GenHiveTableDDLSqlResponse) {
     response = &GenHiveTableDDLSqlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GenHiveTableDDLSql
@@ -12519,6 +12994,55 @@ func (c *Client) GenHiveTableDDLSqlWithContext(ctx context.Context, request *Gen
     return
 }
 
+func NewGetFileInfoRequest() (request *GetFileInfoRequest) {
+    request = &GetFileInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "GetFileInfo")
+    
+    
+    return
+}
+
+func NewGetFileInfoResponse() (response *GetFileInfoResponse) {
+    response = &GetFileInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// GetFileInfo
+// 开发空间-获取数据开发脚本信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) GetFileInfo(request *GetFileInfoRequest) (response *GetFileInfoResponse, err error) {
+    return c.GetFileInfoWithContext(context.Background(), request)
+}
+
+// GetFileInfo
+// 开发空间-获取数据开发脚本信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) GetFileInfoWithContext(ctx context.Context, request *GetFileInfoRequest) (response *GetFileInfoResponse, err error) {
+    if request == nil {
+        request = NewGetFileInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetFileInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetFileInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetIntegrationNodeColumnSchemaRequest() (request *GetIntegrationNodeColumnSchemaRequest) {
     request = &GetIntegrationNodeColumnSchemaRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12533,8 +13057,9 @@ func NewGetIntegrationNodeColumnSchemaRequest() (request *GetIntegrationNodeColu
 func NewGetIntegrationNodeColumnSchemaResponse() (response *GetIntegrationNodeColumnSchemaResponse) {
     response = &GetIntegrationNodeColumnSchemaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetIntegrationNodeColumnSchema
@@ -12583,8 +13108,9 @@ func NewGetOfflineDIInstanceListRequest() (request *GetOfflineDIInstanceListRequ
 func NewGetOfflineDIInstanceListResponse() (response *GetOfflineDIInstanceListResponse) {
     response = &GetOfflineDIInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetOfflineDIInstanceList
@@ -12663,8 +13189,9 @@ func NewGetOfflineInstanceListRequest() (request *GetOfflineInstanceListRequest)
 func NewGetOfflineInstanceListResponse() (response *GetOfflineInstanceListResponse) {
     response = &GetOfflineInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetOfflineInstanceList
@@ -12743,8 +13270,9 @@ func NewKillInstancesRequest() (request *KillInstancesRequest) {
 func NewKillInstancesResponse() (response *KillInstancesResponse) {
     response = &KillInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillInstances
@@ -12827,8 +13355,9 @@ func NewKillOpsMakePlanInstancesRequest() (request *KillOpsMakePlanInstancesRequ
 func NewKillOpsMakePlanInstancesResponse() (response *KillOpsMakePlanInstancesResponse) {
     response = &KillOpsMakePlanInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillOpsMakePlanInstances
@@ -12875,8 +13404,9 @@ func NewKillScheduleInstancesRequest() (request *KillScheduleInstancesRequest) {
 func NewKillScheduleInstancesResponse() (response *KillScheduleInstancesResponse) {
     response = &KillScheduleInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // KillScheduleInstances
@@ -12923,8 +13453,9 @@ func NewLockIntegrationTaskRequest() (request *LockIntegrationTaskRequest) {
 func NewLockIntegrationTaskResponse() (response *LockIntegrationTaskResponse) {
     response = &LockIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // LockIntegrationTask
@@ -13003,8 +13534,9 @@ func NewMakeUpOpsTasksRequest() (request *MakeUpOpsTasksRequest) {
 func NewMakeUpOpsTasksResponse() (response *MakeUpOpsTasksResponse) {
     response = &MakeUpOpsTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MakeUpOpsTasks
@@ -13051,8 +13583,9 @@ func NewMakeUpTasksByWorkflowRequest() (request *MakeUpTasksByWorkflowRequest) {
 func NewMakeUpTasksByWorkflowResponse() (response *MakeUpTasksByWorkflowResponse) {
     response = &MakeUpTasksByWorkflowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MakeUpTasksByWorkflow
@@ -13099,8 +13632,9 @@ func NewMakeUpTasksNewRequest() (request *MakeUpTasksNewRequest) {
 func NewMakeUpTasksNewResponse() (response *MakeUpTasksNewResponse) {
     response = &MakeUpTasksNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MakeUpTasksNew
@@ -13159,8 +13693,9 @@ func NewMakeUpWorkflowNewRequest() (request *MakeUpWorkflowNewRequest) {
 func NewMakeUpWorkflowNewResponse() (response *MakeUpWorkflowNewResponse) {
     response = &MakeUpWorkflowNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // MakeUpWorkflowNew
@@ -13211,8 +13746,9 @@ func NewModifyBaselineAlarmStatusRequest() (request *ModifyBaselineAlarmStatusRe
 func NewModifyBaselineAlarmStatusResponse() (response *ModifyBaselineAlarmStatusResponse) {
     response = &ModifyBaselineAlarmStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselineAlarmStatus
@@ -13259,8 +13795,9 @@ func NewModifyBaselineTaskAlarmStatusRequest() (request *ModifyBaselineTaskAlarm
 func NewModifyBaselineTaskAlarmStatusResponse() (response *ModifyBaselineTaskAlarmStatusResponse) {
     response = &ModifyBaselineTaskAlarmStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBaselineTaskAlarmStatus
@@ -13307,8 +13844,9 @@ func NewModifyDataSourceRequest() (request *ModifyDataSourceRequest) {
 func NewModifyDataSourceResponse() (response *ModifyDataSourceResponse) {
     response = &ModifyDataSourceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDataSource
@@ -13359,8 +13897,9 @@ func NewModifyDimensionWeightRequest() (request *ModifyDimensionWeightRequest) {
 func NewModifyDimensionWeightResponse() (response *ModifyDimensionWeightResponse) {
     response = &ModifyDimensionWeightResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDimensionWeight
@@ -13401,6 +13940,55 @@ func (c *Client) ModifyDimensionWeightWithContext(ctx context.Context, request *
     return
 }
 
+func NewModifyDsFolderRequest() (request *ModifyDsFolderRequest) {
+    request = &ModifyDsFolderRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "ModifyDsFolder")
+    
+    
+    return
+}
+
+func NewModifyDsFolderResponse() (response *ModifyDsFolderResponse) {
+    response = &ModifyDsFolderResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDsFolder
+// 数据开发模块-文件夹更新
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyDsFolder(request *ModifyDsFolderRequest) (response *ModifyDsFolderResponse, err error) {
+    return c.ModifyDsFolderWithContext(context.Background(), request)
+}
+
+// ModifyDsFolder
+// 数据开发模块-文件夹更新
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyDsFolderWithContext(ctx context.Context, request *ModifyDsFolderRequest) (response *ModifyDsFolderResponse, err error) {
+    if request == nil {
+        request = NewModifyDsFolderRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDsFolder require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDsFolderResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyExecStrategyRequest() (request *ModifyExecStrategyRequest) {
     request = &ModifyExecStrategyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -13415,8 +14003,9 @@ func NewModifyExecStrategyRequest() (request *ModifyExecStrategyRequest) {
 func NewModifyExecStrategyResponse() (response *ModifyExecStrategyResponse) {
     response = &ModifyExecStrategyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyExecStrategy
@@ -13467,8 +14056,9 @@ func NewModifyFolderRequest() (request *ModifyFolderRequest) {
 func NewModifyFolderResponse() (response *ModifyFolderResponse) {
     response = &ModifyFolderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyFolder
@@ -13523,8 +14113,9 @@ func NewModifyIntegrationNodeRequest() (request *ModifyIntegrationNodeRequest) {
 func NewModifyIntegrationNodeResponse() (response *ModifyIntegrationNodeResponse) {
     response = &ModifyIntegrationNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyIntegrationNode
@@ -13605,8 +14196,9 @@ func NewModifyIntegrationTaskRequest() (request *ModifyIntegrationTaskRequest) {
 func NewModifyIntegrationTaskResponse() (response *ModifyIntegrationTaskResponse) {
     response = &ModifyIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyIntegrationTask
@@ -13685,8 +14277,9 @@ func NewModifyMonitorStatusRequest() (request *ModifyMonitorStatusRequest) {
 func NewModifyMonitorStatusResponse() (response *ModifyMonitorStatusResponse) {
     response = &ModifyMonitorStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyMonitorStatus
@@ -13737,8 +14330,9 @@ func NewModifyRuleRequest() (request *ModifyRuleRequest) {
 func NewModifyRuleResponse() (response *ModifyRuleResponse) {
     response = &ModifyRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRule
@@ -13787,8 +14381,9 @@ func NewModifyRuleGroupSubscriptionRequest() (request *ModifyRuleGroupSubscripti
 func NewModifyRuleGroupSubscriptionResponse() (response *ModifyRuleGroupSubscriptionResponse) {
     response = &ModifyRuleGroupSubscriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRuleGroupSubscription
@@ -13837,8 +14432,9 @@ func NewModifyRuleTemplateRequest() (request *ModifyRuleTemplateRequest) {
 func NewModifyRuleTemplateResponse() (response *ModifyRuleTemplateResponse) {
     response = &ModifyRuleTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRuleTemplate
@@ -13887,8 +14483,9 @@ func NewModifyTaskAlarmRegularRequest() (request *ModifyTaskAlarmRegularRequest)
 func NewModifyTaskAlarmRegularResponse() (response *ModifyTaskAlarmRegularResponse) {
     response = &ModifyTaskAlarmRegularResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTaskAlarmRegular
@@ -13949,8 +14546,9 @@ func NewModifyTaskInfoRequest() (request *ModifyTaskInfoRequest) {
 func NewModifyTaskInfoResponse() (response *ModifyTaskInfoResponse) {
     response = &ModifyTaskInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTaskInfo
@@ -14001,8 +14599,9 @@ func NewModifyTaskLinksRequest() (request *ModifyTaskLinksRequest) {
 func NewModifyTaskLinksResponse() (response *ModifyTaskLinksResponse) {
     response = &ModifyTaskLinksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTaskLinks
@@ -14053,8 +14652,9 @@ func NewModifyTaskNameRequest() (request *ModifyTaskNameRequest) {
 func NewModifyTaskNameResponse() (response *ModifyTaskNameResponse) {
     response = &ModifyTaskNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTaskName
@@ -14101,8 +14701,9 @@ func NewModifyTaskScriptRequest() (request *ModifyTaskScriptRequest) {
 func NewModifyTaskScriptResponse() (response *ModifyTaskScriptResponse) {
     response = &ModifyTaskScriptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTaskScript
@@ -14153,8 +14754,9 @@ func NewModifyWorkflowInfoRequest() (request *ModifyWorkflowInfoRequest) {
 func NewModifyWorkflowInfoResponse() (response *ModifyWorkflowInfoResponse) {
     response = &ModifyWorkflowInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWorkflowInfo
@@ -14205,8 +14807,9 @@ func NewModifyWorkflowScheduleRequest() (request *ModifyWorkflowScheduleRequest)
 func NewModifyWorkflowScheduleResponse() (response *ModifyWorkflowScheduleResponse) {
     response = &ModifyWorkflowScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyWorkflowSchedule
@@ -14257,8 +14860,9 @@ func NewRegisterEventRequest() (request *RegisterEventRequest) {
 func NewRegisterEventResponse() (response *RegisterEventResponse) {
     response = &RegisterEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterEvent
@@ -14309,8 +14913,9 @@ func NewRegisterEventListenerRequest() (request *RegisterEventListenerRequest) {
 func NewRegisterEventListenerResponse() (response *RegisterEventListenerResponse) {
     response = &RegisterEventListenerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RegisterEventListener
@@ -14361,8 +14966,9 @@ func NewRemoveWorkflowDsRequest() (request *RemoveWorkflowDsRequest) {
 func NewRemoveWorkflowDsResponse() (response *RemoveWorkflowDsResponse) {
     response = &RemoveWorkflowDsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveWorkflowDs
@@ -14409,8 +15015,9 @@ func NewRerunInstancesRequest() (request *RerunInstancesRequest) {
 func NewRerunInstancesResponse() (response *RerunInstancesResponse) {
     response = &RerunInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RerunInstances
@@ -14461,8 +15068,9 @@ func NewRerunOpsMakePlanInstancesRequest() (request *RerunOpsMakePlanInstancesRe
 func NewRerunOpsMakePlanInstancesResponse() (response *RerunOpsMakePlanInstancesResponse) {
     response = &RerunOpsMakePlanInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RerunOpsMakePlanInstances
@@ -14509,8 +15117,9 @@ func NewRerunScheduleInstancesRequest() (request *RerunScheduleInstancesRequest)
 func NewRerunScheduleInstancesResponse() (response *RerunScheduleInstancesResponse) {
     response = &RerunScheduleInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RerunScheduleInstances
@@ -14557,8 +15166,9 @@ func NewRestartInLongAgentRequest() (request *RestartInLongAgentRequest) {
 func NewRestartInLongAgentResponse() (response *RestartInLongAgentResponse) {
     response = &RestartInLongAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartInLongAgent
@@ -14605,8 +15215,9 @@ func NewResumeIntegrationTaskRequest() (request *ResumeIntegrationTaskRequest) {
 func NewResumeIntegrationTaskResponse() (response *ResumeIntegrationTaskResponse) {
     response = &ResumeIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResumeIntegrationTask
@@ -14685,8 +15296,9 @@ func NewRobAndLockIntegrationTaskRequest() (request *RobAndLockIntegrationTaskRe
 func NewRobAndLockIntegrationTaskResponse() (response *RobAndLockIntegrationTaskResponse) {
     response = &RobAndLockIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RobAndLockIntegrationTask
@@ -14721,6 +15333,104 @@ func (c *Client) RobAndLockIntegrationTaskWithContext(ctx context.Context, reque
     return
 }
 
+func NewRunForceSucScheduleInstancesRequest() (request *RunForceSucScheduleInstancesRequest) {
+    request = &RunForceSucScheduleInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "RunForceSucScheduleInstances")
+    
+    
+    return
+}
+
+func NewRunForceSucScheduleInstancesResponse() (response *RunForceSucScheduleInstancesResponse) {
+    response = &RunForceSucScheduleInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RunForceSucScheduleInstances
+// 实例强制成功
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) RunForceSucScheduleInstances(request *RunForceSucScheduleInstancesRequest) (response *RunForceSucScheduleInstancesResponse, err error) {
+    return c.RunForceSucScheduleInstancesWithContext(context.Background(), request)
+}
+
+// RunForceSucScheduleInstances
+// 实例强制成功
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) RunForceSucScheduleInstancesWithContext(ctx context.Context, request *RunForceSucScheduleInstancesRequest) (response *RunForceSucScheduleInstancesResponse, err error) {
+    if request == nil {
+        request = NewRunForceSucScheduleInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RunForceSucScheduleInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRunForceSucScheduleInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRunRerunScheduleInstancesRequest() (request *RunRerunScheduleInstancesRequest) {
+    request = &RunRerunScheduleInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("wedata", APIVersion, "RunRerunScheduleInstances")
+    
+    
+    return
+}
+
+func NewRunRerunScheduleInstancesResponse() (response *RunRerunScheduleInstancesResponse) {
+    response = &RunRerunScheduleInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RunRerunScheduleInstances
+// 实例批量重跑
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) RunRerunScheduleInstances(request *RunRerunScheduleInstancesRequest) (response *RunRerunScheduleInstancesResponse, err error) {
+    return c.RunRerunScheduleInstancesWithContext(context.Background(), request)
+}
+
+// RunRerunScheduleInstances
+// 实例批量重跑
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) RunRerunScheduleInstancesWithContext(ctx context.Context, request *RunRerunScheduleInstancesRequest) (response *RunRerunScheduleInstancesResponse, err error) {
+    if request == nil {
+        request = NewRunRerunScheduleInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RunRerunScheduleInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRunRerunScheduleInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRunTaskRequest() (request *RunTaskRequest) {
     request = &RunTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -14735,8 +15445,9 @@ func NewRunTaskRequest() (request *RunTaskRequest) {
 func NewRunTaskResponse() (response *RunTaskResponse) {
     response = &RunTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunTask
@@ -14746,7 +15457,6 @@ func NewRunTaskResponse() (response *RunTaskResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) RunTask(request *RunTaskRequest) (response *RunTaskResponse, err error) {
     return c.RunTaskWithContext(context.Background(), request)
 }
@@ -14758,7 +15468,6 @@ func (c *Client) RunTask(request *RunTaskRequest) (response *RunTaskResponse, er
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) RunTaskWithContext(ctx context.Context, request *RunTaskRequest) (response *RunTaskResponse, err error) {
     if request == nil {
         request = NewRunTaskRequest()
@@ -14789,8 +15498,9 @@ func NewRunTasksByMultiWorkflowRequest() (request *RunTasksByMultiWorkflowReques
 func NewRunTasksByMultiWorkflowResponse() (response *RunTasksByMultiWorkflowResponse) {
     response = &RunTasksByMultiWorkflowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunTasksByMultiWorkflow
@@ -14837,8 +15547,9 @@ func NewSaveCustomFunctionRequest() (request *SaveCustomFunctionRequest) {
 func NewSaveCustomFunctionResponse() (response *SaveCustomFunctionResponse) {
     response = &SaveCustomFunctionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SaveCustomFunction
@@ -14885,8 +15596,9 @@ func NewSetTaskAlarmNewRequest() (request *SetTaskAlarmNewRequest) {
 func NewSetTaskAlarmNewResponse() (response *SetTaskAlarmNewResponse) {
     response = &SetTaskAlarmNewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetTaskAlarmNew
@@ -14937,8 +15649,9 @@ func NewStartIntegrationTaskRequest() (request *StartIntegrationTaskRequest) {
 func NewStartIntegrationTaskResponse() (response *StartIntegrationTaskResponse) {
     response = &StartIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartIntegrationTask
@@ -15017,8 +15730,9 @@ func NewStopBaselineRequest() (request *StopBaselineRequest) {
 func NewStopBaselineResponse() (response *StopBaselineResponse) {
     response = &StopBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopBaseline
@@ -15077,8 +15791,9 @@ func NewStopIntegrationTaskRequest() (request *StopIntegrationTaskRequest) {
 func NewStopIntegrationTaskResponse() (response *StopIntegrationTaskResponse) {
     response = &StopIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopIntegrationTask
@@ -15157,8 +15872,9 @@ func NewSubmitBaselineRequest() (request *SubmitBaselineRequest) {
 func NewSubmitBaselineResponse() (response *SubmitBaselineResponse) {
     response = &SubmitBaselineResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitBaseline
@@ -15217,8 +15933,9 @@ func NewSubmitCustomFunctionRequest() (request *SubmitCustomFunctionRequest) {
 func NewSubmitCustomFunctionResponse() (response *SubmitCustomFunctionResponse) {
     response = &SubmitCustomFunctionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitCustomFunction
@@ -15277,8 +15994,9 @@ func NewSubmitSqlTaskRequest() (request *SubmitSqlTaskRequest) {
 func NewSubmitSqlTaskResponse() (response *SubmitSqlTaskResponse) {
     response = &SubmitSqlTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitSqlTask
@@ -15371,8 +16089,9 @@ func NewSubmitTaskRequest() (request *SubmitTaskRequest) {
 func NewSubmitTaskResponse() (response *SubmitTaskResponse) {
     response = &SubmitTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitTask
@@ -15469,8 +16188,9 @@ func NewSubmitTaskTestRunRequest() (request *SubmitTaskTestRunRequest) {
 func NewSubmitTaskTestRunResponse() (response *SubmitTaskTestRunResponse) {
     response = &SubmitTaskTestRunResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitTaskTestRun
@@ -15517,8 +16237,9 @@ func NewSubmitWorkflowRequest() (request *SubmitWorkflowRequest) {
 func NewSubmitWorkflowResponse() (response *SubmitWorkflowResponse) {
     response = &SubmitWorkflowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitWorkflow
@@ -15569,8 +16290,9 @@ func NewSuspendIntegrationTaskRequest() (request *SuspendIntegrationTaskRequest)
 func NewSuspendIntegrationTaskResponse() (response *SuspendIntegrationTaskResponse) {
     response = &SuspendIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SuspendIntegrationTask
@@ -15649,8 +16371,9 @@ func NewTaskLogRequest() (request *TaskLogRequest) {
 func NewTaskLogResponse() (response *TaskLogResponse) {
     response = &TaskLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TaskLog
@@ -15703,8 +16426,9 @@ func NewTriggerEventRequest() (request *TriggerEventRequest) {
 func NewTriggerEventResponse() (response *TriggerEventResponse) {
     response = &TriggerEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TriggerEvent
@@ -15755,8 +16479,9 @@ func NewUnlockIntegrationTaskRequest() (request *UnlockIntegrationTaskRequest) {
 func NewUnlockIntegrationTaskResponse() (response *UnlockIntegrationTaskResponse) {
     response = &UnlockIntegrationTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnlockIntegrationTask
@@ -15835,8 +16560,9 @@ func NewUpdateInLongAgentRequest() (request *UpdateInLongAgentRequest) {
 func NewUpdateInLongAgentResponse() (response *UpdateInLongAgentResponse) {
     response = &UpdateInLongAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateInLongAgent
@@ -15915,8 +16641,9 @@ func NewUpdateWorkflowOwnerRequest() (request *UpdateWorkflowOwnerRequest) {
 func NewUpdateWorkflowOwnerResponse() (response *UpdateWorkflowOwnerResponse) {
     response = &UpdateWorkflowOwnerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateWorkflowOwner
@@ -15965,8 +16692,9 @@ func NewUploadContentRequest() (request *UploadContentRequest) {
 func NewUploadContentResponse() (response *UploadContentResponse) {
     response = &UploadContentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UploadContent
