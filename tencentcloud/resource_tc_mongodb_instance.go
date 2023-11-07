@@ -380,8 +380,9 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	for _, group := range groups {
 		groupIds = append(groupIds, *group.SecurityGroupId)
 	}
-	_ = d.Set("security_groups", groupIds)
-
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	switch *instance.MachineType {
 	case MONGODB_MACHINE_TYPE_TGIO:
 		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO10G)
