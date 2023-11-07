@@ -1994,9 +1994,17 @@ Cloud Firewall(CFW)
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
 
+Bastion Host(BH)
+  Resource
+    tencentcloud_dasb_acl
+    tencentcloud_dasb_cmd_template
+    tencentcloud_dasb_device_group
+    tencentcloud_dasb_user
+
 Cwp
   Data Source
     tencentcloud_cwp_machines_simple
+
   Resource
     tencentcloud_cwp_license_order
     tencentcloud_cwp_license_bind_attachment
@@ -3731,6 +3739,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_dasb_acl":                                            resourceTencentCloudDasbAcl(),
+			"tencentcloud_dasb_cmd_template":                                   resourceTencentCloudDasbCmdTemplate(),
+			"tencentcloud_dasb_device_group":                                   resourceTencentCloudDasbDeviceGroup(),
+			"tencentcloud_dasb_user":                                           resourceTencentCloudDasbUser(),
 			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),
