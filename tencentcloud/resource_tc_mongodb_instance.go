@@ -411,6 +411,16 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("availability_zone_list", availabilityZoneList)
 	}
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	_ = d.Set("security_groups", groupIds)
+
 	// standby instance list
 	var standbyInsList []map[string]string
 	for _, v := range instance.StandbyInstances {
