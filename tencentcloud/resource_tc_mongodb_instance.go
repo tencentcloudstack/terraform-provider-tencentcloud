@@ -372,6 +372,17 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	switch *instance.MachineType {
 	case MONGODB_MACHINE_TYPE_TGIO:
 		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO10G)
