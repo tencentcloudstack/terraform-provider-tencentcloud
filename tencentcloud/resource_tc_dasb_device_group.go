@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_dasb_device_group" "example" {
   name          = "tf_example"
-  department_id = "1"
+  department_id = "1.2"
 }
 ```
 
@@ -132,7 +132,9 @@ func resourceTencentCloudDasbDeviceGroupRead(d *schema.ResourceData, meta interf
 
 	if DeviceGroup.Department != nil {
 		departmentId := DeviceGroup.Department.Id
-		_ = d.Set("department_id", departmentId)
+		if *departmentId != "1" {
+			_ = d.Set("department_id", departmentId)
+		}
 	}
 
 	return nil

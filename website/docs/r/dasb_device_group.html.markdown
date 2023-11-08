@@ -16,7 +16,7 @@ Provides a resource to create a dasb device_group
 ```hcl
 resource "tencentcloud_dasb_device_group" "example" {
   name          = "tf_example"
-  department_id = "1"
+  department_id = "1.2"
 }
 ```
 

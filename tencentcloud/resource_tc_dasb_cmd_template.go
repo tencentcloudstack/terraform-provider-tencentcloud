@@ -15,7 +15,7 @@ Import
 dasb cmd_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dasb_cmd_template.example example 15
+terraform import tencentcloud_dasb_cmd_template.example 15
 ```
 */
 package tencentcloud

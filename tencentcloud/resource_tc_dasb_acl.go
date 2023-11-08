@@ -29,7 +29,7 @@ resource "tencentcloud_dasb_acl" "example" {
   allow_shell_file_down   = true
   allow_file_del          = true
   allow_access_credential = true
-  department_id           = "1"
+  department_id           = "1.2"
   validate_from           = "2023-09-22T00:00:00+08:00"
   validate_to             = "2024-09-23T00:00:00+08:00"
 }
@@ -192,12 +192,12 @@ func resourceTencentCloudDasbAcl() *schema.Resource {
 			"validate_from": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Access permission effective time, such as: 2021-09-22T00:00:00+00:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
+				Description: "Access permission effective time, such as: 2021-09-22T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
 			},
 			"validate_to": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Access permission expiration time, such as: 2021-09-23T00:00:00+00:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
+				Description: "Access permission expiration time, such as: 2021-09-23T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.",
 			},
 			"department_id": {
 				Optional:    true,
@@ -555,7 +555,9 @@ func resourceTencentCloudDasbAclRead(d *schema.ResourceData, meta interface{}) e
 
 	if acl.Department != nil {
 		departmentId := acl.Department.Id
-		_ = d.Set("department_id", departmentId)
+		if *departmentId != "1" {
+			_ = d.Set("department_id", departmentId)
+		}
 	}
 
 	if acl.AllowAccessCredential != nil {

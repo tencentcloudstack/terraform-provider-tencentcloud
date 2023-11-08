@@ -100,7 +100,7 @@ resource "tencentcloud_dasb_acl" "example" {
   allow_shell_file_down   = true
   allow_file_del          = true
   allow_access_credential = true
-  department_id           = "1"
+  department_id           = "1.2"
   validate_from           = "2023-09-22T00:00:00+08:00"
   validate_to             = "2024-09-23T00:00:00+08:00"
 }
@@ -132,7 +132,7 @@ resource "tencentcloud_dasb_acl" "example" {
   allow_shell_file_down   = true
   allow_file_del          = true
   allow_access_credential = true
-  department_id           = "1"
+  department_id           = "1.2.3"
   validate_from           = "2023-09-22T00:00:00+08:00"
   validate_to             = "2024-09-23T00:00:00+08:00"
 }

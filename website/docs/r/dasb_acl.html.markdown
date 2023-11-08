@@ -39,7 +39,7 @@ resource "tencentcloud_dasb_acl" "example" {
   allow_shell_file_down   = true
   allow_file_del          = true
   allow_access_credential = true
-  department_id           = "1"
+  department_id           = "1.2"
   validate_from           = "2023-09-22T00:00:00+08:00"
   validate_to             = "2024-09-23T00:00:00+08:00"
 }
@@ -74,8 +74,8 @@ The following arguments are supported:
 * `max_file_up_size` - (Optional, Int) File upload transfer size limit (artifact parameter, currently unused).
 * `user_group_id_set` - (Optional, Set: [`Int`]) Associated user group ID.
 * `user_id_set` - (Optional, Set: [`Int`]) Associated set of user IDs.
-* `validate_from` - (Optional, String) Access permission effective time, such as: 2021-09-22T00:00:00+00:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.
-* `validate_to` - (Optional, String) Access permission expiration time, such as: 2021-09-23T00:00:00+00:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.
+* `validate_from` - (Optional, String) Access permission effective time, such as: 2021-09-22T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.
+* `validate_to` - (Optional, String) Access permission expiration time, such as: 2021-09-23T00:00:00+08:00If the effective and expiry time are not filled in, the access rights will be valid for a long time.
 
 ## Attributes Reference
 

@@ -43,13 +43,13 @@ func TestAccTencentCloudNeedFixDasbDeviceGroupResource_basic(t *testing.T) {
 const testAccDasbDeviceGroup = `
 resource "tencentcloud_dasb_device_group" "example" {
   name          = "tf_example"
-  department_id = "1"
+  department_id = "1.2"
 }
 `
 
 const testAccDasbDeviceGroupUpdate = `
 resource "tencentcloud_dasb_device_group" "example" {
   name          = "tf_example_update"
-  department_id = "1"
+  department_id = "1.2.3"
 }
 `

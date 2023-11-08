@@ -2000,6 +2000,10 @@ Bastion Host(BH)
     tencentcloud_dasb_cmd_template
     tencentcloud_dasb_device_group
     tencentcloud_dasb_user
+    tencentcloud_dasb_device_account
+    tencentcloud_dasb_device_group_members
+    tencentcloud_dasb_user_group_members
+    tencentcloud_dasb_bind_device_resource
 
 Cwp
   Data Source
@@ -3743,6 +3747,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dasb_cmd_template":                                   resourceTencentCloudDasbCmdTemplate(),
 			"tencentcloud_dasb_device_group":                                   resourceTencentCloudDasbDeviceGroup(),
 			"tencentcloud_dasb_user":                                           resourceTencentCloudDasbUser(),
+			"tencentcloud_dasb_device_account":                                 resourceTencentCloudDasbDeviceAccount(),
+			"tencentcloud_dasb_device_group_members":                           resourceTencentCloudDasbDeviceGroupMembers(),
+			"tencentcloud_dasb_user_group_members":                             resourceTencentCloudDasbUserGroupMembers(),
+			"tencentcloud_dasb_bind_device_resource":                           resourceTencentCloudDasbBindDeviceResource(),
 			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),
