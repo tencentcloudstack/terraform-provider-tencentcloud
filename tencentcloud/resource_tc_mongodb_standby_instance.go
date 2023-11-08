@@ -396,8 +396,9 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 	for _, group := range groups {
 		groupIds = append(groupIds, *group.SecurityGroupId)
 	}
-	_ = d.Set("security_groups", groupIds)
-
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	_ = d.Set("machine_type", *instance.MachineType)
 	_ = d.Set("available_zone", instance.Zone)
 	_ = d.Set("vpc_id", instance.VpcId)
