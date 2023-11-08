@@ -32,6 +32,7 @@ The following arguments are supported:
 * `record_type` - (Required, String) The record type.
 * `value` - (Required, String) The record value.
 * `mx` - (Optional, Int) MX priority, valid when the record type is MX, range 1-20. Note: must set when record type equal MX.
+* `remark` - (Optional, String) The Remark of record.
 * `status` - (Optional, String) Records the initial state, with values ranging from ENABLE and DISABLE. The default is ENABLE, and if DISABLE is passed in, resolution will not take effect and the limits of load balancing will not be verified.
 * `sub_domain` - (Optional, String) The host records, default value is `@`.
 * `ttl` - (Optional, Int) TTL, the range is 1-604800, and the minimum value of different levels of domain names is different. Default is 600.
@@ -43,7 +44,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `monitor_status` - The monitoring status of the record.
-* `remark` - The Remark of record.
 
 
 ## Import
