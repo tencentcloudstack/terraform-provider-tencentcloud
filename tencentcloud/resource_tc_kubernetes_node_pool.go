@@ -212,7 +212,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Type:         schema.TypeInt,
 			Optional:     true,
 			Default:      50,
-			ValidateFunc: validateIntegerInRange(50, 500),
+			ValidateFunc: validateIntegerInRange(20, 1024),
 			Description:  "Volume of system disk in GB. Default is `50`.",
 		},
 		"data_disk": {
@@ -1608,6 +1608,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		"enable_auto_scale",
 		"node_os_type",
 		"node_os",
+		"tags",
 	) {
 		maxSize := int64(d.Get("max_size").(int))
 		minSize := int64(d.Get("min_size").(int))
