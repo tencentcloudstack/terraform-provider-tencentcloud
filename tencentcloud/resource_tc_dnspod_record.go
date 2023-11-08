@@ -1,6 +1,8 @@
 /*
 Provide a resource to create a DnsPod record.
 
+~> **NOTE:** Versions before v1.81.43 (including v1.81.43) do not support modifying remark or modifying remark has bug.
+
 Example Usage
 
 ```hcl
