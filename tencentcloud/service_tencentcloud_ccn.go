@@ -623,7 +623,7 @@ func (me *VpcService) GetCcnRegionBandwidthLimits(ctx context.Context,
 }
 
 func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, region, dstRegion string,
-	bandwidth int64) (errRet error) {
+	bandwidth int64, setFlag bool) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewSetCcnRegionBandwidthLimitsRequest()
@@ -638,6 +638,8 @@ func (me *VpcService) SetCcnRegionBandwidthLimits(ctx context.Context, ccnId, re
 	}
 
 	request.CcnRegionBandwidthLimits = []*vpc.CcnRegionBandwidthLimit{&ccnRegionBandwidthLimit}
+
+	request.SetDefaultLimitFlag = helper.Bool(setFlag)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseVpcClient().SetCcnRegionBandwidthLimits(request)
 
