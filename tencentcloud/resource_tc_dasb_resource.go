@@ -107,7 +107,7 @@ func resourceTencentCloudDasbResource() *schema.Resource {
 				Description: "Number of bandwidth expansion packets (4M).",
 			},
 			"package_node": {
-				Required:    true,
+				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Number of authorized point extension packages (50 points).",
