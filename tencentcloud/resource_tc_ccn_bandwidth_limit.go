@@ -234,7 +234,7 @@ func resourceTencentCloudCcnBandwidthLimitDelete(d *schema.ResourceData, meta in
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if v, ok := d.GetOkExists("dst_region"); ok {
+	if v, ok := d.GetOk("dst_region"); ok {
 		dstRegion = v.(string)
 	}
 	if v, ok := d.GetOk("bandwidth_limit"); ok {
