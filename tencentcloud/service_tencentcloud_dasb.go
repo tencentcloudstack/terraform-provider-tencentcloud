@@ -438,3 +438,90 @@ func (me *DasbService) DeleteDasbUserGroupMembersById(ctx context.Context, userG
 
 	return
 }
+
+func (me *DasbService) DescribeDasbResourceById(ctx context.Context, resourceId string) (Resource *dasb.Resource, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewDescribeResourcesRequest()
+	request.ResourceIds = common.StringPtrs([]string{resourceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().DescribeResources(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ResourceSet) != 1 {
+		return
+	}
+
+	Resource = response.Response.ResourceSet[0]
+	return
+}
+
+func (me *DasbService) DescribeDasbDeviceById(ctx context.Context, deviceId string) (device *dasb.Device, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewDescribeDevicesRequest()
+	deviceIdInt, _ := strconv.ParseUint(deviceId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{deviceIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().DescribeDevices(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.DeviceSet) != 1 {
+		return
+	}
+
+	device = response.Response.DeviceSet[0]
+	return
+}
+
+func (me *DasbService) DeleteDasbDeviceById(ctx context.Context, deviceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewDeleteDevicesRequest()
+	deviceIdInt, _ := strconv.ParseUint(deviceId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{deviceIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().DeleteDevices(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
