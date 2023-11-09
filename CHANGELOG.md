@@ -1,3 +1,16 @@
+## 1.81.44 (November 8, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_instance: support set `security_groups` state. ([#2285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2285))
+* resource/tencentcloud_mongodb_sharding_instance: support set `security_groups` state. ([#2285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2285))
+* tencentcloud_kubernetes_node_pool: `tags` field supports update operation ([#2287](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2287))
+* tencentcloud_kubernetes_node_pool: adjust `system_disk_size` validate range ([#2287](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2287))
+
+BUG FIXES:
+
+* tencentcloud_dnspod_record: Fix modify dnspod record remark ([#2288](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2288))
+
 ## 1.81.43 (November 6, 2023)
 
 FEATURES:

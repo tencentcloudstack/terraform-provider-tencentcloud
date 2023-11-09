@@ -1,0 +1,7 @@
+```release-note:enhancement
+tencentcloud_kubernetes_node_pool: adjust `system_disk_size` validate range
+```
+
+```release-note:enhancement
+tencentcloud_kubernetes_node_pool: `tags` field supports update operation
+```
