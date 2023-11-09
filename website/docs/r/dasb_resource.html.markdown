@@ -35,7 +35,6 @@ The following arguments are supported:
 
 * `auto_renew_flag` - (Required, Int) Automatic renewal. 1 is auto renew flag, 0 is not.
 * `deploy_region` - (Required, String) Deploy region.
-* `package_node` - (Required, Int) Number of authorized point extension packages (50 points).
 * `resource_edition` - (Required, String) Resource type.Value:standard/pro.
 * `resource_node` - (Required, Int) Number of resource nodes.
 * `subnet_id` - (Required, String) Deploy resource subnetId.
@@ -44,6 +43,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String) Deploy resource vpcId.
 * `deploy_zone` - (Optional, String) Deploy zone.
 * `package_bandwidth` - (Optional, Int) Number of bandwidth expansion packets (4M).
+* `package_node` - (Optional, Int) Number of authorized point extension packages (50 points).
 
 ## Attributes Reference
 
