@@ -72,7 +72,7 @@ func dataSourceTencentCloudCamGroupUserAccount() *schema.Resource {
 						"remark": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Remark。.",
+							Description: "Remark.",
 						},
 					},
 				},
