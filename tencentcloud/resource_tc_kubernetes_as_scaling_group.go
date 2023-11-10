@@ -227,7 +227,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ConflictsWith: []string{"auto_scaling_config.0.password"},
 			Description:   "ID list of keys.",
 		},
-		"security_group_ids": {
+		"orderly_security_group_ids": {
 			Type:        schema.TypeList,
 			Optional:    true,
 			ForceNew:    true,
@@ -608,7 +608,7 @@ func kubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta inter
 		return result, errRet
 	}
 
-	if v, ok := dMap["security_group_ids"]; ok {
+	if v, ok := dMap["orderly_security_group_ids"]; ok {
 		securityGroups := v.([]interface{})
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {

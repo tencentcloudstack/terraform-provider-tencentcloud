@@ -332,22 +332,12 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ConflictsWith: []string{"auto_scaling_config.0.password"},
 			Description:   "ID list of keys.",
 		},
-		"security_group_ids": {
-			Type:          schema.TypeSet,
-			Optional:      true,
-			Computed:      true,
-			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_config.0.orderly_security_group_ids"},
-			Deprecated:    "The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead.",
-			Description:   "Security groups to which a CVM instance belongs.",
-		},
 		"orderly_security_group_ids": {
-			Type:          schema.TypeList,
-			Optional:      true,
-			Computed:      true,
-			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids"},
-			Description:   "Ordered security groups to which a CVM instance belongs.",
+			Type:        schema.TypeList,
+			Optional:    true,
+			Computed:    true,
+			Elem:        &schema.Schema{Type: schema.TypeString},
+			Description: "Ordered security groups to which a CVM instance belongs.",
 		},
 		"enhanced_security_service": {
 			Type:     schema.TypeBool,
@@ -794,13 +784,6 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		return result, errRet
 	}
 
-	if v, ok := dMap["security_group_ids"]; ok {
-		if list := v.(*schema.Set).List(); len(list) > 0 {
-			errRet = fmt.Errorf("The parameter `security_group_ids` has an issue that the actual order of the security group may be inconsistent with the order of your tf code, which will cause your service to be inaccessible. Please use `orderly_security_group_ids` instead.")
-			return result, errRet
-		}
-	}
-
 	if v, ok := dMap["orderly_security_group_ids"]; ok {
 		if list := v.([]interface{}); len(list) > 0 {
 			request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
@@ -946,15 +929,6 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	if v, ok := dMap["public_ip_assigned"]; ok {
 		publicIpAssigned := v.(bool)
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
-	}
-
-	if d.HasChange("auto_scaling_config.0.security_group_ids") {
-		if v, ok := dMap["security_group_ids"]; ok {
-			if list := v.(*schema.Set).List(); len(list) > 0 {
-				errRet := fmt.Errorf("The parameter `security_group_ids` has an issue that the actual order of the security group may be inconsistent with the order of your tf code, which will cause your service to be inaccessible. You can check whether the order of your current security groups meets your expectations through the TencentCloud Console, then use `orderly_security_group_ids` field to update them.")
-				return nil, errRet
-			}
-		}
 	}
 
 	if d.HasChange("auto_scaling_config.0.orderly_security_group_ids") {
@@ -1247,7 +1221,6 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 
 		if launchCfg.SecurityGroupIds != nil {
-			launchConfig["security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
 			launchConfig["orderly_security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
 		}
 
