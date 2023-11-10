@@ -228,6 +228,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_account_summary
     tencentcloud_cam_policy_granting_service_access
     tencentcloud_cam_oidc_config
+    tencentcloud_cam_group_user_account
 
   Resource
     tencentcloud_cam_role
@@ -2846,6 +2847,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":           dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
+			"tencentcloud_cam_group_user_account":                       dataSourceTencentCloudCamGroupUserAccount(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback":  dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_upgrade":   dataSourceTencentCloudDlcCheckDataEngineImageCanBeUpgrade(),
 			"tencentcloud_dlc_describe_user_type":                       dataSourceTencentCloudDlcDescribeUserType(),
