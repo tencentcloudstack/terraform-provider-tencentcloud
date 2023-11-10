@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -1804,4 +1805,59 @@ func (me *CssService) DeleteCssTimeshiftTemplateById(ctx context.Context, templa
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *CssService) CssRestartPushTaskStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		paramMap := make(map[string]interface{})
+		paramMap["TaskId"] = helper.String(taskId)
+
+		instance, err := me.DescribeCssPullStreamTaskStatusByFilter(ctx, paramMap)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.RunStatus, nil
+	}
+}
+
+func (me *CssService) DeleteCssStartStreamMonitorById(ctx context.Context, monitorId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewStopLiveStreamMonitorRequest()
+	request.MonitorId = &monitorId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().StopLiveStreamMonitor(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CssService) CssStartStreamMonitorStateRefreshFunc(monitorId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeCssStreamMonitorById(ctx, monitorId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.UInt64ToStr(*object.Status), nil
+	}
 }

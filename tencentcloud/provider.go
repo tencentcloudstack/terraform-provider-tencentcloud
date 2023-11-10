@@ -3466,6 +3466,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_timeshift_template":                              resourceTencentCloudCssTimeshiftTemplate(),
 			"tencentcloud_css_timeshift_rule_attachment":                       resourceTencentCloudCssTimeshiftRuleAttachment(),
 			"tencentcloud_css_stream_monitor":                                  resourceTencentCloudCssStreamMonitor(),
+			"tencentcloud_css_start_stream_monitor":                            resourceTencentCloudCssStartStreamMonitor(),
+			"tencentcloud_css_restart_push_task":                               resourceTencentCloudCssRestartPushTask(),
 			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),
