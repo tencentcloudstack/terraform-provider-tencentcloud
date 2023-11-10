@@ -2859,6 +2859,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
+			"tencentcloud_cam_group_user_account":                       dataSourceTencentCloudCamGroupUserAccount(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
