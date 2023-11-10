@@ -16,9 +16,15 @@ FEATURES:
 
 ENHANCEMENTS:
 
+* tencentcloud_ccn_bandwidth_limit: Support recover bandwidth limit when run `terraform destroy` ([#2290](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2290))
+
+
+## 1.81.44 (November 8, 2023)
+
+ENHANCEMENTS:
+
 * resource/tencentcloud_mongodb_instance: support set `security_groups` state. ([#2285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2285))
 * resource/tencentcloud_mongodb_sharding_instance: support set `security_groups` state. ([#2285](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2285))
-* tencentcloud_ccn_bandwidth_limit: Support recover bandwidth limit when run `terraform destroy` ([#2290](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2290))
 * tencentcloud_kubernetes_node_pool: `tags` field supports update operation ([#2287](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2287))
 * tencentcloud_kubernetes_node_pool: adjust `system_disk_size` validate range ([#2287](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2287))
 
