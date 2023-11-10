@@ -1,15 +1,15 @@
 package tencentcloud
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -test.run TestAccTencentCloudCssPullStreamTaskRestartResource_basic -v
-func TestAccTencentCloudCssPullStreamTaskRestartResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixCssPullStreamTaskRestartResource_basic(t *testing.T) {
 	t.Parallel()
 	baseTime := time.Now().UTC().Add(10 * time.Hour)
 	startTime := baseTime.Format(time.RFC3339)

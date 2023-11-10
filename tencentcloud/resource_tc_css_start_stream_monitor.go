@@ -101,7 +101,7 @@ func resourceTencentCloudCssStartStreamMonitorCreate(d *schema.ResourceData, met
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"1"}, 3*readRetryTimeout, time.Second, service.CssStartStreamMonitorStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"1"}, 6*readRetryTimeout, time.Second, service.CssStartStreamMonitorStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -158,7 +158,7 @@ func resourceTencentCloudCssStartStreamMonitorDelete(d *schema.ResourceData, met
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"0"}, 3*readRetryTimeout, time.Second, service.CssStartStreamMonitorStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"0"}, 6*readRetryTimeout, time.Second, service.CssStartStreamMonitorStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

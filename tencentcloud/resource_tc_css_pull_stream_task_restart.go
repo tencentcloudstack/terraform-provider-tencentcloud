@@ -85,7 +85,7 @@ func resourceTencentCloudCssPullStreamTaskRestartCreate(d *schema.ResourceData, 
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"active"}, 3*readRetryTimeout, time.Second, service.CssRestartPushTaskStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"active"}, 6*readRetryTimeout, time.Second, service.CssRestartPushTaskStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
