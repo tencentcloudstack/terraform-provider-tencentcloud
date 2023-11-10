@@ -1,3 +1,24 @@
+## 1.81.45 (November 10, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cam_group_user_account` ([#2292](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2292))
+* **New Resource:** `tencentcloud_dasb_acl` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_bind_device_resource` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_cmd_template` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_device` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_device_account` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_device_group` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_device_group_members` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_resource` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_user` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+* **New Resource:** `tencentcloud_dasb_user_group_members` ([#2286](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2286))
+
+ENHANCEMENTS:
+
+* tencentcloud_ccn_bandwidth_limit: Support recover bandwidth limit when run `terraform destroy` ([#2290](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2290))
+
+
 ## 1.81.44 (November 8, 2023)
 
 ENHANCEMENTS:
