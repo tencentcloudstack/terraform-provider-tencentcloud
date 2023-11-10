@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
@@ -190,6 +192,7 @@ type TencentCloudClient struct {
 	wafConn            *waf.Client
 	cfwConn            *cfw.Client
 	oceanusConn        *oceanus.Client
+	dasbConn           *dasb.Client
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
@@ -1311,6 +1314,19 @@ func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
 	me.oceanusConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.oceanusConn
+}
+
+func (me *TencentCloudClient) UseDasbClient() *dasb.Client {
+	if me.dasbConn != nil {
+		return me.dasbConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dasbConn, _ = dasb.NewClient(me.Credential, me.Region, cpf)
+	me.dasbConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dasbConn
 }
 
 // UseTrocketClient returns trocket client for service
