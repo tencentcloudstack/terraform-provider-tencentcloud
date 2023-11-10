@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_start_stream_monitor" "start_stream_monitor" {
-  monitor_id = ""
+  monitor_id               = "3d5738dd-1ca2-4601-a6e9-004c5ec75c0b"
   audible_input_index_list = [1]
 }
 ```

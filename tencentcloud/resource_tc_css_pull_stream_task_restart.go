@@ -4,9 +4,9 @@ Provides a resource to create a css restart_push_task
 Example Usage
 
 ```hcl
-resource "tencentcloud_css_restart_push_task" "restart_push_task" {
-  task_id = ""
-  operator = ""
+resource "tencentcloud_css_pull_stream_task_restart" "restart_push_task" {
+  task_id  = "3573"
+  operator = "tf-test"
 }
 ```
 */
@@ -22,11 +22,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCssRestartPushTask() *schema.Resource {
+func resourceTencentCloudCssPullStreamTaskRestart() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCssRestartPushTaskCreate,
-		Read:   resourceTencentCloudCssRestartPushTaskRead,
-		Delete: resourceTencentCloudCssRestartPushTaskDelete,
+		Create: resourceTencentCloudCssPullStreamTaskRestartCreate,
+		Read:   resourceTencentCloudCssPullStreamTaskRestartRead,
+		Delete: resourceTencentCloudCssPullStreamTaskRestartDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -48,8 +48,8 @@ func resourceTencentCloudCssRestartPushTask() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCssRestartPushTaskCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_restart_push_task.create")()
+func resourceTencentCloudCssPullStreamTaskRestartCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_pull_stream_task_restart.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -91,18 +91,18 @@ func resourceTencentCloudCssRestartPushTaskCreate(d *schema.ResourceData, meta i
 		return e
 	}
 
-	return resourceTencentCloudCssRestartPushTaskRead(d, meta)
+	return resourceTencentCloudCssPullStreamTaskRestartRead(d, meta)
 }
 
-func resourceTencentCloudCssRestartPushTaskRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_restart_push_task.read")()
+func resourceTencentCloudCssPullStreamTaskRestartRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_pull_stream_task_restart.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudCssRestartPushTaskDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_css_restart_push_task.delete")()
+func resourceTencentCloudCssPullStreamTaskRestartDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_css_pull_stream_task_restart.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
