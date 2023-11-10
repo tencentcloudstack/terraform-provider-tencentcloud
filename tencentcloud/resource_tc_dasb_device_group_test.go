@@ -19,8 +19,8 @@ func TestAccTencentCloudNeedFixDasbDeviceGroupResource_basic(t *testing.T) {
 				Config: testAccDasbDeviceGroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "department_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_device_group.example", "name", "tf_example"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_device_group.example", "department_id", "1.2"),
 				),
 			},
 			{
@@ -32,8 +32,8 @@ func TestAccTencentCloudNeedFixDasbDeviceGroupResource_basic(t *testing.T) {
 				Config: testAccDasbDeviceGroupUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_group.example", "department_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_device_group.example", "name", "tf_example_update"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_device_group.example", "department_id", "1.2.3"),
 				),
 			},
 		},

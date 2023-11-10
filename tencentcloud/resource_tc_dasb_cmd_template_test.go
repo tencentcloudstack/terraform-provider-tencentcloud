@@ -19,8 +19,8 @@ func TestAccTencentCloudNeedFixDasbCmdTemplateResource_basic(t *testing.T) {
 				Config: testAccDasbCmdTemplate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "cmd_list"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_cmd_template.example", "name", "tf_example"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_cmd_template.example", "cmd_list", "rm -rf*"),
 				),
 			},
 			{
@@ -32,8 +32,8 @@ func TestAccTencentCloudNeedFixDasbCmdTemplateResource_basic(t *testing.T) {
 				Config: testAccDasbCmdTemplateUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_cmd_template.example", "cmd_list"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_cmd_template.example", "name", "tf_example_update"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_cmd_template.example", "cmd_list", "reboot"),
 				),
 			},
 		},

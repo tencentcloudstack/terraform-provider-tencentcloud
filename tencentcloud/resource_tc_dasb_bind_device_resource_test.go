@@ -19,7 +19,7 @@ func TestAccTencentCloudNeedFixDasbBindDeviceResourceResource_basic(t *testing.T
 				Config: testAccDasbBindDeviceResource,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_bind_device_resource.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_bind_device_resource.example", "resource_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_bind_device_resource.example", "resource_id", "bh-saas-ocmzo6lgxiv"),
 				),
 			},
 		},

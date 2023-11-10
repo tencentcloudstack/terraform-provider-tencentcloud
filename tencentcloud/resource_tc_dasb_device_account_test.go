@@ -20,7 +20,7 @@ func TestAccTencentCloudNeedFixDasbDeviceAccountResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_account.example", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_account.example", "device_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dasb_device_account.example", "account"),
+					resource.TestCheckResourceAttr("tencentcloud_dasb_device_account.example", "account", "root"),
 				),
 			},
 			{
