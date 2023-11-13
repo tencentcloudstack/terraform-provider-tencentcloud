@@ -6,14 +6,13 @@ Example Usage
 ```hcl
 data "tencentcloud_tsf_application_attribute" "application_attribute" {
   application_id = "application-a24x29xv"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -27,13 +26,13 @@ func dataSourceTencentCloudTsfApplicationAttribute() *schema.Resource {
 			"application_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "application Id.",
+				Description: "Application Id.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "application list other attribute.",
+				Description: "Application list other attribute.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_count": {
@@ -69,49 +68,51 @@ func dataSourceTencentCloudTsfApplicationAttributeRead(d *schema.ResourceData, m
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ids := ""
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("application_id"); ok {
-		ids = v.(string)
 		paramMap["ApplicationId"] = helper.String(v.(string))
 	}
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var attribute *tsf.ApplicationAttribute
+	var result []*tsf.ApplicationAttribute
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfApplicationAttributeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		attribute = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	applicationAttributeMap := map[string]interface{}{}
-	if attribute != nil {
-		if attribute.InstanceCount != nil {
-			applicationAttributeMap["instance_count"] = attribute.InstanceCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		applicationAttributeMap := map[string]interface{}{}
+
+		if result.InstanceCount != nil {
+			applicationAttributeMap["instance_count"] = result.InstanceCount
 		}
 
-		if attribute.RunInstanceCount != nil {
-			applicationAttributeMap["run_instance_count"] = attribute.RunInstanceCount
+		if result.RunInstanceCount != nil {
+			applicationAttributeMap["run_instance_count"] = result.RunInstanceCount
 		}
 
-		if attribute.GroupCount != nil {
-			applicationAttributeMap["group_count"] = attribute.GroupCount
+		if result.GroupCount != nil {
+			applicationAttributeMap["group_count"] = result.GroupCount
 		}
 
-		_ = d.Set("result", []interface{}{applicationAttributeMap})
+		ids = append(ids, *result.ApplicationId)
+		_ = d.Set("result", applicationAttributeMap)
 	}
 
-	d.SetId(ids)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), applicationAttributeMap); e != nil {

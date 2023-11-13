@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_project_security_groups" "project_security_groups" {
-  project_id = 1250480
-  search_key = "自定义模版"
-}
+  project_id = 11954
+  search_key = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -30,11 +29,13 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroups() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Project ID.",
 			},
+
 			"search_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Search Keywords.",
 			},
+
 			"groups": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -90,7 +91,7 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroups() *schema.Resource {
 									"id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "id.",
+										Description: "Id.",
 									},
 									"desc": {
 										Type:        schema.TypeString,
@@ -139,7 +140,7 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroups() *schema.Resource {
 									"id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "id.",
+										Description: "Id.",
 									},
 									"desc": {
 										Type:        schema.TypeString,
@@ -167,6 +168,7 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroups() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -180,12 +182,9 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroupsRead(d *schema.ResourceDa
 	defer logElapsed("data_source.tencentcloud_cynosdb_project_security_groups.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		groups  []*cynosdb.SecurityGroup
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("project_id"); v != nil {
@@ -196,16 +195,18 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroupsRead(d *schema.ResourceDa
 		paramMap["SearchKey"] = helper.String(v.(string))
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var groups []*cynosdb.SecurityGroup
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbProjectSecurityGroupsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		groups = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -265,7 +266,7 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroupsRead(d *schema.ResourceDa
 					inboundList = append(inboundList, inboundMap)
 				}
 
-				securityGroupMap["inbound"] = inboundList
+				securityGroupMap["inbound"] = []interface{}{inboundList}
 			}
 
 			if securityGroup.Outbound != nil {
@@ -308,7 +309,7 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroupsRead(d *schema.ResourceDa
 					outboundList = append(outboundList, outboundMap)
 				}
 
-				securityGroupMap["outbound"] = outboundList
+				securityGroupMap["outbound"] = []interface{}{outboundList}
 			}
 
 			if securityGroup.SecurityGroupId != nil {
@@ -337,6 +338,5 @@ func dataSourceTencentCloudCynosdbProjectSecurityGroupsRead(d *schema.ResourceDa
 			return e
 		}
 	}
-
 	return nil
 }

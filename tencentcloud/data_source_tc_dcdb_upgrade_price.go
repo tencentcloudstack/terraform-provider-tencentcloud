@@ -4,52 +4,39 @@ Use this data source to query detailed information of dcdb upgrade_price
 Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_upgrade_price" "add_upgrade_price" {
-  instance_id = local.dcdb_id
-  upgrade_type = "ADD"
+data "tencentcloud_dcdb_upgrade_price" "upgrade_price" {
+  instance_id = ""
+  upgrade_type = ""
   add_shard_config {
-		shard_count = 2
-		shard_memory = 2
-		shard_storage = 100
+		shard_count =
+		shard_memory =
+		shard_storage =
+
   }
-  amount_unit = "pent"
-}
-
-data "tencentcloud_dcdb_upgrade_price" "expand_upgrade_price" {
-  instance_id = local.dcdb_id
-  upgrade_type = "EXPAND"
-
   expand_shard_config {
-		shard_instance_ids = ["shard-1b5r04az"]
-		shard_memory = 2
-		shard_storage = 40
-		shard_node_count = 2
+		shard_instance_ids =
+		shard_memory =
+		shard_storage =
+		shard_node_count =
+
   }
-  amount_unit = "pent"
-}
-
-data "tencentcloud_dcdb_upgrade_price" "split_upgrade_price" {
-  instance_id = local.dcdb_id
-  upgrade_type = "SPLIT"
-
   split_shard_config {
-		shard_instance_ids = ["shard-1b5r04az"]
-		split_rate = 50
-		shard_memory = 2
-		shard_storage = 100
+		shard_instance_ids =
+		split_rate =
+		shard_memory =
+		shard_storage =
+
   }
-  amount_unit = "pent"
-}
+  amount_unit = ""
+      }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -166,19 +153,19 @@ func dataSourceTencentCloudDcdbUpgradePrice() *schema.Resource {
 			"amount_unit": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Price unit. Valid values: `pent` (cent), `microPent` (microcent).",
+				Description: "Price unit. Valid values: `* pent` (cent), `* microPent` (microcent).",
 			},
 
 			"original_price": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Original price. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).",
+				Description: "Original price * Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. * Currency: CNY (Chinese site), USD (international site).",
 			},
 
 			"price": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "The actual price may be different from the original price due to discounts. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).",
+				Description: "The actual price may be different from the original price due to discounts. * Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. * Currency: CNY (Chinese site), USD (international site).",
 			},
 
 			"formula": {
@@ -203,14 +190,10 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("upgrade_type"); ok {
@@ -228,7 +211,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_storage"]; ok {
 			addShardConfig.ShardStorage = helper.IntInt64(v.(int))
 		}
-		paramMap["AddShardConfig"] = &addShardConfig
+		paramMap["add_shard_config"] = &addShardConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "expand_shard_config"); ok {
@@ -246,7 +229,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_node_count"]; ok {
 			expandShardConfig.ShardNodeCount = helper.IntInt64(v.(int))
 		}
-		paramMap["ExpandShardConfig"] = &expandShardConfig
+		paramMap["expand_shard_config"] = &expandShardConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "split_shard_config"); ok {
@@ -264,7 +247,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_storage"]; ok {
 			splitShardConfig.ShardStorage = helper.IntInt64(v.(int))
 		}
-		paramMap["SplitShardConfig"] = &splitShardConfig
+		paramMap["split_shard_config"] = &splitShardConfig
 	}
 
 	if v, ok := d.GetOk("amount_unit"); ok {
@@ -273,37 +256,35 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *dcdb.DescribeDCDBUpgradePriceResponseParams
-	var e error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e = service.DescribeDcdbUpgradePriceByFilter(ctx, paramMap)
+		result, e := service.DescribeDcdbUpgradePriceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		originalPrice = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if result != nil {
-		if result.OriginalPrice != nil {
-			_ = d.Set("original_price", result.OriginalPrice)
-		}
-
-		if result.Price != nil {
-			_ = d.Set("price", result.Price)
-		}
-
-		if result.Formula != nil {
-			_ = d.Set("formula", result.Formula)
-		}
+	ids := make([]string, 0, len(originalPrice))
+	if originalPrice != nil {
+		_ = d.Set("original_price", originalPrice)
 	}
 
-	d.SetId(instanceId)
+	if price != nil {
+		_ = d.Set("price", price)
+	}
+
+	if formula != nil {
+		_ = d.Set("formula", formula)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), result); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

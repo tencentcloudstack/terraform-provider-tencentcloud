@@ -5,14 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_lighthouse_bundle" "bundle" {
-}
+  bundle_ids =
+  offset = 0
+  limit = 20
+  zones =
+  filters {
+		name = "bundle-id"
+		values =
+
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -54,14 +62,9 @@ func dataSourceTencentCloudLighthouseBundle() *schema.Resource {
 			},
 
 			"filters": {
-				Optional: true,
-				Type:     schema.TypeList,
-				Description: "Filter list.\n" +
-					"- `bundle-id`: filter by the bundle ID.\n" +
-					"- `support-platform-type`: filter by system type, valid values: `LINUX_UNIX`, `WINDOWS`.\n" +
-					"- `bundle-type`: filter according to package type, valid values: `GENERAL_BUNDLE`, `STORAGE_BUNDLE`, `ENTERPRISE_BUNDLE`, `EXCLUSIVE_BUNDLE`, `BEFAST_BUNDLE`.\n" +
-					"- `bundle-state`: filter according to package status, valid values: `ONLINE`, `OFFLINE`.\n" +
-					"NOTE: The upper limit of Filters per request is 10. The upper limit of Filter.Values is 5. Parameter does not support specifying both BundleIds and Filters.",
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Filter listbundle-idFilter by the bundle ID.Type: StringRequired: Nosupport-platform-typeFilter by the OS type.Valid values: LINUX_UNIX (Linux or Unix), WINDOWS (Windows)Type: StringRequired: Nobundle-typeFilter by the bundle type.Valid values: GENERAL_BUNDLE (General bundle), STORAGE_BUNDLE (Storage bundle), ENTERPRISE_BUNDLE (Enterprise bundle), EXCLUSIVE_BUNDLE (Dedicated bundle), BEFAST_BUNDLE (BeFast bundle)Type: StringRequired: Nobundle-stateFilter by the bundle status.Valid values: ONLINE, OFFLINEType: StringRequired: NoEach request can contain up to 10 Filters, and up to 5 Filter.Values for each filter. You cannot specify both BundleIds and Filters at the same time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -165,7 +168,7 @@ func dataSourceTencentCloudLighthouseBundle() *schema.Resource {
 								},
 							},
 						},
-						"cpu": {
+						"c_p_u": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "CPU.",
@@ -218,27 +221,21 @@ func dataSourceTencentCloudLighthouseBundleRead(d *schema.ResourceData, meta int
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("bundle_ids"); ok {
-		bundleIds := make([]string, 0)
-		for _, bundleId := range v.(*schema.Set).List() {
-			bundleIds = append(bundleIds, bundleId.(string))
-		}
-		paramMap["bundle_ids"] = bundleIds
+		bundleIdsSet := v.(*schema.Set).List()
+		paramMap["BundleIds"] = helper.InterfacesStringsPoint(bundleIdsSet)
 	}
 
-	if v, ok := d.GetOk("offset"); ok {
-		paramMap["offset"] = v.(int)
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("limit"); ok {
-		paramMap["limit"] = v.(int)
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("zones"); ok {
-		zones := make([]string, 0)
-		for _, zone := range v.(*schema.Set).List() {
-			zones = append(zones, zone.(string))
-		}
-		paramMap["zones"] = zones
+		zonesSet := v.(*schema.Set).List()
+		paramMap["Zones"] = helper.InterfacesStringsPoint(zonesSet)
 	}
 
 	if v, ok := d.GetOk("filters"); ok {
@@ -261,7 +258,7 @@ func dataSourceTencentCloudLighthouseBundleRead(d *schema.ResourceData, meta int
 		paramMap["filters"] = tmpSet
 	}
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var bundleSet []*lighthouse.Bundle
 
@@ -287,6 +284,7 @@ func dataSourceTencentCloudLighthouseBundleRead(d *schema.ResourceData, meta int
 			if bundle.BundleId != nil {
 				bundleMap["bundle_id"] = bundle.BundleId
 			}
+
 			if bundle.Memory != nil {
 				bundleMap["memory"] = bundle.Memory
 			}
@@ -344,7 +342,7 @@ func dataSourceTencentCloudLighthouseBundleRead(d *schema.ResourceData, meta int
 			}
 
 			if bundle.CPU != nil {
-				bundleMap["cpu"] = bundle.CPU
+				bundleMap["c_p_u"] = bundle.CPU
 			}
 
 			if bundle.InternetMaxBandwidthOut != nil {

@@ -5,11 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_mount_point_attachment" "mount_point_attachment" {
-  access_group_ids = [
-    "ag-bvmzrbsm",
-    "ag-lairqrgr",
-  ]
-  mount_point_id   = "f14mpfy5lh4e-KuiL"
+  mount_point_id = &lt;nil&gt;
+  access_group_ids = &lt;nil&gt;
 }
 ```
 
@@ -18,19 +15,18 @@ Import
 chdfs mount_point_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_chdfs_mount_point_attachment.mount_point_attachment mount_point_id
+terraform import tencentcloud_chdfs_mount_point_attachment.mount_point_attachment mount_point_attachment_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudChdfsMountPointAttachment() *schema.Resource {
@@ -46,7 +42,7 @@ func resourceTencentCloudChdfsMountPointAttachment() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "associate mount point.",
+				Description: "Associate mount point.",
 			},
 
 			"access_group_ids": {
@@ -56,7 +52,7 @@ func resourceTencentCloudChdfsMountPointAttachment() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "associate access group id.",
+				Description: "Associate access group id.",
 			},
 		},
 	}
@@ -70,6 +66,7 @@ func resourceTencentCloudChdfsMountPointAttachmentCreate(d *schema.ResourceData,
 
 	var (
 		request      = chdfs.NewAssociateAccessGroupsRequest()
+		response     = chdfs.NewAssociateAccessGroupsResponse()
 		mountPointId string
 	)
 	if v, ok := d.GetOk("mount_point_id"); ok {
@@ -92,6 +89,7 @@ func resourceTencentCloudChdfsMountPointAttachmentCreate(d *schema.ResourceData,
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -99,6 +97,7 @@ func resourceTencentCloudChdfsMountPointAttachmentCreate(d *schema.ResourceData,
 		return err
 	}
 
+	mountPointId = *response.Response.MountPointId
 	d.SetId(mountPointId)
 
 	return resourceTencentCloudChdfsMountPointAttachmentRead(d, meta)
@@ -114,9 +113,9 @@ func resourceTencentCloudChdfsMountPointAttachmentRead(d *schema.ResourceData, m
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	mountPointId := d.Id()
+	mountPointAttachmentId := d.Id()
 
-	mountPointAttachment, err := service.DescribeChdfsMountPointById(ctx, mountPointId)
+	mountPointAttachment, err := service.DescribeChdfsMountPointAttachmentById(ctx, mountPointId)
 	if err != nil {
 		return err
 	}
@@ -146,15 +145,9 @@ func resourceTencentCloudChdfsMountPointAttachmentDelete(d *schema.ResourceData,
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mountPointAttachmentId := d.Id()
 
-	mountPointId := d.Id()
-
-	mountPoint, err := service.DescribeChdfsMountPointById(ctx, mountPointId)
-	if err != nil {
-		return err
-	}
-
-	if err := service.DeleteChdfsMountPointAttachmentById(ctx, mountPointId, mountPoint.AccessGroupIds); err != nil {
+	if err := service.DeleteChdfsMountPointAttachmentById(ctx, mountPointId); err != nil {
 		return err
 	}
 

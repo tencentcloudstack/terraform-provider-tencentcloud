@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixClsCkafkaConsumerResource_basic(t *testing.T) {
+func TestAccTencentCloudClsCkafkaConsumerResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,31 +29,25 @@ func TestAccTencentCloudNeedFixClsCkafkaConsumerResource_basic(t *testing.T) {
 const testAccClsCkafkaConsumer = `
 
 resource "tencentcloud_cls_ckafka_consumer" "ckafka_consumer" {
-  compression  = 1
+  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
   need_content = true
-  topic_id     = "7e34a3a7-635e-4da8-9005-88106c1fde69"
-
-  ckafka {
-    instance_id   = "ckafka-qzoeaqx8"
-    instance_name = "ckafka-instance"
-    topic_id      = "topic-c6tm4kpm"
-    topic_name    = "name"
-    vip           = "172.16.112.23"
-    vport         = "9092"
-  }
-
   content {
-    enable_tag         = true
-    meta_fields        = [
-      "__FILENAME__",
-      "__HOSTNAME__",
-      "__PKGID__",
-      "__SOURCE__",
-      "__TIMESTAMP__",
-    ]
-    tag_json_not_tiled = true
-    timestamp_accuracy = 2
+		enable_tag = true
+		meta_fields = 
+		tag_json_not_tiled = true
+		timestamp_accuracy = 1
+
   }
+  ckafka {
+		vip = "1.1.1.1"
+		vport = "8000"
+		instance_id = "ckafka-xxxxx"
+		instance_name = "test"
+		topic_id = "topic-5cd3a17e-fb0b-418c-afd7-77b3653974xx"
+		topic_name = "test"
+
+  }
+  compression = 0
 }
 
 `

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDcAccessPointsDataSource_basic(t *testing.T) {
@@ -25,7 +24,7 @@ func TestAccTencentCloudDcAccessPointsDataSource_basic(t *testing.T) {
 const testAccDcAccessPointsDataSource = `
 
 data "tencentcloud_dc_access_points" "access_points" {
-  region_id = "ap-guangzhou"
-}
+  region_id = ""
+  }
 
 `

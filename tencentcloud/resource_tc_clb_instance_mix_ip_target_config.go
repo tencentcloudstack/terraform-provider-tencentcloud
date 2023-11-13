@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_instance_mix_ip_target_config" "instance_mix_ip_target_config" {
-  load_balancer_id = "lb-5dnrkgry"
-  mix_ip_target = false
+  load_balancer_ids =
+  mix_ip_target =
 }
 ```
 
@@ -15,19 +15,19 @@ Import
 clb instance_mix_ip_target_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_clb_instance_mix_ip_target_config.instance_mix_ip_target_config instance_id
+terraform import tencentcloud_clb_instance_mix_ip_target_config.instance_mix_ip_target_config instance_mix_ip_target_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudClbInstanceMixIpTargetConfig() *schema.Resource {
@@ -40,11 +40,13 @@ func resourceTencentCloudClbInstanceMixIpTargetConfig() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"load_balancer_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "ID of CLB instances to be queried.",
+			"load_balancer_ids": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "List of IDs of CLB instances to be queried.",
 			},
 
 			"mix_ip_target": {
@@ -60,9 +62,7 @@ func resourceTencentCloudClbInstanceMixIpTargetConfigCreate(d *schema.ResourceDa
 	defer logElapsed("resource.tencentcloud_clb_instance_mix_ip_target_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	lbId := d.Get("load_balancer_id").(string)
-
-	d.SetId(lbId)
+	d.SetId()
 
 	return resourceTencentCloudClbInstanceMixIpTargetConfigUpdate(d, meta)
 }
@@ -77,25 +77,25 @@ func resourceTencentCloudClbInstanceMixIpTargetConfigRead(d *schema.ResourceData
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	lbId := d.Id()
+	instanceMixIpTargetConfigId := d.Id()
 
-	instance, err := service.DescribeLoadBalancerById(ctx, lbId)
+	instanceMixIpTargetConfig, err := service.DescribeClbInstanceMixIpTargetConfigById(ctx, loadBalancerIds)
 	if err != nil {
 		return err
 	}
 
-	if instance == nil {
+	if instanceMixIpTargetConfig == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `ClbInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `ClbInstanceMixIpTargetConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if instance.LoadBalancerId != nil {
-		_ = d.Set("load_balancer_id", instance.LoadBalancerId)
+	if instanceMixIpTargetConfig.LoadBalancerIds != nil {
+		_ = d.Set("load_balancer_ids", instanceMixIpTargetConfig.LoadBalancerIds)
 	}
 
-	if instance.MixIpTarget != nil {
-		_ = d.Set("mix_ip_target", instance.MixIpTarget)
+	if instanceMixIpTargetConfig.MixIpTarget != nil {
+		_ = d.Set("mix_ip_target", instanceMixIpTargetConfig.MixIpTarget)
 	}
 
 	return nil
@@ -109,15 +109,18 @@ func resourceTencentCloudClbInstanceMixIpTargetConfigUpdate(d *schema.ResourceDa
 
 	request := clb.NewModifyLoadBalancerMixIpTargetRequest()
 
-	lbId := d.Id()
+	instanceMixIpTargetConfigId := d.Id()
 
-	request.LoadBalancerIds = []*string{&lbId}
+	request.LoadBalancerIds = &loadBalancerIds
 
-	if v, ok := d.GetOkExists("mix_ip_target"); ok {
-		request.MixIpTarget = helper.Bool(v.(bool))
+	immutableArgs := []string{"load_balancer_ids", "mix_ip_target"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	var taskId string
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerMixIpTarget(request)
 		if e != nil {
@@ -125,7 +128,6 @@ func resourceTencentCloudClbInstanceMixIpTargetConfigUpdate(d *schema.ResourceDa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		taskId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
@@ -133,9 +135,12 @@ func resourceTencentCloudClbInstanceMixIpTargetConfigUpdate(d *schema.ResourceDa
 		return err
 	}
 
-	retryErr := waitForTaskFinish(taskId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-	if retryErr != nil {
-		return retryErr
+	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"0"}, 60*readRetryTimeout, time.Second, service.ClbInstanceMixIpTargetConfigStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudClbInstanceMixIpTargetConfigRead(d, meta)

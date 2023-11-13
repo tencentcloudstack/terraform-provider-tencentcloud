@@ -5,24 +5,25 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_cron_job" "cron_job" {
-  name = "iac-cron_job-update"
-  project_id = "project-7qkzxhea"
-  scenario_id = "scenario-c22lqb1w"
-  scenario_name = "pts-js(2022-11-10 21:53:53)"
-  frequency_type = 2
-  cron_expression = "* 1 * * *"
-  job_owner = "userName"
-  # end_time = ""
-  notice_id = "notice-vp6i38jt"
-  note = "desc"
-}
-
+  name = &lt;nil&gt;
+  project_id = &lt;nil&gt;
+  scenario_id = &lt;nil&gt;
+  scenario_name = &lt;nil&gt;
+  frequency_type = &lt;nil&gt;
+  cron_expression = &lt;nil&gt;
+  job_owner = &lt;nil&gt;
+  end_time = &lt;nil&gt;
+  notice_id = &lt;nil&gt;
+  note = &lt;nil&gt;
+              }
 ```
+
 Import
 
-pts cron_job can be imported using the projectId#cronJobId, e.g.
+pts cron_job can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_pts_cron_job.cron_job project-7qkzxhea#scenario-c22lqb1w
+terraform import tencentcloud_pts_cron_job.cron_job cron_job_id
 ```
 */
 package tencentcloud
@@ -30,19 +31,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudPtsCronJob() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudPtsCronJobRead,
 		Create: resourceTencentCloudPtsCronJobCreate,
+		Read:   resourceTencentCloudPtsCronJobRead,
 		Update: resourceTencentCloudPtsCronJobUpdate,
 		Delete: resourceTencentCloudPtsCronJobDelete,
 		Importer: &schema.ResourceImporter{
@@ -50,110 +50,104 @@ func resourceTencentCloudPtsCronJob() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Cron Job Name.",
 			},
 
 			"project_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Project Id.",
 			},
 
 			"scenario_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Scenario Id.",
 			},
 
 			"scenario_name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Scenario Name.",
 			},
 
 			"frequency_type": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "Execution frequency type, `1`: execute only once; `2`: daily granularity; `3`: weekly granularity; `4`: advanced.",
 			},
 
 			"cron_expression": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Cron expression, When setting cron_expression at that time, frequency_type must be greater than 1.",
+				Type:        schema.TypeString,
+				Description: "Cron expression.",
 			},
 
 			"job_owner": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Job Owner.",
 			},
 
 			"end_time": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "End Time; type: Timestamp ISO8601.",
 			},
 
 			"notice_id": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Notice ID.",
 			},
 
 			"note": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Note.",
 			},
 
 			"abort_reason": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Reason for suspension.",
 			},
 
 			"status": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Scheduled task status.",
 			},
 
 			"created_at": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creation time; type: Timestamp ISO8601.",
 			},
 
 			"updated_at": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Update time; type: Timestamp ISO8601.",
 			},
 
 			"app_id": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "App ID.",
 			},
 
 			"uin": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "User ID.",
 			},
 
-			"cron_job_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Cron job ID.",
-			},
-
 			"sub_account_uin": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Sub-user ID.",
 			},
 		},
@@ -168,11 +162,10 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 
 	var (
 		request   = pts.NewCreateCronJobRequest()
-		response  *pts.CreateCronJobResponse
+		response  = pts.NewCreateCronJobResponse()
 		cronJobId string
 		projectId string
 	)
-
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
@@ -190,8 +183,8 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 		request.ScenarioName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("frequency_type"); ok {
-		request.FrequencyType = helper.Int64(int64(v.(int)))
+	if v, ok := d.GetOkExists("frequency_type"); ok {
+		request.FrequencyType = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("cron_expression"); ok {
@@ -219,21 +212,19 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create pts cronJob failed, reason:%+v", logId, err)
 		return err
 	}
 
 	cronJobId = *response.Response.CronJobId
+	d.SetId(strings.Join([]string{cronJobId, projectId}, FILED_SP))
 
-	d.SetId(projectId + FILED_SP + cronJobId)
 	return resourceTencentCloudPtsCronJobRead(d, meta)
 }
 
@@ -242,6 +233,7 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -250,21 +242,19 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	projectId := idSplit[0]
-	cronJobId := idSplit[1]
+	cronJobId := idSplit[0]
+	projectId := idSplit[1]
 
-	cronJob, err := service.DescribePtsCronJob(ctx, cronJobId, projectId)
-
+	cronJob, err := service.DescribePtsCronJobById(ctx, cronJobId, projectId)
 	if err != nil {
 		return err
 	}
 
 	if cronJob == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `cronJob` %s does not exist", cronJobId)
+		log.Printf("[WARN]%s resource `PtsCronJob` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-
-	_ = d.Set("cron_job_id", cronJobId)
 
 	if cronJob.Name != nil {
 		_ = d.Set("name", cronJob.Name)
@@ -349,46 +339,78 @@ func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	projectId := idSplit[0]
-	cronJobId := idSplit[1]
+	cronJobId := idSplit[0]
+	projectId := idSplit[1]
 
 	request.CronJobId = &cronJobId
 	request.ProjectId = &projectId
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = helper.String(v.(string))
+	immutableArgs := []string{"name", "project_id", "scenario_id", "scenario_name", "frequency_type", "cron_expression", "job_owner", "end_time", "notice_id", "note", "abort_reason", "status", "created_at", "updated_at", "app_id", "uin", "sub_account_uin"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOk("scenario_id"); ok {
-		request.ScenarioId = helper.String(v.(string))
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("scenario_name"); ok {
-		request.ScenarioName = helper.String(v.(string))
+	if d.HasChange("project_id") {
+		if v, ok := d.GetOk("project_id"); ok {
+			request.ProjectId = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("frequency_type"); ok {
-		request.FrequencyType = helper.Int64(int64(v.(int)))
+	if d.HasChange("scenario_id") {
+		if v, ok := d.GetOk("scenario_id"); ok {
+			request.ScenarioId = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("cron_expression"); ok {
-		request.CronExpression = helper.String(v.(string))
+	if d.HasChange("scenario_name") {
+		if v, ok := d.GetOk("scenario_name"); ok {
+			request.ScenarioName = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("job_owner"); ok {
-		request.JobOwner = helper.String(v.(string))
+	if d.HasChange("frequency_type") {
+		if v, ok := d.GetOkExists("frequency_type"); ok {
+			request.FrequencyType = helper.IntUint64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOk("end_time"); ok {
-		request.EndTime = helper.String(v.(string))
+	if d.HasChange("cron_expression") {
+		if v, ok := d.GetOk("cron_expression"); ok {
+			request.CronExpression = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("notice_id"); ok {
-		request.NoticeId = helper.String(v.(string))
+	if d.HasChange("job_owner") {
+		if v, ok := d.GetOk("job_owner"); ok {
+			request.JobOwner = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("note"); ok {
-		request.Note = helper.String(v.(string))
+	if d.HasChange("end_time") {
+		if v, ok := d.GetOk("end_time"); ok {
+			request.EndTime = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("notice_id") {
+		if v, ok := d.GetOk("notice_id"); ok {
+			request.NoticeId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("note") {
+		if v, ok := d.GetOk("note"); ok {
+			request.Note = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -396,14 +418,12 @@ func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create pts cronJob failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update pts cronJob failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -418,13 +438,12 @@ func resourceTencentCloudPtsCronJobDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	projectId := idSplit[0]
-	cronJobId := idSplit[1]
+	cronJobId := idSplit[0]
+	projectId := idSplit[1]
 
 	if err := service.DeletePtsCronJobById(ctx, cronJobId, projectId); err != nil {
 		return err

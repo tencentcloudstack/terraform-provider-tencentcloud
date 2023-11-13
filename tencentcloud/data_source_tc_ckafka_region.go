@@ -5,15 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_region" "region" {
-}
+  business = ""
+  cdc_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
-	"errors"
-	"strconv"
-
+	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -24,6 +24,18 @@ func dataSourceTencentCloudCkafkaRegion() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCkafkaRegionRead,
 		Schema: map[string]*schema.Schema{
+			"business": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Ignore this.",
+			},
+
+			"cdc_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Ignore this.",
+			},
+
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -33,17 +45,17 @@ func dataSourceTencentCloudCkafkaRegion() *schema.Resource {
 						"region_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "region ID.",
+							Description: "Region ID.",
 						},
 						"region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "geographical name.",
+							Description: "Geographical name.",
 						},
 						"area_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "area name.",
+							Description: "Area name.",
 						},
 						"region_code": {
 							Type:        schema.TypeString,
@@ -53,7 +65,7 @@ func dataSourceTencentCloudCkafkaRegion() *schema.Resource {
 						"region_code_v3": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Region Code(V3 version).",
+							Description: "Region Code（V3 version）.",
 						},
 						"support": {
 							Type:        schema.TypeString,
@@ -87,17 +99,29 @@ func dataSourceTencentCloudCkafkaRegionRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("data_source.tencentcloud_ckafka_region.read")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("business"); ok {
+		paramMap["Business"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("cdc_id"); ok {
+		paramMap["CdcId"] = helper.String(v.(string))
+	}
+
+	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	var result []*ckafka.Region
-	request := ckafka.NewDescribeRegionRequest()
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().DescribeRegion(request)
+		result, e := service.DescribeCkafkaRegionByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		if response == nil || response.Response == nil {
-			return retryError(errors.New("Response is null"))
-		}
-		result = response.Response.Result
+		result = result
 		return nil
 	})
 	if err != nil {
@@ -143,7 +167,7 @@ func dataSourceTencentCloudCkafkaRegionRead(d *schema.ResourceData, meta interfa
 				regionMap["multi_zone"] = region.MultiZone
 			}
 
-			ids = append(ids, strconv.FormatInt(*region.RegionId, 10))
+			ids = append(ids, *region.IdsHash)
 			tmpList = append(tmpList, regionMap)
 		}
 

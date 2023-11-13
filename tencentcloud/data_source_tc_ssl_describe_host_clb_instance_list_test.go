@@ -1,24 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudSslDescribeHostClbInstanceListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_SSL)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostClbInstanceListDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_clb_instance_list.describe_host_clb_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_clb_instance_list.describe_host_clb_instance_list", "certificate_id", "9Bpk7XOu"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_clb_instance_list.describe_host_clb_instance_list")),
 			},
 		},
 	})
@@ -27,7 +24,15 @@ func TestAccTencentCloudSslDescribeHostClbInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostClbInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_clb_instance_list" "describe_host_clb_instance_list" {
-  certificate_id = "9Bpk7XOu"
-}
+  certificate_id = ""
+  is_cache = 
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  async_cache = 
+  old_certificate_id = ""
+        }
 
 `

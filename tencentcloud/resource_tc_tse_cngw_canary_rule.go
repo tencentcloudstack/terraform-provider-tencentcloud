@@ -4,69 +4,40 @@ Provides a resource to create a tse cngw_canary_rule
 Example Usage
 
 ```hcl
-resource "tencentcloud_tse_cngw_service" "cngw_service" {
-  gateway_id = "gateway-ddbb709b"
-  name       = "terraform-test"
-  path       = "/test"
-  protocol   = "http"
-  retries    = 5
-  tags = {
-    "created" = "terraform"
-  }
-  timeout       = 6000
-  upstream_type = "IPList"
-
-  upstream_info {
-    algorithm                   = "round-robin"
-    auto_scaling_cvm_port       = 80
-    auto_scaling_group_id       = "asg-519acdug"
-    auto_scaling_hook_status    = "Normal"
-    auto_scaling_tat_cmd_status = "Normal"
-    port                        = 0
-    slow_start                  = 20
-
-    targets {
-      health = "HEALTHCHECKS_OFF"
-      host   = "192.168.0.1"
-      port   = 80
-      weight = 100
-    }
-  }
-}
-
 resource "tencentcloud_tse_cngw_canary_rule" "cngw_canary_rule" {
-  gateway_id = tencentcloud_tse_cngw_service.cngw_service.gateway_id
-  service_id = tencentcloud_tse_cngw_service.cngw_service.service_id
-  tags       = {
-    "created" = "terraform"
-  }
-
+  gateway_id = "gateway-xxxxxx"
+  service_id = "451a9920-e67a-4519-af41-fccac0e72005"
   canary_rule {
-    enabled  = true
-    priority = 100
+		priority = 10
+		enabled = true
+		condition_list {
+			type = ""
+			key = ""
+			operator = ""
+			value = ""
+			delimiter = ""
+			global_config_id = ""
+			global_config_name = ""
+		}
+		balanced_service_list {
+			service_i_d = ""
+			service_name = ""
+			upstream_name = ""
+			percent =
+		}
+		service_id = ""
+		service_name = ""
 
-    balanced_service_list {
-      percent       = 100
-      service_id    = tencentcloud_tse_cngw_service.cngw_service.service_id
-      service_name  = tencentcloud_tse_cngw_service.cngw_service.name
-    }
-
-    condition_list {
-      key      = "test"
-      operator = "eq"
-      type     = "query"
-      value    = "1"
-    }
   }
 }
 ```
 
 Import
 
-tse cngw_canary_rule can be imported using the gatewayId#serviceId#priority, e.g.
+tse cngw_canary_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tse_cngw_canary_rule.cngw_canary_rule gateway-ddbb709b#b6017eaf-2363-481e-9e93-8d65aaf498cd#100
+terraform import tencentcloud_tse_cngw_canary_rule.cngw_canary_rule cngw_canary_rule_id
 ```
 */
 package tencentcloud
@@ -74,14 +45,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTseCngwCanaryRule() *schema.Resource {
@@ -97,73 +65,72 @@ func resourceTencentCloudTseCngwCanaryRule() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
 			"service_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "service ID.",
+				Description: "Service ID.",
 			},
 
 			"canary_rule": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "canary rule configuration.",
+				Description: "Canary rule configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"priority": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							ForceNew:    true,
-							Description: "priority. The value ranges from 0 to 100; the larger the value, the higher the priority; the priority cannot be repeated between different rules.",
+							Description: "Priority. The value ranges from 0 to 100; the larger the value, the higher the priority; the priority cannot be repeated between different rules.",
 						},
 						"enabled": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "the status of canary rule.",
+							Description: "The status of canary rule.",
 						},
 						"condition_list": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "parameter matching condition list.",
+							Description: "Parameter matching condition list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "type.Reference value:`path`,`method`,`query`,`header`,`cookie`,`body`,`system`.",
+										Description: "Type.Reference value:- path- method- query- header- cookie- body- system.",
 									},
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "parameter name.",
+										Description: "Parameter name.",
 									},
 									"operator": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "operator.Reference value:`le`,`eq`,`lt`,`ne`,`ge`,`gt`,`regex`,`exists`,`in`,`not in`,`prefix`,`exact`,`regex`.",
+										Description: "Operator.Reference value:- le- eq- lt- ne- ge- gt- regex- exists- in- not in- prefix- exact- regex.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "parameter value.",
+										Description: "Parameter value.",
 									},
 									"delimiter": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "delimiter. valid when operator is in or not in, reference value:`,`, `;`,`\\n`.",
+										Description: "Delimiter. valid when operator is in or not in, reference value:- ,- ;- n.",
 									},
 									"global_config_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "global configuration ID.",
+										Description: "Global configuration ID.",
 									},
 									"global_config_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "global configuration name.",
+										Description: "Global configuration name.",
 									},
 								},
 							},
@@ -171,28 +138,28 @@ func resourceTencentCloudTseCngwCanaryRule() *schema.Resource {
 						"balanced_service_list": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "service weight configuration.",
+							Description: "Service weight configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"service_id": {
+									"service_i_d": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "service ID, required when used as an input parameter.",
+										Description: "Service ID, required when used as an input parameter.",
 									},
 									"service_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "service name, meaningless when used as an input parameter.",
+										Description: "Service name, meaningless when used as an input parameter.",
 									},
 									"upstream_name": {
 										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "upstream name, meaningless when used as an input parameter.",
+										Optional:    true,
+										Description: "Upstream name, meaningless when used as an input parameter.",
 									},
 									"percent": {
 										Type:        schema.TypeFloat,
 										Optional:    true,
-										Description: "percent, 10 is 10%, valid values:0 to 100.",
+										Description: "Percent, 10 is 10%，valid values:0 to 100.",
 									},
 								},
 							},
@@ -200,21 +167,15 @@ func resourceTencentCloudTseCngwCanaryRule() *schema.Resource {
 						"service_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "service ID.",
+							Description: "Service ID.",
 						},
 						"service_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "service name.",
+							Description: "Service name.",
 						},
 					},
 				},
-			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
 			},
 		},
 	}
@@ -228,9 +189,8 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 
 	var (
 		request   = tse.NewCreateCloudNativeAPIGatewayCanaryRuleRequest()
+		response  = tse.NewCreateCloudNativeAPIGatewayCanaryRuleResponse()
 		gatewayId string
-		serviceId string
-		priority  int
 	)
 	if v, ok := d.GetOk("gateway_id"); ok {
 		gatewayId = v.(string)
@@ -238,14 +198,12 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("service_id"); ok {
-		serviceId = v.(string)
 		request.ServiceId = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "canary_rule"); ok {
 		cloudNativeAPIGatewayCanaryRule := tse.CloudNativeAPIGatewayCanaryRule{}
 		if v, ok := dMap["priority"]; ok {
-			priority = v.(int)
 			cloudNativeAPIGatewayCanaryRule.Priority = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["enabled"]; ok {
@@ -283,11 +241,14 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 			for _, item := range v.([]interface{}) {
 				balancedServiceListMap := item.(map[string]interface{})
 				cloudNativeAPIGatewayBalancedService := tse.CloudNativeAPIGatewayBalancedService{}
-				if v, ok := balancedServiceListMap["service_id"]; ok {
+				if v, ok := balancedServiceListMap["service_i_d"]; ok {
 					cloudNativeAPIGatewayBalancedService.ServiceID = helper.String(v.(string))
 				}
 				if v, ok := balancedServiceListMap["service_name"]; ok {
 					cloudNativeAPIGatewayBalancedService.ServiceName = helper.String(v.(string))
+				}
+				if v, ok := balancedServiceListMap["upstream_name"]; ok {
+					cloudNativeAPIGatewayBalancedService.UpstreamName = helper.String(v.(string))
 				}
 				if v, ok := balancedServiceListMap["percent"]; ok {
 					cloudNativeAPIGatewayBalancedService.Percent = helper.Float64(v.(float64))
@@ -311,6 +272,7 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -318,17 +280,8 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	d.SetId(gatewayId + FILED_SP + serviceId + FILED_SP + strconv.Itoa(priority))
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tse:%s:uin/:cngw_canary_rule/%s", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
+	gatewayId = *response.Response.GatewayId
+	d.SetId(gatewayId)
 
 	return resourceTencentCloudTseCngwCanaryRuleRead(d, meta)
 }
@@ -338,19 +291,14 @@ func resourceTencentCloudTseCngwCanaryRuleRead(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	gatewayId := idSplit[0]
-	serviceId := idSplit[1]
-	priority := idSplit[2]
+	cngwCanaryRuleId := d.Id()
 
-	cngwCanaryRule, err := service.DescribeTseCngwCanaryRuleById(ctx, gatewayId, serviceId, priority)
+	cngwCanaryRule, err := service.DescribeTseCngwCanaryRuleById(ctx, gatewayId)
 	if err != nil {
 		return err
 	}
@@ -361,23 +309,28 @@ func resourceTencentCloudTseCngwCanaryRuleRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	_ = d.Set("gateway_id", gatewayId)
-	_ = d.Set("service_id", serviceId)
+	if cngwCanaryRule.GatewayId != nil {
+		_ = d.Set("gateway_id", cngwCanaryRule.GatewayId)
+	}
 
-	if cngwCanaryRule != nil {
+	if cngwCanaryRule.ServiceId != nil {
+		_ = d.Set("service_id", cngwCanaryRule.ServiceId)
+	}
+
+	if cngwCanaryRule.CanaryRule != nil {
 		canaryRuleMap := map[string]interface{}{}
 
-		if cngwCanaryRule.Priority != nil {
-			canaryRuleMap["priority"] = cngwCanaryRule.Priority
+		if cngwCanaryRule.CanaryRule.Priority != nil {
+			canaryRuleMap["priority"] = cngwCanaryRule.CanaryRule.Priority
 		}
 
-		if cngwCanaryRule.Enabled != nil {
-			canaryRuleMap["enabled"] = cngwCanaryRule.Enabled
+		if cngwCanaryRule.CanaryRule.Enabled != nil {
+			canaryRuleMap["enabled"] = cngwCanaryRule.CanaryRule.Enabled
 		}
 
-		if cngwCanaryRule.ConditionList != nil {
+		if cngwCanaryRule.CanaryRule.ConditionList != nil {
 			conditionListList := []interface{}{}
-			for _, conditionList := range cngwCanaryRule.ConditionList {
+			for _, conditionList := range cngwCanaryRule.CanaryRule.ConditionList {
 				conditionListMap := map[string]interface{}{}
 
 				if conditionList.Type != nil {
@@ -411,16 +364,16 @@ func resourceTencentCloudTseCngwCanaryRuleRead(d *schema.ResourceData, meta inte
 				conditionListList = append(conditionListList, conditionListMap)
 			}
 
-			canaryRuleMap["condition_list"] = conditionListList
+			canaryRuleMap["condition_list"] = []interface{}{conditionListList}
 		}
 
-		if cngwCanaryRule.BalancedServiceList != nil {
+		if cngwCanaryRule.CanaryRule.BalancedServiceList != nil {
 			balancedServiceListList := []interface{}{}
-			for _, balancedServiceList := range cngwCanaryRule.BalancedServiceList {
+			for _, balancedServiceList := range cngwCanaryRule.CanaryRule.BalancedServiceList {
 				balancedServiceListMap := map[string]interface{}{}
 
 				if balancedServiceList.ServiceID != nil {
-					balancedServiceListMap["service_id"] = balancedServiceList.ServiceID
+					balancedServiceListMap["service_i_d"] = balancedServiceList.ServiceID
 				}
 
 				if balancedServiceList.ServiceName != nil {
@@ -438,27 +391,19 @@ func resourceTencentCloudTseCngwCanaryRuleRead(d *schema.ResourceData, meta inte
 				balancedServiceListList = append(balancedServiceListList, balancedServiceListMap)
 			}
 
-			canaryRuleMap["balanced_service_list"] = balancedServiceListList
+			canaryRuleMap["balanced_service_list"] = []interface{}{balancedServiceListList}
 		}
 
-		if cngwCanaryRule.ServiceId != nil {
-			canaryRuleMap["service_id"] = cngwCanaryRule.ServiceId
+		if cngwCanaryRule.CanaryRule.ServiceId != nil {
+			canaryRuleMap["service_id"] = cngwCanaryRule.CanaryRule.ServiceId
 		}
 
-		if cngwCanaryRule.ServiceName != nil {
-			canaryRuleMap["service_name"] = cngwCanaryRule.ServiceName
+		if cngwCanaryRule.CanaryRule.ServiceName != nil {
+			canaryRuleMap["service_name"] = cngwCanaryRule.CanaryRule.ServiceName
 		}
 
 		_ = d.Set("canary_rule", []interface{}{canaryRuleMap})
 	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "tse", "cngw_canary_rule", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -471,92 +416,97 @@ func resourceTencentCloudTseCngwCanaryRuleUpdate(d *schema.ResourceData, meta in
 
 	request := tse.NewModifyCloudNativeAPIGatewayCanaryRuleRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	gatewayId := idSplit[0]
-	serviceId := idSplit[1]
-	priority := idSplit[2]
-
-	priorityInt64, err := strconv.ParseInt(priority, 10, 64)
-	if err != nil {
-		return err
-	}
+	cngwCanaryRuleId := d.Id()
 
 	request.GatewayId = &gatewayId
-	request.ServiceId = &serviceId
-	request.Priority = &priorityInt64
 
-	immutableArgs := []string{"gateway_id", "service_id"}
+	immutableArgs := []string{"gateway_id", "service_id", "canary_rule"}
+
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "canary_rule"); ok {
-		cloudNativeAPIGatewayCanaryRule := tse.CloudNativeAPIGatewayCanaryRule{}
-		if v, ok := dMap["priority"]; ok {
-			cloudNativeAPIGatewayCanaryRule.Priority = helper.IntInt64(v.(int))
+	if d.HasChange("gateway_id") {
+		if v, ok := d.GetOk("gateway_id"); ok {
+			request.GatewayId = helper.String(v.(string))
 		}
-		if v, ok := dMap["enabled"]; ok {
-			cloudNativeAPIGatewayCanaryRule.Enabled = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["condition_list"]; ok {
-			for _, item := range v.([]interface{}) {
-				conditionListMap := item.(map[string]interface{})
-				cloudNativeAPIGatewayCanaryRuleCondition := tse.CloudNativeAPIGatewayCanaryRuleCondition{}
-				if v, ok := conditionListMap["type"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.Type = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["key"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.Key = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["operator"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.Operator = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["value"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.Value = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["delimiter"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.Delimiter = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["global_config_id"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.GlobalConfigId = helper.String(v.(string))
-				}
-				if v, ok := conditionListMap["global_config_name"]; ok {
-					cloudNativeAPIGatewayCanaryRuleCondition.GlobalConfigName = helper.String(v.(string))
-				}
-				cloudNativeAPIGatewayCanaryRule.ConditionList = append(cloudNativeAPIGatewayCanaryRule.ConditionList, &cloudNativeAPIGatewayCanaryRuleCondition)
-			}
-		}
-		if v, ok := dMap["balanced_service_list"]; ok {
-			for _, item := range v.([]interface{}) {
-				balancedServiceListMap := item.(map[string]interface{})
-				cloudNativeAPIGatewayBalancedService := tse.CloudNativeAPIGatewayBalancedService{}
-				if v, ok := balancedServiceListMap["service_id"]; ok {
-					cloudNativeAPIGatewayBalancedService.ServiceID = helper.String(v.(string))
-				}
-				if v, ok := balancedServiceListMap["service_name"]; ok {
-					cloudNativeAPIGatewayBalancedService.ServiceName = helper.String(v.(string))
-				}
-				if v, ok := balancedServiceListMap["percent"]; ok {
-					cloudNativeAPIGatewayBalancedService.Percent = helper.Float64(v.(float64))
-				}
-				cloudNativeAPIGatewayCanaryRule.BalancedServiceList = append(cloudNativeAPIGatewayCanaryRule.BalancedServiceList, &cloudNativeAPIGatewayBalancedService)
-			}
-		}
-		if v, ok := dMap["service_id"]; ok {
-			cloudNativeAPIGatewayCanaryRule.ServiceId = helper.String(v.(string))
-		}
-		if v, ok := dMap["service_name"]; ok {
-			cloudNativeAPIGatewayCanaryRule.ServiceName = helper.String(v.(string))
-		}
-		request.CanaryRule = &cloudNativeAPIGatewayCanaryRule
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if d.HasChange("service_id") {
+		if v, ok := d.GetOk("service_id"); ok {
+			request.ServiceId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("canary_rule") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "canary_rule"); ok {
+			cloudNativeAPIGatewayCanaryRule := tse.CloudNativeAPIGatewayCanaryRule{}
+			if v, ok := dMap["priority"]; ok {
+				cloudNativeAPIGatewayCanaryRule.Priority = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["enabled"]; ok {
+				cloudNativeAPIGatewayCanaryRule.Enabled = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["condition_list"]; ok {
+				for _, item := range v.([]interface{}) {
+					conditionListMap := item.(map[string]interface{})
+					cloudNativeAPIGatewayCanaryRuleCondition := tse.CloudNativeAPIGatewayCanaryRuleCondition{}
+					if v, ok := conditionListMap["type"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.Type = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["key"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.Key = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["operator"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.Operator = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["value"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.Value = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["delimiter"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.Delimiter = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["global_config_id"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.GlobalConfigId = helper.String(v.(string))
+					}
+					if v, ok := conditionListMap["global_config_name"]; ok {
+						cloudNativeAPIGatewayCanaryRuleCondition.GlobalConfigName = helper.String(v.(string))
+					}
+					cloudNativeAPIGatewayCanaryRule.ConditionList = append(cloudNativeAPIGatewayCanaryRule.ConditionList, &cloudNativeAPIGatewayCanaryRuleCondition)
+				}
+			}
+			if v, ok := dMap["balanced_service_list"]; ok {
+				for _, item := range v.([]interface{}) {
+					balancedServiceListMap := item.(map[string]interface{})
+					cloudNativeAPIGatewayBalancedService := tse.CloudNativeAPIGatewayBalancedService{}
+					if v, ok := balancedServiceListMap["service_i_d"]; ok {
+						cloudNativeAPIGatewayBalancedService.ServiceID = helper.String(v.(string))
+					}
+					if v, ok := balancedServiceListMap["service_name"]; ok {
+						cloudNativeAPIGatewayBalancedService.ServiceName = helper.String(v.(string))
+					}
+					if v, ok := balancedServiceListMap["upstream_name"]; ok {
+						cloudNativeAPIGatewayBalancedService.UpstreamName = helper.String(v.(string))
+					}
+					if v, ok := balancedServiceListMap["percent"]; ok {
+						cloudNativeAPIGatewayBalancedService.Percent = helper.Float64(v.(float64))
+					}
+					cloudNativeAPIGatewayCanaryRule.BalancedServiceList = append(cloudNativeAPIGatewayCanaryRule.BalancedServiceList, &cloudNativeAPIGatewayBalancedService)
+				}
+			}
+			if v, ok := dMap["service_id"]; ok {
+				cloudNativeAPIGatewayCanaryRule.ServiceId = helper.String(v.(string))
+			}
+			if v, ok := dMap["service_name"]; ok {
+				cloudNativeAPIGatewayCanaryRule.ServiceName = helper.String(v.(string))
+			}
+			request.CanaryRule = &cloudNativeAPIGatewayCanaryRule
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().ModifyCloudNativeAPIGatewayCanaryRule(request)
 		if e != nil {
 			return retryError(e)
@@ -570,18 +520,6 @@ func resourceTencentCloudTseCngwCanaryRuleUpdate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tse", "cngw_canary_rule", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTseCngwCanaryRuleRead(d, meta)
 }
 
@@ -593,15 +531,9 @@ func resourceTencentCloudTseCngwCanaryRuleDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	gatewayId := idSplit[0]
-	serviceId := idSplit[1]
-	priority := idSplit[2]
+	cngwCanaryRuleId := d.Id()
 
-	if err := service.DeleteTseCngwCanaryRuleById(ctx, gatewayId, serviceId, priority); err != nil {
+	if err := service.DeleteTseCngwCanaryRuleById(ctx, gatewayId); err != nil {
 		return err
 	}
 

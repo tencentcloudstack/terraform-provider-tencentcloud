@@ -5,16 +5,26 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_param_template" "param_template" {
-    db_mode              = "SERVERLESS"
-    engine_version       = "5.7"
-    template_description = "terraform-template"
-    template_name        = "terraform-template"
+  template_name = ""
+  engine_version = "5.7"
+  template_description = ""
+  template_id = 1000
+  db_mode = "NORMAL"
+  param_list {
+		param_name = ""
+		current_value = ""
+		old_value = ""
 
-    param_list {
-        current_value = "-1"
-        param_name    = "optimizer_trace_offset"
-    }
+  }
 }
+```
+
+Import
+
+cynosdb param_template can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_param_template.param_template param_template_id
 ```
 */
 package tencentcloud
@@ -22,13 +32,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbParamTemplate() *schema.Resource {
@@ -37,7 +45,9 @@ func resourceTencentCloudCynosdbParamTemplate() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbParamTemplateRead,
 		Update: resourceTencentCloudCynosdbParamTemplateUpdate,
 		Delete: resourceTencentCloudCynosdbParamTemplateDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"template_name": {
 				Required:    true,
@@ -59,7 +69,6 @@ func resourceTencentCloudCynosdbParamTemplate() *schema.Resource {
 
 			"template_id": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Optional parameter, template ID to be copied.",
 			},
@@ -72,22 +81,24 @@ func resourceTencentCloudCynosdbParamTemplate() *schema.Resource {
 
 			"param_list": {
 				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeSet,
-				Description: "parameter list.",
+				Type:        schema.TypeList,
+				Description: "Parameter list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"param_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
+							Required:    true,
 							Description: "Parameter Name.",
 						},
 						"current_value": {
 							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
+							Required:    true,
 							Description: "Current value.",
+						},
+						"old_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Original value.",
 						},
 					},
 				},
@@ -103,8 +114,9 @@ func resourceTencentCloudCynosdbParamTemplateCreate(d *schema.ResourceData, meta
 	logId := getLogId(contextNil)
 
 	var (
-		request  = cynosdb.NewCreateParamTemplateRequest()
-		response = cynosdb.NewCreateParamTemplateResponse()
+		request    = cynosdb.NewCreateParamTemplateRequest()
+		response   = cynosdb.NewCreateParamTemplateResponse()
+		templateId int
 	)
 	if v, ok := d.GetOk("template_name"); ok {
 		request.TemplateName = helper.String(v.(string))
@@ -119,6 +131,7 @@ func resourceTencentCloudCynosdbParamTemplateCreate(d *schema.ResourceData, meta
 	}
 
 	if v, ok := d.GetOkExists("template_id"); ok {
+		templateId = v.(int64)
 		request.TemplateId = helper.IntInt64(v.(int))
 	}
 
@@ -127,7 +140,7 @@ func resourceTencentCloudCynosdbParamTemplateCreate(d *schema.ResourceData, meta
 	}
 
 	if v, ok := d.GetOk("param_list"); ok {
-		for _, item := range v.(*schema.Set).List() {
+		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			paramItem := cynosdb.ParamItem{}
 			if v, ok := dMap["param_name"]; ok {
@@ -135,6 +148,9 @@ func resourceTencentCloudCynosdbParamTemplateCreate(d *schema.ResourceData, meta
 			}
 			if v, ok := dMap["current_value"]; ok {
 				paramItem.CurrentValue = helper.String(v.(string))
+			}
+			if v, ok := dMap["old_value"]; ok {
+				paramItem.OldValue = helper.String(v.(string))
 			}
 			request.ParamList = append(request.ParamList, &paramItem)
 		}
@@ -155,8 +171,8 @@ func resourceTencentCloudCynosdbParamTemplateCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	templateId := *response.Response.TemplateId
-	d.SetId(strconv.FormatInt(templateId, 10))
+	templateId = *response.Response.TemplateId
+	d.SetId(helper.Int64ToStr(templateId))
 
 	return resourceTencentCloudCynosdbParamTemplateRead(d, meta)
 }
@@ -166,14 +182,12 @@ func resourceTencentCloudCynosdbParamTemplateRead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateId, err := strconv.ParseInt(d.Id(), 10, 64)
-	if err != nil {
-		return err
-	}
+	paramTemplateId := d.Id()
 
 	paramTemplate, err := service.DescribeCynosdbParamTemplateById(ctx, templateId)
 	if err != nil {
@@ -206,38 +220,28 @@ func resourceTencentCloudCynosdbParamTemplateRead(d *schema.ResourceData, meta i
 		_ = d.Set("db_mode", paramTemplate.DbMode)
 	}
 
-	params := make([]string, 0)
-	if v, ok := d.GetOk("param_list"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			if item != nil {
-				dMap := item.(map[string]interface{})
-				if v, ok := dMap["param_name"]; ok {
-					params = append(params, v.(string))
-				}
-			}
-		}
-	}
+	if paramTemplate.ParamList != nil {
+		paramListList := []interface{}{}
+		for _, paramList := range paramTemplate.ParamList {
+			paramListMap := map[string]interface{}{}
 
-	if paramTemplate.Items != nil {
-		if len(params) > 0 {
-			paramInfoSetList := make([]map[string]interface{}, 0, len(params))
-			for _, param := range params {
-				for _, paramList := range paramTemplate.Items {
-					if *paramList.ParamName == param {
-						paramListMap := map[string]interface{}{}
-						if paramList.ParamName != nil {
-							paramListMap["param_name"] = paramList.ParamName
-						}
-						if paramList.CurrentValue != nil {
-							paramListMap["current_value"] = paramList.CurrentValue
-						}
-						paramInfoSetList = append(paramInfoSetList, paramListMap)
-						break
-					}
-				}
+			if paramTemplate.ParamList.ParamName != nil {
+				paramListMap["param_name"] = paramTemplate.ParamList.ParamName
 			}
-			_ = d.Set("param_list", paramInfoSetList)
+
+			if paramTemplate.ParamList.CurrentValue != nil {
+				paramListMap["current_value"] = paramTemplate.ParamList.CurrentValue
+			}
+
+			if paramTemplate.ParamList.OldValue != nil {
+				paramListMap["old_value"] = paramTemplate.ParamList.OldValue
+			}
+
+			paramListList = append(paramListList, paramListMap)
 		}
+
+		_ = d.Set("param_list", paramListList)
+
 	}
 
 	return nil
@@ -248,16 +252,14 @@ func resourceTencentCloudCynosdbParamTemplateUpdate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	request := cynosdb.NewModifyParamTemplateRequest()
 
-	templateId, err := strconv.ParseInt(d.Id(), 10, 64)
-	if err != nil {
-		return err
-	}
+	paramTemplateId := d.Id()
 
 	request.TemplateId = &templateId
 
-	immutableArgs := []string{"engine_version", "template_id", "db_mode"}
+	immutableArgs := []string{"template_name", "engine_version", "template_description", "template_id", "db_mode", "param_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -277,36 +279,31 @@ func resourceTencentCloudCynosdbParamTemplateUpdate(d *schema.ResourceData, meta
 		}
 	}
 
-	if d.HasChange("param_list") {
-		oldParam, _ := d.GetChange("param_list")
-		oldItem := oldParam.(*schema.Set).List()
-		oldParamItem := make(map[string]string)
-		for _, v := range oldItem {
-			dMap := v.(map[string]interface{})
-			key := dMap["param_name"].(string)
-			value := dMap["current_value"].(string)
-			oldParamItem[key] = value
+	if d.HasChange("template_id") {
+		if v, ok := d.GetOkExists("template_id"); ok {
+			request.TemplateId = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("param_list") {
 		if v, ok := d.GetOk("param_list"); ok {
-			for _, item := range v.(*schema.Set).List() {
-				dMap := item.(map[string]interface{})
-				paramItem := cynosdb.ModifyParamItem{}
+			for _, item := range v.([]interface{}) {
+				paramItem := cynosdb.ParamItem{}
 				if v, ok := dMap["param_name"]; ok {
 					paramItem.ParamName = helper.String(v.(string))
 				}
 				if v, ok := dMap["current_value"]; ok {
 					paramItem.CurrentValue = helper.String(v.(string))
 				}
-				if oldParamItem[*paramItem.ParamName] != "" {
-					paramItem.OldValue = helper.String(oldParamItem[*paramItem.ParamName])
+				if v, ok := dMap["old_value"]; ok {
+					paramItem.OldValue = helper.String(v.(string))
 				}
 				request.ParamList = append(request.ParamList, &paramItem)
 			}
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyParamTemplate(request)
 		if e != nil {
 			return retryError(e)
@@ -331,10 +328,7 @@ func resourceTencentCloudCynosdbParamTemplateDelete(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	templateId, err := strconv.ParseInt(d.Id(), 10, 64)
-	if err != nil {
-		return err
-	}
+	paramTemplateId := d.Id()
 
 	if err := service.DeleteCynosdbParamTemplateById(ctx, templateId); err != nil {
 		return err

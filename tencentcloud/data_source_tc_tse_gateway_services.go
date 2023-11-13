@@ -5,19 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_gateway_services" "gateway_services" {
-  gateway_id = "gateway-ddbb709b"
+  gateway_id = "gateway-xxxxxx"
   filters {
-    key   = "name"
-    value = "test"
+		key = "name"
+		value = "serviceA"
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -31,24 +31,24 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "filter conditions, valid value:name,upstreamType.",
+				Description: "Filter conditions, valid value:Name,UpstreamType.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "filter name.",
+							Description: "Filter name.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "filter value.",
+							Description: "Filter value.",
 						},
 					},
 				},
@@ -57,24 +57,24 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "result.",
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"service_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "service list.",
+							Description: "Service list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
+									"i_d": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service ID.",
+										Description: "Service ID.",
 									},
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service name.",
+										Description: "Service name.",
 									},
 									"tags": {
 										Type: schema.TypeSet,
@@ -82,43 +82,43 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "tag list.",
+										Description: "Tag list.",
 									},
 									"upstream_info": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "upstream information.",
+										Description: "Upstream information.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"host": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "an IP address or domain name.",
+													Description: "An IP address or domain name.",
 												},
 												"port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "port.",
+													Description: "Port.",
 												},
-												"source_id": {
+												"source_i_d": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "service source ID.",
+													Description: "Service source ID.",
 												},
 												"namespace": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "namespace.",
+													Description: "Namespace.",
 												},
 												"service_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "the name of the service in registry or kubernetes.",
+													Description: "The name of the service in registry or kubernetes.",
 												},
 												"targets": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "provided when service type is IPList.",
+													Description: "Provided when service type is IPList.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"host": {
@@ -129,27 +129,27 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 															"port": {
 																Type:        schema.TypeInt,
 																Computed:    true,
-																Description: "port.",
+																Description: "Port.",
 															},
 															"weight": {
 																Type:        schema.TypeInt,
 																Computed:    true,
-																Description: "weight.",
+																Description: "Weight.",
 															},
 															"health": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "health.",
+																Description: "Health.",
 															},
 															"created_time": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "created time.",
+																Description: "Created time.",
 															},
 															"source": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "source of target.",
+																Description: "Source of target.",
 															},
 														},
 													},
@@ -157,67 +157,67 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 												"source_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "source service type.",
+													Description: "Source service type.",
 												},
 												"scf_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "scf lambda type.",
+													Description: "Scf lambda type.",
 												},
 												"scf_namespace": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "scf lambda namespace.",
+													Description: "Scf lambda namespace.",
 												},
 												"scf_lambda_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "scf lambda name.",
+													Description: "Scf lambda name.",
 												},
 												"scf_lambda_qualifier": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "scf lambda version.",
+													Description: "Scf lambda version.",
 												},
 												"slow_start": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "slow start time, unit:second,when it&#39;s enabled, weight of the node is increased from 1 to the target value gradually.",
+													Description: "Slow start time，unit:second,when it&amp;#39;s enabled, weight of the node is increased from 1 to the target value gradually.",
 												},
 												"algorithm": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "load balance algorithm,default:round-robin,least-connections and consisten_hashing also support.",
+													Description: "Load balance algorithm,default:round-robin,least-connections and consisten_hashing also support.",
 												},
-												"auto_scaling_group_id": {
+												"auto_scaling_group_i_d": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "auto scaling group ID of cvm.",
+													Description: "Auto scaling group ID of cvm.",
 												},
 												"auto_scaling_cvm_port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "auto scaling group port of cvm.",
+													Description: "Auto scaling group port of cvm.",
 												},
 												"auto_scaling_tat_cmd_status": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "tat cmd status in auto scaling group of cvm.",
+													Description: "Tat cmd status in auto scaling group of cvm.",
 												},
 												"auto_scaling_hook_status": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "hook status in auto scaling group of cvm.",
+													Description: "Hook status in auto scaling group of cvm.",
 												},
 												"source_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "the name of source service.",
+													Description: "The name of source service.",
 												},
 												"real_source_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "exact source service type.",
+													Description: "Exact source service type.",
 												},
 											},
 										},
@@ -225,17 +225,17 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 									"upstream_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service type.",
+										Description: "Service type.",
 									},
 									"created_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "created time.",
+										Description: "Created time.",
 									},
 									"editable": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "editable status.",
+										Description: "Editable status.",
 									},
 								},
 							},
@@ -243,7 +243,7 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "total count.",
+							Description: "Total count.",
 						},
 					},
 				},
@@ -292,29 +292,31 @@ func dataSourceTencentCloudTseGatewayServicesRead(d *schema.ResourceData, meta i
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tse.KongServices
+	var result []*tse.KongServices
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTseGatewayServicesByFilter(ctx, paramMap)
+		result, e := service.DescribeTseGatewayServicesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(result.ServiceList))
-	kongServicesMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		kongServicesMap := map[string]interface{}{}
+
 		if result.ServiceList != nil {
 			serviceListList := []interface{}{}
 			for _, serviceList := range result.ServiceList {
 				serviceListMap := map[string]interface{}{}
 
 				if serviceList.ID != nil {
-					serviceListMap["id"] = serviceList.ID
+					serviceListMap["i_d"] = serviceList.ID
 				}
 
 				if serviceList.Name != nil {
@@ -337,7 +339,7 @@ func dataSourceTencentCloudTseGatewayServicesRead(d *schema.ResourceData, meta i
 					}
 
 					if serviceList.UpstreamInfo.SourceID != nil {
-						upstreamInfoMap["source_id"] = serviceList.UpstreamInfo.SourceID
+						upstreamInfoMap["source_i_d"] = serviceList.UpstreamInfo.SourceID
 					}
 
 					if serviceList.UpstreamInfo.Namespace != nil {
@@ -380,7 +382,7 @@ func dataSourceTencentCloudTseGatewayServicesRead(d *schema.ResourceData, meta i
 							targetsList = append(targetsList, targetsMap)
 						}
 
-						upstreamInfoMap["targets"] = targetsList
+						upstreamInfoMap["targets"] = []interface{}{targetsList}
 					}
 
 					if serviceList.UpstreamInfo.SourceType != nil {
@@ -412,7 +414,7 @@ func dataSourceTencentCloudTseGatewayServicesRead(d *schema.ResourceData, meta i
 					}
 
 					if serviceList.UpstreamInfo.AutoScalingGroupID != nil {
-						upstreamInfoMap["auto_scaling_group_id"] = serviceList.UpstreamInfo.AutoScalingGroupID
+						upstreamInfoMap["auto_scaling_group_i_d"] = serviceList.UpstreamInfo.AutoScalingGroupID
 					}
 
 					if serviceList.UpstreamInfo.AutoScalingCvmPort != nil {
@@ -451,17 +453,17 @@ func dataSourceTencentCloudTseGatewayServicesRead(d *schema.ResourceData, meta i
 				}
 
 				serviceListList = append(serviceListList, serviceListMap)
-				ids = append(ids, *serviceList.ID)
 			}
 
-			kongServicesMap["service_list"] = serviceListList
+			kongServicesMap["service_list"] = []interface{}{serviceListList}
 		}
 
 		if result.TotalCount != nil {
 			kongServicesMap["total_count"] = result.TotalCount
 		}
 
-		_ = d.Set("result", []interface{}{kongServicesMap})
+		ids = append(ids, *result.GatewayId)
+		_ = d.Set("result", kongServicesMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

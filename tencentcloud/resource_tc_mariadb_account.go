@@ -5,20 +5,21 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_account" "account" {
-	instance_id = "tdsql-4pzs5b67"
-	user_name   = "account-test"
-	host        = "10.101.202.22"
-	password    = "Password123."
-	read_only   = 0
-	description = "desc"
+  instance_id = &lt;nil&gt;
+  user_name = &lt;nil&gt;
+  host = &lt;nil&gt;
+  password = &lt;nil&gt;
+  read_only = &lt;nil&gt;
+  description = &lt;nil&gt;
 }
-
 ```
+
 Import
 
-mariadb account can be imported using the instance_id#user_name#host, e.g.
+mariadb account can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_mariadb_account.account tdsql-4pzs5b67#account-test#10.101.202.22
+terraform import tencentcloud_mariadb_account.account account_id
 ```
 */
 package tencentcloud
@@ -26,19 +27,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMariadbAccount() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMariadbAccountRead,
 		Create: resourceTencentCloudMariadbAccountCreate,
+		Read:   resourceTencentCloudMariadbAccountRead,
 		Update: resourceTencentCloudMariadbAccountUpdate,
 		Delete: resourceTencentCloudMariadbAccountDelete,
 		Importer: &schema.ResourceImporter{
@@ -46,40 +46,39 @@ func resourceTencentCloudMariadbAccount() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "instance id.",
+				Type:        schema.TypeString,
+				Description: "Instance id.",
 			},
 
 			"user_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "user name.",
+				Type:        schema.TypeString,
+				Description: "User name.",
 			},
 
 			"host": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "host.",
+				Type:        schema.TypeString,
+				Description: "Host.",
 			},
 
 			"password": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Sensitive:   true,
-				Description: "account password.",
+				Type:        schema.TypeString,
+				Description: "Account password.",
 			},
 
 			"read_only": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "wether account is read only, 0 means not a read only account.",
+				Type:        schema.TypeInt,
+				Description: "Wether account is read only, 0 means not a read only account.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "account description.",
+				Type:        schema.TypeString,
+				Description: "Account description.",
 			},
 		},
 	}
@@ -93,11 +92,11 @@ func resourceTencentCloudMariadbAccountCreate(d *schema.ResourceData, meta inter
 
 	var (
 		request    = mariadb.NewCreateAccountRequest()
+		response   = mariadb.NewCreateAccountResponse()
 		instanceId string
 		userName   string
 		host       string
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
@@ -117,7 +116,7 @@ func resourceTencentCloudMariadbAccountCreate(d *schema.ResourceData, meta inter
 		request.Password = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("read_only"); ok {
+	if v, ok := d.GetOkExists("read_only"); ok {
 		request.ReadOnly = helper.IntInt64(v.(int))
 	}
 
@@ -130,18 +129,19 @@ func resourceTencentCloudMariadbAccountCreate(d *schema.ResourceData, meta inter
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create mariadb account failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + userName + FILED_SP + host)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, userName, host}, FILED_SP))
+
 	return resourceTencentCloudMariadbAccountRead(d, meta)
 }
 
@@ -150,6 +150,7 @@ func resourceTencentCloudMariadbAccountRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -162,24 +163,32 @@ func resourceTencentCloudMariadbAccountRead(d *schema.ResourceData, meta interfa
 	userName := idSplit[1]
 	host := idSplit[2]
 
-	account, err := service.DescribeMariadbAccount(ctx, instanceId, userName, host)
-
+	account, err := service.DescribeMariadbAccountById(ctx, instanceId, userName, host)
 	if err != nil {
 		return err
 	}
 
 	if account == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `account` %s does not exist", userName)
+		log.Printf("[WARN]%s resource `MariadbAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("user_name", userName)
-	_ = d.Set("host", host)
+	if account.InstanceId != nil {
+		_ = d.Set("instance_id", account.InstanceId)
+	}
 
-	// if account.Password != nil {
-	// 	_ = d.Set("password", account.Password)
-	// }
+	if account.UserName != nil {
+		_ = d.Set("user_name", account.UserName)
+	}
+
+	if account.Host != nil {
+		_ = d.Set("host", account.Host)
+	}
+
+	if account.Password != nil {
+		_ = d.Set("password", account.Password)
+	}
 
 	if account.ReadOnly != nil {
 		_ = d.Set("read_only", account.ReadOnly)
@@ -212,77 +221,32 @@ func resourceTencentCloudMariadbAccountUpdate(d *schema.ResourceData, meta inter
 	request.UserName = &userName
 	request.Host = &host
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
+	immutableArgs := []string{"instance_id", "user_name", "host", "password", "read_only", "description"}
 
-	if d.HasChange("user_name") {
-		return fmt.Errorf("`user_name` do not support change now.")
-	}
-
-	if d.HasChange("host") {
-		return fmt.Errorf("`host` do not support change now.")
-	}
-
-	if d.HasChange("read_only") {
-		return fmt.Errorf("`read_only` do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyAccountDescription(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s create mariadb account failed, reason:%+v", logId, err)
-			return err
-		}
 	}
 
-	// update pwd
-	if d.HasChange("password") {
-		PwdRequest := mariadb.NewResetAccountPasswordRequest()
-		if v, ok := d.GetOk("password"); ok {
-			PwdRequest.Password = helper.String(v.(string))
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyAccountDescription(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		if v, ok := d.GetOk("user_name"); ok {
-			PwdRequest.UserName = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("host"); ok {
-			PwdRequest.Host = helper.String(v.(string))
-		}
-
-		PwdRequest.InstanceId = &instanceId
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ResetAccountPassword(PwdRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s operate mariadb resetPassword failed, reason:%+v", logId, err)
-			return err
-		}
-
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mariadb account failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMariadbAccountRead(d, meta)
@@ -296,7 +260,6 @@ func resourceTencentCloudMariadbAccountDelete(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())

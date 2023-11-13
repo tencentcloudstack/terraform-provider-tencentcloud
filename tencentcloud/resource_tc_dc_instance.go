@@ -5,14 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dc_instance" "instance" {
-  access_point_id         = "ap-shenzhen-b-ft"
-  bandwidth               = 10
-  customer_contact_number = "0"
-  direct_connect_name     = "terraform-for-test"
-  line_operator           = "In-houseWiring"
-  port_type               = "10GBase-LR"
-  sign_law                = true
-  vlan                    = -1
+  direct_connect_name = ""
+  access_point_id = ""
+  line_operator = ""
+  port_type = ""
+  circuit_code = ""
+  location = ""
+  bandwidth =
+  redundant_direct_connect_id = ""
+  vlan =
+  tencent_address = ""
+  customer_address = ""
+  customer_name = ""
+  customer_contact_mail = ""
+  customer_contact_number = ""
+  fault_report_contact_person = ""
+  fault_report_contact_number = ""
+  sign_law =
 }
 ```
 
@@ -21,7 +30,7 @@ Import
 dc instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dc_instance.instance dc_id
+terraform import tencentcloud_dc_instance.instance instance_id
 ```
 */
 package tencentcloud
@@ -29,12 +38,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudDcInstance() *schema.Resource {
@@ -159,8 +167,9 @@ func resourceTencentCloudDcInstanceCreate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dc.NewCreateDirectConnectRequest()
-		response = dc.NewCreateDirectConnectResponse()
+		request         = dc.NewCreateDirectConnectRequest()
+		response        = dc.NewCreateDirectConnectResponse()
+		directConnectId string
 	)
 	if v, ok := d.GetOk("direct_connect_name"); ok {
 		request.DirectConnectName = helper.String(v.(string))
@@ -245,12 +254,8 @@ func resourceTencentCloudDcInstanceCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	dcSet := response.Response.DirectConnectIdSet
-	if len(dcSet) < 1 {
-		return fmt.Errorf("Create Direct Connect failed")
-	}
-
-	d.SetId(*dcSet[0])
+	directConnectId = *response.Response.DirectConnectId
+	d.SetId(directConnectId)
 
 	return resourceTencentCloudDcInstanceRead(d, meta)
 }
@@ -265,20 +270,18 @@ func resourceTencentCloudDcInstanceRead(d *schema.ResourceData, meta interface{}
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	directConnectId := d.Id()
+	instanceId := d.Id()
 
-	instances, err := service.DescribeDirectConnects(ctx, directConnectId, "")
+	instance, err := service.DescribeDcInstanceById(ctx, directConnectId)
 	if err != nil {
 		return err
 	}
 
-	if len(instances) < 1 {
+	if instance == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `DcInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	instance := instances[0]
 
 	if instance.DirectConnectName != nil {
 		_ = d.Set("direct_connect_name", instance.DirectConnectName)
@@ -359,15 +362,11 @@ func resourceTencentCloudDcInstanceUpdate(d *schema.ResourceData, meta interface
 
 	request := dc.NewModifyDirectConnectAttributeRequest()
 
-	directConnectId := d.Id()
+	instanceId := d.Id()
 
 	request.DirectConnectId = &directConnectId
-	needChange := false
 
-	immutableArgs := []string{
-		"access_point_id", "line_operator", "port_type",
-		"bandwidth", "redundant_direct_connect_id",
-	}
+	immutableArgs := []string{"direct_connect_name", "access_point_id", "line_operator", "port_type", "circuit_code", "location", "bandwidth", "redundant_direct_connect_id", "vlan", "tencent_address", "customer_address", "customer_name", "customer_contact_mail", "customer_contact_number", "fault_report_contact_person", "fault_report_contact_number", "sign_law"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -375,83 +374,90 @@ func resourceTencentCloudDcInstanceUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	mutableArgs := []string{
-		"direct_connect_name", "circuit_code", "location",
-		"vlan", "tencent_address", "customer_address", "customer_name",
-		"customer_contact_mail", "customer_contact_number", "fault_report_contact_person",
-		"fault_report_contact_number", "sign_law",
-	}
-
-	for _, v := range mutableArgs {
-		if d.HasChange(v) {
-			needChange = true
-			break
-		}
-	}
-
-	if needChange {
-
+	if d.HasChange("direct_connect_name") {
 		if v, ok := d.GetOk("direct_connect_name"); ok {
 			request.DirectConnectName = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("circuit_code") {
 		if v, ok := d.GetOk("circuit_code"); ok {
 			request.CircuitCode = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("bandwidth") {
 		if v, ok := d.GetOkExists("bandwidth"); ok {
-			request.Bandwidth = helper.IntUint64(v.(int))
+			request.Bandwidth = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("vlan") {
 		if v, ok := d.GetOkExists("vlan"); ok {
 			request.Vlan = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("tencent_address") {
 		if v, ok := d.GetOk("tencent_address"); ok {
 			request.TencentAddress = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("customer_address") {
 		if v, ok := d.GetOk("customer_address"); ok {
 			request.CustomerAddress = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("customer_name") {
 		if v, ok := d.GetOk("customer_name"); ok {
 			request.CustomerName = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("customer_contact_mail") {
 		if v, ok := d.GetOk("customer_contact_mail"); ok {
 			request.CustomerContactMail = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("customer_contact_number") {
 		if v, ok := d.GetOk("customer_contact_number"); ok {
 			request.CustomerContactNumber = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("fault_report_contact_person") {
 		if v, ok := d.GetOk("fault_report_contact_person"); ok {
 			request.FaultReportContactPerson = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("fault_report_contact_number") {
 		if v, ok := d.GetOk("fault_report_contact_number"); ok {
 			request.FaultReportContactNumber = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("sign_law") {
 		if v, ok := d.GetOkExists("sign_law"); ok {
 			request.SignLaw = helper.Bool(v.(bool))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().ModifyDirectConnectAttribute(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update dc instance failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().ModifyDirectConnectAttribute(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update dc instance failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudDcInstanceRead(d, meta)
@@ -465,7 +471,7 @@ func resourceTencentCloudDcInstanceDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	directConnectId := d.Id()
+	instanceId := d.Id()
 
 	if err := service.DeleteDcInstanceById(ctx, directConnectId); err != nil {
 		return err

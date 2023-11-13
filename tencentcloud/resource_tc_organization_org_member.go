@@ -5,24 +5,25 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test"
-  node_id         = 2003721
-  permission_ids  = [
-    1,
-    2,
-    3,
-    4,
-  ]
-  policy_type     = "Financial"
-  remark          = "for terraform test"
+  name = &lt;nil&gt;
+  policy_type = "Financial"
+  permission_ids =
+  node_id =
+  account_name = ""
+  remark = ""
+  record_id =
+  pay_uin = ""
+  identity_role_i_d =
+  auth_relation_id =
 }
-
 ```
+
 Import
 
 organization org_member can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_organization_org_member.org_member orgMember_id
+terraform import tencentcloud_organization_org_member.org_member org_member_id
 ```
 */
 package tencentcloud
@@ -30,18 +31,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudOrganizationOrgMember() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudOrganizationOrgMemberRead,
 		Create: resourceTencentCloudOrganizationOrgMemberCreate,
+		Read:   resourceTencentCloudOrganizationOrgMemberRead,
 		Update: resourceTencentCloudOrganizationOrgMemberUpdate,
 		Delete: resourceTencentCloudOrganizationOrgMemberDelete,
 		Importer: &schema.ResourceImporter{
@@ -49,110 +49,69 @@ func resourceTencentCloudOrganizationOrgMember() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Member name.",
+				Type:        schema.TypeString,
+				Description: "Member name.The maximum length is 25 characters, supporting English letters, numbers, Chinese characters, and symbols +@,&amp;amp;amp;._[]-:,.",
 			},
 
 			"policy_type": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Organization policy type.- `Financial`: Financial management policy.",
 			},
 
 			"permission_ids": {
-				Type: schema.TypeSet,
+				Required: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Required:    true,
-				Description: "Financial management permission IDs.Valid values:- `1`: View bill.- `2`: Check balance.- `3`: Fund transfer.- `4`: Combine bill.- `5`: Issue an invoice.- `6`: Inherit discount.- `7`: Pay on behalf.value 1,2 is required.",
+				Description: "Financial management permission IDs.Valid values:- `1`: View bill.- `2`: Check balance.- `3`: Fund transfer.- `4`: Combine bill.- `5`: Issue an invoice.- `6`: Inherit discount.- `7`: Pay on behalf.- `8`: Analysis cost.value 1,2 is required.",
 			},
 
 			"node_id": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "Organization node ID.",
 			},
 
-			"remark": {
+			"account_name": {
+				Required:    true,
 				Type:        schema.TypeString,
+				Description: "Member account name.The maximum length is 25 characters, supporting English letters, numbers, Chinese characters, and symbols +@,&amp;amp;amp;._[]-:,.",
+			},
+
+			"remark": {
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Notes.",
 			},
 
 			"record_id": {
-				Type:        schema.TypeInt,
 				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Create member record ID.When create failed and needs to be recreated, is required.",
 			},
 
 			"pay_uin": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "The uin which is payment account on behalf.When `PermissionIds` contains 7, is required.",
 			},
 
-			"node_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Organization node name.",
-			},
-
-			"member_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member Type.Valid values:- `Invite`: The member is invited.- `Create`: The member is created.",
-			},
-
-			"org_policy_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Organization policy name.",
-			},
-
-			"org_permission": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Financial management permissions.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Permissions ID.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Permissions name.",
-						},
-					},
+			"identity_role_i_d": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
 				},
+				Description: "Manage Identity IDs.",
 			},
 
-			"is_allow_quit": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Whether to allow member to leave the organization.Valid values:- `Allow`.- `Denied`.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member creation time.",
-			},
-
-			"update_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Member update time.",
-			},
-
-			"pay_name": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The member name which is payment account on behalf.",
+			"auth_relation_id": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Auth relationships Id.When creating members for different auth, it is necessary to.",
 			},
 		},
 	}
@@ -166,13 +125,11 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 
 	var (
 		request  = organization.NewCreateOrganizationMemberRequest()
-		response *organization.CreateOrganizationMemberResponse
-		uin      int64
+		response = organization.NewCreateOrganizationMemberResponse()
+		uin      int
 	)
-
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
-		request.AccountName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("policy_type"); ok {
@@ -187,15 +144,19 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		}
 	}
 
-	if v, _ := d.GetOk("node_id"); v != nil {
+	if v, ok := d.GetOkExists("node_id"); ok {
 		request.NodeId = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("account_name"); ok {
+		request.AccountName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
 		request.Remark = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("record_id"); v != nil {
+	if v, ok := d.GetOkExists("record_id"); ok {
 		request.RecordId = helper.IntInt64(v.(int))
 	}
 
@@ -203,26 +164,36 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		request.PayUin = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("identity_role_i_d"); ok {
+		identityRoleIDSet := v.(*schema.Set).List()
+		for i := range identityRoleIDSet {
+			identityRoleID := identityRoleIDSet[i].(int)
+			request.IdentityRoleID = append(request.IdentityRoleID, helper.IntUint64(identityRoleID))
+		}
+	}
+
+	if v, ok := d.GetOkExists("auth_relation_id"); ok {
+		request.AuthRelationId = helper.IntInt64(v.(int))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().CreateOrganizationMember(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create organization orgMember failed, reason:%+v", logId, err)
 		return err
 	}
 
 	uin = *response.Response.Uin
-
 	d.SetId(helper.Int64ToStr(uin))
+
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }
 
@@ -231,95 +202,62 @@ func resourceTencentCloudOrganizationOrgMemberRead(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	orgMemberId := d.Id()
 
-	orgMember, err := service.DescribeOrganizationOrgMember(ctx, orgMemberId)
-
+	orgMember, err := service.DescribeOrganizationOrgMemberById(ctx, uin)
 	if err != nil {
 		return err
 	}
 
 	if orgMember == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `orgMember` %s does not exist", orgMemberId)
+		log.Printf("[WARN]%s resource `OrganizationOrgMember` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if orgMember.Name != nil {
 		_ = d.Set("name", orgMember.Name)
 	}
 
-	if orgMember.OrgPolicyType != nil {
-		_ = d.Set("policy_type", orgMember.OrgPolicyType)
+	if orgMember.PolicyType != nil {
+		_ = d.Set("policy_type", orgMember.PolicyType)
 	}
 
-	if orgMember.OrgPermission != nil {
-		orgPermissionIds := []uint64{}
-		for _, orgPermission := range orgMember.OrgPermission {
-			if orgPermission.Id != nil {
-				orgPermissionIds = append(orgPermissionIds, *orgPermission.Id)
-			}
-		}
-		_ = d.Set("permission_ids", orgPermissionIds)
+	if orgMember.PermissionIds != nil {
+		_ = d.Set("permission_ids", orgMember.PermissionIds)
 	}
 
 	if orgMember.NodeId != nil {
 		_ = d.Set("node_id", orgMember.NodeId)
 	}
 
+	if orgMember.AccountName != nil {
+		_ = d.Set("account_name", orgMember.AccountName)
+	}
+
 	if orgMember.Remark != nil {
 		_ = d.Set("remark", orgMember.Remark)
+	}
+
+	if orgMember.RecordId != nil {
+		_ = d.Set("record_id", orgMember.RecordId)
 	}
 
 	if orgMember.PayUin != nil {
 		_ = d.Set("pay_uin", orgMember.PayUin)
 	}
 
-	if orgMember.NodeName != nil {
-		_ = d.Set("node_name", orgMember.NodeName)
+	if orgMember.IdentityRoleID != nil {
+		_ = d.Set("identity_role_i_d", orgMember.IdentityRoleID)
 	}
 
-	if orgMember.MemberType != nil {
-		_ = d.Set("member_type", orgMember.MemberType)
-	}
-
-	if orgMember.OrgPolicyName != nil {
-		_ = d.Set("org_policy_name", orgMember.OrgPolicyName)
-	}
-
-	if orgMember.OrgPermission != nil {
-		orgPermissionList := []interface{}{}
-		for _, orgPermission := range orgMember.OrgPermission {
-			orgPermissionMap := map[string]interface{}{}
-			if orgPermission.Id != nil {
-				orgPermissionMap["id"] = orgPermission.Id
-			}
-			if orgPermission.Name != nil {
-				orgPermissionMap["name"] = orgPermission.Name
-			}
-
-			orgPermissionList = append(orgPermissionList, orgPermissionMap)
-		}
-		_ = d.Set("org_permission", orgPermissionList)
-	}
-
-	if orgMember.IsAllowQuit != nil {
-		_ = d.Set("is_allow_quit", orgMember.IsAllowQuit)
-	}
-
-	if orgMember.CreateTime != nil {
-		_ = d.Set("create_time", orgMember.CreateTime)
-	}
-
-	if orgMember.UpdateTime != nil {
-		_ = d.Set("update_time", orgMember.UpdateTime)
-	}
-
-	if orgMember.PayName != nil {
-		_ = d.Set("pay_name", orgMember.PayName)
+	if orgMember.AuthRelationId != nil {
+		_ = d.Set("auth_relation_id", orgMember.AuthRelationId)
 	}
 
 	return nil
@@ -331,91 +269,77 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 
 	logId := getLogId(contextNil)
 
-	request := organization.NewMoveOrganizationNodeMembersRequest()
-	updateRequest := organization.NewUpdateOrganizationMemberRequest()
+	var (
+		moveOrganizationNodeMembersRequest  = organization.NewMoveOrganizationNodeMembersRequest()
+		moveOrganizationNodeMembersResponse = organization.NewMoveOrganizationNodeMembersResponse()
+	)
 
 	orgMemberId := d.Id()
 
-	request.MemberUin = []*int64{helper.Int64(helper.StrToInt64(orgMemberId))}
-	updateRequest.MemberUin = helper.Uint64(helper.StrToUInt64(orgMemberId))
-	if d.HasChange("node_id") {
-		if v, _ := d.GetOk("node_id"); v != nil {
-			request.NodeId = helper.IntInt64(v.(int))
-		}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().MoveOrganizationNodeMembers(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
+	request.Uin = &uin
 
-		if err != nil {
-			log.Printf("[CRITAL]%s create organization orgMember failed, reason:%+v", logId, err)
-			return err
+	immutableArgs := []string{"name", "policy_type", "permission_ids", "node_id", "account_name", "remark", "record_id", "pay_uin", "identity_role_i_d", "auth_relation_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
 	if d.HasChange("name") {
-		if v, _ := d.GetOk("name"); v != nil {
-			updateRequest.Name = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("remark") {
-		if v, _ := d.GetOk("remark"); v != nil {
-			updateRequest.Remark = helper.String(v.(string))
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("policy_type") {
-		if v, _ := d.GetOk("policy_type"); v != nil {
-			updateRequest.PolicyType = helper.String(v.(string))
+		if v, ok := d.GetOk("policy_type"); ok {
+			request.PolicyType = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("permission_ids") {
-		if v, _ := d.GetOk("permission_ids"); v != nil {
-			ids := v.(*schema.Set).List()
-			for i := range ids {
-				id := ids[i].(uint64)
-				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.Uint64(id))
+		if v, ok := d.GetOk("permission_ids"); ok {
+			permissionIdsSet := v.(*schema.Set).List()
+			for i := range permissionIdsSet {
+				permissionIds := permissionIdsSet[i].(int)
+				request.PermissionIds = append(request.PermissionIds, helper.IntUint64(permissionIds))
 			}
 		}
 	}
 
-	if d.HasChange("is_allow_quit") {
-		if v, _ := d.GetOk("is_allow_quit"); v != nil {
-			updateRequest.IsAllowQuit = helper.String(v.(string))
+	if d.HasChange("node_id") {
+		if v, ok := d.GetOkExists("node_id"); ok {
+			request.NodeId = helper.IntInt64(v.(int))
 		}
 	}
 
-	if d.HasChange("record_id") {
-		return fmt.Errorf("`record_id` do not support change now.")
+	if d.HasChange("remark") {
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("pay_uin") {
-		if v, _ := d.GetOk("pay_uin"); v != nil {
-			updateRequest.PayUin = helper.String(v.(string))
+		if v, ok := d.GetOk("pay_uin"); ok {
+			request.PayUin = helper.String(v.(string))
 		}
 	}
 
-	UpdateErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().UpdateOrganizationMember(updateRequest)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().MoveOrganizationNodeMembers(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, updateRequest.GetAction(), updateRequest.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-	if UpdateErr != nil {
-		log.Printf("[CRITAL]%s update organization orgMember failed, reason:%+v", logId, UpdateErr)
-		return UpdateErr
+	if err != nil {
+		log.Printf("[CRITAL]%s update organization orgMember failed, reason:%+v", logId, err)
+		return err
 	}
+
 	return resourceTencentCloudOrganizationOrgMemberRead(d, meta)
 }
 
@@ -427,10 +351,9 @@ func resourceTencentCloudOrganizationOrgMemberDelete(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	orgMemberId := d.Id()
 
-	if err := service.DeleteOrganizationOrgMemberById(ctx, orgMemberId); err != nil {
+	if err := service.DeleteOrganizationOrgMemberById(ctx, uin); err != nil {
 		return err
 	}
 

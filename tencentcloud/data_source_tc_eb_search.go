@@ -1,75 +1,37 @@
 /*
-Use this data source to query detailed information of eb eb_search
+Use this data source to query detailed information of eb search
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_eb_put_events" "put_events" {
-  event_list {
-    source = "ckafka.cloud.tencent"
-    data = jsonencode(
-      {
-        "topic" : "test-topic",
-        "Partition" : 1,
-        "offset" : 37,
-        "msgKey" : "test",
-        "msgBody" : "Hello from Ckafka again!"
-      }
-    )
-    type    = "connector:ckafka"
-    subject = "qcs::ckafka:ap-guangzhou:uin/1250000000:ckafkaId/uin/1250000000/ckafka-123456"
-    time    = 1691572461939
-
-  }
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-}
-
-data "tencentcloud_eb_search" "eb_search" {
-  start_time   = 1691637288422
-  end_time     = 1691648088422
-  event_bus_id = "eb-jzytzr4e"
-  group_field = "RuleIds"
+data "tencentcloud_eb_search" "search" {
+  start_time =
+  end_time =
+  event_bus_id = ""
+  group_field = ""
   filter {
-  	type = "OR"
-  	filters {
-  		key = "status"
-  		operator = "eq"
-  		value = "1"
-  	}
-  }
+		key = ""
+		operator = ""
+		value = ""
+		type = ""
+		filters {
+			key = ""
+			operator = ""
+			value = ""
+		}
 
-  filter {
-  	type = "OR"
-  	filters {
-  		key = "type"
-  		operator = "eq"
-  		value = "connector:ckafka"
-  	}
   }
-  # order_fields = [""]
-  order_by = "desc"
-}
+  order_fields =
+  order_by = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -80,42 +42,42 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "start time.",
+				Description: "Start time.",
 			},
 
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "end time.",
+				Description: "End time.",
 			},
 
 			"event_bus_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "event bus Id.",
+				Description: "Event bus Id.",
 			},
 
 			"group_field": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
-				Description: "aggregate field, When querying the log index dimension value, you must enter.",
+				Description: "Aggregate field.",
 			},
 
 			"filter": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "filter criteria.",
+				Description: "Filter criteria.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "filter field name.",
+							Description: "Filter field name.",
 						},
 						"operator": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "operator, congruent eq, not equal neq, similar like, exclude similar not like, less than lt, less than and equal to lte, greater than gt, greater than and equal to gte, in range range, not in range norange.",
+							Description: "Operator, congruent eq, not equal neq, similar like, exclude similar not like, less than lt, less than and equal to lte, greater than gt, greater than and equal to gte, in range range, not in range norange.",
 						},
 						"value": {
 							Type:        schema.TypeString,
@@ -136,12 +98,12 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 									"key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "filter field name.",
+										Description: "Filter field name.",
 									},
 									"operator": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "operator, congruent eq, not equal neq, similar like, exclude similar not like, less than lt, less than and equal to lte, greater than gt, greater than and equal to gte, within range range, not within range norange.",
+										Description: "Operator, congruent eq, not equal neq, similar like, exclude similar not like, less than lt, less than and equal to lte, greater than gt, greater than and equal to gte, within range range, not within range norange.",
 									},
 									"value": {
 										Type:        schema.TypeString,
@@ -161,22 +123,13 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "sort array, take effect when the log is retrieved.",
+				Description: "Sort array.",
 			},
 
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sort by, asc from old to new, desc from new to old, take effect when the log is retrieved.",
-			},
-
-			"dimension_values": {
-				Computed: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "Index retrieves dimension values.",
+				Description: "Sort by, asc from old to new, desc from new to old.",
 			},
 
 			"results": {
@@ -243,33 +196,23 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var (
-		startTime  string
-		endTime    string
-		eventBusId string
-		groupField string
-	)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("start_time"); v != nil {
-		startTime = strconv.Itoa(v.(int))
 		paramMap["StartTime"] = helper.IntInt64(v.(int))
 	}
 
 	if v, _ := d.GetOk("end_time"); v != nil {
-		endTime = strconv.Itoa(v.(int))
 		paramMap["EndTime"] = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("event_bus_id"); ok {
-		eventBusId = v.(string)
 		paramMap["EventBusId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("group_field"); ok {
-		groupField = v.(string)
 		paramMap["GroupField"] = helper.String(v.(string))
 	}
 
@@ -311,7 +254,7 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 			}
 			tmpSet = append(tmpSet, &logFilter)
 		}
-		paramMap["Filter"] = tmpSet
+		paramMap["filter"] = tmpSet
 	}
 
 	if v, ok := d.GetOk("order_fields"); ok {
@@ -325,39 +268,21 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if groupField != "" {
-		var searchResults []*string
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			response, e := service.DescribeEbSearchByFilter(ctx, paramMap)
-			if e != nil {
-				return retryError(e)
-			}
-			searchResults = response
-			return nil
-		})
-		if err != nil {
-			return err
-		}
+	var results []*string
 
-		if searchResults != nil {
-			_ = d.Set("dimension_values", searchResults)
-		}
-	}
-
-	var results []*eb.SearchLogResult
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeEbSearchLogByFilter(ctx, paramMap)
+		result, e := service.DescribeEbSearchByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		results = response
+		results = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	tmpList := make([]map[string]interface{}, 0, len(results))
+	ids := make([]string, 0, len(results))
 	if results != nil {
 		for _, searchLogResult := range results {
 			searchLogResultMap := map[string]interface{}{}
@@ -394,16 +319,17 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 				searchLogResultMap["status"] = searchLogResult.Status
 			}
 
+			ids = append(ids, *searchLogResult.EventBusId)
 			tmpList = append(tmpList, searchLogResultMap)
 		}
 
 		_ = d.Set("results", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{startTime, endTime, eventBusId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

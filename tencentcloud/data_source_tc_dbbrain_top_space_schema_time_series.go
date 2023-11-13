@@ -5,20 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_top_space_schema_time_series" "top_space_schema_time_series" {
-  instance_id = "%s"
-  sort_by = "DataLength"
-  start_date = "%s"
-  end_date = "%s"
-  product = "mysql"
-}
+  instance_id = ""
+  limit =
+  sort_by = ""
+  start_date = ""
+  end_date = ""
+  product = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -32,13 +31,12 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"limit": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     20,
 				Description: "The number of Top libraries to return, the maximum value is 100, and the default is 20.",
 			},
 
@@ -63,7 +61,7 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
+				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
 			},
 
 			"top_space_schema_time_series": {
@@ -75,7 +73,7 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries() *schema.Resource {
 						"table_schema": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "databases name.",
+							Description: "Databases name.",
 						},
 						"series_data": {
 							Type:        schema.TypeList,
@@ -100,12 +98,9 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries() *schema.Resource {
 													Description: "Indicator unit.",
 												},
 												"values": {
-													Type:     schema.TypeSet,
-													Computed: true,
-													Elem: &schema.Schema{
-														Type: schema.TypeFloat,
-													},
-													Description: "Index value. Note: This field may return null, indicating that no valid value can be obtained.",
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Index value. Note： This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
@@ -141,12 +136,10 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeriesRead(d *schema.Resourc
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var instanceId string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, _ := d.GetOk("limit"); v != nil {
@@ -218,7 +211,8 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeriesRead(d *schema.Resourc
 
 						seriesList = append(seriesList, seriesMap)
 					}
-					seriesDataMap["series"] = seriesList
+
+					seriesDataMap["series"] = []interface{}{seriesList}
 				}
 
 				if schemaSpaceTimeSeries.SeriesData.Timestamp != nil {
@@ -228,7 +222,7 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeriesRead(d *schema.Resourc
 				schemaSpaceTimeSeriesMap["series_data"] = []interface{}{seriesDataMap}
 			}
 
-			ids = append(ids, strings.Join([]string{instanceId, *schemaSpaceTimeSeries.TableSchema}, FILED_SP))
+			ids = append(ids, *schemaSpaceTimeSeries.InstanceId)
 			tmpList = append(tmpList, schemaSpaceTimeSeriesMap)
 		}
 

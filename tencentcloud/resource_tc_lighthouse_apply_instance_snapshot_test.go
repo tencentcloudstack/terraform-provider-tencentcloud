@@ -1,15 +1,15 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseApplyInstanceSnapshotResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -17,13 +17,20 @@ func TestAccTencentCloudLighthouseApplyInstanceSnapshotResource_basic(t *testing
 				Config: testAccLighthouseApplyInstanceSnapshot,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_lighthouse_apply_instance_snapshot.apply_instance_snapshot", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_lighthouse_apply_instance_snapshot.apply_instance_snapshot",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
-const testAccLighthouseApplyInstanceSnapshot = DefaultLighthoustVariables + `
+const testAccLighthouseApplyInstanceSnapshot = `
+
 resource "tencentcloud_lighthouse_apply_instance_snapshot" "apply_instance_snapshot" {
-	instance_id = var.lighthouse_id
-	snapshot_id = var.lighthouse_snapshot_id
+  instance_id = "lhins-123456"
+  snapshot_id = "lhsnap-123456"
 }
+
 `

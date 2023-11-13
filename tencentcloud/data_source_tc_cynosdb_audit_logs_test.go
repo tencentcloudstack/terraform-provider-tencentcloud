@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbAuditLogsDataSource_basic -v
 func TestAccTencentCloudCynosdbAuditLogsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,26 +15,36 @@ func TestAccTencentCloudCynosdbAuditLogsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbAuditLogsDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_audit_logs.audit_logs"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_audit_logs.audit_logs")),
 			},
 		},
 	})
 }
 
 const testAccCynosdbAuditLogsDataSource = `
+
 data "tencentcloud_cynosdb_audit_logs" "audit_logs" {
-  instance_id = "cynosdbmysql-ins-afqx1hy0"
-  start_time  = "2023-06-18 10:00:00"
-  end_time    = "2023-06-18 10:00:02"
-  order       = "DESC"
-  order_by    = "timestamp"
+  instance_id = "cynosdbmysql-ins-xx"
+  start_time = "2017-07-12 10:29:20"
+  end_time = "2017-07-12 10:29:20"
+  order = "ASC"
+  order_by = "timestap"
   filter {
-    host        = ["30.50.207.176"]
-    user        = ["keep_dts"]
-    policy_name = ["default_audit"]
-    sql_type    = "SELECT"
+		host = 
+		user = 
+		d_b_name = 
+		table_name = 
+		policy_name = 
+		sql = ""
+		sql_type = ""
+		exec_time = 
+		affect_rows = 
+		sql_types = 
+		sqls = 
+		sent_rows = 
+		thread_id = 
+
   }
-}
+  }
+
 `

@@ -5,18 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_application" "application" {
+  search_word = "example"
+  order_by = "name"
+  order_type = 1
   application_type = "V"
-  microservice_type = "N"
-  # application_resource_type_list = [""]
-  application_id_list = ["application-a24x29xv"]
-}
+  microservice_type = "M"
+  application_resource_type_list =
+  application_id_list =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -27,6 +29,24 @@ func dataSourceTencentCloudTsfApplication() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTsfApplicationRead,
 		Schema: map[string]*schema.Schema{
+			"search_word": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The search field.",
+			},
+
+			"order_by": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The field to order by.",
+			},
+
+			"order_type": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "The order type.",
+			},
+
 			"application_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -82,7 +102,7 @@ func dataSourceTencentCloudTsfApplication() *schema.Resource {
 									"application_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The name of the application.",
+										Description: " The name of the application.",
 									},
 									"application_desc": {
 										Type:        schema.TypeString,
@@ -107,59 +127,59 @@ func dataSourceTencentCloudTsfApplication() *schema.Resource {
 									"create_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "create time.",
+										Description: "Create time.",
 									},
 									"update_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "update time.",
+										Description: "Update time.",
 									},
 									"application_resource_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "application resource type.",
+										Description: "Application resource type.",
 									},
 									"application_runtime_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "application runtime type.",
+										Description: "Application runtime type.",
 									},
 									"apigateway_service_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway service id.",
+										Description: "Gateway service id.",
 									},
 									"application_remark_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "remark name.",
+										Description: "Remark name.",
 									},
 									"service_config_list": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "service config list.",
+										Description: "Service config list.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "serviceName.",
+													Description: "ServiceName.",
 												},
 												"ports": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "port list.",
+													Description: "Port list.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"target_port": {
 																Type:        schema.TypeInt,
 																Computed:    true,
-																Description: "service port.",
+																Description: "Service port.",
 															},
 															"protocol": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "protocol.",
+																Description: "Protocol.",
 															},
 														},
 													},
@@ -167,13 +187,13 @@ func dataSourceTencentCloudTsfApplication() *schema.Resource {
 												"health_check": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "health check setting.",
+													Description: "Health check setting.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"path": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "health check path.",
+																Description: "Health check path.",
 															},
 														},
 													},
@@ -184,7 +204,7 @@ func dataSourceTencentCloudTsfApplication() *schema.Resource {
 									"ignore_create_image_repository": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether ignore create image repository.",
+										Description: "Whether ignore create image repository.",
 									},
 								},
 							},
@@ -211,6 +231,18 @@ func dataSourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("search_word"); ok {
+		paramMap["SearchWord"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("order_by"); ok {
+		paramMap["OrderBy"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("order_type"); v != nil {
+		paramMap["OrderType"] = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("application_type"); ok {
 		paramMap["ApplicationType"] = helper.String(v.(string))
 	}
@@ -231,29 +263,31 @@ func dataSourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta inter
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var application *tsf.TsfPageApplication
+	var result []*tsf.TsfPageApplication
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfApplicationByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		application = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(application.Content))
-	tsfPageApplicationMap := map[string]interface{}{}
-	if application != nil {
-		if application.TotalCount != nil {
-			tsfPageApplicationMap["total_count"] = application.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageApplicationMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			tsfPageApplicationMap["total_count"] = result.TotalCount
 		}
 
-		if application.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range application.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.ApplicationId != nil {
@@ -329,7 +363,7 @@ func dataSourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta inter
 								portsList = append(portsList, portsMap)
 							}
 
-							serviceConfigListMap["ports"] = portsList
+							serviceConfigListMap["ports"] = []interface{}{portsList}
 						}
 
 						if serviceConfigList.HealthCheck != nil {
@@ -345,7 +379,7 @@ func dataSourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta inter
 						serviceConfigListList = append(serviceConfigListList, serviceConfigListMap)
 					}
 
-					contentMap["service_config_list"] = serviceConfigListList
+					contentMap["service_config_list"] = []interface{}{serviceConfigListList}
 				}
 
 				if content.IgnoreCreateImageRepository != nil {
@@ -353,13 +387,13 @@ func dataSourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta inter
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.ApplicationId)
 			}
 
-			tsfPageApplicationMap["content"] = contentList
+			tsfPageApplicationMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageApplicationMap})
+		ids = append(ids, *result.ApplicationId)
+		_ = d.Set("result", tsfPageApplicationMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

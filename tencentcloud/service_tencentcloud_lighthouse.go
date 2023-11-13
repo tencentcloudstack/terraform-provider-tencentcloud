@@ -1344,3 +1344,698 @@ func (me *LightHouseService) DescribeFirewallTemplateRulesById(ctx context.Conte
 
 	return
 }
+
+func (me *LighthouseService) DescribeLighthouseBundleByFilter(ctx context.Context, param map[string]interface{}) (bundle []*lighthouse.Bundle, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeBundlesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "BundleIds" {
+			request.BundleIds = v.([]*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "Zones" {
+			request.Zones = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*lighthouse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeBundles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BundleSet) < 1 {
+			break
+		}
+		bundle = append(bundle, response.Response.BundleSet...)
+		if len(response.Response.BundleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseDiskConfigByFilter(ctx context.Context, param map[string]interface{}) (diskConfig []*lighthouse.DiskConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeDiskConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*lighthouse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeDiskConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DiskConfigSet) < 1 {
+			break
+		}
+		diskConfig = append(diskConfig, response.Response.DiskConfigSet...)
+		if len(response.Response.DiskConfigSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseFirewallRulesTemplateByFilter(ctx context.Context, param map[string]interface{}) (firewallRulesTemplate []*lighthouse.FirewallRuleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeFirewallRulesTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeFirewallRulesTemplate(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.FirewallRuleSet) < 1 {
+			break
+		}
+		firewallRulesTemplate = append(firewallRulesTemplate, response.Response.FirewallRuleSet...)
+		if len(response.Response.FirewallRuleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceBlueprintByFilter(ctx context.Context, param map[string]interface{}) (instanceBlueprint []*lighthouse.BlueprintInstance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeBlueprintInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeBlueprintInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BlueprintInstanceSet) < 1 {
+			break
+		}
+		instanceBlueprint = append(instanceBlueprint, response.Response.BlueprintInstanceSet...)
+		if len(response.Response.BlueprintInstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceDiskNumByFilter(ctx context.Context, param map[string]interface{}) (instanceDiskNum []*lighthouse.AttachDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeInstancesDiskNumRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeInstancesDiskNum(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AttachDetailSet) < 1 {
+			break
+		}
+		instanceDiskNum = append(instanceDiskNum, response.Response.AttachDetailSet...)
+		if len(response.Response.AttachDetailSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceTrafficPackageByFilter(ctx context.Context, param map[string]interface{}) (instanceTrafficPackage []*lighthouse.InstanceReturnable, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeInstancesReturnableRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeInstancesReturnable(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceReturnableSet) < 1 {
+			break
+		}
+		instanceTrafficPackage = append(instanceTrafficPackage, response.Response.InstanceReturnableSet...)
+		if len(response.Response.InstanceReturnableSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceVncUrlByFilter(ctx context.Context, param map[string]interface{}) (instanceVncUrl []*lighthouse.DescribeInstanceVncUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeInstanceVncUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeInstanceVncUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceVncUrl) < 1 {
+			break
+		}
+		instanceVncUrl = append(instanceVncUrl, response.Response.InstanceVncUrl...)
+		if len(response.Response.InstanceVncUrl) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseRegionByFilter(ctx context.Context, param map[string]interface{}) (region []*lighthouse.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeRegions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RegionSet) < 1 {
+			break
+		}
+		region = append(region, response.Response.RegionSet...)
+		if len(response.Response.RegionSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseResetInstanceBlueprintByFilter(ctx context.Context, param map[string]interface{}) (resetInstanceBlueprint []*lighthouse.ResetInstanceBlueprint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeResetInstanceBlueprintsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*lighthouse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeResetInstanceBlueprints(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ResetInstanceBlueprintSet) < 1 {
+			break
+		}
+		resetInstanceBlueprint = append(resetInstanceBlueprint, response.Response.ResetInstanceBlueprintSet...)
+		if len(response.Response.ResetInstanceBlueprintSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseSceneByFilter(ctx context.Context, param map[string]interface{}) (scene []*lighthouse.Scene, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeScenesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SceneIds" {
+			request.SceneIds = v.([]*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeScenes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SceneSet) < 1 {
+			break
+		}
+		scene = append(scene, response.Response.SceneSet...)
+		if len(response.Response.SceneSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseZoneByFilter(ctx context.Context, param map[string]interface{}) (zone []*lighthouse.ZoneInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeZonesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderField" {
+			request.OrderField = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeZones(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ZoneInfoSet) < 1 {
+			break
+		}
+		zone = append(zone, response.Response.ZoneInfoSet...)
+		if len(response.Response.ZoneInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseDiskAttachmentById(ctx context.Context, diskIds string, instanceId string) (diskAttachment *lighthouse.Disk, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeDisksRequest()
+	request.DiskIds = &diskIds
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeDisks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Disk) < 1 {
+		return
+	}
+
+	diskAttachment = response.Response.Disk[0]
+	return
+}
+
+func (me *LighthouseService) DeleteLighthouseDiskAttachmentById(ctx context.Context, diskIds string, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDetachDisksRequest()
+	request.DiskIds = &diskIds
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DetachDisks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LighthouseService) LighthouseDiskAttachmentStateRefreshFunc(diskIds string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDisks(ctx, diskIds, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.DiskState), nil
+	}
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceLoginKeyPairById(ctx context.Context, instanceId string) (instanceLoginKeyPair *lighthouse.DescribeInstanceLoginKeyPairAttributeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeInstanceLoginKeyPairAttributeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeInstanceLoginKeyPairAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceLoginKeyPair = response.Response
+	return
+}
+
+func (me *LighthouseService) DescribeLighthouseInstanceModifyBundleById(ctx context.Context, instanceId string) (instanceModifyBundle *lighthouse.ModifyBundle, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeModifyInstanceBundlesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeModifyInstanceBundles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ModifyBundle) < 1 {
+		return
+	}
+
+	instanceModifyBundle = response.Response.ModifyBundle[0]
+	return
+}
+
+func (me *LighthouseService) LighthouseInstanceModifyBundleStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeInstances(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.LatestOperationState), nil
+	}
+}

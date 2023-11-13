@@ -5,14 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_connect_resource" "connect_resource" {
-}
+  type = "DTS"
+  search_word = "resourceName"
+  offset = 0
+  limit = 20
+  resource_region = "region"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -26,7 +30,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 			"type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "connection source type.",
+				Description: "Connection source type.",
 			},
 
 			"search_word": {
@@ -37,14 +41,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 
 			"offset": {
 				Optional:    true,
-				Default:     0,
 				Type:        schema.TypeInt,
 				Description: "Page offset, default is 0.",
 			},
 
 			"limit": {
 				Optional:    true,
-				Default:     20,
 				Type:        schema.TypeInt,
 				Description: "Return the number, the default is 20, the maximum is 100.",
 			},
@@ -75,12 +77,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 									"resource_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Resource id.",
+										Description: "ResourceId.",
 									},
 									"resource_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Resource name.",
+										Description: "ResourceName.",
 									},
 									"description": {
 										Type:        schema.TypeString,
@@ -174,7 +176,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 											},
 										},
 									},
-									"mongo_db_connect_param": {
+									"mongo_d_b_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Mongo DB configuration, returned when Type is MONGODB.",
@@ -188,32 +190,32 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "MongoDB The username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "MongoDB The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "MongoDB Instance resource of connection source.",
 												},
 												"self_built": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Whether the connection source is a self-built cluster.",
+													Description: "MongoDBWhether the connection source is a self-built cluster.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MongoDBInstance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MongoDBThe vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -232,37 +234,37 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "ES port.",
+													Description: "Es port.",
 												},
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "EsThe username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "Es The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "Es Instance resource of connection source.",
 												},
 												"self_built": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Whether the connection source is a self-built cluster.",
+													Description: "EsWhether the connection source is a self-built cluster.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "EsInstance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "EsThe vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -272,10 +274,10 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 											},
 										},
 									},
-									"clickhouse_connect_param": {
+									"click_house_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "ClickHouse configuration, returned when Type is CLICKHOUSE.",
+										Description: "Click House configuration, returned when Type is CLICKHOUSE.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"port": {
@@ -286,32 +288,32 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "ClickHouseThe username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "ClickHouse The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "ClickHouse Instance resource of connection source.",
 												},
 												"self_built": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Whether the connection source is a self-built cluster.",
+													Description: "ClickHouseWhether the connection source is a self-built cluster.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "ClickHouseInstance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "ClickHouseThe vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -321,7 +323,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 											},
 										},
 									},
-									"mysql_connect_param": {
+									"my_s_q_l_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Mysql configuration, returned when Type is MYSQL or TDSQL C MYSQL.",
@@ -335,12 +337,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "MySQLThe username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "MySQL The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
@@ -350,12 +352,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MySQLInstance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MySQLThe vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -375,7 +377,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 											},
 										},
 									},
-									"postgre_sql_connect_param": {
+									"postgre_s_q_l_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Postgresql configuration, returned when Type is POSTGRESQL or TDSQL C POSTGRESQL.",
@@ -389,27 +391,27 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "PostgreSQLThe username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "PostgreSQL The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "PostgreSQL Instance resource of connection source.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "PostgreSQL Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "PostgreSQL The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"cluster_id": {
 													Type:        schema.TypeString,
@@ -424,12 +426,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"self_built": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Whether the connection source is a self-built cluster.",
+													Description: "PostgreSQL Whether the connection source is a self-built cluster.",
 												},
 											},
 										},
 									},
-									"maria_db_connect_param": {
+									"maria_d_b_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Mariadb configuration, returned when Type is MARIADB.",
@@ -443,27 +445,27 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "MariaDB The username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "MariaDB The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "MariaDB Instance resource of connection source.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MariaDB Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "MariaDB The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -473,7 +475,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 											},
 										},
 									},
-									"sql_server_connect_param": {
+									"s_q_l_server_connect_param": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "SQL Server configuration, returned when Type is SQLSERVER.",
@@ -487,27 +489,27 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "SQLServerThe username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "SQLServer The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "SQLServer Instance resource of connection source.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "SQLServer Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "SQLServerThe vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -541,17 +543,17 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "Ctsdb The username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "Ctsdb The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "Ctsdb Instance resource of connection source.",
 												},
 											},
 										},
@@ -570,27 +572,27 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"user_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The username of the connection source.",
+													Description: "Doris The username of the connection source.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The password of the connection source.",
+													Description: "Doris  The password of the connection source.",
 												},
 												"resource": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance resource of connection source.",
+													Description: "Doris  Instance resource of connection source.",
 												},
 												"service_vip": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "Doris Instance VIP of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"uniq_vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
+													Description: "Doris The vpc Id of the connection source, when it is a Tencent Cloud instance, it is required.",
 												},
 												"is_update": {
 													Type:        schema.TypeBool,
@@ -600,12 +602,12 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"self_built": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "Whether the connection source is a self-built cluster.",
+													Description: "Doris Whether the connection source is a self-built cluster.",
 												},
 												"be_port": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "Doris's http load balancing connection port, usually mapped to be's 8040 port.",
+													Description: "Doris&amp;#39;s http load balancing connection port, usually mapped to be&amp;#39;s 8040 port        .",
 												},
 											},
 										},
@@ -634,7 +636,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"broker_address": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Broker address for Kafka connection, required for self-build.",
+													Description: "Broker address for Kafka connection, required for self-build                        .",
 												},
 												"region": {
 													Type:        schema.TypeString,
@@ -670,44 +672,44 @@ func dataSourceTencentCloudCkafkaConnectResourceRead(d *schema.ResourceData, met
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("type"); ok {
-		paramMap["type"] = v.(string)
+		paramMap["Type"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("search_word"); ok {
-		paramMap["search_word"] = v.(string)
+		paramMap["SearchWord"] = helper.String(v.(string))
 	}
 
 	if v, _ := d.GetOk("offset"); v != nil {
-		paramMap["offset"] = v.(int)
+		paramMap["Offset"] = helper.IntInt64(v.(int))
 	}
 
 	if v, _ := d.GetOk("limit"); v != nil {
-		paramMap["limit"] = v.(int)
+		paramMap["Limit"] = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("resource_region"); ok {
-		paramMap["resource_region"] = v.(string)
+		paramMap["ResourceRegion"] = helper.String(v.(string))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *ckafka.DescribeConnectResourcesResp
+	var result []*ckafka.DescribeConnectResourcesResp
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeCkafkaConnectResourceByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaConnectResourceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	describeConnectResourcesRespMap := make(map[string]interface{})
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		describeConnectResourcesRespMap := map[string]interface{}{}
 
 		if result.TotalCount != nil {
 			describeConnectResourcesRespMap["total_count"] = result.TotalCount
@@ -715,460 +717,459 @@ func dataSourceTencentCloudCkafkaConnectResourceRead(d *schema.ResourceData, met
 
 		if result.ConnectResourceList != nil {
 			connectResourceListList := []interface{}{}
-			for _, connectResource := range result.ConnectResourceList {
+			for _, connectResourceList := range result.ConnectResourceList {
 				connectResourceListMap := map[string]interface{}{}
 
-				if connectResource.ResourceId != nil {
-					connectResourceListMap["resource_id"] = connectResource.ResourceId
+				if connectResourceList.ResourceId != nil {
+					connectResourceListMap["resource_id"] = connectResourceList.ResourceId
 				}
 
-				if connectResource.ResourceName != nil {
-					connectResourceListMap["resource_name"] = connectResource.ResourceName
+				if connectResourceList.ResourceName != nil {
+					connectResourceListMap["resource_name"] = connectResourceList.ResourceName
 				}
 
-				if connectResource.Description != nil {
-					connectResourceListMap["description"] = connectResource.Description
+				if connectResourceList.Description != nil {
+					connectResourceListMap["description"] = connectResourceList.Description
 				}
 
-				if connectResource.Type != nil {
-					connectResourceListMap["type"] = connectResource.Type
+				if connectResourceList.Type != nil {
+					connectResourceListMap["type"] = connectResourceList.Type
 				}
 
-				if connectResource.Status != nil {
-					connectResourceListMap["status"] = connectResource.Status
+				if connectResourceList.Status != nil {
+					connectResourceListMap["status"] = connectResourceList.Status
 				}
 
-				if connectResource.CreateTime != nil {
-					connectResourceListMap["create_time"] = connectResource.CreateTime
+				if connectResourceList.CreateTime != nil {
+					connectResourceListMap["create_time"] = connectResourceList.CreateTime
 				}
 
-				if connectResource.ErrorMessage != nil {
-					connectResourceListMap["error_message"] = connectResource.ErrorMessage
+				if connectResourceList.ErrorMessage != nil {
+					connectResourceListMap["error_message"] = connectResourceList.ErrorMessage
 				}
 
-				if connectResource.DatahubTaskCount != nil {
-					connectResourceListMap["datahub_task_count"] = connectResource.DatahubTaskCount
+				if connectResourceList.DatahubTaskCount != nil {
+					connectResourceListMap["datahub_task_count"] = connectResourceList.DatahubTaskCount
 				}
 
-				if connectResource.CurrentStep != nil {
-					connectResourceListMap["current_step"] = connectResource.CurrentStep
+				if connectResourceList.CurrentStep != nil {
+					connectResourceListMap["current_step"] = connectResourceList.CurrentStep
 				}
 
-				if connectResource.TaskProgress != nil {
-					connectResourceListMap["task_progress"] = connectResource.TaskProgress
+				if connectResourceList.TaskProgress != nil {
+					connectResourceListMap["task_progress"] = connectResourceList.TaskProgress
 				}
 
-				if connectResource.StepList != nil {
-					connectResourceListMap["step_list"] = connectResource.StepList
+				if connectResourceList.StepList != nil {
+					connectResourceListMap["step_list"] = connectResourceList.StepList
 				}
 
-				if connectResource.DtsConnectParam != nil {
+				if connectResourceList.DtsConnectParam != nil {
 					dtsConnectParamMap := map[string]interface{}{}
 
-					if connectResource.DtsConnectParam.Port != nil {
-						dtsConnectParamMap["port"] = connectResource.DtsConnectParam.Port
+					if connectResourceList.DtsConnectParam.Port != nil {
+						dtsConnectParamMap["port"] = connectResourceList.DtsConnectParam.Port
 					}
 
-					if connectResource.DtsConnectParam.GroupId != nil {
-						dtsConnectParamMap["group_id"] = connectResource.DtsConnectParam.GroupId
+					if connectResourceList.DtsConnectParam.GroupId != nil {
+						dtsConnectParamMap["group_id"] = connectResourceList.DtsConnectParam.GroupId
 					}
 
-					if connectResource.DtsConnectParam.UserName != nil {
-						dtsConnectParamMap["user_name"] = connectResource.DtsConnectParam.UserName
+					if connectResourceList.DtsConnectParam.UserName != nil {
+						dtsConnectParamMap["user_name"] = connectResourceList.DtsConnectParam.UserName
 					}
 
-					if connectResource.DtsConnectParam.Password != nil {
-						dtsConnectParamMap["password"] = connectResource.DtsConnectParam.Password
+					if connectResourceList.DtsConnectParam.Password != nil {
+						dtsConnectParamMap["password"] = connectResourceList.DtsConnectParam.Password
 					}
 
-					if connectResource.DtsConnectParam.Resource != nil {
-						dtsConnectParamMap["resource"] = connectResource.DtsConnectParam.Resource
+					if connectResourceList.DtsConnectParam.Resource != nil {
+						dtsConnectParamMap["resource"] = connectResourceList.DtsConnectParam.Resource
 					}
 
-					if connectResource.DtsConnectParam.Topic != nil {
-						dtsConnectParamMap["topic"] = connectResource.DtsConnectParam.Topic
+					if connectResourceList.DtsConnectParam.Topic != nil {
+						dtsConnectParamMap["topic"] = connectResourceList.DtsConnectParam.Topic
 					}
 
-					if connectResource.DtsConnectParam.IsUpdate != nil {
-						dtsConnectParamMap["is_update"] = connectResource.DtsConnectParam.IsUpdate
+					if connectResourceList.DtsConnectParam.IsUpdate != nil {
+						dtsConnectParamMap["is_update"] = connectResourceList.DtsConnectParam.IsUpdate
 					}
 
 					connectResourceListMap["dts_connect_param"] = []interface{}{dtsConnectParamMap}
 				}
 
-				if connectResource.MongoDBConnectParam != nil {
+				if connectResourceList.MongoDBConnectParam != nil {
 					mongoDBConnectParamMap := map[string]interface{}{}
 
-					if connectResource.MongoDBConnectParam.Port != nil {
-						mongoDBConnectParamMap["port"] = connectResource.MongoDBConnectParam.Port
+					if connectResourceList.MongoDBConnectParam.Port != nil {
+						mongoDBConnectParamMap["port"] = connectResourceList.MongoDBConnectParam.Port
 					}
 
-					if connectResource.MongoDBConnectParam.UserName != nil {
-						mongoDBConnectParamMap["user_name"] = connectResource.MongoDBConnectParam.UserName
+					if connectResourceList.MongoDBConnectParam.UserName != nil {
+						mongoDBConnectParamMap["user_name"] = connectResourceList.MongoDBConnectParam.UserName
 					}
 
-					if connectResource.MongoDBConnectParam.Password != nil {
-						mongoDBConnectParamMap["password"] = connectResource.MongoDBConnectParam.Password
+					if connectResourceList.MongoDBConnectParam.Password != nil {
+						mongoDBConnectParamMap["password"] = connectResourceList.MongoDBConnectParam.Password
 					}
 
-					if connectResource.MongoDBConnectParam.Resource != nil {
-						mongoDBConnectParamMap["resource"] = connectResource.MongoDBConnectParam.Resource
+					if connectResourceList.MongoDBConnectParam.Resource != nil {
+						mongoDBConnectParamMap["resource"] = connectResourceList.MongoDBConnectParam.Resource
 					}
 
-					if connectResource.MongoDBConnectParam.SelfBuilt != nil {
-						mongoDBConnectParamMap["self_built"] = connectResource.MongoDBConnectParam.SelfBuilt
+					if connectResourceList.MongoDBConnectParam.SelfBuilt != nil {
+						mongoDBConnectParamMap["self_built"] = connectResourceList.MongoDBConnectParam.SelfBuilt
 					}
 
-					if connectResource.MongoDBConnectParam.ServiceVip != nil {
-						mongoDBConnectParamMap["service_vip"] = connectResource.MongoDBConnectParam.ServiceVip
+					if connectResourceList.MongoDBConnectParam.ServiceVip != nil {
+						mongoDBConnectParamMap["service_vip"] = connectResourceList.MongoDBConnectParam.ServiceVip
 					}
 
-					if connectResource.MongoDBConnectParam.UniqVpcId != nil {
-						mongoDBConnectParamMap["uniq_vpc_id"] = connectResource.MongoDBConnectParam.UniqVpcId
+					if connectResourceList.MongoDBConnectParam.UniqVpcId != nil {
+						mongoDBConnectParamMap["uniq_vpc_id"] = connectResourceList.MongoDBConnectParam.UniqVpcId
 					}
 
-					if connectResource.MongoDBConnectParam.IsUpdate != nil {
-						mongoDBConnectParamMap["is_update"] = connectResource.MongoDBConnectParam.IsUpdate
+					if connectResourceList.MongoDBConnectParam.IsUpdate != nil {
+						mongoDBConnectParamMap["is_update"] = connectResourceList.MongoDBConnectParam.IsUpdate
 					}
 
-					connectResourceListMap["mongo_db_connect_param"] = []interface{}{mongoDBConnectParamMap}
+					connectResourceListMap["mongo_d_b_connect_param"] = []interface{}{mongoDBConnectParamMap}
 				}
 
-				if connectResource.EsConnectParam != nil {
+				if connectResourceList.EsConnectParam != nil {
 					esConnectParamMap := map[string]interface{}{}
 
-					if connectResource.EsConnectParam.Port != nil {
-						esConnectParamMap["port"] = connectResource.EsConnectParam.Port
+					if connectResourceList.EsConnectParam.Port != nil {
+						esConnectParamMap["port"] = connectResourceList.EsConnectParam.Port
 					}
 
-					if connectResource.EsConnectParam.UserName != nil {
-						esConnectParamMap["user_name"] = connectResource.EsConnectParam.UserName
+					if connectResourceList.EsConnectParam.UserName != nil {
+						esConnectParamMap["user_name"] = connectResourceList.EsConnectParam.UserName
 					}
 
-					if connectResource.EsConnectParam.Password != nil {
-						esConnectParamMap["password"] = connectResource.EsConnectParam.Password
+					if connectResourceList.EsConnectParam.Password != nil {
+						esConnectParamMap["password"] = connectResourceList.EsConnectParam.Password
 					}
 
-					if connectResource.EsConnectParam.Resource != nil {
-						esConnectParamMap["resource"] = connectResource.EsConnectParam.Resource
+					if connectResourceList.EsConnectParam.Resource != nil {
+						esConnectParamMap["resource"] = connectResourceList.EsConnectParam.Resource
 					}
 
-					if connectResource.EsConnectParam.SelfBuilt != nil {
-						esConnectParamMap["self_built"] = connectResource.EsConnectParam.SelfBuilt
+					if connectResourceList.EsConnectParam.SelfBuilt != nil {
+						esConnectParamMap["self_built"] = connectResourceList.EsConnectParam.SelfBuilt
 					}
 
-					if connectResource.EsConnectParam.ServiceVip != nil {
-						esConnectParamMap["service_vip"] = connectResource.EsConnectParam.ServiceVip
+					if connectResourceList.EsConnectParam.ServiceVip != nil {
+						esConnectParamMap["service_vip"] = connectResourceList.EsConnectParam.ServiceVip
 					}
 
-					if connectResource.EsConnectParam.UniqVpcId != nil {
-						esConnectParamMap["uniq_vpc_id"] = connectResource.EsConnectParam.UniqVpcId
+					if connectResourceList.EsConnectParam.UniqVpcId != nil {
+						esConnectParamMap["uniq_vpc_id"] = connectResourceList.EsConnectParam.UniqVpcId
 					}
 
-					if connectResource.EsConnectParam.IsUpdate != nil {
-						esConnectParamMap["is_update"] = connectResource.EsConnectParam.IsUpdate
+					if connectResourceList.EsConnectParam.IsUpdate != nil {
+						esConnectParamMap["is_update"] = connectResourceList.EsConnectParam.IsUpdate
 					}
 
 					connectResourceListMap["es_connect_param"] = []interface{}{esConnectParamMap}
 				}
 
-				if connectResource.ClickHouseConnectParam != nil {
+				if connectResourceList.ClickHouseConnectParam != nil {
 					clickHouseConnectParamMap := map[string]interface{}{}
 
-					if connectResource.ClickHouseConnectParam.Port != nil {
-						clickHouseConnectParamMap["port"] = connectResource.ClickHouseConnectParam.Port
+					if connectResourceList.ClickHouseConnectParam.Port != nil {
+						clickHouseConnectParamMap["port"] = connectResourceList.ClickHouseConnectParam.Port
 					}
 
-					if connectResource.ClickHouseConnectParam.UserName != nil {
-						clickHouseConnectParamMap["user_name"] = connectResource.ClickHouseConnectParam.UserName
+					if connectResourceList.ClickHouseConnectParam.UserName != nil {
+						clickHouseConnectParamMap["user_name"] = connectResourceList.ClickHouseConnectParam.UserName
 					}
 
-					if connectResource.ClickHouseConnectParam.Password != nil {
-						clickHouseConnectParamMap["password"] = connectResource.ClickHouseConnectParam.Password
+					if connectResourceList.ClickHouseConnectParam.Password != nil {
+						clickHouseConnectParamMap["password"] = connectResourceList.ClickHouseConnectParam.Password
 					}
 
-					if connectResource.ClickHouseConnectParam.Resource != nil {
-						clickHouseConnectParamMap["resource"] = connectResource.ClickHouseConnectParam.Resource
+					if connectResourceList.ClickHouseConnectParam.Resource != nil {
+						clickHouseConnectParamMap["resource"] = connectResourceList.ClickHouseConnectParam.Resource
 					}
 
-					if connectResource.ClickHouseConnectParam.SelfBuilt != nil {
-						clickHouseConnectParamMap["self_built"] = connectResource.ClickHouseConnectParam.SelfBuilt
+					if connectResourceList.ClickHouseConnectParam.SelfBuilt != nil {
+						clickHouseConnectParamMap["self_built"] = connectResourceList.ClickHouseConnectParam.SelfBuilt
 					}
 
-					if connectResource.ClickHouseConnectParam.ServiceVip != nil {
-						clickHouseConnectParamMap["service_vip"] = connectResource.ClickHouseConnectParam.ServiceVip
+					if connectResourceList.ClickHouseConnectParam.ServiceVip != nil {
+						clickHouseConnectParamMap["service_vip"] = connectResourceList.ClickHouseConnectParam.ServiceVip
 					}
 
-					if connectResource.ClickHouseConnectParam.UniqVpcId != nil {
-						clickHouseConnectParamMap["uniq_vpc_id"] = connectResource.ClickHouseConnectParam.UniqVpcId
+					if connectResourceList.ClickHouseConnectParam.UniqVpcId != nil {
+						clickHouseConnectParamMap["uniq_vpc_id"] = connectResourceList.ClickHouseConnectParam.UniqVpcId
 					}
 
-					if connectResource.ClickHouseConnectParam.IsUpdate != nil {
-						clickHouseConnectParamMap["is_update"] = connectResource.ClickHouseConnectParam.IsUpdate
+					if connectResourceList.ClickHouseConnectParam.IsUpdate != nil {
+						clickHouseConnectParamMap["is_update"] = connectResourceList.ClickHouseConnectParam.IsUpdate
 					}
 
 					connectResourceListMap["click_house_connect_param"] = []interface{}{clickHouseConnectParamMap}
 				}
 
-				if connectResource.MySQLConnectParam != nil {
+				if connectResourceList.MySQLConnectParam != nil {
 					mySQLConnectParamMap := map[string]interface{}{}
 
-					if connectResource.MySQLConnectParam.Port != nil {
-						mySQLConnectParamMap["port"] = connectResource.MySQLConnectParam.Port
+					if connectResourceList.MySQLConnectParam.Port != nil {
+						mySQLConnectParamMap["port"] = connectResourceList.MySQLConnectParam.Port
 					}
 
-					if connectResource.MySQLConnectParam.UserName != nil {
-						mySQLConnectParamMap["user_name"] = connectResource.MySQLConnectParam.UserName
+					if connectResourceList.MySQLConnectParam.UserName != nil {
+						mySQLConnectParamMap["user_name"] = connectResourceList.MySQLConnectParam.UserName
 					}
 
-					if connectResource.MySQLConnectParam.Password != nil {
-						mySQLConnectParamMap["password"] = connectResource.MySQLConnectParam.Password
+					if connectResourceList.MySQLConnectParam.Password != nil {
+						mySQLConnectParamMap["password"] = connectResourceList.MySQLConnectParam.Password
 					}
 
-					if connectResource.MySQLConnectParam.Resource != nil {
-						mySQLConnectParamMap["resource"] = connectResource.MySQLConnectParam.Resource
+					if connectResourceList.MySQLConnectParam.Resource != nil {
+						mySQLConnectParamMap["resource"] = connectResourceList.MySQLConnectParam.Resource
 					}
 
-					if connectResource.MySQLConnectParam.ServiceVip != nil {
-						mySQLConnectParamMap["service_vip"] = connectResource.MySQLConnectParam.ServiceVip
+					if connectResourceList.MySQLConnectParam.ServiceVip != nil {
+						mySQLConnectParamMap["service_vip"] = connectResourceList.MySQLConnectParam.ServiceVip
 					}
 
-					if connectResource.MySQLConnectParam.UniqVpcId != nil {
-						mySQLConnectParamMap["uniq_vpc_id"] = connectResource.MySQLConnectParam.UniqVpcId
+					if connectResourceList.MySQLConnectParam.UniqVpcId != nil {
+						mySQLConnectParamMap["uniq_vpc_id"] = connectResourceList.MySQLConnectParam.UniqVpcId
 					}
 
-					if connectResource.MySQLConnectParam.IsUpdate != nil {
-						mySQLConnectParamMap["is_update"] = connectResource.MySQLConnectParam.IsUpdate
+					if connectResourceList.MySQLConnectParam.IsUpdate != nil {
+						mySQLConnectParamMap["is_update"] = connectResourceList.MySQLConnectParam.IsUpdate
 					}
 
-					if connectResource.MySQLConnectParam.ClusterId != nil {
-						mySQLConnectParamMap["cluster_id"] = connectResource.MySQLConnectParam.ClusterId
+					if connectResourceList.MySQLConnectParam.ClusterId != nil {
+						mySQLConnectParamMap["cluster_id"] = connectResourceList.MySQLConnectParam.ClusterId
 					}
 
-					if connectResource.MySQLConnectParam.SelfBuilt != nil {
-						mySQLConnectParamMap["self_built"] = connectResource.MySQLConnectParam.SelfBuilt
+					if connectResourceList.MySQLConnectParam.SelfBuilt != nil {
+						mySQLConnectParamMap["self_built"] = connectResourceList.MySQLConnectParam.SelfBuilt
 					}
 
-					connectResourceListMap["mysql_connect_param"] = []interface{}{mySQLConnectParamMap}
+					connectResourceListMap["my_s_q_l_connect_param"] = []interface{}{mySQLConnectParamMap}
 				}
 
-				if connectResource.PostgreSQLConnectParam != nil {
+				if connectResourceList.PostgreSQLConnectParam != nil {
 					postgreSQLConnectParamMap := map[string]interface{}{}
 
-					if connectResource.PostgreSQLConnectParam.Port != nil {
-						postgreSQLConnectParamMap["port"] = connectResource.PostgreSQLConnectParam.Port
+					if connectResourceList.PostgreSQLConnectParam.Port != nil {
+						postgreSQLConnectParamMap["port"] = connectResourceList.PostgreSQLConnectParam.Port
 					}
 
-					if connectResource.PostgreSQLConnectParam.UserName != nil {
-						postgreSQLConnectParamMap["user_name"] = connectResource.PostgreSQLConnectParam.UserName
+					if connectResourceList.PostgreSQLConnectParam.UserName != nil {
+						postgreSQLConnectParamMap["user_name"] = connectResourceList.PostgreSQLConnectParam.UserName
 					}
 
-					if connectResource.PostgreSQLConnectParam.Password != nil {
-						postgreSQLConnectParamMap["password"] = connectResource.PostgreSQLConnectParam.Password
+					if connectResourceList.PostgreSQLConnectParam.Password != nil {
+						postgreSQLConnectParamMap["password"] = connectResourceList.PostgreSQLConnectParam.Password
 					}
 
-					if connectResource.PostgreSQLConnectParam.Resource != nil {
-						postgreSQLConnectParamMap["resource"] = connectResource.PostgreSQLConnectParam.Resource
+					if connectResourceList.PostgreSQLConnectParam.Resource != nil {
+						postgreSQLConnectParamMap["resource"] = connectResourceList.PostgreSQLConnectParam.Resource
 					}
 
-					if connectResource.PostgreSQLConnectParam.ServiceVip != nil {
-						postgreSQLConnectParamMap["service_vip"] = connectResource.PostgreSQLConnectParam.ServiceVip
+					if connectResourceList.PostgreSQLConnectParam.ServiceVip != nil {
+						postgreSQLConnectParamMap["service_vip"] = connectResourceList.PostgreSQLConnectParam.ServiceVip
 					}
 
-					if connectResource.PostgreSQLConnectParam.UniqVpcId != nil {
-						postgreSQLConnectParamMap["uniq_vpc_id"] = connectResource.PostgreSQLConnectParam.UniqVpcId
+					if connectResourceList.PostgreSQLConnectParam.UniqVpcId != nil {
+						postgreSQLConnectParamMap["uniq_vpc_id"] = connectResourceList.PostgreSQLConnectParam.UniqVpcId
 					}
 
-					if connectResource.PostgreSQLConnectParam.ClusterId != nil {
-						postgreSQLConnectParamMap["cluster_id"] = connectResource.PostgreSQLConnectParam.ClusterId
+					if connectResourceList.PostgreSQLConnectParam.ClusterId != nil {
+						postgreSQLConnectParamMap["cluster_id"] = connectResourceList.PostgreSQLConnectParam.ClusterId
 					}
 
-					if connectResource.PostgreSQLConnectParam.IsUpdate != nil {
-						postgreSQLConnectParamMap["is_update"] = connectResource.PostgreSQLConnectParam.IsUpdate
+					if connectResourceList.PostgreSQLConnectParam.IsUpdate != nil {
+						postgreSQLConnectParamMap["is_update"] = connectResourceList.PostgreSQLConnectParam.IsUpdate
 					}
 
-					if connectResource.PostgreSQLConnectParam.SelfBuilt != nil {
-						postgreSQLConnectParamMap["self_built"] = connectResource.PostgreSQLConnectParam.SelfBuilt
+					if connectResourceList.PostgreSQLConnectParam.SelfBuilt != nil {
+						postgreSQLConnectParamMap["self_built"] = connectResourceList.PostgreSQLConnectParam.SelfBuilt
 					}
 
-					connectResourceListMap["postgre_sql_connect_param"] = []interface{}{postgreSQLConnectParamMap}
+					connectResourceListMap["postgre_s_q_l_connect_param"] = []interface{}{postgreSQLConnectParamMap}
 				}
 
-				if connectResource.MariaDBConnectParam != nil {
+				if connectResourceList.MariaDBConnectParam != nil {
 					mariaDBConnectParamMap := map[string]interface{}{}
 
-					if connectResource.MariaDBConnectParam.Port != nil {
-						mariaDBConnectParamMap["port"] = connectResource.MariaDBConnectParam.Port
+					if connectResourceList.MariaDBConnectParam.Port != nil {
+						mariaDBConnectParamMap["port"] = connectResourceList.MariaDBConnectParam.Port
 					}
 
-					if connectResource.MariaDBConnectParam.UserName != nil {
-						mariaDBConnectParamMap["user_name"] = connectResource.MariaDBConnectParam.UserName
+					if connectResourceList.MariaDBConnectParam.UserName != nil {
+						mariaDBConnectParamMap["user_name"] = connectResourceList.MariaDBConnectParam.UserName
 					}
 
-					if connectResource.MariaDBConnectParam.Password != nil {
-						mariaDBConnectParamMap["password"] = connectResource.MariaDBConnectParam.Password
+					if connectResourceList.MariaDBConnectParam.Password != nil {
+						mariaDBConnectParamMap["password"] = connectResourceList.MariaDBConnectParam.Password
 					}
 
-					if connectResource.MariaDBConnectParam.Resource != nil {
-						mariaDBConnectParamMap["resource"] = connectResource.MariaDBConnectParam.Resource
+					if connectResourceList.MariaDBConnectParam.Resource != nil {
+						mariaDBConnectParamMap["resource"] = connectResourceList.MariaDBConnectParam.Resource
 					}
 
-					if connectResource.MariaDBConnectParam.ServiceVip != nil {
-						mariaDBConnectParamMap["service_vip"] = connectResource.MariaDBConnectParam.ServiceVip
+					if connectResourceList.MariaDBConnectParam.ServiceVip != nil {
+						mariaDBConnectParamMap["service_vip"] = connectResourceList.MariaDBConnectParam.ServiceVip
 					}
 
-					if connectResource.MariaDBConnectParam.UniqVpcId != nil {
-						mariaDBConnectParamMap["uniq_vpc_id"] = connectResource.MariaDBConnectParam.UniqVpcId
+					if connectResourceList.MariaDBConnectParam.UniqVpcId != nil {
+						mariaDBConnectParamMap["uniq_vpc_id"] = connectResourceList.MariaDBConnectParam.UniqVpcId
 					}
 
-					if connectResource.MariaDBConnectParam.IsUpdate != nil {
-						mariaDBConnectParamMap["is_update"] = connectResource.MariaDBConnectParam.IsUpdate
+					if connectResourceList.MariaDBConnectParam.IsUpdate != nil {
+						mariaDBConnectParamMap["is_update"] = connectResourceList.MariaDBConnectParam.IsUpdate
 					}
 
-					connectResourceListMap["maria_db_connect_param"] = []interface{}{mariaDBConnectParamMap}
+					connectResourceListMap["maria_d_b_connect_param"] = []interface{}{mariaDBConnectParamMap}
 				}
 
-				if connectResource.SQLServerConnectParam != nil {
+				if connectResourceList.SQLServerConnectParam != nil {
 					sQLServerConnectParamMap := map[string]interface{}{}
 
-					if connectResource.SQLServerConnectParam.Port != nil {
-						sQLServerConnectParamMap["port"] = connectResource.SQLServerConnectParam.Port
+					if connectResourceList.SQLServerConnectParam.Port != nil {
+						sQLServerConnectParamMap["port"] = connectResourceList.SQLServerConnectParam.Port
 					}
 
-					if connectResource.SQLServerConnectParam.UserName != nil {
-						sQLServerConnectParamMap["user_name"] = connectResource.SQLServerConnectParam.UserName
+					if connectResourceList.SQLServerConnectParam.UserName != nil {
+						sQLServerConnectParamMap["user_name"] = connectResourceList.SQLServerConnectParam.UserName
 					}
 
-					if connectResource.SQLServerConnectParam.Password != nil {
-						sQLServerConnectParamMap["password"] = connectResource.SQLServerConnectParam.Password
+					if connectResourceList.SQLServerConnectParam.Password != nil {
+						sQLServerConnectParamMap["password"] = connectResourceList.SQLServerConnectParam.Password
 					}
 
-					if connectResource.SQLServerConnectParam.Resource != nil {
-						sQLServerConnectParamMap["resource"] = connectResource.SQLServerConnectParam.Resource
+					if connectResourceList.SQLServerConnectParam.Resource != nil {
+						sQLServerConnectParamMap["resource"] = connectResourceList.SQLServerConnectParam.Resource
 					}
 
-					if connectResource.SQLServerConnectParam.ServiceVip != nil {
-						sQLServerConnectParamMap["service_vip"] = connectResource.SQLServerConnectParam.ServiceVip
+					if connectResourceList.SQLServerConnectParam.ServiceVip != nil {
+						sQLServerConnectParamMap["service_vip"] = connectResourceList.SQLServerConnectParam.ServiceVip
 					}
 
-					if connectResource.SQLServerConnectParam.UniqVpcId != nil {
-						sQLServerConnectParamMap["uniq_vpc_id"] = connectResource.SQLServerConnectParam.UniqVpcId
+					if connectResourceList.SQLServerConnectParam.UniqVpcId != nil {
+						sQLServerConnectParamMap["uniq_vpc_id"] = connectResourceList.SQLServerConnectParam.UniqVpcId
 					}
 
-					if connectResource.SQLServerConnectParam.IsUpdate != nil {
-						sQLServerConnectParamMap["is_update"] = connectResource.SQLServerConnectParam.IsUpdate
+					if connectResourceList.SQLServerConnectParam.IsUpdate != nil {
+						sQLServerConnectParamMap["is_update"] = connectResourceList.SQLServerConnectParam.IsUpdate
 					}
 
-					connectResourceListMap["sql_server_connect_param"] = []interface{}{sQLServerConnectParamMap}
+					connectResourceListMap["s_q_l_server_connect_param"] = []interface{}{sQLServerConnectParamMap}
 				}
 
-				if connectResource.CtsdbConnectParam != nil {
+				if connectResourceList.CtsdbConnectParam != nil {
 					ctsdbConnectParamMap := map[string]interface{}{}
 
-					if connectResource.CtsdbConnectParam.Port != nil {
-						ctsdbConnectParamMap["port"] = connectResource.CtsdbConnectParam.Port
+					if connectResourceList.CtsdbConnectParam.Port != nil {
+						ctsdbConnectParamMap["port"] = connectResourceList.CtsdbConnectParam.Port
 					}
 
-					if connectResource.CtsdbConnectParam.ServiceVip != nil {
-						ctsdbConnectParamMap["service_vip"] = connectResource.CtsdbConnectParam.ServiceVip
+					if connectResourceList.CtsdbConnectParam.ServiceVip != nil {
+						ctsdbConnectParamMap["service_vip"] = connectResourceList.CtsdbConnectParam.ServiceVip
 					}
 
-					if connectResource.CtsdbConnectParam.UniqVpcId != nil {
-						ctsdbConnectParamMap["uniq_vpc_id"] = connectResource.CtsdbConnectParam.UniqVpcId
+					if connectResourceList.CtsdbConnectParam.UniqVpcId != nil {
+						ctsdbConnectParamMap["uniq_vpc_id"] = connectResourceList.CtsdbConnectParam.UniqVpcId
 					}
 
-					if connectResource.CtsdbConnectParam.UserName != nil {
-						ctsdbConnectParamMap["user_name"] = connectResource.CtsdbConnectParam.UserName
+					if connectResourceList.CtsdbConnectParam.UserName != nil {
+						ctsdbConnectParamMap["user_name"] = connectResourceList.CtsdbConnectParam.UserName
 					}
 
-					if connectResource.CtsdbConnectParam.Password != nil {
-						ctsdbConnectParamMap["password"] = connectResource.CtsdbConnectParam.Password
+					if connectResourceList.CtsdbConnectParam.Password != nil {
+						ctsdbConnectParamMap["password"] = connectResourceList.CtsdbConnectParam.Password
 					}
 
-					if connectResource.CtsdbConnectParam.Resource != nil {
-						ctsdbConnectParamMap["resource"] = connectResource.CtsdbConnectParam.Resource
+					if connectResourceList.CtsdbConnectParam.Resource != nil {
+						ctsdbConnectParamMap["resource"] = connectResourceList.CtsdbConnectParam.Resource
 					}
 
 					connectResourceListMap["ctsdb_connect_param"] = []interface{}{ctsdbConnectParamMap}
 				}
 
-				if connectResource.DorisConnectParam != nil {
+				if connectResourceList.DorisConnectParam != nil {
 					dorisConnectParamMap := map[string]interface{}{}
 
-					if connectResource.DorisConnectParam.Port != nil {
-						dorisConnectParamMap["port"] = connectResource.DorisConnectParam.Port
+					if connectResourceList.DorisConnectParam.Port != nil {
+						dorisConnectParamMap["port"] = connectResourceList.DorisConnectParam.Port
 					}
 
-					if connectResource.DorisConnectParam.UserName != nil {
-						dorisConnectParamMap["user_name"] = connectResource.DorisConnectParam.UserName
+					if connectResourceList.DorisConnectParam.UserName != nil {
+						dorisConnectParamMap["user_name"] = connectResourceList.DorisConnectParam.UserName
 					}
 
-					if connectResource.DorisConnectParam.Password != nil {
-						dorisConnectParamMap["password"] = connectResource.DorisConnectParam.Password
+					if connectResourceList.DorisConnectParam.Password != nil {
+						dorisConnectParamMap["password"] = connectResourceList.DorisConnectParam.Password
 					}
 
-					if connectResource.DorisConnectParam.Resource != nil {
-						dorisConnectParamMap["resource"] = connectResource.DorisConnectParam.Resource
+					if connectResourceList.DorisConnectParam.Resource != nil {
+						dorisConnectParamMap["resource"] = connectResourceList.DorisConnectParam.Resource
 					}
 
-					if connectResource.DorisConnectParam.ServiceVip != nil {
-						dorisConnectParamMap["service_vip"] = connectResource.DorisConnectParam.ServiceVip
+					if connectResourceList.DorisConnectParam.ServiceVip != nil {
+						dorisConnectParamMap["service_vip"] = connectResourceList.DorisConnectParam.ServiceVip
 					}
 
-					if connectResource.DorisConnectParam.UniqVpcId != nil {
-						dorisConnectParamMap["uniq_vpc_id"] = connectResource.DorisConnectParam.UniqVpcId
+					if connectResourceList.DorisConnectParam.UniqVpcId != nil {
+						dorisConnectParamMap["uniq_vpc_id"] = connectResourceList.DorisConnectParam.UniqVpcId
 					}
 
-					if connectResource.DorisConnectParam.IsUpdate != nil {
-						dorisConnectParamMap["is_update"] = connectResource.DorisConnectParam.IsUpdate
+					if connectResourceList.DorisConnectParam.IsUpdate != nil {
+						dorisConnectParamMap["is_update"] = connectResourceList.DorisConnectParam.IsUpdate
 					}
 
-					if connectResource.DorisConnectParam.SelfBuilt != nil {
-						dorisConnectParamMap["self_built"] = connectResource.DorisConnectParam.SelfBuilt
+					if connectResourceList.DorisConnectParam.SelfBuilt != nil {
+						dorisConnectParamMap["self_built"] = connectResourceList.DorisConnectParam.SelfBuilt
 					}
 
-					if connectResource.DorisConnectParam.BePort != nil {
-						dorisConnectParamMap["be_port"] = connectResource.DorisConnectParam.BePort
+					if connectResourceList.DorisConnectParam.BePort != nil {
+						dorisConnectParamMap["be_port"] = connectResourceList.DorisConnectParam.BePort
 					}
 
 					connectResourceListMap["doris_connect_param"] = []interface{}{dorisConnectParamMap}
 				}
 
-				if connectResource.KafkaConnectParam != nil {
+				if connectResourceList.KafkaConnectParam != nil {
 					kafkaConnectParamMap := map[string]interface{}{}
 
-					if connectResource.KafkaConnectParam.Resource != nil {
-						kafkaConnectParamMap["resource"] = connectResource.KafkaConnectParam.Resource
+					if connectResourceList.KafkaConnectParam.Resource != nil {
+						kafkaConnectParamMap["resource"] = connectResourceList.KafkaConnectParam.Resource
 					}
 
-					if connectResource.KafkaConnectParam.SelfBuilt != nil {
-						kafkaConnectParamMap["self_built"] = connectResource.KafkaConnectParam.SelfBuilt
+					if connectResourceList.KafkaConnectParam.SelfBuilt != nil {
+						kafkaConnectParamMap["self_built"] = connectResourceList.KafkaConnectParam.SelfBuilt
 					}
 
-					if connectResource.KafkaConnectParam.IsUpdate != nil {
-						kafkaConnectParamMap["is_update"] = connectResource.KafkaConnectParam.IsUpdate
+					if connectResourceList.KafkaConnectParam.IsUpdate != nil {
+						kafkaConnectParamMap["is_update"] = connectResourceList.KafkaConnectParam.IsUpdate
 					}
 
-					if connectResource.KafkaConnectParam.BrokerAddress != nil {
-						kafkaConnectParamMap["broker_address"] = connectResource.KafkaConnectParam.BrokerAddress
+					if connectResourceList.KafkaConnectParam.BrokerAddress != nil {
+						kafkaConnectParamMap["broker_address"] = connectResourceList.KafkaConnectParam.BrokerAddress
 					}
 
-					if connectResource.KafkaConnectParam.Region != nil {
-						kafkaConnectParamMap["region"] = connectResource.KafkaConnectParam.Region
+					if connectResourceList.KafkaConnectParam.Region != nil {
+						kafkaConnectParamMap["region"] = connectResourceList.KafkaConnectParam.Region
 					}
 
 					connectResourceListMap["kafka_connect_param"] = []interface{}{kafkaConnectParamMap}
 				}
 
 				connectResourceListList = append(connectResourceListList, connectResourceListMap)
-				ids = append(ids, *connectResource.ResourceId)
-
 			}
 
-			describeConnectResourcesRespMap["connect_resource_list"] = connectResourceListList
+			describeConnectResourcesRespMap["connect_resource_list"] = []interface{}{connectResourceListList}
 		}
 
-		_ = d.Set("result", []map[string]interface{}{describeConnectResourcesRespMap})
+		ids = append(ids, *result.ResourceId)
+		_ = d.Set("result", describeConnectResourcesRespMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

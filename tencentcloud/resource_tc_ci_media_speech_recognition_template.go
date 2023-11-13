@@ -5,29 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_speech_recognition_template" "media_speech_recognition_template" {
-  bucket = "terraform-ci-1308919341"
-  name = "speech_recognition_template"
+  name = &lt;nil&gt;
   speech_recognition {
-		engine_model_type = "16k_zh"
-		channel_num = "1"
-		res_text_format = "1"
-		filter_dirty = "0"
-		filter_modal = "1"
-		convert_num_mode = "0"
-		speaker_diarization = "1"
-		speaker_number = "0"
-		filter_punc = "0"
-		output_file_type = "txt"
+		engine_model_type = &lt;nil&gt;
+		channel_num = &lt;nil&gt;
+		res_text_format = &lt;nil&gt;
+		filter_dirty = &lt;nil&gt;
+		filter_modal = &lt;nil&gt;
+		convert_num_mode = &lt;nil&gt;
+		speaker_diarization = &lt;nil&gt;
+		speaker_number = &lt;nil&gt;
+		filter_punc = &lt;nil&gt;
+		output_file_type = &lt;nil&gt;
+
   }
 }
 ```
 
 Import
 
-ci media_speech_recognition_template can be imported using the bucket#templateId, e.g.
+ci media_speech_recognition_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_speech_recognition_template.media_speech_recognition_template terraform-ci-xxxxxx#t1d794430f2f1f4350b11e905ce2c6167e
+terraform import tencentcloud_ci_media_speech_recognition_template.media_speech_recognition_template media_speech_recognition_template_id
 ```
 */
 package tencentcloud
@@ -35,14 +35,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaSpeechRecognitionTemplate() *schema.Resource {
@@ -55,12 +52,6 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -71,13 +62,13 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplate() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "audio configuration.",
+				Description: "Audio configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"engine_model_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Engine model type, divided into phone scene and non-phone scene, phone scene: 8k_zh: phone 8k Chinese Mandarin general (can be used for dual-channel audio), 8k_zh_s: phone 8k Chinese Mandarin speaker separation (only for monophonic audio), 8k_en: Telephone 8k English; non-telephone scene: 16k_zh: 16k Mandarin Chinese, 16k_zh_video: 16k audio and video field, 16k_en: 16k English, 16k_ca: 16k Cantonese, 16k_ja: 16k Japanese, 16k_zh_edu: Chinese education, 16k_en_edu: English education, 16k_zh_medical: medical, 16k_th: Thai, 16k_zh_dialect: multi-dialect, supports 23 dialects.",
+							Description: "Engine model type, divided into phone scene and non-phone scene, phone scene: 8k_zh: phone 8k Chinese Mandarin general (can be used for dual-channel audio), 8k_zh_s: phone 8k Chinese Mandarin speaker separation (only for monophonic audio) ,8k_en: Telephone 8k English; non-telephone scene: 16k_zh: 16k Mandarin Chinese, 16k_zh_video: 16k audio and video field, 16k_en: 16k English, 16k_ca: 16k Cantonese, 16k_ja: 16k Japanese, 16k_zh_edu: Chinese education, 16k_en_edu: English education, 16k_zh_medical: medical, 16k_th: Thai, 16k_zh_dialect: multi-dialect, supports 23 dialects.",
 						},
 						"channel_num": {
 							Type:        schema.TypeString,
@@ -90,32 +81,32 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplate() *schema.Resource {
 							Description: "Recognition result return form: 0 means the recognition result text (including segmented time stamps), 1 is the detailed recognition result at the word level granularity, without punctuation, and includes the speech rate value (a list of word time stamps, generally used to generate subtitle scenes), 2 Detailed recognition results at word-level granularity (including punctuation and speech rate values)..",
 						},
 						"filter_dirty": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Whether to filter dirty words (currently supports Mandarin Chinese engine): 0 means not to filter dirty words, 1 means to filter dirty words, 2 means to replace dirty words with *, the default value is 0.",
 						},
 						"filter_modal": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Whether to pass modal particles (currently supports Mandarin Chinese engine): 0 means not to filter modal particles, 1 means partial filtering, 2 means strict filtering, and the default value is 0.",
 						},
 						"convert_num_mode": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Whether to perform intelligent conversion of Arabic numerals (currently supports Mandarin Chinese engine): 0 means no conversion, directly output Chinese numbers, 1 means intelligently convert to Arabic numerals according to the scene, 3 means enable math-related digital conversion, the default value is 0.",
 						},
 						"speaker_diarization": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Whether to enable speaker separation: 0 means not enabled, 1 means enabled (only supports 8k_zh, 16k_zh, 16k_zh_video, monophonic audio), the default value is 0, Note: 8K telephony scenarios suggest using dual-channel to distinguish between the two parties, set ChannelNum=2 is enough, no need to enable speaker separation.",
 						},
 						"speaker_number": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The number of speakers to be separated (need to be used in conjunction with enabling speaker separation), value range: 0-10, 0 means automatic separation (currently only supports <= 6 people), 1-10 represents the number of specified speakers to be separated. The default value is 0.",
+							Description: "The number of speakers to be separated (need to be used in conjunction with enabling speaker separation), value range: 0-10, 0 means automatic separation (currently only supports ≤ 6 people), 1-10 represents the number of specified speakers to be separated. The default value is 0.",
 						},
 						"filter_punc": {
-							Type:        schema.TypeString,
+							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Whether to filter punctuation (currently supports Mandarin Chinese engine): 0 means no filtering, 1 means filtering end-of-sentence punctuation, 2 means filtering all punctuation, the default value is 0.",
 						},
@@ -136,68 +127,57 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplateCreate(d *schema.Resour
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaSpeechRecognitionTemplateOptions{
-			Tag: "SpeechRecognition",
-		}
+		request    = ci.NewCreateMediaSpeechRecognitionTemplateRequest()
+		response   = ci.NewCreateMediaSpeechRecognitionTemplateResponse()
 		templateId string
-		bucket     string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "speech_recognition"); ok {
-		speechRecognition := cos.SpeechRecognition{}
+		speechRecognition := ci.SpeechRecognition{}
 		if v, ok := dMap["engine_model_type"]; ok {
-			speechRecognition.EngineModelType = v.(string)
+			speechRecognition.EngineModelType = helper.String(v.(string))
 		}
 		if v, ok := dMap["channel_num"]; ok {
-			speechRecognition.ChannelNum = v.(string)
+			speechRecognition.ChannelNum = helper.String(v.(string))
 		}
 		if v, ok := dMap["res_text_format"]; ok {
-			speechRecognition.ResTextFormat = v.(string)
+			speechRecognition.ResTextFormat = helper.String(v.(string))
 		}
 		if v, ok := dMap["filter_dirty"]; ok {
-			speechRecognition.FilterDirty = v.(string)
+			speechRecognition.FilterDirty = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["filter_modal"]; ok {
-			speechRecognition.FilterModal = v.(string)
+			speechRecognition.FilterModal = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["convert_num_mode"]; ok {
-			speechRecognition.ConvertNumMode = v.(string)
+			speechRecognition.ConvertNumMode = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["speaker_diarization"]; ok {
-			speechRecognition.SpeakerDiarization = v.(string)
+			speechRecognition.SpeakerDiarization = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["speaker_number"]; ok {
-			speechRecognition.SpeakerNumber = v.(string)
+			speechRecognition.SpeakerNumber = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["filter_punc"]; ok {
-			speechRecognition.FilterPunc = v.(string)
+			speechRecognition.FilterPunc = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["output_file_type"]; ok {
-			speechRecognition.OutputFileType = v.(string)
+			speechRecognition.OutputFileType = helper.String(v.(string))
 		}
 		request.SpeechRecognition = &speechRecognition
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaSpeechRecognitionTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaSpeechRecognitionTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaSpeechRecognitionTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -207,8 +187,8 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplateCreate(d *schema.Resour
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaSpeechRecognitionTemplateRead(d, meta)
 }
@@ -218,73 +198,68 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplateRead(d *schema.Resource
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSpeechRecognitionTemplateId := d.Id()
 
-	mediaSpeechRecognitionTemplate, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaSpeechRecognitionTemplate, err := service.DescribeCiMediaSpeechRecognitionTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
 	if mediaSpeechRecognitionTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaSpeechRecognitionTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if mediaSpeechRecognitionTemplate.Name != "" {
+	if mediaSpeechRecognitionTemplate.Name != nil {
 		_ = d.Set("name", mediaSpeechRecognitionTemplate.Name)
 	}
 
 	if mediaSpeechRecognitionTemplate.SpeechRecognition != nil {
 		speechRecognitionMap := map[string]interface{}{}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.EngineModelType != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.EngineModelType != nil {
 			speechRecognitionMap["engine_model_type"] = mediaSpeechRecognitionTemplate.SpeechRecognition.EngineModelType
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.ChannelNum != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.ChannelNum != nil {
 			speechRecognitionMap["channel_num"] = mediaSpeechRecognitionTemplate.SpeechRecognition.ChannelNum
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.ResTextFormat != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.ResTextFormat != nil {
 			speechRecognitionMap["res_text_format"] = mediaSpeechRecognitionTemplate.SpeechRecognition.ResTextFormat
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterDirty != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterDirty != nil {
 			speechRecognitionMap["filter_dirty"] = mediaSpeechRecognitionTemplate.SpeechRecognition.FilterDirty
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterModal != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterModal != nil {
 			speechRecognitionMap["filter_modal"] = mediaSpeechRecognitionTemplate.SpeechRecognition.FilterModal
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.ConvertNumMode != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.ConvertNumMode != nil {
 			speechRecognitionMap["convert_num_mode"] = mediaSpeechRecognitionTemplate.SpeechRecognition.ConvertNumMode
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerDiarization != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerDiarization != nil {
 			speechRecognitionMap["speaker_diarization"] = mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerDiarization
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerNumber != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerNumber != nil {
 			speechRecognitionMap["speaker_number"] = mediaSpeechRecognitionTemplate.SpeechRecognition.SpeakerNumber
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterPunc != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.FilterPunc != nil {
 			speechRecognitionMap["filter_punc"] = mediaSpeechRecognitionTemplate.SpeechRecognition.FilterPunc
 		}
 
-		if mediaSpeechRecognitionTemplate.SpeechRecognition.OutputFileType != "" {
+		if mediaSpeechRecognitionTemplate.SpeechRecognition.OutputFileType != nil {
 			speechRecognitionMap["output_file_type"] = mediaSpeechRecognitionTemplate.SpeechRecognition.OutputFileType
 		}
 
@@ -299,71 +274,32 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplateUpdate(d *schema.Resour
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaSpeechRecognitionTemplateOptions{
-		Tag: "SpeechRecognition",
-	}
+	request := ci.NewUpdateMediaSpeechRecognitionTemplateRequest()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	mediaSpeechRecognitionTemplateId := d.Id()
 
-	if d.HasChange("speech_recognition") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "speech_recognition"); ok {
-			speechRecognition := cos.SpeechRecognition{}
-			if v, ok := dMap["engine_model_type"]; ok {
-				speechRecognition.EngineModelType = v.(string)
-			}
-			if v, ok := dMap["channel_num"]; ok {
-				speechRecognition.ChannelNum = v.(string)
-			}
-			if v, ok := dMap["res_text_format"]; ok {
-				speechRecognition.ResTextFormat = v.(string)
-			}
-			if v, ok := dMap["filter_dirty"]; ok {
-				speechRecognition.FilterDirty = v.(string)
-			}
-			if v, ok := dMap["filter_modal"]; ok {
-				speechRecognition.FilterModal = v.(string)
-			}
-			if v, ok := dMap["convert_num_mode"]; ok {
-				speechRecognition.ConvertNumMode = v.(string)
-			}
-			if v, ok := dMap["speaker_diarization"]; ok {
-				speechRecognition.SpeakerDiarization = v.(string)
-			}
-			if v, ok := dMap["speaker_number"]; ok {
-				speechRecognition.SpeakerNumber = v.(string)
-			}
-			if v, ok := dMap["filter_punc"]; ok {
-				speechRecognition.FilterPunc = v.(string)
-			}
-			if v, ok := dMap["output_file_type"]; ok {
-				speechRecognition.OutputFileType = v.(string)
-			}
-			request.SpeechRecognition = &speechRecognition
+	request.TemplateId = &templateId
+
+	immutableArgs := []string{"name", "speech_recognition"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaSpeechRecognitionTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaSpeechRecognitionTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaSpeechRecognitionTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaSpeechRecognitionTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaSpeechRecognitionTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -378,14 +314,9 @@ func resourceTencentCloudCiMediaSpeechRecognitionTemplateDelete(d *schema.Resour
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSpeechRecognitionTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaSpeechRecognitionTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

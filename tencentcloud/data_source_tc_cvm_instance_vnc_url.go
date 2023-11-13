@@ -5,18 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_instance_vnc_url" "instance_vnc_url" {
-  instance_id = "ins-xxxxxxxx"
-}
+  instance_id = "ins-r9hr2upy"
+  }
 ```
 */
 package tencentcloud
 
 import (
-	"fmt"
-
+	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -49,36 +47,38 @@ func dataSourceTencentCloudCvmInstanceVncUrlRead(d *schema.ResourceData, meta in
 	defer logElapsed("data_source.tencentcloud_cvm_instance_vnc_url.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var response *cvm.DescribeInstanceVncUrlResponse
-	request := cvm.NewDescribeInstanceVncUrlRequest()
-	instanceId := d.Get("instance_id").(string)
-	request.InstanceId = helper.String(instanceId)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	logId := getLogId(contextNil)
 
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeInstanceVncUrl(request)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("instance_id"); ok {
+		paramMap["InstanceId"] = helper.String(v.(string))
+	}
+
+	service := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeCvmInstanceVncUrlByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		response = result
+		instanceVncUrl = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if response == nil || response.Response == nil {
-		d.SetId("")
-		return fmt.Errorf("Response is nil")
-
+	ids := make([]string, 0, len(instanceVncUrl))
+	if instanceVncUrl != nil {
+		_ = d.Set("instance_vnc_url", instanceVncUrl)
 	}
-	d.SetId(instanceId)
-	_ = d.Set("instance_vnc_url", *response.Response.InstanceVncUrl)
 
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), map[string]interface{}{
-			"instance_vnc_url": *response.Response.InstanceVncUrl,
-		}); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

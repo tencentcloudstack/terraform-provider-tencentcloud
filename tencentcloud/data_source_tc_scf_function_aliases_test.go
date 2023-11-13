@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfFunctionAliasesDataSource_basic(t *testing.T) {
@@ -25,8 +24,9 @@ func TestAccTencentCloudScfFunctionAliasesDataSource_basic(t *testing.T) {
 const testAccScfFunctionAliasesDataSource = `
 
 data "tencentcloud_scf_function_aliases" "function_aliases" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-}
+  function_name = ""
+  namespace = ""
+  function_version = ""
+  }
 
 `

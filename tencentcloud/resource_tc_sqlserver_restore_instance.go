@@ -5,12 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
-  instance_id = "mssql-qelbzgwf"
-  backup_id   = 3482091273
+  instance_id = "mssql-i1z41iwd"
+  backup_id = 1981910
+  target_instance_id = "mssql-au8ajamz"
   rename_restore {
-    old_name = "keep_pubsub_db2"
-    new_name = "restore_keep_pubsub_db2"
+		old_name = ""
+		new_name = ""
+
   }
+  type =
+  d_b_list =
+  group_id = ""
 }
 ```
 
@@ -19,7 +24,7 @@ Import
 sqlserver restore_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_restore_instance.restore_instance mssql-qelbzgwf#3482091273#keep_pubsub_db2#restore_keep_pubsub_db2
+terraform import tencentcloud_sqlserver_restore_instance.restore_instance restore_instance_id
 ```
 */
 package tencentcloud
@@ -27,14 +32,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudSqlserverRestoreInstance() *schema.Resource {
@@ -52,48 +53,58 @@ func resourceTencentCloudSqlserverRestoreInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
+
 			"backup_id": {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Backup file ID, which can be obtained through the Id field in the returned value of the DescribeBackups API.",
 			},
+
+			"target_instance_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "ID of the target instance to which the backup is restored. The target instance should be under the same APPID. If this parameter is left empty, ID of the source instance will be used.",
+			},
+
 			"rename_restore": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeList,
 				Description: "Restore the databases listed in ReNameRestoreDatabase and rename them after restoration. If this parameter is left empty, all databases will be restored and renamed in the default format.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"old_name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "Database name. If the OldName database does not exist, a failure will be returned.It can be left empty in offline migration tasks.",
 						},
 						"new_name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
 						},
 					},
 				},
 			},
-			"encryption": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "TDE encryption, `enable` encrypted, `disable` unencrypted.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"db_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Database name.",
-						},
-						"status": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "encryption, `enable` encrypted, `disable` unencrypted.",
-						},
-					},
+
+			"type": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Rollback type, 0-overwrite method; 1-rename method, default 1.",
+			},
+
+			"d_b_list": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
 				},
+				Description: "The database that needs to be covered and rolled back is required only when the file is covered and rolled back.",
+			},
+
+			"group_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Group ID of unarchived backup files grouped by backup task. This parameter is returned by the DescribeBackups API.",
 			},
 		},
 	}
@@ -103,37 +114,12 @@ func resourceTencentCloudSqlserverRestoreInstanceCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_sqlserver_restore_instance.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		instanceId string
-		backupId   string
-	)
-
+	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("backup_id"); ok {
-		backupId = strconv.Itoa(v.(int))
-	}
-
-	oldNameList := make([]string, 0)
-	newNameList := make([]string, 0)
-	if v, ok := d.GetOk("rename_restore"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["old_name"]; ok {
-				oldNameList = append(oldNameList, v.(string))
-			}
-			if v, ok := dMap["new_name"]; ok {
-				newNameList = append(newNameList, v.(string))
-			}
-		}
-	}
-
-	oldNameListStr := strings.Join(oldNameList, COMMA_SP)
-	newNameListStr := strings.Join(newNameList, COMMA_SP)
-
-	d.SetId(strings.Join([]string{instanceId, backupId, oldNameListStr, newNameListStr}, FILED_SP))
+	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverRestoreInstanceUpdate(d, meta)
 }
@@ -142,24 +128,15 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 	defer logElapsed("resource.tencentcloud_sqlserver_restore_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
-	instanceId := idSplit[0]
-	backupId := idSplit[1]
-	oldNameListStr := idSplit[2]
-	newNameListStr := idSplit[3]
-	oldNameList := strings.Split(oldNameListStr, COMMA_SP)
-	newNameList := strings.Split(newNameListStr, COMMA_SP)
-	allNameList := append(oldNameList, newNameList...)
-	restoreInstance, err := service.DescribeSqlserverRestoreInstanceById(ctx, instanceId, allNameList)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	restoreInstanceId := d.Id()
+
+	restoreInstance, err := service.DescribeSqlserverRestoreInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -174,31 +151,44 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 		_ = d.Set("instance_id", restoreInstance.InstanceId)
 	}
 
-	tmpBackipId, _ := strconv.Atoi(backupId)
-	_ = d.Set("backup_id", tmpBackipId)
-
-	renameRestoreList := []interface{}{}
-	for i := 0; i < len(oldNameList); i++ {
-		renameRestoreMap := map[string]interface{}{}
-		renameRestoreMap["old_name"] = oldNameList[i]
-		renameRestoreMap["new_name"] = newNameList[i]
-		renameRestoreList = append(renameRestoreList, renameRestoreMap)
+	if restoreInstance.BackupId != nil {
+		_ = d.Set("backup_id", restoreInstance.BackupId)
 	}
-	_ = d.Set("rename_restore", renameRestoreList)
 
-	if restoreInstance.DBDetails != nil {
-		tmpList := make([]map[string]interface{}, 0)
-		for _, item := range restoreInstance.DBDetails {
-			dMap := map[string]interface{}{}
-			if item.Name != nil {
-				dMap["db_name"] = item.Name
+	if restoreInstance.TargetInstanceId != nil {
+		_ = d.Set("target_instance_id", restoreInstance.TargetInstanceId)
+	}
+
+	if restoreInstance.RenameRestore != nil {
+		renameRestoreList := []interface{}{}
+		for _, renameRestore := range restoreInstance.RenameRestore {
+			renameRestoreMap := map[string]interface{}{}
+
+			if restoreInstance.RenameRestore.OldName != nil {
+				renameRestoreMap["old_name"] = restoreInstance.RenameRestore.OldName
 			}
-			if item.Encryption != nil {
-				dMap["status"] = item.Encryption
+
+			if restoreInstance.RenameRestore.NewName != nil {
+				renameRestoreMap["new_name"] = restoreInstance.RenameRestore.NewName
 			}
-			tmpList = append(tmpList, dMap)
+
+			renameRestoreList = append(renameRestoreList, renameRestoreMap)
 		}
-		_ = d.Set("encryption", tmpList)
+
+		_ = d.Set("rename_restore", renameRestoreList)
+
+	}
+
+	if restoreInstance.Type != nil {
+		_ = d.Set("type", restoreInstance.Type)
+	}
+
+	if restoreInstance.DBList != nil {
+		_ = d.Set("d_b_list", restoreInstance.DBList)
+	}
+
+	if restoreInstance.GroupId != nil {
+		_ = d.Set("group_id", restoreInstance.GroupId)
 	}
 
 	return nil
@@ -208,36 +198,19 @@ func resourceTencentCloudSqlserverRestoreInstanceUpdate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_sqlserver_restore_instance.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request = sqlserver.NewRestoreInstanceRequest()
-		flowId  int64
-	)
+	logId := getLogId(contextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
-	instanceId := idSplit[0]
-	backupId := idSplit[1]
+	request := sqlserver.NewRestoreInstanceRequest()
+
+	restoreInstanceId := d.Id()
 
 	request.InstanceId = &instanceId
-	tmpBackupId, _ := strconv.Atoi(backupId)
-	request.BackupId = helper.IntInt64(tmpBackupId)
 
-	if v, ok := d.GetOk("rename_restore"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			parameter := sqlserver.RenameRestoreDatabase{}
-			if v, ok := dMap["old_name"]; ok {
-				parameter.OldName = helper.String(v.(string))
-			}
-			if v, ok := dMap["new_name"]; ok {
-				parameter.NewName = helper.String(v.(string))
-			}
-			request.RenameRestore = append(request.RenameRestore, &parameter)
+	immutableArgs := []string{"instance_id", "backup_id", "target_instance_id", "rename_restore", "type", "d_b_list", "group_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
@@ -248,45 +221,10 @@ func resourceTencentCloudSqlserverRestoreInstanceUpdate(d *schema.ResourceData, 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		flowId = *result.Response.FlowId
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update sqlserver restoreInstance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeCloneStatusByFlowId(ctx, flowId)
-		if e != nil {
-			return retryError(e)
-		}
-
-		if result == nil {
-			e = fmt.Errorf("sqlserver restoreInstance instanceId %s flowId %d not exists", instanceId, flowId)
-			return resource.NonRetryableError(e)
-		}
-
-		if *result.Status == SQLSERVER_TASK_RUNNING {
-			return resource.RetryableError(fmt.Errorf("restore sqlserver restoreInstance task status is running"))
-		}
-
-		if *result.Status == SQLSERVER_TASK_SUCCESS {
-			return nil
-		}
-
-		if *result.Status == SQLSERVER_TASK_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("restore sqlserver restoreInstance task status is failed"))
-		}
-
-		e = fmt.Errorf("restore sqlserver restoreInstance task status is %v, we won't wait for it finish", *result.Status)
-		return resource.NonRetryableError(e)
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s restore sqlserver restoreInstance task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -297,29 +235,5 @@ func resourceTencentCloudSqlserverRestoreInstanceDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_sqlserver_restore_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId            = getLogId(contextNil)
-		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
-		sqlserverService = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
-	instanceId := idSplit[0]
-	newNameListStr := idSplit[3]
-	newNameList := strings.Split(newNameListStr, COMMA_SP)
-
-	if len(newNameList) == 0 {
-		return nil
-	}
-
-	tmpNames := make([]*string, len(newNameList))
-	for v := range newNameList {
-		tmpNames[v] = &newNameList[v]
-	}
-
-	err := sqlserverService.DeleteSqlserverDB(ctx, instanceId, tmpNames)
-	return err
+	return nil
 }

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseDiskConfigDataSource_basic(t *testing.T) {
@@ -26,8 +25,10 @@ const testAccLighthouseDiskConfigDataSource = `
 
 data "tencentcloud_lighthouse_disk_config" "disk_config" {
   filters {
-	name = "zone"
-	values = ["ap-guangzhou-3"]
+		name = ""
+		values = 
+
   }
-}
+  }
+
 `

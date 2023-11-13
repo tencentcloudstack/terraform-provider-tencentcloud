@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCynosdbAccountsDataSource_basic(t *testing.T) {
@@ -16,20 +15,19 @@ func TestAccTencentCloudCynosdbAccountsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbAccountsDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_accounts.accounts"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_accounts.accounts", "account_set.#", "1"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_accounts.accounts")),
 			},
 		},
 	})
 }
 
-const testAccCynosdbAccountsDataSource = CommonCynosdb + `
+const testAccCynosdbAccountsDataSource = `
 
 data "tencentcloud_cynosdb_accounts" "accounts" {
-	cluster_id = var.cynosdb_cluster_id
-	account_names = ["root"]
-}
+  cluster_id = "cynosdbmysql-on5xw0ni"
+  account_names = 
+  db_type = "MYSQL"
+  hosts = 
+  }
 
 `

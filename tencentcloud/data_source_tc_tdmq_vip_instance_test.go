@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentNeedFixCloudTdmqVipInstanceDataSource_basic(t *testing.T) {
+func TestAccTencentCloudTdmqVipInstanceDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,16 +15,16 @@ func TestAccTencentNeedFixCloudTdmqVipInstanceDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTdmqVipInstanceDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_vip_instance.vip_instance"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_vip_instance.vip_instance")),
 			},
 		},
 	})
 }
 
 const testAccTdmqVipInstanceDataSource = `
+
 data "tencentcloud_tdmq_vip_instance" "vip_instance" {
-  cluster_id = "rocketmq-rd3545bkkj49"
-}
+  cluster_id = &lt;nil&gt;
+    }
+
 `

@@ -4,17 +4,15 @@ Use this data source to query detailed information of sqlserver project_security
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_project_security_groups" "example" {
+data "tencentcloud_sqlserver_project_security_groups" "project_security_groups" {
   project_id = 0
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -30,6 +28,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Project ID, which can be viewed through the console project management.",
 			},
+
 			"security_group_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -39,7 +38,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 						"project_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "project ID.",
+							Description: "Project ID.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -49,7 +48,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 						"inbound_set": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "inbound rules.",
+							Description: "Inbound rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"action": {
@@ -65,7 +64,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 									"port_range": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "port or port range.",
+										Description: "Port or port range.",
 									},
 									"ip_protocol": {
 										Type:        schema.TypeString,
@@ -83,7 +82,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 						"outbound_set": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "outbound rules.",
+							Description: "Outbound rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"action": {
@@ -99,7 +98,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 									"port_range": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "port or port range.",
+										Description: "Port or port range.",
 									},
 									"ip_protocol": {
 										Type:        schema.TypeString,
@@ -122,7 +121,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 						"security_group_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "security group name.",
+							Description: "Security group name.",
 						},
 						"security_group_remark": {
 							Type:        schema.TypeString,
@@ -132,6 +131,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroups() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -145,18 +145,16 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroupsRead(d *schema.Resource
 	defer logElapsed("data_source.tencentcloud_sqlserver_project_security_groups.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		projectId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("project_id"); v != nil {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
-		projectId = strconv.Itoa(v.(int))
 	}
+
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var securityGroupSet []*sqlserver.SecurityGroup
 
@@ -165,15 +163,14 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroupsRead(d *schema.Resource
 		if e != nil {
 			return retryError(e)
 		}
-
 		securityGroupSet = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(securityGroupSet))
 	tmpList := make([]map[string]interface{}, 0, len(securityGroupSet))
 
 	if securityGroupSet != nil {
@@ -216,7 +213,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroupsRead(d *schema.Resource
 					inboundSetList = append(inboundSetList, inboundSetMap)
 				}
 
-				securityGroupMap["inbound_set"] = inboundSetList
+				securityGroupMap["inbound_set"] = []interface{}{inboundSetList}
 			}
 
 			if securityGroup.OutboundSet != nil {
@@ -247,7 +244,7 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroupsRead(d *schema.Resource
 					outboundSetList = append(outboundSetList, outboundSetMap)
 				}
 
-				securityGroupMap["outbound_set"] = outboundSetList
+				securityGroupMap["outbound_set"] = []interface{}{outboundSetList}
 			}
 
 			if securityGroup.SecurityGroupId != nil {
@@ -262,13 +259,14 @@ func dataSourceTencentCloudSqlserverProjectSecurityGroupsRead(d *schema.Resource
 				securityGroupMap["security_group_remark"] = securityGroup.SecurityGroupRemark
 			}
 
+			ids = append(ids, *securityGroup.InstanceId)
 			tmpList = append(tmpList, securityGroupMap)
 		}
 
 		_ = d.Set("security_group_set", tmpList)
 	}
 
-	d.SetId(projectId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

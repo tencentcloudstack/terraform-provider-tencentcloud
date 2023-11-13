@@ -5,21 +5,31 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_proxy" "proxy" {
-  cluster_id               = "cynosdbmysql-bws8h88b"
-  cpu                      = 2
-  mem                      = 4000
-  unique_vpc_id            = "vpc-k1t8ickr"
-  unique_subnet_id         = "subnet-jdi5xn22"
-  connection_pool_type     = "SessionConnectionPool"
-  open_connection_pool     = "yes"
-  connection_pool_time_out = 30
-  security_group_ids       = ["sg-baxfiao5"]
-  description              = "desc sample"
+  cluster_id = "cynosdbmysql-xxxxxxx"
+  cpu = 2
+  mem = 4000
+  unique_vpc_id = "无"
+  unique_subnet_id = "无"
+  proxy_count = 2
+  connection_pool_type = "SessionConnectionPool"
+  open_connection_pool = "yes"
+  connection_pool_time_out = 0
+  security_group_ids =
+  description = "无"
   proxy_zones {
-    proxy_node_zone  = "ap-guangzhou-7"
-    proxy_node_count = 2
+		proxy_node_zone = ""
+		proxy_node_count =
+
   }
 }
+```
+
+Import
+
+cynosdb proxy can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_proxy.proxy proxy_id
 ```
 */
 package tencentcloud
@@ -27,15 +37,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCynosdbProxy() *schema.Resource {
@@ -44,79 +51,83 @@ func resourceTencentCloudCynosdbProxy() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbProxyRead,
 		Update: resourceTencentCloudCynosdbProxyUpdate,
 		Delete: resourceTencentCloudCynosdbProxyDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"cpu": {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Number of CPU cores.",
 			},
+
 			"mem": {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Memory.",
 			},
+
 			"unique_vpc_id": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Private network ID, which is consistent with the cluster private network ID by default.",
 			},
+
 			"unique_subnet_id": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "The private network subnet ID is consistent with the cluster subnet ID by default.",
 			},
+
 			"proxy_count": {
-				Optional:      true,
-				Computed:      true,
-				Type:          schema.TypeInt,
-				ConflictsWith: []string{"proxy_zones"},
-				Description:   "Number of database proxy group nodes. If it is set at the same time as the `proxy_zones` field, the `proxy_zones` parameter shall prevail.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Number of database proxy group nodes.",
 			},
+
 			"connection_pool_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Connection pool type: SessionConnectionPool (session level Connection pool).",
 			},
+
 			"open_connection_pool": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Whether to enable Connection pool, yes - enable, no - do not enable.",
 			},
+
 			"connection_pool_time_out": {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Connection pool threshold: unit (second).",
 			},
+
 			"security_group_ids": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Security Group ID Array.",
 			},
+
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Description.",
 			},
-			"proxy_group_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Proxy Group Id.",
-			},
+
 			"proxy_zones": {
-				Optional:      true,
-				Computed:      true,
-				Type:          schema.TypeList,
-				Description:   "Database node information.",
-				ConflictsWith: []string{"proxy_count"},
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Database node information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"proxy_node_zone": {
@@ -132,25 +143,6 @@ func resourceTencentCloudCynosdbProxy() *schema.Resource {
 					},
 				},
 			},
-			"ro_instances": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "Read only instance list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"instance_id": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "instance id.",
-						},
-						"weight": {
-							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "weight.",
-						},
-					},
-				},
-			},
 		},
 	}
 }
@@ -159,27 +151,23 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_cynosdb_proxy.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId        = getLogId(contextNil)
-		ctx          = context.WithValue(context.TODO(), logIdKey, logId)
-		service      = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request      = cynosdb.NewCreateProxyRequest()
-		response     = cynosdb.NewCreateProxyResponse()
-		clusterId    string
-		proxyGroupId string
-		flowId       int64
-	)
+	logId := getLogId(contextNil)
 
+	var (
+		request   = cynosdb.NewCreateProxyRequest()
+		response  = cynosdb.NewCreateProxyResponse()
+		clusterId string
+	)
 	if v, ok := d.GetOk("cluster_id"); ok {
-		request.ClusterId = helper.String(v.(string))
 		clusterId = v.(string)
+		request.ClusterId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("cpu"); ok {
+	if v, ok := d.GetOkExists("cpu"); ok {
 		request.Cpu = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("mem"); ok {
+	if v, ok := d.GetOkExists("mem"); ok {
 		request.Mem = helper.IntInt64(v.(int))
 	}
 
@@ -191,6 +179,10 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 		request.UniqueSubnetId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("proxy_count"); ok {
+		request.ProxyCount = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("connection_pool_type"); ok {
 		request.ConnectionPoolType = helper.String(v.(string))
 	}
@@ -199,7 +191,7 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 		request.OpenConnectionPool = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("connection_pool_time_out"); ok {
+	if v, ok := d.GetOkExists("connection_pool_time_out"); ok {
 		request.ConnectionPoolTimeOut = helper.IntInt64(v.(int))
 	}
 
@@ -227,10 +219,6 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 			}
 			request.ProxyZones = append(request.ProxyZones, &proxyZone)
 		}
-	} else {
-		if v, ok = d.GetOk("proxy_count"); ok {
-			request.ProxyCount = helper.IntInt64(v.(int))
-		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -240,63 +228,24 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		if result == nil {
-			e = fmt.Errorf("cynosdb proxy not exists")
-			return resource.NonRetryableError(e)
-		}
-
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create cynosdb proxy failed, reason:%+v", logId, err)
 		return err
 	}
 
-	flowId = *response.Response.FlowId
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
+	clusterId = *response.Response.ClusterId
+	d.SetId(clusterId)
 
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("cynosdb proxy is processing"))
-		}
-	})
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb proxy fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbProxyStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
-
-	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId, "")
-	if err != nil {
-		return err
-	}
-
-	if proxy == nil {
-		log.Printf("[WARN]%s resource `CynosdbProxy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	proxyGroupRwInfo := proxy.ProxyGroupInfos[0]
-	proxyGroup := proxyGroupRwInfo.ProxyGroup
-	if proxyGroup != nil {
-		if proxyGroup.ProxyGroupId != nil {
-			proxyGroupId = *proxyGroup.ProxyGroupId
-		}
-	}
-
-	d.SetId(strings.Join([]string{clusterId, proxyGroupId}, FILED_SP))
 
 	return resourceTencentCloudCynosdbProxyRead(d, meta)
 }
@@ -305,21 +254,15 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cynosdb_proxy.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	clusterId := idSplit[0]
-	proxyGroupId := idSplit[1]
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId, proxyGroupId)
+	proxyId := d.Id()
+
+	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId)
 	if err != nil {
 		return err
 	}
@@ -330,96 +273,68 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	if proxy != nil {
-		proxyGroupRwInfo := proxy.ProxyGroupInfos[0]
-		connectionPool := proxyGroupRwInfo.ConnectionPool
-		if connectionPool != nil {
-			if connectionPool.ConnectionPoolType != nil {
-				_ = d.Set("connection_pool_type", connectionPool.ConnectionPoolType)
+	if proxy.ClusterId != nil {
+		_ = d.Set("cluster_id", proxy.ClusterId)
+	}
+
+	if proxy.Cpu != nil {
+		_ = d.Set("cpu", proxy.Cpu)
+	}
+
+	if proxy.Mem != nil {
+		_ = d.Set("mem", proxy.Mem)
+	}
+
+	if proxy.UniqueVpcId != nil {
+		_ = d.Set("unique_vpc_id", proxy.UniqueVpcId)
+	}
+
+	if proxy.UniqueSubnetId != nil {
+		_ = d.Set("unique_subnet_id", proxy.UniqueSubnetId)
+	}
+
+	if proxy.ProxyCount != nil {
+		_ = d.Set("proxy_count", proxy.ProxyCount)
+	}
+
+	if proxy.ConnectionPoolType != nil {
+		_ = d.Set("connection_pool_type", proxy.ConnectionPoolType)
+	}
+
+	if proxy.OpenConnectionPool != nil {
+		_ = d.Set("open_connection_pool", proxy.OpenConnectionPool)
+	}
+
+	if proxy.ConnectionPoolTimeOut != nil {
+		_ = d.Set("connection_pool_time_out", proxy.ConnectionPoolTimeOut)
+	}
+
+	if proxy.SecurityGroupIds != nil {
+		_ = d.Set("security_group_ids", proxy.SecurityGroupIds)
+	}
+
+	if proxy.Description != nil {
+		_ = d.Set("description", proxy.Description)
+	}
+
+	if proxy.ProxyZones != nil {
+		proxyZonesList := []interface{}{}
+		for _, proxyZones := range proxy.ProxyZones {
+			proxyZonesMap := map[string]interface{}{}
+
+			if proxy.ProxyZones.ProxyNodeZone != nil {
+				proxyZonesMap["proxy_node_zone"] = proxy.ProxyZones.ProxyNodeZone
 			}
 
-			if connectionPool.OpenConnectionPool != nil {
-				_ = d.Set("open_connection_pool", connectionPool.OpenConnectionPool)
+			if proxy.ProxyZones.ProxyNodeCount != nil {
+				proxyZonesMap["proxy_node_count"] = proxy.ProxyZones.ProxyNodeCount
 			}
 
-			if connectionPool.ConnectionPoolTimeOut != nil {
-				_ = d.Set("connection_pool_time_out", connectionPool.ConnectionPoolTimeOut)
-			}
+			proxyZonesList = append(proxyZonesList, proxyZonesMap)
 		}
 
-		netAddrInfos := proxyGroupRwInfo.NetAddrInfos
-		if netAddrInfos != nil {
-			netAddrInfo := netAddrInfos[0]
-			if netAddrInfo.Description != nil {
-				_ = d.Set("description", netAddrInfo.Description)
-			}
+		_ = d.Set("proxy_zones", proxyZonesList)
 
-			if netAddrInfo.UniqVpcId != nil {
-				_ = d.Set("unique_vpc_id", netAddrInfo.UniqVpcId)
-			}
-
-			if netAddrInfo.UniqSubnetId != nil {
-				_ = d.Set("unique_subnet_id", netAddrInfo.UniqSubnetId)
-			}
-		}
-
-		proxyGroups := proxyGroupRwInfo.ProxyGroup
-		if proxyGroups != nil {
-			if proxyGroups.ProxyNodeCount != nil {
-				_ = d.Set("proxy_count", proxyGroups.ProxyNodeCount)
-			}
-
-			if proxyGroups.ProxyGroupId != nil {
-				_ = d.Set("proxy_group_id", proxyGroups.ProxyGroupId)
-			}
-		}
-
-		InstanceWeights := proxyGroupRwInfo.ProxyGroupRwInfo.InstanceWeights
-		if InstanceWeights != nil {
-			tmpList := []interface{}{}
-			for _, v := range InstanceWeights {
-				tmpMap := make(map[string]interface{})
-				tmpMap["instance_id"] = v.InstanceId
-				tmpMap["weight"] = v.Weight
-				tmpList = append(tmpList, tmpMap)
-			}
-			_ = d.Set("ro_instances", tmpList)
-		}
-
-		proxyNodes := proxyGroupRwInfo.ProxyNodes
-		if proxyNodes != nil {
-			zoneMap := make(map[string]int)
-			for _, v := range proxyNodes {
-				if v.Cpu != nil {
-					_ = d.Set("cpu", v.Cpu)
-				}
-
-				if v.Mem != nil {
-					_ = d.Set("mem", v.Mem)
-				}
-
-				if v.Zone != nil {
-					zone := *v.Zone
-					_, ok := zoneMap[zone]
-					if ok {
-						zoneMap[zone] += 1
-					} else {
-						zoneMap[zone] = 1
-					}
-				}
-			}
-
-			if len(zoneMap) != 0 {
-				tmpList := []interface{}{}
-				for k, v := range zoneMap {
-					tmpMap := make(map[string]interface{})
-					tmpMap["proxy_node_zone"] = k
-					tmpMap["proxy_node_count"] = v
-					tmpList = append(tmpList, tmpMap)
-				}
-				_ = d.Set("proxy_zones", tmpList)
-			}
-		}
 	}
 
 	return nil
@@ -429,25 +344,18 @@ func resourceTencentCloudCynosdbProxyUpdate(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_cynosdb_proxy.update")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId                  = getLogId(contextNil)
-		ctx                    = context.WithValue(context.TODO(), logIdKey, logId)
-		service                = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		switchProxyRequest     = cynosdb.NewSwitchProxyVpcRequest()
-		modifyProxyDescRequest = cynosdb.NewModifyProxyDescRequest()
-		upgradeProxyRequest    = cynosdb.NewUpgradeProxyRequest()
-		flowId                 int64
+		switchProxyVpcRequest  = cynosdb.NewSwitchProxyVpcRequest()
+		switchProxyVpcResponse = cynosdb.NewSwitchProxyVpcResponse()
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	proxyId := d.Id()
 
-	clusterId := idSplit[0]
-	proxyGroupId := idSplit[1]
+	request.ClusterId = &clusterId
 
-	immutableArgs := []string{"cluster_id", "connection_pool_type", "open_connection_pool", "connection_pool_time_out", "security_group_ids"}
+	immutableArgs := []string{"cluster_id", "cpu", "mem", "unique_vpc_id", "unique_subnet_id", "proxy_count", "connection_pool_type", "open_connection_pool", "connection_pool_time_out", "security_group_ids", "description", "proxy_zones"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -455,98 +363,39 @@ func resourceTencentCloudCynosdbProxyUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if d.HasChange("unique_vpc_id") || d.HasChange("unique_subnet_id") {
-		switchProxyRequest.ClusterId = &clusterId
-		switchProxyRequest.ProxyGroupId = &proxyGroupId
-		switchProxyRequest.OldIpReserveHours = common.Int64Ptr(1)
-
-		if v, ok := d.GetOk("unique_vpc_id"); ok {
-			switchProxyRequest.UniqVpcId = helper.String(v.(string))
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
 		}
+	}
 
-		if v, ok := d.GetOk("unique_subnet_id"); ok {
-			switchProxyRequest.UniqSubnetId = helper.String(v.(string))
+	if d.HasChange("cpu") {
+		if v, ok := d.GetOkExists("cpu"); ok {
+			request.Cpu = helper.IntInt64(v.(int))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().SwitchProxyVpc(switchProxyRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, switchProxyRequest.GetAction(), switchProxyRequest.ToJsonString(), result.ToJsonString())
-			}
-
-			flowId = *result.Response.FlowId
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb proxy failed, reason:%+v", logId, err)
-			return err
+	if d.HasChange("mem") {
+		if v, ok := d.GetOkExists("mem"); ok {
+			request.Mem = helper.IntInt64(v.(int))
 		}
+	}
 
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-			ok, err := service.DescribeFlow(ctx, flowId)
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-
-			if ok {
-				return nil
-			} else {
-				return resource.RetryableError(fmt.Errorf("cynosdb proxy is processing"))
-			}
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb proxy fail, reason:%s\n", logId, err.Error())
-			return err
+	if d.HasChange("proxy_count") {
+		if v, ok := d.GetOkExists("proxy_count"); ok {
+			request.ProxyCount = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("description") {
-		modifyProxyDescRequest.ClusterId = &clusterId
-		modifyProxyDescRequest.ProxyGroupId = &proxyGroupId
-
 		if v, ok := d.GetOk("description"); ok {
-			modifyProxyDescRequest.Description = helper.String(v.(string))
-		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyProxyDesc(modifyProxyDescRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyProxyDescRequest.GetAction(), modifyProxyDescRequest.ToJsonString(), result.ToJsonString())
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb proxy desc failed, reason:%+v", logId, err)
-			return err
+			request.Description = helper.String(v.(string))
 		}
 	}
 
-	if d.HasChange("cpu") || d.HasChange("mem") || d.HasChange("proxy_count") || d.HasChange("proxy_zones") {
-		upgradeProxyRequest.ClusterId = &clusterId
-
-		if v, ok := d.GetOk("cpu"); ok {
-			upgradeProxyRequest.Cpu = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("mem"); ok {
-			upgradeProxyRequest.Mem = helper.IntInt64(v.(int))
-		}
-
+	if d.HasChange("proxy_zones") {
 		if v, ok := d.GetOk("proxy_zones"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				proxyZone := cynosdb.ProxyZone{}
 				if v, ok := dMap["proxy_node_zone"]; ok {
 					proxyZone.ProxyNodeZone = helper.String(v.(string))
@@ -554,52 +403,23 @@ func resourceTencentCloudCynosdbProxyUpdate(d *schema.ResourceData, meta interfa
 				if v, ok := dMap["proxy_node_count"]; ok {
 					proxyZone.ProxyNodeCount = helper.IntInt64(v.(int))
 				}
-				upgradeProxyRequest.ProxyZones = append(upgradeProxyRequest.ProxyZones, &proxyZone)
+				request.ProxyZones = append(request.ProxyZones, &proxyZone)
 			}
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().SwitchProxyVpc(request)
+		if e != nil {
+			return retryError(e)
 		} else {
-			if v, ok = d.GetOk("proxy_count"); ok {
-				upgradeProxyRequest.ProxyCount = helper.IntInt64(v.(int))
-			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().UpgradeProxy(upgradeProxyRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, switchProxyRequest.GetAction(), switchProxyRequest.ToJsonString(), result.ToJsonString())
-			}
-
-			flowId = *result.Response.FlowId
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s upgrade proxy failed, reason:%+v", logId, err)
-			return err
-		}
-
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-			ok, err := service.DescribeFlow(ctx, flowId)
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-
-			if ok {
-				return nil
-			} else {
-				return resource.RetryableError(fmt.Errorf("upgrade proxy is processing"))
-			}
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s upgrade proxy fail, reason:%s\n", logId, err.Error())
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cynosdb proxy failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudCynosdbProxyRead(d, meta)
@@ -609,44 +429,22 @@ func resourceTencentCloudCynosdbProxyDelete(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_cynosdb_proxy.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	proxyId := d.Id()
 
-	clusterId := idSplit[0]
-
-	flowId, err := service.DeleteCynosdbProxyById(ctx, clusterId)
-	if err != nil {
+	if err := service.DeleteCynosdbProxyById(ctx, clusterId); err != nil {
 		return err
 	}
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, *flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("cynosdb proxy is processing"))
-		}
-	})
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbProxyStateRefreshFunc(d.Id(), []string{}))
 
-	if err != nil {
-		log.Printf("[CRITAL]%s close cynosdb proxy fail, reason:%s\n", logId, err.Error())
-		return err
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

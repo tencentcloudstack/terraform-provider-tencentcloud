@@ -462,3 +462,261 @@ func (me *ChdfsService) DescribeChdfsFileSystems(ctx context.Context) (fileSyste
 
 	return
 }
+
+func (me *ChdfsService) DescribeChdfsAccessGroupsByFilter(ctx context.Context, param map[string]interface{}) (AccessGroups []*chdfs.AccessGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeAccessGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "VpcId" {
+			request.VpcId = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseChdfsClient().DescribeAccessGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AccessGroups) < 1 {
+			break
+		}
+		AccessGroups = append(AccessGroups, response.Response.AccessGroups...)
+		if len(response.Response.AccessGroups) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsFileSystemsByFilter(ctx context.Context, param map[string]interface{}) (FileSystems []*chdfs.FileSystem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeFileSystemsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseChdfsClient().DescribeFileSystems(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.FileSystems) < 1 {
+			break
+		}
+		FileSystems = append(FileSystems, response.Response.FileSystems...)
+		if len(response.Response.FileSystems) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsMountPointsByFilter(ctx context.Context, param map[string]interface{}) (MountPoints []*chdfs.MountPoint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeMountPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FileSystemId" {
+			request.FileSystemId = v.(*string)
+		}
+		if k == "AccessGroupId" {
+			request.AccessGroupId = v.(*string)
+		}
+		if k == "OwnerUin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseChdfsClient().DescribeMountPoints(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MountPoints) < 1 {
+			break
+		}
+		MountPoints = append(MountPoints, response.Response.MountPoints...)
+		if len(response.Response.MountPoints) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsAccessRuleById(ctx context.Context, accessGroupId string, accessRuleId string) (accessRule *chdfs.AccessRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeAccessRulesRequest()
+	request.AccessGroupId = &accessGroupId
+	request.AccessRuleId = &accessRuleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeAccessRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AccessRule) < 1 {
+		return
+	}
+
+	accessRule = response.Response.AccessRule[0]
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsAccessRuleById(ctx context.Context, accessGroupId string, accessRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDeleteAccessRulesRequest()
+	request.AccessGroupId = &accessGroupId
+	request.AccessRuleId = &accessRuleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DeleteAccessRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsMountPointAttachmentById(ctx context.Context, mountPointId string) (mountPointAttachment *chdfs.MountPoint, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeMountPointRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeMountPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.MountPoint) < 1 {
+		return
+	}
+
+	mountPointAttachment = response.Response.MountPoint[0]
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsMountPointAttachmentById(ctx context.Context, mountPointId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDisassociateAccessGroupsRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DisassociateAccessGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

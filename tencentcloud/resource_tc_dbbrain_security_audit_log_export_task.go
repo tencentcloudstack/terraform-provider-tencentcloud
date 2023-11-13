@@ -4,82 +4,77 @@ Provides a resource to create a dbbrain security_audit_log_export_task
 Example Usage
 
 ```hcl
-resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
-  sec_audit_group_id = "sec_audit_group_id"
-  start_time = "2020-12-28 00:00:00"
-  end_time = "2020-12-28 01:00:00"
-  product = "mysql"
-  danger_levels = [0,1,2]
+resource "tencentcloud_dbbrain_security_audit_log_export_task" "security_audit_log_export_task" {
+  sec_audit_group_id = &lt;nil&gt;
+  start_time = &lt;nil&gt;
+  end_time = &lt;nil&gt;
+  product = &lt;nil&gt;
+  danger_levels = &lt;nil&gt;
 }
+```
 
+Import
+
+dbbrain security_audit_log_export_task can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dbbrain_security_audit_log_export_task.security_audit_log_export_task security_audit_log_export_task_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudDbbrainSecurityAuditLogExportTask() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead,
 		Create: resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate,
+		Read:   resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead,
+		Update: resourceTencentCloudDbbrainSecurityAuditLogExportTaskUpdate,
 		Delete: resourceTencentCloudDbbrainSecurityAuditLogExportTaskDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"sec_audit_group_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "security audit group id.",
+				Type:        schema.TypeString,
+				Description: "Security audit group id.",
 			},
 
 			"start_time": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "start time.",
+				Type:        schema.TypeString,
+				Description: "Start time.",
 			},
 
 			"end_time": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "end time.",
+				Type:        schema.TypeString,
+				Description: "End time.",
 			},
 
 			"product": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "product, optional value is mysql.",
+				Type:        schema.TypeString,
+				Description: "Product, optional value is mysql.",
 			},
 
 			"danger_levels": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Optional:    true,
-				ForceNew:    true,
-				Description: "List of log risk levels, supported values include: 0 no risk; 1 low risk; 2 medium risk; 3 high risk.",
-			},
-
-			"async_request_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "request of async id.",
+				Description: "Danger level list.",
 			},
 		},
 	}
@@ -93,13 +88,10 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 
 	var (
 		request         = dbbrain.NewCreateSecurityAuditLogExportTaskRequest()
-		response        *dbbrain.CreateSecurityAuditLogExportTaskResponse
-		service         = DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
+		response        = dbbrain.NewCreateSecurityAuditLogExportTaskResponse()
 		secAuditGroupId string
-		asyncRequestId  string
+		asyncRequestId  int
 	)
-
 	if v, ok := d.GetOk("sec_audit_group_id"); ok {
 		secAuditGroupId = v.(string)
 		request.SecAuditGroupId = helper.String(v.(string))
@@ -130,8 +122,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -141,24 +132,8 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 		return err
 	}
 
-	asyncRequestId = helper.UInt64ToStr(*response.Response.AsyncRequestId)
-	d.SetId(secAuditGroupId + FILED_SP + asyncRequestId)
-
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-		ret, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, helper.String(secAuditGroupId), helper.String(asyncRequestId), nil)
-		if err != nil {
-			return retryError(err)
-		}
-		if ret != nil {
-			log.Printf("[DEBUG]%s task.Status:[%s]\n", logId, *ret.Status)
-			return nil
-		}
-		return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is nil, retry..."))
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s query dbbrain securityAuditLogExportTask failed, reason:%+v", logId, err)
-		return err
-	}
+	secAuditGroupId = *response.Response.SecAuditGroupId
+	d.SetId(strings.Join([]string{secAuditGroupId, helper.Int64ToStr(asyncRequestId)}, FILED_SP))
 
 	return resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d, meta)
 }
@@ -168,6 +143,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d *schema.Resourc
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -176,38 +152,57 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d *schema.Resourc
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	secAuditGroupId := helper.String(idSplit[0])
-	asyncRequestId := helper.String(idSplit[1])
+	secAuditGroupId := idSplit[0]
+	asyncRequestId := idSplit[1]
 
-	securityAuditLogExportTask, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
+	securityAuditLogExportTask, err := service.DescribeDbbrainSecurityAuditLogExportTaskById(ctx, secAuditGroupId, asyncRequestId)
 	if err != nil {
 		return err
 	}
 
-	// _ = d.Set("sec_audit_group_id", secAuditGroupId)
-
 	if securityAuditLogExportTask == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `securityAuditLogExportTask` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `DbbrainSecurityAuditLogExportTask` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	if securityAuditLogExportTask.LogStartTime != nil {
-		_ = d.Set("start_time", securityAuditLogExportTask.LogStartTime)
+	if securityAuditLogExportTask.SecAuditGroupId != nil {
+		_ = d.Set("sec_audit_group_id", securityAuditLogExportTask.SecAuditGroupId)
 	}
 
-	if securityAuditLogExportTask.LogEndTime != nil {
-		_ = d.Set("end_time", securityAuditLogExportTask.LogEndTime)
+	if securityAuditLogExportTask.StartTime != nil {
+		_ = d.Set("start_time", securityAuditLogExportTask.StartTime)
+	}
+
+	if securityAuditLogExportTask.EndTime != nil {
+		_ = d.Set("end_time", securityAuditLogExportTask.EndTime)
+	}
+
+	if securityAuditLogExportTask.Product != nil {
+		_ = d.Set("product", securityAuditLogExportTask.Product)
 	}
 
 	if securityAuditLogExportTask.DangerLevels != nil {
 		_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
 	}
 
-	if securityAuditLogExportTask.AsyncRequestId != nil {
-		_ = d.Set("async_request_id", securityAuditLogExportTask.AsyncRequestId)
-	}
-
 	return nil
+}
+
+func resourceTencentCloudDbbrainSecurityAuditLogExportTaskUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dbbrain_security_audit_log_export_task.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	immutableArgs := []string{"sec_audit_group_id", "start_time", "end_time", "product", "danger_levels"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d, meta)
 }
 
 func resourceTencentCloudDbbrainSecurityAuditLogExportTaskDelete(d *schema.ResourceData, meta interface{}) error {
@@ -218,15 +213,14 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskDelete(d *schema.Resou
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	secAuditGroupId := helper.String(idSplit[0])
-	asyncRequestId := helper.String(idSplit[1])
+	secAuditGroupId := idSplit[0]
+	asyncRequestId := idSplit[1]
 
-	if err := service.DeleteDbbrainSecurityAuditLogExportTaskById(ctx, secAuditGroupId, asyncRequestId, nil); err != nil {
+	if err := service.DeleteDbbrainSecurityAuditLogExportTaskById(ctx, secAuditGroupId, asyncRequestId); err != nil {
 		return err
 	}
 

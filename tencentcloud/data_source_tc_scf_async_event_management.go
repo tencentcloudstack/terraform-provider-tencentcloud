@@ -5,19 +5,33 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_async_event_management" "async_event_management" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-  qualifier     = "$LATEST"
-  order   = "ASC"
+  function_name = "test_function"
+  namespace = "test_namespace"
+  qualifier = "$LATEST"
+  invoke_type = &lt;nil&gt;
+  status = &lt;nil&gt;
+  start_time_interval {
+		start = &lt;nil&gt;
+		end = &lt;nil&gt;
+
+  }
+  end_time_interval {
+		start = "2020-02-02 04:03:03"
+		end = "2020-02-02 05:03:03"
+
+  }
+  order = "ASC"
   orderby = "StartTime"
-}
+  offset = 0
+  limit = 20
+  invoke_request_id = "xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -64,6 +78,48 @@ func dataSourceTencentCloudScfAsyncEventManagement() *schema.Resource {
 				Description: "Filter (event status list), Values: RUNNING, FINISHED, ABORTED, FAILED.",
 			},
 
+			"start_time_interval": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Filter (left-closed-right-open range of execution start time).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"start": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Start time (inclusive) the format of %Y-%m-%d %H:%M:%S.",
+						},
+						"end": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "End time (exclusive) the format of %Y-%m-%d %H:%M:%S.",
+						},
+					},
+				},
+			},
+
+			"end_time_interval": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Filter (left-closed-right-open range of execution end time).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"start": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Start time (inclusive) in the format of %Y-%m-%d %H:%M:%S.",
+						},
+						"end": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "End time (exclusive) the format of %Y-%m-%d %H:%M:%S.",
+						},
+					},
+				},
+			},
+
 			"order": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -74,6 +130,18 @@ func dataSourceTencentCloudScfAsyncEventManagement() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Valid values: StartTime, EndTime. Default value: StartTime.",
+			},
+
+			"offset": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Data offset. Default value: 0.",
+			},
+
+			"limit": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Number of results to be returned. Default value: 20. Maximum value: 100.",
 			},
 
 			"invoke_request_id": {
@@ -162,12 +230,42 @@ func dataSourceTencentCloudScfAsyncEventManagementRead(d *schema.ResourceData, m
 		paramMap["Status"] = helper.InterfacesStringsPoint(statusSet)
 	}
 
+	if dMap, ok := helper.InterfacesHeadMap(d, "start_time_interval"); ok {
+		timeInterval := scf.TimeInterval{}
+		if v, ok := dMap["start"]; ok {
+			timeInterval.Start = helper.String(v.(string))
+		}
+		if v, ok := dMap["end"]; ok {
+			timeInterval.End = helper.String(v.(string))
+		}
+		paramMap["start_time_interval"] = &timeInterval
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "end_time_interval"); ok {
+		timeInterval := scf.TimeInterval{}
+		if v, ok := dMap["start"]; ok {
+			timeInterval.Start = helper.String(v.(string))
+		}
+		if v, ok := dMap["end"]; ok {
+			timeInterval.End = helper.String(v.(string))
+		}
+		paramMap["end_time_interval"] = &timeInterval
+	}
+
 	if v, ok := d.GetOk("order"); ok {
 		paramMap["Order"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("orderby"); ok {
 		paramMap["Orderby"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntInt64(v.(int))
+	}
+
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("invoke_request_id"); ok {
@@ -221,7 +319,7 @@ func dataSourceTencentCloudScfAsyncEventManagementRead(d *schema.ResourceData, m
 				asyncEventMap["end_time"] = asyncEvent.EndTime
 			}
 
-			ids = append(ids, *asyncEvent.InvokeRequestId)
+			ids = append(ids, *asyncEvent.Namespace)
 			tmpList = append(tmpList, asyncEventMap)
 		}
 

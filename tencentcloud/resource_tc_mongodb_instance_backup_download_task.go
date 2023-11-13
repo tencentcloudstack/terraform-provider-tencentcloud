@@ -5,10 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mongodb_instance_backup_download_task" "instance_backup_download_task" {
-  instance_id = "cmgo-b43i3wkj"
-  backup_name = "cmgo-b43i3wkj_2023-05-09 14:54"
+  instance_id = ""
+  backup_name = "myBackupName"
   backup_sets {
-    replica_set_id = "cmgo-b43i3wkj_0"
+		replica_set_id = ""
+
   }
 }
 ```
@@ -18,21 +19,19 @@ Import
 mongodb instance_backup_download_task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task instanceId#backupName
+terraform import tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task instance_backup_download_task_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMongodbInstanceBackupDownloadTask() *schema.Resource {
@@ -62,7 +61,7 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTask() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
-				Description: "Specifies the node names of replica sets to download or a list of shard names for sharded clusters.For example, the replica set cmgo-p8vnipr5, example (fixed value): BackupSets.0=cmgo-p8vnipr5_0, the full amount of data can be downloaded.For example, the sharded cluster cmgo-p8vnipr5, for example: BackupSets.0=cmgo-p8vnipr5_0&amp;amp;BackupSets.1=cmgo-p8vnipr5_1, that is, to download the data of shard 0 and 1. If the sharded cluster needs to be downloaded in full, please pass in the example. Full slice name.",
+				Description: "Specifies the node names of replica sets to download or a list of shard names for sharded clusters.For example, the replica set cmgo-p8vnipr5, example (fixed value): BackupSets.0=cmgo-p8vnipr5_0, the full amount of data can be downloaded.For example, the sharded cluster cmgo-p8vnipr5, for example: BackupSets.0=cmgo-p8vnipr5_0&amp;amp;amp;BackupSets.1=cmgo-p8vnipr5_1, that is, to download the data of shard 0 and 1. If the sharded cluster needs to be downloaded in full, please pass in the example. Full slice name.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"replica_set_id": {
@@ -85,6 +84,7 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.Resou
 
 	var (
 		request    = mongodb.NewCreateBackupDownloadTaskRequest()
+		response   = mongodb.NewCreateBackupDownloadTaskResponse()
 		instanceId string
 		backupName string
 	)
@@ -116,6 +116,7 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -123,7 +124,8 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.Resou
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + backupName)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, backupName}, FILED_SP))
 
 	return resourceTencentCloudMongodbInstanceBackupDownloadTaskRead(d, meta)
 }
@@ -156,27 +158,51 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskRead(d *schema.Resourc
 		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("backup_name", backupName)
+	if instanceBackupDownloadTask.InstanceId != nil {
+		_ = d.Set("instance_id", instanceBackupDownloadTask.InstanceId)
+	}
 
-	if instanceBackupDownloadTask != nil {
+	if instanceBackupDownloadTask.BackupName != nil {
+		_ = d.Set("backup_name", instanceBackupDownloadTask.BackupName)
+	}
+
+	if instanceBackupDownloadTask.BackupSets != nil {
 		backupSetsList := []interface{}{}
-		for _, backupSet := range instanceBackupDownloadTask {
+		for _, backupSets := range instanceBackupDownloadTask.BackupSets {
 			backupSetsMap := map[string]interface{}{}
 
-			if backupSet.ReplicaSetId != nil {
-				backupSetsMap["replica_set_id"] = backupSet.ReplicaSetId
+			if instanceBackupDownloadTask.BackupSets.ReplicaSetId != nil {
+				backupSetsMap["replica_set_id"] = instanceBackupDownloadTask.BackupSets.ReplicaSetId
 			}
+
 			backupSetsList = append(backupSetsList, backupSetsMap)
 		}
+
 		_ = d.Set("backup_sets", backupSetsList)
+
 	}
+
 	return nil
 }
 
 func resourceTencentCloudMongodbInstanceBackupDownloadTaskDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	instanceId := idSplit[0]
+	backupName := idSplit[1]
+
+	if err := service.DeleteMongodbInstanceBackupDownloadTaskById(ctx, instanceId, backupName); err != nil {
+		return err
+	}
 
 	return nil
 }

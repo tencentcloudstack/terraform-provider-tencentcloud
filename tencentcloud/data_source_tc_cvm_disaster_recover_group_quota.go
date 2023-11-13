@@ -5,19 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_disaster_recover_group_quota" "disaster_recover_group_quota" {
-}
+          }
 ```
 */
 package tencentcloud
 
 import (
-	"fmt"
-
+	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 func dataSourceTencentCloudCvmDisasterRecoverGroupQuota() *schema.Resource {
@@ -67,41 +64,50 @@ func dataSourceTencentCloudCvmDisasterRecoverGroupQuotaRead(d *schema.ResourceDa
 	defer logElapsed("data_source.tencentcloud_cvm_disaster_recover_group_quota.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var response *cvm.DescribeDisasterRecoverGroupQuotaResponse
+	logId := getLogId(contextNil)
 
-	request := cvm.NewDescribeDisasterRecoverGroupQuotaRequest()
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	service := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeDisasterRecoverGroupQuota(request)
+		result, e := service.DescribeCvmDisasterRecoverGroupQuotaByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		response = result
+		groupQuota = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	if response == nil || response.Response == nil {
-		d.SetId("")
-		return fmt.Errorf("Response is nil")
-	}
-	_ = d.Set("group_quota", response.Response.GroupQuota)
-	_ = d.Set("current_num", response.Response.CurrentNum)
-	_ = d.Set("cvm_in_host_group_quota", response.Response.CvmInHostGroupQuota)
-	_ = d.Set("cvm_in_sw_group_quota", response.Response.CvmInSwGroupQuota)
-	_ = d.Set("cvm_in_rack_group_quota", response.Response.CvmInRackGroupQuota)
 
-	d.SetId(helper.BuildToken())
+	ids := make([]string, 0, len(groupQuota))
+	if groupQuota != nil {
+		_ = d.Set("group_quota", groupQuota)
+	}
+
+	if currentNum != nil {
+		_ = d.Set("current_num", currentNum)
+	}
+
+	if cvmInHostGroupQuota != nil {
+		_ = d.Set("cvm_in_host_group_quota", cvmInHostGroupQuota)
+	}
+
+	if cvmInSwGroupQuota != nil {
+		_ = d.Set("cvm_in_sw_group_quota", cvmInSwGroupQuota)
+	}
+
+	if cvmInRackGroupQuota != nil {
+		_ = d.Set("cvm_in_rack_group_quota", cvmInRackGroupQuota)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), map[string]interface{}{
-			"group_quota":             response.Response.GroupQuota,
-			"current_num":             response.Response.CurrentNum,
-			"cvm_in_host_group_quota": response.Response.CvmInHostGroupQuota,
-			"cvm_in_sw_group_quota":   response.Response.CvmInSwGroupQuota,
-			"cvm_in_rack_group_quota": response.Response.CvmInRackGroupQuota,
-		}); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

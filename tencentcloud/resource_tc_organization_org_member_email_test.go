@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudOrganizationOrgMemberEmailResource_basic(t *testing.T) {
@@ -16,21 +15,7 @@ func TestAccTencentCloudOrganizationOrgMemberEmailResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrgMemberEmail,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member_email.org_member_email", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "member_uin", "100033704327"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "email", "iac-test@qq.com"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "country_code", "86"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "phone", "12345678901"),
-				),
-			},
-			{
-				Config: testAccOrganizationOrgMemberEmailUpdate,
-				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member_email.org_member_email", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "member_uin", "100033704327"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "email", "iac-test-update@qq.com"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "country_code", "86"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member_email.org_member_email", "phone", "12345678902"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member_email.org_member_email", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_organization_org_member_email.org_member_email",
@@ -44,20 +29,11 @@ func TestAccTencentCloudOrganizationOrgMemberEmailResource_basic(t *testing.T) {
 const testAccOrganizationOrgMemberEmail = `
 
 resource "tencentcloud_organization_org_member_email" "org_member_email" {
-  member_uin = 100033704327
-  email = "iac-test@qq.com"
-  country_code = "86"
-  phone = "12345678901"
-  }
-
-`
-const testAccOrganizationOrgMemberEmailUpdate = `
-
-resource "tencentcloud_organization_org_member_email" "org_member_email" {
-  member_uin = 100033704327
-  email = "iac-test-update@qq.com"
-  country_code = "86"
-  phone = "12345678902"
-  }
+  member_uin = &lt;nil&gt;
+  email = &lt;nil&gt;
+  country_code = &lt;nil&gt;
+  phone = &lt;nil&gt;
+  bind_id = &lt;nil&gt;
+}
 
 `

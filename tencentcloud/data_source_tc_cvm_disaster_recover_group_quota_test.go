@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmDisasterRecoverGroupQuotaDataSource_basic(t *testing.T) {
@@ -25,6 +24,6 @@ func TestAccTencentCloudCvmDisasterRecoverGroupQuotaDataSource_basic(t *testing.
 const testAccCvmDisasterRecoverGroupQuotaDataSource = `
 
 data "tencentcloud_cvm_disaster_recover_group_quota" "disaster_recover_group_quota" {
-}
+          }
 
 `

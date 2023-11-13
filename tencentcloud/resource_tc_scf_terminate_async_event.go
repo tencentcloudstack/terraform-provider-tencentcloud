@@ -5,22 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_scf_terminate_async_event" "terminate_async_event" {
-  function_name = "keep-1676351130"
-  invoke_request_id = "9de9405a-e33a-498d-bb59-e80b7bed1191"
-  namespace     = "default"
+  function_name = "test"
+  invoke_request_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  namespace = "testNamespace"
   grace_shutdown = true
 }
+```
+
+Import
+
+scf terminate_async_event can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_scf_terminate_async_event.terminate_async_event terminate_async_event_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudScfTerminateAsyncEvent() *schema.Resource {
@@ -28,6 +35,9 @@ func resourceTencentCloudScfTerminateAsyncEvent() *schema.Resource {
 		Create: resourceTencentCloudScfTerminateAsyncEventCreate,
 		Read:   resourceTencentCloudScfTerminateAsyncEventRead,
 		Delete: resourceTencentCloudScfTerminateAsyncEventDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"function_name": {
 				Required:    true,
@@ -54,7 +64,7 @@ func resourceTencentCloudScfTerminateAsyncEvent() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to enable grace shutdown. If it's true, a SIGTERM signal is sent to the specified request. See [Sending termination signal](https://www.tencentcloud.com/document/product/583/63969?from_cn_redirect=1#.E5.8F.91.E9.80.81.E7.BB.88.E6.AD.A2.E4.BF.A1.E5.8F.B7]. It's set to false by default.",
+				Description: "Whether to enable grace shutdown. If it’s true, a SIGTERM signal is sent to the specified request. See [Sending termination signal](https://www.tencentcloud.com/document/product/583/63969?from_cn_redirect=1#.E5.8F.91.E9.80.81.E7.BB.88.E6.AD.A2.E4.BF.A1.E5.8F.B7]. It’s set to false by default.",
 			},
 		},
 	}
@@ -68,6 +78,7 @@ func resourceTencentCloudScfTerminateAsyncEventCreate(d *schema.ResourceData, me
 
 	var (
 		request         = scf.NewTerminateAsyncEventRequest()
+		response        = scf.NewTerminateAsyncEventResponse()
 		invokeRequestId string
 	)
 	if v, ok := d.GetOk("function_name"); ok {
@@ -94,6 +105,7 @@ func resourceTencentCloudScfTerminateAsyncEventCreate(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -101,6 +113,7 @@ func resourceTencentCloudScfTerminateAsyncEventCreate(d *schema.ResourceData, me
 		return err
 	}
 
+	invokeRequestId = *response.Response.InvokeRequestId
 	d.SetId(invokeRequestId)
 
 	return resourceTencentCloudScfTerminateAsyncEventRead(d, meta)

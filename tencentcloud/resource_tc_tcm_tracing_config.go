@@ -1,45 +1,32 @@
 /*
 Provides a resource to create a tcm tracing_config
 
-~> **NOTE:** If you use the config attribute tracing in tencentcloud_tcm_mesh, do not use tencentcloud_tcm_tracing_config
-
 Example Usage
 
 ```hcl
 resource "tencentcloud_tcm_tracing_config" "tracing_config" {
   mesh_id = "mesh-xxxxxxxx"
   enable = true
-  apm {
-	enable = true
-	region = "ap-guangzhou"
-	instance_id = "apm-xxx"
+  a_p_m {
+		enable = true
+		region = "ap-shanghai"
+		instance_id = "apm-xxx"
+
   }
   sampling =
   zipkin {
-	address = "10.10.10.10:9411"
+		address = "10.10.10.10:9411"
+
   }
 }
-
-resource "tencentcloud_tcm_tracing_config" "delete_config" {
-  mesh_id = "mesh-rofjmxxx"
-  enable = true
-  apm {
-    enable = false
-    # region = "ap-guangzhou"
-    # instance_id = "apm-xxx"
-  }
-  sampling = 0
-  zipkin {
-    address = ""
-  }
-}
-
 ```
+
 Import
 
-tcm tracing_config can be imported using the mesh_id, e.g.
+tcm tracing_config can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tcm_tracing_config.tracing_config mesh-rofjmxxx
+terraform import tencentcloud_tcm_tracing_config.tracing_config tracing_config_id
 ```
 */
 package tencentcloud
@@ -47,19 +34,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTcmTracingConfig() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTcmTracingConfigRead,
 		Create: resourceTencentCloudTcmTracingConfigCreate,
+		Read:   resourceTencentCloudTcmTracingConfigRead,
 		Update: resourceTencentCloudTcmTracingConfigUpdate,
 		Delete: resourceTencentCloudTcmTracingConfigDelete,
 		Importer: &schema.ResourceImporter{
@@ -67,21 +52,21 @@ func resourceTencentCloudTcmTracingConfig() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"mesh_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Mesh ID.",
 			},
 
 			"enable": {
-				Type:        schema.TypeBool,
 				Optional:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether enable tracing.",
 			},
 
-			"apm": {
+			"a_p_m": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
 				Description: "APM config.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -105,15 +90,15 @@ func resourceTencentCloudTcmTracingConfig() *schema.Resource {
 			},
 
 			"sampling": {
-				Type:        schema.TypeFloat,
 				Optional:    true,
+				Type:        schema.TypeFloat,
 				Description: "Tracing sampling, 0.0-1.0.",
 			},
 
 			"zipkin": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
 				Description: "Third party zipkin config.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -139,6 +124,7 @@ func resourceTencentCloudTcmTracingConfigCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(meshId)
+
 	return resourceTencentCloudTcmTracingConfigUpdate(d, meta)
 }
 
@@ -147,55 +133,59 @@ func resourceTencentCloudTcmTracingConfigRead(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	meshId := d.Id()
+	tracingConfigId := d.Id()
 
-	response, err := service.DescribeTcmMesh(ctx, meshId)
-
+	TracingConfig, err := service.DescribeTcmTracingConfigById(ctx, meshId)
 	if err != nil {
 		return err
 	}
 
-	if response == nil {
+	if TracingConfig == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tracingConfig` %s does not exist", meshId)
+		log.Printf("[WARN]%s resource `TcmTracingConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	mesh := response.Mesh
-	if mesh.MeshId != nil {
-		_ = d.Set("mesh_id", mesh.MeshId)
+	if TracingConfig.MeshId != nil {
+		_ = d.Set("mesh_id", TracingConfig.MeshId)
 	}
 
-	tracing := mesh.Config.Tracing
-	if tracing != nil {
-		if tracing.Enable != nil {
-			_ = d.Set("enable", tracing.Enable)
-		}
-		apmMap := map[string]interface{}{}
-		if tracing.APM.Enable != nil {
-			apmMap["enable"] = tracing.APM.Enable
-		}
-		if tracing.APM.Region != nil {
-			apmMap["region"] = tracing.APM.Region
-		}
-		if tracing.APM.InstanceId != nil {
-			apmMap["instance_id"] = tracing.APM.InstanceId
-		}
-
-		_ = d.Set("apm", []interface{}{apmMap})
+	if TracingConfig.Enable != nil {
+		_ = d.Set("enable", TracingConfig.Enable)
 	}
 
-	if tracing.Sampling != nil {
-		_ = d.Set("sampling", tracing.Sampling)
+	if TracingConfig.APM != nil {
+		aPMMap := map[string]interface{}{}
+
+		if TracingConfig.APM.Enable != nil {
+			aPMMap["enable"] = TracingConfig.APM.Enable
+		}
+
+		if TracingConfig.APM.Region != nil {
+			aPMMap["region"] = TracingConfig.APM.Region
+		}
+
+		if TracingConfig.APM.InstanceId != nil {
+			aPMMap["instance_id"] = TracingConfig.APM.InstanceId
+		}
+
+		_ = d.Set("a_p_m", []interface{}{aPMMap})
 	}
 
-	if tracing.Zipkin != nil {
+	if TracingConfig.Sampling != nil {
+		_ = d.Set("sampling", TracingConfig.Sampling)
+	}
+
+	if TracingConfig.Zipkin != nil {
 		zipkinMap := map[string]interface{}{}
-		if tracing.Zipkin.Address != nil {
-			zipkinMap["address"] = tracing.Zipkin.Address
+
+		if TracingConfig.Zipkin.Address != nil {
+			zipkinMap["address"] = TracingConfig.Zipkin.Address
 		}
 
 		_ = d.Set("zipkin", []interface{}{zipkinMap})
@@ -212,40 +202,54 @@ func resourceTencentCloudTcmTracingConfigUpdate(d *schema.ResourceData, meta int
 
 	request := tcm.NewModifyTracingConfigRequest()
 
-	meshId := d.Id()
+	tracingConfigId := d.Id()
 
 	request.MeshId = &meshId
 
-	if v, ok := d.GetOk("enable"); ok {
-		request.Enable = helper.Bool(v.(bool))
+	immutableArgs := []string{"mesh_id", "enable", "a_p_m", "sampling", "zipkin"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "apm"); ok {
-		aPM := tcm.APM{}
-		if v, ok := dMap["enable"]; ok {
-			aPM.Enable = helper.Bool(v.(bool))
+	if d.HasChange("enable") {
+		if v, ok := d.GetOkExists("enable"); ok {
+			request.Enable = helper.Bool(v.(bool))
 		}
-		if v, ok := dMap["region"]; ok {
-			aPM.Region = helper.String(v.(string))
-		}
-		if v, ok := dMap["instance_id"]; ok {
-			aPM.InstanceId = helper.String(v.(string))
-		}
-
-		request.APM = &aPM
 	}
 
-	if v, ok := d.GetOk("sampling"); ok {
-		request.Sampling = helper.Float64(v.(float64))
+	if d.HasChange("a_p_m") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "a_p_m"); ok {
+			aPM := tcm.APM{}
+			if v, ok := dMap["enable"]; ok {
+				aPM.Enable = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["region"]; ok {
+				aPM.Region = helper.String(v.(string))
+			}
+			if v, ok := dMap["instance_id"]; ok {
+				aPM.InstanceId = helper.String(v.(string))
+			}
+			request.APM = &aPM
+		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "zipkin"); ok {
-		tracingZipkin := tcm.TracingZipkin{}
-		if v, ok := dMap["address"]; ok {
-			tracingZipkin.Address = helper.String(v.(string))
+	if d.HasChange("sampling") {
+		if v, ok := d.GetOkExists("sampling"); ok {
+			request.Sampling = helper.Float64(v.(float64))
 		}
+	}
 
-		request.Zipkin = &tracingZipkin
+	if d.HasChange("zipkin") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "zipkin"); ok {
+			tracingZipkin := tcm.TracingZipkin{}
+			if v, ok := dMap["address"]; ok {
+				tracingZipkin.Address = helper.String(v.(string))
+			}
+			request.Zipkin = &tracingZipkin
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -253,14 +257,12 @@ func resourceTencentCloudTcmTracingConfigUpdate(d *schema.ResourceData, meta int
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tcm tracingConfig failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tcm TracingConfig failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_group_config_release" "group_config_release" {
-  group_id = "group-yrjkln9v"
-}
+  group_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -27,7 +26,7 @@ func dataSourceTencentCloudTsfGroupConfigRelease() *schema.Resource {
 			"group_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "groupId.",
+				Description: "GroupId.",
 			},
 
 			"result": {
@@ -54,12 +53,12 @@ func dataSourceTencentCloudTsfGroupConfigRelease() *schema.Resource {
 						"repo_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "image name.Note: This field may return null, which means no valid value was found.",
+							Description: "Image name.Note: This field may return null, which means no valid value was found.",
 						},
 						"tag_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "image tag name.Note: This field may return null, which means no valid value was found.",
+							Description: "Image tag name.Note: This field may return null, which means no valid value was found.",
 						},
 						"public_config_release_list": {
 							Type:        schema.TypeList,
@@ -296,32 +295,34 @@ func dataSourceTencentCloudTsfGroupConfigReleaseRead(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var groupId string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("group_id"); ok {
-		groupId = v.(string)
 		paramMap["GroupId"] = helper.String(v.(string))
 	}
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tsf.GroupRelease
+	var result []*tsf.GroupRelease
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTsfGroupConfigReleaseByFilter(ctx, paramMap)
+		result, e := service.DescribeTsfGroupConfigReleaseByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	groupReleaseMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		groupReleaseMap := map[string]interface{}{}
+
 		if result.PackageId != nil {
 			groupReleaseMap["package_id"] = result.PackageId
 		}
@@ -402,7 +403,7 @@ func dataSourceTencentCloudTsfGroupConfigReleaseRead(d *schema.ResourceData, met
 				publicConfigReleaseListList = append(publicConfigReleaseListList, publicConfigReleaseListMap)
 			}
 
-			groupReleaseMap["public_config_release_list"] = publicConfigReleaseListList
+			groupReleaseMap["public_config_release_list"] = []interface{}{publicConfigReleaseListList}
 		}
 
 		if result.ConfigReleaseList != nil {
@@ -465,7 +466,7 @@ func dataSourceTencentCloudTsfGroupConfigReleaseRead(d *schema.ResourceData, met
 				configReleaseListList = append(configReleaseListList, configReleaseListMap)
 			}
 
-			groupReleaseMap["config_release_list"] = configReleaseListList
+			groupReleaseMap["config_release_list"] = []interface{}{configReleaseListList}
 		}
 
 		if result.FileConfigReleaseList != nil {
@@ -524,13 +525,14 @@ func dataSourceTencentCloudTsfGroupConfigReleaseRead(d *schema.ResourceData, met
 				fileConfigReleaseListList = append(fileConfigReleaseListList, fileConfigReleaseListMap)
 			}
 
-			groupReleaseMap["file_config_release_list"] = fileConfigReleaseListList
+			groupReleaseMap["file_config_release_list"] = []interface{}{fileConfigReleaseListList}
 		}
 
-		_ = d.Set("result", []interface{}{groupReleaseMap})
+		ids = append(ids, *result.GroupId)
+		_ = d.Set("result", groupReleaseMap)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{groupId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), groupReleaseMap); e != nil {

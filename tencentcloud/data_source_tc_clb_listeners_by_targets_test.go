@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbListenersByTargetsDataSource_basic(t *testing.T) {
@@ -26,8 +25,10 @@ const testAccClbListenersByTargetsDataSource = `
 
 data "tencentcloud_clb_listeners_by_targets" "listeners_by_targets" {
   backends {
-    vpc_id     = "vpc-4owdpnwr"
-    private_ip = "106.52.160.211"
+		vpc_id = ""
+		private_ip = ""
+
   }
-}
+  }
+
 `

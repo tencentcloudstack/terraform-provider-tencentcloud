@@ -4,50 +4,9 @@ Provides a resource to create a monitor tmp_manage_grafana_attachment
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_monitor_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_monitor_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-
-resource "tencentcloud_monitor_tmp_instance" "foo" {
-  instance_name       = "tf-tmp-instance"
-  vpc_id              = tencentcloud_vpc.vpc.id
-  subnet_id           = tencentcloud_subnet.subnet.id
-  data_retention_time = 30
-  zone                = var.availability_zone
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_monitor_grafana_instance" "foo" {
-  instance_name         = "tf-grafana"
-  vpc_id                = tencentcloud_vpc.vpc.id
-  subnet_ids            = [tencentcloud_subnet.subnet.id]
-  grafana_init_password = "1234567890"
-  enable_internet 		= false
-  is_destroy 			= true
-
-  tags = {
-    "createdBy" = "test"
-  }
-}
-
-resource "tencentcloud_monitor_tmp_manage_grafana_attachment" "foo" {
-    grafana_id  = tencentcloud_monitor_grafana_instance.foo.id
-    instance_id = tencentcloud_monitor_tmp_instance.foo.id
+resource "tencentcloud_monitor_tmp_manage_grafana_attachment" "tmp_manage_grafana_attachment" {
+  instance_id = "prom-test"
+  grafana_id = "grafana-test"
 }
 ```
 
@@ -56,19 +15,18 @@ Import
 monitor tmp_manage_grafana_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_monitor_tmp_manage_grafana_attachment.manage_grafana_attachment prom-xxxxxxxx
+terraform import tencentcloud_monitor_tmp_manage_grafana_attachment.tmp_manage_grafana_attachment tmp_manage_grafana_attachment_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMonitorTmpManageGrafanaAttachment() *schema.Resource {
@@ -105,6 +63,7 @@ func resourceTencentCloudMonitorTmpManageGrafanaAttachmentCreate(d *schema.Resou
 
 	var (
 		request    = monitor.NewBindPrometheusManagedGrafanaRequest()
+		response   = monitor.NewBindPrometheusManagedGrafanaResponse()
 		instanceId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -123,13 +82,15 @@ func resourceTencentCloudMonitorTmpManageGrafanaAttachmentCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create monitor manageGrafanaAttachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create monitor TmpManageGrafanaAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudMonitorTmpManageGrafanaAttachmentRead(d, meta)
@@ -145,25 +106,25 @@ func resourceTencentCloudMonitorTmpManageGrafanaAttachmentRead(d *schema.Resourc
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
+	tmpManageGrafanaAttachmentId := d.Id()
 
-	manageGrafanaAttachment, err := service.DescribeMonitorManageGrafanaAttachmentById(ctx, instanceId)
+	TmpManageGrafanaAttachment, err := service.DescribeMonitorTmpManageGrafanaAttachmentById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
-	if manageGrafanaAttachment == nil {
+	if TmpManageGrafanaAttachment == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `MonitorTmpManageGrafanaAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if manageGrafanaAttachment.InstanceId != nil {
-		_ = d.Set("instance_id", manageGrafanaAttachment.InstanceId)
+	if TmpManageGrafanaAttachment.InstanceId != nil {
+		_ = d.Set("instance_id", TmpManageGrafanaAttachment.InstanceId)
 	}
 
-	if manageGrafanaAttachment.GrafanaInstanceId != nil {
-		_ = d.Set("grafana_id", manageGrafanaAttachment.GrafanaInstanceId)
+	if TmpManageGrafanaAttachment.GrafanaId != nil {
+		_ = d.Set("grafana_id", TmpManageGrafanaAttachment.GrafanaId)
 	}
 
 	return nil
@@ -177,9 +138,9 @@ func resourceTencentCloudMonitorTmpManageGrafanaAttachmentDelete(d *schema.Resou
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := d.Id()
+	tmpManageGrafanaAttachmentId := d.Id()
 
-	if err := service.DeleteMonitorManageGrafanaAttachmentById(ctx, instanceId); err != nil {
+	if err := service.DeleteMonitorTmpManageGrafanaAttachmentById(ctx, instanceId); err != nil {
 		return err
 	}
 

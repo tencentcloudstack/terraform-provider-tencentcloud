@@ -5,8 +5,27 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster_params" "cluster_params" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  param_name = "innodb_checksum_algorithm"
+  cluster_id = &lt;nil&gt;
+  param_name = &lt;nil&gt;
+  total_count = &lt;nil&gt;
+  items {
+		current_value = &lt;nil&gt;
+		default = &lt;nil&gt;
+		enum_value = &lt;nil&gt;
+		max = &lt;nil&gt;
+		min = &lt;nil&gt;
+		param_name = &lt;nil&gt;
+		need_reboot = &lt;nil&gt;
+		param_type = &lt;nil&gt;
+		match_type = &lt;nil&gt;
+		match_value = &lt;nil&gt;
+		description = &lt;nil&gt;
+		is_global = &lt;nil&gt;
+		modifiable_info = &lt;nil&gt;
+		is_func = &lt;nil&gt;
+		func = &lt;nil&gt;
+
+  }
 }
 ```
 */
@@ -14,7 +33,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -37,25 +55,26 @@ func dataSourceTencentCloudCynosdbClusterParams() *schema.Resource {
 				Description: "Parameter name.",
 			},
 
+			"total_count": {
+				Type:        schema.TypeInt,
+				Description: "The total count of parameters.",
+			},
+
 			"items": {
 				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "Instance parameter list. Note: This field may return null, indicating that no valid value can be obtained.",
+				Description: "Instance parameter list.Note: This field may return null, indicating that no valid value can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"current_value": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Current value.",
 						},
 						"default": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Default value.",
 						},
 						"enum_value": {
-							Type:     schema.TypeSet,
-							Computed: true,
+							Type: schema.TypeSet,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -63,57 +82,51 @@ func dataSourceTencentCloudCynosdbClusterParams() *schema.Resource {
 						},
 						"max": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The maximum value when the parameter type is float/integer.",
 						},
 						"min": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The minimum value when the parameter type is float/integer.",
 						},
 						"param_name": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The name of parameter.",
 						},
 						"need_reboot": {
 							Type:        schema.TypeInt,
-							Computed:    true,
 							Description: "Whether to reboot.",
 						},
 						"param_type": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Parameter type: integer/float/string/enum/bool.",
 						},
 						"match_type": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Matching type, multiVal, regex is used when the parameter type is string.",
 						},
 						"match_value": {
 							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Match the target value, when multiVal, each key is divided by `;`.",
+							Description: "Match the target value, when multiVal, each key is divided by &amp;#39;;&amp;#39;.",
 						},
 						"description": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The description of parameter.",
 						},
 						"is_global": {
 							Type:        schema.TypeInt,
-							Computed:    true,
 							Description: "Is it a global parameter.Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"modifiable_info": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Description: "Whether the parameter can be modified.Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"is_func": {
 							Type:        schema.TypeBool,
-							Computed:    true,
 							Description: "Is it a function.Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"func": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Function.Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
@@ -137,14 +150,77 @@ func dataSourceTencentCloudCynosdbClusterParamsRead(d *schema.ResourceData, meta
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var clusterId string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
+		paramMap["ClusterId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("param_name"); ok {
-		paramMap["param_name"] = v.(string)
+		paramMap["ParamName"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("total_count"); v != nil {
+		paramMap["TotalCount"] = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("items"); ok {
+		itemsSet := v.([]interface{})
+		tmpSet := make([]*cynosdb.ParamInfo, 0, len(itemsSet))
+
+		for _, item := range itemsSet {
+			paramInfo := cynosdb.ParamInfo{}
+			paramInfoMap := item.(map[string]interface{})
+
+			if v, ok := paramInfoMap["current_value"]; ok {
+				paramInfo.CurrentValue = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["default"]; ok {
+				paramInfo.Default = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["enum_value"]; ok {
+				enumValueSet := v.(*schema.Set).List()
+				paramInfo.EnumValue = helper.InterfacesStringsPoint(enumValueSet)
+			}
+			if v, ok := paramInfoMap["max"]; ok {
+				paramInfo.Max = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["min"]; ok {
+				paramInfo.Min = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["param_name"]; ok {
+				paramInfo.ParamName = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["need_reboot"]; ok {
+				paramInfo.NeedReboot = helper.IntInt64(v.(int))
+			}
+			if v, ok := paramInfoMap["param_type"]; ok {
+				paramInfo.ParamType = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["match_type"]; ok {
+				paramInfo.MatchType = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["match_value"]; ok {
+				paramInfo.MatchValue = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["description"]; ok {
+				paramInfo.Description = helper.String(v.(string))
+			}
+			if v, ok := paramInfoMap["is_global"]; ok {
+				paramInfo.IsGlobal = helper.IntInt64(v.(int))
+			}
+			if modifiableInfoMap, ok := helper.InterfaceToMap(paramInfoMap, "modifiable_info"); ok {
+				modifiableInfo := cynosdb.ModifiableInfo{}
+				paramInfo.ModifiableInfo = &modifiableInfo
+			}
+			if v, ok := paramInfoMap["is_func"]; ok {
+				paramInfo.IsFunc = helper.Bool(v.(bool))
+			}
+			if v, ok := paramInfoMap["func"]; ok {
+				paramInfo.Func = helper.String(v.(string))
+			}
+			tmpSet = append(tmpSet, &paramInfo)
+		}
+		paramMap["items"] = tmpSet
 	}
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -152,7 +228,7 @@ func dataSourceTencentCloudCynosdbClusterParamsRead(d *schema.ResourceData, meta
 	var items []*cynosdb.ParamInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeClusterParamsByFilter(ctx, clusterId, paramMap)
+		result, e := service.DescribeCynosdbClusterParamsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -165,33 +241,8 @@ func dataSourceTencentCloudCynosdbClusterParamsRead(d *schema.ResourceData, meta
 
 	ids := make([]string, 0, len(items))
 	tmpList := make([]map[string]interface{}, 0, len(items))
-	for _, item := range items {
-		ids = append(ids, *item.ParamName)
-		itemMap := make(map[string]interface{})
-		itemMap["current_value"] = item.CurrentValue
-		itemMap["default"] = item.Default
-		itemMap["max"] = item.Max
-		itemMap["min"] = item.Min
-		itemMap["param_name"] = item.ParamName
-		itemMap["need_reboot"] = item.NeedReboot
-		itemMap["param_type"] = item.ParamType
-		itemMap["match_type"] = item.MatchType
-		itemMap["match_value"] = item.MatchValue
-		itemMap["description"] = item.Description
-		itemMap["is_global"] = item.IsGlobal
-		itemMap["is_func"] = item.IsFunc
-		itemMap["func"] = item.Func
-		enumValues := make([]string, 0)
-		if item.EnumValue != nil {
-			for _, enumValueItem := range item.EnumValue {
-				enumValues = append(enumValues, *enumValueItem)
-			}
-			itemMap["enum_value"] = enumValues
-		}
-		tmpList = append(tmpList, itemMap)
-	}
+
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("items", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

@@ -5,12 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_snapshot_by_timeoffset_template" "snapshot_by_timeoffset_template" {
-  fill_type           = "stretch"
-  format              = "jpg"
-  height              = 128
-  name                = "terraform-test"
+  name = &lt;nil&gt;
+  width = 0
+  height = 0
   resolution_adaptive = "open"
-  width               = 140
+  format = "jpg"
+  comment = &lt;nil&gt;
+  fill_type = "black"
 }
 ```
 
@@ -26,12 +27,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsSnapshotByTimeoffsetTemplate() *schema.Resource {
@@ -98,7 +99,7 @@ func resourceTencentCloudMpsSnapshotByTimeoffsetTemplateCreate(d *schema.Resourc
 	var (
 		request    = mps.NewCreateSnapshotByTimeOffsetTemplateRequest()
 		response   = mps.NewCreateSnapshotByTimeOffsetTemplateResponse()
-		definition uint64
+		definition int
 	)
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -144,7 +145,7 @@ func resourceTencentCloudMpsSnapshotByTimeoffsetTemplateCreate(d *schema.Resourc
 	}
 
 	definition = *response.Response.Definition
-	d.SetId(helper.UInt64ToStr(definition))
+	d.SetId(helper.Int64ToStr(definition))
 
 	return resourceTencentCloudMpsSnapshotByTimeoffsetTemplateRead(d, meta)
 }
@@ -159,7 +160,7 @@ func resourceTencentCloudMpsSnapshotByTimeoffsetTemplateRead(d *schema.ResourceD
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	snapshotByTimeoffsetTemplateId := d.Id()
 
 	snapshotByTimeoffsetTemplate, err := service.DescribeMpsSnapshotByTimeoffsetTemplateById(ctx, definition)
 	if err != nil {
@@ -209,66 +210,74 @@ func resourceTencentCloudMpsSnapshotByTimeoffsetTemplateUpdate(d *schema.Resourc
 
 	logId := getLogId(contextNil)
 
-	needChange := false
-
 	request := mps.NewModifySnapshotByTimeOffsetTemplateRequest()
 
-	definition := d.Id()
+	snapshotByTimeoffsetTemplateId := d.Id()
 
-	request.Definition = helper.StrToUint64Point(definition)
+	request.Definition = &definition
 
-	mutableArgs := []string{"name", "width", "height", "resolution_adaptive", "format", "comment", "fill_type"}
+	immutableArgs := []string{"name", "width", "height", "resolution_adaptive", "format", "comment", "fill_type"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("width") {
 		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("height") {
 		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("resolution_adaptive") {
 		if v, ok := d.GetOk("resolution_adaptive"); ok {
 			request.ResolutionAdaptive = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("format") {
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("fill_type") {
 		if v, ok := d.GetOk("fill_type"); ok {
 			request.FillType = helper.String(v.(string))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifySnapshotByTimeOffsetTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps snapshotByTimeoffsetTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifySnapshotByTimeOffsetTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps snapshotByTimeoffsetTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsSnapshotByTimeoffsetTemplateRead(d, meta)
@@ -282,7 +291,7 @@ func resourceTencentCloudMpsSnapshotByTimeoffsetTemplateDelete(d *schema.Resourc
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	snapshotByTimeoffsetTemplateId := d.Id()
 
 	if err := service.DeleteMpsSnapshotByTimeoffsetTemplateById(ctx, definition); err != nil {
 		return err

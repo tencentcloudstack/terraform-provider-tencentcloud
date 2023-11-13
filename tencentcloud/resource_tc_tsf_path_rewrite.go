@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_path_rewrite" "path_rewrite" {
-  gateway_group_id = "group-a2j9zxpv"
-  regex = "/test"
-  replacement = "/tt"
-  blocked = "N"
-  order = 2
+    gateway_group_id = ""
+  regex = ""
+  replacement = ""
+  blocked = ""
+  order =
 }
 ```
 
@@ -18,7 +18,7 @@ Import
 tsf path_rewrite can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_path_rewrite.path_rewrite rewrite-nygq33v2
+terraform import tencentcloud_tsf_path_rewrite.path_rewrite path_rewrite_id
 ```
 */
 package tencentcloud
@@ -26,12 +26,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfPathRewrite() *schema.Resource {
@@ -47,25 +46,25 @@ func resourceTencentCloudTsfPathRewrite() *schema.Resource {
 			"path_rewrite_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "path rewrite rule ID.",
+				Description: "Path rewrite rule ID.",
 			},
 
 			"gateway_group_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway deployment group ID.",
+				Description: "Gateway deployment group ID.",
 			},
 
 			"regex": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "regular expression.",
+				Description: "Regular expression.",
 			},
 
 			"replacement": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "content to replace.",
+				Description: "Content to replace.",
 			},
 
 			"blocked": {
@@ -77,7 +76,7 @@ func resourceTencentCloudTsfPathRewrite() *schema.Resource {
 			"order": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "rule order, the smaller the higher the priority.",
+				Description: "Rule order, the smaller the higher the priority.",
 			},
 		},
 	}
@@ -90,36 +89,32 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request       = tsf.NewCreatePathRewritesWithDetailRespRequest()
-		pathRewrites  = []*tsf.PathRewriteCreateObject{}
-		pathRewrite   = tsf.PathRewriteCreateObject{}
-		response      = tsf.NewCreatePathRewritesWithDetailRespResponse()
+		request       = tsf.NewCreatePathRewritesRequest()
+		response      = tsf.NewCreatePathRewritesResponse()
 		pathRewriteId string
 	)
 	if v, ok := d.GetOk("gateway_group_id"); ok {
-		pathRewrite.GatewayGroupId = helper.String(v.(string))
+		request.GatewayGroupId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("regex"); ok {
-		pathRewrite.Regex = helper.String(v.(string))
+		request.Regex = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("replacement"); ok {
-		pathRewrite.Replacement = helper.String(v.(string))
+		request.Replacement = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("blocked"); ok {
-		pathRewrite.Blocked = helper.String(v.(string))
+		request.Blocked = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("order"); v != nil {
-		pathRewrite.Order = helper.IntInt64(v.(int))
+	if v, ok := d.GetOkExists("order"); ok {
+		request.Order = helper.IntInt64(v.(int))
 	}
 
-	pathRewrites = append(pathRewrites, &pathRewrite)
-	request.PathRewrites = pathRewrites
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewritesWithDetailResp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewrites(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -133,7 +128,7 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	pathRewriteId = *response.Response.Result[0]
+	pathRewriteId = *response.Response.pathRewriteId
 	d.SetId(pathRewriteId)
 
 	return resourceTencentCloudTsfPathRewriteRead(d, meta)
@@ -201,35 +196,11 @@ func resourceTencentCloudTsfPathRewriteUpdate(d *schema.ResourceData, meta inter
 
 	request.PathRewriteId = &pathRewriteId
 
-	immutableArgs := []string{"path_rewrite_id", "gateway_group_id"}
+	immutableArgs := []string{"path_rewrite_id", "gateway_group_id", "regex", "replacement", "blocked", "order"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	if d.HasChange("regex") {
-		if v, ok := d.GetOk("regex"); ok {
-			request.Regex = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("replacement") {
-		if v, ok := d.GetOk("replacement"); ok {
-			request.Replacement = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("blocked") {
-		if v, ok := d.GetOk("blocked"); ok {
-			request.Blocked = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("order") {
-		if v, ok := d.GetOk("order"); ok {
-			request.Order = helper.IntInt64(v.(int))
 		}
 	}
 

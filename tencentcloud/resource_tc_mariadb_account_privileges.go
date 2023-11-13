@@ -5,12 +5,49 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_account_privileges" "account_privileges" {
-  instance_id = "tdsql-9vqvls95"
+  instance_id = "tdsql-e9tklsgz"
   accounts {
-		user = "keep-modify-privileges"
-		host = "127.0.0.1"
+		user = ""
+		host = ""
+
   }
-  global_privileges = ["ALTER", "CREATE", "DELETE", "SELECT", "UPDATE", "DROP"]
+  global_privileges =
+  database_privileges {
+		privileges =
+		database = ""
+
+  }
+  table_privileges {
+		database = ""
+		table = ""
+		privileges =
+
+  }
+  column_privileges {
+		database = ""
+		table = ""
+		column = ""
+		privileges =
+
+  }
+  view_privileges {
+		database = ""
+		view = ""
+		privileges =
+
+  }
+  function_privileges {
+		database = ""
+		function_name = ""
+		privileges =
+
+  }
+  procedure_privileges {
+		database = ""
+		procedure = ""
+		privileges =
+
+  }
 }
 ```
 
@@ -27,14 +64,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
@@ -49,37 +83,39 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
+
 			"accounts": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
-				MaxItems:    1,
-				Description: "account information.",
+				Description: "Account information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"user": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "user name.",
+							Description: "User name.",
 						},
 						"host": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "user host.",
+							Description: "User host.",
 						},
 					},
 				},
 			},
+
 			"global_privileges": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Global permission. Valid values of `GlobalPrivileges`: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `PROCESS`, `DROP`, `REFERENCES`, `INDEX`, `ALTER`, `SHOW DATABASES`, `CREATE TEMPORARY TABLES`, `LOCK TABLES`, `EXECUTE`, `CREATE VIEW`, `SHOW VIEW`, `CREATE ROUTINE`, `ALTER ROUTINE`, `EVENT`, `TRIGGER`.Note: if the parameter is left empty, no change will be made to the granted global permissions. To clear the granted global permissions, set the parameter to an empty array.",
 			},
+
 			"database_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -87,8 +123,10 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
@@ -100,10 +138,11 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 					},
 				},
 			},
+
 			"table_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "`SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `REFERENCES`, `INDEX`, `ALTER`, `CREATE VIEW`, `SHOW VIEW`, `TRIGGER`.Note: if the parameter is not passed in, no change will be made to the granted table permissions. To clear the granted table permissions, set `Privileges` to an empty array.",
+				Description: "LETE`, `CREATE`, `DROP`, `REFERENCES`, `INDEX`, `ALTER`, `CREATE VIEW`, `SHOW VIEW`, `TRIGGER`.Note: if the parameter is not passed in, no change will be made to the granted table permissions. To clear the granted table permissions, set `Privileges` to an empty array.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database": {
@@ -117,14 +156,17 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 							Description: "Table name.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
 					},
 				},
 			},
+
 			"column_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -147,14 +189,17 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 							Description: "Column name.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
 					},
 				},
 			},
+
 			"view_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -172,14 +217,17 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 							Description: "View name.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
 					},
 				},
 			},
+
 			"function_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -197,14 +245,17 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 							Description: "Function name.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
 					},
 				},
 			},
+
 			"procedure_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -222,8 +273,10 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 							Description: "Procedure name.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Permission information.",
 						},
@@ -238,29 +291,22 @@ func resourceTencentCloudMariadbAccountPrivilegesCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_mariadb_account_privileges.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		instanceId string
-		User       string
-		Host       string
-	)
-
+	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("accounts"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["user"]; ok {
-				User = v.(string)
-			}
-			if v, ok := dMap["host"]; ok {
-				Host = v.(string)
-			}
-		}
+	var user string
+	if v, ok := d.GetOk("user"); ok {
+		user = v.(string)
 	}
 
-	d.SetId(strings.Join([]string{instanceId, User, Host}, FILED_SP))
+	var host string
+	if v, ok := d.GetOk("host"); ok {
+		host = v.(string)
+	}
+
+	d.SetId(strings.Join([]string{instanceId, user, host}, FILED_SP))
 
 	return resourceTencentCloudMariadbAccountPrivilegesUpdate(d, meta)
 }
@@ -269,22 +315,21 @@ func resourceTencentCloudMariadbAccountPrivilegesRead(d *schema.ResourceData, me
 	defer logElapsed("resource.tencentcloud_mariadb_account_privileges.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
 	instanceId := idSplit[0]
-	User := idSplit[1]
-	Host := idSplit[2]
+	user := idSplit[1]
+	host := idSplit[2]
 
-	accountPrivileges, err := service.DescribeMariadbAccountPrivilegesById(ctx, instanceId, User, Host)
+	accountPrivileges, err := service.DescribeMariadbAccountPrivilegesById(ctx, instanceId, user, host)
 	if err != nil {
 		return err
 	}
@@ -299,20 +344,172 @@ func resourceTencentCloudMariadbAccountPrivilegesRead(d *schema.ResourceData, me
 		_ = d.Set("instance_id", accountPrivileges.InstanceId)
 	}
 
-	if accountPrivileges.UserName != nil && accountPrivileges.Host != nil {
+	if accountPrivileges.Accounts != nil {
 		accountsList := []interface{}{}
-		accountsMap := map[string]interface{}{}
+		for _, accounts := range accountPrivileges.Accounts {
+			accountsMap := map[string]interface{}{}
 
-		accountsMap["user"] = accountPrivileges.UserName
-		accountsMap["host"] = accountPrivileges.Host
+			if accountPrivileges.Accounts.User != nil {
+				accountsMap["user"] = accountPrivileges.Accounts.User
+			}
 
-		accountsList = append(accountsList, accountsMap)
+			if accountPrivileges.Accounts.Host != nil {
+				accountsMap["host"] = accountPrivileges.Accounts.Host
+			}
+
+			accountsList = append(accountsList, accountsMap)
+		}
 
 		_ = d.Set("accounts", accountsList)
+
 	}
 
-	if accountPrivileges.Privileges != nil {
-		_ = d.Set("global_privileges", accountPrivileges.Privileges)
+	if accountPrivileges.GlobalPrivileges != nil {
+		_ = d.Set("global_privileges", accountPrivileges.GlobalPrivileges)
+	}
+
+	if accountPrivileges.DatabasePrivileges != nil {
+		databasePrivilegesList := []interface{}{}
+		for _, databasePrivileges := range accountPrivileges.DatabasePrivileges {
+			databasePrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.DatabasePrivileges.Privileges != nil {
+				databasePrivilegesMap["privileges"] = accountPrivileges.DatabasePrivileges.Privileges
+			}
+
+			if accountPrivileges.DatabasePrivileges.Database != nil {
+				databasePrivilegesMap["database"] = accountPrivileges.DatabasePrivileges.Database
+			}
+
+			databasePrivilegesList = append(databasePrivilegesList, databasePrivilegesMap)
+		}
+
+		_ = d.Set("database_privileges", databasePrivilegesList)
+
+	}
+
+	if accountPrivileges.TablePrivileges != nil {
+		tablePrivilegesList := []interface{}{}
+		for _, tablePrivileges := range accountPrivileges.TablePrivileges {
+			tablePrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.TablePrivileges.Database != nil {
+				tablePrivilegesMap["database"] = accountPrivileges.TablePrivileges.Database
+			}
+
+			if accountPrivileges.TablePrivileges.Table != nil {
+				tablePrivilegesMap["table"] = accountPrivileges.TablePrivileges.Table
+			}
+
+			if accountPrivileges.TablePrivileges.Privileges != nil {
+				tablePrivilegesMap["privileges"] = accountPrivileges.TablePrivileges.Privileges
+			}
+
+			tablePrivilegesList = append(tablePrivilegesList, tablePrivilegesMap)
+		}
+
+		_ = d.Set("table_privileges", tablePrivilegesList)
+
+	}
+
+	if accountPrivileges.ColumnPrivileges != nil {
+		columnPrivilegesList := []interface{}{}
+		for _, columnPrivileges := range accountPrivileges.ColumnPrivileges {
+			columnPrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.ColumnPrivileges.Database != nil {
+				columnPrivilegesMap["database"] = accountPrivileges.ColumnPrivileges.Database
+			}
+
+			if accountPrivileges.ColumnPrivileges.Table != nil {
+				columnPrivilegesMap["table"] = accountPrivileges.ColumnPrivileges.Table
+			}
+
+			if accountPrivileges.ColumnPrivileges.Column != nil {
+				columnPrivilegesMap["column"] = accountPrivileges.ColumnPrivileges.Column
+			}
+
+			if accountPrivileges.ColumnPrivileges.Privileges != nil {
+				columnPrivilegesMap["privileges"] = accountPrivileges.ColumnPrivileges.Privileges
+			}
+
+			columnPrivilegesList = append(columnPrivilegesList, columnPrivilegesMap)
+		}
+
+		_ = d.Set("column_privileges", columnPrivilegesList)
+
+	}
+
+	if accountPrivileges.ViewPrivileges != nil {
+		viewPrivilegesList := []interface{}{}
+		for _, viewPrivileges := range accountPrivileges.ViewPrivileges {
+			viewPrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.ViewPrivileges.Database != nil {
+				viewPrivilegesMap["database"] = accountPrivileges.ViewPrivileges.Database
+			}
+
+			if accountPrivileges.ViewPrivileges.View != nil {
+				viewPrivilegesMap["view"] = accountPrivileges.ViewPrivileges.View
+			}
+
+			if accountPrivileges.ViewPrivileges.Privileges != nil {
+				viewPrivilegesMap["privileges"] = accountPrivileges.ViewPrivileges.Privileges
+			}
+
+			viewPrivilegesList = append(viewPrivilegesList, viewPrivilegesMap)
+		}
+
+		_ = d.Set("view_privileges", viewPrivilegesList)
+
+	}
+
+	if accountPrivileges.FunctionPrivileges != nil {
+		functionPrivilegesList := []interface{}{}
+		for _, functionPrivileges := range accountPrivileges.FunctionPrivileges {
+			functionPrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.FunctionPrivileges.Database != nil {
+				functionPrivilegesMap["database"] = accountPrivileges.FunctionPrivileges.Database
+			}
+
+			if accountPrivileges.FunctionPrivileges.FunctionName != nil {
+				functionPrivilegesMap["function_name"] = accountPrivileges.FunctionPrivileges.FunctionName
+			}
+
+			if accountPrivileges.FunctionPrivileges.Privileges != nil {
+				functionPrivilegesMap["privileges"] = accountPrivileges.FunctionPrivileges.Privileges
+			}
+
+			functionPrivilegesList = append(functionPrivilegesList, functionPrivilegesMap)
+		}
+
+		_ = d.Set("function_privileges", functionPrivilegesList)
+
+	}
+
+	if accountPrivileges.ProcedurePrivileges != nil {
+		procedurePrivilegesList := []interface{}{}
+		for _, procedurePrivileges := range accountPrivileges.ProcedurePrivileges {
+			procedurePrivilegesMap := map[string]interface{}{}
+
+			if accountPrivileges.ProcedurePrivileges.Database != nil {
+				procedurePrivilegesMap["database"] = accountPrivileges.ProcedurePrivileges.Database
+			}
+
+			if accountPrivileges.ProcedurePrivileges.Procedure != nil {
+				procedurePrivilegesMap["procedure"] = accountPrivileges.ProcedurePrivileges.Procedure
+			}
+
+			if accountPrivileges.ProcedurePrivileges.Privileges != nil {
+				procedurePrivilegesMap["privileges"] = accountPrivileges.ProcedurePrivileges.Privileges
+			}
+
+			procedurePrivilegesList = append(procedurePrivilegesList, procedurePrivilegesMap)
+		}
+
+		_ = d.Set("procedure_privileges", procedurePrivilegesList)
+
 	}
 
 	return nil
@@ -322,153 +519,28 @@ func resourceTencentCloudMariadbAccountPrivilegesUpdate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_mariadb_account_privileges.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request = mariadb.NewModifyAccountPrivilegesRequest()
-		flowId  int64
-	)
+	logId := getLogId(contextNil)
+
+	request := mariadb.NewModifyAccountPrivilegesRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
 	instanceId := idSplit[0]
-	User := idSplit[1]
-	Host := idSplit[2]
+	user := idSplit[1]
+	host := idSplit[2]
 
-	needChange := false
+	request.InstanceId = &instanceId
+	request.User = &user
+	request.Host = &host
 
-	mutableArgs := []string{"global_privileges", "database_privileges", "table_privileges", "column_privileges", "view_privileges", "function_privileges", "procedure_privileges"}
+	immutableArgs := []string{"instance_id", "accounts", "global_privileges", "database_privileges", "table_privileges", "column_privileges", "view_privileges", "function_privileges", "procedure_privileges"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-	}
-
-	if needChange {
-		request.InstanceId = &instanceId
-		request.Accounts = []*mariadb.Account{
-			{
-				User: common.StringPtr(User),
-				Host: common.StringPtr(Host),
-			},
-		}
-
-		if v, ok := d.GetOk("global_privileges"); ok {
-			globalPrivileges := v.(*schema.Set).List()
-			for i := range globalPrivileges {
-				backupCycle := globalPrivileges[i].(string)
-				request.GlobalPrivileges = append(request.GlobalPrivileges, helper.String(backupCycle))
-			}
-		}
-
-		if v, ok := d.GetOk("database_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.DatabasePrivilege{}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				request.DatabasePrivileges = append(request.DatabasePrivileges, &parameter)
-			}
-		}
-
-		if v, ok := d.GetOk("table_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.TablePrivilege{}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				if v, ok := dMap["table"]; ok {
-					parameter.Table = helper.String(v.(string))
-				}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				request.TablePrivileges = append(request.TablePrivileges, &parameter)
-			}
-		}
-
-		if v, ok := d.GetOk("column_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.ColumnPrivilege{}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				if v, ok := dMap["table"]; ok {
-					parameter.Table = helper.String(v.(string))
-				}
-				if v, ok := dMap["column"]; ok {
-					parameter.Column = helper.String(v.(string))
-				}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				request.ColumnPrivileges = append(request.ColumnPrivileges, &parameter)
-			}
-		}
-
-		if v, ok := d.GetOk("view_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.ViewPrivileges{}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				if v, ok := dMap["view"]; ok {
-					parameter.View = helper.String(v.(string))
-				}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				request.ViewPrivileges = append(request.ViewPrivileges, &parameter)
-			}
-		}
-
-		if v, ok := d.GetOk("function_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.FunctionPrivilege{}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				if v, ok := dMap["function_name"]; ok {
-					parameter.FunctionName = helper.String(v.(string))
-				}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				request.FunctionPrivileges = append(request.FunctionPrivileges, &parameter)
-			}
-		}
-
-		if v, ok := d.GetOk("procedure_privileges"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				parameter := mariadb.ProcedurePrivilege{}
-				if v, ok := dMap["database"]; ok {
-					parameter.Database = helper.String(v.(string))
-				}
-				if v, ok := dMap["procedure"]; ok {
-					parameter.Procedure = helper.String(v.(string))
-				}
-				if v, ok := dMap["privileges"]; ok {
-					parameter.Privileges = helper.Strings(v.([]string))
-				}
-				request.ProcedurePrivileges = append(request.ProcedurePrivileges, &parameter)
-			}
-		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -478,36 +550,10 @@ func resourceTencentCloudMariadbAccountPrivilegesUpdate(d *schema.ResourceData, 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		flowId = *result.Response.FlowId
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update mariadb accountPrivileges failed, reason:%+v", logId, err)
-		return err
-	}
-
-	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeFlowById(ctx, flowId)
-		if e != nil {
-			return retryError(e)
-		}
-
-		if *result.Status == MARIADB_TASK_SUCCESS {
-			return nil
-		} else if *result.Status == MARIADB_TASK_RUNNING {
-			return resource.RetryableError(fmt.Errorf("mariadb accountPrivileges status is running"))
-		} else if *result.Status == MARIADB_TASK_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("mariadb accountPrivileges status is fail"))
-		} else {
-			e = fmt.Errorf("mariadb accountPrivileges status illegal")
-			return resource.NonRetryableError(e)
-		}
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s update mariadb accountPrivileges task failed, reason:%+v", logId, err)
 		return err
 	}
 

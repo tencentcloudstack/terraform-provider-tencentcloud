@@ -7,22 +7,30 @@ Example Usage
 resource "tencentcloud_cvm_renew_instance" "renew_instance" {
   instance_ids =
   instance_charge_prepaid {
-	period = 1
-	renew_flag = "NOTIFY_AND_AUTO_RENEW"
+		period = 1
+		renew_flag = "NOTIFY_AND_AUTO_RENEW"
+
   }
   renew_portable_data_disk = true
 }
+```
+
+Import
+
+cvm renew_instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cvm_renew_instance.renew_instance renew_instance_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCvmRenewInstance() *schema.Resource {
@@ -30,13 +38,18 @@ func resourceTencentCloudCvmRenewInstance() *schema.Resource {
 		Create: resourceTencentCloudCvmRenewInstanceCreate,
 		Read:   resourceTencentCloudCvmRenewInstanceRead,
 		Delete: resourceTencentCloudCvmRenewInstanceDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
-			"instance_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Instance ID.",
+			"instance_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Instance ID. To obtain the instance IDs, you can call DescribeInstances and look for InstanceId in the response.",
 			},
 
 			"instance_charge_prepaid": {
@@ -53,26 +66,19 @@ func resourceTencentCloudCvmRenewInstance() *schema.Resource {
 							Description: "Subscription period; unit: month; valid values: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36, 48, 60. Note: This field may return null, indicating that no valid value is found.",
 						},
 						"renew_flag": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: "Auto renewal flag. Valid values:\n" +
-								"- `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically;\n" +
-								"- `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically;\n" +
-								"- `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically;\n" +
-								"Default value: NOTIFY_AND_MANUAL_RENEW. If this parameter is specified as NOTIFY_AND_AUTO_RENEW, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. Note: This field may return null, indicating that no valid value is found.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Auto renewal flag. Valid values:&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;NOTIFY_AND_AUTO_RENEW：notify upon expiration and renew automatically&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;NOTIFY_AND_MANUAL_RENEW：notify upon expiration but do not renew automatically&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;DISABLE_NOTIFY_AND_MANUAL_RENEW：neither notify upon expiration nor renew automatically&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;Default value: NOTIFY_AND_MANUAL_RENEW。If this parameter is specified as NOTIFY_AND_AUTO_RENEW, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. Note: This field may return null, indicating that no valid value is found.",
 						},
 					},
 				},
 			},
 
 			"renew_portable_data_disk": {
-				Optional: true,
-				ForceNew: true,
-				Type:     schema.TypeBool,
-				Description: "Whether to renew the elastic data disk. Valid values:\n" +
-					"- `TRUE`: Indicates to renew the subscription instance and renew the attached elastic data disk at the same time\n" +
-					"- `FALSE`: Indicates that the subscription instance will be renewed and the elastic data disk attached to it will not be renewed\n" +
-					"Default value: TRUE.",
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to renew the elastic data disk. Valid values:&amp;amp;lt;br&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;TRUE：Indicates to renew the subscription instance and renew the attached elastic data disk at the same time&amp;amp;lt;br&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;FALSE：Indicates that the subscription instance will be renewed and the elastic data disk attached to it will not be renewed&amp;amp;lt;br&amp;amp;gt;&amp;amp;lt;br&amp;amp;gt;Default value：TRUE.",
 			},
 		},
 	}
@@ -84,16 +90,25 @@ func resourceTencentCloudCvmRenewInstanceCreate(d *schema.ResourceData, meta int
 
 	logId := getLogId(contextNil)
 
-	request := cvm.NewRenewInstancesRequest()
-	instanceId := d.Get("instance_id").(string)
-	request.InstanceIds = []*string{&instanceId}
+	var (
+		request    = cvm.NewRenewInstancesRequest()
+		response   = cvm.NewRenewInstancesResponse()
+		instanceId string
+	)
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
+	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "instance_charge_prepaid"); ok {
 		instanceChargePrepaid := cvm.InstanceChargePrepaid{}
 		if v, ok := dMap["period"]; ok {
 			instanceChargePrepaid.Period = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["renew_flag"]; ok && v.(string) != "" {
+		if v, ok := dMap["renew_flag"]; ok {
 			instanceChargePrepaid.RenewFlag = helper.String(v.(string))
 		}
 		request.InstanceChargePrepaid = &instanceChargePrepaid
@@ -110,6 +125,7 @@ func resourceTencentCloudCvmRenewInstanceCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -117,6 +133,7 @@ func resourceTencentCloudCvmRenewInstanceCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudCvmRenewInstanceRead(d, meta)

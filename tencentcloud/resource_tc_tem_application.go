@@ -5,17 +5,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_application" "application" {
-  application_name = "demo"
-  description = "demo for test"
+  application_name = "xxx"
+  description = "xxx"
   coding_language = "JAVA"
-  use_default_image_service = 0
-  repo_type = 2
-  repo_name = "qcloud/nginx"
-  repo_server = "ccr.ccs.tencentyun.com"
-  tags = {
-    "created" = "terraform"
+  use_default_image_service = 1
+  repo_type = 0
+  repo_server = &lt;nil&gt;
+  repo_name = &lt;nil&gt;
+  instance_id = &lt;nil&gt;
+  tags {
+		tag_key = "key"
+		tag_value = "tag value"
+
   }
 }
+```
+
+Import
+
+tem application can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tem_application.application application_id
 ```
 */
 package tencentcloud
@@ -23,77 +34,88 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTemApplication() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemApplicationRead,
 		Create: resourceTencentCloudTemApplicationCreate,
+		Read:   resourceTencentCloudTemApplicationRead,
 		Update: resourceTencentCloudTemApplicationUpdate,
 		Delete: resourceTencentCloudTemApplicationDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"application_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "application name.",
+				Type:        schema.TypeString,
+				Description: "Application name.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "application description.",
+				Type:        schema.TypeString,
+				Description: "Application description.",
 			},
 
 			"coding_language": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "program language, like JAVA.",
+				Type:        schema.TypeString,
+				Description: "Program language, like JAVA.",
 			},
 
 			"use_default_image_service": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     0,
-				Description: "create image repo or not.",
+				Type:        schema.TypeInt,
+				Description: "Create image repo or not.",
 			},
 
 			"repo_type": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.",
+				Type:        schema.TypeInt,
+				Description: "Repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.",
 			},
 
 			"repo_server": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "registry address.",
+				Type:        schema.TypeString,
+				Description: "Registry address.",
 			},
 
 			"repo_name": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "repository name.",
+				Type:        schema.TypeString,
+				Description: "Repository name.",
 			},
 
 			"instance_id": {
+				Optional:    true,
 				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "tcr instance id.",
+				Description: "Tcr instance id.",
 			},
+
 			"tags": {
-				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "application tag list.",
+				Description: "Application tag list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -104,13 +126,12 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request  = tem.NewCreateApplicationRequest()
-		response *tem.CreateApplicationResponse
+		request       = tem.NewCreateApplicationRequest()
+		response      = tem.NewCreateApplicationResponse()
+		applicationId string
 	)
-
 	if v, ok := d.GetOk("application_name"); ok {
 		request.ApplicationName = helper.String(v.(string))
 	}
@@ -123,9 +144,11 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 		request.CodingLanguage = helper.String(v.(string))
 	}
 
-	request.UseDefaultImageService = helper.IntInt64(d.Get("use_default_image_service").(int))
+	if v, ok := d.GetOkExists("use_default_image_service"); ok {
+		request.UseDefaultImageService = helper.IntInt64(v.(int))
+	}
 
-	if v, ok := d.GetOk("repo_type"); ok {
+	if v, ok := d.GetOkExists("repo_type"); ok {
 		request.RepoType = helper.IntInt64(v.(int))
 	}
 
@@ -141,47 +164,26 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 		request.InstanceId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
-		for key, value := range v.(map[string]interface{}) {
-			tag := tem.Tag{
-				TagKey:   helper.String(key),
-				TagValue: helper.String(value.(string)),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
+	if v, _ := d.GetOk("tags"); v != nil {
 	}
-
-	request.DeployMode = helper.String("IMAGE")
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().CreateApplication(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem application failed, reason:%+v", logId, err)
 		return err
 	}
 
-	applicationId := *response.Response.Result
-
+	applicationId = *response.Response.ApplicationId
 	d.SetId(applicationId)
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:application/%s", region, applicationId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 
 	return resourceTencentCloudTemApplicationRead(d, meta)
 }
@@ -191,27 +193,22 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	applicationId := d.Id()
 
-	applications, err := service.DescribeTemApplication(ctx, applicationId)
-
-	if len(applications.Result.Records) != 1 {
-		d.SetId("")
-		return nil
-	}
-	application := applications.Result.Records[0]
-
+	application, err := service.DescribeTemApplicationById(ctx, applicationId)
 	if err != nil {
 		return err
 	}
 
 	if application == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `application` %s does not exist", applicationId)
+		log.Printf("[WARN]%s resource `TemApplication` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if application.ApplicationName != nil {
@@ -226,8 +223,16 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("coding_language", application.CodingLanguage)
 	}
 
+	if application.UseDefaultImageService != nil {
+		_ = d.Set("use_default_image_service", application.UseDefaultImageService)
+	}
+
 	if application.RepoType != nil {
 		_ = d.Set("repo_type", application.RepoType)
+	}
+
+	if application.RepoServer != nil {
+		_ = d.Set("repo_server", application.RepoServer)
 	}
 
 	if application.RepoName != nil {
@@ -238,14 +243,8 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("instance_id", application.InstanceId)
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
-	tagService := TagService{client: client}
-	region := client.Region
-	tags, err := tagService.DescribeResourceTags(ctx, "tem", "application", region, applicationId)
-	if err != nil {
-		return err
+	if application.tags != nil {
 	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -255,42 +254,25 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyApplicationInfoRequest()
 
-	request.ApplicationId = helper.String(d.Id())
+	applicationId := d.Id()
 
-	if d.HasChange("application_name") {
-		return fmt.Errorf("`application_name` do not support change now.")
+	request.ApplicationId = &applicationId
+
+	immutableArgs := []string{"application_name", "description", "coding_language", "use_default_image_service", "repo_type", "repo_server", "repo_name", "instance_id", "tags"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOk("description"); ok {
-		request.Description = helper.String(v.(string))
-	}
-
-	if d.HasChange("coding_language") {
-		return fmt.Errorf("`coding_language` do not support change now.")
-	}
-
-	if d.HasChange("use_default_image_service") {
-		return fmt.Errorf("`use_default_image_service` do not support change now.")
-	}
-
-	if d.HasChange("repo_type") {
-		return fmt.Errorf("`repo_type` do not support change now.")
-	}
-
-	if d.HasChange("repo_server") {
-		return fmt.Errorf("`repo_server` do not support change now.")
-	}
-
-	if d.HasChange("repo_name") {
-		return fmt.Errorf("`repo_name` do not support change now.")
-	}
-
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
+	if d.HasChange("description") {
+		if v, ok := d.GetOk("description"); ok {
+			request.Description = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -298,25 +280,13 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem application failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tem", "application", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTemApplicationRead(d, meta)

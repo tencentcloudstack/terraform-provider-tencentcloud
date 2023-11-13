@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudKubernetesClusterAuthenticationOptionsDataSource_basic(t *testing.T) {
@@ -25,7 +24,7 @@ func TestAccTencentCloudKubernetesClusterAuthenticationOptionsDataSource_basic(t
 const testAccKubernetesClusterAuthenticationOptionsDataSource = `
 
 data "tencentcloud_kubernetes_cluster_authentication_options" "cluster_authentication_options" {
-  cluster_id = "cls-kzilgv5m"
-}
+  cluster_id = ""
+      }
 
 `

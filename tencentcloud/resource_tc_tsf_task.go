@@ -5,24 +5,34 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_task" "task" {
-  task_name = "terraform-test"
-  task_content = "/test"
-  execute_type = "unicast"
-  task_type = "java"
-  time_out = 60000
-  group_id = "group-y8pnmoga"
+    task_name = ""
+  task_content = ""
+  execute_type = ""
+  task_type = ""
+  time_out =
+  group_id = ""
   task_rule {
-	rule_type = "Cron"
-	expression = "0 * 1 * * ? "
+		rule_type = ""
+		expression = ""
+		repeat_interval =
+
   }
-  retry_count = 0
-  retry_interval = 0
-  success_operator = "GTE"
-  success_ratio = "100"
+  retry_count =
+  retry_interval =
+  shard_count =
+  shard_arguments {
+		shard_key =
+		shard_value = ""
+
+  }
+  success_operator = ""
+  success_ratio = ""
   advance_settings {
-	sub_task_concurrency = 2
+		sub_task_concurrency =
+
   }
-  task_argument = "a=c"
+  task_argument = ""
+          program_id_list =
 }
 ```
 
@@ -31,7 +41,7 @@ Import
 tsf task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_task.task task-y37eqq95
+terraform import tencentcloud_tsf_task.task task_id
 ```
 */
 package tencentcloud
@@ -39,13 +49,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfTask() *schema.Resource {
@@ -54,50 +62,50 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 		Read:   resourceTencentCloudTsfTaskRead,
 		Update: resourceTencentCloudTsfTaskUpdate,
 		Delete: resourceTencentCloudTsfTaskDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"task_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "task ID.",
+				Description: "Task ID.",
 			},
 
 			"task_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "task name, task length 64 characters.",
+				Description: "Task name, task length 64 characters.",
 			},
 
 			"task_content": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "task content, length limit 65536 bytes.",
+				Description: "Task content, length limit 65536 bytes.",
 			},
 
 			"execute_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "execution type, unicast/broadcast.",
+				Description: "Execution type, unicast/broadcast.",
 			},
 
 			"task_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "task type, java.",
+				Description: "Task type, java.",
 			},
 
 			"time_out": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "task timeout, time unit ms.",
+				Description: "Task timeout, time unit ms.",
 			},
 
 			"group_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "deployment group ID.",
+				Description: "Deployment group ID.",
 			},
 
 			"task_rule": {
@@ -105,13 +113,13 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "trigger rule.",
+				Description: "Trigger rule.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"rule_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "trigger rule type, Cron/Repeat.",
+							Description: "Trigger rule type, Cron/Repeat.",
 						},
 						"expression": {
 							Type:        schema.TypeString,
@@ -121,7 +129,7 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 						"repeat_interval": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "time interval, in milliseconds.",
+							Description: "Time interval, in milliseconds.",
 						},
 					},
 				},
@@ -131,21 +139,21 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "number of retries, 0 &amp;lt;= RetryCount&amp;lt;= 10.",
+				Description: "Number of retries, 0 &amp;amp;lt;= RetryCount&amp;amp;lt;= 10.",
 			},
 
 			"retry_interval": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "retry interval, 0 &amp;lt;= RetryInterval &amp;lt;= 600000, time unit ms.",
+				Description: "Retry interval, 0 &amp;amp;lt;= RetryInterval &amp;amp;lt;= 600000, time unit ms.",
 			},
 
 			"shard_count": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "number of shards.",
+				Description: "Number of shards.",
 			},
 
 			"shard_arguments": {
@@ -173,7 +181,7 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "the operator to judge the success of the task.",
+				Description: "The operator to judge the success of the task.",
 			},
 
 			"success_ratio": {
@@ -188,7 +196,7 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "advanced settings.",
+				Description: "Advanced settings.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"sub_task_concurrency": {
@@ -204,7 +212,7 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "task parameters, the length limit is 10000 characters.",
+				Description: "Task parameters, the length limit is 10000 characters.",
 			},
 
 			"task_state": {
@@ -225,13 +233,13 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 			"task_log_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "task history ID.",
+				Description: "Task history ID.",
 			},
 
 			"trigger_type": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "trigger type.",
+				Description: "Trigger type.",
 			},
 
 			"program_id_list": {
@@ -273,7 +281,7 @@ func resourceTencentCloudTsfTaskCreate(d *schema.ResourceData, meta interface{})
 		request.TaskType = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("time_out"); v != nil {
+	if v, ok := d.GetOkExists("time_out"); ok {
 		request.TimeOut = helper.IntUint64(v.(int))
 	}
 
@@ -295,15 +303,15 @@ func resourceTencentCloudTsfTaskCreate(d *schema.ResourceData, meta interface{})
 		request.TaskRule = &taskRule
 	}
 
-	if v, _ := d.GetOk("retry_count"); v != nil {
+	if v, ok := d.GetOkExists("retry_count"); ok {
 		request.RetryCount = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("retry_interval"); v != nil {
+	if v, ok := d.GetOkExists("retry_interval"); ok {
 		request.RetryInterval = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("shard_count"); v != nil {
+	if v, ok := d.GetOkExists("shard_count"); ok {
 		request.ShardCount = helper.IntInt64(v.(int))
 	}
 
@@ -364,7 +372,7 @@ func resourceTencentCloudTsfTaskCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	taskId = *response.Response.Result
+	taskId = *response.Response.TaskId
 	d.SetId(taskId)
 
 	return resourceTencentCloudTsfTaskRead(d, meta)
@@ -456,12 +464,12 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 		for _, shardArguments := range task.ShardArguments {
 			shardArgumentsMap := map[string]interface{}{}
 
-			if shardArguments.ShardKey != nil {
-				shardArgumentsMap["shard_key"] = shardArguments.ShardKey
+			if task.ShardArguments.ShardKey != nil {
+				shardArgumentsMap["shard_key"] = task.ShardArguments.ShardKey
 			}
 
-			if shardArguments.ShardValue != nil {
-				shardArgumentsMap["shard_value"] = shardArguments.ShardValue
+			if task.ShardArguments.ShardValue != nil {
+				shardArgumentsMap["shard_value"] = task.ShardArguments.ShardValue
 			}
 
 			shardArgumentsList = append(shardArgumentsList, shardArgumentsMap)
@@ -476,7 +484,7 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if task.SuccessRatio != nil {
-		_ = d.Set("success_ratio", strconv.FormatInt(*task.SuccessRatio, 10))
+		_ = d.Set("success_ratio", task.SuccessRatio)
 	}
 
 	if task.AdvanceSettings != nil {
@@ -497,13 +505,9 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("task_state", task.TaskState)
 	}
 
-	var belongFlowIds []string
-	if task.BelongFlowIds != nil && len(task.BelongFlowIds) > 0 {
-		for _, v := range task.BelongFlowIds {
-			belongFlowIds = append(belongFlowIds, *v)
-		}
+	if task.BelongFlowIds != nil {
+		_ = d.Set("belong_flow_ids", task.BelongFlowIds)
 	}
-	_ = d.Set("belong_flow_ids", belongFlowIds)
 
 	if task.TaskLogId != nil {
 		_ = d.Set("task_log_id", task.TaskLogId)
@@ -513,9 +517,9 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("trigger_type", task.TriggerType)
 	}
 
-	// if task.ProgramIdList != nil {
-	// 	_ = d.Set("program_id_list", task.ProgramIdList)
-	// }
+	if task.ProgramIdList != nil {
+		_ = d.Set("program_id_list", task.ProgramIdList)
+	}
 
 	return nil
 }
@@ -532,7 +536,7 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 
 	request.TaskId = &taskId
 
-	immutableArgs := []string{"task_id", "task_state", "belong_flow_ids", "task_log_id", "trigger_type"}
+	immutableArgs := []string{"task_id", "task_name", "task_content", "execute_type", "task_type", "time_out", "group_id", "task_rule", "retry_count", "retry_interval", "shard_count", "shard_arguments", "success_operator", "success_ratio", "advance_settings", "task_argument", "task_state", "belong_flow_ids", "task_log_id", "trigger_type", "program_id_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -565,7 +569,7 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("time_out") {
-		if v, _ := d.GetOk("time_out"); v != nil {
+		if v, ok := d.GetOkExists("time_out"); ok {
 			request.TimeOut = helper.IntUint64(v.(int))
 		}
 	}
@@ -593,19 +597,19 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("retry_count") {
-		if v, _ := d.GetOk("retry_count"); v != nil {
+		if v, ok := d.GetOkExists("retry_count"); ok {
 			request.RetryCount = helper.IntUint64(v.(int))
 		}
 	}
 
 	if d.HasChange("retry_interval") {
-		if v, _ := d.GetOk("retry_interval"); v != nil {
+		if v, ok := d.GetOkExists("retry_interval"); ok {
 			request.RetryInterval = helper.IntUint64(v.(int))
 		}
 	}
 
 	if d.HasChange("shard_count") {
-		if v, _ := d.GetOk("shard_count"); v != nil {
+		if v, ok := d.GetOkExists("shard_count"); ok {
 			request.ShardCount = helper.IntInt64(v.(int))
 		}
 	}
@@ -613,7 +617,6 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("shard_arguments") {
 		if v, ok := d.GetOk("shard_arguments"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				shardArgument := tsf.ShardArgument{}
 				if v, ok := dMap["shard_key"]; ok {
 					shardArgument.ShardKey = helper.IntUint64(v.(int))
@@ -634,7 +637,7 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 
 	if d.HasChange("success_ratio") {
 		if v, ok := d.GetOk("success_ratio"); ok {
-			request.SuccessRatio = helper.StrToInt64Point(v.(string))
+			request.SuccessRatio = helper.String(v.(string))
 		}
 	}
 

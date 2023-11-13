@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_gateway_nodes" "gateway_nodes" {
-  gateway_id = "gateway-ddbb709b"
-  group_id   = "group-013c0d8e"
-}
+  gateway_id = "gateway-xx"
+  group_id = "group-xx"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -28,55 +27,69 @@ func dataSourceTencentCloudTseGatewayNodes() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
 			"group_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "gateway group ID.",
+				Description: "Gateway group ID.",
 			},
 
-			"node_list": {
-				Type:        schema.TypeList,
+			"result": {
 				Computed:    true,
-				Description: "nodes information.",
+				Type:        schema.TypeList,
+				Description: "Gateway nodes information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"node_id": {
-							Type:        schema.TypeString,
+						"total_count": {
+							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "gateway node id.",
+							Description: "The Number of nodes information.",
 						},
-						"node_ip": {
-							Type:        schema.TypeString,
+						"node_list": {
+							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "gateway node ip.",
-						},
-						"zone_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Zone idNote: This field may return null, indicating that a valid value is not available.",
-						},
-						"zone": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "ZoneNote: This field may return null, indicating that a valid value is not available.",
-						},
-						"group_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Group IDNote: This field may return null, indicating that a valid value is not available.",
-						},
-						"group_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Group nameNote: This field may return null, indicating that a valid value is not available.",
-						},
-						"status": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "statusNote: This field may return null, indicating that a valid value is not available.",
+							Description: "Nodes information.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"node_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Gateway node id.",
+									},
+									"node_ip": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Gateway node ip.",
+									},
+									"zone_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Zone idNote: This field may return null, indicating that a valid value is not available.",
+									},
+									"zone": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "ZoneNote: This field may return null, indicating that a valid value is not available.",
+									},
+									"group_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Group IDNote: This field may return null, indicating that a valid value is not available.",
+									},
+									"group_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Group nameNote: This field may return null, indicating that a valid value is not available.",
+									},
+									"status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "StatusNote: This field may return null, indicating that a valid value is not available.",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -110,13 +123,14 @@ func dataSourceTencentCloudTseGatewayNodesRead(d *schema.ResourceData, meta inte
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result []*tse.CloudNativeAPIGatewayNode
+	var result []*tse.DescribeCloudNativeAPIGatewayNodesResult
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTseGatewayNodesByFilter(ctx, paramMap)
+		result, e := service.DescribeTseGatewayNodesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
@@ -124,50 +138,60 @@ func dataSourceTencentCloudTseGatewayNodesRead(d *schema.ResourceData, meta inte
 	}
 
 	ids := make([]string, 0, len(result))
-	nodeListList := []interface{}{}
 	if result != nil {
-		for _, nodeList := range result {
-			nodeListMap := map[string]interface{}{}
+		describeCloudNativeAPIGatewayNodesResultMap := map[string]interface{}{}
 
-			if nodeList.NodeId != nil {
-				nodeListMap["node_id"] = nodeList.NodeId
-			}
-
-			if nodeList.NodeIp != nil {
-				nodeListMap["node_ip"] = nodeList.NodeIp
-			}
-
-			if nodeList.ZoneId != nil {
-				nodeListMap["zone_id"] = nodeList.ZoneId
-			}
-
-			if nodeList.Zone != nil {
-				nodeListMap["zone"] = nodeList.Zone
-			}
-
-			if nodeList.GroupId != nil {
-				nodeListMap["group_id"] = nodeList.GroupId
-			}
-
-			if nodeList.GroupName != nil {
-				nodeListMap["group_name"] = nodeList.GroupName
-			}
-
-			if nodeList.Status != nil {
-				nodeListMap["status"] = nodeList.Status
-			}
-
-			nodeListList = append(nodeListList, nodeListMap)
-			ids = append(ids, *nodeList.NodeId)
+		if result.TotalCount != nil {
+			describeCloudNativeAPIGatewayNodesResultMap["total_count"] = result.TotalCount
 		}
 
-		_ = d.Set("node_list", nodeListList)
+		if result.NodeList != nil {
+			nodeListList := []interface{}{}
+			for _, nodeList := range result.NodeList {
+				nodeListMap := map[string]interface{}{}
+
+				if nodeList.NodeId != nil {
+					nodeListMap["node_id"] = nodeList.NodeId
+				}
+
+				if nodeList.NodeIp != nil {
+					nodeListMap["node_ip"] = nodeList.NodeIp
+				}
+
+				if nodeList.ZoneId != nil {
+					nodeListMap["zone_id"] = nodeList.ZoneId
+				}
+
+				if nodeList.Zone != nil {
+					nodeListMap["zone"] = nodeList.Zone
+				}
+
+				if nodeList.GroupId != nil {
+					nodeListMap["group_id"] = nodeList.GroupId
+				}
+
+				if nodeList.GroupName != nil {
+					nodeListMap["group_name"] = nodeList.GroupName
+				}
+
+				if nodeList.Status != nil {
+					nodeListMap["status"] = nodeList.Status
+				}
+
+				nodeListList = append(nodeListList, nodeListMap)
+			}
+
+			describeCloudNativeAPIGatewayNodesResultMap["node_list"] = []interface{}{nodeListList}
+		}
+
+		ids = append(ids, *result.GatewayId)
+		_ = d.Set("result", describeCloudNativeAPIGatewayNodesResultMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), nodeListList); e != nil {
+		if e := writeToFile(output.(string), describeCloudNativeAPIGatewayNodesResultMap); e != nil {
 			return e
 		}
 	}

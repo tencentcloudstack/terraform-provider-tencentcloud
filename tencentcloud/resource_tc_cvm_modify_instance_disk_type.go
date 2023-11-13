@@ -27,16 +27,23 @@ resource "tencentcloud_cvm_modify_instance_disk_type" "modify_instance_disk_type
   }
 }
 ```
+
+Import
+
+cvm modify_instance_disk_type can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cvm_modify_instance_disk_type.modify_instance_disk_type modify_instance_disk_type_id
+```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
@@ -68,61 +75,44 @@ func resourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
 							Description: "Data disk size (in GB). The minimum adjustment increment is 10 GB. The value range varies by data disk type. The default value is 0, indicating that no data disk is purchased. For more information, see the product documentation.",
 						},
 						"disk_type": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: "Data disk type. Valid values:\n" +
-								"- LOCAL_BASIC: local hard disk;\n" +
-								"- LOCAL_SSD: local SSD hard disk;\n" +
-								"- LOCAL_NVME: local NVME hard disk, which is strongly related to InstanceType and cannot be specified;\n" +
-								"- LOCAL_PRO: local HDD hard disk, which is strongly related to InstanceType and cannot be specified;\n" +
-								"- CLOUD_BASIC: ordinary cloud disk;\n" +
-								"- CLOUD_PREMIUM: high-performance cloud disk;\n" +
-								"- CLOUD_SSD:SSD cloud disk;\n" +
-								"- CLOUD_HSSD: enhanced SSD cloud disk;\n" +
-								"- CLOUD_TSSD: extremely fast SSD cloud disk;\n" +
-								"- CLOUD_BSSD: general-purpose SSD cloud disk;\n" +
-								"Default value: LOCAL_BASIC.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Data disk type. Valid values：&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;LOCAL_BASIC：local disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;LOCAL_SSD：local SSD disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;LOCAL_NVME：local NVME disk, specified in the InstanceType&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;local HDD disk, specified in the InstanceType&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_BASIC：HDD cloud disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_PREMIUM：Premium Cloud Storage&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;SSD&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;Enhanced SSD&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;Tremendous SSD&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_BSSD：Balanced SSD&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;Default value：LOCAL_BASIC。&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;This parameter is invalid for the `ResizeInstanceDisk` API.",
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Data disk ID. Note that it's not available for LOCAL_BASIC and LOCAL_SSD disks.",
+							Description: "Data disk ID. Note that it’s not available for LOCAL_BASIC and LOCAL_SSD disks.It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.",
 						},
 						"delete_with_instance": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Description: "Whether to terminate the data disk when its CVM is terminated. Valid values:\n" +
-								"- TRUE: terminate the data disk when its CVM is terminated. This value only supports pay-as-you-go cloud disks billed on an hourly basis.\n" +
-								"- FALSE: retain the data disk when its CVM is terminated.\n" +
-								"Default value: TRUE.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to terminate the data disk when its CVM is terminated. Valid values: &amp;lt;li&amp;gt;TRUE: terminate the data disk when its CVM is terminated. This value only supports pay-as-you-go cloud disks billed on an hourly basis. &amp;lt;li&amp;gt;FALSE: retain the data disk when its CVM is terminated.&amp;lt;br&amp;gt; Default value: TRUE&amp;lt;br&amp;gt; Currently this parameter is only used in the RunInstances API.Note: This field may return null, indicating that no valid value is found.",
 						},
 						"snapshot_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Data disk snapshot ID. The size of the selected data disk snapshot must be smaller than that of the data disk.",
+							Description: "Data disk snapshot ID. The size of the selected data disk snapshot must be smaller than that of the data disk. Note: This field may return null, indicating that no valid value is found.",
 						},
 						"encrypt": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Description: "Specifies whether the data disk is encrypted. Valid values:\n" +
-								"- TRUE: encrypted\n" +
-								"- FALSE: not encrypted\n" +
-								"Default value: FALSE.",
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Specifies whether the data disk is encrypted. Valid values: &amp;lt;li&amp;gt;TRUE：encrypted &amp;lt;li&amp;gt;FALSE：not encrypted&amp;lt;br&amp;gt; Default value: FALSE&amp;lt;br&amp;gt; This parameter is only used with RunInstances.Note: this field may return null, indicating that no valid value is obtained.",
 						},
 						"kms_key_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "ID of the custom CMK in the format of UUID or “kms-abcd1234”. This parameter is used to encrypt cloud disks.",
+							Description: "ID of the custom CMK in the format of UUID or “kms-abcd1234”. This parameter is used to encrypt cloud disks. Currently, this parameter is only used in the RunInstances API.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
 						"throughput_performance": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Cloud disk performance, in MB/s.",
+							Description: "Cloud disk performance, in MB/s Note: this field may return null, indicating that no valid values can be obtained.",
 						},
 						"cdc_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "ID of the dedicated cluster to which the instance belongs.",
+							Description: "ID of the dedicated cluster to which the instance belongs. Note: this field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -137,21 +127,14 @@ func resourceTencentCloudCvmModifyInstanceDiskType() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"disk_type": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Description: "System disk type. Valid values:" +
-								"- LOCAL_BASIC: local disk\n" +
-								"- LOCAL_SSD: local SSD disk\n" +
-								"- CLOUD_BASIC: ordinary cloud disk\n" +
-								"- CLOUD_SSD: SSD cloud disk\n" +
-								"- CLOUD_PREMIUM: Premium cloud storage\n" +
-								"- CLOUD_BSSD: Balanced SSD\n" +
-								"The disk currently in stock will be used by default.",
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "System disk type. Valid values:&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;LOCAL_BASIC: local disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;LOCAL_SSD：local SSD disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_BASIC：HDD cloud disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_SSD：SSD cloud disk&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_PREMIUM：Premium cloud storage&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;CLOUD_BSSD：Balanced SSD&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;The disk currently in stock will be used by default.",
 						},
 						"disk_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter.",
+							Description: "|System disk ID. System disks whose type is LOCAL_BASIC or LOCAL_SSD do not have an ID and do not support this parameter. It is only used as a response parameter for APIs such as DescribeInstances, and cannot be used as a request parameter for APIs such as RunInstances.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
@@ -178,16 +161,16 @@ func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData,
 
 	var (
 		request    = cvm.NewModifyInstanceDiskTypeRequest()
+		response   = cvm.NewModifyInstanceDiskTypeResponse()
 		instanceId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId := v.(string)
-		request.InstanceId = helper.String(instanceId)
+		instanceId = v.(string)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("data_disks"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
 			dataDisk := cvm.DataDisk{}
 			if v, ok := dMap["disk_size"]; ok {
 				dataDisk.DiskSize = helper.IntInt64(v.(int))
@@ -244,6 +227,7 @@ func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData,
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -251,6 +235,7 @@ func resourceTencentCloudCvmModifyInstanceDiskTypeCreate(d *schema.ResourceData,
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudCvmModifyInstanceDiskTypeRead(d, meta)

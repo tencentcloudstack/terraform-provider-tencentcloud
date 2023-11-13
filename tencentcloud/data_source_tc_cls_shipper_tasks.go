@@ -5,17 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cls_shipper_tasks" "shipper_tasks" {
-  shipper_id = "dbde3c9b-ea16-4032-bc2a-d8fa65567a8e"
-  start_time = 160749910700
-  end_time = 160749910800
-}
+  shipper_id = ""
+  start_time =
+  end_time =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
@@ -29,19 +28,19 @@ func dataSourceTencentCloudClsShipperTasks() *schema.Resource {
 			"shipper_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "shipper id.",
+				Description: "Shipper id.",
 			},
 
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "start time(ms).",
+				Description: "Start time(ms).",
 			},
 
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "end time(ms).",
+				Description: "End time(ms).",
 			},
 
 			"tasks": {
@@ -53,47 +52,47 @@ func dataSourceTencentCloudClsShipperTasks() *schema.Resource {
 						"task_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "task id.",
+							Description: "Task id.",
 						},
 						"shipper_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "shipper id.",
+							Description: "Shipper id.",
 						},
 						"topic_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "topic id.",
+							Description: "Topic id.",
 						},
 						"range_start": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "start time of current task (ms).",
+							Description: "Start time of current task (ms).",
 						},
 						"range_end": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "end time of current task (ms).",
+							Description: "End time of current task (ms).",
 						},
 						"start_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "start time(ms).",
+							Description: "Start time(ms).",
 						},
 						"end_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "end time(ms).",
+							Description: "End time(ms).",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "status of current shipper task.",
+							Description: "Status of current shipper task.",
 						},
 						"message": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "detail info.",
+							Description: "Detail info.",
 						},
 					},
 				},

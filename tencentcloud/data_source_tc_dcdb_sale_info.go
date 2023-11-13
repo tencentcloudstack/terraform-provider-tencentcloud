@@ -12,7 +12,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -26,49 +25,49 @@ func dataSourceTencentCloudDcdbSaleInfo() *schema.Resource {
 			"region_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "list of sale region info.",
+				Description: "List of sale region info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region name(en).",
+							Description: "Region name(en).",
 						},
 						"region_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "region id.",
+							Description: "Region id.",
 						},
 						"region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region name(zh).",
+							Description: "Region name(zh).",
 						},
 						"zone_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "list of az zone.",
+							Description: "List of az zone.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"zone": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "zone name(en).",
+										Description: "Zone name(en).",
 									},
 									"zone_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "zone id.",
+										Description: "Zone id.",
 									},
 									"zone_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "zone name(zh).",
+										Description: "Zone name(zh).",
 									},
 									"on_sale": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "is zone on sale.",
+										Description: "Is zone on sale.",
 									},
 								},
 							},
@@ -76,34 +75,34 @@ func dataSourceTencentCloudDcdbSaleInfo() *schema.Resource {
 						"available_choice": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "available zone choice.",
+							Description: "Available zone choice.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"master_zone": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "master zone.",
+										Description: "Master zone.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"zone": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(en).",
+													Description: "Zone name(en).",
 												},
 												"zone_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "zone id.",
+													Description: "Zone id.",
 												},
 												"zone_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(zh).",
+													Description: "Zone name(zh).",
 												},
 												"on_sale": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "is zone on sale.",
+													Description: "Is zone on sale.",
 												},
 											},
 										},
@@ -111,28 +110,28 @@ func dataSourceTencentCloudDcdbSaleInfo() *schema.Resource {
 									"slave_zones": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "slave zones.",
+										Description: "Slave zones.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"zone": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(en).",
+													Description: "Zone name(en).",
 												},
 												"zone_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "zone id.",
+													Description: "Zone id.",
 												},
 												"zone_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(zh).",
+													Description: "Zone name(zh).",
 												},
 												"on_sale": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "is zone on sale.",
+													Description: "Is zone on sale.",
 												},
 											},
 										},
@@ -221,7 +220,7 @@ func dataSourceTencentCloudDcdbSaleInfoRead(d *schema.ResourceData, meta interfa
 					zoneListList = append(zoneListList, zoneListMap)
 				}
 
-				regionInfoMap["zone_list"] = zoneListList
+				regionInfoMap["zone_list"] = []interface{}{zoneListList}
 			}
 
 			if regionInfo.AvailableChoice != nil {
@@ -262,7 +261,6 @@ func dataSourceTencentCloudDcdbSaleInfoRead(d *schema.ResourceData, meta interfa
 
 							if slaveZones.ZoneId != nil {
 								slaveZonesMap["zone_id"] = slaveZones.ZoneId
-								ids = append(ids, helper.Int64ToStr(*slaveZones.ZoneId))
 							}
 
 							if slaveZones.ZoneName != nil {
@@ -276,15 +274,16 @@ func dataSourceTencentCloudDcdbSaleInfoRead(d *schema.ResourceData, meta interfa
 							slaveZonesList = append(slaveZonesList, slaveZonesMap)
 						}
 
-						availableChoiceMap["slave_zones"] = slaveZonesList
+						availableChoiceMap["slave_zones"] = []interface{}{slaveZonesList}
 					}
 
 					availableChoiceList = append(availableChoiceList, availableChoiceMap)
 				}
 
-				regionInfoMap["available_choice"] = availableChoiceList
+				regionInfoMap["available_choice"] = []interface{}{availableChoiceList}
 			}
 
+			ids = append(ids, *regionInfo.Zone)
 			tmpList = append(tmpList, regionInfoMap)
 		}
 

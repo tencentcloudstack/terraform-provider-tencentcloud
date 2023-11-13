@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbInstanceDetailDataSource_basic(t *testing.T) {
@@ -25,7 +24,13 @@ func TestAccTencentCloudClbInstanceDetailDataSource_basic(t *testing.T) {
 const testAccClbInstanceDetailDataSource = `
 
 data "tencentcloud_clb_instance_detail" "instance_detail" {
-  target_type = "NODE"
-}
+  fields = 
+  target_type = ""
+  filters {
+		name = ""
+		values = 
+
+  }
+  }
 
 `

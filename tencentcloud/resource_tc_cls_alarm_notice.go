@@ -5,24 +5,28 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cls_alarm_notice" "alarm_notice" {
-  name = "terraform-alarm-notice-test"
+  name = "notice"
+  type = "Trigger"
+  notice_receivers {
+		receiver_type = "Uin"
+		receiver_ids =
+		receiver_channels =
+		start_time = "00:00:00"
+		end_time = "23:59:59"
+		index = 1
+
+  }
+  web_callbacks {
+		url = "http://www.testnotice.com/callback"
+		callback_type = "WeCom"
+		method = "POST"
+		headers =
+		body = "null"
+		index = 10
+
+  }
   tags = {
     "createdBy" = "terraform"
-  }
-  type = "All"
-
-  notice_receivers {
-    index             = 0
-    receiver_channels = [
-      "Sms",
-    ]
-    receiver_ids = [
-      13478043,
-      15972111,
-    ]
-    receiver_type = "Uin"
-    start_time    = "00:00:00"
-    end_time      = "23:59:59"
   }
 }
 ```
@@ -40,12 +44,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudClsAlarmNotice() *schema.Resource {
@@ -61,25 +64,25 @@ func resourceTencentCloudClsAlarmNotice() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "alarm notice name.",
+				Description: "Alarm notice name.",
 			},
 
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "notice type.",
+				Description: "Notice type.",
 			},
 
 			"notice_receivers": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "notice receivers.",
+				Description: "Notice receivers.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"receiver_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "receiver type, Uin or Group.",
+							Description: "Receiver type, Uin or Group.",
 						},
 						"receiver_ids": {
 							Type: schema.TypeSet,
@@ -87,7 +90,7 @@ func resourceTencentCloudClsAlarmNotice() *schema.Resource {
 								Type: schema.TypeInt,
 							},
 							Required:    true,
-							Description: "receiver id.",
+							Description: "Receiver id.",
 						},
 						"receiver_channels": {
 							Type: schema.TypeSet,
@@ -95,22 +98,22 @@ func resourceTencentCloudClsAlarmNotice() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "receiver channels, Email,Sms,WeChat or Phone.",
+							Description: "Receiver channels, Email,Sms,WeChat or Phone.",
 						},
 						"start_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "start time allowed to receive messages.",
+							Description: "Start time allowed to receive messages.",
 						},
 						"end_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "end time allowed to receive messages.",
+							Description: "End time allowed to receive messages.",
 						},
 						"index": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "index.",
+							Description: "Index.",
 						},
 					},
 				},
@@ -119,18 +122,18 @@ func resourceTencentCloudClsAlarmNotice() *schema.Resource {
 			"web_callbacks": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "callback info.",
+				Description: "Callback info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"url": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "callback url.",
+							Description: "Callback url.",
 						},
 						"callback_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "callback type, WeCom or Http.",
+							Description: "Callback type, WeCom or Http.",
 						},
 						"method": {
 							Type:        schema.TypeString,
@@ -143,17 +146,17 @@ func resourceTencentCloudClsAlarmNotice() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "abandoned.",
+							Description: "Abandoned.",
 						},
 						"body": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "abandoned.",
+							Description: "Abandoned.",
 						},
 						"index": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "index.",
+							Description: "Index.",
 						},
 					},
 				},
@@ -315,31 +318,31 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 
 	if alarmNotice.NoticeReceivers != nil {
 		noticeReceiversList := []interface{}{}
-		for _, noticeReceiver := range alarmNotice.NoticeReceivers {
+		for _, noticeReceivers := range alarmNotice.NoticeReceivers {
 			noticeReceiversMap := map[string]interface{}{}
 
-			if noticeReceiver.ReceiverType != nil {
-				noticeReceiversMap["receiver_type"] = noticeReceiver.ReceiverType
+			if alarmNotice.NoticeReceivers.ReceiverType != nil {
+				noticeReceiversMap["receiver_type"] = alarmNotice.NoticeReceivers.ReceiverType
 			}
 
-			if noticeReceiver.ReceiverIds != nil {
-				noticeReceiversMap["receiver_ids"] = noticeReceiver.ReceiverIds
+			if alarmNotice.NoticeReceivers.ReceiverIds != nil {
+				noticeReceiversMap["receiver_ids"] = alarmNotice.NoticeReceivers.ReceiverIds
 			}
 
-			if noticeReceiver.ReceiverChannels != nil {
-				noticeReceiversMap["receiver_channels"] = noticeReceiver.ReceiverChannels
+			if alarmNotice.NoticeReceivers.ReceiverChannels != nil {
+				noticeReceiversMap["receiver_channels"] = alarmNotice.NoticeReceivers.ReceiverChannels
 			}
 
-			if noticeReceiver.StartTime != nil {
-				noticeReceiversMap["start_time"] = noticeReceiver.StartTime
+			if alarmNotice.NoticeReceivers.StartTime != nil {
+				noticeReceiversMap["start_time"] = alarmNotice.NoticeReceivers.StartTime
 			}
 
-			if noticeReceiver.EndTime != nil {
-				noticeReceiversMap["end_time"] = noticeReceiver.EndTime
+			if alarmNotice.NoticeReceivers.EndTime != nil {
+				noticeReceiversMap["end_time"] = alarmNotice.NoticeReceivers.EndTime
 			}
 
-			if noticeReceiver.Index != nil {
-				noticeReceiversMap["index"] = noticeReceiver.Index
+			if alarmNotice.NoticeReceivers.Index != nil {
+				noticeReceiversMap["index"] = alarmNotice.NoticeReceivers.Index
 			}
 
 			noticeReceiversList = append(noticeReceiversList, noticeReceiversMap)
@@ -351,31 +354,31 @@ func resourceTencentCloudClsAlarmNoticeRead(d *schema.ResourceData, meta interfa
 
 	if alarmNotice.WebCallbacks != nil {
 		webCallbacksList := []interface{}{}
-		for _, webCallback := range alarmNotice.WebCallbacks {
+		for _, webCallbacks := range alarmNotice.WebCallbacks {
 			webCallbacksMap := map[string]interface{}{}
 
-			if webCallback.Url != nil {
-				webCallbacksMap["url"] = webCallback.Url
+			if alarmNotice.WebCallbacks.Url != nil {
+				webCallbacksMap["url"] = alarmNotice.WebCallbacks.Url
 			}
 
-			if webCallback.CallbackType != nil {
-				webCallbacksMap["callback_type"] = webCallback.CallbackType
+			if alarmNotice.WebCallbacks.CallbackType != nil {
+				webCallbacksMap["callback_type"] = alarmNotice.WebCallbacks.CallbackType
 			}
 
-			if webCallback.Method != nil {
-				webCallbacksMap["method"] = webCallback.Method
+			if alarmNotice.WebCallbacks.Method != nil {
+				webCallbacksMap["method"] = alarmNotice.WebCallbacks.Method
 			}
 
-			if webCallback.Headers != nil {
-				webCallbacksMap["headers"] = webCallback.Headers
+			if alarmNotice.WebCallbacks.Headers != nil {
+				webCallbacksMap["headers"] = alarmNotice.WebCallbacks.Headers
 			}
 
-			if webCallback.Body != nil {
-				webCallbacksMap["body"] = webCallback.Body
+			if alarmNotice.WebCallbacks.Body != nil {
+				webCallbacksMap["body"] = alarmNotice.WebCallbacks.Body
 			}
 
-			if webCallback.Index != nil {
-				webCallbacksMap["index"] = webCallback.Index
+			if alarmNotice.WebCallbacks.Index != nil {
+				webCallbacksMap["index"] = alarmNotice.WebCallbacks.Index
 			}
 
 			webCallbacksList = append(webCallbacksList, webCallbacksMap)
@@ -406,32 +409,32 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 
 	alarmNoticeId := d.Id()
 
-	needChange := false
 	request.AlarmNoticeId = &alarmNoticeId
 
-	mutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks"}
+	immutableArgs := []string{"name", "type", "notice_receivers", "web_callbacks"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("type") {
 		if v, ok := d.GetOk("type"); ok {
 			request.Type = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("notice_receivers") {
 		if v, ok := d.GetOk("notice_receivers"); ok {
 			for _, item := range v.([]interface{}) {
 				noticeReceiver := cls.NoticeReceiver{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["receiver_type"]; ok {
 					noticeReceiver.ReceiverType = helper.String(v.(string))
 				}
@@ -461,11 +464,12 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 				request.NoticeReceivers = append(request.NoticeReceivers, &noticeReceiver)
 			}
 		}
+	}
 
+	if d.HasChange("web_callbacks") {
 		if v, ok := d.GetOk("web_callbacks"); ok {
 			for _, item := range v.([]interface{}) {
 				webCallback := cls.WebCallback{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["url"]; ok {
 					webCallback.Url = helper.String(v.(string))
 				}
@@ -491,20 +495,20 @@ func resourceTencentCloudClsAlarmNoticeUpdate(d *schema.ResourceData, meta inter
 				request.WebCallbacks = append(request.WebCallbacks, &webCallback)
 			}
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyAlarmNotice(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cls alarmNotice failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyAlarmNotice(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cls alarmNotice failed, reason:%+v", logId, err)
+		return err
 	}
 
 	if d.HasChange("tags") {

@@ -5,9 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_organization_org_financial_by_member" "org_financial_by_member" {
-  month = "2023-05"
-  end_month = "2023-10"
-  member_uins = [100015591986,100029796005]
+  month = &lt;nil&gt;
+  end_month = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
+  product_codes = &lt;nil&gt;
     }
 ```
 */
@@ -15,10 +16,8 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -59,7 +58,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 			"total_cost": {
 				Computed:    true,
 				Type:        schema.TypeFloat,
-				Description: "Total cost of the member.",
+				Description: "Total cost of the member(¥).",
 			},
 
 			"items": {
@@ -81,7 +80,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMember() *schema.Resource {
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the member.",
+							Description: "Total cost of the member(¥).",
 						},
 						"ratio": {
 							Type:        schema.TypeString,
@@ -120,7 +119,10 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 
 	if v, ok := d.GetOk("member_uins"); ok {
 		memberUinsSet := v.(*schema.Set).List()
-		paramMap["MemberUins"] = helper.InterfacesIntInt64Point(memberUinsSet)
+		for i := range memberUinsSet {
+			memberUins := memberUinsSet[i].(int)
+			paramMap["MemberUins"] = append(paramMap["MemberUins"], helper.IntInt64(memberUins))
+		}
 	}
 
 	if v, ok := d.GetOk("product_codes"); ok {
@@ -129,28 +131,26 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 	}
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var response *organization.DescribeOrganizationFinancialByMemberResponseParams
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeOrganizationOrgFinancialByMemberByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		response = result
+		totalCost = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(response.Items))
-	tmpList := make([]map[string]interface{}, 0, len(response.Items))
-	if response.TotalCost != nil {
-		_ = d.Set("total_cost", response.TotalCost)
+	ids := make([]string, 0, len(totalCost))
+	if totalCost != nil {
+		_ = d.Set("total_cost", totalCost)
 	}
 
-	if response.Items != nil {
-		for _, orgMemberFinancial := range response.Items {
+	if items != nil {
+		for _, orgMemberFinancial := range items {
 			orgMemberFinancialMap := map[string]interface{}{}
 
 			if orgMemberFinancial.MemberUin != nil {
@@ -169,7 +169,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 				orgMemberFinancialMap["ratio"] = orgMemberFinancial.Ratio
 			}
 
-			ids = append(ids, helper.Int64ToStr(*orgMemberFinancial.MemberUin))
+			ids = append(ids, *orgMemberFinancial.Month)
 			tmpList = append(tmpList, orgMemberFinancialMap)
 		}
 
@@ -179,7 +179,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMemberRead(d *schema.Resour
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

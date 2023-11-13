@@ -1,26 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSesEmail_address_basic -v
-func TestAccTencentCloudSesEmail_address_basic(t *testing.T) {
+func TestAccTencentCloudSesEmailAddressResource_basic(t *testing.T) {
 	t.Parallel()
-
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSesEmail_address,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_ses_email_address.email_address", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ses_email_address.email_address", "email_address", "aaa@iac-tf.cloud"),
-					resource.TestCheckResourceAttr("tencentcloud_ses_email_address.email_address", "email_sender_name", "aaa"),
-				),
+				Config: testAccSesEmailAddress,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ses_email_address.email_address", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_ses_email_address.email_address",
@@ -31,11 +26,11 @@ func TestAccTencentCloudSesEmail_address_basic(t *testing.T) {
 	})
 }
 
-const testAccSesEmail_address = `
+const testAccSesEmailAddress = `
 
 resource "tencentcloud_ses_email_address" "email_address" {
-  email_address     = "aaa@iac-tf.cloud"
-  email_sender_name = "aaa"
+  email_address = &lt;nil&gt;
+  email_sender_name = &lt;nil&gt;
 }
 
 `

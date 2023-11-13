@@ -824,3 +824,338 @@ func (me *MongodbService) DescribeMongodbInstanceSlowLogByFilter(ctx context.Con
 
 	return
 }
+
+func (me *MongodbService) DescribeMongodbInstanceBackupsByFilter(ctx context.Context, param map[string]interface{}) (instanceBackups []*mongodb.BackupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeDBBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "BackupMethod" {
+			request.BackupMethod = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeDBBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BackupList) < 1 {
+			break
+		}
+		instanceBackups = append(instanceBackups, response.Response.BackupList...)
+		if len(response.Response.BackupList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceConnectionsByFilter(ctx context.Context, param map[string]interface{}) (instanceConnections []*mongodb.ClientConnection, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeClientConnectionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeClientConnections(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Clients) < 1 {
+			break
+		}
+		instanceConnections = append(instanceConnections, response.Response.Clients...)
+		if len(response.Response.Clients) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceCurrentOpByFilter(ctx context.Context, param map[string]interface{}) (instanceCurrentOp []*mongodb.CurrentOp, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeCurrentOpRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Ns" {
+			request.Ns = v.(*string)
+		}
+		if k == "MillisecondRunning" {
+			request.MillisecondRunning = v.(*uint64)
+		}
+		if k == "Op" {
+			request.Op = v.(*string)
+		}
+		if k == "ReplicaSetName" {
+			request.ReplicaSetName = v.(*string)
+		}
+		if k == "State" {
+			request.State = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeCurrentOp(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CurrentOps) < 1 {
+			break
+		}
+		instanceCurrentOp = append(instanceCurrentOp, response.Response.CurrentOps...)
+		if len(response.Response.CurrentOps) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceParamsByFilter(ctx context.Context, param map[string]interface{}) (instanceParams []*mongodb.InstanceEnumParam, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeInstanceParamsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeInstanceParams(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceEnumParam) < 1 {
+			break
+		}
+		instanceParams = append(instanceParams, response.Response.InstanceEnumParam...)
+		if len(response.Response.InstanceEnumParam) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceSlowLogByFilter(ctx context.Context, param map[string]interface{}) (instanceSlowLog []*mongodb.DescribeSlowLogsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "SlowMS" {
+			request.SlowMS = v.(*uint64)
+		}
+		if k == "Format" {
+			request.Format = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SlowLogs) < 1 {
+			break
+		}
+		instanceSlowLog = append(instanceSlowLog, response.Response.SlowLogs...)
+		if len(response.Response.SlowLogs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstancePropertyById(ctx context.Context, instanceId string) (instanceProperty *mongodb.UserInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mongodb.NewDescribeAccountUsersRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeAccountUsers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.UserInfo) < 1 {
+		return
+	}
+
+	instanceProperty = response.Response.UserInfo[0]
+	return
+}
+
+func (me *MongodbService) DeleteMongodbInstancePropertyById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mongodb.NewDeleteAccountUserRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DeleteAccountUser(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

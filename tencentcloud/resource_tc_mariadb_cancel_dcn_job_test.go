@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixMariadbCancelDcnJobResource_basic(t *testing.T) {
+func TestAccTencentCloudMariadbCancelDcnJobResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,16 +15,21 @@ func TestAccTencentCloudNeedFixMariadbCancelDcnJobResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbCancelDcnJob,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_cancel_dcn_job.cancel_dcn_job", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mariadb_cancel_dcn_job.cancel_dcn_job", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_mariadb_cancel_dcn_job.cancel_dcn_job",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
 const testAccMariadbCancelDcnJob = `
+
 resource "tencentcloud_mariadb_cancel_dcn_job" "cancel_dcn_job" {
-  instance_id = "tdsql-9vqvls95"
+  instance_id = ""
 }
+
 `

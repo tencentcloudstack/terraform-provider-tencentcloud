@@ -4,16 +4,16 @@ Use this data source to query detailed information of waf instance_qps_limit
 Example Usage
 
 ```hcl
-data "tencentcloud_waf_instance_qps_limit" "example" {
-  instance_id = "waf_2kxtlbky00b3b4qz"
-}
+data "tencentcloud_waf_instance_qps_limit" "instance_qps_limit" {
+  instance_id = ""
+  type = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -29,11 +29,13 @@ func dataSourceTencentCloudWafInstanceQpsLimit() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Unique ID of Instance.",
 			},
+
 			"type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Instance type.",
 			},
+
 			"qps_data": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -43,31 +45,32 @@ func dataSourceTencentCloudWafInstanceQpsLimit() *schema.Resource {
 						"elastic_billing_default": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Elastic qps default value.",
+							Description: "Elastic qps default valueNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 						"elastic_billing_min": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Minimum elastic qps.",
+							Description: "Minimum elastic qpsNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 						"elastic_billing_max": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Maximum elastic qps.",
+							Description: "Maximum elastic qpsNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
-						"qps_extend_max": {
+						"q_p_s_extend_max": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Maximum qps of extend package.",
+							Description: "Maximum qps of extend packageNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
-						"qps_extend_intl_max": {
+						"q_p_s_extend_intl_max": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Maximum qps of extend package for overseas.",
+							Description: "Maximum qps of extend package for overseasNote: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -81,40 +84,37 @@ func dataSourceTencentCloudWafInstanceQpsLimitRead(d *schema.ResourceData, meta 
 	defer logElapsed("data_source.tencentcloud_waf_instance_qps_limit.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		qpsData    *waf.QpsData
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("type"); ok {
 		paramMap["Type"] = helper.String(v.(string))
 	}
 
+	service := WafService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var qpsData []*waf.QpsData
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeWafInstanceQpsLimitByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		qpsData = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(qpsData))
 	if qpsData != nil {
-		tmqList := []interface{}{}
 		qpsDataMap := map[string]interface{}{}
 
 		if qpsData.ElasticBillingDefault != nil {
@@ -130,24 +130,23 @@ func dataSourceTencentCloudWafInstanceQpsLimitRead(d *schema.ResourceData, meta 
 		}
 
 		if qpsData.QPSExtendMax != nil {
-			qpsDataMap["qps_extend_max"] = qpsData.QPSExtendMax
+			qpsDataMap["q_p_s_extend_max"] = qpsData.QPSExtendMax
 		}
 
 		if qpsData.QPSExtendIntlMax != nil {
-			qpsDataMap["qps_extend_intl_max"] = qpsData.QPSExtendIntlMax
+			qpsDataMap["q_p_s_extend_intl_max"] = qpsData.QPSExtendIntlMax
 		}
 
-		tmqList = append(tmqList, qpsDataMap)
-		_ = d.Set("qps_data", tmqList)
+		ids = append(ids, *qpsData.InstanceId)
+		_ = d.Set("qps_data", qpsDataMap)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string), qpsDataMap); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

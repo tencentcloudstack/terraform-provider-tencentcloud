@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmChcHostsDataSource_basic(t *testing.T) {
@@ -25,10 +24,12 @@ func TestAccTencentCloudCvmChcHostsDataSource_basic(t *testing.T) {
 const testAccCvmChcHostsDataSource = `
 
 data "tencentcloud_cvm_chc_hosts" "chc_hosts" {
-	chc_ids = ["chc-0brmw3wl"]
+  chc_ids = 
   filters {
-    name = "zone"
-    values = ["ap-guangzhou-7"]
+		name = ""
+		values = 
+
   }
-}
+  }
+
 `

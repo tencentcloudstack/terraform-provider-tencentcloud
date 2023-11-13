@@ -310,3 +310,745 @@ func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*cos.
 
 	return resRaw.(*cos.GetGuetzliResult), nil
 }
+
+func (me *CiService) DescribeCiStyleById(ctx context.Context, styleName string) (style *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewGetStyleRequest()
+	request.StyleName = &styleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().GetStyle(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	style = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiStyleById(ctx context.Context, styleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteStyleRequest()
+	request.StyleName = &styleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteStyle(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaAnimationTemplateById(ctx context.Context, templateId string) (mediaAnimationTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaAnimationTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaAnimationTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaConcatTemplateById(ctx context.Context, templateId string) (mediaConcatTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaConcatTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaConcatTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaPicProcessTemplateById(ctx context.Context, templateId string) (mediaPicProcessTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaPicProcessTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaPicProcessTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaSmartCoverTemplateById(ctx context.Context, templateId string) (mediaSmartCoverTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaSmartCoverTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaSmartCoverTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaSnapshotTemplateById(ctx context.Context, templateId string) (mediaSnapshotTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaSnapshotTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaSnapshotTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaSpeechRecognitionTemplateById(ctx context.Context, templateId string) (mediaSpeechRecognitionTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaSpeechRecognitionTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaSpeechRecognitionTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaSuperResolutionTemplateById(ctx context.Context, templateId string) (mediaSuperResolutionTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaSuperResolutionTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaSuperResolutionTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaTranscodeTemplateById(ctx context.Context, templateId string) (mediaTranscodeTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaTranscodeTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaTranscodeTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaTtsTemplateById(ctx context.Context, templateId string) (mediaTtsTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaTtsTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaTtsTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaVideoProcessTemplateById(ctx context.Context, templateId string) (mediaVideoProcessTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaVideoProcessTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaVideoProcessTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaVoiceSeparateTemplateById(ctx context.Context, templateId string) (mediaVoiceSeparateTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	mediaVoiceSeparateTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaVoiceSeparateTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiMediaWorkflowById(ctx context.Context, workflowId string) (mediaWorkflow *ci.MediaWorkflow, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDescribeMediaWorkflowRequest()
+	request.WorkflowId = &workflowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DescribeMediaWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.MediaWorkflow) < 1 {
+		return
+	}
+
+	mediaWorkflow = response.Response.MediaWorkflow[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaWorkflowById(ctx context.Context, workflowId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteMediaWorkflowRequest()
+	request.WorkflowId = &workflowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteMediaWorkflow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CiService) DescribeCiPosterTemplateById(ctx context.Context, styleName string) (posterTemplate *ci.GetStyleResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewGetStyleRequest()
+	request.StyleName = &styleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().GetStyle(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.GetStyleResult) < 1 {
+		return
+	}
+
+	posterTemplate = response.Response.GetStyleResult[0]
+	return
+}
+
+func (me *CiService) DeleteCiPosterTemplateById(ctx context.Context, styleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ci.NewDeleteStyleRequest()
+	request.StyleName = &styleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCiClient().DeleteStyle(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

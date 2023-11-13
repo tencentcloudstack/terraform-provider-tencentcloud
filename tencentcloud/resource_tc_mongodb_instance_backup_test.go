@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNNeedFixMongodbInstanceBackupResource_basic(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceBackupResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -18,6 +17,11 @@ func TestAccTencentCloudNNeedFixMongodbInstanceBackupResource_basic(t *testing.T
 				Config: testAccMongodbInstanceBackup,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance_backup.instance_backup", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_mongodb_instance_backup.instance_backup",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -25,7 +29,7 @@ func TestAccTencentCloudNNeedFixMongodbInstanceBackupResource_basic(t *testing.T
 const testAccMongodbInstanceBackup = `
 
 resource "tencentcloud_mongodb_instance_backup" "instance_backup" {
-  instance_id = "cmgo-jbrmgzfl"
+  instance_id = "cmgo-9d0p6umb"
   backup_method = 0
   backup_remark = "my backup"
 }

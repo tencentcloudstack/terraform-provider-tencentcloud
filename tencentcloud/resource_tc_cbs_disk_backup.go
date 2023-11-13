@@ -1,17 +1,13 @@
 /*
-Provides a resource to create a cbs disk_backup.
-
-~> **NOTE:** Backup quota must greater than 1.
+Provides a resource to create a cbs disk_backup
 
 Example Usage
 
 ```hcl
-
-	resource "tencentcloud_cbs_disk_backup" "disk_backup" {
-	  disk_id = "disk-xxx"
-	  disk_backup_name = "xxx"
-	}
-
+resource "tencentcloud_cbs_disk_backup" "disk_backup" {
+  disk_id = "disk-xxx"
+  disk_backup_name = "xxx"
+}
 ```
 
 Import
@@ -26,12 +22,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCbsDiskBackup() *schema.Resource {
@@ -65,39 +61,44 @@ func resourceTencentCloudCbsDiskBackupCreate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		diskId         string
-		diskBackupName string
+		request      = cbs.NewCreateDiskBackupRequest()
+		response     = cbs.NewCreateDiskBackupResponse()
+		diskBackupId string
 	)
 	if v, ok := d.GetOk("disk_id"); ok {
-		diskId = v.(string)
+		request.DiskId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("disk_backup_name"); ok {
-		diskBackupName = v.(string)
+		request.DiskBackupName = helper.String(v.(string))
 	}
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	diskBackupId, err := service.CreateDiskBackup(ctx, diskId, diskBackupName)
-	if err != nil {
-		return nil
-	}
-	d.SetId(diskBackupId)
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		diskBackup, e := service.DescribeCbsDiskBackupById(ctx, diskBackupId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDiskBackup(request)
 		if e != nil {
 			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if *diskBackup.DiskBackupState != "NORMAL" {
-			return resource.RetryableError(fmt.Errorf("DiskBackupState not ready"))
-		}
+		response = result
 		return nil
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create cbs DiskBackup failed, reason:%+v", logId, err)
 		return err
+	}
+
+	diskBackupId = *response.Response.DiskBackupId
+	d.SetId(diskBackupId)
+
+	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"CREATING"}, 10*readRetryTimeout, time.Second, service.CbsDiskBackupStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudCbsDiskBackupRead(d, meta)
@@ -148,21 +149,6 @@ func resourceTencentCloudCbsDiskBackupDelete(d *schema.ResourceData, meta interf
 	diskBackupId := d.Id()
 
 	if err := service.DeleteCbsDiskBackupById(ctx, diskBackupId); err != nil {
-		return err
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		diskBackup, e := service.DescribeCbsDiskBackupById(ctx, diskBackupId)
-		if e != nil {
-			return retryError(e)
-		}
-		if diskBackup == nil {
-			return nil
-		}
-		return resource.RetryableError(errors.New("Disk backup still deleting"))
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s delete cbs DiskBackup failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_listeners_by_targets" "listeners_by_targets" {
   backends {
-    vpc_id     = "vpc-4owdpnwr"
-    private_ip = "106.52.160.211"
+		vpc_id = ""
+		private_ip = ""
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -103,7 +103,7 @@ func dataSourceTencentCloudClbListenersByTargets() *schema.Resource {
 												"url": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "url.",
+													Description: "Url.",
 												},
 												"targets": {
 													Type:        schema.TypeList,
@@ -227,7 +227,7 @@ func dataSourceTencentCloudClbListenersByTargetsRead(d *schema.ResourceData, met
 			}
 			tmpSet = append(tmpSet, &lbRsItem)
 		}
-		paramMap["Backends"] = tmpSet
+		paramMap["backends"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -235,7 +235,7 @@ func dataSourceTencentCloudClbListenersByTargetsRead(d *schema.ResourceData, met
 	var loadBalancers []*clb.LBItem
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeClbListenersByTargets(ctx, paramMap)
+		result, e := service.DescribeClbListenersByTargetsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -323,13 +323,13 @@ func dataSourceTencentCloudClbListenersByTargetsRead(d *schema.ResourceData, met
 									targetsList = append(targetsList, targetsMap)
 								}
 
-								rulesMap["targets"] = targetsList
+								rulesMap["targets"] = []interface{}{targetsList}
 							}
 
 							rulesList = append(rulesList, rulesMap)
 						}
 
-						listenersMap["rules"] = rulesList
+						listenersMap["rules"] = []interface{}{rulesList}
 					}
 
 					if listeners.Targets != nil {
@@ -360,7 +360,7 @@ func dataSourceTencentCloudClbListenersByTargetsRead(d *schema.ResourceData, met
 							targetsList = append(targetsList, targetsMap)
 						}
 
-						listenersMap["targets"] = targetsList
+						listenersMap["targets"] = []interface{}{targetsList}
 					}
 
 					if listeners.EndPort != nil {
@@ -370,7 +370,7 @@ func dataSourceTencentCloudClbListenersByTargetsRead(d *schema.ResourceData, met
 					listenersList = append(listenersList, listenersMap)
 				}
 
-				lBItemMap["listeners"] = listenersList
+				lBItemMap["listeners"] = []interface{}{listenersList}
 			}
 
 			if lBItem.Region != nil {

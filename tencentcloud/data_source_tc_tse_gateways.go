@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_tse_gateways" "gateways" {
   filters {
-    name   = "GatewayId"
-    values = ["gateway-ddbb709b"]
+		name = "Region"
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -30,13 +30,13 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "filter conditions, valid value:Type,Name,GatewayId,Tag,TradeType,InternetPaymode,Region.",
+				Description: "Filter conditions, valid value:Type,Name,GatewayId,Tag,TradeType,InternetPaymode,Region.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "filter name.",
+							Description: "Filter name.",
 						},
 						"values": {
 							Type: schema.TypeSet,
@@ -44,7 +44,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "filter value.",
+							Description: "Filter value.",
 						},
 					},
 				},
@@ -53,60 +53,60 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "gateways information.",
+				Description: "Gateways information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "total count.",
+							Description: "Total count.",
 						},
 						"gateway_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "gateway list.",
+							Description: "Gateway list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"gateway_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway ID.",
+										Description: "Gateway ID.",
 									},
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "status of gateway. May return values: `Creating`, `CreateFailed`, `Running`, `Modifying`, `UpdatingSpec`, `UpdateFailed`, `Deleting`, `DeleteFailed`, `Isolating`.",
+										Description: "Status of gateway. May return values: - Creating - CreateFailed - Running - Modifying - UpdatingSpec - UpdateFailed - Deleting - DeleteFailed - Isolating.",
 									},
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway name.",
+										Description: "Gateway name.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway type.",
+										Description: "Gateway type.",
 									},
 									"gateway_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway version. Reference value: `2.4.1`, `2.5.1`.",
+										Description: "Gateway version. Reference value:- 2.4.1- 2.5.1.",
 									},
 									"node_config": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "original node config.",
+										Description: "Original node config.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"specification": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "specification, 1c2g|2c4g|4c8g|8c16g.",
+													Description: "Specification, 1c2g|2c4g|4c8g|8c16g.",
 												},
 												"number": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "node number, 2-50.",
+													Description: "Node number, 2-50.",
 												},
 											},
 										},
@@ -114,18 +114,18 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"vpc_config": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "vpc information.",
+										Description: "Vpc infomation.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"vpc_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "subnet ID. Assign an IP address to the engine in the VPC subnet.",
+													Description: "Subnet ID. Assign an IP address to the engine in the VPC subnet.",
 												},
 												"subnet_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "subnet ID. Assign an IP address to the engine in the VPC subnet.",
+													Description: "Subnet ID. Assign an IP address to the engine in the VPC subnet.",
 												},
 											},
 										},
@@ -133,28 +133,28 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"description": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "description of gateway.",
+										Description: "Description of gateway.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "create time.",
+										Description: "Create time.",
 									},
 									"tags": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "tags information of gatewayNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Tags infomation of gatewayNote: This field may return null, indicating that a valid value is not available.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"tag_key": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "tag key.",
+													Description: "Tag key.",
 												},
 												"tag_value": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "tag value.",
+													Description: "Tag value.",
 												},
 											},
 										},
@@ -162,78 +162,78 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"enable_cls": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether to enable CLS log.",
+										Description: "Whether to enable CLS log.",
 									},
 									"trade_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "trade type. `0`: postpaid, `1`: Prepaid.",
+										Description: "Trade type.- 0: postpaid- 1: Prepaid.",
 									},
 									"feature_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "product version. `TRIAL`, `STANDARD`(default value), `PROFESSIONAL`.",
+										Description: "Product version.- TRIAL- STANDARD (default value)- PROFESSIONAL.",
 									},
 									"internet_max_bandwidth_out": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "public network outbound traffic bandwidth.",
+										Description: "Public network outbound traffic bandwidth.",
 									},
 									"auto_renew_flag": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "auto renew flag, `0`: default status, `1`: auto renew, `2`: auto not renew.",
+										Description: "Auto renew flag- 0 ,default status- 1 ,auto renew- 2 ,auto not renew.",
 									},
 									"cur_deadline": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "expire date, for prepaid type.Note: This field may return null, indicating that a valid value is not available.",
+										Description: "Expire date, for prepaid type.Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"isolate_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "isolation time, used when the gateway is isolated.",
+										Description: "Isolation time, used when the gateway is isolated.",
 									},
 									"enable_internet": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether to open the public network of client.Note: This field may return null, indicating that a valid value is not available.",
+										Description: "Whether to open the public network of client.Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"engine_region": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "engine region of gateway.",
+										Description: "Engine region of gateway.",
 									},
 									"ingress_class_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "ingress class name.",
+										Description: "Ingress class name.",
 									},
 									"internet_pay_mode": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "trade type of internet. `BANDWIDTH`, `TRAFFIC`.",
+										Description: "Trade type of internet.- BANDWIDTH- TRAFFIC.",
 									},
 									"gateway_minor_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "minor version of gateway.",
+										Description: "Minor version of gateway.",
 									},
 									"instance_port": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "the port information that the instance monitors.",
+										Description: "The port information that the instance monitors.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"http_port": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "http port.",
+													Description: "Http port.",
 												},
 												"https_port": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "https port.",
+													Description: "Https port.",
 												},
 											},
 										},
@@ -241,7 +241,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"load_balancer_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "load balance type of public internet.",
+										Description: "Load balance type of public internet.",
 									},
 									"public_ip_addresses": {
 										Type: schema.TypeSet,
@@ -249,7 +249,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "addresses of public internet.",
+										Description: "Addresses of public internet.",
 									},
 								},
 							},
@@ -272,6 +272,7 @@ func dataSourceTencentCloudTseGatewaysRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
@@ -297,22 +298,24 @@ func dataSourceTencentCloudTseGatewaysRead(d *schema.ResourceData, meta interfac
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tse.ListCloudNativeAPIGatewayResult
+	var result []*tse.ListCloudNativeAPIGatewayResult
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTseGatewaysByFilter(ctx, paramMap)
+		result, e := service.DescribeTseGatewaysByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(result.GatewayList))
-	listCloudNativeAPIGatewayResultMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		listCloudNativeAPIGatewayResultMap := map[string]interface{}{}
+
 		if result.TotalCount != nil {
 			listCloudNativeAPIGatewayResultMap["total_count"] = result.TotalCount
 		}
@@ -394,7 +397,7 @@ func dataSourceTencentCloudTseGatewaysRead(d *schema.ResourceData, meta interfac
 						tagsList = append(tagsList, tagsMap)
 					}
 
-					gatewayListMap["tags"] = tagsList
+					gatewayListMap["tags"] = []interface{}{tagsList}
 				}
 
 				if gatewayList.EnableCls != nil {
@@ -468,13 +471,13 @@ func dataSourceTencentCloudTseGatewaysRead(d *schema.ResourceData, meta interfac
 				}
 
 				gatewayListList = append(gatewayListList, gatewayListMap)
-				ids = append(ids, *gatewayList.GatewayId)
 			}
 
-			listCloudNativeAPIGatewayResultMap["gateway_list"] = gatewayListList
+			listCloudNativeAPIGatewayResultMap["gateway_list"] = []interface{}{gatewayListList}
 		}
 
-		_ = d.Set("result", []interface{}{listCloudNativeAPIGatewayResultMap})
+		ids = append(ids, *result.GatewayId)
+		_ = d.Set("result", listCloudNativeAPIGatewayResultMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

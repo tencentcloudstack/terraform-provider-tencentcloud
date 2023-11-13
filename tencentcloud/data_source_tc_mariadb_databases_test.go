@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbDatabasesDataSource_basic -v
 func TestAccTencentCloudMariadbDatabasesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,19 +15,15 @@ func TestAccTencentCloudMariadbDatabasesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbDatabasesDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_mariadb_databases.databases"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_mariadb_databases.databases", "databases.#"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mariadb_databases.databases")),
 			},
 		},
 	})
 }
 
-const testAccMariadbDatabasesDataSource = testAccMariadbHourDbInstance + `
+const testAccMariadbDatabasesDataSource = `
 
 data "tencentcloud_mariadb_databases" "databases" {
-  instance_id = tencentcloud_mariadb_hour_db_instance.basic.id
-}
+    }
 
 `

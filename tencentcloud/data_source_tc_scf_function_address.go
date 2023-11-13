@@ -5,20 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_function_address" "function_address" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-  qualifier     = "$LATEST"
-}
+  function_name = ""
+  qualifier = ""
+  namespace = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -88,37 +86,31 @@ func dataSourceTencentCloudScfFunctionAddressRead(d *schema.ResourceData, meta i
 
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var res *scf.GetFunctionAddressResponseParams
-
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeScfFunctionAddress(ctx, paramMap)
+		result, e := service.DescribeScfFunctionAddressByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		res = result
+		url = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	resMap := make(map[string]interface{})
-
-	if res.Url != nil {
-		_ = d.Set("url", res.Url)
-		resMap["url"] = res.Url
+	ids := make([]string, 0, len(url))
+	if url != nil {
+		_ = d.Set("url", url)
 	}
 
-	if res.CodeSha256 != nil {
-		_ = d.Set("code_sha256", res.CodeSha256)
-		resMap["code_sha256"] = res.CodeSha256
+	if codeSha256 != nil {
+		_ = d.Set("code_sha256", codeSha256)
 	}
 
-	d.SetId(*res.Url)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
-
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), resMap); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

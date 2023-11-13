@@ -5,20 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tat_invocation_task" "invocation_task" {
-  # invocation_task_ids = ["invt-a8bv0ip7"]
+  invocation_task_ids =
   filters {
-    name = "instance-id"
-    values = ["ins-p4pq4gaq"]
+		name = ""
+		values =
+
   }
-  hide_output = true
-}
+  hide_output =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
@@ -134,7 +134,7 @@ func dataSourceTencentCloudTatInvocationTask() *schema.Resource {
 										Computed:    true,
 										Description: "COS URL of the logs.",
 									},
-									"output_upload_cos_error_info": {
+									"output_upload_c_o_s_error_info": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Error message for uploading logs to COS.",
@@ -193,12 +193,12 @@ func dataSourceTencentCloudTatInvocationTask() *schema.Resource {
 										Computed:    true,
 										Description: "The user who executes the command.",
 									},
-									"output_cos_bucket_url": {
+									"output_c_o_s_bucket_url": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "URL of the COS bucket to store the output.",
 									},
-									"output_cos_key_prefix": {
+									"output_c_o_s_key_prefix": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Prefix of the output file name.",
@@ -338,7 +338,7 @@ func dataSourceTencentCloudTatInvocationTaskRead(d *schema.ResourceData, meta in
 				}
 
 				if invocationTask.TaskResult.OutputUploadCOSErrorInfo != nil {
-					taskResultMap["output_upload_cos_error_info"] = invocationTask.TaskResult.OutputUploadCOSErrorInfo
+					taskResultMap["output_upload_c_o_s_error_info"] = invocationTask.TaskResult.OutputUploadCOSErrorInfo
 				}
 
 				invocationTaskMap["task_result"] = []interface{}{taskResultMap}
@@ -384,11 +384,11 @@ func dataSourceTencentCloudTatInvocationTaskRead(d *schema.ResourceData, meta in
 				}
 
 				if invocationTask.CommandDocument.OutputCOSBucketUrl != nil {
-					commandDocumentMap["output_cos_bucket_url"] = invocationTask.CommandDocument.OutputCOSBucketUrl
+					commandDocumentMap["output_c_o_s_bucket_url"] = invocationTask.CommandDocument.OutputCOSBucketUrl
 				}
 
 				if invocationTask.CommandDocument.OutputCOSKeyPrefix != nil {
-					commandDocumentMap["output_cos_key_prefix"] = invocationTask.CommandDocument.OutputCOSKeyPrefix
+					commandDocumentMap["output_c_o_s_key_prefix"] = invocationTask.CommandDocument.OutputCOSKeyPrefix
 				}
 
 				invocationTaskMap["command_document"] = []interface{}{commandDocumentMap}

@@ -10,14 +10,13 @@ data "tencentcloud_mongodb_instance_slow_log" "instance_slow_log" {
   end_time = "2019-06-02 12:00:00"
   slow_m_s = 100
   format = "json"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -45,7 +44,7 @@ func dataSourceTencentCloudMongodbInstanceSlowLog() *schema.Resource {
 				Description: "Slow log termination time, format: yyyy-mm-dd hh:mm:ss, such as: 2019-06-02 12:00:00.The time interval between the start and end of the query cannot exceed 24 hours,and only slow logs within the last 7 days are allowed to be queried.",
 			},
 
-			"slow_ms": {
+			"slow_m_s": {
 				Required:    true,
 				Type:        schema.TypeInt,
 				Description: "Slow log execution time threshold, return slow logs whose execution time exceeds this threshold,the unit is milliseconds (ms), and the minimum is 100 milliseconds.",
@@ -63,7 +62,7 @@ func dataSourceTencentCloudMongodbInstanceSlowLog() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "details of slow logs.",
+				Description: "Details of slow logs.",
 			},
 
 			"result_output_file": {
@@ -85,23 +84,23 @@ func dataSourceTencentCloudMongodbInstanceSlowLogRead(d *schema.ResourceData, me
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
-		paramMap["start_time"] = helper.String(v.(string))
+		paramMap["StartTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_time"); ok {
-		paramMap["end_time"] = helper.String(v.(string))
+		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("slow_ms"); v != nil {
-		paramMap["slow_ms"] = helper.IntUint64(v.(int))
+	if v, _ := d.GetOk("slow_m_s"); v != nil {
+		paramMap["SlowMS"] = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("format"); ok {
-		paramMap["format"] = helper.String(v.(string))
+		paramMap["Format"] = helper.String(v.(string))
 	}
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -125,14 +124,10 @@ func dataSourceTencentCloudMongodbInstanceSlowLogRead(d *schema.ResourceData, me
 		_ = d.Set("slow_logs", slowLogs)
 	}
 
-	for _, slowLog := range slowLogs {
-		ids = append(ids, *slowLog)
-	}
-
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), slowLogs); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

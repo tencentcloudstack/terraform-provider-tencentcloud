@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbTargetGroupListDataSource_basic(t *testing.T) {
@@ -25,10 +24,12 @@ func TestAccTencentCloudClbTargetGroupListDataSource_basic(t *testing.T) {
 const testAccClbTargetGroupListDataSource = `
 
 data "tencentcloud_clb_target_group_list" "target_group_list" {
+  target_group_ids = 
   filters {
-    name = "TargetGroupName"
-    values = ["keep-tgg"]
+		name = ""
+		values = 
+
   }
-}
+  }
 
 `

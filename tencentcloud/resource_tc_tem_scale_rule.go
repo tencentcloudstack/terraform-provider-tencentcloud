@@ -1,56 +1,46 @@
 /*
-Provides a resource to create a tem scaleRule
+Provides a resource to create a tem scale_rule
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tem_scale_rule" "scaleRule" {
-  environment_id = "en-o5edaepv"
-  application_id = "app-3j29aa2p"
-  workload_id = resource.tencentcloud_tem_workload.workload.id
+resource "tencentcloud_tem_scale_rule" "scale_rule" {
+  environment_id = "en-xxx"
+  application_id = "app-xxx"
   autoscaler {
-    autoscaler_name = "test3123"
-    description     = "test"
-    enabled         = true
-    min_replicas    = 1
-    max_replicas    = 4
-    cron_horizontal_autoscaler {
-      name     = "test"
-      period   = "* * *"
-      priority = 1
-      enabled  = true
-      schedules {
-        start_at        = "03:00"
-        target_replicas = 1
-      }
-    }
-    cron_horizontal_autoscaler {
-      name     = "test123123"
-      period   = "* * *"
-      priority = 0
-      enabled  = true
-      schedules {
-        start_at        = "04:13"
-        target_replicas = 1
-      }
-    }
-    horizontal_autoscaler {
-      metrics      = "CPU"
-      enabled      = true
-      max_replicas = 4
-      min_replicas = 1
-      threshold    = 60
-    }
+		autoscaler_name = "test"
+		description = "test"
+		enabled = true
+		min_replicas = 1
+		max_replicas = 2
+		cron_horizontal_autoscaler {
+			name = "test"
+			period = "test"
+			priority = 1
+			enabled = true
+			schedules {
+				start_at = "03:00"
+				target_replicas = 1
+			}
+		}
+		horizontal_autoscaler {
+			metrics = "test"
+			enabled = true
+			max_replicas = 2
+			min_replicas = 1
+			threshold = 60
+		}
 
   }
 }
-
 ```
+
 Import
 
-tem scaleRule can be imported using the id, e.g.
+tem scale_rule can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_scale_rule.scaleRule environmentId#applicationId#scaleRuleId
+terraform import tencentcloud_tem_scale_rule.scale_rule scale_rule_id
 ```
 */
 package tencentcloud
@@ -58,19 +48,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemScaleRule() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemScaleRuleRead,
 		Create: resourceTencentCloudTemScaleRuleCreate,
+		Read:   resourceTencentCloudTemScaleRuleRead,
 		Update: resourceTencentCloudTemScaleRuleUpdate,
 		Delete: resourceTencentCloudTemScaleRuleDelete,
 		Importer: &schema.ResourceImporter{
@@ -78,99 +67,90 @@ func resourceTencentCloudTemScaleRule() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "environment ID.",
+				Type:        schema.TypeString,
+				Description: "Environment ID.",
 			},
 
 			"application_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "application ID.",
-			},
-
-			"workload_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.",
+				Description: "Application ID.",
 			},
 
 			"autoscaler": {
+				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Required:    true,
 				Description: ".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"autoscaler_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "name.",
+							Description: "Name.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "description.",
+							Description: "Description.",
 						},
 						"enabled": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "enable AutoScaler.",
+							Description: "Enable AutoScaler.",
 						},
 						"min_replicas": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "minimal replica number.",
+							Description: "Minimal replica number.",
 						},
 						"max_replicas": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "maximal replica number.",
+							Description: "Maximal replica number.",
 						},
 						"cron_horizontal_autoscaler": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "scaler based on cron configuration.",
+							Description: "Scaler based on cron configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "name.",
+										Description: "Name.",
 									},
 									"period": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "period.",
+										Description: "Period.",
 									},
 									"priority": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "priority.",
+										Description: "Priority.",
 									},
 									"enabled": {
 										Type:        schema.TypeBool,
 										Required:    true,
-										Description: "enable scaler.",
+										Description: "Enable scaler.",
 									},
 									"schedules": {
 										Type:        schema.TypeList,
 										Required:    true,
-										Description: "schedule payload.",
+										Description: "Schedule payload.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"start_at": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "start time.",
+													Description: "Start time.",
 												},
 												"target_replicas": {
 													Type:        schema.TypeInt,
 													Required:    true,
-													Description: "target replica number.",
+													Description: "Target replica number.",
 												},
 											},
 										},
@@ -181,33 +161,33 @@ func resourceTencentCloudTemScaleRule() *schema.Resource {
 						"horizontal_autoscaler": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "scaler based on metrics.",
+							Description: "Scaler based on metrics.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"metrics": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "metric name.",
+										Description: "Metric name.",
 									},
 									"enabled": {
 										Type:        schema.TypeBool,
 										Required:    true,
-										Description: "enable scaler.",
+										Description: "Enable scaler.",
 									},
 									"max_replicas": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "maximal replica number.",
+										Description: "Maximal replica number.",
 									},
 									"min_replicas": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "minimal replica number.",
+										Description: "Minimal replica number.",
 									},
 									"threshold": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "metric threshold.",
+										Description: "Metric threshold.",
 									},
 								},
 							},
@@ -227,11 +207,11 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request       = tem.NewCreateApplicationAutoscalerRequest()
-		response      *tem.CreateApplicationAutoscalerResponse
+		response      = tem.NewCreateApplicationAutoscalerResponse()
 		environmentId string
 		applicationId string
+		autoscalerId  string
 	)
-
 	if v, ok := d.GetOk("environment_id"); ok {
 		environmentId = v.(string)
 		request.EnvironmentId = helper.String(v.(string))
@@ -240,13 +220,6 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("application_id"); ok {
 		applicationId = v.(string)
 		request.ApplicationId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("workload_id"); ok {
-		workloadId := v.(string)
-		if workloadId != environmentId+FILED_SP+applicationId {
-			return fmt.Errorf("workloadId is error, it should be %s", environmentId+FILED_SP+applicationId)
-		}
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "autoscaler"); ok {
@@ -268,28 +241,28 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 		}
 		if v, ok := dMap["cron_horizontal_autoscaler"]; ok {
 			for _, item := range v.([]interface{}) {
-				CronHorizontalAutoscalerMap := item.(map[string]interface{})
+				cronHorizontalAutoscalerMap := item.(map[string]interface{})
 				cronHorizontalAutoscaler := tem.CronHorizontalAutoscaler{}
-				if v, ok := CronHorizontalAutoscalerMap["name"]; ok {
+				if v, ok := cronHorizontalAutoscalerMap["name"]; ok {
 					cronHorizontalAutoscaler.Name = helper.String(v.(string))
 				}
-				if v, ok := CronHorizontalAutoscalerMap["period"]; ok {
+				if v, ok := cronHorizontalAutoscalerMap["period"]; ok {
 					cronHorizontalAutoscaler.Period = helper.String(v.(string))
 				}
-				if v, ok := CronHorizontalAutoscalerMap["priority"]; ok {
+				if v, ok := cronHorizontalAutoscalerMap["priority"]; ok {
 					cronHorizontalAutoscaler.Priority = helper.IntInt64(v.(int))
 				}
-				if v, ok := CronHorizontalAutoscalerMap["enabled"]; ok {
+				if v, ok := cronHorizontalAutoscalerMap["enabled"]; ok {
 					cronHorizontalAutoscaler.Enabled = helper.Bool(v.(bool))
 				}
-				if v, ok := CronHorizontalAutoscalerMap["schedules"]; ok {
+				if v, ok := cronHorizontalAutoscalerMap["schedules"]; ok {
 					for _, item := range v.([]interface{}) {
-						SchedulesMap := item.(map[string]interface{})
+						schedulesMap := item.(map[string]interface{})
 						cronHorizontalAutoscalerSchedule := tem.CronHorizontalAutoscalerSchedule{}
-						if v, ok := SchedulesMap["start_at"]; ok {
+						if v, ok := schedulesMap["start_at"]; ok {
 							cronHorizontalAutoscalerSchedule.StartAt = helper.String(v.(string))
 						}
-						if v, ok := SchedulesMap["target_replicas"]; ok {
+						if v, ok := schedulesMap["target_replicas"]; ok {
 							cronHorizontalAutoscalerSchedule.TargetReplicas = helper.IntInt64(v.(int))
 						}
 						cronHorizontalAutoscaler.Schedules = append(cronHorizontalAutoscaler.Schedules, &cronHorizontalAutoscalerSchedule)
@@ -300,21 +273,21 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 		}
 		if v, ok := dMap["horizontal_autoscaler"]; ok {
 			for _, item := range v.([]interface{}) {
-				HorizontalAutoscalerMap := item.(map[string]interface{})
+				horizontalAutoscalerMap := item.(map[string]interface{})
 				horizontalAutoscaler := tem.HorizontalAutoscaler{}
-				if v, ok := HorizontalAutoscalerMap["metrics"]; ok {
+				if v, ok := horizontalAutoscalerMap["metrics"]; ok {
 					horizontalAutoscaler.Metrics = helper.String(v.(string))
 				}
-				if v, ok := HorizontalAutoscalerMap["enabled"]; ok {
+				if v, ok := horizontalAutoscalerMap["enabled"]; ok {
 					horizontalAutoscaler.Enabled = helper.Bool(v.(bool))
 				}
-				if v, ok := HorizontalAutoscalerMap["max_replicas"]; ok {
+				if v, ok := horizontalAutoscalerMap["max_replicas"]; ok {
 					horizontalAutoscaler.MaxReplicas = helper.IntInt64(v.(int))
 				}
-				if v, ok := HorizontalAutoscalerMap["min_replicas"]; ok {
+				if v, ok := horizontalAutoscalerMap["min_replicas"]; ok {
 					horizontalAutoscaler.MinReplicas = helper.IntInt64(v.(int))
 				}
-				if v, ok := HorizontalAutoscalerMap["threshold"]; ok {
+				if v, ok := horizontalAutoscalerMap["threshold"]; ok {
 					horizontalAutoscaler.Threshold = helper.IntInt64(v.(int))
 				}
 				autoscaler.HorizontalAutoscaler = append(autoscaler.HorizontalAutoscaler, &horizontalAutoscaler)
@@ -328,29 +301,28 @@ func resourceTencentCloudTemScaleRuleCreate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem scaleRule failed, reason:%+v", logId, err)
 		return err
 	}
 
-	scaleRuleId := *response.Response.Result
+	environmentId = *response.Response.EnvironmentId
+	d.SetId(strings.Join([]string{environmentId, applicationId, autoscalerId}, FILED_SP))
 
-	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + scaleRuleId)
 	return resourceTencentCloudTemScaleRuleRead(d, meta)
 }
 
 func resourceTencentCloudTemScaleRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_scaleRule.read")()
+	defer logElapsed("resource.tencentcloud_tem_scale_rule.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -361,101 +333,129 @@ func resourceTencentCloudTemScaleRuleRead(d *schema.ResourceData, meta interface
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	scaleRuleId := idSplit[2]
+	autoscalerId := idSplit[2]
 
-	scaleRule, err := service.DescribeTemScaleRule(ctx, environmentId, applicationId, scaleRuleId)
-
+	scaleRule, err := service.DescribeTemScaleRuleById(ctx, environmentId, applicationId, autoscalerId)
 	if err != nil {
 		return err
 	}
 
 	if scaleRule == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `scaleRule` %s does not exist", scaleRuleId)
+		log.Printf("[WARN]%s resource `TemScaleRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("environment_id", environmentId)
-	_ = d.Set("application_id", applicationId)
-	_ = d.Set("workload_id", environmentId+FILED_SP+applicationId)
+	if scaleRule.EnvironmentId != nil {
+		_ = d.Set("environment_id", scaleRule.EnvironmentId)
+	}
 
-	autoscalerMap := map[string]interface{}{}
-	if scaleRule.AutoscalerName != nil {
-		autoscalerMap["autoscaler_name"] = scaleRule.AutoscalerName
+	if scaleRule.ApplicationId != nil {
+		_ = d.Set("application_id", scaleRule.ApplicationId)
 	}
-	if scaleRule.Description != nil {
-		autoscalerMap["description"] = scaleRule.Description
-	}
-	if scaleRule.Enabled != nil {
-		autoscalerMap["enabled"] = scaleRule.Enabled
-	}
-	if scaleRule.MinReplicas != nil {
-		autoscalerMap["min_replicas"] = scaleRule.MinReplicas
-	}
-	if scaleRule.MaxReplicas != nil {
-		autoscalerMap["max_replicas"] = scaleRule.MaxReplicas
-	}
-	if scaleRule.CronHorizontalAutoscaler != nil {
-		cronHorizontalAutoscalerList := []interface{}{}
-		for _, cronHorizontalAutoscaler := range scaleRule.CronHorizontalAutoscaler {
-			cronHorizontalAutoscalerMap := map[string]interface{}{}
-			if cronHorizontalAutoscaler.Name != nil {
-				cronHorizontalAutoscalerMap["name"] = cronHorizontalAutoscaler.Name
-			}
-			if cronHorizontalAutoscaler.Period != nil {
-				cronHorizontalAutoscalerMap["period"] = cronHorizontalAutoscaler.Period
-			}
-			if cronHorizontalAutoscaler.Priority != nil {
-				cronHorizontalAutoscalerMap["priority"] = cronHorizontalAutoscaler.Priority
-			}
-			if cronHorizontalAutoscaler.Enabled != nil {
-				cronHorizontalAutoscalerMap["enabled"] = cronHorizontalAutoscaler.Enabled
-			}
-			if cronHorizontalAutoscaler.Schedules != nil {
-				schedulesList := []interface{}{}
-				for _, schedules := range cronHorizontalAutoscaler.Schedules {
-					schedulesMap := map[string]interface{}{}
-					if schedules.StartAt != nil {
-						schedulesMap["start_at"] = schedules.StartAt
-					}
-					if schedules.TargetReplicas != nil {
-						schedulesMap["target_replicas"] = schedules.TargetReplicas
-					}
 
-					schedulesList = append(schedulesList, schedulesMap)
+	if scaleRule.Autoscaler != nil {
+		autoscalerMap := map[string]interface{}{}
+
+		if scaleRule.Autoscaler.AutoscalerName != nil {
+			autoscalerMap["autoscaler_name"] = scaleRule.Autoscaler.AutoscalerName
+		}
+
+		if scaleRule.Autoscaler.Description != nil {
+			autoscalerMap["description"] = scaleRule.Autoscaler.Description
+		}
+
+		if scaleRule.Autoscaler.Enabled != nil {
+			autoscalerMap["enabled"] = scaleRule.Autoscaler.Enabled
+		}
+
+		if scaleRule.Autoscaler.MinReplicas != nil {
+			autoscalerMap["min_replicas"] = scaleRule.Autoscaler.MinReplicas
+		}
+
+		if scaleRule.Autoscaler.MaxReplicas != nil {
+			autoscalerMap["max_replicas"] = scaleRule.Autoscaler.MaxReplicas
+		}
+
+		if scaleRule.Autoscaler.CronHorizontalAutoscaler != nil {
+			cronHorizontalAutoscalerList := []interface{}{}
+			for _, cronHorizontalAutoscaler := range scaleRule.Autoscaler.CronHorizontalAutoscaler {
+				cronHorizontalAutoscalerMap := map[string]interface{}{}
+
+				if cronHorizontalAutoscaler.Name != nil {
+					cronHorizontalAutoscalerMap["name"] = cronHorizontalAutoscaler.Name
 				}
-				cronHorizontalAutoscalerMap["schedules"] = schedulesList
+
+				if cronHorizontalAutoscaler.Period != nil {
+					cronHorizontalAutoscalerMap["period"] = cronHorizontalAutoscaler.Period
+				}
+
+				if cronHorizontalAutoscaler.Priority != nil {
+					cronHorizontalAutoscalerMap["priority"] = cronHorizontalAutoscaler.Priority
+				}
+
+				if cronHorizontalAutoscaler.Enabled != nil {
+					cronHorizontalAutoscalerMap["enabled"] = cronHorizontalAutoscaler.Enabled
+				}
+
+				if cronHorizontalAutoscaler.Schedules != nil {
+					schedulesList := []interface{}{}
+					for _, schedules := range cronHorizontalAutoscaler.Schedules {
+						schedulesMap := map[string]interface{}{}
+
+						if schedules.StartAt != nil {
+							schedulesMap["start_at"] = schedules.StartAt
+						}
+
+						if schedules.TargetReplicas != nil {
+							schedulesMap["target_replicas"] = schedules.TargetReplicas
+						}
+
+						schedulesList = append(schedulesList, schedulesMap)
+					}
+
+					cronHorizontalAutoscalerMap["schedules"] = []interface{}{schedulesList}
+				}
+
+				cronHorizontalAutoscalerList = append(cronHorizontalAutoscalerList, cronHorizontalAutoscalerMap)
 			}
 
-			cronHorizontalAutoscalerList = append(cronHorizontalAutoscalerList, cronHorizontalAutoscalerMap)
+			autoscalerMap["cron_horizontal_autoscaler"] = []interface{}{cronHorizontalAutoscalerList}
 		}
-		autoscalerMap["cron_horizontal_autoscaler"] = cronHorizontalAutoscalerList
-	}
-	if scaleRule.HorizontalAutoscaler != nil {
-		horizontalAutoscalerList := []interface{}{}
-		for _, horizontalAutoscaler := range scaleRule.HorizontalAutoscaler {
-			horizontalAutoscalerMap := map[string]interface{}{}
-			if horizontalAutoscaler.Metrics != nil {
-				horizontalAutoscalerMap["metrics"] = horizontalAutoscaler.Metrics
-			}
-			if horizontalAutoscaler.Enabled != nil {
-				horizontalAutoscalerMap["enabled"] = horizontalAutoscaler.Enabled
-			}
-			if horizontalAutoscaler.MaxReplicas != nil {
-				horizontalAutoscalerMap["max_replicas"] = horizontalAutoscaler.MaxReplicas
-			}
-			if horizontalAutoscaler.MinReplicas != nil {
-				horizontalAutoscalerMap["min_replicas"] = horizontalAutoscaler.MinReplicas
-			}
-			if horizontalAutoscaler.Threshold != nil {
-				horizontalAutoscalerMap["threshold"] = horizontalAutoscaler.Threshold
+
+		if scaleRule.Autoscaler.HorizontalAutoscaler != nil {
+			horizontalAutoscalerList := []interface{}{}
+			for _, horizontalAutoscaler := range scaleRule.Autoscaler.HorizontalAutoscaler {
+				horizontalAutoscalerMap := map[string]interface{}{}
+
+				if horizontalAutoscaler.Metrics != nil {
+					horizontalAutoscalerMap["metrics"] = horizontalAutoscaler.Metrics
+				}
+
+				if horizontalAutoscaler.Enabled != nil {
+					horizontalAutoscalerMap["enabled"] = horizontalAutoscaler.Enabled
+				}
+
+				if horizontalAutoscaler.MaxReplicas != nil {
+					horizontalAutoscalerMap["max_replicas"] = horizontalAutoscaler.MaxReplicas
+				}
+
+				if horizontalAutoscaler.MinReplicas != nil {
+					horizontalAutoscalerMap["min_replicas"] = horizontalAutoscaler.MinReplicas
+				}
+
+				if horizontalAutoscaler.Threshold != nil {
+					horizontalAutoscalerMap["threshold"] = horizontalAutoscaler.Threshold
+				}
+
+				horizontalAutoscalerList = append(horizontalAutoscalerList, horizontalAutoscalerMap)
 			}
 
-			horizontalAutoscalerList = append(horizontalAutoscalerList, horizontalAutoscalerMap)
+			autoscalerMap["horizontal_autoscaler"] = []interface{}{horizontalAutoscalerList}
 		}
-		autoscalerMap["horizontal_autoscaler"] = horizontalAutoscalerList
-	}
 
-	_ = d.Set("autoscaler", []interface{}{autoscalerMap})
+		_ = d.Set("autoscaler", []interface{}{autoscalerMap})
+	}
 
 	return nil
 }
@@ -474,18 +474,18 @@ func resourceTencentCloudTemScaleRuleUpdate(d *schema.ResourceData, meta interfa
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	scaleRuleId := idSplit[2]
+	autoscalerId := idSplit[2]
 
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
-	request.AutoscalerId = &scaleRuleId
+	request.AutoscalerId = &autoscalerId
 
-	if d.HasChange("environment_id") {
-		return fmt.Errorf("`environment_id` do not support change now.")
-	}
+	immutableArgs := []string{"environment_id", "application_id", "autoscaler"}
 
-	if d.HasChange("application_id") {
-		return fmt.Errorf("`application_id` do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("autoscaler") {
@@ -508,28 +508,28 @@ func resourceTencentCloudTemScaleRuleUpdate(d *schema.ResourceData, meta interfa
 			}
 			if v, ok := dMap["cron_horizontal_autoscaler"]; ok {
 				for _, item := range v.([]interface{}) {
-					CronHorizontalAutoscalerMap := item.(map[string]interface{})
+					cronHorizontalAutoscalerMap := item.(map[string]interface{})
 					cronHorizontalAutoscaler := tem.CronHorizontalAutoscaler{}
-					if v, ok := CronHorizontalAutoscalerMap["name"]; ok {
+					if v, ok := cronHorizontalAutoscalerMap["name"]; ok {
 						cronHorizontalAutoscaler.Name = helper.String(v.(string))
 					}
-					if v, ok := CronHorizontalAutoscalerMap["period"]; ok {
+					if v, ok := cronHorizontalAutoscalerMap["period"]; ok {
 						cronHorizontalAutoscaler.Period = helper.String(v.(string))
 					}
-					if v, ok := CronHorizontalAutoscalerMap["priority"]; ok {
+					if v, ok := cronHorizontalAutoscalerMap["priority"]; ok {
 						cronHorizontalAutoscaler.Priority = helper.IntInt64(v.(int))
 					}
-					if v, ok := CronHorizontalAutoscalerMap["enabled"]; ok {
+					if v, ok := cronHorizontalAutoscalerMap["enabled"]; ok {
 						cronHorizontalAutoscaler.Enabled = helper.Bool(v.(bool))
 					}
-					if v, ok := CronHorizontalAutoscalerMap["schedules"]; ok {
+					if v, ok := cronHorizontalAutoscalerMap["schedules"]; ok {
 						for _, item := range v.([]interface{}) {
-							SchedulesMap := item.(map[string]interface{})
+							schedulesMap := item.(map[string]interface{})
 							cronHorizontalAutoscalerSchedule := tem.CronHorizontalAutoscalerSchedule{}
-							if v, ok := SchedulesMap["start_at"]; ok {
+							if v, ok := schedulesMap["start_at"]; ok {
 								cronHorizontalAutoscalerSchedule.StartAt = helper.String(v.(string))
 							}
-							if v, ok := SchedulesMap["target_replicas"]; ok {
+							if v, ok := schedulesMap["target_replicas"]; ok {
 								cronHorizontalAutoscalerSchedule.TargetReplicas = helper.IntInt64(v.(int))
 							}
 							cronHorizontalAutoscaler.Schedules = append(cronHorizontalAutoscaler.Schedules, &cronHorizontalAutoscalerSchedule)
@@ -540,21 +540,21 @@ func resourceTencentCloudTemScaleRuleUpdate(d *schema.ResourceData, meta interfa
 			}
 			if v, ok := dMap["horizontal_autoscaler"]; ok {
 				for _, item := range v.([]interface{}) {
-					HorizontalAutoscalerMap := item.(map[string]interface{})
+					horizontalAutoscalerMap := item.(map[string]interface{})
 					horizontalAutoscaler := tem.HorizontalAutoscaler{}
-					if v, ok := HorizontalAutoscalerMap["metrics"]; ok {
+					if v, ok := horizontalAutoscalerMap["metrics"]; ok {
 						horizontalAutoscaler.Metrics = helper.String(v.(string))
 					}
-					if v, ok := HorizontalAutoscalerMap["enabled"]; ok {
+					if v, ok := horizontalAutoscalerMap["enabled"]; ok {
 						horizontalAutoscaler.Enabled = helper.Bool(v.(bool))
 					}
-					if v, ok := HorizontalAutoscalerMap["max_replicas"]; ok {
+					if v, ok := horizontalAutoscalerMap["max_replicas"]; ok {
 						horizontalAutoscaler.MaxReplicas = helper.IntInt64(v.(int))
 					}
-					if v, ok := HorizontalAutoscalerMap["min_replicas"]; ok {
+					if v, ok := horizontalAutoscalerMap["min_replicas"]; ok {
 						horizontalAutoscaler.MinReplicas = helper.IntInt64(v.(int))
 					}
-					if v, ok := HorizontalAutoscalerMap["threshold"]; ok {
+					if v, ok := horizontalAutoscalerMap["threshold"]; ok {
 						horizontalAutoscaler.Threshold = helper.IntInt64(v.(int))
 					}
 					autoscaler.HorizontalAutoscaler = append(autoscaler.HorizontalAutoscaler, &horizontalAutoscaler)
@@ -569,13 +569,12 @@ func resourceTencentCloudTemScaleRuleUpdate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem scaleRule failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -590,20 +589,15 @@ func resourceTencentCloudTemScaleRuleDelete(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	scaleRuleId := idSplit[2]
+	autoscalerId := idSplit[2]
 
-	if err := service.DisableTemScaleRuleById(ctx, environmentId, applicationId, scaleRuleId); err != nil {
-		return err
-	}
-
-	if err := service.DeleteTemScaleRuleById(ctx, environmentId, applicationId, scaleRuleId); err != nil {
+	if err := service.DeleteTemScaleRuleById(ctx, environmentId, applicationId, autoscalerId); err != nil {
 		return err
 	}
 

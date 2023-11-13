@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMongodbInstanceBackupDownloadTaskResource_basic(t *testing.T) {
@@ -15,9 +14,8 @@ func TestAccTencentCloudMongodbInstanceBackupDownloadTaskResource_basic(t *testi
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccMongodbInstanceBackupDownloadTask,
-				Check:     resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task", "id")),
+				Config: testAccMongodbInstanceBackupDownloadTask,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task",
@@ -31,10 +29,11 @@ func TestAccTencentCloudMongodbInstanceBackupDownloadTaskResource_basic(t *testi
 const testAccMongodbInstanceBackupDownloadTask = `
 
 resource "tencentcloud_mongodb_instance_backup_download_task" "instance_backup_download_task" {
-  instance_id = "cmgo-gwqk8669"
-  backup_name = "cmgo-gwqk8669_2023-05-10 10:45"
+  instance_id = ""
+  backup_name = "myBackupName"
   backup_sets {
-    replica_set_id = "cmgo-gwqk8669_0"
+		replica_set_id = ""
+
   }
 }
 

@@ -1,35 +1,38 @@
 /*
 Provides a resource to create a pts file
 
-~> **NOTE:** Modification is not currently supported, please go to the console to modify.
-
 Example Usage
 
 ```hcl
 resource "tencentcloud_pts_file" "file" {
-    file_id        = "file-de2dbaf8"
-    header_in_file = false
-    kind           = 3
-    line_count     = 0
-    name           = "iac.txt"
-    project_id     = "project-45vw7v82"
-    size           = 10799
-    type           = "text/plain"
-    # header_columns = ""
-    # file_infos {
-    # name = ""
-    # size = ""
-    # type = ""
-    # updated_at = ""
-    # }
-}
+  file_id = &lt;nil&gt;
+  project_id = &lt;nil&gt;
+  kind = &lt;nil&gt;
+  name = &lt;nil&gt;
+  size = &lt;nil&gt;
+  type = &lt;nil&gt;
+  line_count = &lt;nil&gt;
+  head_lines = &lt;nil&gt;
+  tail_lines = &lt;nil&gt;
+  header_in_file = &lt;nil&gt;
+  header_columns = &lt;nil&gt;
+  file_infos {
+		name = &lt;nil&gt;
+		size = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		file_id = &lt;nil&gt;
 
+  }
+}
 ```
+
 Import
 
-pts file can be imported using the project_id#file_id, e.g.
+pts file can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_pts_file.file project-45vw7v82#file-de2dbaf8
+terraform import tencentcloud_pts_file.file file_id
 ```
 */
 package tencentcloud
@@ -37,20 +40,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudPtsFile() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudPtsFileRead,
 		Create: resourceTencentCloudPtsFileCreate,
+		Read:   resourceTencentCloudPtsFileRead,
 		Update: resourceTencentCloudPtsFileUpdate,
 		Delete: resourceTencentCloudPtsFileDelete,
 		Importer: &schema.ResourceImporter{
@@ -58,83 +59,83 @@ func resourceTencentCloudPtsFile() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"file_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "File id.",
 			},
 
 			"project_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Project id.",
 			},
 
 			"kind": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "File kind, parameter file-1, protocol file-2, request file-3.",
 			},
 
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "File name.",
 			},
 
 			"size": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "File size.",
 			},
 
 			"type": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "File type, folder-folder.",
 			},
 
 			"line_count": {
-				Type:        schema.TypeInt,
 				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Line count.",
 			},
 
 			"head_lines": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
 				Description: "The first few lines of data.",
 			},
 
 			"tail_lines": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
 				Description: "The last few lines of data.",
 			},
 
 			"header_in_file": {
-				Type:        schema.TypeBool,
 				Optional:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether the header is in the file.",
 			},
 
 			"header_columns": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
 				Description: "Meter head.",
 			},
 
 			"file_infos": {
-				Type:        schema.TypeList,
 				Optional:    true,
+				Type:        schema.TypeList,
 				Description: "Files in a folder.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -178,12 +179,10 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 
 	var (
 		request   = pts.NewCreateFileRequest()
+		response  = pts.NewCreateFileResponse()
 		projectId string
-		fileId    string
 	)
-
 	if v, ok := d.GetOk("file_id"); ok {
-		fileId = v.(string)
 		request.FileId = helper.String(v.(string))
 	}
 
@@ -192,24 +191,24 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 		request.ProjectId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("kind"); ok {
-		request.Kind = helper.Int64(int64(v.(int)))
+	if v, ok := d.GetOkExists("kind"); ok {
+		request.Kind = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("size"); ok {
-		request.Size = helper.Int64(int64(v.(int)))
+	if v, ok := d.GetOkExists("size"); ok {
+		request.Size = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("line_count"); ok {
-		request.LineCount = helper.Int64(int64(v.(int)))
+	if v, ok := d.GetOkExists("line_count"); ok {
+		request.LineCount = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("head_lines"); ok {
@@ -228,7 +227,7 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if v, _ := d.GetOk("header_in_file"); v != nil {
+	if v, ok := d.GetOkExists("header_in_file"); ok {
 		request.HeaderInFile = helper.Bool(v.(bool))
 	}
 
@@ -248,7 +247,7 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 				fileInfo.Name = helper.String(v.(string))
 			}
 			if v, ok := dMap["size"]; ok {
-				fileInfo.Size = helper.Int64(int64(v.(int)))
+				fileInfo.Size = helper.IntUint64(v.(int))
 			}
 			if v, ok := dMap["type"]; ok {
 				fileInfo.Type = helper.String(v.(string))
@@ -259,7 +258,6 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 			if v, ok := dMap["file_id"]; ok {
 				fileInfo.FileId = helper.String(v.(string))
 			}
-
 			request.FileInfos = append(request.FileInfos, &fileInfo)
 		}
 	}
@@ -267,25 +265,21 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateFile(request)
 		if e != nil {
-			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create pts file failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + fileId)
+	projectId = *response.Response.ProjectId
+	d.SetId(strings.Join([]string{projectId}, FILED_SP))
+
 	return resourceTencentCloudPtsFileRead(d, meta)
 }
 
@@ -294,6 +288,7 @@ func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) e
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -303,17 +298,17 @@ func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) e
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	projectId := idSplit[0]
-	fileId := idSplit[1]
+	fileIds := idSplit[1]
 
-	file, err := service.DescribePtsFile(ctx, projectId, fileId)
-
+	file, err := service.DescribePtsFileById(ctx, projectId, fileIds)
 	if err != nil {
 		return err
 	}
 
 	if file == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `file` %s does not exist", fileId)
+		log.Printf("[WARN]%s resource `PtsFile` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if file.FileId != nil {
@@ -364,25 +359,32 @@ func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) e
 		fileInfosList := []interface{}{}
 		for _, fileInfos := range file.FileInfos {
 			fileInfosMap := map[string]interface{}{}
-			if fileInfos.Name != nil {
-				fileInfosMap["name"] = fileInfos.Name
+
+			if file.FileInfos.Name != nil {
+				fileInfosMap["name"] = file.FileInfos.Name
 			}
-			if fileInfos.Size != nil {
-				fileInfosMap["size"] = fileInfos.Size
+
+			if file.FileInfos.Size != nil {
+				fileInfosMap["size"] = file.FileInfos.Size
 			}
-			if fileInfos.Type != nil {
-				fileInfosMap["type"] = fileInfos.Type
+
+			if file.FileInfos.Type != nil {
+				fileInfosMap["type"] = file.FileInfos.Type
 			}
-			if fileInfos.UpdatedAt != nil {
-				fileInfosMap["updated_at"] = fileInfos.UpdatedAt
+
+			if file.FileInfos.UpdatedAt != nil {
+				fileInfosMap["updated_at"] = file.FileInfos.UpdatedAt
 			}
-			if fileInfos.FileId != nil {
-				fileInfosMap["file_id"] = fileInfos.FileId
+
+			if file.FileInfos.FileId != nil {
+				fileInfosMap["file_id"] = file.FileInfos.FileId
 			}
 
 			fileInfosList = append(fileInfosList, fileInfosMap)
 		}
+
 		_ = d.Set("file_infos", fileInfosList)
+
 	}
 
 	return nil
@@ -391,6 +393,42 @@ func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) e
 func resourceTencentCloudPtsFileUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_pts_file.update")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	request := pts.NewRequest()
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	fileIds := idSplit[1]
+
+	request.ProjectId = &projectId
+	request.FileIds = &fileIds
+
+	immutableArgs := []string{"file_id", "project_id", "kind", "name", "size", "type", "line_count", "head_lines", "tail_lines", "header_in_file", "header_columns", "file_infos"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update pts file failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return resourceTencentCloudPtsFileRead(d, meta)
 }
@@ -403,15 +441,14 @@ func resourceTencentCloudPtsFileDelete(d *schema.ResourceData, meta interface{})
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	projectId := idSplit[0]
-	fileId := idSplit[1]
+	fileIds := idSplit[1]
 
-	if err := service.DeletePtsFileById(ctx, projectId, fileId); err != nil {
+	if err := service.DeletePtsFileById(ctx, projectId, fileIds); err != nil {
 		return err
 	}
 

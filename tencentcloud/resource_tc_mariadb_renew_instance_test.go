@@ -1,34 +1,38 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbRenewInstanceResource_basic -v
 func TestAccTencentCloudMariadbRenewInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			testAccPreCheck(t)
 		},
-		CheckDestroy: testAccCheckMariadbInstanceDestroy,
-		Providers:    testAccProviders,
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbRenewInstance,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_renew_instance.renew_instance", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mariadb_renew_instance.renew_instance", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_mariadb_renew_instance.renew_instance",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-const testAccMariadbRenewInstance = testAccMariadbInstance + `
+const testAccMariadbRenewInstance = `
+
 resource "tencentcloud_mariadb_renew_instance" "renew_instance" {
-  instance_id = tencentcloud_mariadb_instance.instance.id
-  period      = 1
+  instance_id = ""
+  period = 
+  auto_voucher = 
+  voucher_ids = 
 }
+
 `

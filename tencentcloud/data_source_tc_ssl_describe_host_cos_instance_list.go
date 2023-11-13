@@ -5,16 +5,21 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_cos_instance_list" "describe_host_cos_instance_list" {
-  certificate_id = "8u8DII0l"
-  resource_type = "cos"
-}
+  certificate_id = ""
+  resource_type = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -72,7 +77,7 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceList() *schema.Resource {
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "domain name.",
+							Description: "Domain name.",
 						},
 						"cert_id": {
 							Type:        schema.TypeString,
@@ -167,7 +172,7 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList *ssl.DescribeHostCosInstanceListResponseParams
+	var instanceList []*ssl.CosInstanceDetail
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeHostCosInstanceListByFilter(ctx, paramMap)
@@ -181,12 +186,11 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 		return err
 	}
 
-	ids := make([]string, 0)
-	tmpList := make([]map[string]interface{}, 0)
+	ids := make([]string, 0, len(instanceList))
+	tmpList := make([]map[string]interface{}, 0, len(instanceList))
 
-	if instanceList != nil && instanceList.InstanceList != nil {
-
-		for _, cosInstanceDetail := range instanceList.InstanceList {
+	if instanceList != nil {
+		for _, cosInstanceDetail := range instanceList {
 			cosInstanceDetailMap := map[string]interface{}{}
 
 			if cosInstanceDetail.Domain != nil {
@@ -209,23 +213,23 @@ func dataSourceTencentCloudSslDescribeHostCosInstanceListRead(d *schema.Resource
 				cosInstanceDetailMap["region"] = cosInstanceDetail.Region
 			}
 
-			ids = append(ids, *cosInstanceDetail.CertId)
+			ids = append(ids, *cosInstanceDetail.CertificateId)
 			tmpList = append(tmpList, cosInstanceDetailMap)
 		}
 
 		_ = d.Set("instance_list", tmpList)
 	}
 
-	if instanceList != nil && instanceList.AsyncTotalNum != nil {
-		_ = d.Set("async_total_num", instanceList.AsyncTotalNum)
+	if asyncTotalNum != nil {
+		_ = d.Set("async_total_num", asyncTotalNum)
 	}
 
-	if instanceList != nil && instanceList.AsyncOffset != nil {
-		_ = d.Set("async_offset", instanceList.AsyncOffset)
+	if asyncOffset != nil {
+		_ = d.Set("async_offset", asyncOffset)
 	}
 
-	if instanceList != nil && instanceList.AsyncCacheTime != nil {
-		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
+	if asyncCacheTime != nil {
+		_ = d.Set("async_cache_time", asyncCacheTime)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

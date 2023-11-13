@@ -5,17 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_file_download_url" "file_download_url" {
-  instance_id = local.dcdb_id
-  shard_id    = "shard-1b5r04az"
-  file_path   = "/cos_backup/test.txt"
-}
+  instance_id = ""
+  shard_id = ""
+  file_path = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -65,15 +64,10 @@ func dataSourceTencentCloudDcdbFileDownloadUrlRead(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		preSignedUrl *string
-		instanceId   string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("shard_id"); ok {
@@ -98,14 +92,15 @@ func dataSourceTencentCloudDcdbFileDownloadUrlRead(d *schema.ResourceData, meta 
 		return err
 	}
 
+	ids := make([]string, 0, len(preSignedUrl))
 	if preSignedUrl != nil {
 		_ = d.Set("pre_signed_url", preSignedUrl)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), preSignedUrl); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

@@ -5,17 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_api_group" "api_group" {
-  group_name = "terraform_test_group"
-  group_context = "/terraform-test"
-  auth_type = "none"
-  description = "terraform-test"
-  group_type = "ms"
-  gateway_instance_id = "gw-ins-i6mjpgm8"
-  # namespace_name_key = "path"
-  # service_name_key = "path"
-  namespace_name_key_position = "path"
-  service_name_key_position = "path"
-}
+  group_name = ""
+  group_context = ""
+  auth_type = ""
+  description = ""
+  group_type = ""
+  gateway_instance_id = ""
+  namespace_name_key = ""
+  service_name_key = ""
+  namespace_name_key_position = ""
+  service_name_key_position = ""
+  }
 ```
 
 Import
@@ -31,12 +31,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfApiGroup() *schema.Resource {
@@ -49,153 +48,203 @@ func resourceTencentCloudTsfApiGroup() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"group_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Api Group Id.",
-			},
 			"group_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "group name, cannot contain Chinese.",
+				Description: "Group name, cannot contain Chinese.",
 			},
 
 			"group_context": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "grouping context.",
+				Description: "Grouping context.",
 			},
 
 			"auth_type": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "authentication type. secret: key authentication; none: no authentication.",
+				Description: "Authentication type. secret: key authentication; none: no authentication.",
 			},
 
 			"description": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "remarks.",
+				Description: "Remarks.",
 			},
 
 			"group_type": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "grouping type, default ms. ms: microservice grouping; external: external Api grouping.",
+				Description: "Grouping type, default ms. ms: microservice grouping; external: external Api grouping.",
 			},
 
 			"gateway_instance_id": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "gateway entity ID.",
+				Description: "Gateway entity ID.",
 			},
 
 			"namespace_name_key": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "namespace parameter key value.",
+				Description: "Namespace parameter key value.",
 			},
 
 			"service_name_key": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "microservice name parameter key value.",
+				Description: "Microservice name parameter key value.",
 			},
 
 			"namespace_name_key_position": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "namespace parameter position, path, header or query, the default is path.",
+				Description: "Namespace parameter position, path, header or query, the default is path.",
 			},
 
 			"service_name_key_position": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "microservice name parameter position, path, header or query, the default is path.",
+				Description: "Microservice name parameter position, path, header or query, the default is path.",
 			},
 
-			"status": {
-				Type:        schema.TypeString,
+			"result": {
 				Computed:    true,
-				Description: "Release status, drafted: Not published. released: released.",
-			},
-
-			"created_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Group creation time such as: 2019-06-20 15:51:28.",
-			},
-			"updated_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Group update time such as: 2019-06-20 15:51:28.",
-			},
-			"binded_gateway_deploy_groups": {
 				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "api group bound gateway deployment group.",
+				Description: "API group informationNote: This field may return null, indicating that no valid value can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"deploy_group_id": {
+						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Gateway deployment group ID.",
+							Description: "Api Group Id.",
 						},
-						"deploy_group_name": {
+						"group_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Gateway deployment group name.",
+							Description: "Api Group name.",
 						},
-						"application_id": {
+						"group_context": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "application ID.",
+							Description: "Grouping context.",
 						},
-						"application_name": {
+						"auth_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Application Name.",
+							Description: "Authentication type. secret: key authentication; none: no authentication.",
 						},
-						"application_type": {
+						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Application classification: V: virtual machine application, C: container application.",
+							Description: "Release status, drafted: Not published. released: released.",
 						},
-						"group_status": {
+						"created_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Deployment group application status, values: Running, Waiting, Paused, Updating, RollingBack, Abnormal, Unknown.",
+							Description: "Group creation time such as: 2019-06-20 15:51:28.",
 						},
-						"cluster_type": {
+						"updated_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Cluster type, C: container, V: virtual machine.",
+							Description: "Group update time such as: 2019-06-20 15:51:28.",
+						},
+						"binded_gateway_deploy_groups": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Api group bound gateway deployment group.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"deploy_group_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Gateway deployment group ID.",
+									},
+									"deploy_group_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Gateway deployment group name.",
+									},
+									"application_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Application ID.",
+									},
+									"application_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Application Name.",
+									},
+									"application_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Application classification: V: virtual machine application, C: container application.",
+									},
+									"group_status": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Deployment group application status, values: Running, Waiting, Paused, Updating, RollingBack, Abnormal, Unknown.",
+									},
+									"cluster_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Cluster type, C: container, V: virtual machine.",
+									},
+								},
+							},
+						},
+						"api_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of APIs.",
+						},
+						"acl_mode": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Access group ACL type.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Describe.",
+						},
+						"group_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Grouping type. ms: microservice grouping; external: external Api grouping.",
+						},
+						"gateway_instance_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Type of gateway instance.",
+						},
+						"gateway_instance_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Gateway instance ID.",
+						},
+						"namespace_name_key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Namespace parameter key value.",
+						},
+						"service_name_key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Microservice name parameter key value.",
+						},
+						"namespace_name_key_position": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Namespace parameter position, path, header or query, the default is path.",
+						},
+						"service_name_key_position": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Microservice name parameter position, path, header or query, the default is path.",
 						},
 					},
 				},
-			},
-			"api_count": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "number of APIs.",
-			},
-			"acl_mode": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Access group ACL type.",
-			},
-			"gateway_instance_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Type of gateway instance.",
 			},
 		},
 	}
@@ -267,7 +316,7 @@ func resourceTencentCloudTsfApiGroupCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	groupId = *response.Response.Result
+	groupId = *response.Response.GroupId
 	d.SetId(groupId)
 
 	return resourceTencentCloudTsfApiGroupRead(d, meta)
@@ -283,7 +332,7 @@ func resourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interface{
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	groupId := d.Id()
+	apiGroupId := d.Id()
 
 	apiGroup, err := service.DescribeTsfApiGroupById(ctx, groupId)
 	if err != nil {
@@ -295,8 +344,6 @@ func resourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interface{
 		log.Printf("[WARN]%s resource `TsfApiGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	_ = d.Set("group_id", groupId)
 
 	if apiGroup.GroupName != nil {
 		_ = d.Set("group_name", apiGroup.GroupName)
@@ -338,67 +385,117 @@ func resourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("service_name_key_position", apiGroup.ServiceNameKeyPosition)
 	}
 
-	if apiGroup.Status != nil {
-		_ = d.Set("status", apiGroup.Status)
-	}
+	if apiGroup.Result != nil {
+		resultMap := map[string]interface{}{}
 
-	if apiGroup.CreatedTime != nil {
-		_ = d.Set("created_time", apiGroup.CreatedTime)
-	}
-
-	if apiGroup.UpdatedTime != nil {
-		_ = d.Set("updated_time", apiGroup.UpdatedTime)
-	}
-
-	if apiGroup.BindedGatewayDeployGroups != nil {
-		bindedGatewayDeployGroupsList := []interface{}{}
-		for _, bindedGatewayDeployGroups := range apiGroup.BindedGatewayDeployGroups {
-			bindedGatewayDeployGroupsMap := map[string]interface{}{}
-
-			if bindedGatewayDeployGroups.DeployGroupId != nil {
-				bindedGatewayDeployGroupsMap["deploy_group_id"] = bindedGatewayDeployGroups.DeployGroupId
-			}
-
-			if bindedGatewayDeployGroups.DeployGroupName != nil {
-				bindedGatewayDeployGroupsMap["deploy_group_name"] = bindedGatewayDeployGroups.DeployGroupName
-			}
-
-			if bindedGatewayDeployGroups.ApplicationId != nil {
-				bindedGatewayDeployGroupsMap["application_id"] = bindedGatewayDeployGroups.ApplicationId
-			}
-
-			if bindedGatewayDeployGroups.ApplicationName != nil {
-				bindedGatewayDeployGroupsMap["application_name"] = bindedGatewayDeployGroups.ApplicationName
-			}
-
-			if bindedGatewayDeployGroups.ApplicationType != nil {
-				bindedGatewayDeployGroupsMap["application_type"] = bindedGatewayDeployGroups.ApplicationType
-			}
-
-			if bindedGatewayDeployGroups.GroupStatus != nil {
-				bindedGatewayDeployGroupsMap["group_status"] = bindedGatewayDeployGroups.GroupStatus
-			}
-
-			if bindedGatewayDeployGroups.ClusterType != nil {
-				bindedGatewayDeployGroupsMap["cluster_type"] = bindedGatewayDeployGroups.ClusterType
-			}
-
-			bindedGatewayDeployGroupsList = append(bindedGatewayDeployGroupsList, bindedGatewayDeployGroupsMap)
+		if apiGroup.Result.GroupId != nil {
+			resultMap["group_id"] = apiGroup.Result.GroupId
 		}
 
-		_ = d.Set("binded_gateway_deploy_groups", bindedGatewayDeployGroupsList)
-	}
+		if apiGroup.Result.GroupName != nil {
+			resultMap["group_name"] = apiGroup.Result.GroupName
+		}
 
-	if apiGroup.ApiCount != nil {
-		_ = d.Set("api_count", apiGroup.ApiCount)
-	}
+		if apiGroup.Result.GroupContext != nil {
+			resultMap["group_context"] = apiGroup.Result.GroupContext
+		}
 
-	if apiGroup.AclMode != nil {
-		_ = d.Set("acl_mode", apiGroup.AclMode)
-	}
+		if apiGroup.Result.AuthType != nil {
+			resultMap["auth_type"] = apiGroup.Result.AuthType
+		}
 
-	if apiGroup.GatewayInstanceType != nil {
-		_ = d.Set("gateway_instance_type", apiGroup.GatewayInstanceType)
+		if apiGroup.Result.Status != nil {
+			resultMap["status"] = apiGroup.Result.Status
+		}
+
+		if apiGroup.Result.CreatedTime != nil {
+			resultMap["created_time"] = apiGroup.Result.CreatedTime
+		}
+
+		if apiGroup.Result.UpdatedTime != nil {
+			resultMap["updated_time"] = apiGroup.Result.UpdatedTime
+		}
+
+		if apiGroup.Result.BindedGatewayDeployGroups != nil {
+			bindedGatewayDeployGroupsList := []interface{}{}
+			for _, bindedGatewayDeployGroups := range apiGroup.Result.BindedGatewayDeployGroups {
+				bindedGatewayDeployGroupsMap := map[string]interface{}{}
+
+				if bindedGatewayDeployGroups.DeployGroupId != nil {
+					bindedGatewayDeployGroupsMap["deploy_group_id"] = bindedGatewayDeployGroups.DeployGroupId
+				}
+
+				if bindedGatewayDeployGroups.DeployGroupName != nil {
+					bindedGatewayDeployGroupsMap["deploy_group_name"] = bindedGatewayDeployGroups.DeployGroupName
+				}
+
+				if bindedGatewayDeployGroups.ApplicationId != nil {
+					bindedGatewayDeployGroupsMap["application_id"] = bindedGatewayDeployGroups.ApplicationId
+				}
+
+				if bindedGatewayDeployGroups.ApplicationName != nil {
+					bindedGatewayDeployGroupsMap["application_name"] = bindedGatewayDeployGroups.ApplicationName
+				}
+
+				if bindedGatewayDeployGroups.ApplicationType != nil {
+					bindedGatewayDeployGroupsMap["application_type"] = bindedGatewayDeployGroups.ApplicationType
+				}
+
+				if bindedGatewayDeployGroups.GroupStatus != nil {
+					bindedGatewayDeployGroupsMap["group_status"] = bindedGatewayDeployGroups.GroupStatus
+				}
+
+				if bindedGatewayDeployGroups.ClusterType != nil {
+					bindedGatewayDeployGroupsMap["cluster_type"] = bindedGatewayDeployGroups.ClusterType
+				}
+
+				bindedGatewayDeployGroupsList = append(bindedGatewayDeployGroupsList, bindedGatewayDeployGroupsMap)
+			}
+
+			resultMap["binded_gateway_deploy_groups"] = []interface{}{bindedGatewayDeployGroupsList}
+		}
+
+		if apiGroup.Result.ApiCount != nil {
+			resultMap["api_count"] = apiGroup.Result.ApiCount
+		}
+
+		if apiGroup.Result.AclMode != nil {
+			resultMap["acl_mode"] = apiGroup.Result.AclMode
+		}
+
+		if apiGroup.Result.Description != nil {
+			resultMap["description"] = apiGroup.Result.Description
+		}
+
+		if apiGroup.Result.GroupType != nil {
+			resultMap["group_type"] = apiGroup.Result.GroupType
+		}
+
+		if apiGroup.Result.GatewayInstanceType != nil {
+			resultMap["gateway_instance_type"] = apiGroup.Result.GatewayInstanceType
+		}
+
+		if apiGroup.Result.GatewayInstanceId != nil {
+			resultMap["gateway_instance_id"] = apiGroup.Result.GatewayInstanceId
+		}
+
+		if apiGroup.Result.NamespaceNameKey != nil {
+			resultMap["namespace_name_key"] = apiGroup.Result.NamespaceNameKey
+		}
+
+		if apiGroup.Result.ServiceNameKey != nil {
+			resultMap["service_name_key"] = apiGroup.Result.ServiceNameKey
+		}
+
+		if apiGroup.Result.NamespaceNameKeyPosition != nil {
+			resultMap["namespace_name_key_position"] = apiGroup.Result.NamespaceNameKeyPosition
+		}
+
+		if apiGroup.Result.ServiceNameKeyPosition != nil {
+			resultMap["service_name_key_position"] = apiGroup.Result.ServiceNameKeyPosition
+		}
+
+		_ = d.Set("result", []interface{}{resultMap})
 	}
 
 	return nil
@@ -412,15 +509,21 @@ func resourceTencentCloudTsfApiGroupUpdate(d *schema.ResourceData, meta interfac
 
 	request := tsf.NewUpdateApiGroupRequest()
 
-	groupId := d.Id()
+	apiGroupId := d.Id()
 
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"group_name", "group_type", "gateway_instance_id"}
+	immutableArgs := []string{"group_name", "group_context", "auth_type", "description", "group_type", "gateway_instance_id", "namespace_name_key", "service_name_key", "namespace_name_key_position", "service_name_key_position", "result"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("group_name") {
+		if v, ok := d.GetOk("group_name"); ok {
+			request.GroupName = helper.String(v.(string))
 		}
 	}
 
@@ -491,7 +594,7 @@ func resourceTencentCloudTsfApiGroupDelete(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	groupId := d.Id()
+	apiGroupId := d.Id()
 
 	if err := service.DeleteTsfApiGroupById(ctx, groupId); err != nil {
 		return err

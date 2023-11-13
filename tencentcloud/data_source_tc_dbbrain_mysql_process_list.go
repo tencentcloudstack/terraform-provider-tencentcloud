@@ -5,17 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_mysql_process_list" "mysql_process_list" {
-  instance_id = local.mysql_id
-  product     = "mysql"
-}
+  instance_id = ""
+  i_d =
+  user = ""
+  host = ""
+  d_b = ""
+  state = ""
+  command = ""
+  time =
+  info = ""
+  product = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -29,13 +35,13 @@ func dataSourceTencentCloudDbbrainMysqlProcessList() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
-			"id": {
+			"i_d": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "thread ID, used to filter the thread list.",
+				Description: "Thread ID, used to filter the thread list.",
 			},
 
 			"user": {
@@ -50,10 +56,10 @@ func dataSourceTencentCloudDbbrainMysqlProcessList() *schema.Resource {
 				Description: "The operating host address of the thread, used to filter the thread list.",
 			},
 
-			"db": {
+			"d_b": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The threads operations database, used to filter the thread list.",
+				Description: "The thread&amp;amp;#39;s operations database, used to filter the thread list.",
 			},
 
 			"state": {
@@ -77,13 +83,13 @@ func dataSourceTencentCloudDbbrainMysqlProcessList() *schema.Resource {
 			"info": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The threads operation statement is used to filter the thread list.",
+				Description: "The thread&amp;amp;#39;s operation statement is used to filter the thread list.",
 			},
 
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values: `mysql` - cloud database MySQL; `cynosdb` - cloud database TDSQL-C for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values： mysql - cloud database MySQL; cynosdb - cloud database TDSQL-C for MySQL, the default is mysql.",
 			},
 
 			"process_list": {
@@ -92,10 +98,10 @@ func dataSourceTencentCloudDbbrainMysqlProcessList() *schema.Resource {
 				Description: "Live thread list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"id": {
+						"i_d": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "thread ID.",
+							Description: "Thread ID.",
 						},
 						"user": {
 							Type:        schema.TypeString,
@@ -107,7 +113,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessList() *schema.Resource {
 							Computed:    true,
 							Description: "The operating host address of the thread.",
 						},
-						"db": {
+						"d_b": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The thread that operates the database.",
@@ -152,17 +158,13 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOkExists("id"); ok {
+	if v, _ := d.GetOk("i_d"); v != nil {
 		paramMap["ID"] = helper.IntUint64(v.(int))
 	}
 
@@ -174,7 +176,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 		paramMap["Host"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("db"); ok {
+	if v, ok := d.GetOk("d_b"); ok {
 		paramMap["DB"] = helper.String(v.(string))
 	}
 
@@ -186,7 +188,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 		paramMap["Command"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("time"); ok {
+	if v, _ := d.GetOk("time"); v != nil {
 		paramMap["Time"] = helper.IntUint64(v.(int))
 	}
 
@@ -222,7 +224,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 			mySqlProcessMap := map[string]interface{}{}
 
 			if mySqlProcess.ID != nil {
-				mySqlProcessMap["id"] = mySqlProcess.ID
+				mySqlProcessMap["i_d"] = mySqlProcess.ID
 			}
 
 			if mySqlProcess.User != nil {
@@ -234,7 +236,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 			}
 
 			if mySqlProcess.DB != nil {
-				mySqlProcessMap["db"] = mySqlProcess.DB
+				mySqlProcessMap["d_b"] = mySqlProcess.DB
 			}
 
 			if mySqlProcess.State != nil {
@@ -253,7 +255,7 @@ func dataSourceTencentCloudDbbrainMysqlProcessListRead(d *schema.ResourceData, m
 				mySqlProcessMap["info"] = mySqlProcess.Info
 			}
 
-			ids = append(ids, strings.Join([]string{instanceId, *mySqlProcess.ID}, FILED_SP))
+			ids = append(ids, *mySqlProcess.InstanceId)
 			tmpList = append(tmpList, mySqlProcessMap)
 		}
 

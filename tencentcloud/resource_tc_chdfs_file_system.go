@@ -5,19 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_file_system" "file_system" {
-  capacity_quota           = 10995116277760
-  description              = "file system for terraform test"
-  enable_ranger            = true
-  file_system_name         = "terraform-test"
-  posix_acl                = false
-  ranger_service_addresses = [
-    "127.0.0.1:80",
-    "127.0.0.1:8000",
-  ]
-  super_users              = [
-    "terraform",
-    "iac",
-  ]
+  file_system_name = "test file system name"
+  capacity_quota = 1073741824
+  posix_acl = true
+  description = "test desc"
+  super_users = &lt;nil&gt;
+  enable_ranger = false
+  ranger_service_addresses = &lt;nil&gt;
 }
 ```
 
@@ -33,13 +27,13 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-	"time"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudChdfsFileSystem() *schema.Resource {
@@ -55,25 +49,25 @@ func resourceTencentCloudChdfsFileSystem() *schema.Resource {
 			"file_system_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "file system name.",
+				Description: "File system name.",
 			},
 
 			"capacity_quota": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "file system capacity. min 1GB, max 1PB, CapacityQuota is N * 1073741824.",
+				Description: "File system capacity. min 1GB, max 1PB, CapacityQuota is N * 1073741824.",
 			},
 
 			"posix_acl": {
 				Required:    true,
 				Type:        schema.TypeBool,
-				Description: "check POSIX ACL or not.",
+				Description: "Check POSIX ACL or not.",
 			},
 
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "desc of the file system.",
+				Description: "Desc of the file system.",
 			},
 
 			"super_users": {
@@ -82,13 +76,13 @@ func resourceTencentCloudChdfsFileSystem() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "super users of the file system, default empty.",
+				Description: "Super users of the file system, default empty.",
 			},
 
 			"enable_ranger": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "check the ranger address or not.",
+				Description: "Check the ranger address or not.",
 			},
 
 			"ranger_service_addresses": {
@@ -97,7 +91,7 @@ func resourceTencentCloudChdfsFileSystem() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "ranger address list, default empty.",
+				Description: "Ranger address list, default empty.",
 			},
 		},
 	}
@@ -118,11 +112,11 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 		request.FileSystemName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("capacity_quota"); v != nil {
+	if v, ok := d.GetOkExists("capacity_quota"); ok {
 		request.CapacityQuota = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("posix_acl"); v != nil {
+	if v, ok := d.GetOkExists("posix_acl"); ok {
 		request.PosixAcl = helper.Bool(v.(bool))
 	}
 
@@ -138,7 +132,7 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if v, _ := d.GetOk("enable_ranger"); v != nil {
+	if v, ok := d.GetOkExists("enable_ranger"); ok {
 		request.EnableRanger = helper.Bool(v.(bool))
 	}
 
@@ -165,12 +159,12 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	fileSystemId = *response.Response.FileSystem.FileSystemId
+	fileSystemId = *response.Response.FileSystemId
 	d.SetId(fileSystemId)
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"2"}, 2*readRetryTimeout, time.Second, service.ChdfsFileSystemStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{1}, 2*readRetryTimeout, time.Second, service.ChdfsFileSystemStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -245,6 +239,14 @@ func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta inte
 
 	request.FileSystemId = &fileSystemId
 
+	immutableArgs := []string{"file_system_name", "capacity_quota", "posix_acl", "description", "super_users", "enable_ranger", "ranger_service_addresses"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("file_system_name") {
 		if v, ok := d.GetOk("file_system_name"); ok {
 			request.FileSystemName = helper.String(v.(string))
@@ -252,13 +254,13 @@ func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("capacity_quota") {
-		if v, _ := d.GetOk("capacity_quota"); v != nil {
+		if v, ok := d.GetOkExists("capacity_quota"); ok {
 			request.CapacityQuota = helper.IntUint64(v.(int))
 		}
 	}
 
 	if d.HasChange("posix_acl") {
-		if v, _ := d.GetOk("posix_acl"); v != nil {
+		if v, ok := d.GetOkExists("posix_acl"); ok {
 			request.PosixAcl = helper.Bool(v.(bool))
 		}
 	}
@@ -280,7 +282,7 @@ func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("enable_ranger") {
-		if v, _ := d.GetOk("enable_ranger"); v != nil {
+		if v, ok := d.GetOkExists("enable_ranger"); ok {
 			request.EnableRanger = helper.Bool(v.(bool))
 		}
 	}

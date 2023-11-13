@@ -4,14 +4,14 @@ Provides a resource to create a tse cngw_certificate
 Example Usage
 
 ```hcl
-
 resource "tencentcloud_tse_cngw_certificate" "cngw_certificate" {
-  gateway_id   = "gateway-ddbb709b"
-  bind_domains = ["example1.com"]
-  cert_id      = "vYSQkJ3K"
-  name         = "xxx1"
+  gateway_id = ""
+  bind_domains =
+  cert_id = ""
+  name = ""
+  key = ""
+  crt = ""
 }
-
 ```
 
 Import
@@ -19,7 +19,7 @@ Import
 tse cngw_certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tse_cngw_certificate.cngw_certificate gatewayId#Id
+terraform import tencentcloud_tse_cngw_certificate.cngw_certificate cngw_certificate_id
 ```
 */
 package tencentcloud
@@ -27,13 +27,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTseCngwCertificate() *schema.Resource {
@@ -48,7 +47,6 @@ func resourceTencentCloudTseCngwCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"gateway_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Gateway ID.",
 			},
@@ -64,7 +62,6 @@ func resourceTencentCloudTseCngwCertificate() *schema.Resource {
 
 			"cert_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Certificate ID of ssl platform.",
 			},
@@ -76,13 +73,13 @@ func resourceTencentCloudTseCngwCertificate() *schema.Resource {
 			},
 
 			"key": {
-				Computed:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Private key of certificate.",
 			},
 
 			"crt": {
-				Computed:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Pem format of certificate.",
 			},
@@ -97,10 +94,10 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request       = tse.NewCreateCloudNativeAPIGatewayCertificateRequest()
-		response      = tse.NewCreateCloudNativeAPIGatewayCertificateResponse()
-		gatewayId     string
-		certificateId string
+		request   = tse.NewCreateCloudNativeAPIGatewayCertificateRequest()
+		response  = tse.NewCreateCloudNativeAPIGatewayCertificateResponse()
+		gatewayId string
+		id        string
 	)
 	if v, ok := d.GetOk("gateway_id"); ok {
 		gatewayId = v.(string)
@@ -123,6 +120,14 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 		request.Name = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("key"); ok {
+		request.Key = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("crt"); ok {
+		request.Crt = helper.String(v.(string))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().CreateCloudNativeAPIGatewayCertificate(request)
 		if e != nil {
@@ -138,8 +143,8 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	certificateId = *response.Response.Result.Id
-	d.SetId(gatewayId + FILED_SP + certificateId)
+	gatewayId = *response.Response.GatewayId
+	d.SetId(strings.Join([]string{gatewayId, id}, FILED_SP))
 
 	return resourceTencentCloudTseCngwCertificateRead(d, meta)
 }
@@ -159,9 +164,9 @@ func resourceTencentCloudTseCngwCertificateRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certificateId := idSplit[1]
+	id := idSplit[1]
 
-	cngwCertificate, err := service.DescribeTseCngwCertificateById(ctx, gatewayId, certificateId)
+	cngwCertificate, err := service.DescribeTseCngwCertificateById(ctx, gatewayId, id)
 	if err != nil {
 		return err
 	}
@@ -172,7 +177,9 @@ func resourceTencentCloudTseCngwCertificateRead(d *schema.ResourceData, meta int
 		return nil
 	}
 
-	_ = d.Set("gateway_id", gatewayId)
+	if cngwCertificate.GatewayId != nil {
+		_ = d.Set("gateway_id", cngwCertificate.GatewayId)
+	}
 
 	if cngwCertificate.BindDomains != nil {
 		_ = d.Set("bind_domains", cngwCertificate.BindDomains)
@@ -210,16 +217,32 @@ func resourceTencentCloudTseCngwCertificateUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certificateId := idSplit[1]
+	id := idSplit[1]
 
 	request.GatewayId = &gatewayId
-	request.Id = &certificateId
+	request.Id = &id
 
-	if v, ok := d.GetOk("bind_domains"); ok {
-		bindDomainsSet := v.(*schema.Set).List()
-		for i := range bindDomainsSet {
-			bindDomains := bindDomainsSet[i].(string)
-			request.BindDomains = append(request.BindDomains, &bindDomains)
+	immutableArgs := []string{"gateway_id", "bind_domains", "cert_id", "name", "key", "crt"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("gateway_id") {
+		if v, ok := d.GetOk("gateway_id"); ok {
+			request.GatewayId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("bind_domains") {
+		if v, ok := d.GetOk("bind_domains"); ok {
+			bindDomainsSet := v.(*schema.Set).List()
+			for i := range bindDomainsSet {
+				bindDomains := bindDomainsSet[i].(string)
+				request.BindDomains = append(request.BindDomains, &bindDomains)
+			}
 		}
 	}
 
@@ -259,9 +282,9 @@ func resourceTencentCloudTseCngwCertificateDelete(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certificateId := idSplit[1]
+	id := idSplit[1]
 
-	if err := service.DeleteTseCngwCertificateById(ctx, gatewayId, certificateId); err != nil {
+	if err := service.DeleteTseCngwCertificateById(ctx, gatewayId, id); err != nil {
 		return err
 	}
 

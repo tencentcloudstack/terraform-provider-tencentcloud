@@ -9,17 +9,24 @@ resource "tencentcloud_lighthouse_apply_instance_snapshot" "apply_instance_snaps
   snapshot_id = "lhsnap-123456"
 }
 ```
+
+Import
+
+lighthouse apply_instance_snapshot can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_lighthouse_apply_instance_snapshot.apply_instance_snapshot apply_instance_snapshot_id
+```
 */
 package tencentcloud
 
 import (
-	"log"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudLighthouseApplyInstanceSnapshot() *schema.Resource {
@@ -27,7 +34,9 @@ func resourceTencentCloudLighthouseApplyInstanceSnapshot() *schema.Resource {
 		Create: resourceTencentCloudLighthouseApplyInstanceSnapshotCreate,
 		Read:   resourceTencentCloudLighthouseApplyInstanceSnapshotRead,
 		Delete: resourceTencentCloudLighthouseApplyInstanceSnapshotDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -54,17 +63,16 @@ func resourceTencentCloudLighthouseApplyInstanceSnapshotCreate(d *schema.Resourc
 
 	var (
 		request    = lighthouse.NewApplyInstanceSnapshotRequest()
+		response   = lighthouse.NewApplyInstanceSnapshotResponse()
 		snapshotId string
-		instanceId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("snapshot_id"); ok {
 		snapshotId = v.(string)
-		request.SnapshotId = helper.String(snapshotId)
+		request.SnapshotId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -74,6 +82,7 @@ func resourceTencentCloudLighthouseApplyInstanceSnapshotCreate(d *schema.Resourc
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -81,11 +90,12 @@ func resourceTencentCloudLighthouseApplyInstanceSnapshotCreate(d *schema.Resourc
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + snapshotId)
+	snapshotId = *response.Response.SnapshotId
+	d.SetId(snapshotId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseApplySnapshotStateRefreshFunc(snapshotId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseApplyInstanceSnapshotStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

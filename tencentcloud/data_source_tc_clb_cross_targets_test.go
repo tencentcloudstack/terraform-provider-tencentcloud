@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbCrossTargetsDataSource_basic(t *testing.T) {
@@ -26,9 +25,10 @@ const testAccClbCrossTargetsDataSource = `
 
 data "tencentcloud_clb_cross_targets" "cross_targets" {
   filters {
-    name = "vpc-id"
-    values = ["vpc-4owdpnwr"]
+		name = ""
+		values = 
+
   }
-}
+  }
 
 `

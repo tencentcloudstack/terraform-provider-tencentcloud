@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixSqlserverStartBackupFullMigrationResource_basic(t *testing.T) {
+func TestAccTencentCloudSqlserverStartBackupFullMigrationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,17 +15,22 @@ func TestAccTencentCloudNeedFixSqlserverStartBackupFullMigrationResource_basic(t
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverStartBackupFullMigration,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_start_backup_full_migration.start_backup_full_migration", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_start_backup_full_migration.start_backup_full_migration", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_sqlserver_start_backup_full_migration.start_backup_full_migration",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
 const testAccSqlserverStartBackupFullMigration = `
+
 resource "tencentcloud_sqlserver_start_backup_full_migration" "start_backup_full_migration" {
-  instance_id         = "mssql-i1z41iwd"
-  backup_migration_id = "mssql-backup-migration-kpl74n9l"
+  instance_id = "mssql-i1z41iwd"
+  backup_migration_id = ""
 }
+
 `

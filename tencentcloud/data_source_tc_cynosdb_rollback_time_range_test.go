@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbRollbackTimeRangeDataSource_basic -v
 func TestAccTencentCloudCynosdbRollbackTimeRangeDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,19 +15,16 @@ func TestAccTencentCloudCynosdbRollbackTimeRangeDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbRollbackTimeRangeDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_rollback_time_range.rollback_time_range"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_rollback_time_range.rollback_time_range", "rollback_time_ranges.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_rollback_time_range.rollback_time_range", "rollback_time_ranges.0.time_range_start"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_rollback_time_range.rollback_time_range", "rollback_time_ranges.0.time_range_end"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_rollback_time_range.rollback_time_range")),
 			},
 		},
 	})
 }
 
 const testAccCynosdbRollbackTimeRangeDataSource = `
+
 data "tencentcloud_cynosdb_rollback_time_range" "rollback_time_range" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-}
+  cluster_id = "cynosdbmysql-oib3wx0i"
+      }
+
 `

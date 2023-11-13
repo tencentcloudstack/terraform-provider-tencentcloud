@@ -4,14 +4,14 @@ Use this data source to query detailed information of dcdb shard_spec
 Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_shard_spec" "shard_spec" {}
+data "tencentcloud_dcdb_shard_spec" "shard_spec" {
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -25,54 +25,54 @@ func dataSourceTencentCloudDcdbShardSpec() *schema.Resource {
 			"spec_config": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "list of instance specifications.",
+				Description: "List of instance specifications.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"machine": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "machine type.",
+							Description: "Machine type.",
 						},
 						"spec_config_infos": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "list of machine specifications.",
+							Description: "List of machine specifications.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"node_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "node count.",
+										Description: "Node count.",
 									},
 									"memory": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "memory, in GB.",
+										Description: "Memory, in GB.",
 									},
 									"min_storage": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "minimum storage size, in GB.",
+										Description: "Minimum storage size, in GB.",
 									},
 									"max_storage": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "maximum storage size, inGB.",
+										Description: "Maximum storage size, inGB.",
 									},
 									"suit_info": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "recommended usage scenarios.",
+										Description: "Recommended usage scenarios.",
 									},
 									"pid": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "product price id.",
+										Description: "Product price id.",
 									},
 									"qps": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "maximum QPS.",
+										Description: "Maximum QPS.",
 									},
 									"cpu": {
 										Type:        schema.TypeInt,
@@ -171,7 +171,7 @@ func dataSourceTencentCloudDcdbShardSpecRead(d *schema.ResourceData, meta interf
 					specConfigInfosList = append(specConfigInfosList, specConfigInfosMap)
 				}
 
-				specConfigMap["spec_config_infos"] = specConfigInfosList
+				specConfigMap["spec_config_infos"] = []interface{}{specConfigInfosList}
 			}
 
 			ids = append(ids, *specConfig.Machine)

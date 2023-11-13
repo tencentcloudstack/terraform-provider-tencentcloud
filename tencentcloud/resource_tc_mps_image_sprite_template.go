@@ -5,16 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_image_sprite_template" "image_sprite_template" {
-  column_count        = 10
-  fill_type           = "stretch"
-  format              = "jpg"
-  height              = 143
-  name                = "terraform-test"
+  sample_type = &lt;nil&gt;
+  sample_interval = &lt;nil&gt;
+  row_count = &lt;nil&gt;
+  column_count = &lt;nil&gt;
+  name = &lt;nil&gt;
+  width = 0
+  height = 0
   resolution_adaptive = "open"
-  row_count           = 10
-  sample_interval     = 10
-  sample_type         = "Time"
-  width               = 182
+  fill_type = "black"
+  comment = &lt;nil&gt;
+  format = "jpg"
 }
 ```
 
@@ -30,12 +31,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsImageSpriteTemplate() *schema.Resource {
@@ -126,7 +127,7 @@ func resourceTencentCloudMpsImageSpriteTemplateCreate(d *schema.ResourceData, me
 	var (
 		request    = mps.NewCreateImageSpriteTemplateRequest()
 		response   = mps.NewCreateImageSpriteTemplateResponse()
-		definition uint64
+		definition int
 	)
 	if v, ok := d.GetOk("sample_type"); ok {
 		request.SampleType = helper.String(v.(string))
@@ -188,7 +189,7 @@ func resourceTencentCloudMpsImageSpriteTemplateCreate(d *schema.ResourceData, me
 	}
 
 	definition = *response.Response.Definition
-	d.SetId(helper.UInt64ToStr(definition))
+	d.SetId(helper.Int64ToStr(definition))
 
 	return resourceTencentCloudMpsImageSpriteTemplateRead(d, meta)
 }
@@ -203,7 +204,7 @@ func resourceTencentCloudMpsImageSpriteTemplateRead(d *schema.ResourceData, meta
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	imageSpriteTemplateId := d.Id()
 
 	imageSpriteTemplate, err := service.DescribeMpsImageSpriteTemplateById(ctx, definition)
 	if err != nil {
@@ -271,80 +272,96 @@ func resourceTencentCloudMpsImageSpriteTemplateUpdate(d *schema.ResourceData, me
 
 	request := mps.NewModifyImageSpriteTemplateRequest()
 
-	definition := d.Id()
+	imageSpriteTemplateId := d.Id()
 
-	request.Definition = helper.StrToUint64Point(definition)
+	request.Definition = &definition
 
-	mutableArgs := []string{"sample_type", "sample_interval", "row_count", "column_count", "name", "width", "height", "resolution_adaptive", "fill_type", "comment", "format"}
+	immutableArgs := []string{"sample_type", "sample_interval", "row_count", "column_count", "name", "width", "height", "resolution_adaptive", "fill_type", "comment", "format"}
 
-	needChange := false
-
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
+	if d.HasChange("sample_type") {
 		if v, ok := d.GetOk("sample_type"); ok {
 			request.SampleType = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("sample_interval") {
 		if v, ok := d.GetOkExists("sample_interval"); ok {
 			request.SampleInterval = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("row_count") {
 		if v, ok := d.GetOkExists("row_count"); ok {
 			request.RowCount = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("column_count") {
 		if v, ok := d.GetOkExists("column_count"); ok {
 			request.ColumnCount = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("width") {
 		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("height") {
 		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("resolution_adaptive") {
 		if v, ok := d.GetOk("resolution_adaptive"); ok {
 			request.ResolutionAdaptive = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("fill_type") {
 		if v, ok := d.GetOk("fill_type"); ok {
 			request.FillType = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("format") {
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyImageSpriteTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps imageSpriteTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyImageSpriteTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps imageSpriteTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsImageSpriteTemplateRead(d, meta)
@@ -358,7 +375,7 @@ func resourceTencentCloudMpsImageSpriteTemplateDelete(d *schema.ResourceData, me
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	imageSpriteTemplateId := d.Id()
 
 	if err := service.DeleteMpsImageSpriteTemplateById(ctx, definition); err != nil {
 		return err

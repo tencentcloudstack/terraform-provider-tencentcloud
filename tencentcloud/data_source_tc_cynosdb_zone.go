@@ -7,14 +7,13 @@ Example Usage
 data "tencentcloud_cynosdb_zone" "zone" {
   include_virtual_zones = true
   show_permission = true
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -28,7 +27,7 @@ func dataSourceTencentCloudCynosdbZone() *schema.Resource {
 			"include_virtual_zones": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "Is virtual zone included.",
+				Description: "Is virtual zone included .",
 			},
 
 			"show_permission": {
@@ -149,6 +148,7 @@ func dataSourceTencentCloudCynosdbZoneRead(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
@@ -163,6 +163,7 @@ func dataSourceTencentCloudCynosdbZoneRead(d *schema.ResourceData, meta interfac
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var regionSet []*cynosdb.SaleRegion
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbZoneByFilter(ctx, paramMap)
 		if e != nil {
@@ -177,6 +178,7 @@ func dataSourceTencentCloudCynosdbZoneRead(d *schema.ResourceData, meta interfac
 
 	ids := make([]string, 0, len(regionSet))
 	tmpList := make([]map[string]interface{}, 0, len(regionSet))
+
 	if regionSet != nil {
 		for _, saleRegion := range regionSet {
 			saleRegionMap := map[string]interface{}{}
@@ -233,7 +235,7 @@ func dataSourceTencentCloudCynosdbZoneRead(d *schema.ResourceData, meta interfac
 					zoneSetList = append(zoneSetList, zoneSetMap)
 				}
 
-				saleRegionMap["zone_set"] = zoneSetList
+				saleRegionMap["zone_set"] = []interface{}{zoneSetList}
 			}
 
 			if saleRegion.DbType != nil {
@@ -256,10 +258,10 @@ func dataSourceTencentCloudCynosdbZoneRead(d *schema.ResourceData, meta interfac
 					modulesList = append(modulesList, modulesMap)
 				}
 
-				saleRegionMap["modules"] = modulesList
+				saleRegionMap["modules"] = []interface{}{modulesList}
 			}
 
-			ids = append(ids, *saleRegion.Region)
+			ids = append(ids, *saleRegion.Zone)
 			tmpList = append(tmpList, saleRegionMap)
 		}
 

@@ -5,7 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_nacos_replicas" "nacos_replicas" {
-  instance_id = "ins-8078da86"
+  instance_id = "ins-xxxxxx"
+    tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 */
@@ -13,7 +16,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -27,7 +29,7 @@ func dataSourceTencentCloudTseNacosReplicas() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engine instance ID.",
+				Description: "Engine instance ID.",
 			},
 
 			"replicas": {
@@ -39,17 +41,17 @@ func dataSourceTencentCloudTseNacosReplicas() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name.",
+							Description: "Name.",
 						},
 						"role": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "role.",
+							Description: "Role.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "status.",
+							Description: "Status.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
@@ -75,6 +77,11 @@ func dataSourceTencentCloudTseNacosReplicas() *schema.Resource {
 				},
 			},
 
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -91,11 +98,9 @@ func dataSourceTencentCloudTseNacosReplicasRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	instanceId := ""
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
@@ -115,6 +120,7 @@ func dataSourceTencentCloudTseNacosReplicasRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	ids := make([]string, 0, len(replicas))
 	tmpList := make([]map[string]interface{}, 0, len(replicas))
 
 	if replicas != nil {
@@ -149,13 +155,14 @@ func dataSourceTencentCloudTseNacosReplicasRead(d *schema.ResourceData, meta int
 				nacosReplicaMap["vpc_id"] = nacosReplica.VpcId
 			}
 
+			ids = append(ids, *nacosReplica.InstanceId)
 			tmpList = append(tmpList, nacosReplicaMap)
 		}
 
 		_ = d.Set("replicas", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

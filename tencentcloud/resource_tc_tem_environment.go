@@ -5,21 +5,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_environment" "environment" {
-  environment_name = "demo"
-  description      = "demo for test"
-  vpc              = "vpc-2hfyray3"
-  subnet_ids       = ["subnet-rdkj0agk", "subnet-r1c4pn5m", "subnet-02hcj95c"]
-  tags = {
-    "created" = "terraform"
+  environment_name = "xxx"
+  description = "xxx"
+  vpc = "vpc-xxx"
+  subnet_ids =
+  tags {
+		tag_key = "key"
+		tag_value = "tag value"
+
   }
 }
-
 ```
+
 Import
 
 tem environment can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_environment.environment environment_id
+terraform import tencentcloud_tem_environment.environment environment_id
 ```
 */
 package tencentcloud
@@ -27,18 +30,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudTemEnvironment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemEnvironmentRead,
 		Create: resourceTencentCloudTemEnvironmentCreate,
+		Read:   resourceTencentCloudTemEnvironmentRead,
 		Update: resourceTencentCloudTemEnvironmentUpdate,
 		Delete: resourceTencentCloudTemEnvironmentDelete,
 		Importer: &schema.ResourceImporter{
@@ -46,35 +49,49 @@ func resourceTencentCloudTemEnvironment() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"environment_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "environment name.",
+				Type:        schema.TypeString,
+				Description: "Environment name.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "environment description.",
+				Type:        schema.TypeString,
+				Description: "Environment description.",
 			},
 
 			"vpc": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "vpc ID.",
+				Type:        schema.TypeString,
+				Description: "Vpc ID.",
 			},
 
 			"subnet_ids": {
-				Type: schema.TypeSet,
+				Required: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Required:    true,
-				Description: "subnet IDs.",
+				Description: "Subnet IDs.",
 			},
+
 			"tags": {
-				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "environment tag list.",
+				Description: "Environment tag list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag value.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -87,10 +104,10 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tem.NewCreateEnvironmentRequest()
-		response *tem.CreateEnvironmentResponse
+		request       = tem.NewCreateEnvironmentRequest()
+		response      = tem.NewCreateEnvironmentResponse()
+		environmentId string
 	)
-
 	if v, ok := d.GetOk("environment_name"); ok {
 		request.EnvironmentName = helper.String(v.(string))
 	}
@@ -111,14 +128,7 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
-		for key, value := range v.(map[string]interface{}) {
-			tag := tem.Tag{
-				TagKey:   helper.String(key),
-				TagValue: helper.String(value.(string)),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
+	if v, _ := d.GetOk("tags"); v != nil {
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -126,49 +136,25 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem environment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	environmentId := *response.Response.Result
-
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTemEnvironmentStatus(ctx, environmentId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.ClusterStatus == "NORMAL" {
-			return nil
-		}
-		if *instance.ClusterStatus == "FAILED" {
-			return resource.NonRetryableError(fmt.Errorf("environment status is %v, operate failed.", *instance.ClusterStatus))
-		}
-		return resource.RetryableError(fmt.Errorf("environment status is %v, retry...", *instance.ClusterStatus))
-	})
-	if err != nil {
-		return err
-	}
-
+	environmentId = *response.Response.EnvironmentId
 	d.SetId(environmentId)
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:environment/%s", region, environmentId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
+	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"NORMAL"}, 10*readRetryTimeout, time.Second, service.TemEnvironmentStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudTemEnvironmentRead(d, meta)
@@ -179,21 +165,22 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	environmentId := d.Id()
 
-	environments, err := service.DescribeTemEnvironment(ctx, environmentId)
-
+	environment, err := service.DescribeTemEnvironmentById(ctx, environmentId)
 	if err != nil {
 		return err
 	}
-	environment := environments.Result
+
 	if environment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `environment` %s does not exist", environmentId)
+		log.Printf("[WARN]%s resource `TemEnvironment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if environment.EnvironmentName != nil {
@@ -204,22 +191,16 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("description", environment.Description)
 	}
 
-	if environment.VpcId != nil {
-		_ = d.Set("vpc", environment.VpcId)
+	if environment.Vpc != nil {
+		_ = d.Set("vpc", environment.Vpc)
 	}
 
 	if environment.SubnetIds != nil {
 		_ = d.Set("subnet_ids", environment.SubnetIds)
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
-	tagService := TagService{client: client}
-	region := client.Region
-	tags, err := tagService.DescribeResourceTags(ctx, "tem", "environment", region, environmentId)
-	if err != nil {
-		return err
+	if environment.tags != nil {
 	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -229,11 +210,20 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyEnvironmentRequest()
 
-	request.EnvironmentId = helper.String(d.Id())
+	environmentId := d.Id()
+
+	request.EnvironmentId = &environmentId
+
+	immutableArgs := []string{"environment_name", "description", "vpc", "subnet_ids", "tags"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("environment_name") {
 		if v, ok := d.GetOk("environment_name"); ok {
@@ -245,10 +235,6 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-	}
-
-	if d.HasChange("vpc") {
-		return fmt.Errorf("`vpc` do not support change now.")
 	}
 
 	if d.HasChange("subnet_ids") {
@@ -266,25 +252,13 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem environment failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tem", "environment", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTemEnvironmentRead(d, meta)

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfRequestStatusDataSource_basic(t *testing.T) {
@@ -25,9 +24,11 @@ func TestAccTencentCloudScfRequestStatusDataSource_basic(t *testing.T) {
 const testAccScfRequestStatusDataSource = `
 
 data "tencentcloud_scf_request_status" "request_status" {
-  function_name       = "keep-1676351130"
-  function_request_id = "9de9405a-e33a-498d-bb59-e80b7bed1191"
-  namespace           = "default"
-}
+  function_name = ""
+  function_request_id = ""
+  namespace = ""
+  start_time = ""
+  end_time = ""
+  }
 
 `

@@ -1,74 +1,24 @@
 /*
-Provides a resource to create a monitor grafanaNotificationChannel
+Provides a resource to create a monitor grafana_notification_channel
 
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-6"
+resource "tencentcloud_monitor_grafana_notification_channel" "grafana_notification_channel" {
+  instance_id = &lt;nil&gt;
+    channel_name = &lt;nil&gt;
+  org_id = 1
+  receivers = &lt;nil&gt;
+  extra_org_ids = &lt;nil&gt;
 }
+```
 
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_monitor_vpc"
-}
+Import
 
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_monitor_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
+monitor grafana_notification_channel can be imported using the id, e.g.
 
-resource "tencentcloud_monitor_grafana_instance" "foo" {
-  instance_name         = "test-grafana"
-  vpc_id                = tencentcloud_vpc.vpc.id
-  subnet_ids            = [tencentcloud_subnet.subnet.id]
-  grafana_init_password = "1234567890"
-  enable_internet = false
-
-  tags = {
-    "createdBy" = "test"
-  }
-}
-
-resource "tencentcloud_monitor_alarm_notice" "foo" {
-  name                  = "tf_alarm_notice"
-  notice_type           = "ALL"
-  notice_language       = "zh-CN"
-
-  user_notices    {
-      receiver_type              = "USER"
-      start_time                 = 0
-      end_time                   = 1
-      notice_way                 = ["SMS","EMAIL"]
-      user_ids                   = [10001]
-      group_ids                  = []
-      phone_order                = [10001]
-      phone_circle_times         = 2
-      phone_circle_interval      = 50
-      phone_inner_interval       = 60
-      need_phone_arrive_notice   = 1
-      phone_call_type            = "CIRCLE"
-      weekday                    =[1,2,3,4,5,6,7]
-  }
-
-  url_notices {
-      url    = "https://www.mytest.com/validate"
-      end_time =  0
-      start_time = 1
-      weekday = [1,2,3,4,5,6,7]
-  }
-}
-
-resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
-  instance_id   = tencentcloud_monitor_grafana_instance.foo.id
-  channel_name  = "tf-channel"
-  org_id        = 1
-  receivers     = [tencentcloud_monitor_alarm_notice.foo.amp_consumer_id]
-  extra_org_ids = ["1"]
-}
-
+```
+terraform import tencentcloud_monitor_grafana_notification_channel.grafana_notification_channel grafana_notification_channel_id
 ```
 */
 package tencentcloud
@@ -76,66 +26,67 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorGrafanaNotificationChannelRead,
 		Create: resourceTencentCloudMonitorGrafanaNotificationChannelCreate,
+		Read:   resourceTencentCloudMonitorGrafanaNotificationChannelRead,
 		Update: resourceTencentCloudMonitorGrafanaNotificationChannelUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaNotificationChannelDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "grafana instance id.",
+				Type:        schema.TypeString,
+				Description: "Grafana instance id.",
 			},
 
 			"channel_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "plugin id.",
+				Type:        schema.TypeString,
+				Description: "Plugin id.",
 			},
 
 			"channel_name": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "channel name.",
+				Type:        schema.TypeString,
+				Description: "Channel name.",
 			},
 
 			"org_id": {
-				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Grafana organization which channel will be installed, default to 1 representing Main Org.",
 			},
 
 			"receivers": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
-				Computed:    true,
-				Description: "cloud monitor notification template notice-id list.",
+				Description: "Cloud monitor notification template notice-id list.",
 			},
 
 			"extra_org_ids": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
-				Description: "extra grafana organization id list, default to 1 representing Main Org.",
+				Description: "Extra grafana organization id list, default to 1 representing Main Org.",
 			},
 		},
 	}
@@ -148,22 +99,21 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.Resou
 	logId := getLogId(contextNil)
 
 	var (
-		request    = monitor.NewCreateGrafanaNotificationChannelRequest()
-		response   *monitor.CreateGrafanaNotificationChannelResponse
-		channelId  string
-		instanceId string
+		request     = monitor.NewCreateGrafanaNotificationChannelRequest()
+		response    = monitor.NewCreateGrafanaNotificationChannelResponse()
+		channelId   string
+		channelName string
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("channel_name"); ok {
+		channelName = v.(string)
 		request.ChannelName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("org_id"); ok {
+	if v, ok := d.GetOkExists("org_id"); ok {
 		request.OrgId = helper.IntInt64(v.(int))
 	}
 
@@ -188,21 +138,19 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.Resou
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor grafanaNotificationChannel failed, reason:%+v", logId, err)
 		return err
 	}
 
 	channelId = *response.Response.ChannelId
+	d.SetId(strings.Join([]string{channelId, channelName}, FILED_SP))
 
-	d.SetId(channelId + FILED_SP + instanceId)
 	return resourceTencentCloudMonitorGrafanaNotificationChannelRead(d, meta)
 }
 
@@ -211,6 +159,7 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -220,20 +169,22 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	channelId := idSplit[0]
-	instanceId := idSplit[1]
+	channelName := idSplit[1]
 
-	grafanaNotificationChannel, err := service.DescribeMonitorGrafanaNotificationChannel(ctx, channelId, instanceId)
-
+	grafanaNotificationChannel, err := service.DescribeMonitorGrafanaNotificationChannelById(ctx, channelId, channelName)
 	if err != nil {
 		return err
 	}
 
 	if grafanaNotificationChannel == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `grafanaNotificationChannel` %s does not exist", channelId)
+		log.Printf("[WARN]%s resource `MonitorGrafanaNotificationChannel` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
+	if grafanaNotificationChannel.InstanceId != nil {
+		_ = d.Set("instance_id", grafanaNotificationChannel.InstanceId)
+	}
 
 	if grafanaNotificationChannel.ChannelId != nil {
 		_ = d.Set("channel_id", grafanaNotificationChannel.ChannelId)
@@ -243,7 +194,17 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 		_ = d.Set("channel_name", grafanaNotificationChannel.ChannelName)
 	}
 
-	_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
+	if grafanaNotificationChannel.OrgId != nil {
+		_ = d.Set("org_id", grafanaNotificationChannel.OrgId)
+	}
+
+	if grafanaNotificationChannel.Receivers != nil {
+		_ = d.Set("receivers", grafanaNotificationChannel.Receivers)
+	}
+
+	if grafanaNotificationChannel.ExtraOrgIds != nil {
+		_ = d.Set("extra_org_ids", grafanaNotificationChannel.ExtraOrgIds)
+	}
 
 	return nil
 }
@@ -261,33 +222,17 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelUpdate(d *schema.Resou
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	channelId := idSplit[0]
-	instanceId := idSplit[1]
+	channelName := idSplit[1]
 
 	request.ChannelId = &channelId
-	request.InstanceId = &instanceId
+	request.ChannelName = &channelName
 
-	if v, ok := d.GetOk("channel_name"); ok {
-		request.ChannelName = helper.String(v.(string))
-	}
+	immutableArgs := []string{"instance_id", "channel_id", "channel_name", "org_id", "receivers", "extra_org_ids"}
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
-
-	if d.HasChange("channel_name") {
-		return fmt.Errorf("`channel_name` do not support change now.")
-	}
-
-	if d.HasChange("org_id") {
-		return fmt.Errorf("`org_id` do not support change now.")
-	}
-
-	if d.HasChange("receivers") {
-		return fmt.Errorf("`receivers` do not support change now.")
-	}
-
-	if d.HasChange("extra_org_ids") {
-		return fmt.Errorf("`extra_org_ids` do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -295,13 +240,12 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelUpdate(d *schema.Resou
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update monitor grafanaNotificationChannel failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -316,15 +260,14 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelDelete(d *schema.Resou
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	channelId := idSplit[0]
-	instanceId := idSplit[1]
+	channelName := idSplit[1]
 
-	if err := service.DeleteMonitorGrafanaNotificationChannelById(ctx, channelId, instanceId); err != nil {
+	if err := service.DeleteMonitorGrafanaNotificationChannelById(ctx, channelId, channelName); err != nil {
 		return err
 	}
 

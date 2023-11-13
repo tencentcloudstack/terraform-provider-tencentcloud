@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseSceneDataSource_basic(t *testing.T) {
@@ -25,6 +24,7 @@ func TestAccTencentCloudLighthouseSceneDataSource_basic(t *testing.T) {
 const testAccLighthouseSceneDataSource = `
 
 data "tencentcloud_lighthouse_scene" "scene" {
+  scene_ids = 
   offset = 0
   limit = 20
 }

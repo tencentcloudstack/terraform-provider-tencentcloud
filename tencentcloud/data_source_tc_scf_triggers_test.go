@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfTriggersDataSource_basic(t *testing.T) {
@@ -25,10 +24,15 @@ func TestAccTencentCloudScfTriggersDataSource_basic(t *testing.T) {
 const testAccScfTriggersDataSource = `
 
 data "tencentcloud_scf_triggers" "triggers" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-  order_by      = "add_time"
-  order         = "DESC"
-}
+  function_name = "testFunction"
+  namespace = "testNamespace"
+  order_by = "add_time"
+  order = "DESC"
+  filters {
+		name = &lt;nil&gt;
+		values = &lt;nil&gt;
+
+  }
+  }
 
 `

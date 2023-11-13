@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_tdmq_rabbitmq_vip_instance" "rabbitmq_vip_instance" {
   filters {
-	name   = ""
-	values = []
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -30,7 +30,7 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "query condition filter.",
+				Description: "Query condition filter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -39,15 +39,17 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 							Description: "The name of the filter parameter.",
 						},
 						"values": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
-							Description: "value.",
+							Description: "Value.",
 						},
 					},
 				},
 			},
-			// computed
+
 			"instances": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -57,17 +59,17 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance id.",
+							Description: "Instance id.",
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance name.",
+							Description: "Instance name.",
 						},
 						"instance_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance versionNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Instance versionNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
@@ -132,6 +134,7 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstance() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -145,12 +148,9 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, m
 	defer logElapsed("data_source.tencentcloud_tdmq_rabbitmq_vip_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		instances []*tdmq.RabbitMQVipInstance
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("filters"); ok {
@@ -173,16 +173,18 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, m
 		paramMap["filters"] = tmpSet
 	}
 
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var instances []*tdmq.RabbitMQVipInstance
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqRabbitmqVipInstanceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		instances = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -268,6 +270,5 @@ func dataSourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, m
 			return e
 		}
 	}
-
 	return nil
 }

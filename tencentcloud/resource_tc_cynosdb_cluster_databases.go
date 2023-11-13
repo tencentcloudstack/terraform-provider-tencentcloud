@@ -5,16 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_databases" "cluster_databases" {
-  cluster_id    = "cynosdbmysql-bws8h88b"
-  db_name       = "terraform-test"
+  cluster_id = "cynosdbmysql-xxxxxxx"
+  db_name = "test"
   character_set = "utf8"
-  collate_rule  = "utf8_general_ci"
+  collate_rule = " utf8_general_ci "
   user_host_privileges {
-    db_user_name = "root"
-    db_host      = "%"
-    db_privilege = "READ_ONLY"
+		db_user_name = ""
+		db_host = ""
+		db_privilege = ""
+
   }
-  description = "terraform test"
+  description = "test"
 }
 ```
 
@@ -31,13 +32,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbClusterDatabases() *schema.Resource {
@@ -88,12 +87,12 @@ func resourceTencentCloudCynosdbClusterDatabases() *schema.Resource {
 						"db_host": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: ".",
+							Description: "Client IP Note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 						"db_privilege": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: ".",
+							Description: "User permission note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 					},
 				},
@@ -116,8 +115,8 @@ func resourceTencentCloudCynosdbClusterDatabasesCreate(d *schema.ResourceData, m
 
 	var (
 		request   = cynosdb.NewCreateClusterDatabaseRequest()
+		response  = cynosdb.NewCreateClusterDatabaseResponse()
 		clusterId string
-		dbName    string
 	)
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
@@ -125,7 +124,6 @@ func resourceTencentCloudCynosdbClusterDatabasesCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("db_name"); ok {
-		dbName = v.(string)
 		request.DbName = helper.String(v.(string))
 	}
 
@@ -165,6 +163,7 @@ func resourceTencentCloudCynosdbClusterDatabasesCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -172,7 +171,8 @@ func resourceTencentCloudCynosdbClusterDatabasesCreate(d *schema.ResourceData, m
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + dbName)
+	clusterId = *response.Response.ClusterId
+	d.SetId(clusterId)
 
 	return resourceTencentCloudCynosdbClusterDatabasesRead(d, meta)
 }
@@ -182,18 +182,14 @@ func resourceTencentCloudCynosdbClusterDatabasesRead(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	dbName := idSplit[1]
+	clusterDatabasesId := d.Id()
 
-	clusterDatabases, err := service.DescribeCynosdbClusterDatabasesById(ctx, clusterId, dbName)
+	clusterDatabases, err := service.DescribeCynosdbClusterDatabasesById(ctx, clusterId)
 	if err != nil {
 		return err
 	}
@@ -225,16 +221,16 @@ func resourceTencentCloudCynosdbClusterDatabasesRead(d *schema.ResourceData, met
 		for _, userHostPrivileges := range clusterDatabases.UserHostPrivileges {
 			userHostPrivilegesMap := map[string]interface{}{}
 
-			if userHostPrivileges.DbUserName != nil {
-				userHostPrivilegesMap["db_user_name"] = userHostPrivileges.DbUserName
+			if clusterDatabases.UserHostPrivileges.DbUserName != nil {
+				userHostPrivilegesMap["db_user_name"] = clusterDatabases.UserHostPrivileges.DbUserName
 			}
 
-			if userHostPrivileges.DbHost != nil {
-				userHostPrivilegesMap["db_host"] = userHostPrivileges.DbHost
+			if clusterDatabases.UserHostPrivileges.DbHost != nil {
+				userHostPrivilegesMap["db_host"] = clusterDatabases.UserHostPrivileges.DbHost
 			}
 
-			if userHostPrivileges.DbPrivilege != nil {
-				userHostPrivilegesMap["db_privilege"] = userHostPrivileges.DbPrivilege
+			if clusterDatabases.UserHostPrivileges.DbPrivilege != nil {
+				userHostPrivilegesMap["db_privilege"] = clusterDatabases.UserHostPrivileges.DbPrivilege
 			}
 
 			userHostPrivilegesList = append(userHostPrivilegesList, userHostPrivilegesMap)
@@ -259,17 +255,11 @@ func resourceTencentCloudCynosdbClusterDatabasesUpdate(d *schema.ResourceData, m
 
 	request := cynosdb.NewModifyClusterDatabaseRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	dbName := idSplit[1]
+	clusterDatabasesId := d.Id()
 
 	request.ClusterId = &clusterId
-	request.DbName = &dbName
 
-	immutableArgs := []string{"cluster_id", "character_set", "collate_rule"}
+	immutableArgs := []string{"cluster_id", "db_name", "character_set", "collate_rule", "user_host_privileges", "description"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -277,41 +267,22 @@ func resourceTencentCloudCynosdbClusterDatabasesUpdate(d *schema.ResourceData, m
 		}
 	}
 
-	if d.HasChange("user_host_privileges") {
-		oldPrivileges, privileges := d.GetChange("user_host_privileges")
-		for _, item := range privileges.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			userHostPrivilege := cynosdb.UserHostPrivilege{}
-			if v, ok := dMap["db_user_name"]; ok {
-				userHostPrivilege.DbUserName = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_host"]; ok {
-				userHostPrivilege.DbHost = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_privilege"]; ok {
-				userHostPrivilege.DbPrivilege = helper.String(v.(string))
-			}
-			request.NewUserHostPrivileges = append(request.NewUserHostPrivileges, &userHostPrivilege)
-		}
-
-		for _, item := range oldPrivileges.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			userHostPrivilege := cynosdb.UserHostPrivilege{}
-			if v, ok := dMap["db_user_name"]; ok {
-				userHostPrivilege.DbUserName = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_host"]; ok {
-				userHostPrivilege.DbHost = helper.String(v.(string))
-			}
-			if v, ok := dMap["db_privilege"]; ok {
-				userHostPrivilege.DbPrivilege = helper.String(v.(string))
-			}
-			request.OldUserHostPrivileges = append(request.OldUserHostPrivileges, &userHostPrivilege)
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
 		}
 	}
 
-	if v, ok := d.GetOk("description"); ok {
-		request.Description = helper.String(v.(string))
+	if d.HasChange("db_name") {
+		if v, ok := d.GetOk("db_name"); ok {
+			request.DbName = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("description") {
+		if v, ok := d.GetOk("description"); ok {
+			request.Description = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -339,14 +310,9 @@ func resourceTencentCloudCynosdbClusterDatabasesDelete(d *schema.ResourceData, m
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	dbName := idSplit[1]
+	clusterDatabasesId := d.Id()
 
-	if err := service.DeleteCynosdbClusterDatabasesById(ctx, clusterId, dbName); err != nil {
+	if err := service.DeleteCynosdbClusterDatabasesById(ctx, clusterId); err != nil {
 		return err
 	}
 

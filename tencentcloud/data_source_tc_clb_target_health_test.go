@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbTargetHealthDataSource_basic(t *testing.T) {
@@ -25,6 +24,7 @@ func TestAccTencentCloudClbTargetHealthDataSource_basic(t *testing.T) {
 const testAccClbTargetHealthDataSource = `
 
 data "tencentcloud_clb_target_health" "target_health" {
-  load_balancer_ids = ["lb-5dnrkgry"]
-}
+  load_balancer_ids = 
+  }
+
 `

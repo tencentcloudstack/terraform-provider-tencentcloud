@@ -5,75 +5,91 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_transcode_template" "media_transcode_template" {
-  bucket = "terraform-ci-1308919341"
-  name = "transcode_template"
+  name = &lt;nil&gt;
   container {
-		format = "mp4"
-		# clip_config {
-		# 	duration = ""
-		# }
+		format = &lt;nil&gt;
+		clip_config {
+			duration = &lt;nil&gt;
+		}
+
   }
   video {
-		codec = "H.264"
-		width = "1280"
-		# height = ""
-		fps = "30"
-		remove = "false"
-		profile = "high"
-		bitrate = "1000"
-		# crf = ""
-		# gop = ""
-		preset = "medium"
-		# bufsize = ""
-		# maxrate = ""
-		# pixfmt = ""
-		long_short_mode = "false"
-		# rotate = ""
+		codec = &lt;nil&gt;
+		width = &lt;nil&gt;
+		height = &lt;nil&gt;
+		fps = &lt;nil&gt;
+		remove = &lt;nil&gt;
+		profile = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		crf = &lt;nil&gt;
+		gop = &lt;nil&gt;
+		preset = &lt;nil&gt;
+		bufsize = &lt;nil&gt;
+		maxrate = &lt;nil&gt;
+		pixfmt = &lt;nil&gt;
+		long_short_mode = &lt;nil&gt;
+		rotate = &lt;nil&gt;
+
   }
   time_interval {
-		start = "0"
-		duration = "60"
+		start = &lt;nil&gt;
+		duration = &lt;nil&gt;
+
   }
   audio {
-		codec = "aac"
-		samplerate = "44100"
-		bitrate = "128"
-		channels = "4"
-		remove = "false"
-		keep_two_tracks = "false"
-		switch_track = "false"
-		sample_format = ""
+		codec = &lt;nil&gt;
+		samplerate = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		channels = &lt;nil&gt;
+		remove = &lt;nil&gt;
+		keep_two_tracks = &lt;nil&gt;
+		switch_track = &lt;nil&gt;
+		sample_format = &lt;nil&gt;
+
   }
   trans_config {
-		adj_dar_method = "scale"
-		is_check_reso = "false"
-		reso_adj_method = "1"
-		is_check_video_bitrate = "false"
-		video_bitrate_adj_method = "0"
-		is_check_audio_bitrate = "false"
-		audio_bitrate_adj_method = "0"
-		delete_metadata = "false"
-		is_hdr2_sdr = "false"
+		adj_dar_method = &lt;nil&gt;
+		is_check_reso = &lt;nil&gt;
+		reso_adj_method = &lt;nil&gt;
+		is_check_video_bitrate = &lt;nil&gt;
+		video_bitrate_adj_method = &lt;nil&gt;
+		is_check_audio_bitrate = &lt;nil&gt;
+		audio_bitrate_adj_method = &lt;nil&gt;
+		is_check_video_fps = &lt;nil&gt;
+		video_fps_adj_method = &lt;nil&gt;
+		delete_metadata = &lt;nil&gt;
+		is_hdr2_sdr = &lt;nil&gt;
+		transcode_index = &lt;nil&gt;
+		hls_encrypt {
+			is_hls_encrypt = &lt;nil&gt;
+			uri_key = &lt;nil&gt;
+		}
+		dash_encrypt {
+			is_encrypt = &lt;nil&gt;
+			uri_key = &lt;nil&gt;
+		}
+
   }
   audio_mix {
-		audio_source = "https://terraform-ci-1308919341.cos.ap-guangzhou.myqcloud.com/mp3%2Fnizhan-test.mp3"
-		mix_mode = "Once"
-		replace = "true"
+		audio_source = &lt;nil&gt;
+		mix_mode = &lt;nil&gt;
+		replace = &lt;nil&gt;
 		effect_config {
-			enable_start_fadein = "true"
-			start_fadein_time = "3"
-			enable_end_fadeout = "false"
-			end_fadeout_time = "0"
-			enable_bgm_fade = "true"
-			bgm_fade_time = "1.7"
+			enable_start_fadein = &lt;nil&gt;
+			start_fadein_time = &lt;nil&gt;
+			enable_end_fadeout = &lt;nil&gt;
+			end_fadeout_time = &lt;nil&gt;
+			enable_bgm_fade = &lt;nil&gt;
+			bgm_fade_time = &lt;nil&gt;
 		}
+
   }
 }
 ```
 
 Import
 
-ci media_transcode_template can be imported using the bucket#templateId, e.g.
+ci media_transcode_template can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_ci_media_transcode_template.media_transcode_template media_transcode_template_id
@@ -84,14 +100,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
@@ -104,12 +117,6 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -120,7 +127,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "container format.",
+				Description: "Container format.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"format": {
@@ -151,7 +158,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "video information, do not upload Video, which is equivalent to deleting video information.",
+				Description: "Video information, do not upload Video, which is equivalent to deleting video information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"codec": {
@@ -162,7 +169,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"width": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "width, value range: [128, 4096], Unit: px, If only Width is set, Height is calculated according to the original ratio of the video, must be even.",
+							Description: "Width, value range: [128, 4096], Unit: px, If only Width is set, Height is calculated according to the original ratio of the video, must be even.",
 						},
 						"height": {
 							Type:        schema.TypeString,
@@ -182,7 +189,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"profile": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "encoding level, Support baseline, main, high, auto- When Pixfmt is auto, this parameter can only be set to auto, when it is set to other options, the parameter value will be set to auto- baseline: suitable for mobile devices- main: suitable for standard resolution devices- high: suitable for high-resolution devices- Only H.264 supports this parameter.",
+							Description: "Encoding level, Support baseline, main, high, auto- When Pixfmt is auto, this parameter can only be set to auto, when it is set to other options, the parameter value will be set to auto- baseline: suitable for mobile devices- main: suitable for standard resolution devices- high: suitable for high-resolution devices- Only H.264 supports this parameter.",
 						},
 						"bitrate": {
 							Type:        schema.TypeString,
@@ -207,7 +214,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"bufsize": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "buffer size, Value range: [1000, 128000], Unit: Kb, This parameter is not supported when Codec is VP8/VP9.",
+							Description: "Buffer size, Value range: [1000, 128000], Unit: Kb, This parameter is not supported when Codec is VP8/VP9.",
 						},
 						"maxrate": {
 							Type:        schema.TypeString,
@@ -217,7 +224,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"pixfmt": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "video color format, H.264 support: yuv420p, yuv422p, yuv444p, yuvj420p, yuvj422p, yuvj444p, auto, H.265 support: yuv420p, yuv420p10le, auto, This parameter is not supported when Codec is VP8/VP9/AV1.",
+							Description: "Video color format, H.264 support: yuv420p, yuv422p, yuv444p, yuvj420p, yuvj422p, yuvj444p, auto, H.265 support: yuv420p, yuv420p10le, auto, This parameter is not supported when Codec is VP8/VP9/AV1.",
 						},
 						"long_short_mode": {
 							Type:        schema.TypeString,
@@ -237,7 +244,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "time interval.",
+				Description: "Time interval.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"start": {
@@ -248,7 +255,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"duration": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "duration, [0 video duration], in seconds, Support float format, the execution accuracy is accurate to milliseconds.",
+							Description: "Duration, [0 video duration], in seconds, Support float format, the execution accuracy is accurate to milliseconds.",
 						},
 					},
 				},
@@ -279,7 +286,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 						"channels": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "number of channels- When Codec is set to aac/flac, support 1, 2, 4, 5, 6, 8- When Codec is set to mp3/opus, support 1, 2- When Codec is set to Vorbis, only 2 is supported- When Codec is set to amr, only 1 is supported- When Codec is set to pcm_s16le, only 1 and 2 are supported- When the encapsulation format is dash, 8 is not supported.",
+							Description: "Number of channels- When Codec is set to aac/flac, support 1, 2, 4, 5, 6, 8- When Codec is set to mp3/opus, support 1, 2- When Codec is set to Vorbis, only 2 is supported- When Codec is set to amr, only 1 is supported- When Codec is set to pcm_s16le, only 1 and 2 are supported- When the encapsulation format is dash, 8 is not supported.",
 						},
 						"remove": {
 							Type:        schema.TypeString,
@@ -309,7 +316,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "transcoding configuration.",
+				Description: "Transcoding configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"adj_dar_method": {
@@ -347,6 +354,16 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 							Optional:    true,
 							Description: "Audio bit rate adjustment mode, value 0, 1; when the output audio bit rate is greater than the original audio bit rate, 0 means use the original audio bit rate; 1 means return transcoding failed, Take effect when IsCheckAudioBitrate is true.",
 						},
+						"is_check_video_fps": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Whether to check the video frame rate, true, false, When false, transcode according to configuration parameters.",
+						},
+						"video_fps_adj_method": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Video frame rate adjustment method, the value is 0, 1; when the output video frame rate is greater than the original video frame rate, 0 means to use the original video frame rate; 1 means return to transcoding failure, Take effect when IsCheckVideoFps is true.",
+						},
 						"delete_metadata": {
 							Type:        schema.TypeString,
 							Optional:    true,
@@ -357,25 +374,46 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 							Optional:    true,
 							Description: "Whether to enable HDR to SDR true, false.",
 						},
+						"transcode_index": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Specifies the stream number to be processed, corresponding to Response.MediaInfo.Stream.Video.Index in the media information and Response.MediaInfo.Stream.Audio.Index.",
+						},
 						"hls_encrypt": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
-							Description: "hls encryption configuration.",
+							Description: "Hls encryption configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_hls_encrypt": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "Whether to enable HLS encryption, support encryption when Container.Format is hls.",
 									},
 									"uri_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "HLS encrypted key, this parameter is only meaningful when IsHlsEncrypt is true.",
+									},
+								},
+							},
+						},
+						"dash_encrypt": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Dash encryption configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"is_encrypt": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Whether to enable DASH encryption, support encryption when Container.Format is hls.",
+									},
+									"uri_key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "DASH encrypted key, this parameter is only meaningful when IsEncrypt is true.",
 									},
 								},
 							},
@@ -387,7 +425,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 			"audio_mix": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "mixing parameters.",
+				Description: "Mixing parameters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"audio_source": {
@@ -415,7 +453,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 									"enable_start_fadein": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "enable fade in.",
+										Description: "Enable fade in.",
 									},
 									"start_fadein_time": {
 										Type:        schema.TypeString,
@@ -425,12 +463,12 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 									"enable_end_fadeout": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "enable fade out.",
+										Description: "Enable fade out.",
 									},
 									"end_fadeout_time": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "fade out time, greater than 0, support floating point numbers.",
+										Description: "Fade out time, greater than 0, support floating point numbers.",
 									},
 									"enable_bgm_fade": {
 										Type:        schema.TypeString,
@@ -440,7 +478,7 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 									"bgm_fade_time": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "bgm transition fade-in duration, support floating point numbers.",
+										Description: "Bgm transition fade-in duration, support floating point numbers.",
 									},
 								},
 							},
@@ -457,172 +495,171 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaTranscodeTemplateOptions{
-			Tag: "Transcode",
-		}
-		bucket     string
+		request    = ci.NewCreateMediaTranscodeTemplateRequest()
+		response   = ci.NewCreateMediaTranscodeTemplateResponse()
 		templateId string
 	)
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := cos.Container{}
+		container := ci.Container{}
 		if v, ok := dMap["format"]; ok {
-			container.Format = v.(string)
+			container.Format = helper.String(v.(string))
 		}
 		if clipConfigMap, ok := helper.InterfaceToMap(dMap, "clip_config"); ok {
-			clipConfig := cos.ClipConfig{}
+			snapshot := ci.Snapshot{}
 			if v, ok := clipConfigMap["duration"]; ok {
-				clipConfig.Duration = v.(string)
+				snapshot.Duration = helper.String(v.(string))
 			}
-			container.ClipConfig = &clipConfig
+			container.ClipConfig = &snapshot
 		}
 		request.Container = &container
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "video"); ok {
-		video := cos.Video{}
+		video := ci.Video{}
 		if v, ok := dMap["codec"]; ok {
-			video.Codec = v.(string)
+			video.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["width"]; ok {
-			video.Width = v.(string)
+			video.Width = helper.String(v.(string))
 		}
 		if v, ok := dMap["height"]; ok {
-			video.Height = v.(string)
+			video.Height = helper.String(v.(string))
 		}
 		if v, ok := dMap["fps"]; ok {
-			video.Fps = v.(string)
+			video.Fps = helper.String(v.(string))
 		}
 		if v, ok := dMap["remove"]; ok {
-			video.Remove = v.(string)
+			video.Remove = helper.String(v.(string))
 		}
 		if v, ok := dMap["profile"]; ok {
-			video.Profile = v.(string)
+			video.Profile = helper.String(v.(string))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			video.Bitrate = v.(string)
+			video.Bitrate = helper.String(v.(string))
 		}
 		if v, ok := dMap["crf"]; ok {
-			video.Crf = v.(string)
+			video.Crf = helper.String(v.(string))
 		}
 		if v, ok := dMap["gop"]; ok {
-			video.Gop = v.(string)
+			video.Gop = helper.String(v.(string))
 		}
 		if v, ok := dMap["preset"]; ok {
-			video.Preset = v.(string)
+			video.Preset = helper.String(v.(string))
 		}
 		if v, ok := dMap["bufsize"]; ok {
-			video.Bufsize = v.(string)
+			video.Bufsize = helper.String(v.(string))
 		}
 		if v, ok := dMap["maxrate"]; ok {
-			video.Maxrate = v.(string)
+			video.Maxrate = helper.String(v.(string))
 		}
 		if v, ok := dMap["pixfmt"]; ok {
-			video.Pixfmt = v.(string)
+			video.Pixfmt = helper.String(v.(string))
 		}
 		if v, ok := dMap["long_short_mode"]; ok {
-			video.LongShortMode = v.(string)
+			video.LongShortMode = helper.String(v.(string))
 		}
 		if v, ok := dMap["rotate"]; ok {
-			video.Rotate = v.(string)
+			video.Rotate = helper.String(v.(string))
 		}
 		request.Video = &video
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-		timeInterval := cos.TimeInterval{}
+		timeInterval := ci.TimeInterval{}
 		if v, ok := dMap["start"]; ok {
-			timeInterval.Start = v.(string)
+			timeInterval.Start = helper.String(v.(string))
 		}
 		if v, ok := dMap["duration"]; ok {
-			timeInterval.Duration = v.(string)
+			timeInterval.Duration = helper.String(v.(string))
 		}
 		request.TimeInterval = &timeInterval
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "audio"); ok {
-		audio := cos.Audio{}
+		audio := ci.Audio{}
 		if v, ok := dMap["codec"]; ok {
-			audio.Codec = v.(string)
+			audio.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["samplerate"]; ok {
-			audio.Samplerate = v.(string)
+			audio.Samplerate = helper.String(v.(string))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			audio.Bitrate = v.(string)
+			audio.Bitrate = helper.String(v.(string))
 		}
 		if v, ok := dMap["channels"]; ok {
-			audio.Channels = v.(string)
+			audio.Channels = helper.String(v.(string))
 		}
 		if v, ok := dMap["remove"]; ok {
-			audio.Remove = v.(string)
+			audio.Remove = helper.String(v.(string))
 		}
 		if v, ok := dMap["keep_two_tracks"]; ok {
-			audio.KeepTwoTracks = v.(string)
+			audio.KeepTwoTracks = helper.String(v.(string))
 		}
 		if v, ok := dMap["switch_track"]; ok {
-			audio.SwitchTrack = v.(string)
+			audio.SwitchTrack = helper.String(v.(string))
 		}
 		if v, ok := dMap["sample_format"]; ok {
-			audio.SampleFormat = v.(string)
+			audio.SampleFormat = helper.String(v.(string))
 		}
 		request.Audio = &audio
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "trans_config"); ok {
-		transConfig := cos.TransConfig{}
+		transConfig := ci.TransConfig{}
 		if v, ok := dMap["adj_dar_method"]; ok {
-			transConfig.AdjDarMethod = v.(string)
+			transConfig.AdjDarMethod = helper.String(v.(string))
 		}
 		if v, ok := dMap["is_check_reso"]; ok {
-			transConfig.IsCheckReso = v.(string)
+			transConfig.IsCheckReso = helper.String(v.(string))
 		}
 		if v, ok := dMap["reso_adj_method"]; ok {
-			transConfig.ResoAdjMethod = v.(string)
+			transConfig.ResoAdjMethod = helper.String(v.(string))
 		}
 		if v, ok := dMap["is_check_video_bitrate"]; ok {
-			transConfig.IsCheckVideoBitrate = v.(string)
+			transConfig.IsCheckVideoBitrate = helper.String(v.(string))
 		}
 		if v, ok := dMap["video_bitrate_adj_method"]; ok {
-			transConfig.VideoBitrateAdjMethod = v.(string)
+			transConfig.VideoBitrateAdjMethod = helper.String(v.(string))
 		}
 		if v, ok := dMap["is_check_audio_bitrate"]; ok {
-			transConfig.IsCheckAudioBitrate = v.(string)
+			transConfig.IsCheckAudioBitrate = helper.String(v.(string))
 		}
 		if v, ok := dMap["audio_bitrate_adj_method"]; ok {
-			transConfig.AudioBitrateAdjMethod = v.(string)
+			transConfig.AudioBitrateAdjMethod = helper.String(v.(string))
+		}
+		if v, ok := dMap["is_check_video_fps"]; ok {
+			transConfig.IsCheckVideoFps = helper.String(v.(string))
+		}
+		if v, ok := dMap["video_fps_adj_method"]; ok {
+			transConfig.VideoFpsAdjMethod = helper.String(v.(string))
 		}
 		if v, ok := dMap["delete_metadata"]; ok {
-			transConfig.DeleteMetadata = v.(string)
+			transConfig.DeleteMetadata = helper.String(v.(string))
 		}
 		if v, ok := dMap["is_hdr2_sdr"]; ok {
-			transConfig.IsHdr2Sdr = v.(string)
+			transConfig.IsHdr2Sdr = helper.String(v.(string))
+		}
+		if v, ok := dMap["transcode_index"]; ok {
+			transConfig.TranscodeIndex = helper.String(v.(string))
 		}
 		if hlsEncryptMap, ok := helper.InterfaceToMap(dMap, "hls_encrypt"); ok {
-			hlsEncrypt := cos.HlsEncrypt{}
+			hlsEncrypt := ci.HlsEncrypt{}
 			if v, ok := hlsEncryptMap["is_hls_encrypt"]; ok {
-				if v.(string) == "true" {
-					hlsEncrypt.IsHlsEncrypt = true
-				} else {
-					hlsEncrypt.IsHlsEncrypt = false
-				}
+				hlsEncrypt.IsHlsEncrypt = helper.String(v.(string))
 			}
 			if v, ok := hlsEncryptMap["uri_key"]; ok {
-				hlsEncrypt.UriKey = v.(string)
+				hlsEncrypt.UriKey = helper.String(v.(string))
 			}
 			transConfig.HlsEncrypt = &hlsEncrypt
+		}
+		if v, ok := dMap["dash_encrypt"]; ok {
+			transConfig.DashEncrypt = helper.String(v.(string))
 		}
 		request.TransConfig = &transConfig
 	}
@@ -630,49 +667,48 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("audio_mix"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
-			audioMix := cos.AudioMix{}
+			audioMix := ci.AudioMix{}
 			if v, ok := dMap["audio_source"]; ok {
-				audioMix.AudioSource = v.(string)
+				audioMix.AudioSource = helper.String(v.(string))
 			}
 			if v, ok := dMap["mix_mode"]; ok {
-				audioMix.MixMode = v.(string)
+				audioMix.MixMode = helper.String(v.(string))
 			}
 			if v, ok := dMap["replace"]; ok {
-				audioMix.Replace = v.(string)
+				audioMix.Replace = helper.String(v.(string))
 			}
 			if effectConfigMap, ok := helper.InterfaceToMap(dMap, "effect_config"); ok {
-				effectConfig := cos.EffectConfig{}
+				effectConfig := ci.EffectConfig{}
 				if v, ok := effectConfigMap["enable_start_fadein"]; ok {
-					effectConfig.EnableStartFadein = v.(string)
+					effectConfig.EnableStartFadein = helper.String(v.(string))
 				}
 				if v, ok := effectConfigMap["start_fadein_time"]; ok {
-					effectConfig.StartFadeinTime = v.(string)
+					effectConfig.StartFadeinTime = helper.String(v.(string))
 				}
 				if v, ok := effectConfigMap["enable_end_fadeout"]; ok {
-					effectConfig.EnableEndFadeout = v.(string)
+					effectConfig.EnableEndFadeout = helper.String(v.(string))
 				}
 				if v, ok := effectConfigMap["end_fadeout_time"]; ok {
-					effectConfig.EndFadeoutTime = v.(string)
+					effectConfig.EndFadeoutTime = helper.String(v.(string))
 				}
 				if v, ok := effectConfigMap["enable_bgm_fade"]; ok {
-					effectConfig.EnableBgmFade = v.(string)
+					effectConfig.EnableBgmFade = helper.String(v.(string))
 				}
 				if v, ok := effectConfigMap["bgm_fade_time"]; ok {
-					effectConfig.BgmFadeTime = v.(string)
+					effectConfig.BgmFadeTime = helper.String(v.(string))
 				}
 				audioMix.EffectConfig = &effectConfig
 			}
-			request.AudioMixArray = append(request.AudioMixArray, audioMix)
+			request.AudioMix = append(request.AudioMix, &audioMix)
 		}
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaTranscodeTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaTranscodeTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaTranscodeTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -682,8 +718,8 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaTranscodeTemplateRead(d, meta)
 }
@@ -698,38 +734,34 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaTranscodeTemplateId := d.Id()
 
-	template, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaTranscodeTemplate, err := service.DescribeCiMediaTranscodeTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
-	if template == nil {
+	if mediaTranscodeTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaTranscodeTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	if template.Name != "" {
-		_ = d.Set("name", template.Name)
+	if mediaTranscodeTemplate.Name != nil {
+		_ = d.Set("name", mediaTranscodeTemplate.Name)
 	}
-	mediaTranscodeTemplate := template.TransTpl
+
 	if mediaTranscodeTemplate.Container != nil {
 		containerMap := map[string]interface{}{}
 
-		if mediaTranscodeTemplate.Container.Format != "" {
+		if mediaTranscodeTemplate.Container.Format != nil {
 			containerMap["format"] = mediaTranscodeTemplate.Container.Format
 		}
 
 		if mediaTranscodeTemplate.Container.ClipConfig != nil {
 			clipConfigMap := map[string]interface{}{}
 
-			if mediaTranscodeTemplate.Container.ClipConfig.Duration != "" {
+			if mediaTranscodeTemplate.Container.ClipConfig.Duration != nil {
 				clipConfigMap["duration"] = mediaTranscodeTemplate.Container.ClipConfig.Duration
 			}
 
@@ -742,63 +774,63 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 	if mediaTranscodeTemplate.Video != nil {
 		videoMap := map[string]interface{}{}
 
-		if mediaTranscodeTemplate.Video.Codec != "" {
+		if mediaTranscodeTemplate.Video.Codec != nil {
 			videoMap["codec"] = mediaTranscodeTemplate.Video.Codec
 		}
 
-		if mediaTranscodeTemplate.Video.Width != "" {
+		if mediaTranscodeTemplate.Video.Width != nil {
 			videoMap["width"] = mediaTranscodeTemplate.Video.Width
 		}
 
-		if mediaTranscodeTemplate.Video.Height != "" {
+		if mediaTranscodeTemplate.Video.Height != nil {
 			videoMap["height"] = mediaTranscodeTemplate.Video.Height
 		}
 
-		if mediaTranscodeTemplate.Video.Fps != "" {
+		if mediaTranscodeTemplate.Video.Fps != nil {
 			videoMap["fps"] = mediaTranscodeTemplate.Video.Fps
 		}
 
-		if mediaTranscodeTemplate.Video.Remove != "" {
+		if mediaTranscodeTemplate.Video.Remove != nil {
 			videoMap["remove"] = mediaTranscodeTemplate.Video.Remove
 		}
 
-		if mediaTranscodeTemplate.Video.Profile != "" {
+		if mediaTranscodeTemplate.Video.Profile != nil {
 			videoMap["profile"] = mediaTranscodeTemplate.Video.Profile
 		}
 
-		if mediaTranscodeTemplate.Video.Bitrate != "" {
+		if mediaTranscodeTemplate.Video.Bitrate != nil {
 			videoMap["bitrate"] = mediaTranscodeTemplate.Video.Bitrate
 		}
 
-		if mediaTranscodeTemplate.Video.Crf != "" {
+		if mediaTranscodeTemplate.Video.Crf != nil {
 			videoMap["crf"] = mediaTranscodeTemplate.Video.Crf
 		}
 
-		if mediaTranscodeTemplate.Video.Gop != "" {
+		if mediaTranscodeTemplate.Video.Gop != nil {
 			videoMap["gop"] = mediaTranscodeTemplate.Video.Gop
 		}
 
-		if mediaTranscodeTemplate.Video.Preset != "" {
+		if mediaTranscodeTemplate.Video.Preset != nil {
 			videoMap["preset"] = mediaTranscodeTemplate.Video.Preset
 		}
 
-		if mediaTranscodeTemplate.Video.Bufsize != "" {
+		if mediaTranscodeTemplate.Video.Bufsize != nil {
 			videoMap["bufsize"] = mediaTranscodeTemplate.Video.Bufsize
 		}
 
-		if mediaTranscodeTemplate.Video.Maxrate != "" {
+		if mediaTranscodeTemplate.Video.Maxrate != nil {
 			videoMap["maxrate"] = mediaTranscodeTemplate.Video.Maxrate
 		}
 
-		if mediaTranscodeTemplate.Video.Pixfmt != "" {
+		if mediaTranscodeTemplate.Video.Pixfmt != nil {
 			videoMap["pixfmt"] = mediaTranscodeTemplate.Video.Pixfmt
 		}
 
-		if mediaTranscodeTemplate.Video.LongShortMode != "" {
+		if mediaTranscodeTemplate.Video.LongShortMode != nil {
 			videoMap["long_short_mode"] = mediaTranscodeTemplate.Video.LongShortMode
 		}
 
-		if mediaTranscodeTemplate.Video.Rotate != "" {
+		if mediaTranscodeTemplate.Video.Rotate != nil {
 			videoMap["rotate"] = mediaTranscodeTemplate.Video.Rotate
 		}
 
@@ -808,11 +840,11 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 	if mediaTranscodeTemplate.TimeInterval != nil {
 		timeIntervalMap := map[string]interface{}{}
 
-		if mediaTranscodeTemplate.TimeInterval.Start != "" {
+		if mediaTranscodeTemplate.TimeInterval.Start != nil {
 			timeIntervalMap["start"] = mediaTranscodeTemplate.TimeInterval.Start
 		}
 
-		if mediaTranscodeTemplate.TimeInterval.Duration != "" {
+		if mediaTranscodeTemplate.TimeInterval.Duration != nil {
 			timeIntervalMap["duration"] = mediaTranscodeTemplate.TimeInterval.Duration
 		}
 
@@ -822,35 +854,35 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 	if mediaTranscodeTemplate.Audio != nil {
 		audioMap := map[string]interface{}{}
 
-		if mediaTranscodeTemplate.Audio.Codec != "" {
+		if mediaTranscodeTemplate.Audio.Codec != nil {
 			audioMap["codec"] = mediaTranscodeTemplate.Audio.Codec
 		}
 
-		if mediaTranscodeTemplate.Audio.Samplerate != "" {
+		if mediaTranscodeTemplate.Audio.Samplerate != nil {
 			audioMap["samplerate"] = mediaTranscodeTemplate.Audio.Samplerate
 		}
 
-		if mediaTranscodeTemplate.Audio.Bitrate != "" {
+		if mediaTranscodeTemplate.Audio.Bitrate != nil {
 			audioMap["bitrate"] = mediaTranscodeTemplate.Audio.Bitrate
 		}
 
-		if mediaTranscodeTemplate.Audio.Channels != "" {
+		if mediaTranscodeTemplate.Audio.Channels != nil {
 			audioMap["channels"] = mediaTranscodeTemplate.Audio.Channels
 		}
 
-		if mediaTranscodeTemplate.Audio.Remove != "" {
+		if mediaTranscodeTemplate.Audio.Remove != nil {
 			audioMap["remove"] = mediaTranscodeTemplate.Audio.Remove
 		}
 
-		if mediaTranscodeTemplate.Audio.KeepTwoTracks != "" {
+		if mediaTranscodeTemplate.Audio.KeepTwoTracks != nil {
 			audioMap["keep_two_tracks"] = mediaTranscodeTemplate.Audio.KeepTwoTracks
 		}
 
-		if mediaTranscodeTemplate.Audio.SwitchTrack != "" {
+		if mediaTranscodeTemplate.Audio.SwitchTrack != nil {
 			audioMap["switch_track"] = mediaTranscodeTemplate.Audio.SwitchTrack
 		}
 
-		if mediaTranscodeTemplate.Audio.SampleFormat != "" {
+		if mediaTranscodeTemplate.Audio.SampleFormat != nil {
 			audioMap["sample_format"] = mediaTranscodeTemplate.Audio.SampleFormat
 		}
 
@@ -860,108 +892,125 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 	if mediaTranscodeTemplate.TransConfig != nil {
 		transConfigMap := map[string]interface{}{}
 
-		if mediaTranscodeTemplate.TransConfig.AdjDarMethod != "" {
+		if mediaTranscodeTemplate.TransConfig.AdjDarMethod != nil {
 			transConfigMap["adj_dar_method"] = mediaTranscodeTemplate.TransConfig.AdjDarMethod
 		}
 
-		if mediaTranscodeTemplate.TransConfig.IsCheckReso != "" {
+		if mediaTranscodeTemplate.TransConfig.IsCheckReso != nil {
 			transConfigMap["is_check_reso"] = mediaTranscodeTemplate.TransConfig.IsCheckReso
 		}
 
-		if mediaTranscodeTemplate.TransConfig.ResoAdjMethod != "" {
+		if mediaTranscodeTemplate.TransConfig.ResoAdjMethod != nil {
 			transConfigMap["reso_adj_method"] = mediaTranscodeTemplate.TransConfig.ResoAdjMethod
 		}
 
-		if mediaTranscodeTemplate.TransConfig.IsCheckVideoBitrate != "" {
+		if mediaTranscodeTemplate.TransConfig.IsCheckVideoBitrate != nil {
 			transConfigMap["is_check_video_bitrate"] = mediaTranscodeTemplate.TransConfig.IsCheckVideoBitrate
 		}
 
-		if mediaTranscodeTemplate.TransConfig.VideoBitrateAdjMethod != "" {
+		if mediaTranscodeTemplate.TransConfig.VideoBitrateAdjMethod != nil {
 			transConfigMap["video_bitrate_adj_method"] = mediaTranscodeTemplate.TransConfig.VideoBitrateAdjMethod
 		}
 
-		if mediaTranscodeTemplate.TransConfig.IsCheckAudioBitrate != "" {
+		if mediaTranscodeTemplate.TransConfig.IsCheckAudioBitrate != nil {
 			transConfigMap["is_check_audio_bitrate"] = mediaTranscodeTemplate.TransConfig.IsCheckAudioBitrate
 		}
 
-		if mediaTranscodeTemplate.TransConfig.AudioBitrateAdjMethod != "" {
+		if mediaTranscodeTemplate.TransConfig.AudioBitrateAdjMethod != nil {
 			transConfigMap["audio_bitrate_adj_method"] = mediaTranscodeTemplate.TransConfig.AudioBitrateAdjMethod
 		}
 
-		if mediaTranscodeTemplate.TransConfig.DeleteMetadata != "" {
+		if mediaTranscodeTemplate.TransConfig.IsCheckVideoFps != nil {
+			transConfigMap["is_check_video_fps"] = mediaTranscodeTemplate.TransConfig.IsCheckVideoFps
+		}
+
+		if mediaTranscodeTemplate.TransConfig.VideoFpsAdjMethod != nil {
+			transConfigMap["video_fps_adj_method"] = mediaTranscodeTemplate.TransConfig.VideoFpsAdjMethod
+		}
+
+		if mediaTranscodeTemplate.TransConfig.DeleteMetadata != nil {
 			transConfigMap["delete_metadata"] = mediaTranscodeTemplate.TransConfig.DeleteMetadata
 		}
 
-		if mediaTranscodeTemplate.TransConfig.IsHdr2Sdr != "" {
+		if mediaTranscodeTemplate.TransConfig.IsHdr2Sdr != nil {
 			transConfigMap["is_hdr2_sdr"] = mediaTranscodeTemplate.TransConfig.IsHdr2Sdr
+		}
+
+		if mediaTranscodeTemplate.TransConfig.TranscodeIndex != nil {
+			transConfigMap["transcode_index"] = mediaTranscodeTemplate.TransConfig.TranscodeIndex
 		}
 
 		if mediaTranscodeTemplate.TransConfig.HlsEncrypt != nil {
 			hlsEncryptMap := map[string]interface{}{}
 
-			hlsEncryptMap["is_hls_encrypt"] = fmt.Sprintf("%v", mediaTranscodeTemplate.TransConfig.HlsEncrypt.IsHlsEncrypt)
+			if mediaTranscodeTemplate.TransConfig.HlsEncrypt.IsHlsEncrypt != nil {
+				hlsEncryptMap["is_hls_encrypt"] = mediaTranscodeTemplate.TransConfig.HlsEncrypt.IsHlsEncrypt
+			}
 
-			if mediaTranscodeTemplate.TransConfig.HlsEncrypt.UriKey != "" {
+			if mediaTranscodeTemplate.TransConfig.HlsEncrypt.UriKey != nil {
 				hlsEncryptMap["uri_key"] = mediaTranscodeTemplate.TransConfig.HlsEncrypt.UriKey
 			}
 
 			transConfigMap["hls_encrypt"] = []interface{}{hlsEncryptMap}
 		}
 
+		if mediaTranscodeTemplate.TransConfig.DashEncrypt != nil {
+		}
+
 		_ = d.Set("trans_config", []interface{}{transConfigMap})
 	}
 
-	if mediaTranscodeTemplate.AudioMixArray != nil {
-		audioMixArrayList := []interface{}{}
-		for _, audioMix := range mediaTranscodeTemplate.AudioMixArray {
-			audioMixArrayMap := map[string]interface{}{}
+	if mediaTranscodeTemplate.AudioMix != nil {
+		audioMixList := []interface{}{}
+		for _, audioMix := range mediaTranscodeTemplate.AudioMix {
+			audioMixMap := map[string]interface{}{}
 
-			if audioMix.AudioSource != "" {
-				audioMixArrayMap["audio_source"] = audioMix.AudioSource
+			if mediaTranscodeTemplate.AudioMix.AudioSource != nil {
+				audioMixMap["audio_source"] = mediaTranscodeTemplate.AudioMix.AudioSource
 			}
 
-			if audioMix.MixMode != "" {
-				audioMixArrayMap["mix_mode"] = audioMix.MixMode
+			if mediaTranscodeTemplate.AudioMix.MixMode != nil {
+				audioMixMap["mix_mode"] = mediaTranscodeTemplate.AudioMix.MixMode
 			}
 
-			if audioMix.Replace != "" {
-				audioMixArrayMap["replace"] = audioMix.Replace
+			if mediaTranscodeTemplate.AudioMix.Replace != nil {
+				audioMixMap["replace"] = mediaTranscodeTemplate.AudioMix.Replace
 			}
 
-			if audioMix.EffectConfig != nil {
+			if mediaTranscodeTemplate.AudioMix.EffectConfig != nil {
 				effectConfigMap := map[string]interface{}{}
 
-				if audioMix.EffectConfig.EnableStartFadein != "" {
-					effectConfigMap["enable_start_fadein"] = audioMix.EffectConfig.EnableStartFadein
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.EnableStartFadein != nil {
+					effectConfigMap["enable_start_fadein"] = mediaTranscodeTemplate.AudioMix.EffectConfig.EnableStartFadein
 				}
 
-				if audioMix.EffectConfig.StartFadeinTime != "" {
-					effectConfigMap["start_fadein_time"] = audioMix.EffectConfig.StartFadeinTime
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.StartFadeinTime != nil {
+					effectConfigMap["start_fadein_time"] = mediaTranscodeTemplate.AudioMix.EffectConfig.StartFadeinTime
 				}
 
-				if audioMix.EffectConfig.EnableEndFadeout != "" {
-					effectConfigMap["enable_end_fadeout"] = audioMix.EffectConfig.EnableEndFadeout
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.EnableEndFadeout != nil {
+					effectConfigMap["enable_end_fadeout"] = mediaTranscodeTemplate.AudioMix.EffectConfig.EnableEndFadeout
 				}
 
-				if audioMix.EffectConfig.EndFadeoutTime != "" {
-					effectConfigMap["end_fadeout_time"] = audioMix.EffectConfig.EndFadeoutTime
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.EndFadeoutTime != nil {
+					effectConfigMap["end_fadeout_time"] = mediaTranscodeTemplate.AudioMix.EffectConfig.EndFadeoutTime
 				}
 
-				if audioMix.EffectConfig.EnableBgmFade != "" {
-					effectConfigMap["enable_bgm_fade"] = audioMix.EffectConfig.EnableBgmFade
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.EnableBgmFade != nil {
+					effectConfigMap["enable_bgm_fade"] = mediaTranscodeTemplate.AudioMix.EffectConfig.EnableBgmFade
 				}
 
-				if audioMix.EffectConfig.BgmFadeTime != "" {
-					effectConfigMap["bgm_fade_time"] = audioMix.EffectConfig.BgmFadeTime
+				if mediaTranscodeTemplate.AudioMix.EffectConfig.BgmFadeTime != nil {
+					effectConfigMap["bgm_fade_time"] = mediaTranscodeTemplate.AudioMix.EffectConfig.BgmFadeTime
 				}
 
-				audioMixArrayMap["effect_config"] = []interface{}{effectConfigMap}
+				audioMixMap["effect_config"] = []interface{}{effectConfigMap}
 			}
 
-			audioMixArrayList = append(audioMixArrayList, audioMixArrayMap)
+			audioMixList = append(audioMixList, audioMixMap)
 		}
 
-		_ = d.Set("audio_mix_array", audioMixArrayList)
+		_ = d.Set("audio_mix", audioMixList)
 
 	}
 
@@ -973,233 +1022,32 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaTranscodeTemplateOptions{
-		Tag: "Transcode",
-	}
+	request := ci.NewUpdateMediaTranscodeTemplateRequest()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	mediaTranscodeTemplateId := d.Id()
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := cos.Container{}
-		if v, ok := dMap["format"]; ok {
-			container.Format = v.(string)
-		}
-		if clipConfigMap, ok := helper.InterfaceToMap(dMap, "clip_config"); ok {
-			clipConfig := cos.ClipConfig{}
-			if v, ok := clipConfigMap["duration"]; ok {
-				clipConfig.Duration = v.(string)
-			}
-			container.ClipConfig = &clipConfig
-		}
-		request.Container = &container
-	}
+	request.TemplateId = &templateId
 
-	if d.HasChange("video") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "video"); ok {
-			video := cos.Video{}
-			if v, ok := dMap["codec"]; ok {
-				video.Codec = v.(string)
-			}
-			if v, ok := dMap["width"]; ok {
-				video.Width = v.(string)
-			}
-			if v, ok := dMap["height"]; ok {
-				video.Height = v.(string)
-			}
-			if v, ok := dMap["fps"]; ok {
-				video.Fps = v.(string)
-			}
-			if v, ok := dMap["remove"]; ok {
-				video.Remove = v.(string)
-			}
-			if v, ok := dMap["profile"]; ok {
-				video.Profile = v.(string)
-			}
-			if v, ok := dMap["bitrate"]; ok {
-				video.Bitrate = v.(string)
-			}
-			if v, ok := dMap["crf"]; ok {
-				video.Crf = v.(string)
-			}
-			if v, ok := dMap["gop"]; ok {
-				video.Gop = v.(string)
-			}
-			if v, ok := dMap["preset"]; ok {
-				video.Preset = v.(string)
-			}
-			if v, ok := dMap["bufsize"]; ok {
-				video.Bufsize = v.(string)
-			}
-			if v, ok := dMap["maxrate"]; ok {
-				video.Maxrate = v.(string)
-			}
-			if v, ok := dMap["pixfmt"]; ok {
-				video.Pixfmt = v.(string)
-			}
-			if v, ok := dMap["long_short_mode"]; ok {
-				video.LongShortMode = v.(string)
-			}
-			if v, ok := dMap["rotate"]; ok {
-				video.Rotate = v.(string)
-			}
-			request.Video = &video
+	immutableArgs := []string{"name", "container", "video", "time_interval", "audio", "trans_config", "audio_mix"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
-
-	if d.HasChange("time_interval") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-			timeInterval := cos.TimeInterval{}
-			if v, ok := dMap["start"]; ok {
-				timeInterval.Start = v.(string)
-			}
-			if v, ok := dMap["duration"]; ok {
-				timeInterval.Duration = v.(string)
-			}
-			request.TimeInterval = &timeInterval
-		}
-	}
-	if d.HasChange("audio") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "audio"); ok {
-			audio := cos.Audio{}
-			if v, ok := dMap["codec"]; ok {
-				audio.Codec = v.(string)
-			}
-			if v, ok := dMap["samplerate"]; ok {
-				audio.Samplerate = v.(string)
-			}
-			if v, ok := dMap["bitrate"]; ok {
-				audio.Bitrate = v.(string)
-			}
-			if v, ok := dMap["channels"]; ok {
-				audio.Channels = v.(string)
-			}
-			if v, ok := dMap["remove"]; ok {
-				audio.Remove = v.(string)
-			}
-			if v, ok := dMap["keep_two_tracks"]; ok {
-				audio.KeepTwoTracks = v.(string)
-			}
-			if v, ok := dMap["switch_track"]; ok {
-				audio.SwitchTrack = v.(string)
-			}
-			if v, ok := dMap["sample_format"]; ok {
-				audio.SampleFormat = v.(string)
-			}
-			request.Audio = &audio
-		}
-	}
-
-	if d.HasChange("trans_config") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "trans_config"); ok {
-			transConfig := cos.TransConfig{}
-			if v, ok := dMap["adj_dar_method"]; ok {
-				transConfig.AdjDarMethod = v.(string)
-			}
-			if v, ok := dMap["is_check_reso"]; ok {
-				transConfig.IsCheckReso = v.(string)
-			}
-			if v, ok := dMap["reso_adj_method"]; ok {
-				transConfig.ResoAdjMethod = v.(string)
-			}
-			if v, ok := dMap["is_check_video_bitrate"]; ok {
-				transConfig.IsCheckVideoBitrate = v.(string)
-			}
-			if v, ok := dMap["video_bitrate_adj_method"]; ok {
-				transConfig.VideoBitrateAdjMethod = v.(string)
-			}
-			if v, ok := dMap["is_check_audio_bitrate"]; ok {
-				transConfig.IsCheckAudioBitrate = v.(string)
-			}
-			if v, ok := dMap["audio_bitrate_adj_method"]; ok {
-				transConfig.AudioBitrateAdjMethod = v.(string)
-			}
-			if v, ok := dMap["delete_metadata"]; ok {
-				transConfig.DeleteMetadata = v.(string)
-			}
-			if v, ok := dMap["is_hdr2_sdr"]; ok {
-				transConfig.IsHdr2Sdr = v.(string)
-			}
-			if hlsEncryptMap, ok := helper.InterfaceToMap(dMap, "hls_encrypt"); ok {
-				hlsEncrypt := cos.HlsEncrypt{}
-				if v, ok := hlsEncryptMap["is_hls_encrypt"]; ok {
-					if v.(string) == "true" {
-						hlsEncrypt.IsHlsEncrypt = true
-					} else {
-						hlsEncrypt.IsHlsEncrypt = false
-					}
-				}
-				if v, ok := hlsEncryptMap["uri_key"]; ok {
-					hlsEncrypt.UriKey = v.(string)
-				}
-				transConfig.HlsEncrypt = &hlsEncrypt
-			}
-			request.TransConfig = &transConfig
-		}
-	}
-
-	if d.HasChange("audio_mix") {
-		if v, ok := d.GetOk("audio_mix"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				audioMix := cos.AudioMix{}
-				if v, ok := dMap["audio_source"]; ok {
-					audioMix.AudioSource = v.(string)
-				}
-				if v, ok := dMap["mix_mode"]; ok {
-					audioMix.MixMode = v.(string)
-				}
-				if v, ok := dMap["replace"]; ok {
-					audioMix.Replace = v.(string)
-				}
-				if effectConfigMap, ok := helper.InterfaceToMap(dMap, "effect_config"); ok {
-					effectConfig := cos.EffectConfig{}
-					if v, ok := effectConfigMap["enable_start_fadein"]; ok {
-						effectConfig.EnableStartFadein = v.(string)
-					}
-					if v, ok := effectConfigMap["start_fadein_time"]; ok {
-						effectConfig.StartFadeinTime = v.(string)
-					}
-					if v, ok := effectConfigMap["enable_end_fadeout"]; ok {
-						effectConfig.EnableEndFadeout = v.(string)
-					}
-					if v, ok := effectConfigMap["end_fadeout_time"]; ok {
-						effectConfig.EndFadeoutTime = v.(string)
-					}
-					if v, ok := effectConfigMap["enable_bgm_fade"]; ok {
-						effectConfig.EnableBgmFade = v.(string)
-					}
-					if v, ok := effectConfigMap["bgm_fade_time"]; ok {
-						effectConfig.BgmFadeTime = v.(string)
-					}
-					audioMix.EffectConfig = &effectConfig
-				}
-				request.AudioMixArray = append(request.AudioMixArray, audioMix)
-			}
-		}
-	}
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaTranscodeTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaTranscodeTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaTranscodeTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaTranscodeTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaTranscodeTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -1214,14 +1062,9 @@ func resourceTencentCloudCiMediaTranscodeTemplateDelete(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaTranscodeTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaTranscodeTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

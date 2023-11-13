@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_cluster" "cluster" {
-  cluster_id_list = ["cluster-vwgj5e6y"]
-  cluster_type = "V"
-  # search_word = ""
-  disable_program_auth_check = true
-}
+  cluster_id_list =
+  cluster_type = "C"
+  search_word = ""
+  disable_program_auth_check = false
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -99,12 +98,12 @@ func dataSourceTencentCloudTsfCluster() *schema.Resource {
 									"cluster_status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "cluster status. Note: This field may return null, indicating no valid value.",
+										Description: "Cluster status. Note: This field may return null, indicating no valid value.",
 									},
-									"cluster_cidr": {
+									"cluster_c_i_d_r": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "cluster CIDR. Note: This field may return null, indicating no valid value.",
+										Description: "Cluster CIDR. Note: This field may return null, indicating no valid value.",
 									},
 									"cluster_total_cpu": {
 										Type:        schema.TypeFloat,
@@ -154,17 +153,17 @@ func dataSourceTencentCloudTsfCluster() *schema.Resource {
 									"update_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"tsf_region_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "region ID of TSF.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Region ID of TSF.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"tsf_region_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "region name of TSF.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Region name of TSF.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"tsf_zone_id": {
 										Type:        schema.TypeString,
@@ -331,29 +330,31 @@ func dataSourceTencentCloudTsfClusterRead(d *schema.ResourceData, meta interface
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var cluster *tsf.TsfPageCluster
+	var result []*tsf.TsfPageCluster
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfClusterByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		cluster = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(cluster.Content))
-	tsfPageClusterMap := map[string]interface{}{}
-	if cluster != nil {
-		if cluster.TotalCount != nil {
-			tsfPageClusterMap["total_count"] = cluster.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageClusterMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			tsfPageClusterMap["total_count"] = result.TotalCount
 		}
 
-		if cluster.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range cluster.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.ClusterId != nil {
@@ -381,7 +382,7 @@ func dataSourceTencentCloudTsfClusterRead(d *schema.ResourceData, meta interface
 				}
 
 				if content.ClusterCIDR != nil {
-					contentMap["cluster_cidr"] = content.ClusterCIDR
+					contentMap["cluster_c_i_d_r"] = content.ClusterCIDR
 				}
 
 				if content.ClusterTotalCpu != nil {
@@ -525,13 +526,13 @@ func dataSourceTencentCloudTsfClusterRead(d *schema.ResourceData, meta interface
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.ClusterId)
 			}
 
-			tsfPageClusterMap["content"] = contentList
+			tsfPageClusterMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageClusterMap})
+		ids = append(ids, *result.ClusterId)
+		_ = d.Set("result", tsfPageClusterMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

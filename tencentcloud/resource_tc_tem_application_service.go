@@ -5,26 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_application_service" "application_service" {
-  environment_id = "en-dpxyydl5"
-  application_id = "app-jrl3346j"
+  environment_id = "en-xxx"
+  application_id = "xxx"
   service {
 		type = "CLUSTER"
-		service_name = "test0-1"
+		service_name = "consumer"
+		i_p = ""
+		subnet_id = "subnet-xxxx"
 		port_mapping_item_list {
 			port = 80
 			target_port = 80
 			protocol = "TCP"
 		}
+
   }
 }
 ```
 
 Import
 
-tem application_service can be imported using the environmentId#applicationId#serviceName, e.g.
+tem application_service can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tem_application_service.application_service en-dpxyydl5#app-jrl3346j#test0-1
+terraform import tencentcloud_tem_application_service.application_service application_service_id
 ```
 */
 package tencentcloud
@@ -32,13 +35,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemApplicationService() *schema.Resource {
@@ -54,63 +56,54 @@ func resourceTencentCloudTemApplicationService() *schema.Resource {
 			"environment_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "environment ID.",
+				Description: "Environment ID.",
 			},
 
 			"application_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "application ID.",
+				Description: "Application ID.",
 			},
 
 			"service": {
 				Optional:    true,
-				Type:        schema.TypeList,
-				MaxItems:    1,
-				Description: "service detail list.",
+				Description: "Service detail list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Description:  "application service type: EXTERNAL | VPC | CLUSTER.",
-							ValidateFunc: validateAllowedStringValue([]string{"EXTERNAL", "VPC", "CLUSTER"}),
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Application service type: EXTERNAL | VPC | CLUSTER.",
 						},
 						"service_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "application service name.",
+							Description: "Application service name.",
 						},
-						"vpc_id": {
-							Optional:    true,
+						"i_p": {
 							Type:        schema.TypeString,
-							Description: "ID of vpc instance, required when type is `VPC`.",
+							Optional:    true,
+							Description: "Ip address of application service.",
 						},
 						"subnet_id": {
+							Type:        schema.TypeString,
 							Optional:    true,
-							Type:        schema.TypeString,
-							Description: "ID of subnet instance, required when type is `VPC`.",
-						},
-						"ip": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "ip address of application service.",
+							Description: "Subnet id of instance for type VPC.",
 						},
 						"port_mapping_item_list": {
-							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "port mapping item list.",
+							Description: "Port mapping item list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "container port.",
+										Description: "Container port.",
 									},
 									"target_port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Description: "application listen port.",
+										Description: "Application listen port.",
 									},
 									"protocol": {
 										Type:        schema.TypeString,
@@ -135,9 +128,9 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 
 	var (
 		request       = tem.NewCreateApplicationServiceRequest()
+		response      = tem.NewCreateApplicationServiceResponse()
 		environmentId string
 		applicationId string
-		serviceName   string
 	)
 	if v, ok := d.GetOk("environment_id"); ok {
 		environmentId = v.(string)
@@ -149,44 +142,7 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		request.ApplicationId = helper.String(v.(string))
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "service"); ok {
-		servicePortMapping := tem.ServicePortMapping{}
-		if v, ok := dMap["type"]; ok {
-			servicePortMapping.Type = helper.String(v.(string))
-			if v.(string) == "VPC" {
-				if vv, ok := dMap["vpc_id"]; ok && vv != "" {
-					servicePortMapping.VpcId = helper.String(vv.(string))
-				} else {
-					return fmt.Errorf("vpc_id is required when type is `VPC`")
-				}
-				if vv, ok := dMap["subnet_id"]; ok && vv != "" {
-					servicePortMapping.SubnetId = helper.String(vv.(string))
-				} else {
-					return fmt.Errorf("subnet_id is required when type is `VPC`")
-				}
-			}
-		}
-		if v, ok := dMap["service_name"]; ok {
-			serviceName = v.(string)
-			servicePortMapping.ServiceName = helper.String(v.(string))
-		}
-		if v, ok := dMap["port_mapping_item_list"]; ok {
-			for _, item := range v.([]interface{}) {
-				portMappingItemListMap := item.(map[string]interface{})
-				servicePortMappingItem := tem.ServicePortMappingItem{}
-				if v, ok := portMappingItemListMap["port"]; ok {
-					servicePortMappingItem.Port = helper.IntInt64(v.(int))
-				}
-				if v, ok := portMappingItemListMap["target_port"]; ok {
-					servicePortMappingItem.TargetPort = helper.IntInt64(v.(int))
-				}
-				if v, ok := portMappingItemListMap["protocol"]; ok {
-					servicePortMappingItem.Protocol = helper.String(v.(string))
-				}
-				servicePortMapping.PortMappingItemList = append(servicePortMapping.PortMappingItemList, &servicePortMappingItem)
-			}
-		}
-		request.Service = &servicePortMapping
+	if v, _ := d.GetOk("service"); v != nil {
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -196,6 +152,7 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -203,23 +160,8 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *service.Result.AllIpDone {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("service is not ready %v, retry...", *service.Result.AllIpDone))
-	})
-	if err != nil {
-		return err
-	}
-
-	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + serviceName)
+	environmentId = *response.Response.EnvironmentId
+	d.SetId(strings.Join([]string{environmentId, applicationId}, FILED_SP))
 
 	return resourceTencentCloudTemApplicationServiceRead(d, meta)
 }
@@ -235,88 +177,32 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	serviceName := idSplit[2]
 
-	res, err := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
+	applicationService, err := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
 	if err != nil {
 		return err
 	}
 
-	if res == nil {
+	if applicationService == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `TemApplicationService` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("environment_id", environmentId)
-	_ = d.Set("application_id", applicationId)
-
-	var applicationService *tem.ServicePortMapping
-	for _, v := range res.Result.ServicePortMappingList {
-		if *v.ServiceName == serviceName {
-			applicationService = v
-		}
+	if applicationService.EnvironmentId != nil {
+		_ = d.Set("environment_id", applicationService.EnvironmentId)
 	}
 
-	if applicationService != nil {
-		serviceMap := map[string]interface{}{}
+	if applicationService.ApplicationId != nil {
+		_ = d.Set("application_id", applicationService.ApplicationId)
+	}
 
-		if applicationService.Type != nil {
-			serviceMap["type"] = applicationService.Type
-			if *applicationService.Type == "VPC" {
-				if applicationService.VpcId != nil {
-					serviceMap["vpc_id"] = applicationService.VpcId
-				}
-
-				if applicationService.SubnetId != nil {
-					serviceMap["subnet_id"] = applicationService.SubnetId
-				}
-			}
-		}
-
-		if applicationService.ServiceName != nil {
-			serviceMap["service_name"] = applicationService.ServiceName
-		}
-
-		if applicationService.Type != nil {
-			if *applicationService.Type == "CLUSTER" {
-				serviceMap["ip"] = applicationService.ClusterIp
-			} else {
-				serviceMap["ip"] = applicationService.ExternalIp
-			}
-		}
-
-		if applicationService.PortMappingItemList != nil {
-			portMappingItemListList := []interface{}{}
-			for _, portMappingItemList := range applicationService.PortMappingItemList {
-				portMappingItemListMap := map[string]interface{}{}
-
-				if portMappingItemList.Port != nil {
-					portMappingItemListMap["port"] = portMappingItemList.Port
-				}
-
-				if portMappingItemList.TargetPort != nil {
-					portMappingItemListMap["target_port"] = portMappingItemList.TargetPort
-				}
-
-				if portMappingItemList.Protocol != nil {
-					portMappingItemListMap["protocol"] = portMappingItemList.Protocol
-				}
-
-				portMappingItemListList = append(portMappingItemListList, portMappingItemListMap)
-			}
-
-			serviceMap["port_mapping_item_list"] = portMappingItemListList
-		}
-
-		err = d.Set("service", []interface{}{serviceMap})
-		if err != nil {
-			return err
-		}
+	if applicationService.Service != nil {
 	}
 
 	return nil
@@ -331,53 +217,24 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 	request := tem.NewModifyApplicationServiceRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	serviceName := idSplit[2]
 
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
-	if d.HasChange("service") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "service"); ok {
-			servicePortMapping := tem.ServicePortMapping{}
-			if v, ok := dMap["type"]; ok {
-				servicePortMapping.Type = helper.String(v.(string))
-				if v.(string) == "VPC" {
-					if vv, ok := dMap["vpc_id"]; ok && vv != "" {
-						servicePortMapping.VpcId = helper.String(vv.(string))
-					} else {
-						return fmt.Errorf("vpc_id is required when type is `VPC`")
-					}
-					if vv, ok := dMap["subnet_id"]; ok && vv != "" {
-						servicePortMapping.SubnetId = helper.String(vv.(string))
-					} else {
-						return fmt.Errorf("subnet_id is required when type is `VPC`")
-					}
-				}
-			}
 
-			servicePortMapping.ServiceName = &serviceName
-			if v, ok := dMap["port_mapping_item_list"]; ok {
-				for _, item := range v.([]interface{}) {
-					portMappingItemListMap := item.(map[string]interface{})
-					servicePortMappingItem := tem.ServicePortMappingItem{}
-					if v, ok := portMappingItemListMap["port"]; ok {
-						servicePortMappingItem.Port = helper.IntInt64(v.(int))
-					}
-					if v, ok := portMappingItemListMap["target_port"]; ok {
-						servicePortMappingItem.TargetPort = helper.IntInt64(v.(int))
-					}
-					if v, ok := portMappingItemListMap["protocol"]; ok {
-						servicePortMappingItem.Protocol = helper.String(v.(string))
-					}
-					servicePortMapping.PortMappingItemList = append(servicePortMapping.PortMappingItemList, &servicePortMappingItem)
-				}
-			}
-			request.Data = &servicePortMapping
+	immutableArgs := []string{"environment_id", "application_id", "service"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
+	}
+
+	if v, _ := d.GetOk("service"); v != nil {
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -390,23 +247,7 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tem applicationService failed, reason:%+v", logId, err)
-		return err
-	}
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *service.Result.AllIpDone {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("service is not ready %v, retry...", *service.Result.AllIpDone))
-	})
-	if err != nil {
+		log.Printf("[CRITAL]%s update tem applicationService failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -422,14 +263,13 @@ func resourceTencentCloudTemApplicationServiceDelete(d *schema.ResourceData, met
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
-	serviceName := idSplit[2]
 
-	if err := service.DeleteTemApplicationServiceById(ctx, environmentId, applicationId, serviceName); err != nil {
+	if err := service.DeleteTemApplicationServiceById(ctx, environmentId, applicationId); err != nil {
 		return err
 	}
 

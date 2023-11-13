@@ -11,20 +11,27 @@ resource "tencentcloud_tsf_application_public_config" "application_public_config
   config_version_desc = "product version"
   config_type = "P"
   encode_with_base64 = true
-  # program_id_list =
+  program_id_list =
 }
+```
+
+Import
+
+tsf application_public_config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_application_public_config.application_public_config application_public_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfApplicationPublicConfig() *schema.Resource {
@@ -32,9 +39,9 @@ func resourceTencentCloudTsfApplicationPublicConfig() *schema.Resource {
 		Create: resourceTencentCloudTsfApplicationPublicConfigCreate,
 		Read:   resourceTencentCloudTsfApplicationPublicConfigRead,
 		Delete: resourceTencentCloudTsfApplicationPublicConfigDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"config_name": {
 				Required:    true,
@@ -47,14 +54,14 @@ func resourceTencentCloudTsfApplicationPublicConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "config version.",
+				Description: "Config version.",
 			},
 
 			"config_value": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "config value, only yaml file allowed.",
+				Description: "Config value, only yaml file allowed.",
 			},
 
 			"config_version_desc": {
@@ -75,7 +82,7 @@ func resourceTencentCloudTsfApplicationPublicConfig() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Description: "the config value is encoded with base64 or not.",
+				Description: "The config value is encoded with base64 or not.",
 			},
 
 			"program_id_list": {
@@ -85,7 +92,7 @@ func resourceTencentCloudTsfApplicationPublicConfig() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "datasource for auth.",
+				Description: "Datasource for auth.",
 			},
 		},
 	}
@@ -149,7 +156,7 @@ func resourceTencentCloudTsfApplicationPublicConfigCreate(d *schema.ResourceData
 		return err
 	}
 
-	configId = *response.Response.Result.ConfigId
+	configId = *response.Response.ConfigId
 	d.SetId(configId)
 
 	return resourceTencentCloudTsfApplicationPublicConfigRead(d, meta)
@@ -165,7 +172,7 @@ func resourceTencentCloudTsfApplicationPublicConfigRead(d *schema.ResourceData, 
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	configId := d.Id()
+	applicationPublicConfigId := d.Id()
 
 	applicationPublicConfig, err := service.DescribeTsfApplicationPublicConfigById(ctx, configId)
 	if err != nil {
@@ -198,13 +205,13 @@ func resourceTencentCloudTsfApplicationPublicConfigRead(d *schema.ResourceData, 
 		_ = d.Set("config_type", applicationPublicConfig.ConfigType)
 	}
 
-	// if applicationPublicConfig.EncodeWithBase64 != nil {
-	// 	_ = d.Set("encode_with_base64", applicationPublicConfig.EncodeWithBase64)
-	// }
+	if applicationPublicConfig.EncodeWithBase64 != nil {
+		_ = d.Set("encode_with_base64", applicationPublicConfig.EncodeWithBase64)
+	}
 
-	// if applicationPublicConfig.ProgramIdList != nil {
-	// 	_ = d.Set("program_id_list", applicationPublicConfig.ProgramIdList)
-	// }
+	if applicationPublicConfig.ProgramIdList != nil {
+		_ = d.Set("program_id_list", applicationPublicConfig.ProgramIdList)
+	}
 
 	return nil
 }
@@ -217,7 +224,7 @@ func resourceTencentCloudTsfApplicationPublicConfigDelete(d *schema.ResourceData
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	configId := d.Id()
+	applicationPublicConfigId := d.Id()
 
 	if err := service.DeleteTsfApplicationPublicConfigById(ctx, configId); err != nil {
 		return err

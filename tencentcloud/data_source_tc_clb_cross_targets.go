@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_cross_targets" "cross_targets" {
   filters {
-    name = "vpc-id"
-    values = ["vpc-4owdpnwr"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -66,7 +66,7 @@ func dataSourceTencentCloudClbCrossTargets() *schema.Resource {
 							Computed:    true,
 							Description: "VPC ID of the CVM or ENI instance.",
 						},
-						"ip": {
+						"i_p": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IP address of the CVM or ENI instance.",
@@ -135,7 +135,7 @@ func dataSourceTencentCloudClbCrossTargetsRead(d *schema.ResourceData, meta inte
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -170,7 +170,7 @@ func dataSourceTencentCloudClbCrossTargetsRead(d *schema.ResourceData, meta inte
 			}
 
 			if crossTargets.IP != nil {
-				crossTargetsMap["ip"] = crossTargets.IP
+				crossTargetsMap["i_p"] = crossTargets.IP
 			}
 
 			if crossTargets.VpcName != nil {

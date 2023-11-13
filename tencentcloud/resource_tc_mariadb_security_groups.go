@@ -1,23 +1,22 @@
 /*
 Provides a resource to create a mariadb security_groups
 
-~> **NOTE:** If you use this resource, please do not use security_group_ids in tencentcloud_mariadb_instance resource
-
 Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_security_groups" "security_groups" {
-  instance_id       = "tdsql-4pzs5b67"
-  security_group_id = "sg-7kpsbxdb"
-  product           = "mariadb"
+  instance_ids = &lt;nil&gt;
+  security_group_id = &lt;nil&gt;
+  product = &lt;nil&gt;
 }
-
 ```
+
 Import
 
 mariadb security_groups can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_mariadb_security_groups.security_groups tdsql-4pzs5b67#sg-7kpsbxdb#mariadb
+terraform import tencentcloud_mariadb_security_groups.security_groups security_groups_id
 ```
 */
 package tencentcloud
@@ -25,41 +24,43 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMariadbSecurityGroups() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMariadbSecurityGroupsRead,
 		Create: resourceTencentCloudMariadbSecurityGroupsCreate,
+		Read:   resourceTencentCloudMariadbSecurityGroupsRead,
 		Update: resourceTencentCloudMariadbSecurityGroupsUpdate,
 		Delete: resourceTencentCloudMariadbSecurityGroupsDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"instance_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "instance id.",
+			"instance_ids": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Instance ids.",
 			},
 
 			"security_group_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "security group id.",
+				Type:        schema.TypeString,
+				Description: "Security group id.",
 			},
 
 			"product": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "product name, fixed to mariadb.",
+				Type:        schema.TypeString,
+				Description: "Product name, fixed to mariadb.",
 			},
 		},
 	}
@@ -73,14 +74,16 @@ func resourceTencentCloudMariadbSecurityGroupsCreate(d *schema.ResourceData, met
 
 	var (
 		request         = mariadb.NewAssociateSecurityGroupsRequest()
+		response        = mariadb.NewAssociateSecurityGroupsResponse()
 		instanceId      string
 		securityGroupId string
-		product         string
 	)
-
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceIds = []*string{helper.String(v.(string))}
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
 	}
 
 	if v, ok := d.GetOk("security_group_id"); ok {
@@ -89,7 +92,6 @@ func resourceTencentCloudMariadbSecurityGroupsCreate(d *schema.ResourceData, met
 	}
 
 	if v, ok := d.GetOk("product"); ok {
-		product = v.(string)
 		request.Product = helper.String(v.(string))
 	}
 
@@ -98,18 +100,19 @@ func resourceTencentCloudMariadbSecurityGroupsCreate(d *schema.ResourceData, met
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create mariadb securityGroups failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + securityGroupId + FILED_SP + product)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, securityGroupId}, FILED_SP))
+
 	return resourceTencentCloudMariadbSecurityGroupsRead(d, meta)
 }
 
@@ -118,32 +121,40 @@ func resourceTencentCloudMariadbSecurityGroupsRead(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	securityGroupId := idSplit[1]
-	product := idSplit[2]
 
-	securityGroup, err := service.DescribeMariadbSecurityGroup(ctx, instanceId, securityGroupId, product)
-
+	securityGroups, err := service.DescribeMariadbSecurityGroupsById(ctx, instanceId, securityGroupId)
 	if err != nil {
 		return err
 	}
 
-	if securityGroup == nil {
+	if securityGroups == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `securityGroups` %s does not exist", securityGroupId)
+		log.Printf("[WARN]%s resource `MariadbSecurityGroups` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("security_group_id", securityGroupId)
-	_ = d.Set("product", product)
+	if securityGroups.InstanceIds != nil {
+		_ = d.Set("instance_ids", securityGroups.InstanceIds)
+	}
+
+	if securityGroups.SecurityGroupId != nil {
+		_ = d.Set("security_group_id", securityGroups.SecurityGroupId)
+	}
+
+	if securityGroups.Product != nil {
+		_ = d.Set("product", securityGroups.Product)
+	}
 
 	return nil
 }
@@ -157,27 +168,21 @@ func resourceTencentCloudMariadbSecurityGroupsUpdate(d *schema.ResourceData, met
 	request := mariadb.NewModifyDBInstanceSecurityGroupsRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	securityGroupId := idSplit[1]
-	product := idSplit[2]
 
 	request.InstanceId = &instanceId
-	request.SecurityGroupIds = []*string{&securityGroupId}
-	request.Product = &product
+	request.SecurityGroupId = &securityGroupId
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
+	immutableArgs := []string{"instance_ids", "security_group_id", "product"}
 
-	if d.HasChange("security_group_id") {
-		return fmt.Errorf("`security_group_id` do not support change now.")
-	}
-
-	if d.HasChange("product") {
-		return fmt.Errorf("`product` do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -185,14 +190,12 @@ func resourceTencentCloudMariadbSecurityGroupsUpdate(d *schema.ResourceData, met
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb securityGroups failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update mariadb securityGroups failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -207,16 +210,14 @@ func resourceTencentCloudMariadbSecurityGroupsDelete(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	securityGroupId := idSplit[1]
-	product := idSplit[2]
 
-	if err := service.DeleteMariadbSecurityGroupsById(ctx, instanceId, securityGroupId, product); err != nil {
+	if err := service.DeleteMariadbSecurityGroupsById(ctx, instanceId, securityGroupId); err != nil {
 		return err
 	}
 

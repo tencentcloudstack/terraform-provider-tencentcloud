@@ -5,29 +5,37 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_application_file_config" "application_file_config" {
-  config_name = "terraform-test"
+  config_name = "my_config"
   config_version = "1.0"
   config_file_name = "application.yaml"
   config_file_value = "test: 1"
-  application_id = "application-a24x29xv"
+  application_id = "app-123456"
   config_file_path = "/etc/nginx"
   config_version_desc = "1.0"
-  config_file_code = "UTF-8"
+  config_file_code = "utf-8"
   config_post_cmd = "source .bashrc"
   encode_with_base64 = true
+  program_id_list =
 }
+```
+
+Import
+
+tsf application_file_config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_application_file_config.application_file_config application_file_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
@@ -35,7 +43,9 @@ func resourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
 		Create: resourceTencentCloudTsfApplicationFileConfigCreate,
 		Read:   resourceTencentCloudTsfApplicationFileConfigRead,
 		Delete: resourceTencentCloudTsfApplicationFileConfigDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"config_name": {
 				Required:    true,
@@ -76,14 +86,14 @@ func resourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "config release path.",
+				Description: "Config release path.",
 			},
 
 			"config_version_desc": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "config version description.",
+				Description: "Config version description.",
 			},
 
 			"config_file_code": {
@@ -97,14 +107,14 @@ func resourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "post command.",
+				Description: "Post command.",
 			},
 
 			"encode_with_base64": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Description: "the config value is encoded with base64 or not.",
+				Description: "The config value is encoded with base64 or not.",
 			},
 
 			"program_id_list": {
@@ -114,7 +124,7 @@ func resourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "datasource for auth.",
+				Description: "Datasource for auth.",
 			},
 		},
 	}
@@ -194,7 +204,7 @@ func resourceTencentCloudTsfApplicationFileConfigCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	configId = *response.Response.Result.ConfigId
+	configId = *response.Response.ConfigId
 	d.SetId(configId)
 
 	return resourceTencentCloudTsfApplicationFileConfigRead(d, meta)
@@ -210,7 +220,7 @@ func resourceTencentCloudTsfApplicationFileConfigRead(d *schema.ResourceData, me
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	configId := d.Id()
+	applicationFileConfigId := d.Id()
 
 	applicationFileConfig, err := service.DescribeTsfApplicationFileConfigById(ctx, configId)
 	if err != nil {
@@ -259,6 +269,14 @@ func resourceTencentCloudTsfApplicationFileConfigRead(d *schema.ResourceData, me
 		_ = d.Set("config_post_cmd", applicationFileConfig.ConfigPostCmd)
 	}
 
+	if applicationFileConfig.EncodeWithBase64 != nil {
+		_ = d.Set("encode_with_base64", applicationFileConfig.EncodeWithBase64)
+	}
+
+	if applicationFileConfig.ProgramIdList != nil {
+		_ = d.Set("program_id_list", applicationFileConfig.ProgramIdList)
+	}
+
 	return nil
 }
 
@@ -270,7 +288,7 @@ func resourceTencentCloudTsfApplicationFileConfigDelete(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	configId := d.Id()
+	applicationFileConfigId := d.Id()
 
 	if err := service.DeleteTsfApplicationFileConfigById(ctx, configId); err != nil {
 		return err

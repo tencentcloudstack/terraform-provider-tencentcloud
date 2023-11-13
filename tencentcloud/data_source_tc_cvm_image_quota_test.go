@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmImageQuotaDataSource_basic(t *testing.T) {
@@ -25,5 +24,6 @@ func TestAccTencentCloudCvmImageQuotaDataSource_basic(t *testing.T) {
 const testAccCvmImageQuotaDataSource = `
 
 data "tencentcloud_cvm_image_quota" "image_quota" {
-}
+  }
+
 `

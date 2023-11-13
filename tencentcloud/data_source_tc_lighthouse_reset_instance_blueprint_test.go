@@ -1,15 +1,16 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseResetInstanceBlueprintDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -20,11 +21,17 @@ func TestAccTencentCloudLighthouseResetInstanceBlueprintDataSource_basic(t *test
 	})
 }
 
-const testAccLighthouseResetInstanceBlueprintDataSource = DefaultLighthoustVariables + `
+const testAccLighthouseResetInstanceBlueprintDataSource = `
 
 data "tencentcloud_lighthouse_reset_instance_blueprint" "reset_instance_blueprint" {
-  instance_id = var.lighthouse_id
+  instance_id = "lhins-123456"
   offset = 0
   limit = 20
+  filters {
+		name = "blueprint-id"
+		values = 
+
+  }
 }
+
 `

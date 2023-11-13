@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_import_image_os" "import_image_os" {
-}
+    }
 ```
 */
 package tencentcloud
 
 import (
-	"fmt"
-
+	"context"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -93,53 +92,44 @@ func dataSourceTencentCloudCvmImportImageOsRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_cvm_import_image_os.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		request  = cvm.NewDescribeImportImageOsRequest()
-		response = cvm.NewDescribeImportImageOsResponse()
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	service := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var importImageOsListSupported []*cvm.ImageOsList
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		resule, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().DescribeImportImageOs(request)
+		result, e := service.DescribeCvmImportImageOsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		response = resule
+		importImageOsListSupported = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if response == nil || response.Response == nil {
-		d.SetId("")
-		return fmt.Errorf("Response is null")
-	}
-	imageOsList := response.Response.ImportImageOsListSupported
-	importImageOsVersionSet := response.Response.ImportImageOsVersionSet
-	result := make(map[string]interface{})
-	if imageOsList != nil {
-		imageOsListMap := make(map[string]interface{})
+	ids := make([]string, 0, len(importImageOsListSupported))
+	if importImageOsListSupported != nil {
+		imageOsListMap := map[string]interface{}{}
 
-		if len(imageOsList.Windows) != 0 {
-			windowsList := make([]string, 0, len(imageOsList.Windows))
-			for _, v := range imageOsList.Windows {
-				windowsList = append(windowsList, *v)
-			}
-			imageOsListMap["windows"] = windowsList
+		if importImageOsListSupported.Windows != nil {
+			imageOsListMap["windows"] = importImageOsListSupported.Windows
 		}
 
-		if len(imageOsList.Linux) != 0 {
-			linuxList := make([]string, 0, len(imageOsList.Linux))
-			for _, v := range imageOsList.Linux {
-				linuxList = append(linuxList, *v)
-			}
-			imageOsListMap["linux"] = linuxList
+		if importImageOsListSupported.Linux != nil {
+			imageOsListMap["linux"] = importImageOsListSupported.Linux
 		}
 
-		result["import_image_os_list_supported"] = imageOsListMap
-		_ = d.Set("import_image_os_list_supported", []map[string]interface{}{imageOsListMap})
+		ids = append(ids, *importImageOsListSupported.IdsHash)
+		_ = d.Set("import_image_os_list_supported", imageOsListMap)
 	}
+
 	if importImageOsVersionSet != nil {
-		tmpList := make([]map[string]interface{}, 0)
 		for _, osVersion := range importImageOsVersionSet {
 			osVersionMap := map[string]interface{}{}
 
@@ -155,16 +145,17 @@ func dataSourceTencentCloudCvmImportImageOsRead(d *schema.ResourceData, meta int
 				osVersionMap["architecture"] = osVersion.Architecture
 			}
 
+			ids = append(ids, *osVersion.IdsHash)
 			tmpList = append(tmpList, osVersionMap)
 		}
-		result["import_image_os_version_set"] = tmpList
+
 		_ = d.Set("import_image_os_version_set", tmpList)
 	}
 
-	d.SetId(helper.BuildToken())
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), result); e != nil {
+		if e := writeToFile(output.(string), imageOsListMap); e != nil {
 			return e
 		}
 	}

@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudRedisClearInstanceOperationResource_basic -v
 func TestAccTencentCloudRedisClearInstanceOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -19,15 +17,20 @@ func TestAccTencentCloudRedisClearInstanceOperationResource_basic(t *testing.T) 
 				Config: testAccRedisClearInstanceOperation,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_redis_clear_instance_operation.clear_instance_operation", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_redis_clear_instance_operation.clear_instance_operation",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
-const testAccRedisClearInstanceOperation = testAccRedisInstanceCluster + `
+const testAccRedisClearInstanceOperation = `
 
 resource "tencentcloud_redis_clear_instance_operation" "clear_instance_operation" {
-  instance_id = tencentcloud_redis_instance.redis_cluster.id
-  password = "AAA123456BBB"
+  instance_id = "crs-c1nl9rpv"
+  password = &lt;nil&gt;
 }
 
 `

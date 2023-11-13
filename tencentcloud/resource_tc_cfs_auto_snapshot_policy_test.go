@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCfsAutoSnapshotPolicyResource_basic(t *testing.T) {
@@ -30,10 +29,12 @@ func TestAccTencentCloudCfsAutoSnapshotPolicyResource_basic(t *testing.T) {
 const testAccCfsAutoSnapshotPolicy = `
 
 resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  day_of_week = "1,2"
-  hour = "2,3"
+  hour = "&quot;2,3&quot;"
   policy_name = "policy_name"
+  day_of_week = "&quot;1,2&quot;"
   alive_days = 7
+  day_of_month = "2"
+  interval_days = 1
 }
 
 `

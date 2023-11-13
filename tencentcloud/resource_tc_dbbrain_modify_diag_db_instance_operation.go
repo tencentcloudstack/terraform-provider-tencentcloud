@@ -1,40 +1,37 @@
 /*
-Provides a resource to create a dbbrain modify_diag_db_instance_conf
+Provides a resource to create a dbbrain modify_diag_db_instance_operation
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "on" {
+resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "modify_diag_db_instance_operation" {
   instance_confs {
-	daily_inspection = "Yes"
-	overview_display = "Yes"
+		daily_inspection = ""
+		overview_display = ""
+
   }
-  product = "mysql"
-  instance_ids = ["%s"]
+  regions = ""
+  product = ""
+  instance_ids =
 }
 ```
 
-```hcl
-resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "off" {
-  instance_confs {
-	daily_inspection = "No"
-	overview_display = "No"
-  }
-  product = "mysql"
-  instance_ids = ["%s"]
-}
-```
+Import
 
+dbbrain modify_diag_db_instance_operation can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dbbrain_modify_diag_db_instance_operation.modify_diag_db_instance_operation modify_diag_db_instance_operation_id
+```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource {
@@ -42,6 +39,9 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource
 		Create: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate,
 		Read:   resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead,
 		Delete: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_confs": {
 				Required:    true,
@@ -66,9 +66,8 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource
 			},
 
 			"regions": {
-				Optional:    true,
+				Required:    true,
 				ForceNew:    true,
-				Default:     "All",
 				Type:        schema.TypeString,
 				Description: "Effective instance region, the value is All, which means all regions.",
 			},
@@ -77,7 +76,7 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
+				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
 			},
 
 			"instance_ids": {
@@ -100,12 +99,12 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate(d *schema.Re
 	logId := getLogId(contextNil)
 
 	var (
-		request     = dbbrain.NewModifyDiagDBInstanceConfRequest()
-		operationId string
+		request    = dbbrain.NewModifyDiagDBInstanceConfRequest()
+		response   = dbbrain.NewModifyDiagDBInstanceConfResponse()
+		instanceId string
 	)
-
-	instanceConfs := dbbrain.InstanceConfs{}
 	if dMap, ok := helper.InterfacesHeadMap(d, "instance_confs"); ok {
+		instanceConfs := dbbrain.InstanceConfs{}
 		if v, ok := dMap["daily_inspection"]; ok {
 			instanceConfs.DailyInspection = helper.String(v.(string))
 		}
@@ -138,15 +137,16 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate(d *schema.Re
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s operate dbbrain modifyDiagDbInstanceConf failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dbbrain modifyDiagDbInstanceOperation failed, reason:%+v", logId, err)
 		return err
 	}
 
-	operationId = helper.ResourceIdsHash([]string{*instanceConfs.DailyInspection, *instanceConfs.OverviewDisplay})
-	d.SetId(operationId)
+	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
 
 	return resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead(d, meta)
 }

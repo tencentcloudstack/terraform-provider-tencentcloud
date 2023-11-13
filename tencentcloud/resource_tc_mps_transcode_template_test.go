@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMpsTranscodeTemplateResource_basic(t *testing.T) {
@@ -30,28 +29,84 @@ func TestAccTencentCloudMpsTranscodeTemplateResource_basic(t *testing.T) {
 const testAccMpsTranscodeTemplate = `
 
 resource "tencentcloud_mps_transcode_template" "transcode_template" {
-  container    = "mp4"
-  name         = "tf_transcode_template"
-  remove_audio = 0
+  container = &lt;nil&gt;
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   remove_video = 0
-
-  audio_template {
-    audio_channel = 2
-    bitrate       = 27
-    codec         = "libfdk_aac"
-    sample_rate   = 32000
-  }
-
+  remove_audio = 0
   video_template {
-    bitrate             = 130
-    codec               = "libx264"
-    fill_type           = "black"
-    fps                 = 20
-    gop                 = 0
-    height              = 4096
-    resolution_adaptive = "close"
-    vcrf                = 0
-    width               = 128
+		codec = &lt;nil&gt;
+		fps = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		resolution_adaptive = "open"
+		width = 0
+		height = 0
+		gop = &lt;nil&gt;
+		fill_type = "black"
+		vcrf = &lt;nil&gt;
+
+  }
+  audio_template {
+		codec = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		sample_rate = &lt;nil&gt;
+		audio_channel = 2
+
+  }
+  t_e_h_d_config {
+		type = &lt;nil&gt;
+		max_video_bitrate = &lt;nil&gt;
+
+  }
+  enhance_config {
+		video_enhance {
+			frame_rate {
+				switch = "ON"
+				fps = 0
+			}
+			super_resolution {
+				switch = "ON"
+				type = "lq"
+				size = 2
+			}
+			hdr {
+				switch = "ON"
+				type = "HDR10"
+			}
+			denoise {
+				switch = "ON"
+				type = "weak"
+			}
+			image_quality_enhance {
+				switch = "ON"
+				type = "weak"
+			}
+			color_enhance {
+				switch = "ON"
+				type = "weak"
+			}
+			sharp_enhance {
+				switch = "ON"
+				intensity = 
+			}
+			face_enhance {
+				switch = "ON"
+				intensity = 
+			}
+			low_light_enhance {
+				switch = "ON"
+				type = "normal"
+			}
+			scratch_repair {
+				switch = "ON"
+				intensity = 
+			}
+			artifact_repair {
+				switch = "ON"
+				type = "weak"
+			}
+		}
+
   }
 }
 

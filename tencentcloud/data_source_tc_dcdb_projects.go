@@ -4,14 +4,14 @@ Use this data source to query detailed information of dcdb projects
 Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_projects" "projects" {}
+data "tencentcloud_dcdb_projects" "projects" {
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -104,12 +104,13 @@ func dataSourceTencentCloudDcdbProjectsRead(d *schema.ResourceData, meta interfa
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var projects []*dcdb.Project
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeDcdbProjectsByFilter(ctx)
+		result, e := service.DescribeDcdbProjectsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -129,7 +130,6 @@ func dataSourceTencentCloudDcdbProjectsRead(d *schema.ResourceData, meta interfa
 
 			if project.ProjectId != nil {
 				projectMap["project_id"] = project.ProjectId
-				ids = append(ids, helper.Int64ToStr(*project.ProjectId))
 			}
 
 			if project.OwnerUin != nil {
@@ -172,6 +172,7 @@ func dataSourceTencentCloudDcdbProjectsRead(d *schema.ResourceData, meta interfa
 				projectMap["info"] = project.Info
 			}
 
+			ids = append(ids, *project.InstanceId)
 			tmpList = append(tmpList, projectMap)
 		}
 

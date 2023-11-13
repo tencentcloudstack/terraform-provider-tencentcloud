@@ -4,20 +4,18 @@ Provides a resource to create a ci media_video_process_template
 Example Usage
 
 ```hcl
-
 resource "tencentcloud_ci_media_video_process_template" "media_video_process_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "video_process_template"
+  name = &lt;nil&gt;
   color_enhance {
-		enable = "true"
-		contrast = ""
-		correction = ""
-		saturation = ""
+		enable = &lt;nil&gt;
+		contrast = &lt;nil&gt;
+		correction = &lt;nil&gt;
+		saturation = &lt;nil&gt;
 
   }
   ms_sharpen {
-		enable = "false"
-		sharpen_level = ""
+		enable = &lt;nil&gt;
+		sharpen_level = &lt;nil&gt;
 
   }
 }
@@ -25,10 +23,10 @@ resource "tencentcloud_ci_media_video_process_template" "media_video_process_tem
 
 Import
 
-ci media_video_process_template can be imported using the bucket#templateId, e.g.
+ci media_video_process_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_video_process_template.media_video_process_template terraform-ci-xxxxxx#t1d5694d87639a4593a9fd7e9025d26f52
+terraform import tencentcloud_ci_media_video_process_template.media_video_process_template media_video_process_template_id
 ```
 */
 package tencentcloud
@@ -36,14 +34,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaVideoProcessTemplate() *schema.Resource {
@@ -56,12 +51,6 @@ func resourceTencentCloudCiMediaVideoProcessTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -72,7 +61,7 @@ func resourceTencentCloudCiMediaVideoProcessTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "color enhancement.",
+				Description: "Color enhancement.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable": {
@@ -88,7 +77,7 @@ func resourceTencentCloudCiMediaVideoProcessTemplate() *schema.Resource {
 						"correction": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "colorcorrection, value range: [0, 100], empty string (indicating automatic analysis).",
+							Description: "Colorcorrection, value range: [0, 100], empty string (indicating automatic analysis).",
 						},
 						"saturation": {
 							Type:        schema.TypeString,
@@ -103,7 +92,7 @@ func resourceTencentCloudCiMediaVideoProcessTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "detail enhancement, ColorEnhance and MsSharpen cannot both be empty.",
+				Description: "Detail enhancement, ColorEnhance and MsSharpen cannot both be empty.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"enable": {
@@ -128,61 +117,50 @@ func resourceTencentCloudCiMediaVideoProcessTemplateCreate(d *schema.ResourceDat
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaVideoProcessTemplateOptions{
-			Tag: "VideoProcess",
-		}
-		bucket     string
+		request    = ci.NewCreateMediaVideoProcessTemplateRequest()
+		response   = ci.NewCreateMediaVideoProcessTemplateResponse()
 		templateId string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "color_enhance"); ok {
-		colorEnhance := cos.ColorEnhance{}
+		colorEnhance := ci.ColorEnhance{}
 		if v, ok := dMap["enable"]; ok {
-			colorEnhance.Enable = v.(string)
+			colorEnhance.Enable = helper.String(v.(string))
 		}
 		if v, ok := dMap["contrast"]; ok {
-			colorEnhance.Contrast = v.(string)
+			colorEnhance.Contrast = helper.String(v.(string))
 		}
 		if v, ok := dMap["correction"]; ok {
-			colorEnhance.Correction = v.(string)
+			colorEnhance.Correction = helper.String(v.(string))
 		}
 		if v, ok := dMap["saturation"]; ok {
-			colorEnhance.Saturation = v.(string)
+			colorEnhance.Saturation = helper.String(v.(string))
 		}
 		request.ColorEnhance = &colorEnhance
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "ms_sharpen"); ok {
-		msSharpen := cos.MsSharpen{}
+		colorEnhance := ci.ColorEnhance{}
 		if v, ok := dMap["enable"]; ok {
-			msSharpen.Enable = v.(string)
+			colorEnhance.Enable = helper.String(v.(string))
 		}
 		if v, ok := dMap["sharpen_level"]; ok {
-			msSharpen.SharpenLevel = v.(string)
+			colorEnhance.SharpenLevel = helper.String(v.(string))
 		}
-		request.MsSharpen = &msSharpen
+		request.MsSharpen = &colorEnhance
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaVideoProcessTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaVideoProcessTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaVideoProcessTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -192,8 +170,8 @@ func resourceTencentCloudCiMediaVideoProcessTemplateCreate(d *schema.ResourceDat
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaVideoProcessTemplateRead(d, meta)
 }
@@ -203,70 +181,62 @@ func resourceTencentCloudCiMediaVideoProcessTemplateRead(d *schema.ResourceData,
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaVideoProcessTemplateId := d.Id()
 
-	template, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaVideoProcessTemplate, err := service.DescribeCiMediaVideoProcessTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
-	if template == nil {
+	if mediaVideoProcessTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaVideoProcessTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if template.Name != "" {
-		_ = d.Set("name", template.Name)
+	if mediaVideoProcessTemplate.Name != nil {
+		_ = d.Set("name", mediaVideoProcessTemplate.Name)
 	}
 
-	if template.VideoProcess != nil {
-		mediaVideoProcessTemplate := template.VideoProcess
-		if mediaVideoProcessTemplate.ColorEnhance != nil {
-			colorEnhanceMap := map[string]interface{}{}
+	if mediaVideoProcessTemplate.ColorEnhance != nil {
+		colorEnhanceMap := map[string]interface{}{}
 
-			if mediaVideoProcessTemplate.ColorEnhance.Enable != "" {
-				colorEnhanceMap["enable"] = mediaVideoProcessTemplate.ColorEnhance.Enable
-			}
-
-			if mediaVideoProcessTemplate.ColorEnhance.Contrast != "" {
-				colorEnhanceMap["contrast"] = mediaVideoProcessTemplate.ColorEnhance.Contrast
-			}
-
-			if mediaVideoProcessTemplate.ColorEnhance.Correction != "" {
-				colorEnhanceMap["correction"] = mediaVideoProcessTemplate.ColorEnhance.Correction
-			}
-
-			if mediaVideoProcessTemplate.ColorEnhance.Saturation != "" {
-				colorEnhanceMap["saturation"] = mediaVideoProcessTemplate.ColorEnhance.Saturation
-			}
-
-			_ = d.Set("color_enhance", []interface{}{colorEnhanceMap})
+		if mediaVideoProcessTemplate.ColorEnhance.Enable != nil {
+			colorEnhanceMap["enable"] = mediaVideoProcessTemplate.ColorEnhance.Enable
 		}
 
-		if mediaVideoProcessTemplate.MsSharpen != nil {
-			msSharpenMap := map[string]interface{}{}
-
-			if mediaVideoProcessTemplate.MsSharpen.Enable != "" {
-				msSharpenMap["enable"] = mediaVideoProcessTemplate.MsSharpen.Enable
-			}
-
-			if mediaVideoProcessTemplate.MsSharpen.SharpenLevel != "" {
-				msSharpenMap["sharpen_level"] = mediaVideoProcessTemplate.MsSharpen.SharpenLevel
-			}
-
-			_ = d.Set("ms_sharpen", []interface{}{msSharpenMap})
+		if mediaVideoProcessTemplate.ColorEnhance.Contrast != nil {
+			colorEnhanceMap["contrast"] = mediaVideoProcessTemplate.ColorEnhance.Contrast
 		}
+
+		if mediaVideoProcessTemplate.ColorEnhance.Correction != nil {
+			colorEnhanceMap["correction"] = mediaVideoProcessTemplate.ColorEnhance.Correction
+		}
+
+		if mediaVideoProcessTemplate.ColorEnhance.Saturation != nil {
+			colorEnhanceMap["saturation"] = mediaVideoProcessTemplate.ColorEnhance.Saturation
+		}
+
+		_ = d.Set("color_enhance", []interface{}{colorEnhanceMap})
+	}
+
+	if mediaVideoProcessTemplate.MsSharpen != nil {
+		msSharpenMap := map[string]interface{}{}
+
+		if mediaVideoProcessTemplate.MsSharpen.Enable != nil {
+			msSharpenMap["enable"] = mediaVideoProcessTemplate.MsSharpen.Enable
+		}
+
+		if mediaVideoProcessTemplate.MsSharpen.SharpenLevel != nil {
+			msSharpenMap["sharpen_level"] = mediaVideoProcessTemplate.MsSharpen.SharpenLevel
+		}
+
+		_ = d.Set("ms_sharpen", []interface{}{msSharpenMap})
 	}
 
 	return nil
@@ -277,61 +247,32 @@ func resourceTencentCloudCiMediaVideoProcessTemplateUpdate(d *schema.ResourceDat
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaVideoProcessTemplateOptions{
-		Tag: "VideoProcess",
-	}
+	request := ci.NewUpdateMediaVideoProcessTemplateRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaVideoProcessTemplateId := d.Id()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	request.TemplateId = &templateId
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "color_enhance"); ok {
-		colorEnhance := cos.ColorEnhance{}
-		if v, ok := dMap["enable"]; ok {
-			colorEnhance.Enable = v.(string)
+	immutableArgs := []string{"name", "color_enhance", "ms_sharpen"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-		if v, ok := dMap["contrast"]; ok {
-			colorEnhance.Contrast = v.(string)
-		}
-		if v, ok := dMap["correction"]; ok {
-			colorEnhance.Correction = v.(string)
-		}
-		if v, ok := dMap["saturation"]; ok {
-			colorEnhance.Saturation = v.(string)
-		}
-		request.ColorEnhance = &colorEnhance
-	}
-	if dMap, ok := helper.InterfacesHeadMap(d, "ms_sharpen"); ok {
-		msSharpen := cos.MsSharpen{}
-		if v, ok := dMap["enable"]; ok {
-			msSharpen.Enable = v.(string)
-		}
-		if v, ok := dMap["sharpen_level"]; ok {
-			msSharpen.SharpenLevel = v.(string)
-		}
-		request.MsSharpen = &msSharpen
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaVideoProcessTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaVideoProcessTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaVideoProcessTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaVideoProcessTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaVideoProcessTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -346,14 +287,9 @@ func resourceTencentCloudCiMediaVideoProcessTemplateDelete(d *schema.ResourceDat
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaVideoProcessTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaVideoProcessTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

@@ -1,27 +1,26 @@
 /*
-Provides a resource to create a tem appConfig
+Provides a resource to create a tem app_config
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tem_app_config" "appConfig" {
-  environment_id = "en-o5edaepv"
-  name = "demo"
-  config_data {
-    key = "key"
-    value = "value"
-  }
-  config_data {
-    key = "key1"
-    value = "value1"
+resource "tencentcloud_tem_app_config" "app_config" {
+  environment_id = "en-xxx"
+  name = "xxx"
+  data {
+		key = "key"
+		value = "value"
+
   }
 }
 ```
+
 Import
 
-tem appConfig can be imported using the id, e.g.
+tem app_config can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_app_config.appConfig environmentId#name
+terraform import tencentcloud_tem_app_config.app_config app_config_id
 ```
 */
 package tencentcloud
@@ -29,19 +28,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemAppConfig() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemAppConfigRead,
 		Create: resourceTencentCloudTemAppConfigCreate,
+		Read:   resourceTencentCloudTemAppConfigRead,
 		Update: resourceTencentCloudTemAppConfigUpdate,
 		Delete: resourceTencentCloudTemAppConfigDelete,
 		Importer: &schema.ResourceImporter{
@@ -49,34 +47,32 @@ func resourceTencentCloudTemAppConfig() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "environment ID.",
+				Type:        schema.TypeString,
+				Description: "Environment ID.",
 			},
 
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "appConfig name.",
+				Type:        schema.TypeString,
+				Description: "AppConfig name.",
 			},
 
-			"config_data": {
-				Type:        schema.TypeList,
+			"data": {
 				Required:    true,
-				Description: "payload.",
+				Type:        schema.TypeList,
+				Description: "Payload.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "key.",
+							Description: "Key.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "value.",
+							Description: "Value.",
 						},
 					},
 				},
@@ -93,10 +89,10 @@ func resourceTencentCloudTemAppConfigCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request       = tem.NewCreateConfigDataRequest()
+		response      = tem.NewCreateConfigDataResponse()
 		environmentId string
 		name          string
 	)
-
 	if v, ok := d.GetOk("environment_id"); ok {
 		environmentId = v.(string)
 		request.EnvironmentId = helper.String(v.(string))
@@ -107,7 +103,7 @@ func resourceTencentCloudTemAppConfigCreate(d *schema.ResourceData, meta interfa
 		request.Name = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("config_data"); ok {
+	if v, ok := d.GetOk("data"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			pair := tem.Pair{}
@@ -119,7 +115,6 @@ func resourceTencentCloudTemAppConfigCreate(d *schema.ResourceData, meta interfa
 			}
 			request.Data = append(request.Data, &pair)
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -127,26 +122,28 @@ func resourceTencentCloudTemAppConfigCreate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem appConfig failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + name)
+	environmentId = *response.Response.EnvironmentId
+	d.SetId(strings.Join([]string{environmentId, name}, FILED_SP))
+
 	return resourceTencentCloudTemAppConfigRead(d, meta)
 }
 
 func resourceTencentCloudTemAppConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_appConfig.read")()
+	defer logElapsed("resource.tencentcloud_tem_app_config.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -158,18 +155,20 @@ func resourceTencentCloudTemAppConfigRead(d *schema.ResourceData, meta interface
 	environmentId := idSplit[0]
 	name := idSplit[1]
 
-	appConfig, err := service.DescribeTemAppConfig(ctx, environmentId, name)
-
+	appConfig, err := service.DescribeTemAppConfigById(ctx, environmentId, name)
 	if err != nil {
 		return err
 	}
 
 	if appConfig == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `appConfig` %s does not exist", name)
+		log.Printf("[WARN]%s resource `TemAppConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("environment_id", environmentId)
+	if appConfig.EnvironmentId != nil {
+		_ = d.Set("environment_id", appConfig.EnvironmentId)
+	}
 
 	if appConfig.Name != nil {
 		_ = d.Set("name", appConfig.Name)
@@ -179,16 +178,20 @@ func resourceTencentCloudTemAppConfigRead(d *schema.ResourceData, meta interface
 		dataList := []interface{}{}
 		for _, data := range appConfig.Data {
 			dataMap := map[string]interface{}{}
-			if data.Key != nil {
-				dataMap["key"] = data.Key
+
+			if appConfig.Data.Key != nil {
+				dataMap["key"] = appConfig.Data.Key
 			}
-			if data.Value != nil {
-				dataMap["value"] = data.Value
+
+			if appConfig.Data.Value != nil {
+				dataMap["value"] = appConfig.Data.Value
 			}
 
 			dataList = append(dataList, dataMap)
 		}
-		_ = d.Set("config_data", dataList)
+
+		_ = d.Set("data", dataList)
+
 	}
 
 	return nil
@@ -212,18 +215,17 @@ func resourceTencentCloudTemAppConfigUpdate(d *schema.ResourceData, meta interfa
 	request.EnvironmentId = &environmentId
 	request.Name = &name
 
-	if d.HasChange("environment_id") {
-		return fmt.Errorf("`environment_id` do not support change now.")
+	immutableArgs := []string{"environment_id", "name", "data"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if d.HasChange("name") {
-		return fmt.Errorf("`name` do not support change now.")
-	}
-
-	if d.HasChange("config_data") {
-		if v, ok := d.GetOk("config_data"); ok {
+	if d.HasChange("data") {
+		if v, ok := d.GetOk("data"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				pair := tem.Pair{}
 				if v, ok := dMap["key"]; ok {
 					pair.Key = helper.String(v.(string))
@@ -241,13 +243,12 @@ func resourceTencentCloudTemAppConfigUpdate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem appConfig failed, reason:%+v", logId, err)
 		return err
 	}
 

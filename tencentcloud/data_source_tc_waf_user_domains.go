@@ -4,14 +4,14 @@ Use this data source to query detailed information of waf user_domains
 Example Usage
 
 ```hcl
-data "tencentcloud_waf_user_domains" "user_domains" {}
+data "tencentcloud_waf_user_domains" "user_domains" {
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -76,6 +76,7 @@ func dataSourceTencentCloudWafUserDomains() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -89,23 +90,23 @@ func dataSourceTencentCloudWafUserDomainsRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_waf_user_domains.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		usersInfo []*waf.UserDomainInfo
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	service := WafService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var usersInfo []*waf.UserDomainInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeWafUserDomainsByFilter(ctx)
+		result, e := service.DescribeWafUserDomainsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		usersInfo = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -167,6 +168,5 @@ func dataSourceTencentCloudWafUserDomainsRead(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
-
 	return nil
 }

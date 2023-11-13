@@ -5,14 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_person_sample" "person_sample" {
-  name          = "test"
-  usages        = [
-    "Review.Face"
-  ]
-  description   = "test"
-  face_contents = [
-    filebase64("./person.png")
-  ]
+  name = &lt;nil&gt;
+  usages = &lt;nil&gt;
+  description = &lt;nil&gt;
+  face_contents = &lt;nil&gt;
 }
 ```
 
@@ -28,15 +24,12 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/base64"
-	"io/ioutil"
-	"log"
-	"net/http"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsPersonSample() *schema.Resource {
@@ -61,7 +54,7 @@ func resourceTencentCloudMpsPersonSample() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Material application scene, optional value:1. Recognition.Face: used for content recognition 2. Review.Face: used for inappropriate content identification 3. All: contains all of the above, equivalent to 1+2.",
+				Description: "Material application scene, optional value:1. Recognition: used for content recognition, equivalent to Recognition.Face.2. Review: used for inappropriate content identification, equivalent to Review.Face.3. All: contains all of the above, equivalent to 1+2.",
 			},
 
 			"description": {
@@ -132,7 +125,7 @@ func resourceTencentCloudMpsPersonSampleCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	personId = *response.Response.Person.PersonId
+	personId = *response.Response.PersonId
 	d.SetId(personId)
 
 	return resourceTencentCloudMpsPersonSampleRead(d, meta)
@@ -148,7 +141,7 @@ func resourceTencentCloudMpsPersonSampleRead(d *schema.ResourceData, meta interf
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	personId := d.Id()
+	personSampleId := d.Id()
 
 	personSample, err := service.DescribeMpsPersonSampleById(ctx, personId)
 	if err != nil {
@@ -165,30 +158,16 @@ func resourceTencentCloudMpsPersonSampleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("name", personSample.Name)
 	}
 
-	if personSample.UsageSet != nil {
-		_ = d.Set("usages", personSample.UsageSet)
+	if personSample.Usages != nil {
+		_ = d.Set("usages", personSample.Usages)
 	}
 
 	if personSample.Description != nil {
 		_ = d.Set("description", personSample.Description)
 	}
 
-	if personSample.FaceInfoSet != nil {
-		faceContents := []*string{}
-		for _, faceInfo := range personSample.FaceInfoSet {
-			url := faceInfo.Url
-			res, err := http.Get(*url)
-			if err != nil {
-				return err
-			}
-			content, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				return err
-			}
-			base64Encode := base64.StdEncoding.EncodeToString(content)
-			faceContents = append(faceContents, &base64Encode)
-		}
-		_ = d.Set("face_contents", faceContents)
+	if personSample.FaceContents != nil {
+		_ = d.Set("face_contents", personSample.FaceContents)
 	}
 
 	return nil
@@ -202,26 +181,25 @@ func resourceTencentCloudMpsPersonSampleUpdate(d *schema.ResourceData, meta inte
 
 	request := mps.NewModifyPersonSampleRequest()
 
-	personId := d.Id()
+	personSampleId := d.Id()
 
-	needChange := false
 	request.PersonId = &personId
 
-	mutableArgs := []string{"name", "usages", "description", "face_contents"}
+	immutableArgs := []string{"name", "usages", "description", "face_contents"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("usages") {
 		if v, ok := d.GetOk("usages"); ok {
 			usagesSet := v.(*schema.Set).List()
 			for i := range usagesSet {
@@ -229,35 +207,26 @@ func resourceTencentCloudMpsPersonSampleUpdate(d *schema.ResourceData, meta inte
 				request.Usages = append(request.Usages, &usages)
 			}
 		}
+	}
 
+	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
+	}
 
-		if v, ok := d.GetOk("face_contents"); ok {
-			faceContentsSet := v.(*schema.Set).List()
-			operationInfo := mps.AiSampleFaceOperation{}
-			for i := range faceContentsSet {
-				faceContents := faceContentsSet[i].(string)
-				operationInfo.FaceContents = append(operationInfo.FaceContents, &faceContents)
-			}
-			operationInfo.Type = helper.String("reset")
-			request.FaceOperationInfo = &operationInfo
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyPersonSample(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyPersonSample(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps personSample failed, reason:%+v", logId, err)
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps personSample failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsPersonSampleRead(d, meta)
@@ -271,7 +240,7 @@ func resourceTencentCloudMpsPersonSampleDelete(d *schema.ResourceData, meta inte
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	personId := d.Id()
+	personSampleId := d.Id()
 
 	if err := service.DeleteMpsPersonSampleById(ctx, personId); err != nil {
 		return err

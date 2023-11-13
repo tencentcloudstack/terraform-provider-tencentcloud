@@ -1,27 +1,25 @@
 /*
 Use this data source to query detailed information of cat metric_data
+
 Example Usage
+
 ```hcl
 data "tencentcloud_cat_metric_data" "metric_data" {
-  analyze_task_type = "AnalyzeTaskType_Network"
-  metric_type = "gauge"
-  field = "avg(\"ping_time\")"
-  filters = [
-    "\"host\" = 'www.qq.com'",
-    "time >= now()-1h",
-  ]
-}
+  analyze_task_type = ""
+  metric_type = ""
+  field = ""
+  filter = ""
+  group_by = ""
+  filters =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -32,7 +30,7 @@ func dataSourceTencentCloudCatMetricData() *schema.Resource {
 			"analyze_task_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Analysis of task type, supported types: `AnalyzeTaskType_Network`: network quality, `AnalyzeTaskType_Browse`: page performance, `AnalyzeTaskType_Transport`: port performance, `AnalyzeTaskType_UploadDownload`: file transport, `AnalyzeTaskType_MediaStream`: audiovisual experience.",
+				Description: "Analysis of task type, supported types: AnalyzeTaskType_Network: network quality, AnalyzeTaskType_Browse: page performance, AnalyzeTaskType_Transport: port performance, AnalyzeTaskType_UploadDownload: file transport, AnalyzeTaskType_MediaStream: audiovisual experience.",
 			},
 
 			"metric_type": {
@@ -60,7 +58,7 @@ func dataSourceTencentCloudCatMetricData() *schema.Resource {
 			},
 
 			"filters": {
-				Required: true,
+				Optional: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -119,34 +117,27 @@ func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interf
 
 	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var metric *cat.DescribeProbeMetricDataResponseParams
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCatMetricDataByFilter(ctx, paramMap)
 		if e != nil {
-			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkError.Code == "FailedOperation.DbQueryFailed" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		}
-		metric = result
+		metricSet = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	var metricSet string
-	if metric != nil && metric.MetricSet != nil {
-		metricSet = *metric.MetricSet
-		_ = d.Set("metric_set", metric.MetricSet)
+	ids := make([]string, 0, len(metricSet))
+	if metricSet != nil {
+		_ = d.Set("metric_set", metricSet)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{metricSet}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), metricSet); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

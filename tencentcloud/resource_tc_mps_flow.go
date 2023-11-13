@@ -3,108 +3,57 @@ Provides a resource to create a mps flow
 
 Example Usage
 
-Create a mps RTP flow
-
 ```hcl
-resource "tencentcloud_mps_event" "event" {
-	event_name = "tf_test_event_srt_%d"
-	description = "tf test mps event description"
-  }
-
 resource "tencentcloud_mps_flow" "flow" {
-  flow_name = "tf_test_mps_flow_srt_%d"
-  max_bandwidth = 10000000
+  flow_name = ""
+  max_bandwidth =
   input_group {
-		input_name = "test_inputname"
-		protocol = "SRT"
-		description = "input name Description"
-		allow_ip_list = ["0.0.0.0/0"]
-		srt_settings {
-			mode = "LISTENER"
-			stream_id = "#!::u=johnny,r=resource,h=xxx.com,t=stream,m=play"
-			latency = 1000
-			recv_latency = 1000
-			peer_latency =  1000
-			peer_idle_timeout =  1000
+		input_name = ""
+		protocol = ""
+		description = ""
+		allow_ip_list =
+		s_r_t_settings {
+			mode = ""
+			stream_id = ""
+			latency =
+			recv_latency =
+			peer_latency =
+			peer_idle_timeout =
+			passphrase = ""
+			pb_key_len =
+			source_addresses {
+				ip = ""
+				port =
+			}
 		}
-  }
-  event_id = tencentcloud_mps_event.event.id
-}
-```
-
-Create a mps RTP flow
-
-```hcl
-resource "tencentcloud_mps_event" "event_rtp" {
-	event_name = "tf_test_event_rtp_%d"
-	description = "tf test mps event description"
-  }
-
-resource "tencentcloud_mps_flow" "flow_rtp" {
-  flow_name = "tf_test_mps_flow_rtp_%d"
-  max_bandwidth = 10000000
-  input_group {
-		input_name = "test_inputname"
-		protocol = "RTP"
-		description = "input name Description"
-		allow_ip_list = ["0.0.0.0/0"]
-		rtp_settings {
-			fec = "none"
-			idle_timeout = 1000
+		r_t_p_settings {
+			f_e_c = ""
+			idle_timeout =
 		}
+		fail_over = ""
+		r_t_m_p_pull_settings {
+			source_addresses {
+				tc_url = ""
+				stream_key = ""
+			}
+		}
+		r_t_s_p_pull_settings {
+			source_addresses {
+				url = ""
+			}
+		}
+		h_l_s_pull_settings {
+			source_addresses {
+				url = ""
+			}
+		}
+		resilient_stream {
+			enable =
+			buffer_time =
+		}
+
   }
-  event_id = tencentcloud_mps_event.event_rtp.id
-}
-```
-
-Create a mps RTP flow and start it
-
-Before you start a mps flow, you need to create a output first.
-
-```hcl
-resource "tencentcloud_mps_event" "event_rtp" {
-  event_name  = "your_event_name"
-  description = "tf test mps event description"
-}
-
-resource "tencentcloud_mps_flow" "flow_rtp" {
-  flow_name     = "your_flow_name"
-  max_bandwidth = 10000000
-  input_group {
-    input_name    = "test_inputname"
-    protocol      = "RTP"
-    description   = "input name Description"
-    allow_ip_list = ["0.0.0.0/0"]
-    rtp_settings {
-      fec          = "none"
-      idle_timeout = 1000
-    }
-  }
-  event_id = tencentcloud_mps_event.event_rtp.id
-}
-
-resource "tencentcloud_mps_output" "output" {
-  flow_id = tencentcloud_mps_flow.flow_rtp.id
-  output {
-    output_name   = "your_output_name"
-    description   = "tf mps output group"
-    protocol      = "RTP"
-    output_region = "ap-guangzhou"
-    rtp_settings {
-      destinations {
-        ip   = "203.205.141.84"
-        port = 65535
-      }
-      fec          = "none"
-      idle_timeout = 1000
-    }
-  }
-}
-
-resource "tencentcloud_mps_start_flow_operation" "operation" {
-  flow_id    = tencentcloud_mps_flow.flow_rtp.id
-  start      = true
-  depends_on = [tencentcloud_mps_output.output]
+  event_id = ""
 }
 ```
 
@@ -121,12 +70,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsFlow() *schema.Resource {
@@ -142,7 +90,7 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 			"flow_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Flow name.",
+				Description: "Flow name。.",
 			},
 
 			"max_bandwidth": {
@@ -153,7 +101,6 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 
 			"input_group": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "The input group for the flow.",
 				Elem: &schema.Resource{
@@ -181,60 +128,51 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 							Optional:    true,
 							Description: "The input IP whitelist, the format is CIDR.",
 						},
-						"srt_settings": {
+						"s_r_t_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "The input SRT configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "SRT mode, optional [LISTENER|CALLER], default is LISTENER.",
 									},
 									"stream_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;,=_-), length 0~512. For specific format, please refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys.",
+										Description: "Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;amp;,=_-), length 0~512. For specific format, please refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys。.",
 									},
 									"latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Delay, default 0, unit ms, range [0, 3000].",
 									},
 									"recv_latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Receiving delay, default is 120, unit ms, range is [0, 3000].",
 									},
 									"peer_latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Peer delay, the default is 0, the unit is ms, and the range is [0, 3000].",
 									},
 									"peer_idle_timeout": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Peer timeout, default is 5000, unit ms, range is [1000, 10000].",
 									},
 									"passphrase": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The decryption key, which is empty by default, means no encryption. Only ascii code values can be filled in, and the length is [10, 79].",
 									},
 									"pb_key_len": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Key length, default is 0, optional [0|16|24|32].",
 									},
 									"source_addresses": {
@@ -259,24 +197,21 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 								},
 							},
 						},
-						"rtp_settings": {
+						"r_t_p_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "RTP configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"fec": {
+									"f_e_c": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "Defaults to none, optional values[none].",
+										Description: "Defaults to &amp;#39;none&amp;#39;, optional values[&amp;#39;none&amp;#39;].",
 									},
 									"idle_timeout": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Idle timeout, the default is 5000, the unit is ms, and the range is [1000, 10000].",
 									},
 								},
@@ -285,14 +220,12 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 						"fail_over": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
 							Description: "The active/standby switch of the input, [OPEN|CLOSE] is optional, and the default is CLOSE.",
 						},
-						"rtmp_pull_settings": {
+						"r_t_m_p_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input RTMP_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -318,11 +251,10 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 								},
 							},
 						},
-						"rtsp_pull_settings": {
+						"r_t_s_p_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input RTSP_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -343,11 +275,10 @@ func resourceTencentCloudMpsFlow() *schema.Resource {
 								},
 							},
 						},
-						"hls_pull_settings": {
+						"h_l_s_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input HLS_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -436,13 +367,11 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 			if v, ok := dMap["allow_ip_list"]; ok {
 				allowIpListSet := v.(*schema.Set).List()
 				for i := range allowIpListSet {
-					if allowIpListSet[i] != nil {
-						allowIpList := allowIpListSet[i].(string)
-						createInput.AllowIpList = append(createInput.AllowIpList, &allowIpList)
-					}
+					allowIpList := allowIpListSet[i].(string)
+					createInput.AllowIpList = append(createInput.AllowIpList, &allowIpList)
 				}
 			}
-			if sRTSettingsMap, ok := helper.InterfaceToMap(dMap, "srt_settings"); ok {
+			if sRTSettingsMap, ok := helper.InterfaceToMap(dMap, "s_r_t_settings"); ok {
 				createInputSRTSettings := mps.CreateInputSRTSettings{}
 				if v, ok := sRTSettingsMap["mode"]; ok {
 					createInputSRTSettings.Mode = helper.String(v.(string))
@@ -483,9 +412,9 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 				}
 				createInput.SRTSettings = &createInputSRTSettings
 			}
-			if rTPSettingsMap, ok := helper.InterfaceToMap(dMap, "rtp_settings"); ok {
+			if rTPSettingsMap, ok := helper.InterfaceToMap(dMap, "r_t_p_settings"); ok {
 				createInputRTPSettings := mps.CreateInputRTPSettings{}
-				if v, ok := rTPSettingsMap["fec"]; ok {
+				if v, ok := rTPSettingsMap["f_e_c"]; ok {
 					createInputRTPSettings.FEC = helper.String(v.(string))
 				}
 				if v, ok := rTPSettingsMap["idle_timeout"]; ok {
@@ -496,7 +425,7 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 			if v, ok := dMap["fail_over"]; ok {
 				createInput.FailOver = helper.String(v.(string))
 			}
-			if rTMPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtmp_pull_settings"); ok {
+			if rTMPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "r_t_m_p_pull_settings"); ok {
 				createInputRTMPPullSettings := mps.CreateInputRTMPPullSettings{}
 				if v, ok := rTMPPullSettingsMap["source_addresses"]; ok {
 					for _, item := range v.([]interface{}) {
@@ -513,7 +442,7 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 				}
 				createInput.RTMPPullSettings = &createInputRTMPPullSettings
 			}
-			if rTSPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtsp_pull_settings"); ok {
+			if rTSPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "r_t_s_p_pull_settings"); ok {
 				createInputRTSPPullSettings := mps.CreateInputRTSPPullSettings{}
 				if v, ok := rTSPPullSettingsMap["source_addresses"]; ok {
 					for _, item := range v.([]interface{}) {
@@ -527,7 +456,7 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 				}
 				createInput.RTSPPullSettings = &createInputRTSPPullSettings
 			}
-			if hLSPullSettingsMap, ok := helper.InterfaceToMap(dMap, "hls_pull_settings"); ok {
+			if hLSPullSettingsMap, ok := helper.InterfaceToMap(dMap, "h_l_s_pull_settings"); ok {
 				createInputHLSPullSettings := mps.CreateInputHLSPullSettings{}
 				if v, ok := hLSPullSettingsMap["source_addresses"]; ok {
 					for _, item := range v.([]interface{}) {
@@ -574,10 +503,7 @@ func resourceTencentCloudMpsFlowCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	if response.Response.Info != nil {
-		flowId = *response.Response.Info.FlowId
-	}
-
+	flowId = *response.Response.FlowId
 	d.SetId(flowId)
 
 	return resourceTencentCloudMpsFlowRead(d, meta)
@@ -616,71 +542,63 @@ func resourceTencentCloudMpsFlowRead(d *schema.ResourceData, meta interface{}) e
 
 	if flow.InputGroup != nil {
 		inputGroupList := []interface{}{}
-		for ii, inputGroup := range flow.InputGroup {
+		for _, inputGroup := range flow.InputGroup {
 			inputGroupMap := map[string]interface{}{}
 
-			if inputGroup.InputName != nil {
-				inputGroupMap["input_name"] = inputGroup.InputName
+			if flow.InputGroup.InputName != nil {
+				inputGroupMap["input_name"] = flow.InputGroup.InputName
 			}
 
-			if inputGroup.Protocol != nil {
-				inputGroupMap["protocol"] = inputGroup.Protocol
+			if flow.InputGroup.Protocol != nil {
+				inputGroupMap["protocol"] = flow.InputGroup.Protocol
 			}
 
-			if inputGroup.Description != nil {
-				inputGroupMap["description"] = inputGroup.Description
+			if flow.InputGroup.Description != nil {
+				inputGroupMap["description"] = flow.InputGroup.Description
 			}
 
-			if inputGroup.AllowIpList != nil {
-				inputGroupMap["allow_ip_list"] = inputGroup.AllowIpList
+			if flow.InputGroup.AllowIpList != nil {
+				inputGroupMap["allow_ip_list"] = flow.InputGroup.AllowIpList
 			}
 
-			if inputGroup.SRTSettings != nil {
+			if flow.InputGroup.SRTSettings != nil {
 				sRTSettingsMap := map[string]interface{}{}
 
-				if inputGroup.SRTSettings.Mode != nil {
-					sRTSettingsMap["mode"] = inputGroup.SRTSettings.Mode
+				if flow.InputGroup.SRTSettings.Mode != nil {
+					sRTSettingsMap["mode"] = flow.InputGroup.SRTSettings.Mode
 				}
 
-				if inputGroup.SRTSettings.StreamId != nil {
-					sRTSettingsMap["stream_id"] = inputGroup.SRTSettings.StreamId
+				if flow.InputGroup.SRTSettings.StreamId != nil {
+					sRTSettingsMap["stream_id"] = flow.InputGroup.SRTSettings.StreamId
 				}
 
-				if inputGroup.SRTSettings.Latency != nil {
-					sRTSettingsMap["latency"] = inputGroup.SRTSettings.Latency
+				if flow.InputGroup.SRTSettings.Latency != nil {
+					sRTSettingsMap["latency"] = flow.InputGroup.SRTSettings.Latency
 				}
 
-				if inputGroup.SRTSettings.RecvLatency != nil {
-					sRTSettingsMap["recv_latency"] = inputGroup.SRTSettings.RecvLatency
+				if flow.InputGroup.SRTSettings.RecvLatency != nil {
+					sRTSettingsMap["recv_latency"] = flow.InputGroup.SRTSettings.RecvLatency
 				}
 
-				//cannot be imported
-				if inputGroup.SRTSettings.PeerLatency != nil {
-					index := fmt.Sprintf("input_group.%d.srt_settings.0.peer_latency", ii)
-					oldValue := d.Get(index).(int)
-					if *inputGroup.SRTSettings.PeerLatency == 0 {
-						// need fix: the SDK has bug that cannot return the real value for peer_latency.
-						sRTSettingsMap["peer_latency"] = helper.IntInt64(oldValue)
-					} else {
-						sRTSettingsMap["peer_latency"] = inputGroup.SRTSettings.PeerLatency
-					}
+				if flow.InputGroup.SRTSettings.PeerLatency != nil {
+					sRTSettingsMap["peer_latency"] = flow.InputGroup.SRTSettings.PeerLatency
 				}
 
-				if inputGroup.SRTSettings.PeerIdleTimeout != nil {
-					sRTSettingsMap["peer_idle_timeout"] = inputGroup.SRTSettings.PeerIdleTimeout
+				if flow.InputGroup.SRTSettings.PeerIdleTimeout != nil {
+					sRTSettingsMap["peer_idle_timeout"] = flow.InputGroup.SRTSettings.PeerIdleTimeout
 				}
 
-				if inputGroup.SRTSettings.Passphrase != nil {
-					sRTSettingsMap["passphrase"] = inputGroup.SRTSettings.Passphrase
+				if flow.InputGroup.SRTSettings.Passphrase != nil {
+					sRTSettingsMap["passphrase"] = flow.InputGroup.SRTSettings.Passphrase
 				}
 
-				if inputGroup.SRTSettings.PbKeyLen != nil {
-					sRTSettingsMap["pb_key_len"] = inputGroup.SRTSettings.PbKeyLen
+				if flow.InputGroup.SRTSettings.PbKeyLen != nil {
+					sRTSettingsMap["pb_key_len"] = flow.InputGroup.SRTSettings.PbKeyLen
 				}
 
-				if inputGroup.SRTSettings.SourceAddresses != nil {
+				if flow.InputGroup.SRTSettings.SourceAddresses != nil {
 					sourceAddressesList := []interface{}{}
-					for _, sourceAddresses := range inputGroup.SRTSettings.SourceAddresses {
+					for _, sourceAddresses := range flow.InputGroup.SRTSettings.SourceAddresses {
 						sourceAddressesMap := map[string]interface{}{}
 
 						if sourceAddresses.Ip != nil {
@@ -694,36 +612,36 @@ func resourceTencentCloudMpsFlowRead(d *schema.ResourceData, meta interface{}) e
 						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
 					}
 
-					sRTSettingsMap["source_addresses"] = sourceAddressesList
+					sRTSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
 				}
 
-				inputGroupMap["srt_settings"] = []interface{}{sRTSettingsMap}
+				inputGroupMap["s_r_t_settings"] = []interface{}{sRTSettingsMap}
 			}
 
-			if inputGroup.RTPSettings != nil {
+			if flow.InputGroup.RTPSettings != nil {
 				rTPSettingsMap := map[string]interface{}{}
 
-				if inputGroup.RTPSettings.FEC != nil {
-					rTPSettingsMap["fec"] = inputGroup.RTPSettings.FEC
+				if flow.InputGroup.RTPSettings.FEC != nil {
+					rTPSettingsMap["f_e_c"] = flow.InputGroup.RTPSettings.FEC
 				}
 
-				if inputGroup.RTPSettings.IdleTimeout != nil {
-					rTPSettingsMap["idle_timeout"] = inputGroup.RTPSettings.IdleTimeout
+				if flow.InputGroup.RTPSettings.IdleTimeout != nil {
+					rTPSettingsMap["idle_timeout"] = flow.InputGroup.RTPSettings.IdleTimeout
 				}
 
-				inputGroupMap["rtp_settings"] = []interface{}{rTPSettingsMap}
+				inputGroupMap["r_t_p_settings"] = []interface{}{rTPSettingsMap}
 			}
 
-			if inputGroup.FailOver != nil {
-				inputGroupMap["fail_over"] = inputGroup.FailOver
+			if flow.InputGroup.FailOver != nil {
+				inputGroupMap["fail_over"] = flow.InputGroup.FailOver
 			}
 
-			if inputGroup.RTMPPullSettings != nil {
+			if flow.InputGroup.RTMPPullSettings != nil {
 				rTMPPullSettingsMap := map[string]interface{}{}
 
-				if inputGroup.RTMPPullSettings.SourceAddresses != nil {
+				if flow.InputGroup.RTMPPullSettings.SourceAddresses != nil {
 					sourceAddressesList := []interface{}{}
-					for _, sourceAddresses := range inputGroup.RTMPPullSettings.SourceAddresses {
+					for _, sourceAddresses := range flow.InputGroup.RTMPPullSettings.SourceAddresses {
 						sourceAddressesMap := map[string]interface{}{}
 
 						if sourceAddresses.TcUrl != nil {
@@ -737,18 +655,18 @@ func resourceTencentCloudMpsFlowRead(d *schema.ResourceData, meta interface{}) e
 						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
 					}
 
-					rTMPPullSettingsMap["source_addresses"] = sourceAddressesList
+					rTMPPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
 				}
 
-				inputGroupMap["rtmp_pull_settings"] = []interface{}{rTMPPullSettingsMap}
+				inputGroupMap["r_t_m_p_pull_settings"] = []interface{}{rTMPPullSettingsMap}
 			}
 
-			if inputGroup.RTSPPullSettings != nil {
+			if flow.InputGroup.RTSPPullSettings != nil {
 				rTSPPullSettingsMap := map[string]interface{}{}
 
-				if inputGroup.RTSPPullSettings.SourceAddresses != nil {
+				if flow.InputGroup.RTSPPullSettings.SourceAddresses != nil {
 					sourceAddressesList := []interface{}{}
-					for _, sourceAddresses := range inputGroup.RTSPPullSettings.SourceAddresses {
+					for _, sourceAddresses := range flow.InputGroup.RTSPPullSettings.SourceAddresses {
 						sourceAddressesMap := map[string]interface{}{}
 
 						if sourceAddresses.Url != nil {
@@ -758,18 +676,18 @@ func resourceTencentCloudMpsFlowRead(d *schema.ResourceData, meta interface{}) e
 						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
 					}
 
-					rTSPPullSettingsMap["source_addresses"] = sourceAddressesList
+					rTSPPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
 				}
 
-				inputGroupMap["rtsp_pull_settings"] = []interface{}{rTSPPullSettingsMap}
+				inputGroupMap["r_t_s_p_pull_settings"] = []interface{}{rTSPPullSettingsMap}
 			}
 
-			if inputGroup.HLSPullSettings != nil {
+			if flow.InputGroup.HLSPullSettings != nil {
 				hLSPullSettingsMap := map[string]interface{}{}
 
-				if inputGroup.HLSPullSettings.SourceAddresses != nil {
+				if flow.InputGroup.HLSPullSettings.SourceAddresses != nil {
 					sourceAddressesList := []interface{}{}
-					for _, sourceAddresses := range inputGroup.HLSPullSettings.SourceAddresses {
+					for _, sourceAddresses := range flow.InputGroup.HLSPullSettings.SourceAddresses {
 						sourceAddressesMap := map[string]interface{}{}
 
 						if sourceAddresses.Url != nil {
@@ -779,21 +697,21 @@ func resourceTencentCloudMpsFlowRead(d *schema.ResourceData, meta interface{}) e
 						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
 					}
 
-					hLSPullSettingsMap["source_addresses"] = sourceAddressesList
+					hLSPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
 				}
 
-				inputGroupMap["hls_pull_settings"] = []interface{}{hLSPullSettingsMap}
+				inputGroupMap["h_l_s_pull_settings"] = []interface{}{hLSPullSettingsMap}
 			}
 
-			if inputGroup.ResilientStream != nil {
+			if flow.InputGroup.ResilientStream != nil {
 				resilientStreamMap := map[string]interface{}{}
 
-				if inputGroup.ResilientStream.Enable != nil {
-					resilientStreamMap["enable"] = inputGroup.ResilientStream.Enable
+				if flow.InputGroup.ResilientStream.Enable != nil {
+					resilientStreamMap["enable"] = flow.InputGroup.ResilientStream.Enable
 				}
 
-				if inputGroup.ResilientStream.BufferTime != nil {
-					resilientStreamMap["buffer_time"] = inputGroup.ResilientStream.BufferTime
+				if flow.InputGroup.ResilientStream.BufferTime != nil {
+					resilientStreamMap["buffer_time"] = flow.InputGroup.ResilientStream.BufferTime
 				}
 
 				inputGroupMap["resilient_stream"] = []interface{}{resilientStreamMap}
@@ -825,7 +743,7 @@ func resourceTencentCloudMpsFlowUpdate(d *schema.ResourceData, meta interface{})
 
 	request.FlowId = &flowId
 
-	immutableArgs := []string{"max_bandwidth", "input_group", "event_id"}
+	immutableArgs := []string{"flow_name", "max_bandwidth", "input_group", "event_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

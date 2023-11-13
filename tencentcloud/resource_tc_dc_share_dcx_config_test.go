@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixDcShareDcxConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudDcShareDcxConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,8 +29,8 @@ func TestAccTencentCloudNeedFixDcShareDcxConfigResource_basic(t *testing.T) {
 const testAccDcShareDcxConfig = `
 
 resource "tencentcloud_dc_share_dcx_config" "share_dcx_config" {
-  direct_connect_tunnel_id = "dcx-4z49tnws"
-  enable = false
+  direct_connect_tunnel_id = "dcx-test1234"
+  enable = true
 }
 
 `

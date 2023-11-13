@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmImportImageOsDataSource_basic(t *testing.T) {
@@ -23,6 +22,8 @@ func TestAccTencentCloudCvmImportImageOsDataSource_basic(t *testing.T) {
 }
 
 const testAccCvmImportImageOsDataSource = `
+
 data "tencentcloud_cvm_import_image_os" "import_image_os" {
-}
+    }
+
 `

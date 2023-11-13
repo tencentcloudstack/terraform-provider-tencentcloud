@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_eb_plateform_event_template" "plateform_event_template" {
-  event_type = "eb_platform_test:TEST:ALL"
-}
+  event_type = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -52,16 +51,13 @@ func dataSourceTencentCloudEbPlateformEventTemplateRead(d *schema.ResourceData, 
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var eventType string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("event_type"); ok {
-		eventType = v.(string)
 		paramMap["EventType"] = helper.String(v.(string))
 	}
 
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var eventTemplate *string
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeEbPlateformEventTemplateByFilter(ctx, paramMap)
 		if e != nil {
@@ -74,14 +70,15 @@ func dataSourceTencentCloudEbPlateformEventTemplateRead(d *schema.ResourceData, 
 		return err
 	}
 
+	ids := make([]string, 0, len(eventTemplate))
 	if eventTemplate != nil {
 		_ = d.Set("event_template", eventTemplate)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{eventType, *eventTemplate}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), eventTemplate); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

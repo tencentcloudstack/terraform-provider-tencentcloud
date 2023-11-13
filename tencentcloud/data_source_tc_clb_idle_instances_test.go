@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbIdleInstancesDataSource_basic(t *testing.T) {
@@ -16,7 +15,7 @@ func TestAccTencentCloudClbIdleInstancesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClbIdleInstancesDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_clb_idle_instances.idle_instance")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_clb_idle_instances.idle_instances")),
 			},
 		},
 	})
@@ -24,7 +23,8 @@ func TestAccTencentCloudClbIdleInstancesDataSource_basic(t *testing.T) {
 
 const testAccClbIdleInstancesDataSource = `
 
-data "tencentcloud_clb_idle_instances" "idle_instance" {
-  load_balancer_region = "ap-guangzhou"
-}
+data "tencentcloud_clb_idle_instances" "idle_instances" {
+  load_balancer_region = ""
+  }
+
 `

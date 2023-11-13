@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbResourcesDataSource_basic(t *testing.T) {
@@ -26,8 +25,10 @@ const testAccClbResourcesDataSource = `
 
 data "tencentcloud_clb_resources" "resources" {
   filters {
-    name = "isp"
-    values = ["BGP"]
+		name = ""
+		values = 
+
   }
-}
+  }
+
 `

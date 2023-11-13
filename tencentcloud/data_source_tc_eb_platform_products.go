@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_eb_platform_products" "platform_products" {
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
@@ -64,6 +63,7 @@ func dataSourceTencentCloudEbPlatformProductsRead(d *schema.ResourceData, meta i
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var platformProducts []*eb.PlatformProduct
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeEbPlatformProductsByFilter(ctx, paramMap)
 		if e != nil {

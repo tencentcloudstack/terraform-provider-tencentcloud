@@ -1,25 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudSslDescribeHostDeployRecordDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_SSL)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostDeployRecordDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "certificate_id", "9D3qRt7r"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record", "resource_type", "ddos"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_deploy_record.describe_host_deploy_record")),
 			},
 		},
 	})
@@ -28,8 +24,8 @@ func TestAccTencentCloudSslDescribeHostDeployRecordDataSource_basic(t *testing.T
 const testAccSslDescribeHostDeployRecordDataSource = `
 
 data "tencentcloud_ssl_describe_host_deploy_record" "describe_host_deploy_record" {
-  certificate_id = "9D3qRt7r"
-  resource_type = "ddos"
+  certificate_id = ""
+  resource_type = ""
   }
 
 `

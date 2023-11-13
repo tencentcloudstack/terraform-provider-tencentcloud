@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfProvisionedConcurrencyConfigResource_basic(t *testing.T) {
@@ -18,6 +17,11 @@ func TestAccTencentCloudScfProvisionedConcurrencyConfigResource_basic(t *testing
 				Config: testAccScfProvisionedConcurrencyConfig,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_provisioned_concurrency_config.provisioned_concurrency_config", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_scf_provisioned_concurrency_config.provisioned_concurrency_config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -25,20 +29,21 @@ func TestAccTencentCloudScfProvisionedConcurrencyConfigResource_basic(t *testing
 const testAccScfProvisionedConcurrencyConfig = `
 
 resource "tencentcloud_scf_provisioned_concurrency_config" "provisioned_concurrency_config" {
-  function_name                       = "keep-1676351130"
-  qualifier                           = "2"
+  function_name = "test_function"
+  qualifier = "1"
   version_provisioned_concurrency_num = 2
-  namespace                           = "default"
+  namespace = "test_namespace"
   trigger_actions {
-    trigger_name                        = "test"
-    trigger_provisioned_concurrency_num = 2
-    trigger_cron_config                 = "29 45 12 29 05 * 2023"
-    provisioned_type                    = "Default"
+		trigger_name = ""
+		trigger_provisioned_concurrency_num = 
+		trigger_cron_config = ""
+		provisioned_type = ""
+
   }
-  provisioned_type                    = "Default"
-  tracking_target                     = 0.5
-  min_capacity                        = 1
-  max_capacity                        = 2
+  provisioned_type = ""
+  tracking_target = 
+  min_capacity = 
+  max_capacity = 
 }
 
 `

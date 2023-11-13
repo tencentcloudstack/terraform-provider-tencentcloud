@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_image_quota" "image_quota" {
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -43,7 +42,6 @@ func dataSourceTencentCloudCvmImageQuotaRead(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 
-	var imageNumQuota int64
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
@@ -61,14 +59,15 @@ func dataSourceTencentCloudCvmImageQuotaRead(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	_ = d.Set("image_num_quota", imageNumQuota)
+	ids := make([]string, 0, len(imageNumQuota))
+	if imageNumQuota != nil {
+		_ = d.Set("image_num_quota", imageNumQuota)
+	}
 
-	d.SetId(helper.BuildToken())
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), map[string]interface{}{
-			"image_num_quota": imageNumQuota,
-		}); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

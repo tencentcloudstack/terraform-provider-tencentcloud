@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_backup_time" "backup_time" {
-  instance_id       = "tdsql-9vqvls95"
-  start_backup_time = "01:00"
-  end_backup_time   = "04:00"
+  instance_id = ""
+  start_backup_time = ""
+  end_backup_time = ""
 }
 ```
 
@@ -24,12 +24,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMariadbBackupTime() *schema.Resource {
@@ -45,13 +43,15 @@ func resourceTencentCloudMariadbBackupTime() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
+
 			"start_backup_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Start time of daily backup window in the format of `mm:ss`, such as 22:00.",
 			},
+
 			"end_backup_time": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -66,7 +66,6 @@ func resourceTencentCloudMariadbBackupTimeCreate(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	var instanceId string
-
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
@@ -80,12 +79,13 @@ func resourceTencentCloudMariadbBackupTimeRead(d *schema.ResourceData, meta inte
 	defer logElapsed("resource.tencentcloud_mariadb_backup_time.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		instanceId = d.Id()
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	backupTimeId := d.Id()
 
 	backupTime, err := service.DescribeMariadbBackupTimeById(ctx, instanceId)
 	if err != nil {
@@ -117,19 +117,20 @@ func resourceTencentCloudMariadbBackupTimeUpdate(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_mariadb_backup_time.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		request    = mariadb.NewModifyBackupTimeRequest()
-		instanceId = d.Id()
-	)
+	logId := getLogId(contextNil)
+
+	request := mariadb.NewModifyBackupTimeRequest()
+
+	backupTimeId := d.Id()
 
 	request.InstanceId = &instanceId
-	if v, ok := d.GetOk("start_backup_time"); ok {
-		request.StartBackupTime = helper.String(v.(string))
-	}
 
-	if v, ok := d.GetOk("end_backup_time"); ok {
-		request.EndBackupTime = helper.String(v.(string))
+	immutableArgs := []string{"instance_id", "start_backup_time", "end_backup_time"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -139,14 +140,8 @@ func resourceTencentCloudMariadbBackupTimeUpdate(d *schema.ResourceData, meta in
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		if *result.Response.Status != MODIFY_BACKUPTIME_SUCCESS {
-			return resource.NonRetryableError(fmt.Errorf("update mariadb backupTime status is fail"))
-		}
-
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update mariadb backupTime failed, reason:%+v", logId, err)
 		return err

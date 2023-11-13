@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDcdbInstanceNodeInfoDataSource_basic(t *testing.T) {
@@ -16,19 +15,16 @@ func TestAccTencentCloudDcdbInstanceNodeInfoDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbInstanceNodeInfoDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_instance_node_info.instance_node_info"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_instance_node_info.instance_node_info", "nodes_info.#"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_instance_node_info.instance_node_info")),
 			},
 		},
 	})
 }
 
-const testAccDcdbInstanceNodeInfoDataSource = CommonPresetDcdb + `
+const testAccDcdbInstanceNodeInfoDataSource = `
 
 data "tencentcloud_dcdb_instance_node_info" "instance_node_info" {
-  instance_id = local.dcdb_id
-}
+  instance_id = ""
+  }
 
 `

@@ -5,26 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_slow_logs" "slow_logs" {
-	instance_id   = local.dcdb_id
-	start_time    = "%s"
-	end_time      = "%s"
-	shard_id      = "shard-1b5r04az"
-	db            = "tf_test_db"
-	order_by      = "query_time_sum"
-	order_by_type = "desc"
-	slave         = 0
-}
+  instance_id = ""
+  start_time = ""
+  shard_id = ""
+  end_time = ""
+  db = ""
+  order_by = ""
+  order_by_type = ""
+  slave =
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -219,14 +216,10 @@ func dataSourceTencentCloudDcdbSlowLogsRead(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -259,43 +252,33 @@ func dataSourceTencentCloudDcdbSlowLogsRead(d *schema.ResourceData, meta interfa
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		resp     *dcdb.DescribeDBSlowLogsResponseParams
-		slowLogs []*dcdb.SlowLogData
-		e        error
-	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		slowLogs, resp, e = service.DescribeDcdbSlowLogsByFilter(ctx, paramMap)
+		result, e := service.DescribeDcdbSlowLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		lockTimeSum = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG]%s quey dcdb slow log success, slowLogs.len:%v, resp:[%v], \n ", //result.LockTimeSum:[%v], result.QueryTimeSum:[%v]
-		logId, len(slowLogs), resp)
-	// logId, len(slowLogs), result, result.LockTimeSum, result.QueryTimeSum)
-
-	if resp != nil {
-		if resp.LockTimeSum != nil {
-			_ = d.Set("lock_time_sum", resp.LockTimeSum)
-		}
-
-		if resp.QueryCount != nil {
-			_ = d.Set("query_count", resp.QueryCount)
-		}
-
-		if resp.QueryTimeSum != nil {
-			_ = d.Set("query_time_sum", resp.QueryTimeSum)
-		}
+	ids := make([]string, 0, len(lockTimeSum))
+	if lockTimeSum != nil {
+		_ = d.Set("lock_time_sum", lockTimeSum)
 	}
 
-	if slowLogs != nil {
-		slowLogDataList := []interface{}{}
-		for _, slowLogData := range slowLogs {
+	if queryCount != nil {
+		_ = d.Set("query_count", queryCount)
+	}
+
+	if queryTimeSum != nil {
+		_ = d.Set("query_time_sum", queryTimeSum)
+	}
+
+	if data != nil {
+		for _, slowLogData := range data {
 			slowLogDataMap := map[string]interface{}{}
 
 			if slowLogData.CheckSum != nil {
@@ -374,16 +357,17 @@ func dataSourceTencentCloudDcdbSlowLogsRead(d *schema.ResourceData, meta interfa
 				slowLogDataMap["host"] = slowLogData.Host
 			}
 
-			slowLogDataList = append(slowLogDataList, slowLogDataMap)
+			ids = append(ids, *slowLogData.InstanceId)
+			tmpList = append(tmpList, slowLogDataMap)
 		}
 
-		_ = d.Set("data", slowLogDataList)
+		_ = d.Set("data", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), slowLogs); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

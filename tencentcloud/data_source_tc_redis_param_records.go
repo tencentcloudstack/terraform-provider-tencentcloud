@@ -1,28 +1,27 @@
 /*
-Use this data source to query detailed information of redis param records
+Use this data source to query detailed information of redis param_records
 
 Example Usage
 
 ```hcl
-
 data "tencentcloud_redis_param_records" "param_records" {
-	instance_id = "crs-c1nl9rpv"
-}
-
+  instance_id = "crs-c1nl9rpv"
+  limit = &lt;nil&gt;
+  offset = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudRedisRecordsParam() *schema.Resource {
+func dataSourceTencentCloudRedisParamRecords() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudRedisParamRecordsRead,
 		Schema: map[string]*schema.Schema{
@@ -30,6 +29,18 @@ func dataSourceTencentCloudRedisRecordsParam() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "The ID of instance.",
+			},
+
+			"limit": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Page size.",
+			},
+
+			"offset": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Page offset.",
 			},
 
 			"instance_param_history": {
@@ -81,13 +92,20 @@ func dataSourceTencentCloudRedisParamRecordsRead(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var instanceId string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntUint64(v.(int))
+	}
+
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntUint64(v.(int))
 	}
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -106,6 +124,7 @@ func dataSourceTencentCloudRedisParamRecordsRead(d *schema.ResourceData, meta in
 		return err
 	}
 
+	ids := make([]string, 0, len(instanceParamHistory))
 	tmpList := make([]map[string]interface{}, 0, len(instanceParamHistory))
 
 	if instanceParamHistory != nil {
@@ -132,13 +151,14 @@ func dataSourceTencentCloudRedisParamRecordsRead(d *schema.ResourceData, meta in
 				instanceParamHistoryMap["modify_time"] = instanceParamHistory.ModifyTime
 			}
 
+			ids = append(ids, *instanceParamHistory.InstanceId)
 			tmpList = append(tmpList, instanceParamHistoryMap)
 		}
 
 		_ = d.Set("instance_param_history", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

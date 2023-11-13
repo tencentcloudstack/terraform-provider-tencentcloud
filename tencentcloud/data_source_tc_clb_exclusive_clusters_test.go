@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbExclusiveClustersDataSource_basic(t *testing.T) {
@@ -26,9 +25,10 @@ const testAccClbExclusiveClustersDataSource = `
 
 data "tencentcloud_clb_exclusive_clusters" "exclusive_clusters" {
   filters {
-    name = "zone"
-    values = ["ap-guangzhou-1"]
+		name = ""
+		values = 
+
   }
-}
+  }
 
 `

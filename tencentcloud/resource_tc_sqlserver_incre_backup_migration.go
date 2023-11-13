@@ -4,11 +4,11 @@ Provides a resource to create a sqlserver incre_backup_migration
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_incre_backup_migration" "example" {
-  instance_id         = "mssql-4gmc5805"
-  backup_migration_id = "mssql-backup-migration-9tj0sxnz"
-  backup_files        = []
-  is_recovery         = "YES"
+resource "tencentcloud_sqlserver_incre_backup_migration" "incre_backup_migration" {
+  instance_id = "mssql-i1z41iwd"
+  backup_migration_id = "migration_00001"
+  backup_files =
+  is_recovery = "No"
 }
 ```
 
@@ -25,13 +25,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudSqlserverIncreBackupMigration() *schema.Resource {
@@ -49,27 +47,26 @@ func resourceTencentCloudSqlserverIncreBackupMigration() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "ID of imported target instance.",
 			},
+
 			"backup_migration_id": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Backup import task ID, which is returned through the API CreateBackupMigration.",
 			},
+
 			"backup_files": {
-				Optional:    true,
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Incremental backup file. If the UploadType of a full backup file is COS_URL, fill in URL here. If the UploadType is COS_UPLOAD, fill in the name of the backup file here. Only 1 backup file is supported, but a backup file can involve multiple databases.",
 			},
+
 			"is_recovery": {
 				Optional:    true,
-				Default:     "NO",
 				Type:        schema.TypeString,
 				Description: "Whether restoration is required. No: not required. Yes: required. Not required by default.",
-			},
-			"incremental_migration_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Incremental import task ID.",
 			},
 		},
 	}
@@ -79,26 +76,28 @@ func resourceTencentCloudSqlserverIncreBackupMigrationCreate(d *schema.ResourceD
 	defer logElapsed("resource.tencentcloud_sqlserver_incre_backup_migration.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId             = getLogId(contextNil)
-		request           = sqlserver.NewCreateIncrementalMigrationRequest()
-		response          = sqlserver.NewCreateIncrementalMigrationResponse()
-		instanceId        string
-		backupMigrationId string
-	)
+	logId := getLogId(contextNil)
 
+	var (
+		request    = sqlserver.NewCreateIncrementalMigrationRequest()
+		response   = sqlserver.NewCreateIncrementalMigrationResponse()
+		instanceId string
+	)
 	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
 		instanceId = v.(string)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("backup_migration_id"); ok {
 		request.BackupMigrationId = helper.String(v.(string))
-		backupMigrationId = v.(string)
 	}
 
 	if v, ok := d.GetOk("backup_files"); ok {
-		request.BackupFiles = helper.InterfacesStringsPoint(v.([]interface{}))
+		backupFilesSet := v.(*schema.Set).List()
+		for i := range backupFilesSet {
+			backupFiles := backupFilesSet[i].(string)
+			request.BackupFiles = append(request.BackupFiles, &backupFiles)
+		}
 	}
 
 	if v, ok := d.GetOk("is_recovery"); ok {
@@ -112,22 +111,16 @@ func resourceTencentCloudSqlserverIncreBackupMigrationCreate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		if result == nil {
-			e = fmt.Errorf("sqlserver incre backup migration %s not exists", instanceId)
-			return resource.NonRetryableError(e)
-		}
-
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create sqlserver increBackupMigration failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, backupMigrationId, *response.Response.IncrementalMigrationId}, FILED_SP))
+	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverIncreBackupMigrationRead(d, meta)
 }
@@ -136,22 +129,15 @@ func resourceTencentCloudSqlserverIncreBackupMigrationRead(d *schema.ResourceDat
 	defer logElapsed("resource.tencentcloud_sqlserver_incre_backup_migration.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	instanceId := idSplit[0]
-	backupMigrationId := idSplit[1]
-	incrementalMigrationId := idSplit[2]
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	increBackupMigration, err := service.DescribeSqlserverIncreBackupMigrationById(ctx, instanceId, backupMigrationId, incrementalMigrationId)
+	increBackupMigrationId := d.Id()
+
+	increBackupMigration, err := service.DescribeSqlserverIncreBackupMigrationById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -166,6 +152,10 @@ func resourceTencentCloudSqlserverIncreBackupMigrationRead(d *schema.ResourceDat
 		_ = d.Set("instance_id", increBackupMigration.InstanceId)
 	}
 
+	if increBackupMigration.BackupMigrationId != nil {
+		_ = d.Set("backup_migration_id", increBackupMigration.BackupMigrationId)
+	}
+
 	if increBackupMigration.BackupFiles != nil {
 		_ = d.Set("backup_files", increBackupMigration.BackupFiles)
 	}
@@ -174,10 +164,6 @@ func resourceTencentCloudSqlserverIncreBackupMigrationRead(d *schema.ResourceDat
 		_ = d.Set("is_recovery", increBackupMigration.IsRecovery)
 	}
 
-	_ = d.Set("backup_migration_id", backupMigrationId)
-
-	_ = d.Set("incremental_migration_id", incrementalMigrationId)
-
 	return nil
 }
 
@@ -185,7 +171,15 @@ func resourceTencentCloudSqlserverIncreBackupMigrationUpdate(d *schema.ResourceD
 	defer logElapsed("resource.tencentcloud_sqlserver_incre_backup_migration.update")()
 	defer inconsistentCheck(d, meta)()
 
-	immutableArgs := []string{"instance_id", "backup_migration_id"}
+	logId := getLogId(contextNil)
+
+	request := sqlserver.NewModifyIncrementalMigrationRequest()
+
+	increBackupMigrationId := d.Id()
+
+	request.InstanceId = &instanceId
+
+	immutableArgs := []string{"instance_id", "backup_migration_id", "backup_files", "is_recovery"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -193,33 +187,31 @@ func resourceTencentCloudSqlserverIncreBackupMigrationUpdate(d *schema.ResourceD
 		}
 	}
 
-	var (
-		logId   = getLogId(contextNil)
-		request = sqlserver.NewModifyIncrementalMigrationRequest()
-	)
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
+	if d.HasChange("instance_id") {
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
 	}
 
-	instanceId := idSplit[0]
-	backupMigrationId := idSplit[1]
-	incrementalMigrationId := idSplit[2]
-
-	request.InstanceId = &instanceId
-	request.BackupMigrationId = &backupMigrationId
-	request.IncrementalMigrationId = &incrementalMigrationId
-
-	if d.HasChange("is_recovery") {
-		if v, ok := d.GetOk("is_recovery"); ok {
-			request.IsRecovery = helper.String(v.(string))
+	if d.HasChange("backup_migration_id") {
+		if v, ok := d.GetOk("backup_migration_id"); ok {
+			request.BackupMigrationId = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("backup_files") {
 		if v, ok := d.GetOk("backup_files"); ok {
-			request.BackupFiles = helper.InterfacesStringsPoint(v.([]interface{}))
+			backupFilesSet := v.(*schema.Set).List()
+			for i := range backupFilesSet {
+				backupFiles := backupFilesSet[i].(string)
+				request.BackupFiles = append(request.BackupFiles, &backupFiles)
+			}
+		}
+	}
+
+	if d.HasChange("is_recovery") {
+		if v, ok := d.GetOk("is_recovery"); ok {
+			request.IsRecovery = helper.String(v.(string))
 		}
 	}
 
@@ -230,10 +222,8 @@ func resourceTencentCloudSqlserverIncreBackupMigrationUpdate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update sqlserver increBackupMigration failed, reason:%+v", logId, err)
 		return err
@@ -246,22 +236,13 @@ func resourceTencentCloudSqlserverIncreBackupMigrationDelete(d *schema.ResourceD
 	defer logElapsed("resource.tencentcloud_sqlserver_incre_backup_migration.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	increBackupMigrationId := d.Id()
 
-	instanceId := idSplit[0]
-	backupMigrationId := idSplit[1]
-	incrementalMigrationId := idSplit[2]
-
-	if err := service.DeleteSqlserverIncreBackupMigrationById(ctx, instanceId, backupMigrationId, incrementalMigrationId); err != nil {
+	if err := service.DeleteSqlserverIncreBackupMigrationById(ctx, instanceId); err != nil {
 		return err
 	}
 

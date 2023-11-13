@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfFunctionVersionResource_basic(t *testing.T) {
@@ -30,9 +29,9 @@ func TestAccTencentCloudScfFunctionVersionResource_basic(t *testing.T) {
 const testAccScfFunctionVersion = `
 
 resource "tencentcloud_scf_function_version" "function_version" {
-  function_name    = "keep-1676351130"
-  namespace        = "default"
-  description      = "for-terraform-test"
+  function_name = "test_function"
+  description = "test function"
+  namespace = "test_namespace"
 }
 
 `

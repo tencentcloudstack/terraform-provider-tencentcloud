@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDcInternetAddressQuotaDataSource_basic(t *testing.T) {
@@ -24,6 +23,7 @@ func TestAccTencentCloudDcInternetAddressQuotaDataSource_basic(t *testing.T) {
 
 const testAccDcInternetAddressQuotaDataSource = `
 
-data "tencentcloud_dc_internet_address_quota" "internet_address_quota" {}
+data "tencentcloud_dc_internet_address_quota" "internet_address_quota" {
+          }
 
 `

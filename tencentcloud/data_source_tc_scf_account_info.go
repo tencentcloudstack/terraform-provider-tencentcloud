@@ -4,14 +4,14 @@ Use this data source to query detailed information of scf account_info
 Example Usage
 
 ```hcl
-data "tencentcloud_scf_account_info" "account_info" {}
+data "tencentcloud_scf_account_info" "account_info" {
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -215,12 +215,12 @@ func dataSourceTencentCloudScfAccountInfo() *schema.Resource {
 										Computed:    true,
 										Description: "Limit of async retry attempt quantity.",
 									},
-									"min_msg_ttl": {
+									"min_msg_t_t_l": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "Lower limit of message retention time for async retry.",
 									},
-									"max_msg_ttl": {
+									"max_msg_t_t_l": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "Upper limit of message retention time for async retry.",
@@ -249,29 +249,26 @@ func dataSourceTencentCloudScfAccountInfoRead(d *schema.ResourceData, meta inter
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var accountInfo *scf.GetAccountResponseParams
+	var accountUsage []*scf.UsageInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeScfAccountInfo(ctx)
+		result, e := service.DescribeScfAccountInfoByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		accountInfo = result
+		accountUsage = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-
-	accountInfoMap := map[string]interface{}{}
-
-	if accountInfo.AccountUsage != nil {
+	ids := make([]string, 0, len(accountUsage))
+	if accountUsage != nil {
 		usageInfoMap := map[string]interface{}{}
-		accountUsage := accountInfo.AccountUsage
 
 		if accountUsage.NamespacesCount != nil {
 			usageInfoMap["namespaces_count"] = accountUsage.NamespacesCount
@@ -309,7 +306,7 @@ func dataSourceTencentCloudScfAccountInfoRead(d *schema.ResourceData, meta inter
 				namespaceList = append(namespaceList, namespaceMap)
 			}
 
-			usageInfoMap["namespace"] = namespaceList
+			usageInfoMap["namespace"] = []interface{}{namespaceList}
 		}
 
 		if accountUsage.TotalConcurrencyMem != nil {
@@ -324,13 +321,12 @@ func dataSourceTencentCloudScfAccountInfoRead(d *schema.ResourceData, meta inter
 			usageInfoMap["user_concurrency_mem_limit"] = accountUsage.UserConcurrencyMemLimit
 		}
 
-		_ = d.Set("account_usage", []interface{}{usageInfoMap})
-		accountInfoMap["account_usage"] = []interface{}{usageInfoMap}
+		ids = append(ids, *accountUsage.AppId)
+		_ = d.Set("account_usage", usageInfoMap)
 	}
 
-	if accountInfo.AccountLimit != nil {
+	if accountLimit != nil {
 		limitsInfoMap := map[string]interface{}{}
-		accountLimit := accountInfo.AccountLimit
 
 		if accountLimit.NamespacesCount != nil {
 			limitsInfoMap["namespaces_count"] = accountLimit.NamespacesCount
@@ -401,7 +397,6 @@ func dataSourceTencentCloudScfAccountInfoRead(d *schema.ResourceData, meta inter
 
 				if namespace.Namespace != nil {
 					namespaceMap["namespace"] = namespace.Namespace
-					ids = append(ids, *namespace.Namespace)
 				}
 
 				if namespace.ConcurrentExecutions != nil {
@@ -425,27 +420,27 @@ func dataSourceTencentCloudScfAccountInfoRead(d *schema.ResourceData, meta inter
 				}
 
 				if namespace.MinMsgTTL != nil {
-					namespaceMap["min_msg_ttl"] = namespace.MinMsgTTL
+					namespaceMap["min_msg_t_t_l"] = namespace.MinMsgTTL
 				}
 
 				if namespace.MaxMsgTTL != nil {
-					namespaceMap["max_msg_ttl"] = namespace.MaxMsgTTL
+					namespaceMap["max_msg_t_t_l"] = namespace.MaxMsgTTL
 				}
 
 				namespaceList = append(namespaceList, namespaceMap)
 			}
 
-			limitsInfoMap["namespace"] = namespaceList
+			limitsInfoMap["namespace"] = []interface{}{namespaceList}
 		}
-		_ = d.Set("account_limit", []interface{}{limitsInfoMap})
-		accountInfoMap["account_limit"] = []interface{}{limitsInfoMap}
+
+		ids = append(ids, *accountLimit.AppId)
+		_ = d.Set("account_limit", limitsInfoMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), accountInfoMap); e != nil {
+		if e := writeToFile(output.(string), usageInfoMap); e != nil {
 			return e
 		}
 	}

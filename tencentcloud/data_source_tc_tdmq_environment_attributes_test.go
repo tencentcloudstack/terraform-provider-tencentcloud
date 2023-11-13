@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTdmqEnvironmentAttributesDataSource_basic -v
 func TestAccTencentCloudTdmqEnvironmentAttributesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,32 +15,16 @@ func TestAccTencentCloudTdmqEnvironmentAttributesDataSource_basic(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTdmqEnvironmentAttributesDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_environment_attributes.example"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_environment_attributes.environment_attributes")),
 			},
 		},
 	})
 }
 
 const testAccTdmqEnvironmentAttributesDataSource = `
-data "tencentcloud_tdmq_environment_attributes" "example" {
-  environment_id = tencentcloud_tdmq_namespace.example.environ_name
-  cluster_id     = tencentcloud_tdmq_instance.example.id
-}
 
-resource "tencentcloud_tdmq_instance" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-  tags         = {
-    "createdBy" = "terraform"
-  }
-}
+data "tencentcloud_tdmq_environment_attributes" "environment_attributes" {
+    cluster_id = ""
+              }
 
-resource "tencentcloud_tdmq_namespace" "example" {
-  environ_name = "tf_example"
-  msg_ttl      = 300
-  cluster_id   = tencentcloud_tdmq_instance.example.id
-  remark       = "remark."
-}
 `

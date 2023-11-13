@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmLaunchTemplateDefaultVersionResource_basic(t *testing.T) {
@@ -30,8 +29,8 @@ func TestAccTencentCloudCvmLaunchTemplateDefaultVersionResource_basic(t *testing
 const testAccCvmLaunchTemplateDefaultVersion = `
 
 resource "tencentcloud_cvm_launch_template_default_version" "launch_template_default_version" {
-  launch_template_id = "lt-9e1znnsa"
-  default_version = 4
+  launch_template_id = "lt-34vaef8fe"
+  default_version = 2
 }
 
 `

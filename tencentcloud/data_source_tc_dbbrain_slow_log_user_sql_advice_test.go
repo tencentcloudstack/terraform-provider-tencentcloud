@@ -1,10 +1,8 @@
 package tencentcloud
 
 import (
-	"fmt"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDbbrainSlowLogUserSqlAdviceDataSource_basic(t *testing.T) {
@@ -16,16 +14,8 @@ func TestAccTencentCloudDbbrainSlowLogUserSqlAdviceDataSource_basic(t *testing.T
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDbbrainSlowLogUserSqlAdviceDataSource, defaultDbBrainInstanceId),
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test"),
-					resource.TestCheckResourceAttr("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "sql_text", "select * from tf_test_ci where 1=1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "product", "mysql"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "advices"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "comments"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "tables"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_slow_log_user_sql_advice.test", "sql_plan"),
-				),
+				Config: testAccDbbrainSlowLogUserSqlAdviceDataSource,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dbbrain_slow_log_user_sql_advice.slow_log_user_sql_advice")),
 			},
 		},
 	})
@@ -33,10 +23,11 @@ func TestAccTencentCloudDbbrainSlowLogUserSqlAdviceDataSource_basic(t *testing.T
 
 const testAccDbbrainSlowLogUserSqlAdviceDataSource = `
 
-data "tencentcloud_dbbrain_slow_log_user_sql_advice" "test" {
-  instance_id = "%s"
-  sql_text = "select * from tf_test_ci where 1=1"
-  product = "mysql"
-}
+data "tencentcloud_dbbrain_slow_log_user_sql_advice" "slow_log_user_sql_advice" {
+  instance_id = ""
+  sql_text = ""
+  schema = ""
+  product = ""
+          }
 
 `

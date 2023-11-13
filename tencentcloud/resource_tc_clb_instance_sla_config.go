@@ -5,8 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_instance_sla_config" "instance_sla_config" {
-  load_balancer_id = "lb-5dnrkgry"
-  sla_type         = "SLA"
+  load_balancer_sla {
+		load_balancer_id = "lb-xxxxxxxx"
+		sla_type = ""
+
+  }
 }
 ```
 
@@ -15,19 +18,19 @@ Import
 clb instance_sla_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_clb_instance_sla_config.instance_sla_config instance_id
+terraform import tencentcloud_clb_instance_sla_config.instance_sla_config instance_sla_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudClbInstanceSlaConfig() *schema.Resource {
@@ -40,15 +43,24 @@ func resourceTencentCloudClbInstanceSlaConfig() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"load_balancer_id": {
-				Type:        schema.TypeString,
+			"load_balancer_sla": {
 				Required:    true,
-				Description: "ID of the CLB instance.",
-			},
-			"sla_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "To upgrade to LCU-supported CLB instances. It must be SLA.",
+				Type:        schema.TypeList,
+				Description: "CLB instance information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"load_balancer_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "ID of the CLB instance.",
+						},
+						"sla_type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "To upgrade to LCU-supported CLB instances. It must be SLA.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -58,8 +70,7 @@ func resourceTencentCloudClbInstanceSlaConfigCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_clb_instance_sla_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	lbId := d.Get("load_balancer_id").(string)
-	d.SetId(lbId)
+	d.SetId()
 
 	return resourceTencentCloudClbInstanceSlaConfigUpdate(d, meta)
 }
@@ -74,25 +85,37 @@ func resourceTencentCloudClbInstanceSlaConfigRead(d *schema.ResourceData, meta i
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	lbId := d.Id()
+	instanceSlaConfigId := d.Id()
 
-	instance, err := service.DescribeLoadBalancerById(ctx, lbId)
+	instanceSlaConfig, err := service.DescribeClbInstanceSlaConfigById(ctx, slaUpdateParam)
 	if err != nil {
 		return err
 	}
 
-	if instance == nil {
+	if instanceSlaConfig == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ClbInstanceSlaConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if instance.LoadBalancerId != nil {
-		_ = d.Set("load_balancer_id", instance.LoadBalancerId)
-	}
+	if instanceSlaConfig.LoadBalancerSla != nil {
+		loadBalancerSlaList := []interface{}{}
+		for _, loadBalancerSla := range instanceSlaConfig.LoadBalancerSla {
+			loadBalancerSlaMap := map[string]interface{}{}
 
-	if instance.SlaType != nil {
-		_ = d.Set("sla_type", instance.SlaType)
+			if instanceSlaConfig.LoadBalancerSla.LoadBalancerId != nil {
+				loadBalancerSlaMap["load_balancer_id"] = instanceSlaConfig.LoadBalancerSla.LoadBalancerId
+			}
+
+			if instanceSlaConfig.LoadBalancerSla.SlaType != nil {
+				loadBalancerSlaMap["sla_type"] = instanceSlaConfig.LoadBalancerSla.SlaType
+			}
+
+			loadBalancerSlaList = append(loadBalancerSlaList, loadBalancerSlaMap)
+		}
+
+		_ = d.Set("load_balancer_sla", loadBalancerSlaList)
+
 	}
 
 	return nil
@@ -106,15 +129,18 @@ func resourceTencentCloudClbInstanceSlaConfigUpdate(d *schema.ResourceData, meta
 
 	request := clb.NewModifyLoadBalancerSlaRequest()
 
-	lbId := d.Id()
+	instanceSlaConfigId := d.Id()
 
-	param := clb.SlaUpdateParam{}
-	param.LoadBalancerId = &lbId
-	param.SlaType = helper.String(d.Get("sla_type").(string))
+	request.SlaUpdateParam = &slaUpdateParam
 
-	request.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+	immutableArgs := []string{"load_balancer_sla"}
 
-	var taskId string
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerSla(request)
 		if e != nil {
@@ -122,7 +148,6 @@ func resourceTencentCloudClbInstanceSlaConfigUpdate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		taskId = *result.Response.RequestId
 		return nil
 	})
 	if err != nil {
@@ -130,9 +155,12 @@ func resourceTencentCloudClbInstanceSlaConfigUpdate(d *schema.ResourceData, meta
 		return err
 	}
 
-	retryErr := waitForTaskFinish(taskId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
-	if retryErr != nil {
-		return retryErr
+	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"0"}, 60*readRetryTimeout, time.Second, service.ClbInstanceSlaConfigStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudClbInstanceSlaConfigRead(d, meta)

@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_lighthouse_instance_blueprint" "instance_blueprint" {
-  instance_ids = ["lhins-xxxxxx"]
-}
+  instance_ids =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -236,15 +235,12 @@ func dataSourceTencentCloudLighthouseInstanceBlueprintRead(d *schema.ResourceDat
 		paramMap["InstanceIds"] = helper.InterfacesStringsPoint(instanceIdsSet)
 	}
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var blueprintInstanceSet []*lighthouse.BlueprintInstance
-	instanceIds := make([]string, 0)
-	for _, instanceId := range d.Get("instance_ids").(*schema.Set).List() {
-		instanceIds = append(instanceIds, instanceId.(string))
-	}
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeLighthouseInstanceBlueprintByFilter(ctx, instanceIds)
+		result, e := service.DescribeLighthouseInstanceBlueprintByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -345,11 +341,11 @@ func dataSourceTencentCloudLighthouseInstanceBlueprintRead(d *schema.ResourceDat
 					blueprintMap["docker_version"] = blueprintInstance.Blueprint.DockerVersion
 				}
 
-				blueprintInstanceMap["blueprint"] = []map[string]interface{}{blueprintMap}
+				blueprintInstanceMap["blueprint"] = []interface{}{blueprintMap}
 			}
 
 			if blueprintInstance.SoftwareSet != nil {
-				softwareSetList := make([]map[string]interface{}, 0)
+				softwareSetList := []interface{}{}
 				for _, softwareSet := range blueprintInstance.SoftwareSet {
 					softwareSetMap := map[string]interface{}{}
 
@@ -370,7 +366,7 @@ func dataSourceTencentCloudLighthouseInstanceBlueprintRead(d *schema.ResourceDat
 					}
 
 					if softwareSet.DetailSet != nil {
-						detailSetList := make([]map[string]interface{}, 0)
+						detailSetList := []interface{}{}
 						for _, detailSet := range softwareSet.DetailSet {
 							detailSetMap := map[string]interface{}{}
 
@@ -389,13 +385,13 @@ func dataSourceTencentCloudLighthouseInstanceBlueprintRead(d *schema.ResourceDat
 							detailSetList = append(detailSetList, detailSetMap)
 						}
 
-						softwareSetMap["detail_set"] = detailSetList
+						softwareSetMap["detail_set"] = []interface{}{detailSetList}
 					}
 
 					softwareSetList = append(softwareSetList, softwareSetMap)
 				}
 
-				blueprintInstanceMap["software_set"] = softwareSetList
+				blueprintInstanceMap["software_set"] = []interface{}{softwareSetList}
 			}
 
 			if blueprintInstance.InstanceId != nil {

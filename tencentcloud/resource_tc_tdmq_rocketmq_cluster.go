@@ -4,16 +4,18 @@ Provides a resource to create a tdmqRocketmq cluster
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
+  cluster_name = &lt;nil&gt;
+  remark = &lt;nil&gt;
+                  }
 ```
+
 Import
 
 tdmqRocketmq cluster can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_cluster.cluster cluster_id
+terraform import tencentcloud_tdmq_rocketmq_cluster.cluster cluster_id
 ```
 */
 package tencentcloud
@@ -21,18 +23,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqClusterRead,
 		Create: resourceTencentCloudTdmqRocketmqClusterCreate,
+		Read:   resourceTencentCloudTdmqRocketmqClusterRead,
 		Update: resourceTencentCloudTdmqRocketmqClusterUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqClusterDelete,
 		Importer: &schema.ResourceImporter{
@@ -40,56 +41,56 @@ func resourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster name, which can contain 3-64 letters, digits, hyphens, and underscores.",
 			},
 
 			"remark": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster description (up to 128 characters).",
 			},
 
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
 			"region": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Region information.",
 			},
 
 			"create_time": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Creation time in milliseconds.",
 			},
 
 			"public_end_point": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Public network access address.",
 			},
 
 			"vpc_end_point": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "VPC access address.",
 			},
 
 			"support_namespace_endpoint": {
-				Type:        schema.TypeBool,
 				Computed:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether the namespace access point is supported.",
 			},
 
 			"vpcs": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Vpc list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -108,14 +109,14 @@ func resourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 			},
 
 			"is_vip": {
-				Type:        schema.TypeBool,
 				Computed:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether it is an exclusive instance.",
 			},
 
 			"rocket_m_q_flag": {
-				Type:        schema.TypeBool,
 				Computed:    true,
+				Type:        schema.TypeBool,
 				Description: "Rocketmq cluster identification.",
 			},
 		},
@@ -123,83 +124,66 @@ func resourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqClusterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_cluster.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_cluster.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = tdmqRocketmq.NewCreateRocketMQClusterRequest()
-		response  *tdmqRocketmq.CreateRocketMQClusterResponse
+		response  = tdmqRocketmq.NewCreateRocketMQClusterResponse()
 		clusterId string
 	)
-
 	if v, ok := d.GetOk("cluster_name"); ok {
-
-		request.Name = helper.String(v.(string))
+		request.ClusterName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-
 		request.Remark = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateRocketMQCluster(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateRocketMQCluster(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
 	clusterId = *response.Response.ClusterId
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		_, innerErr := service.DescribeTdmqRocketmqCluster(ctx, clusterId)
-		if innerErr != nil {
-			return resource.RetryableError(innerErr)
-		}
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
 	d.SetId(clusterId)
+
 	return resourceTencentCloudTdmqRocketmqClusterRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqClusterRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_cluster.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_cluster.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	clusterId := d.Id()
 
-	cluster, err := service.DescribeTdmqRocketmqCluster(ctx, clusterId)
-
+	cluster, err := service.DescribeTdmqRocketmqClusterById(ctx, clusterId)
 	if err != nil {
 		return err
 	}
 
 	if cluster == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `cluster` %s does not exist", clusterId)
+		log.Printf("[WARN]%s resource `TdmqRocketmqCluster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if cluster.ClusterName != nil {
@@ -238,16 +222,20 @@ func resourceTencentCloudTdmqRocketmqClusterRead(d *schema.ResourceData, meta in
 		vpcsList := []interface{}{}
 		for _, vpcs := range cluster.Vpcs {
 			vpcsMap := map[string]interface{}{}
-			if vpcs.VpcId != nil {
-				vpcsMap["vpc_id"] = vpcs.VpcId
+
+			if cluster.Vpcs.VpcId != nil {
+				vpcsMap["vpc_id"] = cluster.Vpcs.VpcId
 			}
-			if vpcs.SubnetId != nil {
-				vpcsMap["subnet_id"] = vpcs.SubnetId
+
+			if cluster.Vpcs.SubnetId != nil {
+				vpcsMap["subnet_id"] = cluster.Vpcs.SubnetId
 			}
 
 			vpcsList = append(vpcsList, vpcsMap)
 		}
+
 		_ = d.Set("vpcs", vpcsList)
+
 	}
 
 	if cluster.IsVip != nil {
@@ -262,7 +250,7 @@ func resourceTencentCloudTdmqRocketmqClusterRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTdmqRocketmqClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_cluster.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_cluster.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -273,33 +261,37 @@ func resourceTencentCloudTdmqRocketmqClusterUpdate(d *schema.ResourceData, meta 
 
 	request.ClusterId = &clusterId
 
+	immutableArgs := []string{"cluster_name", "remark", "cluster_id", "region", "create_time", "public_end_point", "vpc_end_point", "support_namespace_endpoint", "vpcs", "is_vip", "rocket_m_q_flag"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("cluster_name") {
 		if v, ok := d.GetOk("cluster_name"); ok {
 			request.ClusterName = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRocketMQCluster(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyRocketMQCluster(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq cluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq cluster failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -307,14 +299,13 @@ func resourceTencentCloudTdmqRocketmqClusterUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudTdmqRocketmqClusterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_cluster.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_cluster.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	clusterId := d.Id()
 
 	if err := service.DeleteTdmqRocketmqClusterById(ctx, clusterId); err != nil {

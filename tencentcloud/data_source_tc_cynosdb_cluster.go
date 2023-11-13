@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster" "cluster" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  database   = "users"
-  table      = "tb_user_name"
+  cluster_id = "xxx"
+  database = "test"
+  table = "1"
   table_type = "all"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -32,21 +31,25 @@ func dataSourceTencentCloudCynosdbCluster() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"database": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Database name.",
 			},
+
 			"table": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Data Table Name.",
 			},
+
 			"table_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Data table type: view: only return view, base_ Table: only returns the basic table, all: returns the view and table.",
 			},
+
 			"tables": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -59,14 +62,17 @@ func dataSourceTencentCloudCynosdbCluster() *schema.Resource {
 							Description: "Database name note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 						"tables": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Computed:    true,
 							Description: "Table Name List Note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -80,18 +86,13 @@ func dataSourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_cynosdb_cluster.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		tables    []*cynosdb.DatabaseTables
-		clusterId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
 
 	if v, ok := d.GetOk("database"); ok {
@@ -106,20 +107,23 @@ func dataSourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta inter
 		paramMap["TableType"] = helper.String(v.(string))
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var tables []*cynosdb.DatabaseTables
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbClusterByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		tables = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(tables))
 	tmpList := make([]map[string]interface{}, 0, len(tables))
 
 	if tables != nil {
@@ -134,19 +138,19 @@ func dataSourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta inter
 				databaseTablesMap["tables"] = databaseTables.Tables
 			}
 
+			ids = append(ids, *databaseTables.ClusterId)
 			tmpList = append(tmpList, databaseTablesMap)
 		}
 
 		_ = d.Set("tables", tmpList)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

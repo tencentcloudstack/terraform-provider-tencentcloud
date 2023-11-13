@@ -3,97 +3,35 @@ Provides a resource to create a eb event_target
 
 Example Usage
 
-Create an event target of type scf
-
 ```hcl
-variable "zone" {
-  default = "ap-guangzhou"
-}
+resource "tencentcloud_eb_event_target" "event_target" {
+  event_bus_id = "eb-xxx"
+  type = "scf"
+  target_description {
+		resource_description = "qcs::scf:ap-guangzhou:uin/xxxxxxxx:namespace/xxxxxx/function/xxxxx/x"
+		s_c_f_params {
+			batch_timeout = 1
+			batch_event_count = 1
+			enable_batch_delivery = true
+		}
+		ckafka_target_params {
+			topic_name = ""
+			retry_policy {
+				retry_interval = 1
+				max_retry_attempts = 1
+			}
+		}
+		e_s_target_params {
+			net_mode = ""
+			index_prefix = ""
+			rotation_interval = ""
+			output_mode = ""
+			index_suffix_mode = ""
+			index_template_type = ""
+		}
 
-variable "namespace" {
-  default = "default"
-}
-
-variable "function" {
-  default = "keep-1676351130"
-}
-
-variable "function_version" {
-  default = "$LATEST"
-}
-
-data "tencentcloud_cam_users" "foo" {
-}
-
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
   }
-}
-
-resource "tencentcloud_eb_event_rule" "foo" {
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-  rule_name    = "tf-event_rule"
-  description  = "event rule desc"
-  enable       = true
-  event_pattern = jsonencode(
-    {
-      source = "apigw.cloud.tencent"
-      type = [
-        "connector:apigw",
-      ]
-    }
-  )
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_eb_event_target" "scf_target" {
-    event_bus_id = tencentcloud_eb_event_bus.foo.id
-    rule_id      = tencentcloud_eb_event_rule.foo.rule_id
-    type         = "scf"
-
-    target_description {
-        resource_description = "qcs::scf:${var.zone}:uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}:namespace/${var.namespace}/function/${var.function}/${var.function_version}"
-
-        scf_params {
-            batch_event_count     = 1
-            batch_timeout         = 1
-            enable_batch_delivery = true
-        }
-    }
-}
-```
-
-Create an event target of type ckafka
-
-```hcl
-variable "ckafka" {
-  default = "ckafka-qzoeaqx8"
-}
-
-resource "tencentcloud_eb_event_target" "ckafka_target" {
-    event_bus_id = tencentcloud_eb_event_bus.foo.id
-    rule_id      = tencentcloud_eb_event_rule.foo.rule_id
-    type         = "ckafka"
-
-    target_description {
-        resource_description = "qcs::scf:${var.zone}:uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}:ckafkaId/uin/${data.tencentcloud_cam_users.foo.user_list.0.uin}/${var.ckafka}"
-
-        ckafka_target_params {
-            topic_name = "dasdasd"
-
-            retry_policy {
-                max_retry_attempts = 360
-                retry_interval     = 60
-            }
-        }
-    }
+  rule_id = ""
 }
 ```
 
@@ -110,13 +48,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudEbEventTarget() *schema.Resource {
@@ -132,20 +69,20 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 			"event_bus_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "event bus id.",
+				Description: "Event bus id.",
 			},
 
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "target type.",
+				Description: "Target type.",
 			},
 
 			"target_description": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "target description.",
+				Description: "Target description.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource_description": {
@@ -153,11 +90,11 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 							Required:    true,
 							Description: "QCS resource six-stage format, more references [resource six-stage format](https://cloud.tencent.com/document/product/598/10606).",
 						},
-						"scf_params": {
+						"s_c_f_params": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "cloud function parameters.",
+							Description: "Cloud function parameters.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"batch_timeout": {
@@ -194,7 +131,7 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Required:    true,
-										Description: "retry strategy.",
+										Description: "Retry strategy.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"retry_interval": {
@@ -213,7 +150,7 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 								},
 							},
 						},
-						"es_target_params": {
+						"e_s_target_params": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
@@ -223,17 +160,17 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 									"net_mode": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "network connection type.",
+										Description: "Network connection type.",
 									},
 									"index_prefix": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "index prefix.",
+										Description: "Index prefix.",
 									},
 									"rotation_interval": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "es log rotation granularity.",
+										Description: "Es log rotation granularity.",
 									},
 									"output_mode": {
 										Type:        schema.TypeString,
@@ -248,7 +185,7 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 									"index_template_type": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "es template type.",
+										Description: "Es template type.",
 									},
 								},
 							},
@@ -260,7 +197,7 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 			"rule_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "event rule id.",
+				Description: "Event rule id.",
 			},
 		},
 	}
@@ -275,9 +212,9 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 	var (
 		request    = eb.NewCreateTargetRequest()
 		response   = eb.NewCreateTargetResponse()
+		targetId   string
 		eventBusId string
 		ruleId     string
-		targetId   string
 	)
 	if v, ok := d.GetOk("event_bus_id"); ok {
 		eventBusId = v.(string)
@@ -293,7 +230,7 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 		if v, ok := dMap["resource_description"]; ok {
 			targetDescription.ResourceDescription = helper.String(v.(string))
 		}
-		if sCFParamsMap, ok := helper.InterfaceToMap(dMap, "scf_params"); ok {
+		if sCFParamsMap, ok := helper.InterfaceToMap(dMap, "s_c_f_params"); ok {
 			sCFParams := eb.SCFParams{}
 			if v, ok := sCFParamsMap["batch_timeout"]; ok {
 				sCFParams.BatchTimeout = helper.IntInt64(v.(int))
@@ -323,7 +260,7 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 			}
 			targetDescription.CkafkaTargetParams = &ckafkaTargetParams
 		}
-		if eSTargetParamsMap, ok := helper.InterfaceToMap(dMap, "es_target_params"); ok {
+		if eSTargetParamsMap, ok := helper.InterfaceToMap(dMap, "e_s_target_params"); ok {
 			eSTargetParams := eb.ESTargetParams{}
 			if v, ok := eSTargetParamsMap["net_mode"]; ok {
 				eSTargetParams.NetMode = helper.String(v.(string))
@@ -369,7 +306,7 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 	}
 
 	targetId = *response.Response.TargetId
-	d.SetId(eventBusId + FILED_SP + ruleId + FILED_SP + targetId)
+	d.SetId(strings.Join([]string{targetId, eventBusId, ruleId}, FILED_SP))
 
 	return resourceTencentCloudEbEventTargetRead(d, meta)
 }
@@ -388,11 +325,11 @@ func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interfac
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	targetId := idSplit[2]
+	targetId := idSplit[0]
+	eventBusId := idSplit[1]
+	ruleId := idSplit[2]
 
-	eventTarget, err := service.DescribeEbEventTargetById(ctx, eventBusId, ruleId, targetId)
+	eventTarget, err := service.DescribeEbEventTargetById(ctx, targetId, eventBusId, ruleId)
 	if err != nil {
 		return err
 	}
@@ -433,7 +370,7 @@ func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interfac
 				sCFParamsMap["enable_batch_delivery"] = eventTarget.TargetDescription.SCFParams.EnableBatchDelivery
 			}
 
-			targetDescriptionMap["scf_params"] = []interface{}{sCFParamsMap}
+			targetDescriptionMap["s_c_f_params"] = []interface{}{sCFParamsMap}
 		}
 
 		if eventTarget.TargetDescription.CkafkaTargetParams != nil {
@@ -487,7 +424,7 @@ func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interfac
 				eSTargetParamsMap["index_template_type"] = eventTarget.TargetDescription.ESTargetParams.IndexTemplateType
 			}
 
-			targetDescriptionMap["es_target_params"] = []interface{}{eSTargetParamsMap}
+			targetDescriptionMap["e_s_target_params"] = []interface{}{eSTargetParamsMap}
 		}
 
 		_ = d.Set("target_description", []interface{}{targetDescriptionMap})
@@ -512,19 +449,31 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	targetId := idSplit[2]
+	targetId := idSplit[0]
+	eventBusId := idSplit[1]
+	ruleId := idSplit[2]
 
+	request.TargetId = &targetId
 	request.EventBusId = &eventBusId
 	request.RuleId = &ruleId
-	request.TargetId = &targetId
 
 	immutableArgs := []string{"event_bus_id", "type", "target_description", "rule_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("event_bus_id") {
+		if v, ok := d.GetOk("event_bus_id"); ok {
+			request.EventBusId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("rule_id") {
+		if v, ok := d.GetOk("rule_id"); ok {
+			request.RuleId = helper.String(v.(string))
 		}
 	}
 
@@ -557,11 +506,11 @@ func resourceTencentCloudEbEventTargetDelete(d *schema.ResourceData, meta interf
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	targetId := idSplit[2]
+	targetId := idSplit[0]
+	eventBusId := idSplit[1]
+	ruleId := idSplit[2]
 
-	if err := service.DeleteEbEventTargetById(ctx, eventBusId, ruleId, targetId); err != nil {
+	if err := service.DeleteEbEventTargetById(ctx, targetId, eventBusId, ruleId); err != nil {
 		return err
 	}
 

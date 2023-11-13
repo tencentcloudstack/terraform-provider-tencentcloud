@@ -5,60 +5,58 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tcm_cluster_attachment" "cluster_attachment" {
-  mesh_id = "mesh-b9q6vf9l"
+  mesh_id = "mesh-xxxxxxxx"
   cluster_list {
-    cluster_id = "cls-rc5uy6dy"
-    region = "ap-guangzhou"
-    role = "REMOTE"
-    vpc_id = "vpc-a1jycmbx"
-    subnet_id = "subnet-lkyb3ayc"
-    type = "TKE"
+		cluster_id = "cls-xxxxxxxx"
+		region = "ap-shanghai"
+		role = "REMOTE"
+		vpc_id = "vpc-xxxxxxxx"
+		subnet_id = "subnet-xxxxxxx"
+		type = "TKE or EKS"
+
   }
 }
-
 ```
+
 Import
 
-tcm cluster_attachment can be imported using the mesh_id#cluster_id, e.g.
+tcm cluster_attachment can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tcm_cluster_attachment.cluster_attachment mesh-b9q6vf9l#cls-rc5uy6dy
+terraform import tencentcloud_tcm_cluster_attachment.cluster_attachment cluster_attachment_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTcmClusterAttachmentRead,
 		Create: resourceTencentCloudTcmClusterAttachmentCreate,
+		Read:   resourceTencentCloudTcmClusterAttachmentRead,
 		Delete: resourceTencentCloudTcmClusterAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"mesh_id": {
-				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Mesh ID.",
 			},
 
 			"cluster_list": {
-				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
 				ForceNew:    true,
+				Type:        schema.TypeList,
 				Description: "Cluster list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -80,13 +78,12 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Cluster&#39;s VpcId.",
+							Description: "Cluster&amp;#39;s VpcId.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
-							Description: "Subnet id, only needed if it&#39;s standalone mesh.",
+							Description: "Subnet id, only needed if it&amp;#39;s standalone mesh.",
 						},
 						"type": {
 							Type:        schema.TypeString,
@@ -104,14 +101,13 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_tcm_cluster_attachment.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		request   = tcm.NewLinkClusterListRequest()
-		meshId    string
-		clusterId string
-	)
+	logId := getLogId(contextNil)
 
+	var (
+		request  = tcm.NewLinkClusterListRequest()
+		response = tcm.NewLinkClusterListResponse()
+		meshId   string
+	)
 	if v, ok := d.GetOk("mesh_id"); ok {
 		meshId = v.(string)
 		request.MeshId = helper.String(v.(string))
@@ -122,7 +118,6 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 			dMap := item.(map[string]interface{})
 			cluster := tcm.Cluster{}
 			if v, ok := dMap["cluster_id"]; ok {
-				clusterId = v.(string)
 				cluster.ClusterId = helper.String(v.(string))
 			}
 			if v, ok := dMap["region"]; ok {
@@ -140,7 +135,6 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 			if v, ok := dMap["type"]; ok {
 				cluster.Type = helper.String(v.(string))
 			}
-
 			request.ClusterList = append(request.ClusterList, &cluster)
 		}
 	}
@@ -150,47 +144,19 @@ func resourceTencentCloudTcmClusterAttachmentCreate(d *schema.ResourceData, meta
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tcm clusterAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		clusterList := mesh.Mesh.ClusterList
-		if len(clusterList) < 1 {
-			return resource.RetryableError(fmt.Errorf("link is being created, retry..."))
-		}
-		var linkState string
-		for _, v := range clusterList {
-			if *v.ClusterId != clusterId {
-				continue
-			}
-			linkState = *v.Status.LinkState
-			if linkState == "LINKED" {
-				return nil
-			}
-			if linkState == "LINK_FAILED" {
-				return resource.NonRetryableError(fmt.Errorf("link status is %v, operate failed.", linkState))
-			}
-		}
-		return resource.RetryableError(fmt.Errorf("link status is %v, retry...", linkState))
-	})
-	if err != nil {
-		return err
-	}
+	meshId = *response.Response.MeshId
+	d.SetId(meshId)
 
-	d.SetId(strings.Join([]string{meshId, clusterId}, FILED_SP))
 	return resourceTencentCloudTcmClusterAttachmentRead(d, meta)
 }
 
@@ -199,61 +165,62 @@ func resourceTencentCloudTcmClusterAttachmentRead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
+	clusterAttachmentId := d.Id()
 
-	meshId := ids[0]
-	clusterId := ids[1]
-
-	mesh, err := service.DescribeTcmMesh(ctx, meshId)
-
+	clusterAttachment, err := service.DescribeTcmClusterAttachmentById(ctx, meshId)
 	if err != nil {
 		return err
 	}
 
-	if mesh == nil || mesh.Mesh == nil || len(mesh.Mesh.ClusterList) < 1 {
+	if clusterAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `clusterAttachment` %s does not exist", meshId)
+		log.Printf("[WARN]%s resource `TcmClusterAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("mesh_id", meshId)
+	if clusterAttachment.MeshId != nil {
+		_ = d.Set("mesh_id", clusterAttachment.MeshId)
+	}
 
-	if len(mesh.Mesh.ClusterList) > 0 {
-		clusterAttachment := mesh.Mesh
+	if clusterAttachment.ClusterList != nil {
 		clusterListList := []interface{}{}
 		for _, clusterList := range clusterAttachment.ClusterList {
-			if *clusterList.ClusterId != clusterId {
-				continue
-			}
 			clusterListMap := map[string]interface{}{}
-			if clusterList.ClusterId != nil {
-				clusterListMap["cluster_id"] = clusterList.ClusterId
+
+			if clusterAttachment.ClusterList.ClusterId != nil {
+				clusterListMap["cluster_id"] = clusterAttachment.ClusterList.ClusterId
 			}
-			if clusterList.Region != nil {
-				clusterListMap["region"] = clusterList.Region
+
+			if clusterAttachment.ClusterList.Region != nil {
+				clusterListMap["region"] = clusterAttachment.ClusterList.Region
 			}
-			if clusterList.Role != nil {
-				clusterListMap["role"] = clusterList.Role
+
+			if clusterAttachment.ClusterList.Role != nil {
+				clusterListMap["role"] = clusterAttachment.ClusterList.Role
 			}
-			if clusterList.VpcId != nil {
-				clusterListMap["vpc_id"] = clusterList.VpcId
+
+			if clusterAttachment.ClusterList.VpcId != nil {
+				clusterListMap["vpc_id"] = clusterAttachment.ClusterList.VpcId
 			}
-			if clusterList.SubnetId != nil {
-				clusterListMap["subnet_id"] = clusterList.SubnetId
+
+			if clusterAttachment.ClusterList.SubnetId != nil {
+				clusterListMap["subnet_id"] = clusterAttachment.ClusterList.SubnetId
 			}
-			if clusterList.Type != nil {
-				clusterListMap["type"] = clusterList.Type
+
+			if clusterAttachment.ClusterList.Type != nil {
+				clusterListMap["type"] = clusterAttachment.ClusterList.Type
 			}
 
 			clusterListList = append(clusterListList, clusterListMap)
 		}
+
 		_ = d.Set("cluster_list", clusterListList)
+
 	}
 
 	return nil
@@ -267,41 +234,9 @@ func resourceTencentCloudTcmClusterAttachmentDelete(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	clusterAttachmentId := d.Id()
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
-
-	meshId := ids[0]
-	clusterId := ids[1]
-
-	if err := service.DeleteTcmClusterAttachmentById(ctx, meshId, clusterId); err != nil {
-		return err
-	}
-
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		mesh, errRet := service.DescribeTcmMesh(ctx, meshId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		clusterList := mesh.Mesh.ClusterList
-		if len(clusterList) < 1 {
-			return nil
-		}
-		var linkState string
-		for _, v := range clusterList {
-			if *v.ClusterId != clusterId {
-				continue
-			}
-			linkState = *v.Status.LinkState
-			if linkState == "UNLINK_FAILED" {
-				return resource.NonRetryableError(fmt.Errorf("link status is %v, operate failed.", linkState))
-			}
-		}
-		return resource.RetryableError(fmt.Errorf("link status is %v, retry...", linkState))
-	})
-	if err != nil {
+	if err := service.DeleteTcmClusterAttachmentById(ctx, meshId); err != nil {
 		return err
 	}
 

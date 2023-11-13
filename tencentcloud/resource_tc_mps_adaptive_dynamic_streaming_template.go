@@ -5,60 +5,34 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynamic_streaming_template" {
-  comment                         = "terrraform test"
-  disable_higher_video_bitrate    = 0
-  disable_higher_video_resolution = 1
-  format                          = "HLS"
-  name                            = "terrraform-test"
-
+  format = &lt;nil&gt;
   stream_infos {
-    remove_audio = 0
-    remove_video = 0
+		video {
+			codec = &lt;nil&gt;
+			fps = &lt;nil&gt;
+			bitrate = &lt;nil&gt;
+			resolution_adaptive = "open"
+			width = 0
+			height = 0
+			gop = &lt;nil&gt;
+			fill_type = "black"
+			vcrf = &lt;nil&gt;
+		}
+		audio {
+			codec = &lt;nil&gt;
+			bitrate = &lt;nil&gt;
+			sample_rate = &lt;nil&gt;
+			audio_channel = 2
+		}
+		remove_audio = &lt;nil&gt;
+		remove_video = &lt;nil&gt;
 
-    audio {
-      audio_channel = 1
-      bitrate       = 55
-      codec         = "libmp3lame"
-      sample_rate   = 32000
-    }
-
-    video {
-      bitrate             = 245
-      codec               = "libx264"
-      fill_type           = "black"
-      fps                 = 30
-      gop                 = 0
-      height              = 135
-      resolution_adaptive = "open"
-      vcrf                = 0
-      width               = 145
-    }
   }
-  stream_infos {
-    remove_audio = 0
-    remove_video = 0
-
-    audio {
-      audio_channel = 2
-      bitrate       = 60
-      codec         = "libfdk_aac"
-      sample_rate   = 32000
-    }
-
-    video {
-      bitrate             = 400
-      codec               = "libx264"
-      fill_type           = "black"
-      fps                 = 40
-      gop                 = 0
-      height              = 150
-      resolution_adaptive = "open"
-      vcrf                = 0
-      width               = 160
-    }
-  }
+  name = &lt;nil&gt;
+  disable_higher_video_bitrate = 0
+  disable_higher_video_resolution = 0
+  comment = &lt;nil&gt;
 }
-
 ```
 
 Import
@@ -73,12 +47,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate() *schema.Resource {
@@ -238,7 +212,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 	var (
 		request    = mps.NewCreateAdaptiveDynamicStreamingTemplateRequest()
 		response   = mps.NewCreateAdaptiveDynamicStreamingTemplateResponse()
-		definition uint64
+		definition int
 	)
 	if v, ok := d.GetOk("format"); ok {
 		request.Format = helper.String(v.(string))
@@ -254,10 +228,10 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 					videoTemplateInfo.Codec = helper.String(v.(string))
 				}
 				if v, ok := videoMap["fps"]; ok {
-					videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+					videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 				}
 				if v, ok := videoMap["bitrate"]; ok {
-					videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+					videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 				}
 				if v, ok := videoMap["resolution_adaptive"]; ok {
 					videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -285,7 +259,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 					audioTemplateInfo.Codec = helper.String(v.(string))
 				}
 				if v, ok := audioMap["bitrate"]; ok {
-					audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+					audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 				}
 				if v, ok := audioMap["sample_rate"]; ok {
 					audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -337,7 +311,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 	}
 
 	definition = *response.Response.Definition
-	d.SetId(helper.UInt64ToStr(definition))
+	d.SetId(helper.Int64ToStr(definition))
 
 	return resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d, meta)
 }
@@ -352,7 +326,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	adaptiveDynamicStreamingTemplateId := d.Id()
 
 	adaptiveDynamicStreamingTemplate, err := service.DescribeMpsAdaptiveDynamicStreamingTemplateById(ctx, definition)
 	if err != nil {
@@ -374,76 +348,76 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 		for _, streamInfos := range adaptiveDynamicStreamingTemplate.StreamInfos {
 			streamInfosMap := map[string]interface{}{}
 
-			if streamInfos.Video != nil {
+			if adaptiveDynamicStreamingTemplate.StreamInfos.Video != nil {
 				videoMap := map[string]interface{}{}
 
-				if streamInfos.Video.Codec != nil {
-					videoMap["codec"] = streamInfos.Video.Codec
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Codec != nil {
+					videoMap["codec"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Codec
 				}
 
-				if streamInfos.Video.Fps != nil {
-					videoMap["fps"] = streamInfos.Video.Fps
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Fps != nil {
+					videoMap["fps"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Fps
 				}
 
-				if streamInfos.Video.Bitrate != nil {
-					videoMap["bitrate"] = streamInfos.Video.Bitrate
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Bitrate != nil {
+					videoMap["bitrate"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Bitrate
 				}
 
-				if streamInfos.Video.ResolutionAdaptive != nil {
-					videoMap["resolution_adaptive"] = streamInfos.Video.ResolutionAdaptive
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.ResolutionAdaptive != nil {
+					videoMap["resolution_adaptive"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.ResolutionAdaptive
 				}
 
-				if streamInfos.Video.Width != nil {
-					videoMap["width"] = streamInfos.Video.Width
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Width != nil {
+					videoMap["width"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Width
 				}
 
-				if streamInfos.Video.Height != nil {
-					videoMap["height"] = streamInfos.Video.Height
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Height != nil {
+					videoMap["height"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Height
 				}
 
-				if streamInfos.Video.Gop != nil {
-					videoMap["gop"] = streamInfos.Video.Gop
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Gop != nil {
+					videoMap["gop"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Gop
 				}
 
-				if streamInfos.Video.FillType != nil {
-					videoMap["fill_type"] = streamInfos.Video.FillType
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.FillType != nil {
+					videoMap["fill_type"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.FillType
 				}
 
-				if streamInfos.Video.Vcrf != nil {
-					videoMap["vcrf"] = streamInfos.Video.Vcrf
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Video.Vcrf != nil {
+					videoMap["vcrf"] = adaptiveDynamicStreamingTemplate.StreamInfos.Video.Vcrf
 				}
 
 				streamInfosMap["video"] = []interface{}{videoMap}
 			}
 
-			if streamInfos.Audio != nil {
+			if adaptiveDynamicStreamingTemplate.StreamInfos.Audio != nil {
 				audioMap := map[string]interface{}{}
 
-				if streamInfos.Audio.Codec != nil {
-					audioMap["codec"] = streamInfos.Audio.Codec
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Audio.Codec != nil {
+					audioMap["codec"] = adaptiveDynamicStreamingTemplate.StreamInfos.Audio.Codec
 				}
 
-				if streamInfos.Audio.Bitrate != nil {
-					audioMap["bitrate"] = streamInfos.Audio.Bitrate
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Audio.Bitrate != nil {
+					audioMap["bitrate"] = adaptiveDynamicStreamingTemplate.StreamInfos.Audio.Bitrate
 				}
 
-				if streamInfos.Audio.SampleRate != nil {
-					audioMap["sample_rate"] = streamInfos.Audio.SampleRate
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Audio.SampleRate != nil {
+					audioMap["sample_rate"] = adaptiveDynamicStreamingTemplate.StreamInfos.Audio.SampleRate
 				}
 
-				if streamInfos.Audio.AudioChannel != nil {
-					audioMap["audio_channel"] = streamInfos.Audio.AudioChannel
+				if adaptiveDynamicStreamingTemplate.StreamInfos.Audio.AudioChannel != nil {
+					audioMap["audio_channel"] = adaptiveDynamicStreamingTemplate.StreamInfos.Audio.AudioChannel
 				}
 
 				streamInfosMap["audio"] = []interface{}{audioMap}
 			}
 
-			if streamInfos.RemoveAudio != nil {
-				streamInfosMap["remove_audio"] = streamInfos.RemoveAudio
+			if adaptiveDynamicStreamingTemplate.StreamInfos.RemoveAudio != nil {
+				streamInfosMap["remove_audio"] = adaptiveDynamicStreamingTemplate.StreamInfos.RemoveAudio
 			}
 
-			if streamInfos.RemoveVideo != nil {
-				streamInfosMap["remove_video"] = streamInfos.RemoveVideo
+			if adaptiveDynamicStreamingTemplate.StreamInfos.RemoveVideo != nil {
+				streamInfosMap["remove_video"] = adaptiveDynamicStreamingTemplate.StreamInfos.RemoveVideo
 			}
 
 			streamInfosList = append(streamInfosList, streamInfosMap)
@@ -480,41 +454,38 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 
 	request := mps.NewModifyAdaptiveDynamicStreamingTemplateRequest()
 
-	definition := d.Id()
+	adaptiveDynamicStreamingTemplateId := d.Id()
 
-	needChange := false
+	request.Definition = &definition
 
-	request.Definition = helper.StrToUint64Point(definition)
+	immutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment"}
 
-	mutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment"}
-
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("format") {
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("stream_infos") {
 		if v, ok := d.GetOk("stream_infos"); ok {
 			for _, item := range v.([]interface{}) {
-				adaptiveStreamTemplateMap := item.(map[string]interface{})
 				adaptiveStreamTemplate := mps.AdaptiveStreamTemplate{}
-				if videoMap, ok := helper.InterfaceToMap(adaptiveStreamTemplateMap, "video"); ok {
+				if videoMap, ok := helper.InterfaceToMap(dMap, "video"); ok {
 					videoTemplateInfo := mps.VideoTemplateInfo{}
 					if v, ok := videoMap["codec"]; ok {
 						videoTemplateInfo.Codec = helper.String(v.(string))
 					}
 					if v, ok := videoMap["fps"]; ok {
-						videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+						videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 					}
 					if v, ok := videoMap["bitrate"]; ok {
-						videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+						videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 					}
 					if v, ok := videoMap["resolution_adaptive"]; ok {
 						videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -536,13 +507,13 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 					}
 					adaptiveStreamTemplate.Video = &videoTemplateInfo
 				}
-				if audioMap, ok := helper.InterfaceToMap(adaptiveStreamTemplateMap, "audio"); ok {
+				if audioMap, ok := helper.InterfaceToMap(dMap, "audio"); ok {
 					audioTemplateInfo := mps.AudioTemplateInfo{}
 					if v, ok := audioMap["codec"]; ok {
 						audioTemplateInfo.Codec = helper.String(v.(string))
 					}
 					if v, ok := audioMap["bitrate"]; ok {
-						audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+						audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 					}
 					if v, ok := audioMap["sample_rate"]; ok {
 						audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -552,45 +523,53 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 					}
 					adaptiveStreamTemplate.Audio = &audioTemplateInfo
 				}
-				if v, ok := adaptiveStreamTemplateMap["remove_audio"]; ok {
+				if v, ok := dMap["remove_audio"]; ok {
 					adaptiveStreamTemplate.RemoveAudio = helper.IntUint64(v.(int))
 				}
-				if v, ok := adaptiveStreamTemplateMap["remove_video"]; ok {
+				if v, ok := dMap["remove_video"]; ok {
 					adaptiveStreamTemplate.RemoveVideo = helper.IntUint64(v.(int))
 				}
 				request.StreamInfos = append(request.StreamInfos, &adaptiveStreamTemplate)
 			}
 		}
+	}
 
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("disable_higher_video_bitrate") {
 		if v, ok := d.GetOkExists("disable_higher_video_bitrate"); ok {
 			request.DisableHigherVideoBitrate = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("disable_higher_video_resolution") {
 		if v, ok := d.GetOkExists("disable_higher_video_resolution"); ok {
 			request.DisableHigherVideoResolution = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAdaptiveDynamicStreamingTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAdaptiveDynamicStreamingTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d, meta)
@@ -604,7 +583,7 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateDelete(d *schema.Res
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	adaptiveDynamicStreamingTemplateId := d.Id()
 
 	if err := service.DeleteMpsAdaptiveDynamicStreamingTemplateById(ctx, definition); err != nil {
 		return err

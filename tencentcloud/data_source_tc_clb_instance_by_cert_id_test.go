@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbInstanceByCertIdDataSource_basic(t *testing.T) {
@@ -25,7 +24,7 @@ func TestAccTencentCloudClbInstanceByCertIdDataSource_basic(t *testing.T) {
 const testAccClbInstanceByCertIdDataSource = `
 
 data "tencentcloud_clb_instance_by_cert_id" "instance_by_cert_id" {
-  cert_ids = ["3a6B5y8v"]
-}
+  cert_ids = 
+  }
 
 `

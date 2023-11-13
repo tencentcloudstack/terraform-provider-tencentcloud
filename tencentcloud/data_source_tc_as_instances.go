@@ -4,32 +4,20 @@ Use this data source to query detailed information of as instances
 Example Usage
 
 ```hcl
-resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name = "tf-as-group-ds-ins-basic"
-  configuration_id   = "your_launch_configuration_id"
-  max_size           = 1
-  min_size           = 1
-  vpc_id             = "your_vpc_id"
-  subnet_ids         = ["your_subnet_id"]
-
-  tags = {
-    "test" = "test"
-  }
-}
-
 data "tencentcloud_as_instances" "instances" {
+  instance_ids =
   filters {
-	name = "auto-scaling-group-id"
-	values = [tencentcloud_as_scaling_group.scaling_group.id]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
@@ -192,22 +180,22 @@ func dataSourceTencentCloudAsInstancesRead(d *schema.ResourceData, meta interfac
 
 	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList []*as.Instance
+	var autoScalingInstanceSet []*as.Instance
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAsInstancesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		instanceList = result
+		autoScalingInstanceSet = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(instanceList))
-	tmpList := make([]map[string]interface{}, 0, len(instanceList))
+	ids := make([]string, 0, len(autoScalingInstanceSet))
+	tmpList := make([]map[string]interface{}, 0, len(autoScalingInstanceSet))
 
 	if instanceList != nil {
 		for _, instance := range instanceList {

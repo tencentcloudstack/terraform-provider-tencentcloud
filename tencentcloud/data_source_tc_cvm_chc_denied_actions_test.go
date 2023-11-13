@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmChcDeniedActionsDataSource_basic(t *testing.T) {
@@ -25,6 +24,7 @@ func TestAccTencentCloudCvmChcDeniedActionsDataSource_basic(t *testing.T) {
 const testAccCvmChcDeniedActionsDataSource = `
 
 data "tencentcloud_cvm_chc_denied_actions" "chc_denied_actions" {
-  chc_ids = ["chc-0brmw3wl"]
-}
+  chc_ids = 
+  }
+
 `

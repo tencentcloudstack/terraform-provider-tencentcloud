@@ -4,9 +4,9 @@ Provides a resource to create a vpc traffic_package
 Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_traffic_package" "example" {
+resource "tencentcloud_vpc_traffic_package" "traffic_package" {
   traffic_amount = 10
-}
+      }
 ```
 
 Import
@@ -22,18 +22,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudVpcTrafficPackage() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpcTrafficPackageCreate,
 		Read:   resourceTencentCloudVpcTrafficPackageRead,
+		Update: resourceTencentCloudVpcTrafficPackageUpdate,
 		Delete: resourceTencentCloudVpcTrafficPackageDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -41,7 +41,6 @@ func resourceTencentCloudVpcTrafficPackage() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"traffic_amount": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Traffic Package Amount, eg: 10,20,50,512,1024,5120,51200,60,300,600,3072,6144,30720,61440,307200.",
 			},
@@ -81,7 +80,6 @@ func resourceTencentCloudVpcTrafficPackageCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOkExists("traffic_amount"); ok {
 		request.TrafficAmount = helper.IntUint64(v.(int))
 	}
-	request.TrafficPackageCount = helper.IntUint64(1)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateTrafficPackages(request)
@@ -98,13 +96,7 @@ func resourceTencentCloudVpcTrafficPackageCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	trafficPackageSet := response.Response.TrafficPackageSet
-
-	if len(trafficPackageSet) < 1 {
-		return fmt.Errorf("create traffic package failed.")
-	}
-	trafficPackageId = *trafficPackageSet[0]
-
+	trafficPackageId = *response.Response.TrafficPackageId
 	d.SetId(trafficPackageId)
 
 	return resourceTencentCloudVpcTrafficPackageRead(d, meta)
@@ -133,8 +125,8 @@ func resourceTencentCloudVpcTrafficPackageRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	if TrafficPackage.TotalAmount != nil {
-		_ = d.Set("traffic_amount", TrafficPackage.TotalAmount)
+	if TrafficPackage.TrafficAmount != nil {
+		_ = d.Set("traffic_amount", TrafficPackage.TrafficAmount)
 	}
 
 	if TrafficPackage.RemainingAmount != nil {
@@ -150,6 +142,22 @@ func resourceTencentCloudVpcTrafficPackageRead(d *schema.ResourceData, meta inte
 	}
 
 	return nil
+}
+
+func resourceTencentCloudVpcTrafficPackageUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_vpc_traffic_package.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	immutableArgs := []string{"traffic_amount", "remaining_amount", "used_amount", "created_time"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return resourceTencentCloudVpcTrafficPackageRead(d, meta)
 }
 
 func resourceTencentCloudVpcTrafficPackageDelete(d *schema.ResourceData, meta interface{}) error {

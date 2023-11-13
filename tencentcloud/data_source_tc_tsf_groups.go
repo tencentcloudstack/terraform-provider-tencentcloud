@@ -5,23 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_groups" "groups" {
-  search_word = "keep"
-  application_id = "application-a24x29xv"
-  order_by = "createTime"
-  order_type = 0
-  namespace_id = "namespace-aemrg36v"
-  cluster_id = "cluster-vwgj5e6y"
-  group_resource_type_list = ["DEF"]
-  status = "Running"
-  group_id_list = ["group-yrjkln9v"]
-}
+  search_word = ""
+  application_id = ""
+  order_by = ""
+  order_type =
+  namespace_id = ""
+  cluster_id = ""
+  group_resource_type_list =
+  status = ""
+  group_id_list =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -35,37 +34,37 @@ func dataSourceTencentCloudTsfGroups() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "searchWord, support groupName.",
+				Description: "SearchWord, support groupName.",
 			},
 
 			"application_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "applicationId.",
+				Description: "ApplicationId.",
 			},
 
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "sort term.",
+				Description: "Sort term.",
 			},
 
 			"order_type": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "order type, 0 desc, 1 asc.",
+				Description: "Order type, 0 desc, 1 asc.",
 			},
 
 			"namespace_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "namespace Id.",
+				Description: "Namespace Id.",
 			},
 
 			"cluster_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "clusterId.",
+				Description: "ClusterId.",
 			},
 
 			"group_resource_type_list": {
@@ -80,7 +79,7 @@ func dataSourceTencentCloudTsfGroups() *schema.Resource {
 			"status": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "group status filter, `Running`: running, `Unknown`: unknown.",
+				Description: "Group status filter.",
 			},
 
 			"group_id_list": {
@@ -89,7 +88,7 @@ func dataSourceTencentCloudTsfGroups() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "group Id list.",
+				Description: "Group Id list.",
 			},
 
 			"result": {
@@ -264,22 +263,24 @@ func dataSourceTencentCloudTsfGroupsRead(d *schema.ResourceData, meta interface{
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tsf.TsfPageVmGroup
+	var result []*tsf.TsfPageVmGroup
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTsfGroupsByFilter(ctx, paramMap)
+		result, e := service.DescribeTsfGroupsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(result.Content))
-	tsfPageVmGroupMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		tsfPageVmGroupMap := map[string]interface{}{}
+
 		if result.TotalCount != nil {
 			tsfPageVmGroupMap["total_count"] = result.TotalCount
 		}
@@ -362,13 +363,13 @@ func dataSourceTencentCloudTsfGroupsRead(d *schema.ResourceData, meta interface{
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.GroupId)
 			}
 
-			tsfPageVmGroupMap["content"] = contentList
+			tsfPageVmGroupMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageVmGroupMap})
+		ids = append(ids, *result.ClusterId)
+		_ = d.Set("result", tsfPageVmGroupMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

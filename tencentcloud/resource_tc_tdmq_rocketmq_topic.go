@@ -4,30 +4,22 @@ Provides a resource to create a tdmqRocketmq topic
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace_name = "tf_example_namespace"
-  remark         = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_topic" "example" {
-  topic_name     = "tf_example"
-  namespace_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  type           = "Normal"
-  remark         = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
+  topic = &lt;nil&gt;
+  namespaces = &lt;nil&gt;
+  type = &lt;nil&gt;
+  cluster_id = &lt;nil&gt;
+  remark = &lt;nil&gt;
+  partition_num = &lt;nil&gt;
+      }
 ```
+
 Import
 
 tdmqRocketmq topic can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_topic.topic topic_id
+terraform import tencentcloud_tdmq_rocketmq_topic.topic topic_id
 ```
 */
 package tencentcloud
@@ -35,71 +27,78 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqRocketmqTopic() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqTopicRead,
 		Create: resourceTencentCloudTdmqRocketmqTopicCreate,
+		Read:   resourceTencentCloudTdmqRocketmqTopicRead,
 		Update: resourceTencentCloudTdmqRocketmqTopicUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqTopicDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"topic_name": {
-				Type:        schema.TypeString,
+			"topic": {
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Topic name, which can contain 3-64 letters, digits, hyphens, and underscores.",
 			},
 
-			"namespace_name": {
-				Type:        schema.TypeString,
-				Required:    true,
+			"namespaces": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Topic namespace. Currently, you can create topics only in one single namespace.",
 			},
 
 			"type": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Topic type. Valid values: Normal, GlobalOrder, PartitionedOrder.",
 			},
 
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
 			"remark": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Topic remarks (up to 128 characters).",
 			},
 
 			"partition_num": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     3,
-				Description: "Number of partitions.",
+				Type:        schema.TypeInt,
+				Description: "Number of partitions, which doesn&amp;amp;#39;t take effect for globally sequential messages.",
+			},
+
+			"name": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Topic name.",
 			},
 
 			"create_time": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Creation time in milliseconds.",
 			},
 
 			"update_time": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Update time in milliseconds.",
 			},
 		},
@@ -107,32 +106,33 @@ func resourceTencentCloudTdmqRocketmqTopic() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqTopicCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_topic.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_topic.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request       = tdmqRocketmq.NewCreateRocketMQTopicRequest()
-		clusterId     string
-		namespaceName string
-		topicName     string
-		topicType     string
+		request     = tdmqRocketmq.NewCreateRocketMQTopicRequest()
+		response    = tdmqRocketmq.NewCreateRocketMQTopicResponse()
+		clusterId   string
+		namespaceId string
+		topic       string
 	)
-
-	if v, ok := d.GetOk("topic_name"); ok {
-		topicName = v.(string)
+	if v, ok := d.GetOk("topic"); ok {
+		topic = v.(string)
 		request.Topic = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("namespace_name"); ok {
-		namespaceName = v.(string)
-		request.Namespaces = []*string{&namespaceName}
+	if v, ok := d.GetOk("namespaces"); ok {
+		namespacesSet := v.(*schema.Set).List()
+		for i := range namespacesSet {
+			namespaces := namespacesSet[i].(string)
+			request.Namespaces = append(request.Namespaces, &namespaces)
+		}
 	}
 
 	if v, ok := d.GetOk("type"); ok {
-		topicType = v.(string)
-		request.Type = helper.String(topicType)
+		request.Type = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("cluster_id"); ok {
@@ -141,78 +141,104 @@ func resourceTencentCloudTdmqRocketmqTopicCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-
 		request.Remark = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("partition_num"); ok {
-		request.PartitionNum = helper.IntInt64(v.(int))
+	if v, ok := d.GetOkExists("partition_num"); ok {
+		request.PartitionNum = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateRocketMQTopic(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateRocketMQTopic(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq topic failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + namespaceName + FILED_SP + topicType + FILED_SP + topicName)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, namespaceId, topic}, FILED_SP))
+
 	return resourceTencentCloudTdmqRocketmqTopicRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqTopicRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_topic.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_topic.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
-	topicType := idSplit[2]
-	topicName := idSplit[3]
+	namespaceId := idSplit[1]
+	topic := idSplit[2]
 
-	topicList, err := service.DescribeTdmqRocketmqTopic(ctx, clusterId, namespaceName, topicName)
+	topic, err := service.DescribeTdmqRocketmqTopicById(ctx, clusterId, namespaceId, topic)
 	if err != nil {
 		return err
 	}
 
-	if len(topicList) == 0 {
+	if topic == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `topic` %s does not exist", topicName)
+		log.Printf("[WARN]%s resource `TdmqRocketmqTopic` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	topic := topicList[0]
+	if topic.Topic != nil {
+		_ = d.Set("topic", topic.Topic)
+	}
 
-	_ = d.Set("topic_name", topic.Name)
-	_ = d.Set("namespace_name", namespaceName)
-	_ = d.Set("type", topicType)
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("remark", topic.Remark)
-	_ = d.Set("partition_num", topic.PartitionNum)
-	_ = d.Set("create_time", topic.CreateTime)
-	_ = d.Set("update_time", topic.UpdateTime)
+	if topic.Namespaces != nil {
+		_ = d.Set("namespaces", topic.Namespaces)
+	}
+
+	if topic.Type != nil {
+		_ = d.Set("type", topic.Type)
+	}
+
+	if topic.ClusterId != nil {
+		_ = d.Set("cluster_id", topic.ClusterId)
+	}
+
+	if topic.Remark != nil {
+		_ = d.Set("remark", topic.Remark)
+	}
+
+	if topic.PartitionNum != nil {
+		_ = d.Set("partition_num", topic.PartitionNum)
+	}
+
+	if topic.Name != nil {
+		_ = d.Set("name", topic.Name)
+	}
+
+	if topic.CreateTime != nil {
+		_ = d.Set("create_time", topic.CreateTime)
+	}
+
+	if topic.UpdateTime != nil {
+		_ = d.Set("update_time", topic.UpdateTime)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudTdmqRocketmqTopicUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_topic.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_topic.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -220,68 +246,48 @@ func resourceTencentCloudTdmqRocketmqTopicUpdate(d *schema.ResourceData, meta in
 	request := tdmqRocketmq.NewModifyRocketMQTopicRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
-	topicName := idSplit[3]
+	namespaceId := idSplit[1]
+	topic := idSplit[2]
 
 	request.ClusterId = &clusterId
-	request.NamespaceId = &namespaceName
-	request.Topic = &topicName
+	request.NamespaceId = &namespaceId
+	request.Topic = &topic
 
-	if d.HasChange("topic") {
+	immutableArgs := []string{"topic", "namespaces", "type", "cluster_id", "remark", "partition_num", "name", "create_time", "update_time"}
 
-		return fmt.Errorf("`topic` do not support change now.")
-
-	}
-
-	if d.HasChange("namespace_name") {
-
-		return fmt.Errorf("`namespace_name` do not support change now.")
-
-	}
-
-	if d.HasChange("type") {
-
-		return fmt.Errorf("`type` do not support change now.")
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("partition_num") {
-		if v, ok := d.GetOk("partition_num"); ok {
-			request.PartitionNum = helper.IntInt64(v.(int))
+		if v, ok := d.GetOkExists("partition_num"); ok {
+			request.PartitionNum = helper.IntUint64(v.(int))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRocketMQTopic(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyRocketMQTopic(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq topic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq topic failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -289,23 +295,22 @@ func resourceTencentCloudTdmqRocketmqTopicUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTdmqRocketmqTopicDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_topic.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_topic.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
-	topicName := idSplit[3]
+	namespaceId := idSplit[1]
+	topic := idSplit[2]
 
-	if err := service.DeleteTdmqRocketmqTopicById(ctx, clusterId, namespaceName, topicName); err != nil {
+	if err := service.DeleteTdmqRocketmqTopicById(ctx, clusterId, namespaceId, topic); err != nil {
 		return err
 	}
 

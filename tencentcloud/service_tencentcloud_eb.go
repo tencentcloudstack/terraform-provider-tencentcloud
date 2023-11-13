@@ -663,3 +663,366 @@ func (me *EbService) DescribeEbPlateformEventTemplateByFilter(ctx context.Contex
 
 	return
 }
+
+func (me *EbService) DescribeEbSearchByFilter(ctx context.Context, param map[string]interface{}) (search []*eb.DescribeLogTagValueResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewDescribeLogTagValueRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "EventBusId" {
+			request.EventBusId = v.(*string)
+		}
+		if k == "GroupField" {
+			request.GroupField = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.([]*eb.LogFilter)
+		}
+		if k == "OrderFields" {
+			request.OrderFields = v.([]*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().DescribeLogTagValue(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Results) < 1 {
+			break
+		}
+		search = append(search, response.Response.Results...)
+		if len(response.Response.Results) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbPlateformEventTemplateByFilter(ctx context.Context, param map[string]interface{}) (plateformEventTemplate []*eb.GetPlatformEventTemplateResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewGetPlatformEventTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EventType" {
+			request.EventType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().GetPlatformEventTemplate(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventTemplate) < 1 {
+			break
+		}
+		plateformEventTemplate = append(plateformEventTemplate, response.Response.EventTemplate...)
+		if len(response.Response.EventTemplate) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbBusByFilter(ctx context.Context, param map[string]interface{}) (bus []*eb.EventBus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListEventBusesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*eb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListEventBuses(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventBuses) < 1 {
+			break
+		}
+		bus = append(bus, response.Response.EventBuses...)
+		if len(response.Response.EventBuses) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbRuleByFilter(ctx context.Context, param map[string]interface{}) (rule []*eb.Rule, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EventBusId" {
+			request.EventBusId = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListRules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Rules) < 1 {
+			break
+		}
+		rule = append(rule, response.Response.Rules...)
+		if len(response.Response.Rules) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbPlatformEventNamesByFilter(ctx context.Context, param map[string]interface{}) (platformEventNames []*eb.PlatformEventDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformEventNamesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProductType" {
+			request.ProductType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListPlatformEventNames(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventNames) < 1 {
+			break
+		}
+		platformEventNames = append(platformEventNames, response.Response.EventNames...)
+		if len(response.Response.EventNames) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbPlatformEventPatternsByFilter(ctx context.Context, param map[string]interface{}) (platformEventPatterns []*eb.PlatformEventSummary, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformEventPatternsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProductType" {
+			request.ProductType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListPlatformEventPatterns(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventPatterns) < 1 {
+			break
+		}
+		platformEventPatterns = append(platformEventPatterns, response.Response.EventPatterns...)
+		if len(response.Response.EventPatterns) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *EbService) DescribeEbPlatformProductsByFilter(ctx context.Context, param map[string]interface{}) (platformProducts []*eb.PlatformProduct, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListPlatformProductsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListPlatformProducts(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.PlatformProducts) < 1 {
+			break
+		}
+		platformProducts = append(platformProducts, response.Response.PlatformProducts...)
+		if len(response.Response.PlatformProducts) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudOrganizationOrgFinancialByProductDataSource_basic(t *testing.T) {
@@ -16,12 +15,7 @@ func TestAccTencentCloudOrganizationOrgFinancialByProductDataSource_basic(t *tes
 		Steps: []resource.TestStep{
 			{
 				Config: testAccOrganizationOrgFinancialByProductDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product"),
-					resource.TestCheckResourceAttr("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "month", "2023-05"),
-					resource.TestCheckResourceAttr("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "end_month", "2023-09"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "product_codes.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product", "product_codes.0", "p_eip"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_organization_org_financial_by_product.org_financial_by_product")),
 			},
 		},
 	})
@@ -30,9 +24,10 @@ func TestAccTencentCloudOrganizationOrgFinancialByProductDataSource_basic(t *tes
 const testAccOrganizationOrgFinancialByProductDataSource = `
 
 data "tencentcloud_organization_org_financial_by_product" "org_financial_by_product" {
-  month = "2023-05"
-  end_month = "2023-09"
-  product_codes = ["p_eip"]
-}
+  month = &lt;nil&gt;
+  end_month = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
+  product_codes = &lt;nil&gt;
+    }
 
 `

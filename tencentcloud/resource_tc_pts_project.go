@@ -5,20 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_project" "project" {
-  name = "ptsObjectName-1"
-  description = "desc"
+  name = "ptsObjectName"
+  description = &lt;nil&gt;
   tags {
-    tag_key = "createdBy"
-    tag_value = "terraform"
-  }
-}
+		tag_key = &lt;nil&gt;
+		tag_value = &lt;nil&gt;
 
+  }
+            }
 ```
+
 Import
 
 pts project can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_pts_project.project project-1ep27k1m
+terraform import tencentcloud_pts_project.project project_id
 ```
 */
 package tencentcloud
@@ -26,19 +28,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudPtsProject() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudPtsProjectRead,
 		Create: resourceTencentCloudPtsProjectCreate,
+		Read:   resourceTencentCloudPtsProjectRead,
 		Update: resourceTencentCloudPtsProjectUpdate,
 		Delete: resourceTencentCloudPtsProjectDelete,
 		Importer: &schema.ResourceImporter{
@@ -46,70 +46,70 @@ func resourceTencentCloudPtsProject() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "ptsObjectName, which must be required.",
+				Type:        schema.TypeString,
+				Description: "PtsObjectName, which must be required.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Pts object description.",
 			},
 
 			"tags": {
-				Type:        schema.TypeList,
 				Optional:    true,
+				Type:        schema.TypeList,
 				Description: "Tags List.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "tag key.",
+							Description: "Tag key.",
 						},
 						"tag_value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "tag value.",
+							Description: "Tag value.",
 						},
 					},
 				},
 			},
 
 			"app_id": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "App ID.",
 			},
 
 			"uin": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "User ID.",
 			},
 
 			"sub_account_uin": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Sub-user ID.",
 			},
 
 			"created_at": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creation time.",
 			},
 
 			"updated_at": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Update time.",
 			},
 
 			"status": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Project status.",
 			},
 		},
@@ -124,10 +124,9 @@ func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface
 
 	var (
 		request   = pts.NewCreateProjectRequest()
-		response  *pts.CreateProjectResponse
+		response  = pts.NewCreateProjectResponse()
 		projectId string
 	)
-
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
@@ -138,18 +137,15 @@ func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.([]interface{}) {
-			if item != nil {
-				dMap := item.(map[string]interface{})
-				tagSpec := pts.TagSpec{}
-				if v, ok := dMap["tag_key"]; ok {
-					tagSpec.TagKey = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_value"]; ok {
-					tagSpec.TagValue = helper.String(v.(string))
-				}
-
-				request.Tags = append(request.Tags, &tagSpec)
+			dMap := item.(map[string]interface{})
+			tagSpec := pts.TagSpec{}
+			if v, ok := dMap["tag_key"]; ok {
+				tagSpec.TagKey = helper.String(v.(string))
 			}
+			if v, ok := dMap["tag_value"]; ok {
+				tagSpec.TagValue = helper.String(v.(string))
+			}
+			request.Tags = append(request.Tags, &tagSpec)
 		}
 	}
 
@@ -158,21 +154,19 @@ func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create pts project failed, reason:%+v", logId, err)
 		return err
 	}
 
 	projectId = *response.Response.ProjectId
-
 	d.SetId(projectId)
+
 	return resourceTencentCloudPtsProjectRead(d, meta)
 }
 
@@ -181,21 +175,22 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	projectId := d.Id()
 
-	project, err := service.DescribePtsProject(ctx, projectId)
-
+	project, err := service.DescribePtsProjectById(ctx, projectId)
 	if err != nil {
 		return err
 	}
 
 	if project == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `project` %s does not exist", projectId)
+		log.Printf("[WARN]%s resource `PtsProject` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if project.Name != nil {
@@ -210,16 +205,20 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 		tagsList := []interface{}{}
 		for _, tags := range project.Tags {
 			tagsMap := map[string]interface{}{}
-			if tags.TagKey != nil {
-				tagsMap["tag_key"] = tags.TagKey
+
+			if project.Tags.TagKey != nil {
+				tagsMap["tag_key"] = project.Tags.TagKey
 			}
-			if tags.TagValue != nil {
-				tagsMap["tag_value"] = tags.TagValue
+
+			if project.Tags.TagValue != nil {
+				tagsMap["tag_value"] = project.Tags.TagValue
 			}
 
 			tagsList = append(tagsList, tagsMap)
 		}
+
 		_ = d.Set("tags", tagsList)
+
 	}
 
 	if project.AppId != nil {
@@ -243,7 +242,7 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.Status != nil {
-		_ = d.Set("status", strconv.FormatInt(*project.Status, 10))
+		_ = d.Set("status", project.Status)
 	}
 
 	return nil
@@ -261,18 +260,29 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 
 	request.ProjectId = &projectId
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = helper.String(v.(string))
+	immutableArgs := []string{"name", "description", "tags", "app_id", "uin", "sub_account_uin", "created_at", "updated_at", "status"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOk("description"); ok {
-		request.Description = helper.String(v.(string))
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
-			if item != nil {
-				dMap := item.(map[string]interface{})
+	if d.HasChange("description") {
+		if v, ok := d.GetOk("description"); ok {
+			request.Description = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("tags") {
+		if v, ok := d.GetOk("tags"); ok {
+			for _, item := range v.([]interface{}) {
 				tagSpec := pts.TagSpec{}
 				if v, ok := dMap["tag_key"]; ok {
 					tagSpec.TagKey = helper.String(v.(string))
@@ -280,7 +290,6 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 				if v, ok := dMap["tag_value"]; ok {
 					tagSpec.TagValue = helper.String(v.(string))
 				}
-
 				request.Tags = append(request.Tags, &tagSpec)
 			}
 		}
@@ -291,14 +300,12 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create pts project failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update pts project failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -313,7 +320,6 @@ func resourceTencentCloudPtsProjectDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	projectId := d.Id()
 
 	if err := service.DeletePtsProjectById(ctx, projectId); err != nil {

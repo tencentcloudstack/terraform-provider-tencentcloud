@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfLayersDataSource_basic(t *testing.T) {
@@ -24,5 +23,9 @@ func TestAccTencentCloudScfLayersDataSource_basic(t *testing.T) {
 
 const testAccScfLayersDataSource = `
 
-data "tencentcloud_scf_layers" "layers" {}
+data "tencentcloud_scf_layers" "layers" {
+  compatible_runtime = ""
+  search_key = ""
+  }
+
 `

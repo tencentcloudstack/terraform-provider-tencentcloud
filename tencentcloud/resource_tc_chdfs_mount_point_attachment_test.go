@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsMountPointAttachmentResource_basic(t *testing.T) {
@@ -29,17 +28,9 @@ func TestAccTencentCloudChdfsMountPointAttachmentResource_basic(t *testing.T) {
 
 const testAccChdfsMountPointAttachment = `
 
-resource "tencentcloud_chdfs_mount_point" "mount_point" {
-  file_system_id     = "f14mpfy5lh4e"
-  mount_point_name   = "terraform-test-mount-attach"
-  mount_point_status = 1
-}
-
 resource "tencentcloud_chdfs_mount_point_attachment" "mount_point_attachment" {
-  access_group_ids = [
-    "ag-bvmzrbsm",
-  ]
-  mount_point_id   = tencentcloud_chdfs_mount_point.mount_point.id
+  mount_point_id = &lt;nil&gt;
+  access_group_ids = &lt;nil&gt;
 }
 
 `

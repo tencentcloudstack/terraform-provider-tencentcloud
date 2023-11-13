@@ -5,15 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_layer_versions" "layer_versions" {
-  layer_name = "tf-test"
-}
+  layer_name = ""
+  compatible_runtime =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -124,7 +124,7 @@ func dataSourceTencentCloudScfLayerVersionsRead(d *schema.ResourceData, meta int
 	var layerVersions []*scf.LayerVersionInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeScfLayerVersions(ctx, paramMap)
+		result, e := service.DescribeScfLayerVersionsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

@@ -4,18 +4,17 @@ Use this data source to query detailed information of organization org_financial
 Example Usage
 
 ```hcl
-
 data "tencentcloud_organization_org_financial_by_month" "org_financial_by_month" {
-  end_month = "2023-05"
-  member_uins = [100026517717]
-}
+  end_month = "2021-01"
+  member_uins = &lt;nil&gt;
+  product_codes = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
@@ -69,7 +68,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMonth() *schema.Resource {
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the month.",
+							Description: "Total cost of the month(¥).",
 						},
 						"growth_rate": {
 							Type:        schema.TypeString,
@@ -104,7 +103,10 @@ func dataSourceTencentCloudOrganizationOrgFinancialByMonthRead(d *schema.Resourc
 
 	if v, ok := d.GetOk("member_uins"); ok {
 		memberUinsSet := v.(*schema.Set).List()
-		paramMap["MemberUins"] = helper.InterfacesIntInt64Point(memberUinsSet)
+		for i := range memberUinsSet {
+			memberUins := memberUinsSet[i].(int)
+			paramMap["MemberUins"] = append(paramMap["MemberUins"], helper.IntInt64(memberUins))
+		}
 	}
 
 	if v, ok := d.GetOk("product_codes"); ok {

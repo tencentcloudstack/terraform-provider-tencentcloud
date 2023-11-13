@@ -4,48 +4,50 @@ Provides a resource to create a tse cngw_gateway
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_tse_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_tse_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
 resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
-  description                = "terraform test1"
-  enable_cls                 = true
-  engine_region              = "ap-guangzhou"
-  feature_version            = "STANDARD"
-  gateway_version            = "2.5.1"
-  ingress_class_name         = "tse-nginx-ingress"
-  internet_max_bandwidth_out = 0
-  name                       = "terraform-gateway1"
-  trade_type                 = 0
-  type                       = "kong"
-
+  name = "test"
+  type = "kong"
+  gateway_version = "2.4.1"
   node_config {
-    number        = 2
-    specification = "1c2g"
-  }
+		specification = ""
+		number =
 
+  }
   vpc_config {
-    subnet_id = tencentcloud_subnet.subnet.id
-    vpc_id    = tencentcloud_vpc.vpc.id
-  }
+		vpc_id = "vpc-xxxxxx"
+		subnet_id = "subnet-xxxxxx"
 
+  }
+  description = "for test"
+  enable_cls = false
+  feature_version = ""
+  internet_max_bandwidth_out =
+  engine_region = "ap-guangzhou"
+  ingress_class_name = ""
+  trade_type =
+  internet_config {
+		internet_address_version = ""
+		internet_pay_mode = ""
+		internet_max_bandwidth_out =
+		description = ""
+		sla_type = ""
+		multi_zone_flag =
+		master_zone_id = ""
+		slave_zone_id = ""
+
+  }
   tags = {
     "createdBy" = "terraform"
   }
 }
+```
+
+Import
+
+tse cngw_gateway can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tse_cngw_gateway.cngw_gateway cngw_gateway_id
 ```
 */
 package tencentcloud
@@ -53,12 +55,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudTseCngwGateway() *schema.Resource {
@@ -74,37 +76,37 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway name, supports up to 60 characters.",
+				Description: "Gateway name, supports up to 60 characters.",
 			},
 
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway type,currently only supports kong.",
+				Description: "Gateway type,currently only supports kong.",
 			},
 
 			"gateway_version": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway vwersion. Reference value: `2.4.1`, `2.5.1`.",
+				Description: "Gateway vwersion. Reference value:- 2.4.1- 2.5.1.",
 			},
 
 			"node_config": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "gateway node configration.",
+				Description: "Gateway node configration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"specification": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "specification, 1c2g|2c4g|4c8g|8c16g.",
+							Description: "Specification, 1c2g|2c4g|4c8g|8c16g.",
 						},
 						"number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "node number, 2-50.",
+							Description: "Node number, 2-50.",
 						},
 					},
 				},
@@ -114,18 +116,18 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "vpc information.",
+				Description: "Vpc infomation.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "VPC ID. Assign an IP address to the engine in the VPC subnet. Reference value: vpc-conz6aix.",
+							Description: "VPC ID. Assign an IP address to the engine in the VPC subnet. Reference value:- vpc-conz6aix.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value: subnet-ahde9me9.",
+							Description: "Subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value:- subnet-ahde9me9.",
 						},
 					},
 				},
@@ -134,79 +136,76 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "description information, up to 120 characters.",
+				Description: "Description information, up to 120 characters.",
 			},
 
 			"enable_cls": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to enable CLS log. Default value: fasle.",
+				Description: "Whether to enable CLS log. Default value:fasle.",
 			},
 
 			"feature_version": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "product version. Reference value: `TRIAL`, `STANDARD`(default value), `PROFESSIONAL`.",
+				Description: "Product version. Reference value:- TRIAL- STANDARD (default value)- PROFESSIONAL.",
 			},
 
 			"internet_max_bandwidth_out": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "public network outbound traffic bandwidth,[1,2048]Mbps.",
+				Description: "Public network outbound traffic bandwidth,[1,2048]Mbps.",
 			},
 
 			"engine_region": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "engine region of gateway.",
+				Description: "Engine region of gateway.",
 			},
 
 			"ingress_class_name": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "ingress class name.",
+				Description: "Ingress class name.",
 			},
 
 			"trade_type": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "trade type. Reference value: `0`: postpaid, `1`:Prepaid (Interface does not support the creation of prepaid instances yet).",
+				Description: "Trade type. Reference value:- 0: postpaid- 1: Prepaid (Interface does not support the creation of prepaid instances yet).",
 			},
 
 			"internet_config": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "internet configration.",
+				Description: "Internet configration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"internet_address_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "internet type. Reference value: `IPV4`(default value), `IPV6`.",
+							Description: "Internet type. Reference value:- IPV4 (default value)- IPV6.",
 						},
 						"internet_pay_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "trade type of internet. Reference value: `BANDWIDTH`, `TRAFFIC`(default value).",
+							Description: "Trade type of internet. Reference value:- BANDWIDTH- TRAFFIC (default value).",
 						},
 						"internet_max_bandwidth_out": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "public network bandwidth.",
+							Description: "Public network bandwidth.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "description of clb.",
+							Description: "Description of clb.",
 						},
 						"sla_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "specification type of clb. Default shared type when this parameter is empty. Reference value:- SLA LCU-supported.",
+							Description: "Specification type of clb. Default shared type when this parameter is empty. Reference value:- SLA LCU-supported.",
 						},
 						"multi_zone_flag": {
 							Type:        schema.TypeBool,
@@ -216,12 +215,12 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 						"master_zone_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "primary availability zone.",
+							Description: "Primary availability zone.",
 						},
 						"slave_zone_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "alternate availability zone.",
+							Description: "Alternate availability zone.",
 						},
 					},
 				},
@@ -232,45 +231,6 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
-
-			"instance_port": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "Port information that the instance listens to.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"http_port": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Http port range.",
-						},
-						"https_port": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Https port range.",
-						},
-						"tcp_port": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Tcp port range.",
-						},
-						"udp_port": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Udp port range.",
-						},
-					},
-				},
-			},
-
-			"public_ip_addresses": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Computed:    true,
-				Description: "Public IP address list.",
-			},
 		},
 	}
 }
@@ -280,7 +240,6 @@ func resourceTencentCloudTseCngwGatewayCreate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = tse.NewCreateCloudNativeAPIGatewayRequest()
@@ -393,14 +352,18 @@ func resourceTencentCloudTseCngwGatewayCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	gatewayId = *response.Response.Result.GatewayId
+	gatewayId = *response.Response.GatewayId
 	d.SetId(gatewayId)
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if err := service.CheckTseNativeAPIGatewayStatusById(ctx, gatewayId, "create"); err != nil {
-		return err
+
+	conf := BuildStateChangeConf([]string{}, []string{"Running"}, 5*readRetryTimeout, time.Second, service.TseCngwGatewayStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -423,7 +386,7 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	gatewayId := d.Id()
+	cngwGatewayId := d.Id()
 
 	cngwGateway, err := service.DescribeTseCngwGatewayById(ctx, gatewayId)
 	if err != nil {
@@ -504,32 +467,42 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("trade_type", cngwGateway.TradeType)
 	}
 
-	if cngwGateway.InstancePort != nil {
-		instancePortMap := map[string]interface{}{}
+	if cngwGateway.InternetConfig != nil {
+		internetConfigMap := map[string]interface{}{}
 
-		if cngwGateway.InstancePort.HttpPort != nil {
-			instancePortMap["http_port"] = cngwGateway.InstancePort.HttpPort
+		if cngwGateway.InternetConfig.InternetAddressVersion != nil {
+			internetConfigMap["internet_address_version"] = cngwGateway.InternetConfig.InternetAddressVersion
 		}
 
-		if cngwGateway.InstancePort.HttpsPort != nil {
-			instancePortMap["https_port"] = cngwGateway.InstancePort.HttpsPort
+		if cngwGateway.InternetConfig.InternetPayMode != nil {
+			internetConfigMap["internet_pay_mode"] = cngwGateway.InternetConfig.InternetPayMode
 		}
 
-		if cngwGateway.InstancePort.TcpPort != nil {
-			instancePortMap["tcp_port"] = cngwGateway.InstancePort.TcpPort
+		if cngwGateway.InternetConfig.InternetMaxBandwidthOut != nil {
+			internetConfigMap["internet_max_bandwidth_out"] = cngwGateway.InternetConfig.InternetMaxBandwidthOut
 		}
 
-		if cngwGateway.InstancePort.UdpPort != nil {
-			instancePortMap["udp_port"] = cngwGateway.InstancePort.UdpPort
+		if cngwGateway.InternetConfig.Description != nil {
+			internetConfigMap["description"] = cngwGateway.InternetConfig.Description
 		}
 
-		_ = d.Set("instance_port", []interface{}{instancePortMap})
-	}
+		if cngwGateway.InternetConfig.SlaType != nil {
+			internetConfigMap["sla_type"] = cngwGateway.InternetConfig.SlaType
+		}
 
-	if cngwGateway.PublicIpAddresses != nil {
-		addresses := make([]*string, 0)
-		addresses = append(addresses, cngwGateway.PublicIpAddresses...)
-		_ = d.Set("public_ip_addresses", addresses)
+		if cngwGateway.InternetConfig.MultiZoneFlag != nil {
+			internetConfigMap["multi_zone_flag"] = cngwGateway.InternetConfig.MultiZoneFlag
+		}
+
+		if cngwGateway.InternetConfig.MasterZoneId != nil {
+			internetConfigMap["master_zone_id"] = cngwGateway.InternetConfig.MasterZoneId
+		}
+
+		if cngwGateway.InternetConfig.SlaveZoneId != nil {
+			internetConfigMap["slave_zone_id"] = cngwGateway.InternetConfig.SlaveZoneId
+		}
+
+		_ = d.Set("internet_config", []interface{}{internetConfigMap})
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -548,116 +521,51 @@ func resourceTencentCloudTseCngwGatewayUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tse.NewModifyCloudNativeAPIGatewayRequest()
 
-	gatewayId := d.Id()
+	cngwGatewayId := d.Id()
 
 	request.GatewayId = &gatewayId
 
-	immutableArgs := []string{"type", "gateway_version", "vpc_config", "feature_version", "internet_max_bandwidth_out", "engine_region", "ingress_class_name", "trade_type", "internet_config"}
+	immutableArgs := []string{"name", "type", "gateway_version", "node_config", "vpc_config", "description", "enable_cls", "feature_version", "internet_max_bandwidth_out", "engine_region", "ingress_class_name", "trade_type", "internet_config"}
+
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	changeFlag := false
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
-			changeFlag = true
 			request.Name = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
-			changeFlag = true
 			request.Description = helper.String(v.(string))
 		}
 	}
 
 	if d.HasChange("enable_cls") {
 		if v, ok := d.GetOkExists("enable_cls"); ok {
-			changeFlag = true
 			request.EnableCls = helper.Bool(v.(bool))
 		}
 	}
 
-	if changeFlag {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().ModifyCloudNativeAPIGateway(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update tse cngwGateway failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().ModifyCloudNativeAPIGateway(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-		if err := service.CheckTseNativeAPIGatewayStatusById(ctx, gatewayId, "update"); err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("node_config") {
-		// Get the default group id
-		paramMap := make(map[string]interface{})
-		paramMap["GatewayId"] = &gatewayId
-		service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-		cngwGroup, err := service.DescribeTseGroupsByFilter(ctx, paramMap)
-		if err != nil {
-			return err
-		}
-		if len(cngwGroup.GatewayGroupList) < 1 {
-			return fmt.Errorf("[WARN]%s resource `TseCngwGroup` [%s] not found, please check if it has been deleted.\n", logId, gatewayId)
-		}
-		groupId := ""
-		for _, v := range cngwGroup.GatewayGroupList {
-			if *v.IsFirstGroup == 1 {
-				groupId = *v.GroupId
-				break
-			}
-		}
-
-		nodeConfigRequest := tse.NewUpdateCloudNativeAPIGatewaySpecRequest()
-		nodeConfigRequest.GatewayId = &gatewayId
-		nodeConfigRequest.GroupId = &groupId
-
-		if dMap, ok := helper.InterfacesHeadMap(d, "node_config"); ok {
-			cloudNativeAPIGatewayNodeConfig := tse.CloudNativeAPIGatewayNodeConfig{}
-			if v, ok := dMap["specification"]; ok {
-				cloudNativeAPIGatewayNodeConfig.Specification = helper.String(v.(string))
-			}
-			if v, ok := dMap["number"]; ok {
-				cloudNativeAPIGatewayNodeConfig.Number = helper.IntInt64(v.(int))
-			}
-			nodeConfigRequest.NodeConfig = &cloudNativeAPIGatewayNodeConfig
-		}
-
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().UpdateCloudNativeAPIGatewaySpec(nodeConfigRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, nodeConfigRequest.GetAction(), nodeConfigRequest.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update tse cngwGateway failed, reason:%+v", logId, err)
-			return err
-		}
-
-		if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "update"); err != nil {
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update tse cngwGateway failed, reason:%+v", logId, err)
+		return err
 	}
 
 	if d.HasChange("tags") {
@@ -683,13 +591,18 @@ func resourceTencentCloudTseCngwGatewayDelete(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	gatewayId := d.Id()
+	cngwGatewayId := d.Id()
 
 	if err := service.DeleteTseCngwGatewayById(ctx, gatewayId); err != nil {
 		return err
 	}
-	if err := service.CheckTseNativeAPIGatewayStatusById(ctx, gatewayId, "delete"); err != nil {
-		return err
+
+	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"Deleted"}, 5*readRetryTimeout, time.Second, service.TseCngwGatewayStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

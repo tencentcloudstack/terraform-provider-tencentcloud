@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_cluster_resources" "cluster_resources" {
   filters {
-    name = "idle"
-    values = ["True"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -64,7 +64,7 @@ func dataSourceTencentCloudClbClusterResources() *schema.Resource {
 						"vip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "vip.",
+							Description: "Vip.",
 						},
 						"load_balancer_id": {
 							Type:        schema.TypeString,
@@ -79,7 +79,7 @@ func dataSourceTencentCloudClbClusterResources() *schema.Resource {
 						"cluster_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster name.",
+							Description: "Cluster name.",
 						},
 						"isp": {
 							Type:        schema.TypeString,
@@ -89,7 +89,7 @@ func dataSourceTencentCloudClbClusterResources() *schema.Resource {
 						"clusters_zone": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "clusters zone.",
+							Description: "Clusters zone.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"master_zone": {
@@ -150,7 +150,7 @@ func dataSourceTencentCloudClbClusterResourcesRead(d *schema.ResourceData, meta 
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}

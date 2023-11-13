@@ -5,15 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_chdfs_mount_points" "mount_points" {
-  file_system_id     = "f14mpfy5lh4e"
-}
+  file_system_id = &lt;nil&gt;
+  access_group_id = &lt;nil&gt;
+  owner_uin = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
@@ -27,51 +28,51 @@ func dataSourceTencentCloudChdfsMountPoints() *schema.Resource {
 			"file_system_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
+				Description: "Get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"access_group_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
+				Description: "Get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"owner_uin": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
+				Description: "Get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"mount_points": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "mount point list.",
+				Description: "Mount point list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"mount_point_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "mount point id.",
+							Description: "Mount point id.",
 						},
 						"mount_point_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "mount point name.",
+							Description: "Mount point name.",
 						},
 						"file_system_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "mounted file system id.",
+							Description: "Mounted file system id.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "mount point status.",
+							Description: "Mount point status.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 						"access_group_ids": {
 							Type: schema.TypeSet,
@@ -79,7 +80,7 @@ func dataSourceTencentCloudChdfsMountPoints() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "associated group ids.",
+							Description: "Associated group ids.",
 						},
 					},
 				},
@@ -104,15 +105,15 @@ func dataSourceTencentCloudChdfsMountPointsRead(d *schema.ResourceData, meta int
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("file_system_id"); ok {
-		paramMap["file_system_id"] = helper.String(v.(string))
+		paramMap["FileSystemId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("access_group_id"); ok {
-		paramMap["access_group_id"] = helper.String(v.(string))
+		paramMap["AccessGroupId"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("owner_uin"); ok {
-		paramMap["owner_uin"] = helper.IntUint64(v.(int))
+	if v, _ := d.GetOk("owner_uin"); v != nil {
+		paramMap["OwnerUin"] = helper.IntUint64(v.(int))
 	}
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}

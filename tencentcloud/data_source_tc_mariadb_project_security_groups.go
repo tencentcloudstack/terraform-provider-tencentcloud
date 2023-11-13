@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_project_security_groups" "project_security_groups" {
-  product    = "mariadb"
-  project_id = 0
-}
+  product = ""
+  project_id =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -30,11 +29,13 @@ func dataSourceTencentCloudMariadbProjectSecurityGroups() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Database engine name. Valid value: `mariadb`.",
 			},
+
 			"project_id": {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Project ID.",
 			},
+
 			"groups": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -127,6 +128,7 @@ func dataSourceTencentCloudMariadbProjectSecurityGroups() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -140,38 +142,36 @@ func dataSourceTencentCloudMariadbProjectSecurityGroupsRead(d *schema.ResourceDa
 	defer logElapsed("data_source.tencentcloud_mariadb_project_security_groups.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		groups  []*mariadb.SecurityGroup
-		Product string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("product"); ok {
 		paramMap["Product"] = helper.String(v.(string))
-		Product = v.(string)
 	}
 
 	if v, _ := d.GetOk("project_id"); v != nil {
 		paramMap["ProjectId"] = helper.IntInt64(v.(int))
 	}
 
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var groups []*mariadb.SecurityGroup
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMariadbProjectSecurityGroupsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		groups = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(groups))
 	tmpList := make([]map[string]interface{}, 0, len(groups))
 
 	if groups != nil {
@@ -222,7 +222,7 @@ func dataSourceTencentCloudMariadbProjectSecurityGroupsRead(d *schema.ResourceDa
 					inboundList = append(inboundList, inboundMap)
 				}
 
-				securityGroupMap["inbound"] = inboundList
+				securityGroupMap["inbound"] = []interface{}{inboundList}
 			}
 
 			if securityGroup.Outbound != nil {
@@ -249,21 +249,22 @@ func dataSourceTencentCloudMariadbProjectSecurityGroupsRead(d *schema.ResourceDa
 					outboundList = append(outboundList, outboundMap)
 				}
 
-				securityGroupMap["outbound"] = outboundList
+				securityGroupMap["outbound"] = []interface{}{outboundList}
 			}
+
+			ids = append(ids, *securityGroup.InstanceId)
 			tmpList = append(tmpList, securityGroupMap)
 		}
 
 		_ = d.Set("groups", tmpList)
 	}
 
-	d.SetId(Product)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

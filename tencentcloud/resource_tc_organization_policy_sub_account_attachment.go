@@ -5,102 +5,126 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_policy_sub_account_attachment" "policy_sub_account_attachment" {
-  member_uin               = 100028582828
-  org_sub_account_uin      = 100028223737
-  policy_id                = 144256499
+  policy_id = &lt;nil&gt;
+  org_sub_account_uins = &lt;nil&gt;
+  member_uin = &lt;nil&gt;
+  org_sub_account_uin = &lt;nil&gt;
+  policy_name = &lt;nil&gt;
+  identity_id = &lt;nil&gt;
+  identity_role_name = &lt;nil&gt;
+  identity_role_alias_name = &lt;nil&gt;
+  create_time = &lt;nil&gt;
+  update_time = &lt;nil&gt;
+  org_sub_account_name = &lt;nil&gt;
 }
 ```
+
 Import
 
 organization policy_sub_account_attachment can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_organization_policy_sub_account_attachment.policy_sub_account_attachment policyId#memberUin#orgSubAccountUin
+terraform import tencentcloud_organization_policy_sub_account_attachment.policy_sub_account_attachment policy_sub_account_attachment_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudOrganizationPolicySubAccountAttachment() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudOrganizationPolicySubAccountAttachmentRead,
 		Create: resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate,
+		Read:   resourceTencentCloudOrganizationPolicySubAccountAttachmentRead,
 		Delete: resourceTencentCloudOrganizationPolicySubAccountAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"policy_id": {
-				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
+				Type:        schema.TypeInt,
 				Description: "Policy ID.",
 			},
 
-			"org_sub_account_uin": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
+			"org_sub_account_uins": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 				Description: "Organization administrator sub account uin list.",
 			},
 
 			"member_uin": {
-				Type:        schema.TypeInt,
 				Required:    true,
 				ForceNew:    true,
+				Type:        schema.TypeInt,
 				Description: "Organization member uin.",
 			},
 
+			"org_sub_account_uin": {
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeInt,
+				Description: "Organization administrator sub account uin.",
+			},
+
 			"policy_name": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Policy name.",
 			},
 
 			"identity_id": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Computed:    true,
 				Description: "Manage Identity ID.",
 			},
 
 			"identity_role_name": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Identity role name.",
 			},
 
 			"identity_role_alias_name": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Identity role alias name.",
 			},
 
 			"create_time": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Creation time.",
 			},
 
 			"update_time": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Update time.",
 			},
 
 			"org_sub_account_name": {
+				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
 				Description: "Organization administrator sub account name.",
 			},
 		},
@@ -114,25 +138,57 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 	logId := getLogId(contextNil)
 
 	var (
-		request          = organization.NewBindOrganizationMemberAuthAccountRequest()
-		policyId         int
-		memberUin        int
-		orgSubAccountUin int
+		request  = organization.NewBindOrganizationMemberAuthAccountRequest()
+		response = organization.NewBindOrganizationMemberAuthAccountResponse()
+		policyId int
 	)
-
-	if v, _ := d.GetOk("policy_id"); v != nil {
+	if v, ok := d.GetOkExists("policy_id"); ok {
 		policyId = v.(int)
-		request.PolicyId = helper.IntInt64(v.(int))
+		request.PolicyId = helper.IntUint64(v.(int))
 	}
 
-	if v, _ := d.GetOk("org_sub_account_uin"); v != nil {
-		orgSubAccountUin = v.(int)
-		request.OrgSubAccountUins = []*int64{helper.IntInt64(v.(int))}
+	if v, ok := d.GetOk("org_sub_account_uins"); ok {
+		orgSubAccountUinsSet := v.(*schema.Set).List()
+		for i := range orgSubAccountUinsSet {
+			orgSubAccountUins := orgSubAccountUinsSet[i].(int)
+			request.OrgSubAccountUins = append(request.OrgSubAccountUins, helper.IntUint64(orgSubAccountUins))
+		}
 	}
 
-	if v, _ := d.GetOk("member_uin"); v != nil {
-		memberUin = v.(int)
-		request.MemberUin = helper.IntInt64(v.(int))
+	if v, ok := d.GetOkExists("member_uin"); ok {
+		request.MemberUin = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("org_sub_account_uin"); ok {
+		request.OrgSubAccountUin = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("policy_name"); ok {
+		request.PolicyName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("identity_id"); ok {
+		request.IdentityId = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("identity_role_name"); ok {
+		request.IdentityRoleName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("identity_role_alias_name"); ok {
+		request.IdentityRoleAliasName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("create_time"); ok {
+		request.CreateTime = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("update_time"); ok {
+		request.UpdateTime = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("org_sub_account_name"); ok {
+		request.OrgSubAccountName = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -140,18 +196,19 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create organization policySubAccountAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(strconv.Itoa(policyId) + FILED_SP + strconv.Itoa(memberUin) + FILED_SP + strconv.Itoa(orgSubAccountUin))
+	policyId = *response.Response.PolicyId
+	d.SetId(strings.Join([]string{helper.Int64ToStr(int64(policyId))}, FILED_SP))
+
 	return resourceTencentCloudOrganizationPolicySubAccountAttachmentRead(d, meta)
 }
 
@@ -160,37 +217,44 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentRead(d *schema.Re
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	policyId := idSplit[0]
-	memberUin := idSplit[1]
+	orgSubAccountUins := idSplit[1]
 
-	policySubAccountAttachment, err := service.DescribeOrganizationPolicySubAccountAttachment(ctx, policyId, memberUin)
-
+	policySubAccountAttachment, err := service.DescribeOrganizationPolicySubAccountAttachmentById(ctx, policyId, orgSubAccountUins)
 	if err != nil {
 		return err
 	}
 
 	if policySubAccountAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `policySubAccountAttachment` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `OrganizationPolicySubAccountAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if policySubAccountAttachment.PolicyId != nil {
 		_ = d.Set("policy_id", policySubAccountAttachment.PolicyId)
 	}
 
+	if policySubAccountAttachment.OrgSubAccountUins != nil {
+		_ = d.Set("org_sub_account_uins", policySubAccountAttachment.OrgSubAccountUins)
+	}
+
+	if policySubAccountAttachment.MemberUin != nil {
+		_ = d.Set("member_uin", policySubAccountAttachment.MemberUin)
+	}
+
 	if policySubAccountAttachment.OrgSubAccountUin != nil {
 		_ = d.Set("org_sub_account_uin", policySubAccountAttachment.OrgSubAccountUin)
 	}
-
-	_ = d.Set("member_uin", helper.StrToInt64(memberUin))
 
 	if policySubAccountAttachment.PolicyName != nil {
 		_ = d.Set("policy_name", policySubAccountAttachment.PolicyName)
@@ -231,16 +295,14 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentDelete(d *schema.
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	policyId := idSplit[0]
-	memberUin := idSplit[1]
-	orgSubAccountUin := idSplit[2]
+	orgSubAccountUins := idSplit[1]
 
-	if err := service.DeleteOrganizationPolicySubAccountAttachmentById(ctx, policyId, memberUin, orgSubAccountUin); err != nil {
+	if err := service.DeleteOrganizationPolicySubAccountAttachmentById(ctx, policyId, orgSubAccountUins); err != nil {
 		return err
 	}
 

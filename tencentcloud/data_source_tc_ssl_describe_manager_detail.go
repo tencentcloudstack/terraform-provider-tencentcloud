@@ -5,18 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_manager_detail" "describe_manager_detail" {
-  manager_id = ""
-}
+                                      }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -25,7 +22,7 @@ func dataSourceTencentCloudSslDescribeManagerDetail() *schema.Resource {
 		Read: dataSourceTencentCloudSslDescribeManagerDetailRead,
 		Schema: map[string]*schema.Schema{
 			"manager_id": {
-				Required:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Manager ID.",
 			},
@@ -105,7 +102,7 @@ func dataSourceTencentCloudSslDescribeManagerDetail() *schema.Resource {
 			"contact_phone": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "contact number.",
+				Description: "Contact number.",
 			},
 
 			"contact_mail": {
@@ -123,7 +120,7 @@ func dataSourceTencentCloudSslDescribeManagerDetail() *schema.Resource {
 			"company_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Manager&amp;#39;s company information.",
+				Description: "Manager&amp;amp;#39;s company information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"company_name": {
@@ -159,12 +156,12 @@ func dataSourceTencentCloudSslDescribeManagerDetail() *schema.Resource {
 						"company_phone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "company phone.",
+							Description: "Company phone.",
 						},
 						"id_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "typeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+							Description: "TypeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
 						"id_number": {
 							Type:        schema.TypeString,
@@ -179,6 +176,12 @@ func dataSourceTencentCloudSslDescribeManagerDetail() *schema.Resource {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Manager Company ID.",
+			},
+
+			"status_info": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Review status details.",
 			},
 
 			"result_output_file": {
@@ -198,138 +201,141 @@ func dataSourceTencentCloudSslDescribeManagerDetailRead(d *schema.ResourceData, 
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	managerId := d.Get("manager_id")
+	paramMap := make(map[string]interface{})
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var response *ssl.DescribeManagerDetailResponseParams
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeSslDescribeManagerDetailByFilter(ctx, helper.IntToStr(managerId.(int)))
+		result, e := service.DescribeSslDescribeManagerDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		response = result
+		status = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	tmpList := make([]map[string]interface{}, 1)
 
-	if response != nil {
-		if response.ManagerId != nil {
-			_ = d.Set("manager_id", managerId)
-		}
-
-		if response.Status != nil {
-			_ = d.Set("status", response.Status)
-		}
-
-		if response.ManagerFirstName != nil {
-			_ = d.Set("manager_first_name", response.ManagerFirstName)
-		}
-
-		if response.ManagerMail != nil {
-			_ = d.Set("manager_mail", response.ManagerMail)
-		}
-
-		if response.ContactFirstName != nil {
-			_ = d.Set("contact_first_name", response.ContactFirstName)
-		}
-
-		if response.ManagerLastName != nil {
-			_ = d.Set("manager_last_name", response.ManagerLastName)
-		}
-
-		if response.ContactPosition != nil {
-			_ = d.Set("contact_position", response.ContactPosition)
-		}
-
-		if response.ManagerPosition != nil {
-			_ = d.Set("manager_position", response.ManagerPosition)
-		}
-
-		if response.VerifyTime != nil {
-			_ = d.Set("verify_time", response.VerifyTime)
-		}
-
-		if response.CreateTime != nil {
-			_ = d.Set("create_time", response.CreateTime)
-		}
-
-		if response.ExpireTime != nil {
-			_ = d.Set("expire_time", response.ExpireTime)
-		}
-
-		if response.ContactLastName != nil {
-			_ = d.Set("contact_last_name", response.ContactLastName)
-		}
-
-		if response.ManagerPhone != nil {
-			_ = d.Set("manager_phone", response.ManagerPhone)
-		}
-
-		if response.ContactPhone != nil {
-			_ = d.Set("contact_phone", response.ContactPhone)
-		}
-
-		if response.ContactMail != nil {
-			_ = d.Set("contact_mail", response.ContactMail)
-		}
-
-		if response.ManagerDepartment != nil {
-			_ = d.Set("manager_department", response.ManagerDepartment)
-		}
-
-		if response.CompanyInfo != nil {
-			companyInfoMap := map[string]interface{}{}
-
-			if response.CompanyInfo.CompanyName != nil {
-				companyInfoMap["company_name"] = response.CompanyInfo.CompanyName
-			}
-
-			if response.CompanyInfo.CompanyId != nil {
-				companyInfoMap["company_id"] = response.CompanyInfo.CompanyId
-			}
-
-			if response.CompanyInfo.CompanyCountry != nil {
-				companyInfoMap["company_country"] = response.CompanyInfo.CompanyCountry
-			}
-
-			if response.CompanyInfo.CompanyProvince != nil {
-				companyInfoMap["company_province"] = response.CompanyInfo.CompanyProvince
-			}
-
-			if response.CompanyInfo.CompanyCity != nil {
-				companyInfoMap["company_city"] = response.CompanyInfo.CompanyCity
-			}
-
-			if response.CompanyInfo.CompanyAddress != nil {
-				companyInfoMap["company_address"] = response.CompanyInfo.CompanyAddress
-			}
-
-			if response.CompanyInfo.CompanyPhone != nil {
-				companyInfoMap["company_phone"] = response.CompanyInfo.CompanyPhone
-			}
-
-			if response.CompanyInfo.IdType != nil {
-				companyInfoMap["id_type"] = response.CompanyInfo.IdType
-			}
-
-			if response.CompanyInfo.IdNumber != nil {
-				companyInfoMap["id_number"] = response.CompanyInfo.IdNumber
-			}
-			tmpList = append(tmpList, companyInfoMap)
-			_ = d.Set("company_info", []interface{}{companyInfoMap})
-		}
-
-		if response.CompanyId != nil {
-			_ = d.Set("company_id", response.CompanyId)
-		}
+	ids := make([]string, 0, len(status))
+	if managerId != nil {
+		_ = d.Set("manager_id", managerId)
 	}
 
-	d.SetId(helper.IntToStr(managerId.(int)))
+	if status != nil {
+		_ = d.Set("status", status)
+	}
+
+	if managerFirstName != nil {
+		_ = d.Set("manager_first_name", managerFirstName)
+	}
+
+	if managerMail != nil {
+		_ = d.Set("manager_mail", managerMail)
+	}
+
+	if contactFirstName != nil {
+		_ = d.Set("contact_first_name", contactFirstName)
+	}
+
+	if managerLastName != nil {
+		_ = d.Set("manager_last_name", managerLastName)
+	}
+
+	if contactPosition != nil {
+		_ = d.Set("contact_position", contactPosition)
+	}
+
+	if managerPosition != nil {
+		_ = d.Set("manager_position", managerPosition)
+	}
+
+	if verifyTime != nil {
+		_ = d.Set("verify_time", verifyTime)
+	}
+
+	if createTime != nil {
+		_ = d.Set("create_time", createTime)
+	}
+
+	if expireTime != nil {
+		_ = d.Set("expire_time", expireTime)
+	}
+
+	if contactLastName != nil {
+		_ = d.Set("contact_last_name", contactLastName)
+	}
+
+	if managerPhone != nil {
+		_ = d.Set("manager_phone", managerPhone)
+	}
+
+	if contactPhone != nil {
+		_ = d.Set("contact_phone", contactPhone)
+	}
+
+	if contactMail != nil {
+		_ = d.Set("contact_mail", contactMail)
+	}
+
+	if managerDepartment != nil {
+		_ = d.Set("manager_department", managerDepartment)
+	}
+
+	if companyInfo != nil {
+		companyInfoMap := map[string]interface{}{}
+
+		if companyInfo.CompanyName != nil {
+			companyInfoMap["company_name"] = companyInfo.CompanyName
+		}
+
+		if companyInfo.CompanyId != nil {
+			companyInfoMap["company_id"] = companyInfo.CompanyId
+		}
+
+		if companyInfo.CompanyCountry != nil {
+			companyInfoMap["company_country"] = companyInfo.CompanyCountry
+		}
+
+		if companyInfo.CompanyProvince != nil {
+			companyInfoMap["company_province"] = companyInfo.CompanyProvince
+		}
+
+		if companyInfo.CompanyCity != nil {
+			companyInfoMap["company_city"] = companyInfo.CompanyCity
+		}
+
+		if companyInfo.CompanyAddress != nil {
+			companyInfoMap["company_address"] = companyInfo.CompanyAddress
+		}
+
+		if companyInfo.CompanyPhone != nil {
+			companyInfoMap["company_phone"] = companyInfo.CompanyPhone
+		}
+
+		if companyInfo.IdType != nil {
+			companyInfoMap["id_type"] = companyInfo.IdType
+		}
+
+		if companyInfo.IdNumber != nil {
+			companyInfoMap["id_number"] = companyInfo.IdNumber
+		}
+
+		ids = append(ids, *companyInfo.ManagerId)
+		_ = d.Set("company_info", companyInfoMap)
+	}
+
+	if companyId != nil {
+		_ = d.Set("company_id", companyId)
+	}
+
+	if statusInfo != nil {
+		_ = d.Set("status_info", statusInfo)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

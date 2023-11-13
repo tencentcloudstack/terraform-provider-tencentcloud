@@ -5,22 +5,27 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_restart_instance" "restart_instance" {
-  instance_id = "cynosdbmysql-ins-afqx1hy0"
+  instance_id = "cynosdbmysql-ins-xxxxxxxx"
 }
+```
+
+Import
+
+cynosdb restart_instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_restart_instance.restart_instance restart_instance_id
 ```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCynosdbRestartInstance() *schema.Resource {
@@ -38,12 +43,6 @@ func resourceTencentCloudCynosdbRestartInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
-
-			"status": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "instance state.",
-			},
 		},
 	}
 }
@@ -53,7 +52,6 @@ func resourceTencentCloudCynosdbRestartInstanceCreate(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = cynosdb.NewRestartInstanceRequest()
@@ -80,29 +78,15 @@ func resourceTencentCloudCynosdbRestartInstanceCreate(d *schema.ResourceData, me
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
-	flowId := *response.Response.FlowId
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("create cynosdb clusterPasswordComplexity is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb clusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbRestartInstanceStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudCynosdbRestartInstanceRead(d, meta)
@@ -111,26 +95,6 @@ func resourceTencentCloudCynosdbRestartInstanceCreate(d *schema.ResourceData, me
 func resourceTencentCloudCynosdbRestartInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_restart_instance.read")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	id := d.Id()
-
-	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, instance, has, err := service.DescribeInstanceById(ctx, id)
-	if err != nil {
-		return err
-	}
-	if !has {
-		log.Printf("[WARN]%s resource `DescribeInstanceById` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		d.SetId("")
-		return nil
-	}
-
-	if instance.Status != nil {
-		_ = d.Set("status", instance.Status)
-	}
 
 	return nil
 }

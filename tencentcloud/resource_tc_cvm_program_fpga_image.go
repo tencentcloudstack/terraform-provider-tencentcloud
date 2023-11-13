@@ -5,9 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cvm_program_fpga_image" "program_fpga_image" {
-  instance_id = "ins-xxxxxx"
-  fpga_url = ""
-  dbd_fs = ""
+  instance_id = "ins-r8hr2upy"
+  f_p_g_a_url = "fpga-test-123456.cos.ap-guangzhou.myqcloud.com/test.xclbin"
+  d_b_d_fs =
+  dry_run = false
 }
 ```
 
@@ -22,12 +23,11 @@ terraform import tencentcloud_cvm_program_fpga_image.program_fpga_image program_
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCvmProgramFpgaImage() *schema.Resource {
@@ -46,14 +46,14 @@ func resourceTencentCloudCvmProgramFpgaImage() *schema.Resource {
 				Description: "The ID information of the instance.",
 			},
 
-			"fpga_url": {
+			"f_p_g_a_url": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "COS URL address of the FPGA image file.",
 			},
 
-			"dbd_fs": {
+			"d_b_d_fs": {
 				Optional: true,
 				ForceNew: true,
 				Type:     schema.TypeSet,
@@ -80,16 +80,20 @@ func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	var (
-		request = cvm.NewProgramFpgaImageRequest()
+		request    = cvm.NewProgramFpgaImageRequest()
+		response   = cvm.NewProgramFpgaImageResponse()
+		instanceId string
 	)
-	instanceId := d.Get("instance_id").(string)
-	request.InstanceId = helper.String(instanceId)
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+		request.InstanceId = helper.String(v.(string))
+	}
 
-	if v, ok := d.GetOk("fpga_url"); ok {
+	if v, ok := d.GetOk("f_p_g_a_url"); ok {
 		request.FPGAUrl = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("dbd_fs"); ok {
+	if v, ok := d.GetOk("d_b_d_fs"); ok {
 		dBDFsSet := v.(*schema.Set).List()
 		for i := range dBDFsSet {
 			dBDFs := dBDFsSet[i].(string)
@@ -108,6 +112,7 @@ func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -115,6 +120,7 @@ func resourceTencentCloudCvmProgramFpgaImageCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudCvmProgramFpgaImageRead(d, meta)

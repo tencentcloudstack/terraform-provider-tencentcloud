@@ -14,11 +14,8 @@ package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -117,99 +114,92 @@ func dataSourceTencentCloudDcdbDatabaseObjectsRead(d *schema.ResourceData, meta 
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("db_name"); ok {
-		paramMap["db_name"] = helper.String(v.(string))
+		paramMap["DbName"] = helper.String(v.(string))
 	}
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var result *dcdb.DescribeDatabaseObjectsResponseParams
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		var e error
-		result, e = service.DescribeDcdbDBObjectsByFilter(ctx, paramMap)
+		result, e := service.DescribeDcdbDatabaseObjectsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		instanceId = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	data := make(map[string]interface{})
+	ids := make([]string, 0, len(instanceId))
+	if tables != nil {
+		for _, databaseTable := range tables {
+			databaseTableMap := map[string]interface{}{}
 
-	if result != nil {
-		tables := result.Tables
-		tabList := make([]map[string]interface{}, 0, len(tables))
-		if tables != nil {
-			for _, databaseTable := range tables {
-				databaseTableMap := map[string]interface{}{}
-
-				if databaseTable.Table != nil {
-					databaseTableMap["table"] = databaseTable.Table
-				}
-				tabList = append(tabList, databaseTableMap)
+			if databaseTable.Table != nil {
+				databaseTableMap["table"] = databaseTable.Table
 			}
-			_ = d.Set("tables", tabList)
-			data["tables"] = tabList
+
+			ids = append(ids, *databaseTable.InstanceId)
+			tmpList = append(tmpList, databaseTableMap)
 		}
 
-		views := result.Views
-		viewList := make([]map[string]interface{}, 0, len(views))
-		if views != nil {
-			for _, databaseView := range views {
-				databaseViewMap := map[string]interface{}{}
-
-				if databaseView.View != nil {
-					databaseViewMap["view"] = databaseView.View
-				}
-				viewList = append(viewList, databaseViewMap)
-			}
-			_ = d.Set("views", viewList)
-			data["views"] = viewList
-		}
-
-		procs := result.Procs
-		procList := make([]map[string]interface{}, 0, len(procs))
-		if procs != nil {
-			for _, databaseProcedure := range procs {
-				databaseProcedureMap := map[string]interface{}{}
-
-				if databaseProcedure.Proc != nil {
-					databaseProcedureMap["proc"] = databaseProcedure.Proc
-				}
-				procList = append(procList, databaseProcedureMap)
-			}
-			_ = d.Set("procs", procList)
-			data["procs"] = procList
-		}
-
-		funcs := result.Funcs
-		funcList := make([]map[string]interface{}, 0, len(funcs))
-		if funcs != nil {
-			for _, databaseFunction := range funcs {
-				databaseFunctionMap := map[string]interface{}{}
-
-				if databaseFunction.Func != nil {
-					databaseFunctionMap["func"] = databaseFunction.Func
-				}
-				funcList = append(funcList, databaseFunctionMap)
-			}
-			_ = d.Set("funcs", funcList)
-			data["funcs"] = funcList
-		}
+		_ = d.Set("tables", tmpList)
 	}
 
-	ids = append(ids, strings.Join([]string{*result.InstanceId, *result.DbName}, FILED_SP))
+	if views != nil {
+		for _, databaseView := range views {
+			databaseViewMap := map[string]interface{}{}
+
+			if databaseView.View != nil {
+				databaseViewMap["view"] = databaseView.View
+			}
+
+			ids = append(ids, *databaseView.InstanceId)
+			tmpList = append(tmpList, databaseViewMap)
+		}
+
+		_ = d.Set("views", tmpList)
+	}
+
+	if procs != nil {
+		for _, databaseProcedure := range procs {
+			databaseProcedureMap := map[string]interface{}{}
+
+			if databaseProcedure.Proc != nil {
+				databaseProcedureMap["proc"] = databaseProcedure.Proc
+			}
+
+			ids = append(ids, *databaseProcedure.InstanceId)
+			tmpList = append(tmpList, databaseProcedureMap)
+		}
+
+		_ = d.Set("procs", tmpList)
+	}
+
+	if funcs != nil {
+		for _, databaseFunction := range funcs {
+			databaseFunctionMap := map[string]interface{}{}
+
+			if databaseFunction.Func != nil {
+				databaseFunctionMap["func"] = databaseFunction.Func
+			}
+
+			ids = append(ids, *databaseFunction.InstanceId)
+			tmpList = append(tmpList, databaseFunctionMap)
+		}
+
+		_ = d.Set("funcs", tmpList)
+	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), data); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

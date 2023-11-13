@@ -4,32 +4,15 @@ Use this data source to query detailed information of cls machines
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_machine_group" "group" {
-  group_name        = "tf-describe-mg-test"
-  service_logging   = true
-  auto_update       = true
-  update_end_time   = "19:05:00"
-  update_start_time = "17:05:00"
-
-  machine_group_type {
-    type   = "ip"
-    values = [
-      "192.168.1.1",
-      "192.168.1.2",
-    ]
-  }
-}
-
 data "tencentcloud_cls_machines" "machines" {
-  group_id = tencentcloud_cls_machine_group.group.id
-}
+  group_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
@@ -55,42 +38,42 @@ func dataSourceTencentCloudClsMachines() *schema.Resource {
 						"ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ip of machine.",
+							Description: "Ip of machine.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "status of machine.",
+							Description: "Status of machine.",
 						},
 						"offline_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "offline time of machine.",
+							Description: "Offline time of machine.",
 						},
 						"auto_update": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "if open auto update flag.",
+							Description: "If open auto update flag.",
 						},
 						"version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "current machine version.",
+							Description: "Current machine version.",
 						},
 						"update_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "machine update status.",
+							Description: "Machine update status.",
 						},
 						"err_code": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "code of update operation.",
+							Description: "Code of update operation.",
 						},
 						"err_msg": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "msg of update operation.",
+							Description: "Msg of update operation.",
 						},
 					},
 				},

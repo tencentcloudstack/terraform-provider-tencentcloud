@@ -199,3 +199,60 @@ func (me *TcmService) DescribeTcmMeshByFilter(ctx context.Context, param map[str
 	}
 	return
 }
+
+func (me *TcmService) DescribeTcmMeshByFilter(ctx context.Context, param map[string]interface{}) (mesh []*tcm.Mesh, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcm.NewDescribeMeshListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MeshId" {
+			request.MeshId = v.([]*string)
+		}
+		if k == "MeshName" {
+			request.MeshName = v.([]*string)
+		}
+		if k == "Tags" {
+			request.Tags = v.([]*string)
+		}
+		if k == "MeshCluster" {
+			request.MeshCluster = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTcmClient().DescribeMeshList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MeshList) < 1 {
+			break
+		}
+		mesh = append(mesh, response.Response.MeshList...)
+		if len(response.Response.MeshList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

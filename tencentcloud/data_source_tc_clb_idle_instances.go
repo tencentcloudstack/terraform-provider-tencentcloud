@@ -1,19 +1,18 @@
 /*
-Use this data source to query detailed information of clb idle_loadbalancers
+Use this data source to query detailed information of clb idle_instances
 
 Example Usage
 
 ```hcl
-data "tencentcloud_clb_idle_instances" "idle_instance" {
-  load_balancer_region = "ap-guangzhou"
-}
+data "tencentcloud_clb_idle_instances" "idle_instances" {
+  load_balancer_region = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -90,7 +89,7 @@ func dataSourceTencentCloudClbIdleInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudClbIdleInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_clb_idle_loadbalancers.read")()
+	defer logElapsed("data_source.tencentcloud_clb_idle_instances.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)

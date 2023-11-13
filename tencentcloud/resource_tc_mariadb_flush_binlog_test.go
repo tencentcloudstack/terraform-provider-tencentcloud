@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbFlushBinlogResource_basic -v
 func TestAccTencentCloudMariadbFlushBinlogResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,16 +15,21 @@ func TestAccTencentCloudMariadbFlushBinlogResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbFlushBinlog,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_flush_binlog.flush_binlog", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mariadb_flush_binlog.flush_binlog", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_mariadb_flush_binlog.flush_binlog",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
 const testAccMariadbFlushBinlog = `
+
 resource "tencentcloud_mariadb_flush_binlog" "flush_binlog" {
-  instance_id = "tdsql-9vqvls95"
+  instance_id = ""
 }
+
 `

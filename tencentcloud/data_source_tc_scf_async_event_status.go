@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_async_event_status" "async_event_status" {
-  invoke_request_id = "9de9405a-e33a-498d-bb59-e80b7bed1191"
-}
+  invoke_request_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -72,32 +71,30 @@ func dataSourceTencentCloudScfAsyncEventStatusRead(d *schema.ResourceData, meta 
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var (
-		result          *scf.AsyncEventStatus
-		invokeRequestId string
-	)
-
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("invoke_request_id"); ok {
-		invokeRequestId = v.(string)
 		paramMap["InvokeRequestId"] = helper.String(v.(string))
 	}
 
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var result []*scf.AsyncEventStatus
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		res, e := service.DescribeScfAsyncEventStatus(ctx, paramMap)
+		result, e := service.DescribeScfAsyncEventStatusByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = res
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	asyncEventStatusMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		asyncEventStatusMap := map[string]interface{}{}
 
 		if result.Status != nil {
 			asyncEventStatusMap["status"] = result.Status
@@ -111,10 +108,11 @@ func dataSourceTencentCloudScfAsyncEventStatusRead(d *schema.ResourceData, meta 
 			asyncEventStatusMap["invoke_request_id"] = result.InvokeRequestId
 		}
 
+		ids = append(ids, *result.InvokeRequestId)
 		_ = d.Set("result", asyncEventStatusMap)
 	}
 
-	d.SetId(invokeRequestId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), asyncEventStatusMap); e != nil {

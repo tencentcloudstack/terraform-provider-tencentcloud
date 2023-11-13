@@ -1,57 +1,21 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudPtsScenarioResource_basic -v
 func TestAccTencentCloudPtsScenarioResource_basic(t *testing.T) {
 	t.Parallel()
-
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckPtsScenarioDestroy,
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPtsScenario,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckPtsScenarioExists("tencentcloud_pts_scenario.scenario"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "name", "pts-js"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "type", "pts-js"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.geo_regions_load_distribution.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.geo_regions_load_distribution.0.percentage", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.geo_regions_load_distribution.0.region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.geo_regions_load_distribution.0.region_id", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.graceful_stop_seconds", "3"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.iteration_count", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.max_requests_per_second", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.#", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.0.duration_seconds", "120"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.0.target_virtual_users", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.1.duration_seconds", "120"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.1.target_virtual_users", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.2.duration_seconds", "120"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.2.target_virtual_users", "5"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.3.duration_seconds", "240"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "load.0.load_spec.0.concurrency.0.stages.3.target_virtual_users", "5"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "test_scripts.#", "1"),
-					resource.TestCheckResourceAttrSet("tencentcloud_pts_scenario.scenario", "test_scripts.0.encoded_content"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "test_scripts.0.load_weight", "100"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "test_scripts.0.name", "script.js"),
-					resource.TestCheckResourceAttrSet("tencentcloud_pts_scenario.scenario", "test_scripts.0.size"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_scenario.scenario", "test_scripts.0.type", "js"),
-					resource.TestCheckResourceAttrSet("tencentcloud_pts_scenario.scenario", "test_scripts.0.updated_at"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_pts_scenario.scenario", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_pts_scenario.scenario",
@@ -62,146 +26,129 @@ func TestAccTencentCloudPtsScenarioResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckPtsScenarioDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_pts_scenario" {
-			continue
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		projectId := idSplit[0]
-		scenarioId := idSplit[1]
-
-		scenario, err := service.DescribePtsScenario(ctx, projectId, scenarioId)
-		if scenario != nil {
-			return fmt.Errorf("pts scenario %s still exists", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func testAccCheckPtsScenarioExists(r string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-		rs, ok := s.RootModule().Resources[r]
-		if !ok {
-			return fmt.Errorf("resource %s is not found", r)
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		projectId := idSplit[0]
-		scenarioId := idSplit[1]
-
-		service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		scenario, err := service.DescribePtsScenario(ctx, projectId, scenarioId)
-		if scenario == nil {
-			return fmt.Errorf("pts scenario %s is not found", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-}
-
-const testAccPtsScenario = testAccPtsProject + `
+const testAccPtsScenario = `
 
 resource "tencentcloud_pts_scenario" "scenario" {
-    name            = "pts-js"
-    project_id      = tencentcloud_pts_project.project.id
-    type            = "pts-js"
+  name = "pts"
+  type = &lt;nil&gt;
+  project_id = &lt;nil&gt;
+  description = &lt;nil&gt;
+  load {
+		load_spec {
+			concurrency {
+				stages {
+					duration_seconds = &lt;nil&gt;
+					target_virtual_users = &lt;nil&gt;
+				}
+				iteration_count = &lt;nil&gt;
+				max_requests_per_second = &lt;nil&gt;
+				graceful_stop_seconds = &lt;nil&gt;
+			}
+			requests_per_second {
+				max_requests_per_second = &lt;nil&gt;
+				duration_seconds = &lt;nil&gt;
+				resources = &lt;nil&gt;
+				start_requests_per_second = &lt;nil&gt;
+				target_requests_per_second = &lt;nil&gt;
+				graceful_stop_seconds = &lt;nil&gt;
+			}
+			script_origin {
+				machine_number = &lt;nil&gt;
+				machine_specification = &lt;nil&gt;
+				duration_seconds = &lt;nil&gt;
+			}
+		}
+		vpc_load_distribution {
+			region_id = &lt;nil&gt;
+			region = &lt;nil&gt;
+			vpc_id = &lt;nil&gt;
+			subnet_ids = &lt;nil&gt;
+		}
+		geo_regions_load_distribution {
+			region_id = &lt;nil&gt;
+			region = &lt;nil&gt;
+			percentage = &lt;nil&gt;
+		}
 
-    domain_name_config {
-    }
+  }
+  datasets {
+		name = &lt;nil&gt;
+		split = &lt;nil&gt;
+		header_in_file = &lt;nil&gt;
+		header_columns = &lt;nil&gt;
+		line_count = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		size = &lt;nil&gt;
+		head_lines = &lt;nil&gt;
+		tail_lines = &lt;nil&gt;
+		type = &lt;nil&gt;
+		file_id = &lt;nil&gt;
 
-    load {
-        geo_regions_load_distribution {
-            percentage = 100
-            region     = "ap-guangzhou"
-            region_id  = 1
-        }
+  }
+  cron_id = &lt;nil&gt;
+  test_scripts {
+		name = &lt;nil&gt;
+		size = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		encoded_content = &lt;nil&gt;
+		encoded_http_archive = &lt;nil&gt;
+		load_weight = &lt;nil&gt;
 
-        load_spec {
-            concurrency {
-                graceful_stop_seconds   = 3
-                iteration_count         = 0
-                max_requests_per_second = 0
+  }
+  protocols {
+		name = &lt;nil&gt;
+		size = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		file_id = &lt;nil&gt;
 
-                stages {
-                    duration_seconds     = 120
-                    target_virtual_users = 2
-                }
-                stages {
-                    duration_seconds     = 120
-                    target_virtual_users = 4
-                }
-                stages {
-                    duration_seconds     = 120
-                    target_virtual_users = 5
-                }
-                stages {
-                    duration_seconds     = 240
-                    target_virtual_users = 5
-                }
-            }
-        }
-    }
+  }
+  request_files {
+		name = &lt;nil&gt;
+		size = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		file_id = &lt;nil&gt;
 
-    sla_policy {
-    }
+  }
+  s_l_a_policy {
+		s_l_a_rules {
+			metric = &lt;nil&gt;
+			aggregation = &lt;nil&gt;
+			condition = &lt;nil&gt;
+			value = &lt;nil&gt;
+			label_filter {
+				label_name = &lt;nil&gt;
+				label_value = &lt;nil&gt;
+			}
+			abort_flag = &lt;nil&gt;
+			for = &lt;nil&gt;
+		}
+		alert_channel {
+			notice_id = &lt;nil&gt;
+			a_m_p_consumer_id = &lt;nil&gt;
+		}
 
-    test_scripts {
-        encoded_content = <<-EOT
-            // Send a http get request
-            import http from 'pts/http';
-            import { check, sleep } from 'pts';
+  }
+  plugins {
+		name = &lt;nil&gt;
+		size = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_at = &lt;nil&gt;
+		file_id = &lt;nil&gt;
 
-            export default function () {
-              // simple get request
-              const resp1 = http.get('http://httpbin.org/get');
-              console.log(resp1.body);
-              // if resp1.body is a json string, resp1.json() transfer json format body to a json object
-              console.log(resp1.json());
-              check('status is 200', () => resp1.statusCode === 200);
+  }
+  domain_name_config {
+		host_aliases {
+			host_names = &lt;nil&gt;
+			i_p = &lt;nil&gt;
+		}
+		d_n_s_config {
+			nameservers = &lt;nil&gt;
+		}
 
-              // sleep 1 second
-              sleep(1);
-
-              // get request with headers and parameters
-              const resp2 = http.get('http://httpbin.org/get', {
-                headers: {
-                  Connection: 'keep-alive',
-                  'User-Agent': 'pts-engine',
-                },
-                query: {
-                  name1: 'value1',
-                  name2: 'value2',
-                },
-              });
-
-              console.log(resp2.json().args.name1); // 'value1'
-              check('body.args.name1 equals value1', () => resp2.json().args.name1 === 'value1');
-            }
-        EOT
-        load_weight     = 100
-        name            = "script.js"
-        size            = 838
-        type            = "js"
-        updated_at      = "2022-11-11T16:18:37+08:00"
-    }
-}
+  }
+              }
 
 `

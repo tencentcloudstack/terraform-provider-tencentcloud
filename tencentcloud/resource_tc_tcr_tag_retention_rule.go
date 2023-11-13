@@ -1,57 +1,41 @@
 /*
-Provides a resource to create a tcr tag retention rule.
+Provides a resource to create a tcr tag_retention_rule
 
 Example Usage
 
-Create a tcr tag retention rule instance
-
 ```hcl
-resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
-  instance_type = "basic"
-  delete_bucket = true
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "example" {
-  instance_id 	 = tencentcloud_tcr_instance.example.id
-  name			 = "tf_example_ns_retention"
-  is_public		 = true
-  is_auto_scan	 = true
-  is_prevent_vul = true
-  severity		 = "medium"
-  cve_whitelist_items	{
-    cve_id = "cve-xxxxx"
-  }
-}
-
-resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
-  registry_id = tencentcloud_tcr_instance.example.id
-  namespace_name = tencentcloud_tcr_namespace.example.name
+resource "tencentcloud_tcr_tag_retention_rule" "tag_retention_rule" {
+  registry_id = "tcr-12345"
+  namespace_id = 1
   retention_rule {
-		key = "nDaysSinceLastPush"
-		value = 2
+		key = "latestPushedK"
+		value = 1
+
   }
-  cron_setting = "daily"
-  disabled = true
+  cron_setting = "manual"
+  disabled = false
 }
 ```
 
+Import
+
+tcr tag_retention_rule can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tcr_tag_retention_rule.tag_retention_rule tag_retention_rule_id
+```
 */
 package tencentcloud
 
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTcrTagRetentionRule() *schema.Resource {
@@ -70,34 +54,28 @@ func resourceTencentCloudTcrTagRetentionRule() *schema.Resource {
 				Description: "The main instance ID.",
 			},
 
-			"namespace_name": {
+			"namespace_id": {
 				Required:    true,
-				Type:        schema.TypeString,
-				Description: "The Name of the namespace.",
-			},
-
-			"retention_id": {
-				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "The ID of the retention task.",
+				Description: "The id of the namespace.",
 			},
 
 			"retention_rule": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Retention Policy.",
+				Description: "Retention policy.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The supported policies are latestPushedK (retain the latest `k` pushed versions) and nDaysSinceLastPush (retain pushed versions within the last `n` days).",
+							Description: "The supported policies are latestPushedK (retain the latest “k” pushed versions) and nDaysSinceLastPush (retain pushed versions within the last “n” days).",
 						},
 						"value": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "corresponding values for rule settings.",
+							Description: "Corresponding values for rule settings.",
 						},
 					},
 				},
@@ -122,13 +100,14 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_tcr_tag_retention_rule.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		request       = tcr.NewCreateTagRetentionRuleRequest()
+		response      = tcr.NewCreateTagRetentionRuleResponse()
 		registryId    string
 		namespaceName string
-		tcrService    = TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+		retentionId   int
 	)
 	if v, ok := d.GetOk("registry_id"); ok {
 		registryId = v.(string)
@@ -137,18 +116,6 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOkExists("namespace_id"); ok {
 		request.NamespaceId = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOk("namespace_name"); ok {
-		namespaceName = v.(string)
-		namespace, has, err := tcrService.DescribeTCRNameSpaceById(ctx, registryId, namespaceName)
-		if !has || namespace == nil {
-			return fmt.Errorf("TCR namespace not found.")
-		}
-		if err != nil {
-			return err
-		}
-		request.NamespaceId = namespace.NamespaceId
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "retention_rule"); ok {
@@ -171,12 +138,13 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateTagRetentionRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().CreateTagRetentionRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -184,18 +152,8 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	TagRetentionRule, err := tcrService.DescribeTcrTagRetentionRuleById(ctx, registryId, namespaceName, nil)
-	if err != nil {
-		return fmt.Errorf("Query retention rule by id failed, reason:[%s]", err.Error())
-	}
-
-	if TagRetentionRule != nil {
-		retentionId := helper.Int64ToStr(*TagRetentionRule.RetentionId)
-		d.SetId(strings.Join([]string{registryId, namespaceName, retentionId}, FILED_SP))
-	} else {
-		log.Printf("[CRITAL]%s TagRetentionRule is nil! Set unique id as empty.", logId)
-		d.SetId("")
-	}
+	registryId = *response.Response.RegistryId
+	d.SetId(strings.Join([]string{registryId, namespaceName, helper.Int64ToStr(retentionId)}, FILED_SP))
 
 	return resourceTencentCloudTcrTagRetentionRuleRead(d, meta)
 }
@@ -208,7 +166,7 @@ func resourceTencentCloudTcrTagRetentionRuleRead(d *schema.ResourceData, meta in
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
@@ -218,7 +176,7 @@ func resourceTencentCloudTcrTagRetentionRuleRead(d *schema.ResourceData, meta in
 	namespaceName := idSplit[1]
 	retentionId := idSplit[2]
 
-	TagRetentionRule, err := service.DescribeTcrTagRetentionRuleById(ctx, registryId, namespaceName, &retentionId)
+	TagRetentionRule, err := service.DescribeTcrTagRetentionRuleById(ctx, registryId, namespaceName, retentionId)
 	if err != nil {
 		return err
 	}
@@ -229,26 +187,23 @@ func resourceTencentCloudTcrTagRetentionRuleRead(d *schema.ResourceData, meta in
 		return nil
 	}
 
-	_ = d.Set("registry_id", registryId)
-
-	if TagRetentionRule.RetentionId != nil {
-		_ = d.Set("retention_id", TagRetentionRule.RetentionId)
+	if TagRetentionRule.RegistryId != nil {
+		_ = d.Set("registry_id", TagRetentionRule.RegistryId)
 	}
 
-	if TagRetentionRule.NamespaceName != nil {
-		_ = d.Set("namespace_name", TagRetentionRule.NamespaceName)
+	if TagRetentionRule.NamespaceId != nil {
+		_ = d.Set("namespace_id", TagRetentionRule.NamespaceId)
 	}
 
-	if len(TagRetentionRule.RetentionRuleList) > 0 {
+	if TagRetentionRule.RetentionRule != nil {
 		retentionRuleMap := map[string]interface{}{}
-		retentionRule := TagRetentionRule.RetentionRuleList[0]
 
-		if retentionRule.Key != nil {
-			retentionRuleMap["key"] = retentionRule.Key
+		if TagRetentionRule.RetentionRule.Key != nil {
+			retentionRuleMap["key"] = TagRetentionRule.RetentionRule.Key
 		}
 
-		if retentionRule.Value != nil {
-			retentionRuleMap["value"] = retentionRule.Value
+		if TagRetentionRule.RetentionRule.Value != nil {
+			retentionRuleMap["value"] = TagRetentionRule.RetentionRule.Value
 		}
 
 		_ = d.Set("retention_rule", []interface{}{retentionRuleMap})
@@ -272,8 +227,6 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	request := tcr.NewModifyTagRetentionRuleRequest()
-	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
@@ -283,26 +236,27 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 	namespaceName := idSplit[1]
 	retentionId := idSplit[2]
 
-	namespace, has, err := tcrService.DescribeTCRNameSpaceById(ctx, registryId, namespaceName)
-	if !has || namespace == nil {
-		return fmt.Errorf("TCR namespace not found.")
-	}
-	if err != nil {
-		return err
-	}
-
 	request.RegistryId = &registryId
-	request.NamespaceId = namespace.NamespaceId
-	request.RetentionId = helper.StrToInt64Point(retentionId)
-	if v, ok := d.GetOkExists("cron_setting"); ok {
-		request.CronSetting = helper.String(v.(string))
-	}
+	request.NamespaceName = &namespaceName
+	request.RetentionId = &retentionId
 
-	immutableArgs := []string{"registry_id", "namespace_name"}
+	immutableArgs := []string{"registry_id", "namespace_id", "retention_rule", "cron_setting", "disabled"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("registry_id") {
+		if v, ok := d.GetOk("registry_id"); ok {
+			request.RegistryId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("namespace_id") {
+		if v, ok := d.GetOkExists("namespace_id"); ok {
+			request.NamespaceId = helper.IntInt64(v.(int))
 		}
 	}
 
@@ -319,14 +273,20 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
+	if d.HasChange("cron_setting") {
+		if v, ok := d.GetOk("cron_setting"); ok {
+			request.CronSetting = helper.String(v.(string))
+		}
+	}
+
 	if d.HasChange("disabled") {
 		if v, ok := d.GetOkExists("disabled"); ok {
 			request.Disabled = helper.Bool(v.(bool))
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().ModifyTagRetentionRule(request)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().ModifyTagRetentionRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -334,7 +294,6 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update tcr TagRetentionRule failed, reason:%+v", logId, err)
 		return err
@@ -350,15 +309,16 @@ func resourceTencentCloudTcrTagRetentionRuleDelete(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	registryId := idSplit[0]
+	namespaceName := idSplit[1]
 	retentionId := idSplit[2]
 
-	if err := service.DeleteTcrTagRetentionRuleById(ctx, registryId, retentionId); err != nil {
+	if err := service.DeleteTcrTagRetentionRuleById(ctx, registryId, namespaceName, retentionId); err != nil {
 		return err
 	}
 

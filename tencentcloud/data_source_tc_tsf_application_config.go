@@ -10,14 +10,13 @@ data "tencentcloud_tsf_application_config" "application_config" {
   config_id_list =
   config_name = "test-config"
   config_version = "1.0"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -46,7 +45,7 @@ func dataSourceTencentCloudTsfApplicationConfig() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Configuration ID list, query all with lower priority when not provided.",
+				Description: " Configuration ID list, query all with lower priority when not provided.",
 			},
 
 			"config_name": {
@@ -116,27 +115,27 @@ func dataSourceTencentCloudTsfApplicationConfig() *schema.Resource {
 									"application_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "application Id. Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Application Id. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"application_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "application Id. Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Application Id. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"delete_flag": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "delete flag, true: allow delete; false: delete prohibit.",
+										Description: "Delete flag, true: allow delete; false: delete prohibit.",
 									},
 									"last_update_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"config_version_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "config version count.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Config version count.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
 							},
@@ -186,29 +185,31 @@ func dataSourceTencentCloudTsfApplicationConfigRead(d *schema.ResourceData, meta
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var config *tsf.TsfPageConfig
+	var result []*tsf.TsfPageConfig
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfApplicationConfigByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		config = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(config.Content))
-	tsfPageConfigMap := map[string]interface{}{}
-	if config != nil {
-		if config.TotalCount != nil {
-			tsfPageConfigMap["total_count"] = config.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageConfigMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			tsfPageConfigMap["total_count"] = result.TotalCount
 		}
 
-		if config.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range config.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.ConfigId != nil {
@@ -260,16 +261,13 @@ func dataSourceTencentCloudTsfApplicationConfigRead(d *schema.ResourceData, meta
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.ConfigId)
 			}
 
-			tsfPageConfigMap["content"] = contentList
+			tsfPageConfigMap["content"] = []interface{}{contentList}
 		}
 
-		err = d.Set("result", []interface{}{tsfPageConfigMap})
-		if err != nil {
-			return err
-		}
+		ids = append(ids, *result.ApplicationId)
+		_ = d.Set("result", tsfPageConfigMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

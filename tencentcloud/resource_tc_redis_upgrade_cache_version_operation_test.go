@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixRedisUpgradeCacheVersionOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudRedisUpgradeCacheVersionOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,6 +16,11 @@ func TestAccTencentCloudNeedFixRedisUpgradeCacheVersionOperationResource_basic(t
 			{
 				Config: testAccRedisUpgradeCacheVersionOperation,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_redis_upgrade_cache_version_operation.upgrade_cache_version_operation", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_redis_upgrade_cache_version_operation.upgrade_cache_version_operation",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

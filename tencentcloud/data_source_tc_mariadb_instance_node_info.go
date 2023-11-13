@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_instance_node_info" "instance_node_info" {
-  instance_id = "tdsql-9vqvls95"
-}
+  instance_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -29,6 +28,7 @@ func dataSourceTencentCloudMariadbInstanceNodeInfo() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID, such as tdsql-6ltok4u9.",
 			},
+
 			"nodes_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -48,6 +48,7 @@ func dataSourceTencentCloudMariadbInstanceNodeInfo() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -61,34 +62,32 @@ func dataSourceTencentCloudMariadbInstanceNodeInfoRead(d *schema.ResourceData, m
 	defer logElapsed("data_source.tencentcloud_mariadb_instance_node_info.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		nodesInfo  []*mariadb.NodeInfo
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
+
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var nodesInfo []*mariadb.NodeInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMariadbInstanceNodeInfoByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		nodesInfo = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(nodesInfo))
 	tmpList := make([]map[string]interface{}, 0, len(nodesInfo))
 
 	if nodesInfo != nil {
@@ -103,19 +102,19 @@ func dataSourceTencentCloudMariadbInstanceNodeInfoRead(d *schema.ResourceData, m
 				nodeInfoMap["role"] = nodeInfo.Role
 			}
 
+			ids = append(ids, *nodeInfo.InstanceId)
 			tmpList = append(tmpList, nodeInfoMap)
 		}
 
 		_ = d.Set("nodes_info", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

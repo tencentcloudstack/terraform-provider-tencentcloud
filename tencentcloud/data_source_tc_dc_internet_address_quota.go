@@ -4,17 +4,16 @@ Use this data source to query detailed information of dc internet_address_quota
 Example Usage
 
 ```hcl
-data "tencentcloud_dc_internet_address_quota" "internet_address_quota" {}
+data "tencentcloud_dc_internet_address_quota" "internet_address_quota" {
+          }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -69,56 +68,46 @@ func dataSourceTencentCloudDcInternetAddressQuotaRead(d *schema.ResourceData, me
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var quota *dc.DescribeInternetAddressQuotaResponse
-
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeDcInternetAddressQuota(ctx)
+		result, e := service.DescribeDcInternetAddressQuotaByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		quota = result
+		ipv6PrefixLen = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if quota.Response.Ipv6PrefixLen != nil {
-		_ = d.Set("ipv6_prefix_len", quota.Response.Ipv6PrefixLen)
+	ids := make([]string, 0, len(ipv6PrefixLen))
+	if ipv6PrefixLen != nil {
+		_ = d.Set("ipv6_prefix_len", ipv6PrefixLen)
 	}
 
-	if quota.Response.Ipv4BgpQuota != nil {
-		_ = d.Set("ipv4_bgp_quota", quota.Response.Ipv4BgpQuota)
+	if ipv4BgpQuota != nil {
+		_ = d.Set("ipv4_bgp_quota", ipv4BgpQuota)
 	}
 
-	if quota.Response.Ipv4OtherQuota != nil {
-		_ = d.Set("ipv4_other_quota", quota.Response.Ipv4OtherQuota)
+	if ipv4OtherQuota != nil {
+		_ = d.Set("ipv4_other_quota", ipv4OtherQuota)
 	}
 
-	if quota.Response.Ipv4BgpNum != nil {
-		_ = d.Set("ipv4_bgp_num", quota.Response.Ipv4BgpNum)
+	if ipv4BgpNum != nil {
+		_ = d.Set("ipv4_bgp_num", ipv4BgpNum)
 	}
 
-	if quota.Response.Ipv4OtherNum != nil {
-		_ = d.Set("ipv4_other_num", quota.Response.Ipv4OtherNum)
+	if ipv4OtherNum != nil {
+		_ = d.Set("ipv4_other_num", ipv4OtherNum)
 	}
 
-	tmpList := []map[string]interface{}{
-		{
-			"ipv6_prefix_len":  quota.Response.Ipv6PrefixLen,
-			"ipv4_bgp_quota":   quota.Response.Ipv4BgpQuota,
-			"ipv4_other_quota": quota.Response.Ipv4OtherQuota,
-			"ipv4_bgp_num":     quota.Response.Ipv4BgpNum,
-			"ipv4_other_num":   quota.Response.Ipv4OtherNum,
-		},
-	}
-
-	d.SetId(helper.Int64ToStr(*quota.Response.Ipv4BgpQuota))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

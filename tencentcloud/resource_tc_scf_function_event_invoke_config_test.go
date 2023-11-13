@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixScfFunctionEventInvokeConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudScfFunctionEventInvokeConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,14 +29,15 @@ func TestAccTencentCloudNeedFixScfFunctionEventInvokeConfigResource_basic(t *tes
 const testAccScfFunctionEventInvokeConfig = `
 
 resource "tencentcloud_scf_function_event_invoke_config" "function_event_invoke_config" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
   async_trigger_config {
-    retry_config {
-      retry_num = 2
-    }
-    msg_ttl = 24
+		retry_config {
+			retry_num = 2
+		}
+		msg_t_t_l = 24
+
   }
+  function_name = "test_function"
+  namespace = "test_namespace"
 }
 
 `

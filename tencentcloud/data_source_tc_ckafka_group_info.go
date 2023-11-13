@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_group_info" "group_info" {
-  instance_id = "ckafka-xxxxxx"
-  group_list = ["xxxxxx"]
-}
+  instance_id = "InstanceId"
+  group_list =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -37,13 +36,13 @@ func dataSourceTencentCloudCkafkaGroupInfo() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Kafka consumption group, Consumer-group, here is an array format, format GroupList.0=xxx&amp;amp;GroupList.1=yyy.",
+				Description: "Kafka consumption group, Consumer-group, here is an array format, format GroupList.0=xxx&amp;amp;amp;GroupList.1=yyy.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "result.",
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"error_code": {
@@ -85,7 +84,7 @@ func dataSourceTencentCloudCkafkaGroupInfo() *schema.Resource {
 									"client_host": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Generally store the customer&#39;s IP address.",
+										Description: "Generally store the customer&amp;#39;s IP address.",
 									},
 									"assignment": {
 										Type:        schema.TypeList,
@@ -96,12 +95,12 @@ func dataSourceTencentCloudCkafkaGroupInfo() *schema.Resource {
 												"version": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "assignment version information.",
+													Description: "Assignment version information.",
 												},
 												"topics": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "topic list.",
+													Description: "Topic list.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"topic": {
@@ -154,12 +153,12 @@ func dataSourceTencentCloudCkafkaGroupInfoRead(d *schema.ResourceData, meta inte
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("group_list"); ok {
 		groupListSet := v.(*schema.Set).List()
-		paramMap["group_list"] = helper.InterfacesStringsPoint(groupListSet)
+		paramMap["GroupList"] = helper.InterfacesStringsPoint(groupListSet)
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -167,11 +166,11 @@ func dataSourceTencentCloudCkafkaGroupInfoRead(d *schema.ResourceData, meta inte
 	var result []*ckafka.GroupInfoResponse
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		groupInfo, e := service.DescribeCkafkaGroupInfoByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaGroupInfoByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = groupInfo
+		result = result
 		return nil
 	})
 	if err != nil {
@@ -241,7 +240,7 @@ func dataSourceTencentCloudCkafkaGroupInfoRead(d *schema.ResourceData, meta inte
 								topicsList = append(topicsList, topicsMap)
 							}
 
-							assignmentMap["topics"] = topicsList
+							assignmentMap["topics"] = []interface{}{topicsList}
 						}
 
 						membersMap["assignment"] = []interface{}{assignmentMap}
@@ -250,14 +249,14 @@ func dataSourceTencentCloudCkafkaGroupInfoRead(d *schema.ResourceData, meta inte
 					membersList = append(membersList, membersMap)
 				}
 
-				groupInfoResponseMap["members"] = membersList
+				groupInfoResponseMap["members"] = []interface{}{membersList}
 			}
 
 			if groupInfoResponse.Group != nil {
 				groupInfoResponseMap["group"] = groupInfoResponse.Group
-				ids = append(ids, *groupInfoResponse.Group)
 			}
 
+			ids = append(ids, *groupInfoResponse.InstanceId)
 			tmpList = append(tmpList, groupInfoResponseMap)
 		}
 

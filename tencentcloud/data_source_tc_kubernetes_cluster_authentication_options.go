@@ -5,18 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_kubernetes_cluster_authentication_options" "cluster_authentication_options" {
-  cluster_id = "cls-kzilgv5m"
-}
+  cluster_id = ""
+      }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	kubernetes "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudKubernetesClusterAuthenticationOptions() *schema.Resource {
@@ -32,28 +32,28 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptions() *schema.Reso
 			"service_accounts": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "ServiceAccount authentication configuration. Note: this field may return `null`, indicating that no valid values can be obtained.",
+				Description: "ServiceAccount authentication configurationNote: this field may return `null`, indicating that no valid values can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"use_tke_default": {
+						"use_t_k_e_default": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Use TKE default issuer and jwksuri. Note: This field may return `null`, indicating that no valid values can be obtained.",
+							Description: "Use TKE default issuer and jwksuriNote: This field may return `null`, indicating that no valid values can be obtained.",
 						},
 						"issuer": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "service-account-issuer. Note: this field may return `null`, indicating that no valid values can be obtained.",
+							Description: "Service-account-issuerNote: this field may return `null`, indicating that no valid values can be obtained.",
 						},
-						"jwks_uri": {
+						"j_w_k_s_u_r_i": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "service-account-jwks-uri. Note: this field may return `null`, indicating that no valid values can be obtained.",
+							Description: "Service-account-jwks-uriNote: this field may return `null`, indicating that no valid values can be obtained.",
 						},
 						"auto_create_discovery_anonymous_auth": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "If it is set to `true`, a RABC rule is automatically created to allow anonymous users to access `/.well-known/openid-configuration` and `/openid/v1/jwks`. Note: this field may return `null`, indicating that no valid values can be obtained.",
+							Description: "If it is set to `true`, a RABC rule is automatically created to allow anonymous users to access `/.well-known/openid-configuration` and `/openid/v1/jwks`.Note: this field may return `null`, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -62,19 +62,19 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptions() *schema.Reso
 			"latest_operation_state": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Result of the last modification. Values: `Updating`, `Success`, `Failed` or `TimeOut`. Note: this field may return `null`, indicating that no valid values can be obtained.",
+				Description: "Result of the last modification. Values: `Updating`, `Success`, `Failed` or `TimeOut`.Note: this field may return `null`, indicating that no valid values can be obtained.",
 			},
 
-			"oidc_config": {
+			"o_i_d_c_config": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "OIDC authentication configurations. Note: This field may return `null`, indicating that no valid value can be obtained.",
+				Description: "OIDC authentication configurationsNote: This field may return `null`, indicating that no valid value can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"auto_create_oidc_config": {
+						"auto_create_o_i_d_c_config": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Creating an identity provider. Note: This field may return `null`, indicating that no valid value can be obtained.",
+							Description: "Creating an identity providerNote: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 						"auto_create_client_id": {
 							Type: schema.TypeSet,
@@ -82,12 +82,12 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptions() *schema.Reso
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "Creating ClientId of the identity provider. Note: This field may return `null`, indicating that no valid value can be obtained.",
+							Description: "Creating ClientId of the identity providerNote: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 						"auto_install_pod_identity_webhook_addon": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "Creating the PodIdentityWebhook component. Note: This field may return `null`, indicating that no valid value can be obtained.",
+							Description: "Creating the PodIdentityWebhook componentNote: This field may return `null`, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -110,78 +110,78 @@ func dataSourceTencentCloudKubernetesClusterAuthenticationOptionsRead(d *schema.
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	clusterId := d.Get("cluster_id").(string)
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("cluster_id"); ok {
+		paramMap["ClusterId"] = helper.String(v.(string))
+	}
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := KubernetesService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		options    *kubernetes.ServiceAccountAuthenticationOptions
-		oidcConfig *kubernetes.OIDCConfigAuthenticationOptions
-		state      string
-		e          error
-	)
+	var serviceAccounts []*kubernetes.ServiceAccountAuthenticationOptions
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		options, state, oidcConfig, e = service.DescribeClusterAuthenticationOptions(ctx, clusterId)
+		result, e := service.DescribeKubernetesClusterAuthenticationOptionsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		serviceAccounts = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	tmpList := make([]map[string]interface{}, 0)
-
-	if options != nil {
+	ids := make([]string, 0, len(serviceAccounts))
+	if serviceAccounts != nil {
 		serviceAccountAuthenticationOptionsMap := map[string]interface{}{}
 
-		if options.UseTKEDefault != nil {
-			serviceAccountAuthenticationOptionsMap["use_tke_default"] = options.UseTKEDefault
+		if serviceAccounts.UseTKEDefault != nil {
+			serviceAccountAuthenticationOptionsMap["use_t_k_e_default"] = serviceAccounts.UseTKEDefault
 		}
 
-		if options.Issuer != nil {
-			serviceAccountAuthenticationOptionsMap["issuer"] = options.Issuer
+		if serviceAccounts.Issuer != nil {
+			serviceAccountAuthenticationOptionsMap["issuer"] = serviceAccounts.Issuer
 		}
 
-		if options.JWKSURI != nil {
-			serviceAccountAuthenticationOptionsMap["jwks_uri"] = options.JWKSURI
+		if serviceAccounts.JWKSURI != nil {
+			serviceAccountAuthenticationOptionsMap["j_w_k_s_u_r_i"] = serviceAccounts.JWKSURI
 		}
 
-		if options.AutoCreateDiscoveryAnonymousAuth != nil {
-			serviceAccountAuthenticationOptionsMap["auto_create_discovery_anonymous_auth"] = options.AutoCreateDiscoveryAnonymousAuth
+		if serviceAccounts.AutoCreateDiscoveryAnonymousAuth != nil {
+			serviceAccountAuthenticationOptionsMap["auto_create_discovery_anonymous_auth"] = serviceAccounts.AutoCreateDiscoveryAnonymousAuth
 		}
-		tmpList = append(tmpList, serviceAccountAuthenticationOptionsMap)
-		_ = d.Set("service_accounts", []interface{}{serviceAccountAuthenticationOptionsMap})
+
+		ids = append(ids, *serviceAccounts.ClusterId)
+		_ = d.Set("service_accounts", serviceAccountAuthenticationOptionsMap)
 	}
 
-	if state != "" {
-		_ = d.Set("latest_operation_state", state)
+	if latestOperationState != nil {
+		_ = d.Set("latest_operation_state", latestOperationState)
 	}
 
-	if oidcConfig != nil {
+	if oIDCConfig != nil {
 		oIDCConfigAuthenticationOptionsMap := map[string]interface{}{}
 
-		if oidcConfig.AutoCreateOIDCConfig != nil {
-			oIDCConfigAuthenticationOptionsMap["auto_create_oidc_config"] = oidcConfig.AutoCreateOIDCConfig
+		if oIDCConfig.AutoCreateOIDCConfig != nil {
+			oIDCConfigAuthenticationOptionsMap["auto_create_o_i_d_c_config"] = oIDCConfig.AutoCreateOIDCConfig
 		}
 
-		if oidcConfig.AutoCreateClientId != nil {
-			oIDCConfigAuthenticationOptionsMap["auto_create_client_id"] = oidcConfig.AutoCreateClientId
+		if oIDCConfig.AutoCreateClientId != nil {
+			oIDCConfigAuthenticationOptionsMap["auto_create_client_id"] = oIDCConfig.AutoCreateClientId
 		}
 
-		if oidcConfig.AutoInstallPodIdentityWebhookAddon != nil {
-			oIDCConfigAuthenticationOptionsMap["auto_install_pod_identity_webhook_addon"] = oidcConfig.AutoInstallPodIdentityWebhookAddon
+		if oIDCConfig.AutoInstallPodIdentityWebhookAddon != nil {
+			oIDCConfigAuthenticationOptionsMap["auto_install_pod_identity_webhook_addon"] = oIDCConfig.AutoInstallPodIdentityWebhookAddon
 		}
-		tmpList = append(tmpList, oIDCConfigAuthenticationOptionsMap)
-		_ = d.Set("oidc_config", []interface{}{oIDCConfigAuthenticationOptionsMap})
+
+		ids = append(ids, *oIDCConfig.ClusterId)
+		_ = d.Set("o_i_d_c_config", oIDCConfigAuthenticationOptionsMap)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string), serviceAccountAuthenticationOptionsMap); e != nil {
 			return e
 		}
 	}

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmSecurityGroupAttachmentResource_basic(t *testing.T) {
@@ -28,8 +27,10 @@ func TestAccTencentCloudCvmSecurityGroupAttachmentResource_basic(t *testing.T) {
 }
 
 const testAccCvmSecurityGroupAttachment = `
+
 resource "tencentcloud_cvm_security_group_attachment" "security_group_attachment" {
-	security_group_id = "sg-a0212ii1"
-	instance_id = "ins-cr2rfq78"
+  security_group_ids = 
+  instance_ids = 
 }
+
 `

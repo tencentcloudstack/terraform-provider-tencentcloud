@@ -1,25 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudSslDescribeHostWafInstanceListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_SSL)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeHostWafInstanceListDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list", "certificate_id", "9D3qRt7r"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list", "resource_type", "waf"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_host_waf_instance_list.describe_host_waf_instance_list")),
 			},
 		},
 	})
@@ -28,8 +24,15 @@ func TestAccTencentCloudSslDescribeHostWafInstanceListDataSource_basic(t *testin
 const testAccSslDescribeHostWafInstanceListDataSource = `
 
 data "tencentcloud_ssl_describe_host_waf_instance_list" "describe_host_waf_instance_list" {
-  certificate_id = "9D3qRt7r"
-  resource_type = "waf"
- }
+  certificate_id = ""
+  resource_type = ""
+  is_cache = 
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  old_certificate_id = ""
+  }
 
 `

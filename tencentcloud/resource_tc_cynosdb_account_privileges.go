@@ -5,35 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_account_privileges" "account_privileges" {
-  cluster_id   = "cynosdbmysql-bws8h88b"
-  account_name = "test"
-  host         = "%"
-  global_privileges = [
-    "CREATE",
-    "DROP",
-    "ALTER",
-    "CREATE TEMPORARY TABLES",
-    "CREATE VIEW"
-  ]
+  cluster_id = "xxx"
+  account {
+		account_name = ""
+		host = ""
+
+  }
+  global_privileges =
   database_privileges {
-    db = "users"
-    privileges = [
-      "DROP",
-      "REFERENCES",
-      "INDEX",
-      "CREATE VIEW",
-      "INSERT",
-      "EVENT"
-    ]
+		db = ""
+		privileges =
+
   }
   table_privileges {
-    db         = "users"
-    table_name = "tb_user_name"
-    privileges = [
-      "ALTER",
-      "REFERENCES",
-      "SHOW VIEW"
-    ]
+		db = ""
+		table_name = ""
+		privileges =
+
   }
 }
 ```
@@ -51,13 +39,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
@@ -72,37 +59,44 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
-			"account_name": {
-				Type:        schema.TypeString,
+			"account": {
 				Required:    true,
-				ForceNew:    true,
-				Description: "Account.",
-			},
-			"host": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "Host, default `%`.",
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Account information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Account.",
+						},
+						"host": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Host, default &amp;#39;%&amp;#39;.",
+						},
+					},
+				},
 			},
 
 			"global_privileges": {
-				Required: true,
+				Optional: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Array of global permissions.",
+				Description: "Global permission array.",
 			},
 
 			"database_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Array of database permissions.",
+				Description: "Database permission array.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"db": {
@@ -116,7 +110,7 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "Database privileges.",
+							Description: "Permission List.",
 						},
 					},
 				},
@@ -125,7 +119,7 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 			"table_privileges": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "array of table permissions.",
+				Description: "Table permission array.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"db": {
@@ -136,7 +130,7 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 						"table_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Table name.",
+							Description: "Table Name.",
 						},
 						"privileges": {
 							Type: schema.TypeSet,
@@ -144,7 +138,7 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "Table privileges.",
+							Description: "Permission List.",
 						},
 					},
 				},
@@ -157,22 +151,17 @@ func resourceTencentCloudCynosdbAccountPrivilegesCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_cynosdb_account_privileges.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		clusterId   string
-		accountName string
-		host        string
-	)
+	var clusterId string
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 	}
-	if v, ok := d.GetOk("account_name"); ok {
-		accountName = v.(string)
-	}
-	if v, ok := d.GetOk("host"); ok {
-		host = v.(string)
+
+	var account string
+	if v, ok := d.GetOk("account"); ok {
+		account = v.(string)
 	}
 
-	d.SetId(clusterId + FILED_SP + accountName + FILED_SP + host)
+	d.SetId(strings.Join([]string{clusterId, account}, FILED_SP))
 
 	return resourceTencentCloudCynosdbAccountPrivilegesUpdate(d, meta)
 }
@@ -182,19 +171,19 @@ func resourceTencentCloudCynosdbAccountPrivilegesRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	accountName := idSplit[1]
-	host := idSplit[2]
+	account := idSplit[1]
 
-	accountPrivileges, err := service.DescribeCynosdbAccountPrivilegesById(ctx, clusterId, accountName, host)
+	accountPrivileges, err := service.DescribeCynosdbAccountPrivilegesById(ctx, clusterId, account)
 	if err != nil {
 		return err
 	}
@@ -205,9 +194,23 @@ func resourceTencentCloudCynosdbAccountPrivilegesRead(d *schema.ResourceData, me
 		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("account_name", accountName)
-	_ = d.Set("host", host)
+	if accountPrivileges.ClusterId != nil {
+		_ = d.Set("cluster_id", accountPrivileges.ClusterId)
+	}
+
+	if accountPrivileges.Account != nil {
+		accountMap := map[string]interface{}{}
+
+		if accountPrivileges.Account.AccountName != nil {
+			accountMap["account_name"] = accountPrivileges.Account.AccountName
+		}
+
+		if accountPrivileges.Account.Host != nil {
+			accountMap["host"] = accountPrivileges.Account.Host
+		}
+
+		_ = d.Set("account", []interface{}{accountMap})
+	}
 
 	if accountPrivileges.GlobalPrivileges != nil {
 		_ = d.Set("global_privileges", accountPrivileges.GlobalPrivileges)
@@ -218,12 +221,12 @@ func resourceTencentCloudCynosdbAccountPrivilegesRead(d *schema.ResourceData, me
 		for _, databasePrivileges := range accountPrivileges.DatabasePrivileges {
 			databasePrivilegesMap := map[string]interface{}{}
 
-			if databasePrivileges.Db != nil {
-				databasePrivilegesMap["db"] = databasePrivileges.Db
+			if accountPrivileges.DatabasePrivileges.Db != nil {
+				databasePrivilegesMap["db"] = accountPrivileges.DatabasePrivileges.Db
 			}
 
-			if databasePrivileges.Privileges != nil {
-				databasePrivilegesMap["privileges"] = databasePrivileges.Privileges
+			if accountPrivileges.DatabasePrivileges.Privileges != nil {
+				databasePrivilegesMap["privileges"] = accountPrivileges.DatabasePrivileges.Privileges
 			}
 
 			databasePrivilegesList = append(databasePrivilegesList, databasePrivilegesMap)
@@ -238,16 +241,16 @@ func resourceTencentCloudCynosdbAccountPrivilegesRead(d *schema.ResourceData, me
 		for _, tablePrivileges := range accountPrivileges.TablePrivileges {
 			tablePrivilegesMap := map[string]interface{}{}
 
-			if tablePrivileges.Db != nil {
-				tablePrivilegesMap["db"] = tablePrivileges.Db
+			if accountPrivileges.TablePrivileges.Db != nil {
+				tablePrivilegesMap["db"] = accountPrivileges.TablePrivileges.Db
 			}
 
-			if tablePrivileges.TableName != nil {
-				tablePrivilegesMap["table_name"] = tablePrivileges.TableName
+			if accountPrivileges.TablePrivileges.TableName != nil {
+				tablePrivilegesMap["table_name"] = accountPrivileges.TablePrivileges.TableName
 			}
 
-			if tablePrivileges.Privileges != nil {
-				tablePrivilegesMap["privileges"] = tablePrivileges.Privileges
+			if accountPrivileges.TablePrivileges.Privileges != nil {
+				tablePrivilegesMap["privileges"] = accountPrivileges.TablePrivileges.Privileges
 			}
 
 			tablePrivilegesList = append(tablePrivilegesList, tablePrivilegesMap)
@@ -269,17 +272,40 @@ func resourceTencentCloudCynosdbAccountPrivilegesUpdate(d *schema.ResourceData, 
 	request := cynosdb.NewModifyAccountPrivilegesRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	accountName := idSplit[1]
-	host := idSplit[2]
+	account := idSplit[1]
 
 	request.ClusterId = &clusterId
-	request.Account = &cynosdb.InputAccount{
-		AccountName: &accountName,
-		Host:        &host,
+	request.Account = &account
+
+	immutableArgs := []string{"cluster_id", "account", "global_privileges", "database_privileges", "table_privileges"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("account") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "account"); ok {
+			inputAccount := cynosdb.InputAccount{}
+			if v, ok := dMap["account_name"]; ok {
+				inputAccount.AccountName = helper.String(v.(string))
+			}
+			if v, ok := dMap["host"]; ok {
+				inputAccount.Host = helper.String(v.(string))
+			}
+			request.Account = &inputAccount
+		}
 	}
 
 	if d.HasChange("global_privileges") {
@@ -295,7 +321,6 @@ func resourceTencentCloudCynosdbAccountPrivilegesUpdate(d *schema.ResourceData, 
 	if d.HasChange("database_privileges") {
 		if v, ok := d.GetOk("database_privileges"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				databasePrivileges := cynosdb.DatabasePrivileges{}
 				if v, ok := dMap["db"]; ok {
 					databasePrivileges.Db = helper.String(v.(string))
@@ -315,7 +340,6 @@ func resourceTencentCloudCynosdbAccountPrivilegesUpdate(d *schema.ResourceData, 
 	if d.HasChange("table_privileges") {
 		if v, ok := d.GetOk("table_privileges"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				tablePrivileges := cynosdb.TablePrivileges{}
 				if v, ok := dMap["db"]; ok {
 					tablePrivileges.Db = helper.String(v.(string))

@@ -5,22 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_rum_project" "project" {
-  name = "projectName"
-  instance_id = "rum-pasZKEI3RLgakj"
-  rate = "100"
-  enable_url_group = "0"
-  type = "web"
-  repo = ""
-  url = "iac-tf.com"
-  desc = "projectDesc-1"
-}
-
+  name = &lt;nil&gt;
+  instance_i_d = &lt;nil&gt;
+  rate = &lt;nil&gt;
+  enable_u_r_l_group = &lt;nil&gt;
+  type = &lt;nil&gt;
+  repo = &lt;nil&gt;
+  u_r_l = &lt;nil&gt;
+  desc = &lt;nil&gt;
+              }
 ```
+
 Import
 
 rum project can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_rum_project.project project_id
+terraform import tencentcloud_rum_project.project project_id
 ```
 */
 package tencentcloud
@@ -28,19 +29,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudRumProject() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudRumProjectRead,
 		Create: resourceTencentCloudRumProjectCreate,
+		Read:   resourceTencentCloudRumProjectRead,
 		Update: resourceTencentCloudRumProjectUpdate,
 		Delete: resourceTencentCloudRumProjectDelete,
 		Importer: &schema.ResourceImporter{
@@ -48,92 +47,92 @@ func resourceTencentCloudRumProject() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Name of the created project (required and up to 200 characters).",
 			},
 
-			"instance_id": {
-				Type:        schema.TypeString,
+			"instance_i_d": {
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Business system ID.",
 			},
 
 			"rate": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Project sampling rate (greater than or equal to 0).",
 			},
 
-			"enable_url_group": {
-				Type:        schema.TypeInt,
+			"enable_u_r_l_group": {
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "Whether to enable aggregation.",
 			},
 
 			"type": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Project type (valid values: `web`, `mp`, `android`, `ios`, `node`, `hippy`, `weex`, `viola`, `rn`).",
 			},
 
 			"repo": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Repository address of the project (optional and up to 256 characters).",
 			},
 
-			"url": {
-				Type:        schema.TypeString,
+			"u_r_l": {
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Webpage address of the project (optional and up to 256 characters).",
 			},
 
 			"desc": {
-				Type:     schema.TypeString,
 				Optional: true,
+				Type:     schema.TypeString,
 				Description: "	Description of the created project (optional and up to 1,000 characters).",
 			},
 
 			"creator": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creator ID.",
 			},
 
 			"create_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creata Time.",
 			},
 
 			"key": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Unique project key (12 characters).",
 			},
 
 			"instance_name": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Instance name.",
 			},
 
 			"instance_key": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Instance key.",
 			},
 
 			"is_star": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Starred status. `1`: yes; `0`: no.",
 			},
 
 			"project_status": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Project status (`1`: Creating; `2`: Running; `3`: Abnormal; `4`: Restarting; `5`: Stopping; `6`: Stopped; `7`: Terminating; `8`: Terminated).",
 			},
 		},
@@ -148,15 +147,14 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 
 	var (
 		request  = rum.NewCreateProjectRequest()
-		response *rum.CreateProjectResponse
-		id       uint64
+		response = rum.NewCreateProjectResponse()
+		iD       int
 	)
-
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("instance_id"); ok {
+	if v, ok := d.GetOk("instance_i_d"); ok {
 		request.InstanceID = helper.String(v.(string))
 	}
 
@@ -164,7 +162,7 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 		request.Rate = helper.String(v.(string))
 	}
 
-	if v := d.Get("enable_url_group"); v != nil {
+	if v, ok := d.GetOkExists("enable_u_r_l_group"); ok {
 		request.EnableURLGroup = helper.IntUint64(v.(int))
 	}
 
@@ -176,7 +174,7 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 		request.Repo = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("url"); ok {
+	if v, ok := d.GetOk("u_r_l"); ok {
 		request.URL = helper.String(v.(string))
 	}
 
@@ -189,21 +187,19 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create rum project failed, reason:%+v", logId, err)
 		return err
 	}
 
-	id = *response.Response.ID
+	iD = *response.Response.ID
+	d.SetId(helper.Int64ToStr(int64(iD)))
 
-	d.SetId(strconv.Itoa(int(id)))
 	return resourceTencentCloudRumProjectRead(d, meta)
 }
 
@@ -212,21 +208,22 @@ func resourceTencentCloudRumProjectRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RumService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	projectId := d.Id()
 
-	project, err := service.DescribeRumProject(ctx, projectId)
-
+	project, err := service.DescribeRumProjectById(ctx, iD)
 	if err != nil {
 		return err
 	}
 
 	if project == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `project` %s does not exist", projectId)
+		log.Printf("[WARN]%s resource `RumProject` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if project.Name != nil {
@@ -234,7 +231,7 @@ func resourceTencentCloudRumProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.InstanceID != nil {
-		_ = d.Set("instance_id", project.InstanceID)
+		_ = d.Set("instance_i_d", project.InstanceID)
 	}
 
 	if project.Rate != nil {
@@ -242,7 +239,7 @@ func resourceTencentCloudRumProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.EnableURLGroup != nil {
-		_ = d.Set("enable_url_group", project.EnableURLGroup)
+		_ = d.Set("enable_u_r_l_group", project.EnableURLGroup)
 	}
 
 	if project.Type != nil {
@@ -254,7 +251,7 @@ func resourceTencentCloudRumProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.URL != nil {
-		_ = d.Set("url", project.URL)
+		_ = d.Set("u_r_l", project.URL)
 	}
 
 	if project.Desc != nil {
@@ -302,12 +299,15 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 
 	projectId := d.Id()
 
-	id, e := strconv.Atoi(projectId)
-	if e != nil {
-		return fmt.Errorf("[ERROR]%s api[%s] sting to uint64 error, err [%s]", logId, request.GetAction(), e)
-	}
+	request.ID = &iD
 
-	request.ID = helper.Uint64(uint64(id))
+	immutableArgs := []string{"name", "instance_i_d", "rate", "enable_u_r_l_group", "type", "repo", "u_r_l", "desc", "creator", "create_time", "key", "instance_name", "instance_key", "is_star", "project_status"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
@@ -315,11 +315,10 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("instance_id") {
-		if v, ok := d.GetOk("instance_id"); ok {
+	if d.HasChange("instance_i_d") {
+		if v, ok := d.GetOk("instance_i_d"); ok {
 			request.InstanceID = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("rate") {
@@ -328,8 +327,8 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("enable_url_group") {
-		if v, ok := d.GetOk("enable_url_group"); ok {
+	if d.HasChange("enable_u_r_l_group") {
+		if v, ok := d.GetOkExists("enable_u_r_l_group"); ok {
 			request.EnableURLGroup = helper.IntUint64(v.(int))
 		}
 	}
@@ -346,8 +345,8 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("url") {
-		if v, ok := d.GetOk("url"); ok {
+	if d.HasChange("u_r_l") {
+		if v, ok := d.GetOk("u_r_l"); ok {
 			request.URL = helper.String(v.(string))
 		}
 	}
@@ -363,14 +362,12 @@ func resourceTencentCloudRumProjectUpdate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create rum project failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update rum project failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -385,10 +382,9 @@ func resourceTencentCloudRumProjectDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RumService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	projectId := d.Id()
 
-	if err := service.DeleteRumProjectById(ctx, projectId); err != nil {
+	if err := service.DeleteRumProjectById(ctx, iD); err != nil {
 		return err
 	}
 

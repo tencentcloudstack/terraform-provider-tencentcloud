@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_task_status" "task_status" {
-  flow_id = 123456
-}
+  flow_id = flowId
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCkafkaTaskStatus() *schema.Resource {
@@ -67,26 +66,31 @@ func dataSourceTencentCloudCkafkaTaskStatusRead(d *schema.ResourceData, meta int
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	flowId := d.Get("flow_id").(int)
+	paramMap := make(map[string]interface{})
+	if v, _ := d.GetOk("flow_id"); v != nil {
+		paramMap["FlowId"] = helper.IntInt64(v.(int))
+	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *ckafka.TaskStatusResponse
+	var result []*ckafka.TaskStatusResponse
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		taskStatus, e := service.DescribeCkafkaTaskStatusByFilter(ctx, flowId)
+		result, e := service.DescribeCkafkaTaskStatusByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = taskStatus
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	taskStatusResponseMapList := make([]interface{}, 0)
+
+	ids := make([]string, 0, len(result))
 	if result != nil {
 		taskStatusResponseMap := map[string]interface{}{}
+
 		if result.Status != nil {
 			taskStatusResponseMap["status"] = result.Status
 		}
@@ -94,14 +98,15 @@ func dataSourceTencentCloudCkafkaTaskStatusRead(d *schema.ResourceData, meta int
 		if result.Output != nil {
 			taskStatusResponseMap["output"] = result.Output
 		}
-		taskStatusResponseMapList = append(taskStatusResponseMapList, taskStatusResponseMap)
-		_ = d.Set("result", taskStatusResponseMapList)
+
+		ids = append(ids, *result.FlowId)
+		_ = d.Set("result", taskStatusResponseMap)
 	}
 
-	d.SetId(strconv.Itoa(flowId))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), taskStatusResponseMapList); e != nil {
+		if e := writeToFile(output.(string), taskStatusResponseMap); e != nil {
 			return e
 		}
 	}

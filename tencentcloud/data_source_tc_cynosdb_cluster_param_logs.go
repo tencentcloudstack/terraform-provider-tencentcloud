@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster_param_logs" "cluster_param_logs" {
-  cluster_id    = "cynosdbmysql-bws8h88b"
-  instance_ids  = ["cynosdbmysql-ins-afqx1hy0"]
-  order_by      = "CreateTime"
+  cluster_id = "123"
+  instance_ids =
+  order_by = "123"
   order_by_type = "DESC"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -32,6 +31,7 @@ func dataSourceTencentCloudCynosdbClusterParamLogs() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"instance_ids": {
 				Optional: true,
 				Type:     schema.TypeSet,
@@ -40,16 +40,19 @@ func dataSourceTencentCloudCynosdbClusterParamLogs() *schema.Resource {
 				},
 				Description: "Instance ID list, used to record specific instances of operations.",
 			},
+
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sort field, defining which field to sort based on when returning results.",
 			},
+
 			"order_by_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Define specific sorting rules, limited to one of desc, asc, DESC, or ASC.",
 			},
+
 			"cluster_param_logs": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -74,7 +77,7 @@ func dataSourceTencentCloudCynosdbClusterParamLogs() *schema.Resource {
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "modify state.",
+							Description: "Modify state.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -99,6 +102,7 @@ func dataSourceTencentCloudCynosdbClusterParamLogs() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -112,18 +116,13 @@ func dataSourceTencentCloudCynosdbClusterParamLogsRead(d *schema.ResourceData, m
 	defer logElapsed("data_source.tencentcloud_cynosdb_cluster_param_logs.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId            = getLogId(contextNil)
-		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
-		service          = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		clusterParamLogs []*cynosdb.ClusterParamModifyLog
-		clusterId        string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
 
 	if v, ok := d.GetOk("instance_ids"); ok {
@@ -139,20 +138,23 @@ func dataSourceTencentCloudCynosdbClusterParamLogsRead(d *schema.ResourceData, m
 		paramMap["OrderByType"] = helper.String(v.(string))
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var clusterParamLogs []*cynosdb.ClusterParamModifyLog
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbClusterParamLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		clusterParamLogs = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(clusterParamLogs))
 	tmpList := make([]map[string]interface{}, 0, len(clusterParamLogs))
 
 	if clusterParamLogs != nil {
@@ -191,19 +193,19 @@ func dataSourceTencentCloudCynosdbClusterParamLogsRead(d *schema.ResourceData, m
 				clusterParamModifyLogMap["instance_id"] = clusterParamModifyLog.InstanceId
 			}
 
+			ids = append(ids, *clusterParamModifyLog.ClusterId)
 			tmpList = append(tmpList, clusterParamModifyLogMap)
 		}
 
 		_ = d.Set("cluster_param_logs", tmpList)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

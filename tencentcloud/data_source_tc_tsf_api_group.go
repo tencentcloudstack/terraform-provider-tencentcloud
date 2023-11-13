@@ -5,21 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_api_group" "api_group" {
-  search_word = "xxx01"
-  group_type = "ms"
-  auth_type = "none"
-  status = "released"
-  order_by = "created_time"
-  order_type = 0
+  search_word = ""
+  group_type = ""
+  auth_type = ""
+  status = ""
+  order_by = ""
+  order_type =
   gateway_instance_id = "gw-ins-lvdypq5k"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -33,7 +32,7 @@ func dataSourceTencentCloudTsfApiGroup() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "search word.",
+				Description: "Search word.",
 			},
 
 			"group_type": {
@@ -81,7 +80,7 @@ func dataSourceTencentCloudTsfApiGroup() *schema.Resource {
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "record count.",
+							Description: "Record count.",
 						},
 						"content": {
 							Type:        schema.TypeList,
@@ -171,7 +170,7 @@ func dataSourceTencentCloudTsfApiGroup() *schema.Resource {
 									"api_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "api count.",
+										Description: "Api count.",
 									},
 									"acl_mode": {
 										Type:        schema.TypeString,
@@ -273,30 +272,31 @@ func dataSourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interfac
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var apiGroupInfo *tsf.TsfPageApiGroupInfo
+	var result []*tsf.TsfPageApiGroupInfo
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfApiGroupByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		apiGroupInfo = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(apiGroupInfo.Content))
-	tsfPageApiGroupInfoMap := map[string]interface{}{}
-	if apiGroupInfo != nil {
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageApiGroupInfoMap := map[string]interface{}{}
 
-		if apiGroupInfo.TotalCount != nil {
-			tsfPageApiGroupInfoMap["total_count"] = apiGroupInfo.TotalCount
+		if result.TotalCount != nil {
+			tsfPageApiGroupInfoMap["total_count"] = result.TotalCount
 		}
 
-		if apiGroupInfo.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range apiGroupInfo.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.GroupId != nil {
@@ -363,7 +363,7 @@ func dataSourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interfac
 						bindedGatewayDeployGroupsList = append(bindedGatewayDeployGroupsList, bindedGatewayDeployGroupsMap)
 					}
 
-					contentMap["binded_gateway_deploy_groups"] = bindedGatewayDeployGroupsList
+					contentMap["binded_gateway_deploy_groups"] = []interface{}{bindedGatewayDeployGroupsList}
 				}
 
 				if content.ApiCount != nil {
@@ -407,13 +407,13 @@ func dataSourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interfac
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.GroupId)
 			}
 
-			tsfPageApiGroupInfoMap["content"] = contentList
+			tsfPageApiGroupInfoMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageApiGroupInfoMap})
+		ids = append(ids, *result.GatewayInstanceId)
+		_ = d.Set("result", tsfPageApiGroupInfoMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

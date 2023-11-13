@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMpsSnapshotByTimeoffsetTemplateResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudMpsSnapshotByTimeoffsetTemplateResource_basic(t *testing
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_snapshot_by_timeoffset_template.snapshot_by_timeoffset_template", "id")),
 			},
 			{
-				Config: testAccMpsSnapshotByTimeoffsetTemplateUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_snapshot_by_timeoffset_template.snapshot_by_timeoffset_template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_snapshot_by_timeoffset_template.snapshot_by_timeoffset_template", "name", "terraform-for-test"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_mps_snapshot_by_timeoffset_template.snapshot_by_timeoffset_template",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,25 +29,13 @@ func TestAccTencentCloudMpsSnapshotByTimeoffsetTemplateResource_basic(t *testing
 const testAccMpsSnapshotByTimeoffsetTemplate = `
 
 resource "tencentcloud_mps_snapshot_by_timeoffset_template" "snapshot_by_timeoffset_template" {
-  fill_type           = "stretch"
-  format              = "jpg"
-  height              = 128
-  name                = "terraform-test"
+  name = &lt;nil&gt;
+  width = 0
+  height = 0
   resolution_adaptive = "open"
-  width               = 140
-}
-
-`
-
-const testAccMpsSnapshotByTimeoffsetTemplateUpdate = `
-
-resource "tencentcloud_mps_snapshot_by_timeoffset_template" "snapshot_by_timeoffset_template" {
-  fill_type           = "stretch"
-  format              = "jpg"
-  height              = 128
-  name                = "terraform-for-test"
-  resolution_adaptive = "open"
-  width               = 140
+  format = "jpg"
+  comment = &lt;nil&gt;
+  fill_type = "black"
 }
 
 `

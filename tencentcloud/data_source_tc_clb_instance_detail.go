@@ -5,18 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_instance_detail" "instance_detail" {
-  target_type = "NODE"
-}
+  fields =
+  target_type = ""
+  filters {
+		name = ""
+		values =
+
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
+	clb "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -30,7 +35,7 @@ func dataSourceTencentCloudClbInstanceDetail() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "List of fields. Only fields specified will be returned. If it's left blank, `null` is returned. The fields `LoadBalancerId` and `LoadBalancerName` are added by default. For details about fields.",
+				Description: "List of fields. Only fields specified will be returned. If it’s left blank, `null` is returned. The fields `LoadBalancerId` and `LoadBalancerName` are added by default. For details about fields, see &amp;amp;lt;a href=https://intl.cloud.tencent.com/document/api/214/30694?from_cn_redirect=1#LoadBalancerDetail&amp;amp;gt;LoadBalancerDetail&amp;amp;lt;/a&amp;amp;gt;.",
 			},
 
 			"target_type": {
@@ -42,7 +47,7 @@ func dataSourceTencentCloudClbInstanceDetail() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter condition of querying lists describing CLB instance details:loadbalancer-id - String - Required: no - (Filter condition) CLB instance ID, such as lb-12345678; project-id - String - Required: no - (Filter condition) Project ID, such as 0 and 123; network - String - Required: no - (Filter condition) Network type of the CLB instance, such as Public and Private.&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt; vip - String - Required: no - (Filter condition) CLB instance VIP, such as 1.1.1.1 and 2204::22:3; target-ip - String - Required: no - (Filter condition) Private IP of the target real servers, such as1.1.1.1 and 2203::214:4; vpcid - String - Required: no - (Filter condition) Identifier of the VPC instance to which the CLB instance belongs, such as vpc-12345678; zone - String - Required: no - (Filter condition) Availability zone where the CLB instance resides, such as ap-guangzhou-1; tag-key - String - Required: no - (Filter condition) Tag key of the CLB instance, such as name; tag:* - String - Required: no - (Filter condition) CLB instance tag, followed by tag key after the colon. For example, use {Name: tag:name,Values: [zhangsan, lisi]} to filter the tag key `name` with the tag value `zhangsan` and `lisi`; fuzzy-search - String - Required: no - (Filter condition) Fuzzy search for CLB instance VIP and CLB instance name, such as 1.",
+				Description: "Filter condition of querying lists describing CLB instance details:&amp;amp;lt;li&amp;amp;gt; loadbalancer-id - String - Required: no - (Filter condition) CLB instance ID, such as lb-12345678. &amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; project-id - String - Required: no - (Filter condition) Project ID, such as 0 and 123.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; network - String - Required: no - (Filter condition) Network type of the CLB instance, such as Public and Private.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; vip - String - Required: no - (Filter condition) CLB instance VIP, such as 1.1.1.1 and 2204::22:3. &amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; target-ip - String - Required: no - (Filter condition) Private IP of the target real servers, such as1.1.1.1 and 2203::214:4.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; vpcid - String - Required: no - (Filter condition) Identifier of the VPC instance to which the CLB instance belongs, such as vpc-12345678.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; zone - String - Required: no - (Filter condition) Availability zone where the CLB instance resides, such as ap-guangzhou-1.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; tag-key - String - Required: no - (Filter condition) Tag key of the CLB instance, such as name.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; tag:* - String - Required: no - (Filter condition) CLB instance tag, followed by tag key after the colon &amp;amp;#39;:&amp;amp;#39;. For example, use {Name: tag:name,Values: [zhangsan, lisi]} to filter the tag key “name” with the tag value “zhangsan” and “lisi”.&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt; fuzzy-search - String - Required: no - (Filter condition) Fuzzy search for CLB instance VIP and CLB instance name, such as 1.1.&amp;amp;lt;/li&amp;amp;gt;.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -93,17 +98,17 @@ func dataSourceTencentCloudClbInstanceDetail() *schema.Resource {
 							Computed:    true,
 							Description: "CLB instance VIP.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
-						"address_ipv6": {
+						"address_i_pv6": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IPv6 VIP address of the CLB instance.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
-						"address_ip_version": {
+						"address_i_p_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IP version of the CLB instance. Valid values: IPv4, IPv6.Note: this field may return null, indicating that no valid values can be obtained.",
 						},
-						"ipv6_mode": {
+						"i_pv6_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IPv6 address type of the CLB instance. Valid values: IPv6Nat64, IPv6FullChain.Note: this field may return null, indicating that no valid values can be obtained.",
@@ -154,7 +159,7 @@ func dataSourceTencentCloudClbInstanceDetail() *schema.Resource {
 										Computed:    true,
 										Description: "Maximum outbound bandwidth in Mbps, which applies only to public network CLB. Value range: 0-65,535. Default value: 10.",
 									},
-									"bandwidth_pkg_sub_type": {
+									"bandwidthpkg_sub_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "Bandwidth package type, such as SINGLEISPNote: This field may return null, indicating that no valid values can be obtained.",
@@ -376,7 +381,7 @@ func dataSourceTencentCloudClbInstanceDetailRead(d *schema.ResourceData, meta in
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -423,15 +428,15 @@ func dataSourceTencentCloudClbInstanceDetailRead(d *schema.ResourceData, meta in
 			}
 
 			if loadBalancerDetail.AddressIPv6 != nil {
-				loadBalancerDetailMap["address_ipv6"] = loadBalancerDetail.AddressIPv6
+				loadBalancerDetailMap["address_i_pv6"] = loadBalancerDetail.AddressIPv6
 			}
 
 			if loadBalancerDetail.AddressIPVersion != nil {
-				loadBalancerDetailMap["address_ip_version"] = loadBalancerDetail.AddressIPVersion
+				loadBalancerDetailMap["address_i_p_version"] = loadBalancerDetail.AddressIPVersion
 			}
 
 			if loadBalancerDetail.IPv6Mode != nil {
-				loadBalancerDetailMap["ipv6_mode"] = loadBalancerDetail.IPv6Mode
+				loadBalancerDetailMap["i_pv6_mode"] = loadBalancerDetail.IPv6Mode
 			}
 
 			if loadBalancerDetail.Zone != nil {
@@ -470,7 +475,7 @@ func dataSourceTencentCloudClbInstanceDetailRead(d *schema.ResourceData, meta in
 				}
 
 				if loadBalancerDetail.NetworkAttributes.BandwidthpkgSubType != nil {
-					networkAttributesMap["bandwidth_pkg_sub_type"] = loadBalancerDetail.NetworkAttributes.BandwidthpkgSubType
+					networkAttributesMap["bandwidthpkg_sub_type"] = loadBalancerDetail.NetworkAttributes.BandwidthpkgSubType
 				}
 
 				loadBalancerDetailMap["network_attributes"] = []interface{}{networkAttributesMap}
@@ -524,7 +529,7 @@ func dataSourceTencentCloudClbInstanceDetailRead(d *schema.ResourceData, meta in
 					tagsList = append(tagsList, tagsMap)
 				}
 
-				loadBalancerDetailMap["tags"] = tagsList
+				loadBalancerDetailMap["tags"] = []interface{}{tagsList}
 			}
 
 			if loadBalancerDetail.ListenerId != nil {

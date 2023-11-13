@@ -5,11 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_scf_function_version" "function_version" {
-  function_name    = "keep-1676351130"
-  namespace        = "default"
-  description      = "for-terraform-test"
+  function_name = "test_function"
+  description = "test function"
+  namespace = "test_namespace"
 }
-
 ```
 
 Import
@@ -17,7 +16,7 @@ Import
 scf function_version can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_scf_function_version.function_version functionName#namespace#functionVersion
+terraform import tencentcloud_scf_function_version.function_version function_version_id
 ```
 */
 package tencentcloud
@@ -25,19 +24,20 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudScfFunctionVersion() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudScfFunctionVersionCreate,
 		Read:   resourceTencentCloudScfFunctionVersionRead,
+		Update: resourceTencentCloudScfFunctionVersionUpdate,
 		Delete: resourceTencentCloudScfFunctionVersionDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -46,28 +46,19 @@ func resourceTencentCloudScfFunctionVersion() *schema.Resource {
 			"function_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Description: "Name of the released function.",
 			},
 
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Description: "Function description.",
 			},
 
 			"namespace": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Description: "Function namespace.",
-			},
-
-			"function_version": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Version of the released function.",
 			},
 		},
 	}
@@ -115,15 +106,15 @@ func resourceTencentCloudScfFunctionVersionCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	functionVersion = *response.Response.FunctionVersion
-	d.SetId(functionName + FILED_SP + namespace + FILED_SP + functionVersion)
+	functionName = *response.Response.FunctionName
+	d.SetId(strings.Join([]string{functionName, namespace, functionVersion}, FILED_SP))
 
-	// wait ready
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
-	err = waitScfFunctionReady(ctx, functionName, namespace, client.UseScfClient())
-	if err != nil {
-		return err
+	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"Active"}, 120*readRetryTimeout, time.Second, service.ScfFunctionVersionStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudScfFunctionVersionRead(d, meta)
@@ -147,34 +138,46 @@ func resourceTencentCloudScfFunctionVersionRead(d *schema.ResourceData, meta int
 	namespace := idSplit[1]
 	functionVersion := idSplit[2]
 
-	version, err := service.DescribeScfFunctionVersionById(ctx, functionName, namespace, functionVersion)
+	FunctionVersion, err := service.DescribeScfFunctionVersionById(ctx, functionName, namespace, functionVersion)
 	if err != nil {
 		return err
 	}
 
-	if version == nil {
+	if FunctionVersion == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ScfFunctionVersion` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if version.Response.FunctionName != nil {
-		_ = d.Set("function_name", version.Response.FunctionName)
+	if FunctionVersion.FunctionName != nil {
+		_ = d.Set("function_name", FunctionVersion.FunctionName)
 	}
 
-	if version.Response.Description != nil {
-		_ = d.Set("description", version.Response.Description)
+	if FunctionVersion.Description != nil {
+		_ = d.Set("description", FunctionVersion.Description)
 	}
 
-	if version.Response.Namespace != nil {
-		_ = d.Set("namespace", version.Response.Namespace)
-	}
-
-	if version.Response.FunctionVersion != nil {
-		_ = d.Set("function_version", version.Response.FunctionVersion)
+	if FunctionVersion.Namespace != nil {
+		_ = d.Set("namespace", FunctionVersion.Namespace)
 	}
 
 	return nil
+}
+
+func resourceTencentCloudScfFunctionVersionUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_scf_function_version.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	immutableArgs := []string{"function_name", "description", "namespace"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return resourceTencentCloudScfFunctionVersionRead(d, meta)
 }
 
 func resourceTencentCloudScfFunctionVersionDelete(d *schema.ResourceData, meta interface{}) error {

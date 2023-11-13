@@ -5,7 +5,11 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_managers" "describe_managers" {
-  company_id = "11772"
+  company_id =
+  manager_name = ""
+  manager_mail = ""
+  status = ""
+  search_key = ""
   }
 ```
 */
@@ -13,7 +17,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -33,7 +36,7 @@ func dataSourceTencentCloudSslDescribeManagers() *schema.Resource {
 			"manager_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Manager&amp;#39;s name (will be abandoned), please use Searchkey.",
+				Description: "Manager&amp;amp;#39;s name (will be abandoned), please use Searchkey.",
 			},
 
 			"manager_mail": {
@@ -45,13 +48,13 @@ func dataSourceTencentCloudSslDescribeManagers() *schema.Resource {
 			"status": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Filter according to the status of the manager, and the value is available&amp;#39;None&amp;#39; Unable to submit review&amp;#39;Audit&amp;#39;, Asian Credit Review&amp;#39;Caaudit&amp;#39; CA review&amp;#39;OK&amp;#39; has been reviewed&amp;#39;Invalid&amp;#39; review failed&amp;#39;Expiring&amp;#39; is about to expire&amp;#39;Expired&amp;#39; expired.",
+				Description: "Filter according to the status of the manager, and the value is available&amp;amp;#39;None&amp;amp;#39; Unable to submit review&amp;amp;#39;Audit&amp;amp;#39;, Asian Credit Review&amp;amp;#39;Caaudit&amp;amp;#39; CA review&amp;amp;#39;OK&amp;amp;#39; has been reviewed&amp;amp;#39;Invalid&amp;amp;#39; review failed&amp;amp;#39;Expiring&amp;amp;#39; is about to expire&amp;amp;#39;Expired&amp;amp;#39; expired.",
 			},
 
 			"search_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Manager&amp;#39;s surname/Manager name/mailbox/department precise matching.",
+				Description: "Manager&amp;amp;#39;s surname/Manager name/mailbox/department precise matching.",
 			},
 
 			"managers": {
@@ -130,6 +133,11 @@ func dataSourceTencentCloudSslDescribeManagers() *schema.Resource {
 							Computed:    true,
 							Description: "Examination timeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
+						"status_info": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Specific review status informationNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+						},
 					},
 				},
 			},
@@ -150,10 +158,9 @@ func dataSourceTencentCloudSslDescribeManagersRead(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var companyId string
+
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("company_id"); v != nil {
-		companyId = helper.IntToStr(v.(int))
 		paramMap["CompanyId"] = helper.IntInt64(v.(int))
 	}
 
@@ -189,6 +196,7 @@ func dataSourceTencentCloudSslDescribeManagersRead(d *schema.ResourceData, meta 
 		return err
 	}
 
+	ids := make([]string, 0, len(managers))
 	tmpList := make([]map[string]interface{}, 0, len(managers))
 
 	if managers != nil {
@@ -251,13 +259,18 @@ func dataSourceTencentCloudSslDescribeManagersRead(d *schema.ResourceData, meta 
 				managerInfoMap["verify_time"] = managerInfo.VerifyTime
 			}
 
+			if managerInfo.StatusInfo != nil {
+				managerInfoMap["status_info"] = managerInfo.StatusInfo
+			}
+
+			ids = append(ids, *managerInfo.CompanyId)
 			tmpList = append(tmpList, managerInfoMap)
 		}
 
 		_ = d.Set("managers", tmpList)
 	}
 
-	d.SetId(companyId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

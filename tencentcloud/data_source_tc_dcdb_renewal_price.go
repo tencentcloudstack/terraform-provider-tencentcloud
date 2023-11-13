@@ -5,20 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_renewal_price" "renewal_price" {
-	instance_id = local.dcdb_id
-	period      = 1
-	amount_unit = "pent"
-}
+  instance_id = ""
+  period =
+  amount_unit = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -41,19 +39,19 @@ func dataSourceTencentCloudDcdbRenewalPrice() *schema.Resource {
 			"amount_unit": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Price unit. Valid values: `pent` (cent), `microPent` (microcent).",
+				Description: "Price unit. Valid values: `* pent` (cent), `* microPent` (microcent).",
 			},
 
 			"original_price": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Original price. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).",
+				Description: "Original price * Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. * Currency: CNY (Chinese site), USD (international site).",
 			},
 
 			"price": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "The actual price may be different from the original price due to discounts. Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. Currency: CNY (Chinese site), USD (international site).",
+				Description: "The actual price may be different from the original price due to discounts. * Unit: Cent (default). If the request parameter contains `AmountUnit`, see `AmountUnit` description. * Currency: CNY (Chinese site), USD (international site).",
 			},
 
 			"result_output_file": {
@@ -72,14 +70,10 @@ func dataSourceTencentCloudDcdbRenewalPriceRead(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, _ := d.GetOk("period"); v != nil {
@@ -90,35 +84,33 @@ func dataSourceTencentCloudDcdbRenewalPriceRead(d *schema.ResourceData, meta int
 		paramMap["AmountUnit"] = helper.String(v.(string))
 	}
 
-	var result *dcdb.DescribeDCDBRenewalPriceResponseParams
-	var e error
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e = service.DescribeDcdbRenewalPriceByFilter(ctx, paramMap)
+		result, e := service.DescribeDcdbRenewalPriceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		originalPrice = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if result != nil {
-		if result.OriginalPrice != nil {
-			_ = d.Set("original_price", result.OriginalPrice)
-		}
-
-		if result.Price != nil {
-			_ = d.Set("price", result.Price)
-		}
+	ids := make([]string, 0, len(originalPrice))
+	if originalPrice != nil {
+		_ = d.Set("original_price", originalPrice)
 	}
 
-	d.SetId(instanceId)
+	if price != nil {
+		_ = d.Set("price", price)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), result); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

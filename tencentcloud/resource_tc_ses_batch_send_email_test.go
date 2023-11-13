@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixSesBatchSendEmailResource_basic(t *testing.T) {
+func TestAccTencentCloudSesBatchSendEmailResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,26 +29,38 @@ func TestAccTencentCloudNeedFixSesBatchSendEmailResource_basic(t *testing.T) {
 const testAccSesBatchSendEmail = `
 
 resource "tencentcloud_ses_batch_send_email" "batch_send_email" {
-  from_email_address = "aaa@iac-tf.cloud"
-  receiver_id        = 1063742
-  subject            = "terraform test"
-  task_type          = 1
+  from_email_address = "Tencent Cloud team &lt;noreply@mail.qcloud.com&gt;"
+  receiver_id = 123
+  subject = "test"
+  task_type = 1
   reply_to_addresses = "reply@mail.qcloud.com"
   template {
-    template_id   = 99629
-    template_data = "{\"name\":\"xxx\",\"age\":\"xx\"}"
+		template_i_d = 5432
+		template_data = "{&quot;name&quot;:&quot;xxx&quot;,&quot;age&quot;:&quot;xx&quot;}"
 
   }
+  simple {
+		html = ""
+		text = ""
 
+  }
+  attachments {
+		file_name = "doc.zip"
+		content = ""
+
+  }
   cycle_param {
-    begin_time = "2023-09-07 15:10:00"
-    interval_time = 1
+		begin_time = "2021-09-10 11:10:11"
+		interval_time = 2
+		term_cycle = 0
+
   }
   timed_param {
-    begin_time = "2023-09-07 15:20:00"
+		begin_time = "2021-09-11 09:10:11"
+
   }
-  unsubscribe = "0"
-  ad_location = 0
+  unsubscribe = "1"
+  a_d_location = 1
 }
 
 `

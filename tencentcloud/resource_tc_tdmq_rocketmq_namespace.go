@@ -4,22 +4,21 @@ Provides a resource to create a tdmqRocketmq namespace
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace_name = "tf_example_namespace"
-  remark         = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
+  cluster_id = &lt;nil&gt;
+  namespace_id = &lt;nil&gt;
+  ttl = &lt;nil&gt;
+  retention_time = &lt;nil&gt;
+  remark = &lt;nil&gt;
+    }
 ```
+
 Import
 
 tdmqRocketmq namespace can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_namespace.namespace namespace_id
+terraform import tencentcloud_tdmq_rocketmq_namespace.namespace namespace_id
 ```
 */
 package tencentcloud
@@ -27,19 +26,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqRocketmqNamespace() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqNamespaceRead,
 		Create: resourceTencentCloudTdmqRocketmqNamespaceCreate,
+		Read:   resourceTencentCloudTdmqRocketmqNamespaceRead,
 		Update: resourceTencentCloudTdmqRocketmqNamespaceUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqNamespaceDelete,
 		Importer: &schema.ResourceImporter{
@@ -47,46 +45,44 @@ func resourceTencentCloudTdmqRocketmqNamespace() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
-			"namespace_name": {
-				Type:        schema.TypeString,
+			"namespace_id": {
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Namespace name, which can contain 3-64 letters, digits, hyphens, and underscores.",
 			},
 
 			"ttl": {
+				Required:    true,
 				Type:        schema.TypeInt,
-				Optional:    true,
-				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.",
 			},
 
 			"retention_time": {
+				Required:    true,
 				Type:        schema.TypeInt,
-				Optional:    true,
-				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of persisted messages in milliseconds.",
 			},
 
 			"remark": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Remarks (up to 128 characters).",
 			},
 
 			"public_endpoint": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Public network access point address.",
 			},
 
 			"vpc_endpoint": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "VPC access point address.",
 			},
 		},
@@ -94,55 +90,66 @@ func resourceTencentCloudTdmqRocketmqNamespace() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqNamespaceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_namespace.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_namespace.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	var (
-		request       = tdmqRocketmq.NewCreateRocketMQNamespaceRequest()
-		namespaceName string
-		clusterId     string
-	)
 
+	var (
+		request     = tdmqRocketmq.NewCreateRocketMQNamespaceRequest()
+		response    = tdmqRocketmq.NewCreateRocketMQNamespaceResponse()
+		namespaceId string
+		clusterId   string
+	)
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 		request.ClusterId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("namespace_name"); ok {
-		namespaceName = v.(string)
+	if v, ok := d.GetOk("namespace_id"); ok {
+		namespaceId = v.(string)
 		request.NamespaceId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("remark"); ok {
+	if v, ok := d.GetOkExists("ttl"); ok {
+		request.Ttl = helper.IntUint64(v.(int))
+	}
 
+	if v, ok := d.GetOkExists("retention_time"); ok {
+		request.RetentionTime = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("remark"); ok {
 		request.Remark = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateRocketMQNamespace(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateRocketMQNamespace(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq namespace failed, reason:%+v", logId, err)
 		return err
 	}
-	d.SetId(clusterId + FILED_SP + namespaceName)
+
+	namespaceId = *response.Response.NamespaceId
+	d.SetId(strings.Join([]string{namespaceId, clusterId}, FILED_SP))
+
 	return resourceTencentCloudTdmqRocketmqNamespaceRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqNamespaceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_namespace.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_namespace.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -151,31 +158,53 @@ func resourceTencentCloudTdmqRocketmqNamespaceRead(d *schema.ResourceData, meta 
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
+	namespaceId := idSplit[0]
+	clusterId := idSplit[1]
 
-	namespaceList, err := service.DescribeTdmqRocketmqNamespace(ctx, namespaceName, clusterId)
-
-	if err != nil || len(namespaceList) == 0 {
+	namespace, err := service.DescribeTdmqRocketmqNamespaceById(ctx, namespaceId, clusterId)
+	if err != nil {
 		return err
 	}
-	namespace := namespaceList[0]
+
 	if namespace == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `namespace` %s does not exist", namespaceName)
+		log.Printf("[WARN]%s resource `TdmqRocketmqNamespace` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("namespace_name", *namespace.NamespaceId)
-	_ = d.Set("remark", namespace.Remark)
-	_ = d.Set("public_endpoint", namespace.PublicEndpoint)
-	_ = d.Set("vpc_endpoint", namespace.VpcEndpoint)
+	if namespace.ClusterId != nil {
+		_ = d.Set("cluster_id", namespace.ClusterId)
+	}
+
+	if namespace.NamespaceId != nil {
+		_ = d.Set("namespace_id", namespace.NamespaceId)
+	}
+
+	if namespace.Ttl != nil {
+		_ = d.Set("ttl", namespace.Ttl)
+	}
+
+	if namespace.RetentionTime != nil {
+		_ = d.Set("retention_time", namespace.RetentionTime)
+	}
+
+	if namespace.Remark != nil {
+		_ = d.Set("remark", namespace.Remark)
+	}
+
+	if namespace.PublicEndpoint != nil {
+		_ = d.Set("public_endpoint", namespace.PublicEndpoint)
+	}
+
+	if namespace.VpcEndpoint != nil {
+		_ = d.Set("vpc_endpoint", namespace.VpcEndpoint)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudTdmqRocketmqNamespaceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_namespace.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_namespace.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -186,17 +215,29 @@ func resourceTencentCloudTdmqRocketmqNamespaceUpdate(d *schema.ResourceData, met
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
+	namespaceId := idSplit[0]
+	clusterId := idSplit[1]
 
-	request.NamespaceId = &namespaceName
+	request.NamespaceId = &namespaceId
 	request.ClusterId = &clusterId
 
-	immutableArgs := []string{"cluster_id", "namespace_name"}
+	immutableArgs := []string{"cluster_id", "namespace_id", "ttl", "retention_time", "remark", "public_endpoint", "vpc_endpoint"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("ttl") {
+		if v, ok := d.GetOkExists("ttl"); ok {
+			request.Ttl = helper.IntUint64(v.(int))
+		}
+	}
+
+	if d.HasChange("retention_time") {
+		if v, ok := d.GetOkExists("retention_time"); ok {
+			request.RetentionTime = helper.IntUint64(v.(int))
 		}
 	}
 
@@ -207,18 +248,16 @@ func resourceTencentCloudTdmqRocketmqNamespaceUpdate(d *schema.ResourceData, met
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRocketMQNamespace(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyRocketMQNamespace(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq namespace failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq namespace failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -226,22 +265,21 @@ func resourceTencentCloudTdmqRocketmqNamespaceUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudTdmqRocketmqNamespaceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_namespace.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_namespace.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
+	namespaceId := idSplit[0]
+	clusterId := idSplit[1]
 
-	if err := service.DeleteTdmqRocketmqNamespaceById(ctx, namespaceName, clusterId); err != nil {
+	if err := service.DeleteTdmqRocketmqNamespaceById(ctx, namespaceId, clusterId); err != nil {
 		return err
 	}
 

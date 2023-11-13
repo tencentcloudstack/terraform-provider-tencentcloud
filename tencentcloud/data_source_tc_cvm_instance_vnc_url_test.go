@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmInstanceVncUrlDataSource_basic(t *testing.T) {
@@ -22,9 +21,10 @@ func TestAccTencentCloudCvmInstanceVncUrlDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccCvmInstanceVncUrlDataSource = defaultCvmModificationVariable + `
+const testAccCvmInstanceVncUrlDataSource = `
 
 data "tencentcloud_cvm_instance_vnc_url" "instance_vnc_url" {
-  instance_id = var.cvm_id
-}
+  instance_id = "ins-r9hr2upy"
+  }
+
 `

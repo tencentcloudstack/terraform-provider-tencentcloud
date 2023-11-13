@@ -1,26 +1,29 @@
 /*
-Provides a resource to create a tem logConfig
+Provides a resource to create a tem log_config
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tem_log_config" "logConfig" {
-  environment_id = "en-o5edaepv"
-  application_id = "app-3j29aa2p"
-  workload_id = resource.tencentcloud_tem_workload.workload.id
-  name           = "terraform"
-  logset_id      = "b5824781-8d5b-4029-a2f7-d03c37f72bdf"
-  topic_id       = "5a85bb6d-8e41-4e04-b7bd-c05e04782f94"
-  input_type     = "container_stdout"
-  log_type       = "minimalist_log"
+resource "tencentcloud_tem_log_config" "log_config" {
+  environment_id = "en-xxx"
+  application_id = "en-xxx"
+  name = "xxx"
+  logset_id = "xxx"
+  topic_id = "xxx"
+  input_type = "container_stdout"
+  log_type = "minimalist_log"
+  beginning_regex = "**.log"
+  log_path = "/xxx"
+  file_pattern = "*.log"
 }
-
 ```
+
 Import
 
-tem logConfig can be imported using the id, e.g.
+tem log_config can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_log_config.logConfig environmentId#applicationId#name
+terraform import tencentcloud_tem_log_config.log_config log_config_id
 ```
 */
 package tencentcloud
@@ -28,19 +31,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemLogConfig() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemLogConfigRead,
 		Create: resourceTencentCloudTemLogConfigCreate,
+		Read:   resourceTencentCloudTemLogConfigRead,
 		Update: resourceTencentCloudTemLogConfigUpdate,
 		Delete: resourceTencentCloudTemLogConfigDelete,
 		Importer: &schema.ResourceImporter{
@@ -48,73 +50,63 @@ func resourceTencentCloudTemLogConfig() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "environment ID.",
+				Type:        schema.TypeString,
+				Description: "Environment ID.",
 			},
 
 			"application_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "application ID.",
-			},
-
-			"workload_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "application ID, which is combined by environment ID and application ID, like `en-o5edaepv#app-3j29aa2p`.",
+				Description: "Application ID.",
 			},
 
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "appConfig name.",
+				Type:        schema.TypeString,
+				Description: "AppConfig name.",
 			},
 
 			"logset_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "logset.",
+				Type:        schema.TypeString,
+				Description: "Logset.",
 			},
 
 			"topic_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "topic.",
+				Type:        schema.TypeString,
+				Description: "Topic.",
 			},
 
 			"input_type": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "container_stdout or container_file.",
+				Type:        schema.TypeString,
+				Description: "Container_stdout or container_file.",
 			},
 
 			"log_type": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "minimalist_log or multiline_log.",
+				Type:        schema.TypeString,
+				Description: "Minimalist_log or multiline_log.",
 			},
 
 			"beginning_regex": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "regex pattern.",
+				Type:        schema.TypeString,
+				Description: "Regex pattern.",
 			},
 
 			"log_path": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "directory if container_file.",
+				Type:        schema.TypeString,
+				Description: "Directory if container_file.",
 			},
 
 			"file_pattern": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "file name pattern if container_file.",
+				Type:        schema.TypeString,
+				Description: "File name pattern if container_file.",
 			},
 		},
 	}
@@ -128,11 +120,11 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request       = tem.NewCreateLogConfigRequest()
+		response      = tem.NewCreateLogConfigResponse()
 		environmentId string
 		applicationId string
 		name          string
 	)
-
 	if v, ok := d.GetOk("environment_id"); ok {
 		environmentId = v.(string)
 		request.EnvironmentId = helper.String(v.(string))
@@ -141,13 +133,6 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 	if v, ok := d.GetOk("application_id"); ok {
 		applicationId = v.(string)
 		request.ApplicationId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("workload_id"); ok {
-		workloadId := v.(string)
-		if workloadId != environmentId+FILED_SP+applicationId {
-			return fmt.Errorf("workloadId is error, it should be %s", environmentId+FILED_SP+applicationId)
-		}
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -188,26 +173,28 @@ func resourceTencentCloudTemLogConfigCreate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem logConfig failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + name)
+	environmentId = *response.Response.EnvironmentId
+	d.SetId(strings.Join([]string{environmentId, applicationId, name}, FILED_SP))
+
 	return resourceTencentCloudTemLogConfigRead(d, meta)
 }
 
 func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tem_logConfig.read")()
+	defer logElapsed("resource.tencentcloud_tem_log_config.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -220,20 +207,24 @@ func resourceTencentCloudTemLogConfigRead(d *schema.ResourceData, meta interface
 	applicationId := idSplit[1]
 	name := idSplit[2]
 
-	logConfig, err := service.DescribeTemLogConfig(ctx, environmentId, applicationId, name)
-
+	logConfig, err := service.DescribeTemLogConfigById(ctx, environmentId, applicationId, name)
 	if err != nil {
 		return err
 	}
 
 	if logConfig == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `logConfig` %s does not exist", name)
+		log.Printf("[WARN]%s resource `TemLogConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("environment_id", environmentId)
-	_ = d.Set("application_id", logConfig.ApplicationId)
-	_ = d.Set("workload_id", environmentId+FILED_SP+applicationId)
+	if logConfig.EnvironmentId != nil {
+		_ = d.Set("environment_id", logConfig.EnvironmentId)
+	}
+
+	if logConfig.ApplicationId != nil {
+		_ = d.Set("application_id", logConfig.ApplicationId)
+	}
 
 	if logConfig.Name != nil {
 		_ = d.Set("name", logConfig.Name)
@@ -290,37 +281,12 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 	request.ApplicationId = &applicationId
 	request.Name = &name
 
-	if d.HasChange("logset_id") || d.HasChange("topic_id") || d.HasChange("input_type") || d.HasChange("log_type") ||
-		d.HasChange("beginning_regex") || d.HasChange("log_path") || d.HasChange("file_pattern") {
-		data := tem.LogConfig{}
-		if v, ok := d.GetOk("logset_id"); ok {
-			data.LogsetId = helper.String(v.(string))
-		}
+	immutableArgs := []string{"environment_id", "application_id", "name", "logset_id", "topic_id", "input_type", "log_type", "beginning_regex", "log_path", "file_pattern"}
 
-		if v, ok := d.GetOk("topic_id"); ok {
-			data.TopicId = helper.String(v.(string))
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-
-		if v, ok := d.GetOk("input_type"); ok {
-			data.InputType = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("log_type"); ok {
-			data.LogType = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("beginning_regex"); ok {
-			data.BeginningRegex = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("log_path"); ok {
-			data.LogPath = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOk("file_pattern"); ok {
-			data.FilePattern = helper.String(v.(string))
-		}
-		request.Data = &data
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -328,13 +294,12 @@ func resourceTencentCloudTemLogConfigUpdate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem logConfig failed, reason:%+v", logId, err)
 		return err
 	}
 

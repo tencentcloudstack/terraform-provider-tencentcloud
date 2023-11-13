@@ -1,60 +1,29 @@
 /*
-Provides a resource to create a tcr webhook trigger
+Provides a resource to create a tcr webhook_trigger
 
 Example Usage
 
-Create a tcr webhook trigger instance
-
 ```hcl
-resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
-  instance_type = "basic"
-  delete_bucket = true
-
-  tags ={
-	test = "test"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "example" {
-	instance_id 	 = tencentcloud_tcr_instance.example.id
-	name			 = "tf_example_ns_retention"
-	is_public		 = true
-	is_auto_scan	 = true
-	is_prevent_vul = true
-	severity		 = "medium"
-	cve_whitelist_items	{
-	  cve_id = "cve-xxxxx"
-	}
-  }
-
-data "tencentcloud_tcr_namespaces" "example" {
-	instance_id = tencentcloud_tcr_namespace.example.instance_id
-  }
-
-locals {
-    ns_id = data.tencentcloud_tcr_namespaces.example.namespace_list.0.id
-  }
-
-resource "tencentcloud_tcr_webhook_trigger" "example" {
-  registry_id = tencentcloud_tcr_instance.example.id
-  namespace = tencentcloud_tcr_namespace.example.name
+resource "tencentcloud_tcr_webhook_trigger" "webhook_trigger" {
+  registry_id = "tcr-xxx"
   trigger {
-		name = "trigger-example"
+		name = "trigger"
 		targets {
 			address = "http://example.org/post"
 			headers {
 				key = "X-Custom-Header"
-				values = ["a"]
+				values =
 			}
 		}
-		event_types = ["pushImage"]
+		event_types =
 		condition = ".*"
 		enabled = true
-		description = "example for trigger description"
-		namespace_id = local.ns_id
+		id = 20
+		description = "this is trigger description"
+		namespace_id = 10
 
   }
+  namespace = "trigger"
   tags = {
     "createdBy" = "terraform"
   }
@@ -66,7 +35,7 @@ Import
 tcr webhook_trigger can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_webhook_trigger.example webhook_trigger_id
+terraform import tencentcloud_tcr_webhook_trigger.webhook_trigger webhook_trigger_id
 ```
 */
 package tencentcloud
@@ -74,13 +43,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTcrWebhookTrigger() *schema.Resource {
@@ -96,36 +63,36 @@ func resourceTencentCloudTcrWebhookTrigger() *schema.Resource {
 			"registry_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance Id.",
+				Description: "Instance Id.",
 			},
 
 			"trigger": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "trigger parameters.",
+				Description: "Trigger parameters.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "trigger name.",
+							Description: "Trigger name.",
 						},
 						"targets": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "trigger target.",
+							Description: "Trigger target.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"address": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "target address.",
+										Description: "Target address.",
 									},
 									"headers": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "custom Headers.",
+										Description: "Custom Headers.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
@@ -153,33 +120,32 @@ func resourceTencentCloudTcrWebhookTrigger() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "trigger action.",
+							Description: "Trigger action.",
 						},
 						"condition": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "trigger rule.",
+							Description: "Trigger rule.",
 						},
 						"enabled": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "enable trigger.",
+							Description: "Enable trigger.",
 						},
 						"id": {
 							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "trigger Id.",
+							Optional:    true,
+							Description: "TriggerId.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "trigger description.",
+							Description: "Trigger description.",
 						},
 						"namespace_id": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Computed:    true,
-							Description: "the namespace Id to which the trigger belongs.",
+							Description: "The namespace Id to which the trigger belongs.",
 						},
 					},
 				},
@@ -188,7 +154,7 @@ func resourceTencentCloudTcrWebhookTrigger() *schema.Resource {
 			"namespace": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "namespace name.",
+				Description: "Namespace name.",
 			},
 
 			"tags": {
@@ -207,11 +173,9 @@ func resourceTencentCloudTcrWebhookTriggerCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request       = tcr.NewCreateWebhookTriggerRequest()
-		response      = tcr.NewCreateWebhookTriggerResponse()
-		registryId    string
-		triggerId     string
-		namespaceName string
+		request    = tcr.NewCreateWebhookTriggerRequest()
+		response   = tcr.NewCreateWebhookTriggerResponse()
+		registryId string
 	)
 	if v, ok := d.GetOk("registry_id"); ok {
 		registryId = v.(string)
@@ -263,6 +227,9 @@ func resourceTencentCloudTcrWebhookTriggerCreate(d *schema.ResourceData, meta in
 		if v, ok := dMap["enabled"]; ok {
 			webhookTrigger.Enabled = helper.Bool(v.(bool))
 		}
+		if v, ok := dMap["id"]; ok {
+			webhookTrigger.Id = helper.IntInt64(v.(int))
+		}
 		if v, ok := dMap["description"]; ok {
 			webhookTrigger.Description = helper.String(v.(string))
 		}
@@ -273,12 +240,11 @@ func resourceTencentCloudTcrWebhookTriggerCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("namespace"); ok {
-		namespaceName = v.(string)
 		request.Namespace = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateWebhookTrigger(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().CreateWebhookTrigger(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -292,8 +258,8 @@ func resourceTencentCloudTcrWebhookTriggerCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	triggerId = helper.Int64ToStr(*response.Response.Trigger.Id)
-	d.SetId(strings.Join([]string{registryId, namespaceName, triggerId}, FILED_SP))
+	registryId = *response.Response.RegistryId
+	d.SetId(registryId)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -316,17 +282,11 @@ func resourceTencentCloudTcrWebhookTriggerRead(d *schema.ResourceData, meta inte
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	registryId := idSplit[0]
-	namespaceName := idSplit[1]
-	triggerId := helper.StrToInt64(idSplit[2])
+	webhookTriggerId := d.Id()
 
-	WebhookTrigger, err := service.DescribeTcrWebhookTriggerById(ctx, registryId, triggerId, namespaceName)
+	WebhookTrigger, err := service.DescribeTcrWebhookTriggerById(ctx, registryId)
 	if err != nil {
 		return err
 	}
@@ -337,73 +297,81 @@ func resourceTencentCloudTcrWebhookTriggerRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	triggerMap := map[string]interface{}{}
-
-	if WebhookTrigger.Name != nil {
-		triggerMap["name"] = WebhookTrigger.Name
+	if WebhookTrigger.RegistryId != nil {
+		_ = d.Set("registry_id", WebhookTrigger.RegistryId)
 	}
 
-	if WebhookTrigger.Targets != nil {
-		targetsList := []interface{}{}
-		for _, targets := range WebhookTrigger.Targets {
-			targetsMap := map[string]interface{}{}
+	if WebhookTrigger.Trigger != nil {
+		triggerMap := map[string]interface{}{}
 
-			if targets.Address != nil {
-				targetsMap["address"] = targets.Address
-			}
-
-			if targets.Headers != nil {
-				headersList := []interface{}{}
-				for _, headers := range targets.Headers {
-					headersMap := map[string]interface{}{}
-
-					if headers.Key != nil {
-						headersMap["key"] = headers.Key
-					}
-
-					if headers.Values != nil {
-						headersMap["values"] = headers.Values
-					}
-
-					headersList = append(headersList, headersMap)
-				}
-				targetsMap["headers"] = headersList
-				// targetsMap["headers"] = []interface{}{headersList}
-			}
-
-			targetsList = append(targetsList, targetsMap)
+		if WebhookTrigger.Trigger.Name != nil {
+			triggerMap["name"] = WebhookTrigger.Trigger.Name
 		}
-		triggerMap["targets"] = targetsList
-		// triggerMap["targets"] = []interface{}{targetsList}
+
+		if WebhookTrigger.Trigger.Targets != nil {
+			targetsList := []interface{}{}
+			for _, targets := range WebhookTrigger.Trigger.Targets {
+				targetsMap := map[string]interface{}{}
+
+				if targets.Address != nil {
+					targetsMap["address"] = targets.Address
+				}
+
+				if targets.Headers != nil {
+					headersList := []interface{}{}
+					for _, headers := range targets.Headers {
+						headersMap := map[string]interface{}{}
+
+						if headers.Key != nil {
+							headersMap["key"] = headers.Key
+						}
+
+						if headers.Values != nil {
+							headersMap["values"] = headers.Values
+						}
+
+						headersList = append(headersList, headersMap)
+					}
+
+					targetsMap["headers"] = []interface{}{headersList}
+				}
+
+				targetsList = append(targetsList, targetsMap)
+			}
+
+			triggerMap["targets"] = []interface{}{targetsList}
+		}
+
+		if WebhookTrigger.Trigger.EventTypes != nil {
+			triggerMap["event_types"] = WebhookTrigger.Trigger.EventTypes
+		}
+
+		if WebhookTrigger.Trigger.Condition != nil {
+			triggerMap["condition"] = WebhookTrigger.Trigger.Condition
+		}
+
+		if WebhookTrigger.Trigger.Enabled != nil {
+			triggerMap["enabled"] = WebhookTrigger.Trigger.Enabled
+		}
+
+		if WebhookTrigger.Trigger.Id != nil {
+			triggerMap["id"] = WebhookTrigger.Trigger.Id
+		}
+
+		if WebhookTrigger.Trigger.Description != nil {
+			triggerMap["description"] = WebhookTrigger.Trigger.Description
+		}
+
+		if WebhookTrigger.Trigger.NamespaceId != nil {
+			triggerMap["namespace_id"] = WebhookTrigger.Trigger.NamespaceId
+		}
+
+		_ = d.Set("trigger", []interface{}{triggerMap})
 	}
 
-	if WebhookTrigger.EventTypes != nil {
-		triggerMap["event_types"] = WebhookTrigger.EventTypes
+	if WebhookTrigger.Namespace != nil {
+		_ = d.Set("namespace", WebhookTrigger.Namespace)
 	}
-
-	if WebhookTrigger.Condition != nil {
-		triggerMap["condition"] = WebhookTrigger.Condition
-	}
-
-	if WebhookTrigger.Enabled != nil {
-		triggerMap["enabled"] = WebhookTrigger.Enabled
-	}
-
-	if WebhookTrigger.Id != nil {
-		triggerMap["id"] = WebhookTrigger.Id
-	}
-
-	if WebhookTrigger.Description != nil {
-		triggerMap["description"] = WebhookTrigger.Description
-	}
-
-	if WebhookTrigger.NamespaceId != nil {
-		triggerMap["namespace_id"] = WebhookTrigger.NamespaceId
-	}
-
-	// triggerList := []interface{}{}
-	// triggerList = append(triggerList, triggerMap)
-	_ = d.Set("trigger", []interface{}{triggerMap})
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -412,9 +380,6 @@ func resourceTencentCloudTcrWebhookTriggerRead(d *schema.ResourceData, meta inte
 		return err
 	}
 	_ = d.Set("tags", tags)
-
-	_ = d.Set("registry_id", registryId)
-	_ = d.Set("namespace", namespaceName)
 
 	return nil
 }
@@ -427,22 +392,21 @@ func resourceTencentCloudTcrWebhookTriggerUpdate(d *schema.ResourceData, meta in
 
 	request := tcr.NewModifyWebhookTriggerRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	registryId := idSplit[0]
-	namespaceName := idSplit[1]
-	// triggerId := helper.StrToInt64Point(idSplit[2])
+	webhookTriggerId := d.Id()
 
 	request.RegistryId = &registryId
-	request.Namespace = &namespaceName
 
-	immutableArgs := []string{"registry_id", "namespace"}
+	immutableArgs := []string{"registry_id", "trigger", "namespace"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("registry_id") {
+		if v, ok := d.GetOk("registry_id"); ok {
+			request.RegistryId = helper.String(v.(string))
 		}
 	}
 
@@ -512,7 +476,7 @@ func resourceTencentCloudTcrWebhookTriggerUpdate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().ModifyWebhookTrigger(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().ModifyWebhookTrigger(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -547,16 +511,10 @@ func resourceTencentCloudTcrWebhookTriggerDelete(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	registryId := idSplit[0]
-	namespaceName := idSplit[1]
-	triggerId := idSplit[2]
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
+	webhookTriggerId := d.Id()
 
-	if err := service.DeleteTcrWebhookTriggerById(ctx, registryId, namespaceName, helper.StrToInt64(triggerId)); err != nil {
+	if err := service.DeleteTcrWebhookTriggerById(ctx, registryId); err != nil {
 		return err
 	}
 

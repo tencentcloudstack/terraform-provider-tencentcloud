@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_project_security_groups" "project_security_groups" {
-  product    = "dcdb"
-  project_id = 0
-}
+  product = ""
+  project_id =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -28,7 +27,7 @@ func dataSourceTencentCloudDcdbProjectSecurityGroups() *schema.Resource {
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Database engine name. Valid value: `dcdb`.",
+				Description: "Database engine name. Valid value: `mariadb`.",
 			},
 
 			"project_id": {
@@ -189,7 +188,6 @@ func dataSourceTencentCloudDcdbProjectSecurityGroupsRead(d *schema.ResourceData,
 
 			if securityGroup.SecurityGroupId != nil {
 				securityGroupMap["security_group_id"] = securityGroup.SecurityGroupId
-				ids = append(ids, *securityGroup.SecurityGroupId)
 			}
 
 			if securityGroup.SecurityGroupName != nil {
@@ -224,7 +222,7 @@ func dataSourceTencentCloudDcdbProjectSecurityGroupsRead(d *schema.ResourceData,
 					inboundList = append(inboundList, inboundMap)
 				}
 
-				securityGroupMap["inbound"] = inboundList
+				securityGroupMap["inbound"] = []interface{}{inboundList}
 			}
 
 			if securityGroup.Outbound != nil {
@@ -251,9 +249,10 @@ func dataSourceTencentCloudDcdbProjectSecurityGroupsRead(d *schema.ResourceData,
 					outboundList = append(outboundList, outboundMap)
 				}
 
-				securityGroupMap["outbound"] = outboundList
+				securityGroupMap["outbound"] = []interface{}{outboundList}
 			}
 
+			ids = append(ids, *securityGroup.InstanceId)
 			tmpList = append(tmpList, securityGroupMap)
 		}
 

@@ -3,24 +3,54 @@ Provides a resource to create a mps input
 
 Example Usage
 
-Create mps input group with SRT
-
 ```hcl
 resource "tencentcloud_mps_input" "input" {
-  flow_id = tencentcloud_mps_flow.flow.id
+  flow_id = ""
   input_group {
-    input_name    = "your_input_name"
-    protocol      = "SRT"
-    description   = "input name Description"
-    allow_ip_list = ["0.0.0.0/0"]
-    srt_settings {
-      mode              = "LISTENER"
-      stream_id         = "#!::u=johnny,r=resource,h=xxx.com,t=stream,m=play"
-      latency           = 1000
-      recv_latency      = 1000
-      peer_latency      = 1000
-      peer_idle_timeout = 1000
-    }
+		input_name = ""
+		protocol = ""
+		description = ""
+		allow_ip_list =
+		s_r_t_settings {
+			mode = ""
+			stream_id = ""
+			latency =
+			recv_latency =
+			peer_latency =
+			peer_idle_timeout =
+			passphrase = ""
+			pb_key_len =
+			source_addresses {
+				ip = ""
+				port =
+			}
+		}
+		r_t_p_settings {
+			f_e_c = ""
+			idle_timeout =
+		}
+		fail_over = ""
+		r_t_m_p_pull_settings {
+			source_addresses {
+				tc_url = ""
+				stream_key = ""
+			}
+		}
+		r_t_s_p_pull_settings {
+			source_addresses {
+				url = ""
+			}
+		}
+		h_l_s_pull_settings {
+			source_addresses {
+				url = ""
+			}
+		}
+		resilient_stream {
+			enable =
+			buffer_time =
+		}
+
   }
 }
 ```
@@ -38,13 +68,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsInput() *schema.Resource {
@@ -66,8 +94,7 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 			"input_group": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				MaxItems:    1,
-				Description: "The input group for the input. Only support one group for one `tencentcloud_mps_input`. Use `for_each` to create multiple inputs Scenario.",
+				Description: "The input group for the input.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"input_name": {
@@ -91,63 +118,53 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Computed:    true,
 							Description: "The input IP whitelist, the format is CIDR.",
 						},
-						"srt_settings": {
+						"s_r_t_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "The input SRT configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "SRT mode, optional [LISTENER|CALLER], default is LISTENER.",
 									},
 									"stream_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;,=_-), length 0~512. Specific format can refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys.",
+										Description: "Stream ID, optional uppercase and lowercase letters, numbers and special characters (.#!:&amp;amp;,=_-), length 0~512. Specific format can refer to:https://github.com/Haivision/srt/blob/master/docs/features/access-control.md#standard-keys。.",
 									},
 									"latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Delay, default 0, unit ms, range [0, 3000].",
 									},
 									"recv_latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Receiving delay, default is 120, unit ms, range is [0, 3000].",
 									},
 									"peer_latency": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Peer delay, the default is 0, the unit is ms, and the range is [0, 3000].",
 									},
 									"peer_idle_timeout": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Peer timeout, default is 5000, unit ms, range is [1000, 10000].",
 									},
 									"passphrase": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The decryption key, which is empty by default, means no encryption. Only ascii code values can be filled in, and the length is [10, 79].",
 									},
 									"pb_key_len": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Key length, default is 0, optional [0|16|24|32].",
 									},
 									"source_addresses": {
@@ -172,24 +189,21 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 								},
 							},
 						},
-						"rtp_settings": {
+						"r_t_p_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input RTP configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"fec": {
+									"f_e_c": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "Defaults to &#39;none&#39;, optional values[&#39;none&#39;].",
+										Description: "Defaults to &amp;#39;none&amp;#39;, optional values[&amp;#39;none&amp;#39;].",
 									},
 									"idle_timeout": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "Idle timeout, the default is 5000, the unit is ms, and the range is [1000, 10000].",
 									},
 								},
@@ -198,14 +212,12 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 						"fail_over": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
 							Description: "The active/standby switch of the input, [OPEN|CLOSE] is optional, and the default is CLOSE.",
 						},
-						"rtmp_pull_settings": {
+						"r_t_m_p_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input RTMP_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -231,11 +243,10 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 								},
 							},
 						},
-						"rtsp_pull_settings": {
+						"r_t_s_p_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input RTSP_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -256,11 +267,10 @@ func resourceTencentCloudMpsInput() *schema.Resource {
 								},
 							},
 						},
-						"hls_pull_settings": {
+						"h_l_s_pull_settings": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Input HLS_PULL configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -312,188 +322,14 @@ func resourceTencentCloudMpsInputCreate(d *schema.ResourceData, meta interface{}
 	defer logElapsed("resource.tencentcloud_mps_input.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	var (
-		request  = mps.NewCreateStreamLinkInputRequest()
-		response = mps.NewCreateStreamLinkInputResponse()
-		inputId  string
-		flowId   string
-		protocol string
-	)
-	if v, ok := d.GetOk("flow_id"); ok {
-		request.FlowId = helper.String(v.(string))
-		flowId = v.(string)
+	var inputId string
+	if v, ok := d.GetOk("input_id"); ok {
+		inputId = v.(string)
 	}
 
-	if v, ok := d.GetOk("input_group"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			createInput := mps.CreateInput{}
-			if v, ok := dMap["input_name"]; ok {
-				createInput.InputName = helper.String(v.(string))
-			}
-			if v, ok := dMap["protocol"]; ok {
-				createInput.Protocol = helper.String(v.(string))
-				protocol = v.(string)
-			}
-			if v, ok := dMap["description"]; ok {
-				createInput.Description = helper.String(v.(string))
-			}
-			if v, ok := dMap["allow_ip_list"]; ok {
-				allowIpListSet := v.(*schema.Set).List()
-				for i := range allowIpListSet {
-					if allowIpListSet[i] != nil {
-						allowIpList := allowIpListSet[i].(string)
-						createInput.AllowIpList = append(createInput.AllowIpList, &allowIpList)
-					}
-				}
-			}
-			if protocol == PROTOCOL_SRT {
-				if sRTSettingsMap, ok := helper.InterfaceToMap(dMap, "srt_settings"); ok {
-					createInputSRTSettings := mps.CreateInputSRTSettings{}
-					if v, ok := sRTSettingsMap["mode"]; ok {
-						createInputSRTSettings.Mode = helper.String(v.(string))
-					}
-					if v, ok := sRTSettingsMap["stream_id"]; ok {
-						createInputSRTSettings.StreamId = helper.String(v.(string))
-					}
-					if v, ok := sRTSettingsMap["latency"]; ok {
-						createInputSRTSettings.Latency = helper.IntInt64(v.(int))
-					}
-					if v, ok := sRTSettingsMap["recv_latency"]; ok {
-						createInputSRTSettings.RecvLatency = helper.IntInt64(v.(int))
-					}
-					if v, ok := sRTSettingsMap["peer_latency"]; ok {
-						createInputSRTSettings.PeerLatency = helper.IntInt64(v.(int))
-					}
-					if v, ok := sRTSettingsMap["peer_idle_timeout"]; ok {
-						createInputSRTSettings.PeerIdleTimeout = helper.IntInt64(v.(int))
-					}
-					if v, ok := sRTSettingsMap["passphrase"]; ok {
-						createInputSRTSettings.Passphrase = helper.String(v.(string))
-					}
-					if v, ok := sRTSettingsMap["pb_key_len"]; ok {
-						createInputSRTSettings.PbKeyLen = helper.IntInt64(v.(int))
-					}
-					if v, ok := sRTSettingsMap["source_addresses"]; ok {
-						for _, item := range v.([]interface{}) {
-							sourceAddressesMap := item.(map[string]interface{})
-							sRTSourceAddressReq := mps.SRTSourceAddressReq{}
-							if v, ok := sourceAddressesMap["ip"]; ok {
-								sRTSourceAddressReq.Ip = helper.String(v.(string))
-							}
-							if v, ok := sourceAddressesMap["port"]; ok {
-								sRTSourceAddressReq.Port = helper.IntInt64(v.(int))
-							}
-							createInputSRTSettings.SourceAddresses = append(createInputSRTSettings.SourceAddresses, &sRTSourceAddressReq)
-						}
-					}
-					createInput.SRTSettings = &createInputSRTSettings
-				}
-			}
-			if protocol == PROTOCOL_RTP {
-				if rTPSettingsMap, ok := helper.InterfaceToMap(dMap, "rtp_settings"); ok {
-					createInputRTPSettings := mps.CreateInputRTPSettings{}
-					if v, ok := rTPSettingsMap["fec"]; ok {
-						createInputRTPSettings.FEC = helper.String(v.(string))
-					}
-					if v, ok := rTPSettingsMap["idle_timeout"]; ok {
-						createInputRTPSettings.IdleTimeout = helper.IntInt64(v.(int))
-					}
-					createInput.RTPSettings = &createInputRTPSettings
-				}
-			}
-			if v, ok := dMap["fail_over"]; ok {
-				createInput.FailOver = helper.String(v.(string))
-			}
-			if protocol == PROTOCOL_RTMP || protocol == PROTOCOL_RTMP_PULL {
-				if rTMPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtmp_pull_settings"); ok {
-					createInputRTMPPullSettings := mps.CreateInputRTMPPullSettings{}
-					if v, ok := rTMPPullSettingsMap["source_addresses"]; ok {
-						for _, item := range v.([]interface{}) {
-							sourceAddressesMap := item.(map[string]interface{})
-							rTMPPullSourceAddress := mps.RTMPPullSourceAddress{}
-							if v, ok := sourceAddressesMap["tc_url"]; ok {
-								rTMPPullSourceAddress.TcUrl = helper.String(v.(string))
-							}
-							if v, ok := sourceAddressesMap["stream_key"]; ok {
-								rTMPPullSourceAddress.StreamKey = helper.String(v.(string))
-							}
-							createInputRTMPPullSettings.SourceAddresses = append(createInputRTMPPullSettings.SourceAddresses, &rTMPPullSourceAddress)
-						}
-					}
-					createInput.RTMPPullSettings = &createInputRTMPPullSettings
-				}
-			}
-			if protocol == PROTOCOL_RTSP_PULL {
-				if rTSPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtsp_pull_settings"); ok {
-					createInputRTSPPullSettings := mps.CreateInputRTSPPullSettings{}
-					if v, ok := rTSPPullSettingsMap["source_addresses"]; ok {
-						for _, item := range v.([]interface{}) {
-							sourceAddressesMap := item.(map[string]interface{})
-							rTSPPullSourceAddress := mps.RTSPPullSourceAddress{}
-							if v, ok := sourceAddressesMap["url"]; ok {
-								rTSPPullSourceAddress.Url = helper.String(v.(string))
-							}
-							createInputRTSPPullSettings.SourceAddresses = append(createInputRTSPPullSettings.SourceAddresses, &rTSPPullSourceAddress)
-						}
-					}
-					createInput.RTSPPullSettings = &createInputRTSPPullSettings
-				}
-			}
-			if protocol == PROTOCOL_HLS || protocol == PROTOCOL_HLS_PULL {
-				if hLSPullSettingsMap, ok := helper.InterfaceToMap(dMap, "hls_pull_settings"); ok {
-					createInputHLSPullSettings := mps.CreateInputHLSPullSettings{}
-					if v, ok := hLSPullSettingsMap["source_addresses"]; ok {
-						for _, item := range v.([]interface{}) {
-							sourceAddressesMap := item.(map[string]interface{})
-							hLSPullSourceAddress := mps.HLSPullSourceAddress{}
-							if v, ok := sourceAddressesMap["url"]; ok {
-								hLSPullSourceAddress.Url = helper.String(v.(string))
-							}
-							createInputHLSPullSettings.SourceAddresses = append(createInputHLSPullSettings.SourceAddresses, &hLSPullSourceAddress)
-						}
-					}
-					createInput.HLSPullSettings = &createInputHLSPullSettings
-				}
-			}
-			if resilientStreamMap, ok := helper.InterfaceToMap(dMap, "resilient_stream"); ok {
-				resilientStreamConf := mps.ResilientStreamConf{}
-				if v, ok := resilientStreamMap["enable"]; ok {
-					resilientStreamConf.Enable = helper.Bool(v.(bool))
-				}
-				if v, ok := resilientStreamMap["buffer_time"]; ok {
-					resilientStreamConf.BufferTime = helper.IntUint64(v.(int))
-				}
-				createInput.ResilientStream = &resilientStreamConf
-			}
-			request.InputGroup = append(request.InputGroup, &createInput)
-		}
-	}
+	d.SetId(inputId)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().CreateStreamLinkInput(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create mps input failed, reason:%+v", logId, err)
-		return err
-	}
-
-	if response.Response.Info != nil && len(response.Response.Info.InputGroup) > 0 {
-		inputId = *response.Response.Info.InputGroup[0].InputId
-	}
-
-	d.SetId(strings.Join([]string{flowId, inputId}, FILED_SP))
-
-	return resourceTencentCloudMpsInputRead(d, meta)
+	return resourceTencentCloudMpsInputUpdate(d, meta)
 }
 
 func resourceTencentCloudMpsInputRead(d *schema.ResourceData, meta interface{}) error {
@@ -505,215 +341,207 @@ func resourceTencentCloudMpsInputRead(d *schema.ResourceData, meta interface{}) 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var protocol string
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	flowId := idSplit[0]
-	inputId := idSplit[1]
+	inputId := d.Id()
 
-	input, err := service.DescribeMpsInputById(ctx, flowId, inputId)
+	input, err := service.DescribeMpsInputById(ctx, inputId)
 	if err != nil {
 		return err
 	}
 
 	if input == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource Mps input group [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `MpsInput` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	_ = d.Set("flow_id", flowId)
-
-	inputGroupMap := map[string]interface{}{}
-
-	if input.InputName != nil {
-		inputGroupMap["input_name"] = input.InputName
+	if input.FlowId != nil {
+		_ = d.Set("flow_id", input.FlowId)
 	}
 
-	if input.Protocol != nil {
-		inputGroupMap["protocol"] = input.Protocol
-		protocol = *input.Protocol
-	}
+	if input.InputGroup != nil {
+		inputGroupList := []interface{}{}
+		for _, inputGroup := range input.InputGroup {
+			inputGroupMap := map[string]interface{}{}
 
-	if input.Description != nil {
-		inputGroupMap["description"] = input.Description
-	}
-
-	if input.AllowIpList != nil {
-		inputGroupMap["allow_ip_list"] = input.AllowIpList
-	}
-
-	if protocol == PROTOCOL_SRT && input.SRTSettings != nil {
-		sRTSettingsMap := map[string]interface{}{}
-
-		if input.SRTSettings.Mode != nil {
-			sRTSettingsMap["mode"] = input.SRTSettings.Mode
-		}
-
-		if input.SRTSettings.StreamId != nil {
-			sRTSettingsMap["stream_id"] = input.SRTSettings.StreamId
-		}
-
-		if input.SRTSettings.Latency != nil {
-			sRTSettingsMap["latency"] = input.SRTSettings.Latency
-		}
-
-		if input.SRTSettings.RecvLatency != nil {
-			sRTSettingsMap["recv_latency"] = input.SRTSettings.RecvLatency
-		}
-
-		// if input.SRTSettings.PeerLatency != nil {
-		// 	sRTSettingsMap["peer_latency"] = input.SRTSettings.PeerLatency
-		// }
-		//cannot be imported
-		if input.SRTSettings.PeerLatency != nil {
-			index := fmt.Sprintf("input_group.%d.srt_settings.0.peer_latency", 0)
-			oldValue := d.Get(index).(int)
-			if *input.SRTSettings.PeerLatency == 0 {
-				// need fix: the SDK has bug that cannot return the real value for peer_latency.
-				sRTSettingsMap["peer_latency"] = helper.IntInt64(oldValue)
-			} else {
-				sRTSettingsMap["peer_latency"] = input.SRTSettings.PeerLatency
-			}
-		}
-
-		if input.SRTSettings.PeerIdleTimeout != nil {
-			sRTSettingsMap["peer_idle_timeout"] = input.SRTSettings.PeerIdleTimeout
-		}
-
-		if input.SRTSettings.Passphrase != nil {
-			sRTSettingsMap["passphrase"] = input.SRTSettings.Passphrase
-		}
-
-		if input.SRTSettings.PbKeyLen != nil {
-			sRTSettingsMap["pb_key_len"] = input.SRTSettings.PbKeyLen
-		}
-
-		if input.SRTSettings.SourceAddresses != nil {
-			sourceAddressesList := []interface{}{}
-			for _, sourceAddresses := range input.SRTSettings.SourceAddresses {
-				sourceAddressesMap := map[string]interface{}{}
-
-				if sourceAddresses.Ip != nil {
-					sourceAddressesMap["ip"] = sourceAddresses.Ip
-				}
-
-				if sourceAddresses.Port != nil {
-					sourceAddressesMap["port"] = sourceAddresses.Port
-				}
-
-				sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+			if input.InputGroup.InputName != nil {
+				inputGroupMap["input_name"] = input.InputGroup.InputName
 			}
 
-			sRTSettingsMap["source_addresses"] = sourceAddressesList
-		}
-
-		inputGroupMap["srt_settings"] = []interface{}{sRTSettingsMap}
-	}
-
-	if protocol == PROTOCOL_RTP && input.RTPSettings != nil {
-		rTPSettingsMap := map[string]interface{}{}
-
-		if input.RTPSettings.FEC != nil {
-			rTPSettingsMap["fec"] = input.RTPSettings.FEC
-		}
-
-		if input.RTPSettings.IdleTimeout != nil {
-			rTPSettingsMap["idle_timeout"] = input.RTPSettings.IdleTimeout
-		}
-
-		inputGroupMap["rtp_settings"] = []interface{}{rTPSettingsMap}
-	}
-
-	if input.FailOver != nil {
-		inputGroupMap["fail_over"] = input.FailOver
-	}
-
-	if (protocol == PROTOCOL_RTMP || protocol == PROTOCOL_RTMP_PULL) && input.RTMPPullSettings != nil {
-		rTMPPullSettingsMap := map[string]interface{}{}
-
-		if input.RTMPPullSettings.SourceAddresses != nil {
-			sourceAddressesList := []interface{}{}
-			for _, sourceAddresses := range input.RTMPPullSettings.SourceAddresses {
-				sourceAddressesMap := map[string]interface{}{}
-
-				if sourceAddresses.TcUrl != nil {
-					sourceAddressesMap["tc_url"] = sourceAddresses.TcUrl
-				}
-
-				if sourceAddresses.StreamKey != nil {
-					sourceAddressesMap["stream_key"] = sourceAddresses.StreamKey
-				}
-
-				sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+			if input.InputGroup.Protocol != nil {
+				inputGroupMap["protocol"] = input.InputGroup.Protocol
 			}
 
-			rTMPPullSettingsMap["source_addresses"] = sourceAddressesList
-		}
-
-		inputGroupMap["rtmp_pull_settings"] = []interface{}{rTMPPullSettingsMap}
-	}
-
-	if protocol == PROTOCOL_RTSP_PULL && input.RTSPPullSettings != nil {
-		rTSPPullSettingsMap := map[string]interface{}{}
-
-		if input.RTSPPullSettings.SourceAddresses != nil {
-			sourceAddressesList := []interface{}{}
-			for _, sourceAddresses := range input.RTSPPullSettings.SourceAddresses {
-				sourceAddressesMap := map[string]interface{}{}
-
-				if sourceAddresses.Url != nil {
-					sourceAddressesMap["url"] = sourceAddresses.Url
-				}
-
-				sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+			if input.InputGroup.Description != nil {
+				inputGroupMap["description"] = input.InputGroup.Description
 			}
 
-			rTSPPullSettingsMap["source_addresses"] = sourceAddressesList
-		}
-
-		inputGroupMap["rtsp_pull_settings"] = []interface{}{rTSPPullSettingsMap}
-	}
-
-	if (protocol == PROTOCOL_HLS || protocol == PROTOCOL_HLS_PULL) && input.HLSPullSettings != nil {
-		hLSPullSettingsMap := map[string]interface{}{}
-
-		if input.HLSPullSettings.SourceAddresses != nil {
-			sourceAddressesList := []interface{}{}
-			for _, sourceAddresses := range input.HLSPullSettings.SourceAddresses {
-				sourceAddressesMap := map[string]interface{}{}
-
-				if sourceAddresses.Url != nil {
-					sourceAddressesMap["url"] = sourceAddresses.Url
-				}
-
-				sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+			if input.InputGroup.AllowIpList != nil {
+				inputGroupMap["allow_ip_list"] = input.InputGroup.AllowIpList
 			}
 
-			hLSPullSettingsMap["source_addresses"] = sourceAddressesList
+			if input.InputGroup.SRTSettings != nil {
+				sRTSettingsMap := map[string]interface{}{}
+
+				if input.InputGroup.SRTSettings.Mode != nil {
+					sRTSettingsMap["mode"] = input.InputGroup.SRTSettings.Mode
+				}
+
+				if input.InputGroup.SRTSettings.StreamId != nil {
+					sRTSettingsMap["stream_id"] = input.InputGroup.SRTSettings.StreamId
+				}
+
+				if input.InputGroup.SRTSettings.Latency != nil {
+					sRTSettingsMap["latency"] = input.InputGroup.SRTSettings.Latency
+				}
+
+				if input.InputGroup.SRTSettings.RecvLatency != nil {
+					sRTSettingsMap["recv_latency"] = input.InputGroup.SRTSettings.RecvLatency
+				}
+
+				if input.InputGroup.SRTSettings.PeerLatency != nil {
+					sRTSettingsMap["peer_latency"] = input.InputGroup.SRTSettings.PeerLatency
+				}
+
+				if input.InputGroup.SRTSettings.PeerIdleTimeout != nil {
+					sRTSettingsMap["peer_idle_timeout"] = input.InputGroup.SRTSettings.PeerIdleTimeout
+				}
+
+				if input.InputGroup.SRTSettings.Passphrase != nil {
+					sRTSettingsMap["passphrase"] = input.InputGroup.SRTSettings.Passphrase
+				}
+
+				if input.InputGroup.SRTSettings.PbKeyLen != nil {
+					sRTSettingsMap["pb_key_len"] = input.InputGroup.SRTSettings.PbKeyLen
+				}
+
+				if input.InputGroup.SRTSettings.SourceAddresses != nil {
+					sourceAddressesList := []interface{}{}
+					for _, sourceAddresses := range input.InputGroup.SRTSettings.SourceAddresses {
+						sourceAddressesMap := map[string]interface{}{}
+
+						if sourceAddresses.Ip != nil {
+							sourceAddressesMap["ip"] = sourceAddresses.Ip
+						}
+
+						if sourceAddresses.Port != nil {
+							sourceAddressesMap["port"] = sourceAddresses.Port
+						}
+
+						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+					}
+
+					sRTSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
+				}
+
+				inputGroupMap["s_r_t_settings"] = []interface{}{sRTSettingsMap}
+			}
+
+			if input.InputGroup.RTPSettings != nil {
+				rTPSettingsMap := map[string]interface{}{}
+
+				if input.InputGroup.RTPSettings.FEC != nil {
+					rTPSettingsMap["f_e_c"] = input.InputGroup.RTPSettings.FEC
+				}
+
+				if input.InputGroup.RTPSettings.IdleTimeout != nil {
+					rTPSettingsMap["idle_timeout"] = input.InputGroup.RTPSettings.IdleTimeout
+				}
+
+				inputGroupMap["r_t_p_settings"] = []interface{}{rTPSettingsMap}
+			}
+
+			if input.InputGroup.FailOver != nil {
+				inputGroupMap["fail_over"] = input.InputGroup.FailOver
+			}
+
+			if input.InputGroup.RTMPPullSettings != nil {
+				rTMPPullSettingsMap := map[string]interface{}{}
+
+				if input.InputGroup.RTMPPullSettings.SourceAddresses != nil {
+					sourceAddressesList := []interface{}{}
+					for _, sourceAddresses := range input.InputGroup.RTMPPullSettings.SourceAddresses {
+						sourceAddressesMap := map[string]interface{}{}
+
+						if sourceAddresses.TcUrl != nil {
+							sourceAddressesMap["tc_url"] = sourceAddresses.TcUrl
+						}
+
+						if sourceAddresses.StreamKey != nil {
+							sourceAddressesMap["stream_key"] = sourceAddresses.StreamKey
+						}
+
+						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+					}
+
+					rTMPPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
+				}
+
+				inputGroupMap["r_t_m_p_pull_settings"] = []interface{}{rTMPPullSettingsMap}
+			}
+
+			if input.InputGroup.RTSPPullSettings != nil {
+				rTSPPullSettingsMap := map[string]interface{}{}
+
+				if input.InputGroup.RTSPPullSettings.SourceAddresses != nil {
+					sourceAddressesList := []interface{}{}
+					for _, sourceAddresses := range input.InputGroup.RTSPPullSettings.SourceAddresses {
+						sourceAddressesMap := map[string]interface{}{}
+
+						if sourceAddresses.Url != nil {
+							sourceAddressesMap["url"] = sourceAddresses.Url
+						}
+
+						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+					}
+
+					rTSPPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
+				}
+
+				inputGroupMap["r_t_s_p_pull_settings"] = []interface{}{rTSPPullSettingsMap}
+			}
+
+			if input.InputGroup.HLSPullSettings != nil {
+				hLSPullSettingsMap := map[string]interface{}{}
+
+				if input.InputGroup.HLSPullSettings.SourceAddresses != nil {
+					sourceAddressesList := []interface{}{}
+					for _, sourceAddresses := range input.InputGroup.HLSPullSettings.SourceAddresses {
+						sourceAddressesMap := map[string]interface{}{}
+
+						if sourceAddresses.Url != nil {
+							sourceAddressesMap["url"] = sourceAddresses.Url
+						}
+
+						sourceAddressesList = append(sourceAddressesList, sourceAddressesMap)
+					}
+
+					hLSPullSettingsMap["source_addresses"] = []interface{}{sourceAddressesList}
+				}
+
+				inputGroupMap["h_l_s_pull_settings"] = []interface{}{hLSPullSettingsMap}
+			}
+
+			if input.InputGroup.ResilientStream != nil {
+				resilientStreamMap := map[string]interface{}{}
+
+				if input.InputGroup.ResilientStream.Enable != nil {
+					resilientStreamMap["enable"] = input.InputGroup.ResilientStream.Enable
+				}
+
+				if input.InputGroup.ResilientStream.BufferTime != nil {
+					resilientStreamMap["buffer_time"] = input.InputGroup.ResilientStream.BufferTime
+				}
+
+				inputGroupMap["resilient_stream"] = []interface{}{resilientStreamMap}
+			}
+
+			inputGroupList = append(inputGroupList, inputGroupMap)
 		}
 
-		inputGroupMap["hls_pull_settings"] = []interface{}{hLSPullSettingsMap}
+		_ = d.Set("input_group", inputGroupList)
+
 	}
-
-	if input.ResilientStream != nil {
-		resilientStreamMap := map[string]interface{}{}
-
-		if input.ResilientStream.Enable != nil {
-			resilientStreamMap["enable"] = input.ResilientStream.Enable
-		}
-
-		if input.ResilientStream.BufferTime != nil {
-			resilientStreamMap["buffer_time"] = input.ResilientStream.BufferTime
-		}
-
-		inputGroupMap["resilient_stream"] = []interface{}{resilientStreamMap}
-	}
-
-	_ = d.Set("input_group", []interface{}{inputGroupMap})
 
 	return nil
 }
@@ -725,18 +553,12 @@ func resourceTencentCloudMpsInputUpdate(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	request := mps.NewModifyStreamLinkInputRequest()
-	var protocol string
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	flowId := idSplit[0]
-	inputId := idSplit[1]
+	inputId := d.Id()
 
-	request.FlowId = &flowId
+	request.InputId = &inputId
 
-	immutableArgs := []string{"flow_id"}
+	immutableArgs := []string{"flow_id", "input_group"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -744,151 +566,9 @@ func resourceTencentCloudMpsInputUpdate(d *schema.ResourceData, meta interface{}
 		}
 	}
 
-	if d.HasChange("input_group") {
-		if v, ok := d.GetOk("input_group"); ok {
-			for _, item := range v.([]interface{}) {
-				modifyInput := mps.ModifyInput{}
-				modifyInput.InputId = &inputId
-				dMap := item.(map[string]interface{})
-				if v, ok := dMap["input_name"]; ok {
-					modifyInput.InputName = helper.String(v.(string))
-				}
-				if v, ok := dMap["protocol"]; ok {
-					modifyInput.Protocol = helper.String(v.(string))
-					protocol = v.(string)
-				}
-				if v, ok := dMap["description"]; ok {
-					modifyInput.Description = helper.String(v.(string))
-				}
-				if v, ok := dMap["allow_ip_list"]; ok {
-					allowIpListSet := v.(*schema.Set).List()
-					for i := range allowIpListSet {
-						if allowIpListSet[i] != nil {
-							allowIpList := allowIpListSet[i].(string)
-							modifyInput.AllowIpList = append(modifyInput.AllowIpList, &allowIpList)
-						}
-					}
-				}
-				if protocol == PROTOCOL_SRT {
-					if sRTSettingsMap, ok := helper.InterfaceToMap(dMap, "srt_settings"); ok {
-						createInputSRTSettings := mps.CreateInputSRTSettings{}
-						if v, ok := sRTSettingsMap["mode"]; ok {
-							createInputSRTSettings.Mode = helper.String(v.(string))
-						}
-						if v, ok := sRTSettingsMap["stream_id"]; ok {
-							createInputSRTSettings.StreamId = helper.String(v.(string))
-						}
-						if v, ok := sRTSettingsMap["latency"]; ok {
-							createInputSRTSettings.Latency = helper.IntInt64(v.(int))
-						}
-						if v, ok := sRTSettingsMap["recv_latency"]; ok {
-							createInputSRTSettings.RecvLatency = helper.IntInt64(v.(int))
-						}
-						if v, ok := sRTSettingsMap["peer_latency"]; ok {
-							createInputSRTSettings.PeerLatency = helper.IntInt64(v.(int))
-						}
-						if v, ok := sRTSettingsMap["peer_idle_timeout"]; ok {
-							createInputSRTSettings.PeerIdleTimeout = helper.IntInt64(v.(int))
-						}
-						if v, ok := sRTSettingsMap["passphrase"]; ok {
-							createInputSRTSettings.Passphrase = helper.String(v.(string))
-						}
-						if v, ok := sRTSettingsMap["pb_key_len"]; ok {
-							createInputSRTSettings.PbKeyLen = helper.IntInt64(v.(int))
-						}
-						if v, ok := sRTSettingsMap["source_addresses"]; ok {
-							for _, item := range v.([]interface{}) {
-								sourceAddressesMap := item.(map[string]interface{})
-								sRTSourceAddressReq := mps.SRTSourceAddressReq{}
-								if v, ok := sourceAddressesMap["ip"]; ok {
-									sRTSourceAddressReq.Ip = helper.String(v.(string))
-								}
-								if v, ok := sourceAddressesMap["port"]; ok {
-									sRTSourceAddressReq.Port = helper.IntInt64(v.(int))
-								}
-								createInputSRTSettings.SourceAddresses = append(createInputSRTSettings.SourceAddresses, &sRTSourceAddressReq)
-							}
-						}
-						modifyInput.SRTSettings = &createInputSRTSettings
-					}
-				}
-				if protocol == PROTOCOL_RTP {
-					if rTPSettingsMap, ok := helper.InterfaceToMap(dMap, "rtp_settings"); ok {
-						createInputRTPSettings := mps.CreateInputRTPSettings{}
-						if v, ok := rTPSettingsMap["fec"]; ok {
-							createInputRTPSettings.FEC = helper.String(v.(string))
-						}
-						if v, ok := rTPSettingsMap["idle_timeout"]; ok {
-							createInputRTPSettings.IdleTimeout = helper.IntInt64(v.(int))
-						}
-						modifyInput.RTPSettings = &createInputRTPSettings
-					}
-				}
-				if v, ok := dMap["fail_over"]; ok {
-					modifyInput.FailOver = helper.String(v.(string))
-				}
-				if protocol == PROTOCOL_RTMP_PULL {
-					if rTMPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtmp_pull_settings"); ok {
-						createInputRTMPPullSettings := mps.CreateInputRTMPPullSettings{}
-						if v, ok := rTMPPullSettingsMap["source_addresses"]; ok {
-							for _, item := range v.([]interface{}) {
-								sourceAddressesMap := item.(map[string]interface{})
-								rTMPPullSourceAddress := mps.RTMPPullSourceAddress{}
-								if v, ok := sourceAddressesMap["tc_url"]; ok {
-									rTMPPullSourceAddress.TcUrl = helper.String(v.(string))
-								}
-								if v, ok := sourceAddressesMap["stream_key"]; ok {
-									rTMPPullSourceAddress.StreamKey = helper.String(v.(string))
-								}
-								createInputRTMPPullSettings.SourceAddresses = append(createInputRTMPPullSettings.SourceAddresses, &rTMPPullSourceAddress)
-							}
-						}
-						modifyInput.RTMPPullSettings = &createInputRTMPPullSettings
-					}
-				}
-				if protocol == PROTOCOL_RTSP_PULL {
-					if rTSPPullSettingsMap, ok := helper.InterfaceToMap(dMap, "rtsp_pull_settings"); ok {
-						createInputRTSPPullSettings := mps.CreateInputRTSPPullSettings{}
-						if v, ok := rTSPPullSettingsMap["source_addresses"]; ok {
-							for _, item := range v.([]interface{}) {
-								sourceAddressesMap := item.(map[string]interface{})
-								rTSPPullSourceAddress := mps.RTSPPullSourceAddress{}
-								if v, ok := sourceAddressesMap["url"]; ok {
-									rTSPPullSourceAddress.Url = helper.String(v.(string))
-								}
-								createInputRTSPPullSettings.SourceAddresses = append(createInputRTSPPullSettings.SourceAddresses, &rTSPPullSourceAddress)
-							}
-						}
-						modifyInput.RTSPPullSettings = &createInputRTSPPullSettings
-					}
-				}
-				if hLSPullSettingsMap, ok := helper.InterfaceToMap(dMap, "hls_pull_settings"); ok {
-					createInputHLSPullSettings := mps.CreateInputHLSPullSettings{}
-					if v, ok := hLSPullSettingsMap["source_addresses"]; ok {
-						for _, item := range v.([]interface{}) {
-							sourceAddressesMap := item.(map[string]interface{})
-							hLSPullSourceAddress := mps.HLSPullSourceAddress{}
-							if v, ok := sourceAddressesMap["url"]; ok {
-								hLSPullSourceAddress.Url = helper.String(v.(string))
-							}
-							createInputHLSPullSettings.SourceAddresses = append(createInputHLSPullSettings.SourceAddresses, &hLSPullSourceAddress)
-						}
-					}
-					modifyInput.HLSPullSettings = &createInputHLSPullSettings
-				}
-				if resilientStreamMap, ok := helper.InterfaceToMap(dMap, "resilient_stream"); ok {
-					resilientStreamConf := mps.ResilientStreamConf{}
-					if v, ok := resilientStreamMap["enable"]; ok {
-						resilientStreamConf.Enable = helper.Bool(v.(bool))
-					}
-					if v, ok := resilientStreamMap["buffer_time"]; ok {
-						resilientStreamConf.BufferTime = helper.IntUint64(v.(int))
-					}
-					modifyInput.ResilientStream = &resilientStreamConf
-				}
-				//  modify api only support to modify one input one time
-				request.Input = &modifyInput
-			}
+	if d.HasChange("flow_id") {
+		if v, ok := d.GetOk("flow_id"); ok {
+			request.FlowId = helper.String(v.(string))
 		}
 	}
 
@@ -912,6 +592,6 @@ func resourceTencentCloudMpsInputUpdate(d *schema.ResourceData, meta interface{}
 func resourceTencentCloudMpsInputDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mps_input.delete")()
 	defer inconsistentCheck(d, meta)()
-	// deleted through `tencentcloud_mps_flow`
+
 	return nil
 }

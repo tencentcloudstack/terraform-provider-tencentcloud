@@ -5,19 +5,26 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_lighthouse_start_instance" "start_instance" {
-  instance_id = "lhins-xxxxxx"
+  instance_ids =
 }
+```
+
+Import
+
+lighthouse start_instance can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_lighthouse_start_instance.start_instance start_instance_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudLighthouseStartInstance() *schema.Resource {
@@ -25,12 +32,18 @@ func resourceTencentCloudLighthouseStartInstance() *schema.Resource {
 		Create: resourceTencentCloudLighthouseStartInstanceCreate,
 		Read:   resourceTencentCloudLighthouseStartInstanceRead,
 		Delete: resourceTencentCloudLighthouseStartInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
-			"instance_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Instance ID.",
+			"instance_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Instance ID list.",
 			},
 		},
 	}
@@ -42,9 +55,19 @@ func resourceTencentCloudLighthouseStartInstanceCreate(d *schema.ResourceData, m
 
 	logId := getLogId(contextNil)
 
-	request := lighthouse.NewStartInstancesRequest()
-	instanceId := d.Get("instance_id").(string)
-	request.InstanceIds = []*string{&instanceId}
+	var (
+		request    = lighthouse.NewStartInstancesRequest()
+		response   = lighthouse.NewStartInstancesResponse()
+		instanceId string
+	)
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().StartInstances(request)
 		if e != nil {
@@ -52,6 +75,7 @@ func resourceTencentCloudLighthouseStartInstanceCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -59,11 +83,12 @@ func resourceTencentCloudLighthouseStartInstanceCreate(d *schema.ResourceData, m
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseStartInstanceStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixClsCosRechargeResource_basic(t *testing.T) {
+func TestAccTencentCloudClsCosRechargeResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,28 +29,41 @@ func TestAccTencentCloudNeedFixClsCosRechargeResource_basic(t *testing.T) {
 const testAccClsCosRecharge = `
 
 resource "tencentcloud_cls_cos_recharge" "cos_recharge" {
-  bucket        = "cos-lock-1308919341"
+  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
+  logset_id = "5cd3a17e-fb0b-418c-afd7-77b365397427"
+  name = "test"
+  bucket = "test-12345677"
   bucket_region = "ap-guangzhou"
-  log_type      = "minimalist_log"
-  logset_id     = "dd426d1a-95bc-4bca-b8c2-baa169261812"
-  name          = "cos_recharge_for_test"
-  prefix        = "test"
-  topic_id      = "7e34a3a7-635e-4da8-9005-88106c1fde69"
-
+  prefix = "/path"
+  log_type = "json_log"
+  compress = "gzip"
   extract_rule_info {
-    backtracking            = 0
-    is_gbk                  = 0
-    json_standard           = 0
-    keys                    = []
-    metadata_type           = 0
-    un_match_up_load_switch = false
+		time_key = "time"
+		time_format = "YYYY-MM-DD HH:MM:SS"
+		delimiter = ","
+		log_regex = "*"
+		begin_regex = "^*"
+		keys = 
+		filter_key_regex {
+			key = "testKey"
+			regex = "testValue"
+		}
+		un_match_up_load_switch = false
+		un_match_log_key = "test"
+		backtracking = -1
+		is_g_b_k = 0
+		json_standard = 1
+		protocol = "tcp"
+		address = "127.0.0.1:9000"
+		parse_protocol = "rfc3164"
+		metadata_type = 0
+		path_regex = "null"
+		meta_tags {
+			key = "testKey"
+			value = "testValue"
+		}
 
-    filter_key_regex {
-      key   = "__CONTENT__"
-      regex = "dasd"
-    }
   }
 }
-
 
 `

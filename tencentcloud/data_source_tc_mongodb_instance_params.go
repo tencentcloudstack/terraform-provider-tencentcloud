@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mongodb_instance_params" "instance_params" {
-  instance_id = "cmgo-gwqk8669"
-}
+  instance_id = "cmgo-9d0p6umb"
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
@@ -39,12 +38,12 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 						"current_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "current value.",
+							Description: "Current value.",
 						},
 						"default_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "default value.",
+							Description: "Default value.",
 						},
 						"enum_value": {
 							Type: schema.TypeSet,
@@ -52,17 +51,17 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "enumvalue.",
+							Description: "Enumvalue.",
 						},
 						"need_restart": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "if need restart.",
+							Description: "If need restart.",
 						},
 						"param_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name of parameter.",
+							Description: "Name of parameter.",
 						},
 						"tips": {
 							Type: schema.TypeSet,
@@ -70,17 +69,17 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "descripition of parameter.",
+							Description: "Descripition of parameter.",
 						},
 						"value_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "value type.",
+							Description: "Value type.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "if is running.",
+							Description: "If is running.",
 						},
 					},
 				},
@@ -95,32 +94,32 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 						"current_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "current value.",
+							Description: "Current value.",
 						},
 						"default_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "default value.",
+							Description: "Default value.",
 						},
 						"max": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "max value.",
+							Description: "Max value.",
 						},
 						"min": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "min value.",
+							Description: "Min value.",
 						},
 						"need_restart": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "if need restart.",
+							Description: "If need restart.",
 						},
 						"param_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name of parameter.",
+							Description: "Name of parameter.",
 						},
 						"tips": {
 							Type: schema.TypeSet,
@@ -128,17 +127,17 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "descripition of parameter.",
+							Description: "Descripition of parameter.",
 						},
 						"value_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "value type.",
+							Description: "Value type.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "if is running.",
+							Description: "If is running.",
 						},
 					},
 				},
@@ -147,33 +146,33 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 			"instance_text_param": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "text parameter.",
+				Description: "Text parameter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"current_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "current value.",
+							Description: "Current value.",
 						},
 						"default_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "default value.",
+							Description: "Default value.",
 						},
 						"need_restart": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "if need restart.",
+							Description: "If need restart.",
 						},
 						"param_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name of parameter.",
+							Description: "Name of parameter.",
 						},
 						"text_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "text value.",
+							Description: "Text value.",
 						},
 						"tips": {
 							Type: schema.TypeSet,
@@ -181,17 +180,17 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "descripition of parameter.",
+							Description: "Descripition of parameter.",
 						},
 						"value_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "value type.",
+							Description: "Value type.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "if is running.",
+							Description: "If is running.",
 						},
 					},
 				},
@@ -200,18 +199,18 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 			"instance_multi_param": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "multi parameter.",
+				Description: "Multi parameter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"current_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "current value.",
+							Description: "Current value.",
 						},
 						"default_value": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "default value.",
+							Description: "Default value.",
 						},
 						"enum_value": {
 							Type: schema.TypeSet,
@@ -219,22 +218,22 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "enum value.",
+							Description: "Enum value.",
 						},
 						"need_restart": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "if need restart.",
+							Description: "If need restart.",
 						},
 						"param_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name of parameter.",
+							Description: "Name of parameter.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "if is running.",
+							Description: "If is running.",
 						},
 						"tips": {
 							Type: schema.TypeSet,
@@ -242,12 +241,12 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "descripition of parameter.",
+							Description: "Descripition of parameter.",
 						},
 						"value_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "value type.",
+							Description: "Value type.",
 						},
 					},
 				},
@@ -272,32 +271,30 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceParam *mongodb.DescribeInstanceParamsResponseParams
+	var instanceEnumParam []*mongodb.InstanceEnumParam
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeMongodbInstanceParams(ctx, paramMap)
+		result, e := service.DescribeMongodbInstanceParamsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		instanceParam = result
+		instanceEnumParam = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
+	ids := make([]string, 0, len(instanceEnumParam))
+	tmpList := make([]map[string]interface{}, 0, len(instanceEnumParam))
 
-	paramList := make([]map[string]interface{}, 0)
-
-	if instanceParam != nil {
-		enumTmpList := make([]map[string]interface{}, 0, len(instanceParam.InstanceEnumParam))
-		for _, instanceEnumParam := range instanceParam.InstanceEnumParam {
+	if instanceEnumParam != nil {
+		for _, instanceEnumParam := range instanceEnumParam {
 			instanceEnumParamMap := map[string]interface{}{}
 
 			if instanceEnumParam.CurrentValue != nil {
@@ -332,17 +329,15 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 				instanceEnumParamMap["status"] = instanceEnumParam.Status
 			}
 
-			ids = append(ids, *instanceEnumParam.ParamName)
-			enumTmpList = append(enumTmpList, instanceEnumParamMap)
+			ids = append(ids, *instanceEnumParam.InstanceId)
+			tmpList = append(tmpList, instanceEnumParamMap)
 		}
 
-		paramList = append(paramList, enumTmpList...)
-		_ = d.Set("instance_enum_param", enumTmpList)
+		_ = d.Set("instance_enum_param", tmpList)
 	}
 
-	if instanceParam != nil {
-		integerTmpList := make([]map[string]interface{}, 0, len(instanceParam.InstanceIntegerParam))
-		for _, instanceIntegerParam := range instanceParam.InstanceIntegerParam {
+	if instanceIntegerParam != nil {
+		for _, instanceIntegerParam := range instanceIntegerParam {
 			instanceIntegerParamMap := map[string]interface{}{}
 
 			if instanceIntegerParam.CurrentValue != nil {
@@ -381,18 +376,15 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 				instanceIntegerParamMap["status"] = instanceIntegerParam.Status
 			}
 
-			ids = append(ids, *instanceIntegerParam.ParamName)
-			integerTmpList = append(integerTmpList, instanceIntegerParamMap)
+			ids = append(ids, *instanceIntegerParam.InstanceId)
+			tmpList = append(tmpList, instanceIntegerParamMap)
 		}
 
-		paramList = append(paramList, integerTmpList...)
-
-		_ = d.Set("instance_integer_param", integerTmpList)
+		_ = d.Set("instance_integer_param", tmpList)
 	}
 
-	if instanceParam != nil {
-		enumTextList := make([]map[string]interface{}, 0, len(instanceParam.InstanceTextParam))
-		for _, instanceTextParam := range instanceParam.InstanceTextParam {
+	if instanceTextParam != nil {
+		for _, instanceTextParam := range instanceTextParam {
 			instanceTextParamMap := map[string]interface{}{}
 
 			if instanceTextParam.CurrentValue != nil {
@@ -427,17 +419,15 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 				instanceTextParamMap["status"] = instanceTextParam.Status
 			}
 
-			ids = append(ids, *instanceTextParam.ParamName)
-			enumTextList = append(enumTextList, instanceTextParamMap)
+			ids = append(ids, *instanceTextParam.InstanceId)
+			tmpList = append(tmpList, instanceTextParamMap)
 		}
 
-		paramList = append(paramList, enumTextList...)
-		_ = d.Set("instance_text_param", enumTextList)
+		_ = d.Set("instance_text_param", tmpList)
 	}
 
-	if instanceParam != nil {
-		enumMultiList := make([]map[string]interface{}, 0, len(instanceParam.InstanceMultiParam))
-		for _, instanceMultiParam := range instanceParam.InstanceMultiParam {
+	if instanceMultiParam != nil {
+		for _, instanceMultiParam := range instanceMultiParam {
 			instanceMultiParamMap := map[string]interface{}{}
 
 			if instanceMultiParam.CurrentValue != nil {
@@ -472,17 +462,17 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 				instanceMultiParamMap["value_type"] = instanceMultiParam.ValueType
 			}
 
-			ids = append(ids, *instanceMultiParam.ParamName)
-			enumMultiList = append(enumMultiList, instanceMultiParamMap)
+			ids = append(ids, *instanceMultiParam.InstanceId)
+			tmpList = append(tmpList, instanceMultiParamMap)
 		}
-		paramList = append(paramList, enumMultiList...)
-		_ = d.Set("instance_multi_param", enumMultiList)
+
+		_ = d.Set("instance_multi_param", tmpList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), paramList); e != nil {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

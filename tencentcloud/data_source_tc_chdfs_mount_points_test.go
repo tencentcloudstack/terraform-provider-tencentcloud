@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsMountPointsDataSource_basic(t *testing.T) {
@@ -25,7 +24,9 @@ func TestAccTencentCloudChdfsMountPointsDataSource_basic(t *testing.T) {
 const testAccChdfsMountPointsDataSource = `
 
 data "tencentcloud_chdfs_mount_points" "mount_points" {
-  file_system_id     = "f14mpfy5lh4e"
-}
+  file_system_id = &lt;nil&gt;
+  access_group_id = &lt;nil&gt;
+  owner_uin = &lt;nil&gt;
+  }
 
 `

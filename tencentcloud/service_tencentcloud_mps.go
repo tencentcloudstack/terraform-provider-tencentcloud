@@ -1221,3 +1221,774 @@ func (me *MpsService) DescribeMpsMediaMetaDataByFilter(ctx context.Context, para
 
 	return
 }
+
+func (me *MpsService) DescribeMpsAdaptiveDynamicStreamingTemplatesByFilter(ctx context.Context, param map[string]interface{}) (adaptiveDynamicStreamingTemplates []*mps.AdaptiveDynamicStreamingTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeAdaptiveDynamicStreamingTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "AdaptiveDynamicStreamingTemplateSet" {
+			request.AdaptiveDynamicStreamingTemplateSet = v.([]*mps.AdaptiveDynamicStreamingTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeAdaptiveDynamicStreamingTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AdaptiveDynamicStreamingTemplateSet) < 1 {
+			break
+		}
+		adaptiveDynamicStreamingTemplates = append(adaptiveDynamicStreamingTemplates, response.Response.AdaptiveDynamicStreamingTemplateSet...)
+		if len(response.Response.AdaptiveDynamicStreamingTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsAiAnalysisTemplatesByFilter(ctx context.Context, param map[string]interface{}) (aiAnalysisTemplates []*mps.AIAnalysisTemplateItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeAIAnalysisTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*int64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "AIAnalysisTemplateSet" {
+			request.AIAnalysisTemplateSet = v.([]*mps.AIAnalysisTemplateItem)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeAIAnalysisTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AIAnalysisTemplateSet) < 1 {
+			break
+		}
+		aiAnalysisTemplates = append(aiAnalysisTemplates, response.Response.AIAnalysisTemplateSet...)
+		if len(response.Response.AIAnalysisTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsAiRecognitionTemplatesByFilter(ctx context.Context, param map[string]interface{}) (aiRecognitionTemplates []*mps.AIRecognitionTemplateItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeAIRecognitionTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*int64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "AIRecognitionTemplateSet" {
+			request.AIRecognitionTemplateSet = v.([]*mps.AIRecognitionTemplateItem)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeAIRecognitionTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AIRecognitionTemplateSet) < 1 {
+			break
+		}
+		aiRecognitionTemplates = append(aiRecognitionTemplates, response.Response.AIRecognitionTemplateSet...)
+		if len(response.Response.AIRecognitionTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsAnimatedGraphicsTemplatesByFilter(ctx context.Context, param map[string]interface{}) (animatedGraphicsTemplates []*mps.AnimatedGraphicsTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeAnimatedGraphicsTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "AnimatedGraphicsTemplateSet" {
+			request.AnimatedGraphicsTemplateSet = v.([]*mps.AnimatedGraphicsTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeAnimatedGraphicsTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AnimatedGraphicsTemplateSet) < 1 {
+			break
+		}
+		animatedGraphicsTemplates = append(animatedGraphicsTemplates, response.Response.AnimatedGraphicsTemplateSet...)
+		if len(response.Response.AnimatedGraphicsTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsContentReviewTemplatesByFilter(ctx context.Context, param map[string]interface{}) (contentReviewTemplates []*mps.ContentReviewTemplateItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeContentReviewTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*int64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "ContentReviewTemplateSet" {
+			request.ContentReviewTemplateSet = v.([]*mps.ContentReviewTemplateItem)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeContentReviewTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ContentReviewTemplateSet) < 1 {
+			break
+		}
+		contentReviewTemplates = append(contentReviewTemplates, response.Response.ContentReviewTemplateSet...)
+		if len(response.Response.ContentReviewTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsImageSpriteTemplatesByFilter(ctx context.Context, param map[string]interface{}) (imageSpriteTemplates []*mps.ImageSpriteTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeImageSpriteTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "ImageSpriteTemplateSet" {
+			request.ImageSpriteTemplateSet = v.([]*mps.ImageSpriteTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeImageSpriteTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ImageSpriteTemplateSet) < 1 {
+			break
+		}
+		imageSpriteTemplates = append(imageSpriteTemplates, response.Response.ImageSpriteTemplateSet...)
+		if len(response.Response.ImageSpriteTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsPersonSamplesByFilter(ctx context.Context, param map[string]interface{}) (personSamples []*mps.AiSamplePerson, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribePersonSamplesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "PersonIds" {
+			request.PersonIds = v.([]*string)
+		}
+		if k == "Names" {
+			request.Names = v.([]*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "PersonSet" {
+			request.PersonSet = v.([]*mps.AiSamplePerson)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribePersonSamples(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.PersonSet) < 1 {
+			break
+		}
+		personSamples = append(personSamples, response.Response.PersonSet...)
+		if len(response.Response.PersonSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsSampleSnapshotTemplatesByFilter(ctx context.Context, param map[string]interface{}) (sampleSnapshotTemplates []*mps.SampleSnapshotTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeSampleSnapshotTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "SampleSnapshotTemplateSet" {
+			request.SampleSnapshotTemplateSet = v.([]*mps.SampleSnapshotTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeSampleSnapshotTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SampleSnapshotTemplateSet) < 1 {
+			break
+		}
+		sampleSnapshotTemplates = append(sampleSnapshotTemplates, response.Response.SampleSnapshotTemplateSet...)
+		if len(response.Response.SampleSnapshotTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsSnapshotByTimeoffsetTemplatesByFilter(ctx context.Context, param map[string]interface{}) (snapshotByTimeoffsetTemplates []*mps.SnapshotByTimeOffsetTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeSnapshotByTimeOffsetTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*uint64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "SnapshotByTimeOffsetTemplateSet" {
+			request.SnapshotByTimeOffsetTemplateSet = v.([]*mps.SnapshotByTimeOffsetTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeSnapshotByTimeOffsetTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SnapshotByTimeOffsetTemplateSet) < 1 {
+			break
+		}
+		snapshotByTimeoffsetTemplates = append(snapshotByTimeoffsetTemplates, response.Response.SnapshotByTimeOffsetTemplateSet...)
+		if len(response.Response.SnapshotByTimeOffsetTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsTranscodeTemplatesByFilter(ctx context.Context, param map[string]interface{}) (transcodeTemplates []*mps.TranscodeTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeTranscodeTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "ContainerType" {
+			request.ContainerType = v.(*string)
+		}
+		if k == "TEHDType" {
+			request.TEHDType = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "TranscodeType" {
+			request.TranscodeType = v.(*string)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "TranscodeTemplateSet" {
+			request.TranscodeTemplateSet = v.([]*mps.TranscodeTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeTranscodeTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.TranscodeTemplateSet) < 1 {
+			break
+		}
+		transcodeTemplates = append(transcodeTemplates, response.Response.TranscodeTemplateSet...)
+		if len(response.Response.TranscodeTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsWatermarkTemplatesByFilter(ctx context.Context, param map[string]interface{}) (watermarkTemplates []*mps.WatermarkTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeWatermarkTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Definitions" {
+			request.Definitions = v.([]*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "WatermarkTemplateSet" {
+			request.WatermarkTemplateSet = v.([]*mps.WatermarkTemplate)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeWatermarkTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.WatermarkTemplateSet) < 1 {
+			break
+		}
+		watermarkTemplates = append(watermarkTemplates, response.Response.WatermarkTemplateSet...)
+		if len(response.Response.WatermarkTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsWorkflowsByFilter(ctx context.Context, param map[string]interface{}) (workflows []*mps.WorkflowInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeWorkflowsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "WorkflowIds" {
+			request.WorkflowIds = v.([]*int64)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "TotalCount" {
+			request.TotalCount = v.(*uint64)
+		}
+		if k == "WorkflowInfoSet" {
+			request.WorkflowInfoSet = v.([]*mps.WorkflowInfo)
+		}
+		if k == "RequestId" {
+			request.RequestId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeWorkflows(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.WorkflowInfoSet) < 1 {
+			break
+		}
+		workflows = append(workflows, response.Response.WorkflowInfoSet...)
+		if len(response.Response.WorkflowInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

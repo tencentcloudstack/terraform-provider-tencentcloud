@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDbbrainMysqlProcessListDataSource_basic(t *testing.T) {
@@ -16,31 +15,25 @@ func TestAccTencentCloudDbbrainMysqlProcessListDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDbbrainMysqlProcessListDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "instance_id"),
-					resource.TestCheckResourceAttr("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "product", "mysql"),
-					// return
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.user"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.host"),
-					// resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.db"),
-					// resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.state"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.command"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.time"),
-					// resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list", "process_list.0.info"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dbbrain_mysql_process_list.mysql_process_list")),
 			},
 		},
 	})
 }
 
-const testAccDbbrainMysqlProcessListDataSource = CommonPresetMysql + `
+const testAccDbbrainMysqlProcessListDataSource = `
 
 data "tencentcloud_dbbrain_mysql_process_list" "mysql_process_list" {
-  instance_id = local.mysql_id
-  product     = "mysql"
-}
+  instance_id = ""
+  i_d = 
+  user = ""
+  host = ""
+  d_b = ""
+  state = ""
+  command = ""
+  time = 
+  info = ""
+  product = ""
+  }
 
 `

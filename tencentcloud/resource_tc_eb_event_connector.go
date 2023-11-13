@@ -1,113 +1,28 @@
 /*
 Provides a resource to create a eb event_connector
 
-~> **NOTE:** When the type is `apigw`, the import function is not supported.
-
 Example Usage
 
-Create ckafka event connector
 ```hcl
-data "tencentcloud_user_info" "foo" {}
-
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_ckafka_instance" "kafka_instance" {
-  instance_name      = "ckafka-instance-maz-tf-test"
-  zone_id            = 100003
-  multi_zone_flag    = true
-  zone_ids           = [100003, 100006]
-  period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
-  msg_retention_time = 1300
-  renew_flag         = 0
-  kafka_version      = "1.1.1"
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
-
-
-  config {
-    auto_create_topic_enable   = true
-    default_num_partitions     = 3
-    default_replication_factor = 3
-  }
-
-  dynamic_retention_config {
-    enable = 1
-  }
-}
-
-locals {
-  ckafka_id = tencentcloud_ckafka_instance.kafka_instance.id
-  uin = data.tencentcloud_user_info.foo.owner_uin
-}
-
 resource "tencentcloud_eb_event_connector" "event_connector" {
-  event_bus_id    = tencentcloud_eb_event_bus.foo.id
-  connection_name = "tf-event-connector"
-  description     = "event connector desc1"
-  enable          = true
-  type            = "ckafka"
   connection_description {
-    resource_description = "qcs::ckafka:ap-guangzhou:uin/${local.uin}:ckafkaId/uin/${local.uin}/${local.ckafka_id}"
-    ckafka_params {
-      offset     = "latest"
-      topic_name = "dasdasd"
-    }
+		resource_description = ""
+		a_p_i_g_w_params {
+			protocol = ""
+			method = ""
+		}
+		ckafka_params {
+			offset = ""
+			topic_name = ""
+		}
+		d_t_s_params =
+
   }
-}
-```
-
-Create api_gateway event connector
-
-```hcl
-data "tencentcloud_user_info" "foo" {}
-
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "tf-eb-service"
-  protocol     = "http&https"
-  service_desc = "your nice service"
-  net_type     = ["INNER", "OUTER"]
-  ip_version   = "IPv4"
-}
-
-locals {
-  uin = data.tencentcloud_user_info.foo.owner_uin
-  service_id = tencentcloud_api_gateway_service.service.id
-}
-
-resource "tencentcloud_eb_event_connector" "event_connector" {
-  event_bus_id    = tencentcloud_eb_event_bus.foo.id
-  connection_name = "tf-event-connector"
-  description     = "event connector desc1"
-  enable          = false
-  type            = "apigw"
-
-  connection_description {
-    resource_description = "qcs::apigw:ap-guangzhou:uin/${local.uin}:serviceid/${local.service_id}"
-    api_gw_params {
-      protocol = "HTTP"
-      method   = "GET"
-    }
-  }
+  event_bus_id = ""
+  connection_name = ""
+  description = ""
+  enable =
+  type = ""
 }
 ```
 
@@ -116,7 +31,7 @@ Import
 eb event_connector can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_eb_event_connector.event_connector eventBusId#connectionId
+terraform import tencentcloud_eb_event_connector.event_connector event_connector_id
 ```
 */
 package tencentcloud
@@ -124,13 +39,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudEbEventConnector() *schema.Resource {
@@ -155,11 +69,11 @@ func resourceTencentCloudEbEventConnector() *schema.Resource {
 							Required:    true,
 							Description: "Resource qcs six-segment style, more reference [resource six-segment style](https://cloud.tencent.com/document/product/598/10606).",
 						},
-						"api_gw_params": {
+						"a_p_i_g_w_params": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "apigw parameter,Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Apigw parameter,Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"protocol": {
@@ -179,21 +93,27 @@ func resourceTencentCloudEbEventConnector() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "ckafka parameter, note: this field may return null, indicating that no valid value can be obtained.",
+							Description: "Ckafka parameter, note: this field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"offset": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "kafka offset.",
+										Description: "Kafka offset.",
 									},
 									"topic_name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "ckafka  topic.",
+										Description: "Ckafka  topic.",
 									},
 								},
 							},
+						},
+						"d_t_s_params": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Data transfer service (DTS) parameter, note: this field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -201,33 +121,32 @@ func resourceTencentCloudEbEventConnector() *schema.Resource {
 
 			"event_bus_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "event bus Id.",
+				Description: "Event bus Id.",
 			},
 
 			"connection_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "connector name.",
+				Description: "Connector name.",
 			},
 
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "description.",
+				Description: "Description.",
 			},
 
 			"enable": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "switch.",
+				Description: "Switch.",
 			},
 
 			"type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "type.",
+				Description: "Type.",
 			},
 		},
 	}
@@ -250,7 +169,7 @@ func resourceTencentCloudEbEventConnectorCreate(d *schema.ResourceData, meta int
 		if v, ok := dMap["resource_description"]; ok {
 			connectionDescription.ResourceDescription = helper.String(v.(string))
 		}
-		if aPIGWParamsMap, ok := helper.InterfaceToMap(dMap, "api_gw_params"); ok {
+		if aPIGWParamsMap, ok := helper.InterfaceToMap(dMap, "a_p_i_g_w_params"); ok {
 			aPIGWParams := eb.APIGWParams{}
 			if v, ok := aPIGWParamsMap["protocol"]; ok {
 				aPIGWParams.Protocol = helper.String(v.(string))
@@ -269,6 +188,10 @@ func resourceTencentCloudEbEventConnectorCreate(d *schema.ResourceData, meta int
 				ckafkaParams.TopicName = helper.String(v.(string))
 			}
 			connectionDescription.CkafkaParams = &ckafkaParams
+		}
+		if dTSParamsMap, ok := helper.InterfaceToMap(dMap, "d_t_s_params"); ok {
+			dTSParams := eb.DTSParams{}
+			connectionDescription.DTSParams = &dTSParams
 		}
 		request.ConnectionDescription = &connectionDescription
 	}
@@ -310,7 +233,7 @@ func resourceTencentCloudEbEventConnectorCreate(d *schema.ResourceData, meta int
 	}
 
 	connectionId = *response.Response.ConnectionId
-	d.SetId(eventBusId + FILED_SP + connectionId)
+	d.SetId(strings.Join([]string{connectionId, eventBusId}, FILED_SP))
 
 	return resourceTencentCloudEbEventConnectorRead(d, meta)
 }
@@ -329,8 +252,8 @@ func resourceTencentCloudEbEventConnectorRead(d *schema.ResourceData, meta inter
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	connectionId := idSplit[1]
+	connectionId := idSplit[0]
+	eventBusId := idSplit[1]
 
 	eventConnector, err := service.DescribeEbEventConnectorById(ctx, connectionId, eventBusId)
 	if err != nil {
@@ -347,14 +270,7 @@ func resourceTencentCloudEbEventConnectorRead(d *schema.ResourceData, meta inter
 		connectionDescriptionMap := map[string]interface{}{}
 
 		if eventConnector.ConnectionDescription.ResourceDescription != nil {
-			description := *eventConnector.ConnectionDescription.ResourceDescription
-			if eventConnector.Type != nil && *eventConnector.Type == "apigw" && strings.Contains(description, "serviceid") && strings.Contains(description, "API") {
-				parts := strings.Split(description, "/")
-				result := strings.Join(parts[:len(parts)-2], "/")
-				connectionDescriptionMap["resource_description"] = &result
-			} else {
-				connectionDescriptionMap["resource_description"] = eventConnector.ConnectionDescription.ResourceDescription
-			}
+			connectionDescriptionMap["resource_description"] = eventConnector.ConnectionDescription.ResourceDescription
 		}
 
 		if eventConnector.ConnectionDescription.APIGWParams != nil {
@@ -368,7 +284,7 @@ func resourceTencentCloudEbEventConnectorRead(d *schema.ResourceData, meta inter
 				aPIGWParamsMap["method"] = eventConnector.ConnectionDescription.APIGWParams.Method
 			}
 
-			connectionDescriptionMap["api_gw_params"] = []interface{}{aPIGWParamsMap}
+			connectionDescriptionMap["a_p_i_g_w_params"] = []interface{}{aPIGWParamsMap}
 		}
 
 		if eventConnector.ConnectionDescription.CkafkaParams != nil {
@@ -383,6 +299,10 @@ func resourceTencentCloudEbEventConnectorRead(d *schema.ResourceData, meta inter
 			}
 
 			connectionDescriptionMap["ckafka_params"] = []interface{}{ckafkaParamsMap}
+		}
+
+		if eventConnector.ConnectionDescription.DTSParams != nil {
+			connectionDescriptionMap["d_t_s_params"] = eventConnector.ConnectionDescription.DTSParams
 		}
 
 		_ = d.Set("connection_description", []interface{}{connectionDescriptionMap})
@@ -423,17 +343,23 @@ func resourceTencentCloudEbEventConnectorUpdate(d *schema.ResourceData, meta int
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	connectionId := idSplit[1]
+	connectionId := idSplit[0]
+	eventBusId := idSplit[1]
 
 	request.ConnectionId = &connectionId
 	request.EventBusId = &eventBusId
 
-	immutableArgs := []string{"connection_description", "type"}
+	immutableArgs := []string{"connection_description", "event_bus_id", "connection_name", "description", "enable", "type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("event_bus_id") {
+		if v, ok := d.GetOk("event_bus_id"); ok {
+			request.EventBusId = helper.String(v.(string))
 		}
 	}
 
@@ -484,8 +410,8 @@ func resourceTencentCloudEbEventConnectorDelete(d *schema.ResourceData, meta int
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	connectionId := idSplit[1]
+	connectionId := idSplit[0]
+	eventBusId := idSplit[1]
 
 	if err := service.DeleteEbEventConnectorById(ctx, connectionId, eventBusId); err != nil {
 		return err

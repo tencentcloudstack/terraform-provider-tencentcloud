@@ -22,12 +22,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsEvent() *schema.Resource {
@@ -89,10 +89,7 @@ func resourceTencentCloudMpsEventCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	if response.Response.Info != nil {
-		eventId = *response.Response.Info.EventId
-	}
-
+	eventId = *response.Response.EventId
 	d.SetId(eventId)
 
 	return resourceTencentCloudMpsEventRead(d, meta)
@@ -143,6 +140,14 @@ func resourceTencentCloudMpsEventUpdate(d *schema.ResourceData, meta interface{}
 	eventId := d.Id()
 
 	request.EventId = &eventId
+
+	immutableArgs := []string{"event_name", "description"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("event_name") {
 		if v, ok := d.GetOk("event_name"); ok {

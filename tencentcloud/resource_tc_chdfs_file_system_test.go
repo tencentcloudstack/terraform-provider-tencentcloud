@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsFileSystemResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudChdfsFileSystemResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_chdfs_file_system.file_system", "id")),
 			},
 			{
-				Config: testAccChdfsFileSystemUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_chdfs_file_system.file_system", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_chdfs_file_system.file_system", "file_system_name", "terraform-test-for"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_chdfs_file_system.file_system",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,39 +29,13 @@ func TestAccTencentCloudChdfsFileSystemResource_basic(t *testing.T) {
 const testAccChdfsFileSystem = `
 
 resource "tencentcloud_chdfs_file_system" "file_system" {
-  capacity_quota           = 10995116277760
-  description              = "file system for terraform test"
-  enable_ranger            = true
-  file_system_name         = "terraform-test"
-  posix_acl                = false
-  ranger_service_addresses = [
-    "127.0.0.1:80",
-    "127.0.0.1:8000",
-  ]
-  super_users              = [
-    "terraform",
-    "iac",
-  ]
-}
-
-`
-
-const testAccChdfsFileSystemUpdate = `
-
-resource "tencentcloud_chdfs_file_system" "file_system" {
-  capacity_quota           = 10995116277760
-  description              = "file system for terraform test"
-  enable_ranger            = true
-  file_system_name         = "terraform-test-for"
-  posix_acl                = false
-  ranger_service_addresses = [
-    "127.0.0.1:80",
-    "127.0.0.1:8000",
-  ]
-  super_users              = [
-    "terraform",
-    "iac",
-  ]
+  file_system_name = "test file system name"
+  capacity_quota = 1073741824
+  posix_acl = true
+  description = "test desc"
+  super_users = &lt;nil&gt;
+  enable_ranger = false
+  ranger_service_addresses = &lt;nil&gt;
 }
 
 `

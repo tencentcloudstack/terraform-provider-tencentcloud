@@ -5,94 +5,365 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_workflow" "workflow" {
-  output_dir    = "/"
-  task_priority = 0
-  workflow_name = "tf-workflow"
-
-  media_process_task {
-    adaptive_dynamic_streaming_task_set {
-      definition             = 12
-      output_object_path     = "/out"
-      segment_object_name    = "/out"
-      sub_stream_object_name = "/out/out/"
-
-      output_storage {
-        type = "COS"
-
-        cos_output_storage {
-          bucket = "cos-lock-1308919341"
-          region = "ap-guangzhou"
-        }
-      }
-    }
-
-    snapshot_by_time_offset_task_set {
-      definition          = 10
-      ext_time_offset_set = [
-        "1s",
-      ]
-      output_object_path  = "/snapshot/"
-      time_offset_set     = []
-
-      output_storage {
-        type = "COS"
-
-        cos_output_storage {
-          bucket = "cos-lock-1308919341"
-          region = "ap-guangzhou"
-        }
-      }
-    }
-
-    animated_graphic_task_set {
-      definition         = 20000
-      end_time_offset    = 0
-      output_object_path = "/test/"
-      start_time_offset  = 0
-
-      output_storage {
-        type = "COS"
-
-        cos_output_storage {
-          bucket = "cos-lock-1308919341"
-          region = "ap-guangzhou"
-        }
-      }
-    }
-  }
-
-  ai_analysis_task {
-    definition = 20
-  }
-
-  ai_content_review_task {
-    definition = 20
-  }
-
-  ai_recognition_task {
-    definition = 20
-  }
-
-  output_storage {
-    type = "COS"
-
-    cos_output_storage {
-      bucket = "cos-lock-1308919341"
-      region = "ap-guangzhou"
-    }
-  }
-
+  workflow_name = &lt;nil&gt;
   trigger {
-    type = "CosFileUpload"
+		type = "CosFileUpload"
+		cos_file_upload_trigger {
+			bucket = "TopRankVideo-125xxx88"
+			region = "ap-chongqing"
+			dir = "/movie/201907/"
+			formats =
+		}
 
-    cos_file_upload_trigger {
-      bucket = "cos-lock-1308919341"
-      dir    = "/"
-      region = "ap-guangzhou"
-    }
   }
-}
+  output_storage {
+		type = "COS"
+		cos_output_storage {
+			bucket = "TopRankVideo-125xxx88"
+			region = "ap-chongqing"
+		}
 
+  }
+  output_dir = "/movie/201907/"
+  media_process_task {
+		transcode_task_set {
+			definition = &lt;nil&gt;
+			raw_parameter {
+				container = &lt;nil&gt;
+				remove_video = 0
+				remove_audio = 0
+				video_template {
+					codec = &lt;nil&gt;
+					fps = &lt;nil&gt;
+					bitrate = &lt;nil&gt;
+					resolution_adaptive = "open"
+					width = 0
+					height = 0
+					gop = &lt;nil&gt;
+					fill_type = "black"
+					vcrf = &lt;nil&gt;
+				}
+				audio_template {
+					codec = &lt;nil&gt;
+					bitrate = &lt;nil&gt;
+					sample_rate = &lt;nil&gt;
+					audio_channel = 2
+				}
+				t_e_h_d_config {
+					type = &lt;nil&gt;
+					max_video_bitrate = &lt;nil&gt;
+				}
+			}
+			override_parameter {
+				container = &lt;nil&gt;
+				remove_video = &lt;nil&gt;
+				remove_audio = &lt;nil&gt;
+				video_template {
+					codec = &lt;nil&gt;
+					fps = &lt;nil&gt;
+					bitrate = &lt;nil&gt;
+					resolution_adaptive = &lt;nil&gt;
+					width = &lt;nil&gt;
+					height = &lt;nil&gt;
+					gop = &lt;nil&gt;
+					fill_type = &lt;nil&gt;
+					vcrf = &lt;nil&gt;
+					content_adapt_stream = 0
+				}
+				audio_template {
+					codec = &lt;nil&gt;
+					bitrate = &lt;nil&gt;
+					sample_rate = &lt;nil&gt;
+					audio_channel = &lt;nil&gt;
+					stream_selects = &lt;nil&gt;
+				}
+				t_e_h_d_config {
+					type = &lt;nil&gt;
+					max_video_bitrate = &lt;nil&gt;
+				}
+				subtitle_template {
+					path = &lt;nil&gt;
+					stream_index = &lt;nil&gt;
+					font_type = "hei.ttf"
+					font_size = &lt;nil&gt;
+					font_color = "0xFFFFFF"
+					font_alpha =
+				}
+			}
+			watermark_set {
+				definition = &lt;nil&gt;
+				raw_parameter {
+					type = &lt;nil&gt;
+					coordinate_origin = "TopLeft"
+					x_pos = "0px"
+					y_pos = "0px"
+					image_template {
+						image_content {
+							type = "COS"
+							cos_input_info {
+								bucket = "TopRankVideo-125xxx88"
+								region = "ap-chongqing"
+								object = "/movie/201907/WildAnimal.mov"
+							}
+							url_input_info {
+								url = &lt;nil&gt;
+							}
+						}
+						width = "10%"
+						height = "0px"
+						repeat_type = &lt;nil&gt;
+					}
+				}
+				text_content = &lt;nil&gt;
+				svg_content = &lt;nil&gt;
+				start_time_offset = &lt;nil&gt;
+				end_time_offset = &lt;nil&gt;
+			}
+			mosaic_set {
+				coordinate_origin = "TopLeft"
+				x_pos = "0px"
+				y_pos = "0px"
+				width = "10%"
+				height = "10%"
+				start_time_offset = &lt;nil&gt;
+				end_time_offset = &lt;nil&gt;
+			}
+			start_time_offset = &lt;nil&gt;
+			end_time_offset = &lt;nil&gt;
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+			segment_object_name = &lt;nil&gt;
+			object_number_format {
+				initial_value = 0
+				increment = 1
+				min_length = 1
+				place_holder = "0"
+			}
+			head_tail_parameter {
+				head_set {
+					type = "COS"
+					cos_input_info {
+						bucket = "TopRankVideo-125xxx88"
+						region = "ap-chongqing"
+						object = "/movie/201907/WildAnimal.mov"
+					}
+					url_input_info {
+						url = &lt;nil&gt;
+					}
+				}
+				tail_set {
+					type = "COS"
+					cos_input_info {
+						bucket = "TopRankVideo-125xxx88"
+						region = "ap-chongqing"
+						object = "/movie/201907/WildAnimal.mov"
+					}
+					url_input_info {
+						url = &lt;nil&gt;
+					}
+				}
+			}
+		}
+		animated_graphic_task_set {
+			definition = &lt;nil&gt;
+			start_time_offset = &lt;nil&gt;
+			end_time_offset = &lt;nil&gt;
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+		}
+		snapshot_by_time_offset_task_set {
+			definition = &lt;nil&gt;
+			ext_time_offset_set = &lt;nil&gt;
+			time_offset_set = &lt;nil&gt;
+			watermark_set {
+				definition = &lt;nil&gt;
+				raw_parameter {
+					type = &lt;nil&gt;
+					coordinate_origin = "TopLeft"
+					x_pos = "0px"
+					y_pos = "0px"
+					image_template {
+						image_content {
+							type = "COS"
+							cos_input_info {
+								bucket = "TopRankVideo-125xxx88"
+								region = "ap-chongqing"
+								object = "/movie/201907/WildAnimal.mov"
+							}
+							url_input_info {
+								url = &lt;nil&gt;
+							}
+						}
+						width = "10%"
+						height = "0px"
+						repeat_type = &lt;nil&gt;
+					}
+				}
+				text_content = &lt;nil&gt;
+				svg_content = &lt;nil&gt;
+				start_time_offset = &lt;nil&gt;
+				end_time_offset = &lt;nil&gt;
+			}
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+			object_number_format {
+				initial_value = 0
+				increment = 1
+				min_length = 1
+				place_holder = "0"
+			}
+		}
+		sample_snapshot_task_set {
+			definition = &lt;nil&gt;
+			watermark_set {
+				definition = &lt;nil&gt;
+				raw_parameter {
+					type = &lt;nil&gt;
+					coordinate_origin = "TopLeft"
+					x_pos = "0px"
+					y_pos = "0px"
+					image_template {
+						image_content {
+							type = "COS"
+							cos_input_info {
+								bucket = "TopRankVideo-125xxx88"
+								region = "ap-chongqing"
+								object = "/movie/201907/WildAnimal.mov"
+							}
+							url_input_info {
+								url = &lt;nil&gt;
+							}
+						}
+						width = "10%"
+						height = "0px"
+						repeat_type = "repeat"
+					}
+				}
+				text_content = &lt;nil&gt;
+				svg_content = &lt;nil&gt;
+				start_time_offset = &lt;nil&gt;
+				end_time_offset = &lt;nil&gt;
+			}
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+			object_number_format {
+				initial_value = 0
+				increment = 1
+				min_length = 1
+				place_holder = "0"
+			}
+		}
+		image_sprite_task_set {
+			definition = &lt;nil&gt;
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+			web_vtt_object_name = &lt;nil&gt;
+			object_number_format {
+				initial_value = 0
+				increment = 1
+				min_length = 1
+				place_holder = "0"
+			}
+		}
+		adaptive_dynamic_streaming_task_set {
+			definition = &lt;nil&gt;
+			watermark_set {
+				definition = &lt;nil&gt;
+				raw_parameter {
+					type = &lt;nil&gt;
+					coordinate_origin = "TopLeft"
+					x_pos = "0px"
+					y_pos = "0px"
+					image_template {
+						image_content {
+							type = "COS"
+							cos_input_info {
+								bucket = "TopRankVideo-125xxx88"
+								region = "ap-chongqing"
+								object = "/movie/201907/WildAnimal.mov"
+							}
+							url_input_info {
+								url = &lt;nil&gt;
+							}
+						}
+						width = "10%"
+						height = "0px"
+						repeat_type = "repeat"
+					}
+				}
+				text_content = &lt;nil&gt;
+				svg_content = &lt;nil&gt;
+				start_time_offset = &lt;nil&gt;
+				end_time_offset = &lt;nil&gt;
+			}
+			output_storage {
+				type = "COS"
+				cos_output_storage {
+					bucket = "TopRankVideo-125xxx88"
+					region = "ap-chongqinq"
+				}
+			}
+			output_object_path = &lt;nil&gt;
+			sub_stream_object_name = &lt;nil&gt;
+			segment_object_name = &lt;nil&gt;
+		}
+
+  }
+  ai_content_review_task {
+		definition = &lt;nil&gt;
+
+  }
+  ai_analysis_task {
+		definition = &lt;nil&gt;
+		extended_parameter = &lt;nil&gt;
+
+  }
+  ai_recognition_task {
+		definition = &lt;nil&gt;
+
+  }
+  task_notify_config {
+		cmq_model = &lt;nil&gt;
+		cmq_region = &lt;nil&gt;
+		topic_name = &lt;nil&gt;
+		queue_name = &lt;nil&gt;
+		notify_mode = &lt;nil&gt;
+		notify_type = &lt;nil&gt;
+		notify_url = &lt;nil&gt;
+
+  }
+  task_priority = &lt;nil&gt;
+}
 ```
 
 Import
@@ -107,12 +378,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsWorkflow() *schema.Resource {
@@ -171,7 +442,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Computed:    true,
 										Description: "A list of file formats that are allowed to be triggered by the workflow, if not filled in, it means that files of all formats can trigger the workflow.",
 									},
 								},
@@ -245,7 +515,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Computed:    true,
 										Description: "Video transcoding custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios. It is recommended that you use Definition to specify transcoding parameters first.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -289,7 +558,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"resolution_adaptive": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height.",
+																Description: "Adaptive resolution, optional values:open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height.",
 															},
 															"width": {
 																Type:        schema.TypeInt,
@@ -309,7 +578,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"fill_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched;.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black.",
+																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black.",
 															},
 															"vcrf": {
 																Type:        schema.TypeInt,
@@ -329,7 +598,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
+																Description: "Encoding format of audio stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
 															},
 															"bitrate": {
 																Type:        schema.TypeInt,
@@ -349,7 +618,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 														},
 													},
 												},
-												"tehd_config": {
+												"t_e_h_d_config": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
@@ -439,7 +708,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"fill_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling;. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched; black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.",
+																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.",
 															},
 															"vcrf": {
 																Type:        schema.TypeInt,
@@ -492,7 +761,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 														},
 													},
 												},
-												"tehd_config": {
+												"t_e_h_d_config": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
@@ -570,7 +839,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Computed:    true,
 													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -752,7 +1020,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 									"end_time_offset": {
 										Type:        schema.TypeFloat,
 										Optional:    true,
-										Description: "End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video.",
+										Description: "End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video..When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video..",
 									},
 									"output_storage": {
 										Type:        schema.TypeList,
@@ -1031,15 +1299,11 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Description: "Screenshot time point list, the time point supports two formats: s and %:;When the string ends with s, it means that the time point is in seconds, such as 3.5s means that the time point is the 3.5th second.When the string ends with %, it means that the time point is the percentage of the video duration, such as 10% means that the time point is the first 10% of the time in the video.",
+										Description: "Screenshot time point list, the time point supports two formats: s and %:When the string ends with s, it means that the time point is in seconds, such as 3.5s means that the time point is the 3.5th second.When the string ends with %, it means that the time point is the percentage of the video duration, such as 10% means that the time point is the first 10% of the time in the video.",
 									},
 									"time_offset_set": {
-										Type: schema.TypeSet,
-										Elem: &schema.Schema{
-											Type: schema.TypeFloat,
-										},
 										Optional:    true,
-										Description: "Screenshot time point list, the unit is &lt;font color=red&gt;seconds&lt;/font&gt;. This parameter is no longer recommended, it is recommended that you use the ExtTimeOffsetSet parameter.",
+										Description: "Screenshot time point list, the unit is &amp;lt;font color=red&amp;gt;seconds&amp;lt;/font&amp;gt;. This parameter is no longer recommended, it is recommended that you use the ExtTimeOffsetSet parameter.",
 									},
 									"watermark_set": {
 										Type:        schema.TypeList,
@@ -1056,7 +1320,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Computed:    true,
 													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -1285,7 +1548,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Computed:    true,
 													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -1603,7 +1865,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Computed:    true,
 													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -1892,7 +2153,6 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 			"task_priority": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     0,
 				Description: "The priority of the workflow, the larger the value, the higher the priority, the value range is -10 to 10, and blank means 0.",
 			},
 		},
@@ -1908,7 +2168,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 	var (
 		request    = mps.NewCreateWorkflowRequest()
 		response   = mps.NewCreateWorkflowResponse()
-		workflowId int64
+		workflowId int
 	)
 	if v, ok := d.GetOk("workflow_name"); ok {
 		request.WorkflowName = helper.String(v.(string))
@@ -1990,10 +2250,10 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 							videoTemplateInfo.Codec = helper.String(v.(string))
 						}
 						if v, ok := videoTemplateMap["fps"]; ok {
-							videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+							videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 						}
 						if v, ok := videoTemplateMap["bitrate"]; ok {
-							videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+							videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 						}
 						if v, ok := videoTemplateMap["resolution_adaptive"]; ok {
 							videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -2021,7 +2281,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 							audioTemplateInfo.Codec = helper.String(v.(string))
 						}
 						if v, ok := audioTemplateMap["bitrate"]; ok {
-							audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+							audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 						}
 						if v, ok := audioTemplateMap["sample_rate"]; ok {
 							audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -2031,13 +2291,13 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 						}
 						rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 					}
-					if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
+					if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
 						tEHDConfig := mps.TEHDConfig{}
 						if v, ok := tEHDConfigMap["type"]; ok {
 							tEHDConfig.Type = helper.String(v.(string))
 						}
 						if v, ok := tEHDConfigMap["max_video_bitrate"]; ok {
-							tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
+							tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
 						}
 						rawTranscodeParameter.TEHDConfig = &tEHDConfig
 					}
@@ -2060,10 +2320,10 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 							videoTemplateInfoForUpdate.Codec = helper.String(v.(string))
 						}
 						if v, ok := videoTemplateMap["fps"]; ok {
-							videoTemplateInfoForUpdate.Fps = helper.IntInt64(v.(int))
+							videoTemplateInfoForUpdate.Fps = helper.IntUint64(v.(int))
 						}
 						if v, ok := videoTemplateMap["bitrate"]; ok {
-							videoTemplateInfoForUpdate.Bitrate = helper.IntInt64(v.(int))
+							videoTemplateInfoForUpdate.Bitrate = helper.IntUint64(v.(int))
 						}
 						if v, ok := videoTemplateMap["resolution_adaptive"]; ok {
 							videoTemplateInfoForUpdate.ResolutionAdaptive = helper.String(v.(string))
@@ -2094,7 +2354,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 							audioTemplateInfoForUpdate.Codec = helper.String(v.(string))
 						}
 						if v, ok := audioTemplateMap["bitrate"]; ok {
-							audioTemplateInfoForUpdate.Bitrate = helper.IntInt64(v.(int))
+							audioTemplateInfoForUpdate.Bitrate = helper.IntUint64(v.(int))
 						}
 						if v, ok := audioTemplateMap["sample_rate"]; ok {
 							audioTemplateInfoForUpdate.SampleRate = helper.IntUint64(v.(int))
@@ -2111,13 +2371,13 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 						}
 						overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 					}
-					if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
+					if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
 						tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 						if v, ok := tEHDConfigMap["type"]; ok {
 							tEHDConfigForUpdate.Type = helper.String(v.(string))
 						}
 						if v, ok := tEHDConfigMap["max_video_bitrate"]; ok {
-							tEHDConfigForUpdate.MaxVideoBitrate = helper.IntInt64(v.(int))
+							tEHDConfigForUpdate.MaxVideoBitrate = helper.IntUint64(v.(int))
 						}
 						overrideTranscodeParameter.TEHDConfig = &tEHDConfigForUpdate
 					}
@@ -2414,11 +2674,6 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 					}
 				}
 				if v, _ := d.GetOk("time_offset_set"); v != nil {
-					timeOffsetSetSet := v.(*schema.Set).List()
-					for i := range timeOffsetSetSet {
-						timeOffsetSet := timeOffsetSetSet[i].(float64)
-						snapshotByTimeOffsetTaskInput.TimeOffsetSet = append(snapshotByTimeOffsetTaskInput.TimeOffsetSet, &timeOffsetSet)
-					}
 				}
 
 				if v, ok := snapshotByTimeOffsetTaskSetMap["watermark_set"]; ok {
@@ -2881,7 +3136,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 		request.TaskNotifyConfig = &taskNotifyConfig
 	}
 
-	if v, _ := d.GetOk("task_priority"); v != nil {
+	if v, ok := d.GetOkExists("task_priority"); ok {
 		request.TaskPriority = helper.IntInt64(v.(int))
 	}
 
@@ -3095,7 +3350,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							tEHDConfigMap["max_video_bitrate"] = transcodeTaskSet.RawParameter.TEHDConfig.MaxVideoBitrate
 						}
 
-						rawParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
+						rawParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
 					}
 
 					transcodeTaskSetMap["raw_parameter"] = []interface{}{rawParameterMap}
@@ -3199,7 +3454,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							tEHDConfigMap["max_video_bitrate"] = transcodeTaskSet.OverrideParameter.TEHDConfig.MaxVideoBitrate
 						}
 
-						overrideParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
+						overrideParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
 					}
 
 					if transcodeTaskSet.OverrideParameter.SubtitleTemplate != nil {
@@ -3341,7 +3596,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 						watermarkSetList = append(watermarkSetList, watermarkSetMap)
 					}
 
-					transcodeTaskSetMap["watermark_set"] = watermarkSetList
+					transcodeTaskSetMap["watermark_set"] = []interface{}{watermarkSetList}
 				}
 
 				if transcodeTaskSet.MosaicSet != nil {
@@ -3380,7 +3635,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 						mosaicSetList = append(mosaicSetList, mosaicSetMap)
 					}
 
-					transcodeTaskSetMap["mosaic_set"] = mosaicSetList
+					transcodeTaskSetMap["mosaic_set"] = []interface{}{mosaicSetList}
 				}
 
 				if transcodeTaskSet.StartTimeOffset != nil {
@@ -3488,7 +3743,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							headSetList = append(headSetList, headSetMap)
 						}
 
-						headTailParameterMap["head_set"] = headSetList
+						headTailParameterMap["head_set"] = []interface{}{headSetList}
 					}
 
 					if transcodeTaskSet.HeadTailParameter.TailSet != nil {
@@ -3531,7 +3786,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							tailSetList = append(tailSetList, tailSetMap)
 						}
 
-						headTailParameterMap["tail_set"] = tailSetList
+						headTailParameterMap["tail_set"] = []interface{}{tailSetList}
 					}
 
 					transcodeTaskSetMap["head_tail_parameter"] = []interface{}{headTailParameterMap}
@@ -3540,7 +3795,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				transcodeTaskSetList = append(transcodeTaskSetList, transcodeTaskSetMap)
 			}
 
-			mediaProcessTaskMap["transcode_task_set"] = transcodeTaskSetList
+			mediaProcessTaskMap["transcode_task_set"] = []interface{}{transcodeTaskSetList}
 		}
 
 		if workflow.MediaProcessTask.AnimatedGraphicTaskSet != nil {
@@ -3591,7 +3846,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				animatedGraphicTaskSetList = append(animatedGraphicTaskSetList, animatedGraphicTaskSetMap)
 			}
 
-			mediaProcessTaskMap["animated_graphic_task_set"] = animatedGraphicTaskSetList
+			mediaProcessTaskMap["animated_graphic_task_set"] = []interface{}{animatedGraphicTaskSetList}
 		}
 
 		if workflow.MediaProcessTask.SnapshotByTimeOffsetTaskSet != nil {
@@ -3717,7 +3972,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 						watermarkSetList = append(watermarkSetList, watermarkSetMap)
 					}
 
-					snapshotByTimeOffsetTaskSetMap["watermark_set"] = watermarkSetList
+					snapshotByTimeOffsetTaskSetMap["watermark_set"] = []interface{}{watermarkSetList}
 				}
 
 				if snapshotByTimeOffsetTaskSet.OutputStorage != nil {
@@ -3773,7 +4028,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				snapshotByTimeOffsetTaskSetList = append(snapshotByTimeOffsetTaskSetList, snapshotByTimeOffsetTaskSetMap)
 			}
 
-			mediaProcessTaskMap["snapshot_by_time_offset_task_set"] = snapshotByTimeOffsetTaskSetList
+			mediaProcessTaskMap["snapshot_by_time_offset_task_set"] = []interface{}{snapshotByTimeOffsetTaskSetList}
 		}
 
 		if workflow.MediaProcessTask.SampleSnapshotTaskSet != nil {
@@ -3891,7 +4146,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 						watermarkSetList = append(watermarkSetList, watermarkSetMap)
 					}
 
-					sampleSnapshotTaskSetMap["watermark_set"] = watermarkSetList
+					sampleSnapshotTaskSetMap["watermark_set"] = []interface{}{watermarkSetList}
 				}
 
 				if sampleSnapshotTaskSet.OutputStorage != nil {
@@ -3947,7 +4202,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				sampleSnapshotTaskSetList = append(sampleSnapshotTaskSetList, sampleSnapshotTaskSetMap)
 			}
 
-			mediaProcessTaskMap["sample_snapshot_task_set"] = sampleSnapshotTaskSetList
+			mediaProcessTaskMap["sample_snapshot_task_set"] = []interface{}{sampleSnapshotTaskSetList}
 		}
 
 		if workflow.MediaProcessTask.ImageSpriteTaskSet != nil {
@@ -4016,7 +4271,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				imageSpriteTaskSetList = append(imageSpriteTaskSetList, imageSpriteTaskSetMap)
 			}
 
-			mediaProcessTaskMap["image_sprite_task_set"] = imageSpriteTaskSetList
+			mediaProcessTaskMap["image_sprite_task_set"] = []interface{}{imageSpriteTaskSetList}
 		}
 
 		if workflow.MediaProcessTask.AdaptiveDynamicStreamingTaskSet != nil {
@@ -4134,7 +4389,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 						watermarkSetList = append(watermarkSetList, watermarkSetMap)
 					}
 
-					adaptiveDynamicStreamingTaskSetMap["watermark_set"] = watermarkSetList
+					adaptiveDynamicStreamingTaskSetMap["watermark_set"] = []interface{}{watermarkSetList}
 				}
 
 				if adaptiveDynamicStreamingTaskSet.OutputStorage != nil {
@@ -4176,7 +4431,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 				adaptiveDynamicStreamingTaskSetList = append(adaptiveDynamicStreamingTaskSetList, adaptiveDynamicStreamingTaskSetMap)
 			}
 
-			mediaProcessTaskMap["adaptive_dynamic_streaming_task_set"] = adaptiveDynamicStreamingTaskSetList
+			mediaProcessTaskMap["adaptive_dynamic_streaming_task_set"] = []interface{}{adaptiveDynamicStreamingTaskSetList}
 		}
 
 		_ = d.Set("media_process_task", []interface{}{mediaProcessTaskMap})
@@ -4267,28 +4522,23 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 
 	workflowId := d.Id()
 
-	request.WorkflowId = helper.StrToInt64Point(workflowId)
+	request.WorkflowId = &workflowId
 
-	isChanged := false
+	immutableArgs := []string{"workflow_name", "trigger", "output_storage", "output_dir", "media_process_task", "ai_content_review_task", "ai_analysis_task", "ai_recognition_task", "task_notify_config", "task_priority"}
 
-	mutableArgs := []string{
-		"workflow_name", "trigger", "output_storage",
-		"output_dir", "media_process_task", "ai_content_review_task",
-		"ai_analysis_task", "ai_recognition_task", "task_notify_config", "task_priority",
-	}
-
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			isChanged = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if isChanged {
+	if d.HasChange("workflow_name") {
 		if v, ok := d.GetOk("workflow_name"); ok {
 			request.WorkflowName = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("trigger") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "trigger"); ok {
 			workflowTrigger := mps.WorkflowTrigger{}
 			if v, ok := dMap["type"]; ok {
@@ -4316,7 +4566,9 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.Trigger = &workflowTrigger
 		}
+	}
 
+	if d.HasChange("output_storage") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "output_storage"); ok {
 			taskOutputStorage := mps.TaskOutputStorage{}
 			if v, ok := dMap["type"]; ok {
@@ -4334,11 +4586,15 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.OutputStorage = &taskOutputStorage
 		}
+	}
 
+	if d.HasChange("output_dir") {
 		if v, ok := d.GetOk("output_dir"); ok {
 			request.OutputDir = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("media_process_task") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "media_process_task"); ok {
 			mediaProcessTaskInput := mps.MediaProcessTaskInput{}
 			if v, ok := dMap["transcode_task_set"]; ok {
@@ -4365,10 +4621,10 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 								videoTemplateInfo.Codec = helper.String(v.(string))
 							}
 							if v, ok := videoTemplateMap["fps"]; ok {
-								videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+								videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 							}
 							if v, ok := videoTemplateMap["bitrate"]; ok {
-								videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+								videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 							}
 							if v, ok := videoTemplateMap["resolution_adaptive"]; ok {
 								videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -4396,7 +4652,7 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 								audioTemplateInfo.Codec = helper.String(v.(string))
 							}
 							if v, ok := audioTemplateMap["bitrate"]; ok {
-								audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+								audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 							}
 							if v, ok := audioTemplateMap["sample_rate"]; ok {
 								audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -4406,13 +4662,13 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 							}
 							rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
 							tEHDConfig := mps.TEHDConfig{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfig.Type = helper.String(v.(string))
 							}
 							if v, ok := tEHDConfigMap["max_video_bitrate"]; ok {
-								tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
+								tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
 							}
 							rawTranscodeParameter.TEHDConfig = &tEHDConfig
 						}
@@ -4435,10 +4691,10 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 								videoTemplateInfoForUpdate.Codec = helper.String(v.(string))
 							}
 							if v, ok := videoTemplateMap["fps"]; ok {
-								videoTemplateInfoForUpdate.Fps = helper.IntInt64(v.(int))
+								videoTemplateInfoForUpdate.Fps = helper.IntUint64(v.(int))
 							}
 							if v, ok := videoTemplateMap["bitrate"]; ok {
-								videoTemplateInfoForUpdate.Bitrate = helper.IntInt64(v.(int))
+								videoTemplateInfoForUpdate.Bitrate = helper.IntUint64(v.(int))
 							}
 							if v, ok := videoTemplateMap["resolution_adaptive"]; ok {
 								videoTemplateInfoForUpdate.ResolutionAdaptive = helper.String(v.(string))
@@ -4469,7 +4725,7 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 								audioTemplateInfoForUpdate.Codec = helper.String(v.(string))
 							}
 							if v, ok := audioTemplateMap["bitrate"]; ok {
-								audioTemplateInfoForUpdate.Bitrate = helper.IntInt64(v.(int))
+								audioTemplateInfoForUpdate.Bitrate = helper.IntUint64(v.(int))
 							}
 							if v, ok := audioTemplateMap["sample_rate"]; ok {
 								audioTemplateInfoForUpdate.SampleRate = helper.IntUint64(v.(int))
@@ -4486,13 +4742,13 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 							}
 							overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
 							tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfigForUpdate.Type = helper.String(v.(string))
 							}
 							if v, ok := tEHDConfigMap["max_video_bitrate"]; ok {
-								tEHDConfigForUpdate.MaxVideoBitrate = helper.IntInt64(v.(int))
+								tEHDConfigForUpdate.MaxVideoBitrate = helper.IntUint64(v.(int))
 							}
 							overrideTranscodeParameter.TEHDConfig = &tEHDConfigForUpdate
 						}
@@ -4789,11 +5045,6 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 						}
 					}
 					if v, _ := d.GetOk("time_offset_set"); v != nil {
-						timeOffsetSetSet := v.(*schema.Set).List()
-						for i := range timeOffsetSetSet {
-							timeOffsetSet := timeOffsetSetSet[i].(float64)
-							snapshotByTimeOffsetTaskInput.TimeOffsetSet = append(snapshotByTimeOffsetTaskInput.TimeOffsetSet, &timeOffsetSet)
-						}
 					}
 
 					if v, ok := snapshotByTimeOffsetTaskSetMap["watermark_set"]; ok {
@@ -5202,7 +5453,9 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.MediaProcessTask = &mediaProcessTaskInput
 		}
+	}
 
+	if d.HasChange("ai_content_review_task") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ai_content_review_task"); ok {
 			aiContentReviewTaskInput := mps.AiContentReviewTaskInput{}
 			if v, ok := dMap["definition"]; ok {
@@ -5210,7 +5463,9 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.AiContentReviewTask = &aiContentReviewTaskInput
 		}
+	}
 
+	if d.HasChange("ai_analysis_task") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ai_analysis_task"); ok {
 			aiAnalysisTaskInput := mps.AiAnalysisTaskInput{}
 			if v, ok := dMap["definition"]; ok {
@@ -5221,7 +5476,9 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.AiAnalysisTask = &aiAnalysisTaskInput
 		}
+	}
 
+	if d.HasChange("ai_recognition_task") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ai_recognition_task"); ok {
 			aiRecognitionTaskInput := mps.AiRecognitionTaskInput{}
 			if v, ok := dMap["definition"]; ok {
@@ -5229,7 +5486,9 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.AiRecognitionTask = &aiRecognitionTaskInput
 		}
+	}
 
+	if d.HasChange("task_notify_config") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "task_notify_config"); ok {
 			taskNotifyConfig := mps.TaskNotifyConfig{}
 			if v, ok := dMap["cmq_model"]; ok {
@@ -5255,25 +5514,26 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.TaskNotifyConfig = &taskNotifyConfig
 		}
+	}
 
-		if v, _ := d.GetOk("task_priority"); v != nil {
+	if d.HasChange("task_priority") {
+		if v, ok := d.GetOkExists("task_priority"); ok {
 			request.TaskPriority = helper.IntInt64(v.(int))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ResetWorkflow(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps workflow failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ResetWorkflow(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps workflow failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsWorkflowRead(d, meta)

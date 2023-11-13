@@ -8,14 +8,13 @@ data "tencentcloud_tsf_microservice_api_version" "microservice_api_version" {
   microservice_id = "ms-yq3jo6jd"
   path = ""
   method = "get"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -35,19 +34,19 @@ func dataSourceTencentCloudTsfMicroserviceApiVersion() *schema.Resource {
 			"path": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "api path.",
+				Description: "Api path.",
 			},
 
 			"method": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "request method.",
+				Description: "Request method.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "api version list.",
+				Description: "Api version list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"application_id": {
@@ -63,7 +62,7 @@ func dataSourceTencentCloudTsfMicroserviceApiVersion() *schema.Resource {
 						"pkg_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "application pkg version.",
+							Description: "Application pkg version.",
 						},
 					},
 				},
@@ -101,23 +100,25 @@ func dataSourceTencentCloudTsfMicroserviceApiVersionRead(d *schema.ResourceData,
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var apiVersion []*tsf.ApiVersionArray
+	var result []*tsf.ApiVersionArray
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfMicroserviceApiVersionByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		apiVersion = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(apiVersion))
-	tmpList := make([]map[string]interface{}, 0, len(apiVersion))
-	if apiVersion != nil {
-		for _, apiVersionArray := range apiVersion {
+	ids := make([]string, 0, len(result))
+	tmpList := make([]map[string]interface{}, 0, len(result))
+
+	if result != nil {
+		for _, apiVersionArray := range result {
 			apiVersionArrayMap := map[string]interface{}{}
 
 			if apiVersionArray.ApplicationId != nil {
@@ -132,7 +133,7 @@ func dataSourceTencentCloudTsfMicroserviceApiVersionRead(d *schema.ResourceData,
 				apiVersionArrayMap["pkg_version"] = apiVersionArray.PkgVersion
 			}
 
-			ids = append(ids, *apiVersionArray.ApplicationId)
+			ids = append(ids, *apiVersionArray.MicroserviceId)
 			tmpList = append(tmpList, apiVersionArrayMap)
 		}
 

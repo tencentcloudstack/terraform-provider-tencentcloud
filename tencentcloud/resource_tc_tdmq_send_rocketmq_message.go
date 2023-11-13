@@ -5,25 +5,32 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tdmq_send_rocketmq_message" "send_rocketmq_message" {
-  cluster_id   = "rocketmq-7k45z9dkpnne"
-  namespace_id = "test_ns"
-  topic_name   = "test_topic"
-  msg_body     = "msg key"
-  msg_key      = "msg tag"
-  msg_tag      = "msg value"
+  cluster_id = ""
+  namespace_id = ""
+  topic_name = ""
+  msg_body = ""
+  msg_key = ""
+  msg_tag = ""
 }
+```
+
+Import
+
+tdmq send_rocketmq_message can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tdmq_send_rocketmq_message.send_rocketmq_message send_rocketmq_message_id
 ```
 */
 package tencentcloud
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqSendRocketmqMessage() *schema.Resource {
@@ -31,7 +38,9 @@ func resourceTencentCloudTdmqSendRocketmqMessage() *schema.Resource {
 		Create: resourceTencentCloudTdmqSendRocketmqMessageCreate,
 		Read:   resourceTencentCloudTdmqSendRocketmqMessageRead,
 		Delete: resourceTencentCloudTdmqSendRocketmqMessageDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
@@ -39,30 +48,35 @@ func resourceTencentCloudTdmqSendRocketmqMessage() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster id.",
 			},
+
 			"namespace_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Namespaces.",
 			},
+
 			"topic_name": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "topic name.",
+				Description: "Topic name.",
 			},
+
 			"msg_body": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Information.",
 			},
+
 			"msg_key": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Message key information.",
 			},
+
 			"msg_tag": {
 				Optional:    true,
 				ForceNew:    true,
@@ -77,22 +91,27 @@ func resourceTencentCloudTdmqSendRocketmqMessageCreate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_tdmq_send_rocketmq_message.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		request   = tdmq.NewSendRocketMQMessageRequest()
-		clusterId string
-	)
+	logId := getLogId(contextNil)
 
+	var (
+		request     = tdmq.NewSendRocketMQMessageRequest()
+		response    = tdmq.NewSendRocketMQMessageResponse()
+		clusterId   string
+		namespaceId string
+		topicName   string
+	)
 	if v, ok := d.GetOk("cluster_id"); ok {
-		request.ClusterId = helper.String(v.(string))
 		clusterId = v.(string)
+		request.ClusterId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("namespace_id"); ok {
+		namespaceId = v.(string)
 		request.NamespaceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("topic_name"); ok {
+		topicName = v.(string)
 		request.TopicName = helper.String(v.(string))
 	}
 
@@ -115,26 +134,16 @@ func resourceTencentCloudTdmqSendRocketmqMessageCreate(d *schema.ResourceData, m
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		if result == nil {
-			e = fmt.Errorf("tdmq sendRocketmqMessage not exists")
-			return resource.NonRetryableError(e)
-		}
-
-		if !*result.Response.Result {
-			e = fmt.Errorf("send tdmq sendRocketmqMessage status is false, requestId: %s, MsgId: %s", *result.Response.RequestId, *result.Response.MsgId)
-			return resource.NonRetryableError(e)
-		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s operate tdmq sendRocketmqMessage failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(clusterId)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, namespaceId, topicName}, FILED_SP))
 
 	return resourceTencentCloudTdmqSendRocketmqMessageRead(d, meta)
 }

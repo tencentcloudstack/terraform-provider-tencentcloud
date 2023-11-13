@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixMpsPersonSampleResource_basic(t *testing.T) {
+func TestAccTencentCloudMpsPersonSampleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,14 +29,10 @@ func TestAccTencentCloudNeedFixMpsPersonSampleResource_basic(t *testing.T) {
 const testAccMpsPersonSample = `
 
 resource "tencentcloud_mps_person_sample" "person_sample" {
-  name          = "test"
-  usages        = [
-    "Review.Face"
-  ]
-  description   = "test"
-  face_contents = [
-    filebase64("./person.png")
-  ]
+  name = &lt;nil&gt;
+  usages = &lt;nil&gt;
+  description = &lt;nil&gt;
+  face_contents = &lt;nil&gt;
 }
 
 `

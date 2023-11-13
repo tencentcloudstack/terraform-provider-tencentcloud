@@ -6,23 +6,21 @@ Example Usage
 ```hcl
 data "tencentcloud_redis_instance_task_list" "instance_task_list" {
   instance_id = "crs-c1nl9rpv"
-  instance_name = ""
-  project_ids = [""]
-  task_types = [""]
+  instance_name = &lt;nil&gt;
+  project_ids =
+  task_types =
   begin_time = "2021-12-30 00:00:00"
   end_time = "2021-12-30 00:00:00"
-  task_status = [""]
-  result = [""]
-  operate_uin = [""]
-}
+  task_status = &lt;nil&gt;
+  result = &lt;nil&gt;
+  operate_uin =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
@@ -185,7 +183,10 @@ func dataSourceTencentCloudRedisInstanceTaskListRead(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("project_ids"); ok {
 		projectIdsSet := v.(*schema.Set).List()
-		paramMap["ProjectIds"] = helper.InterfacesIntInt64Point(projectIdsSet)
+		for i := range projectIdsSet {
+			projectIds := projectIdsSet[i].(int)
+			paramMap["ProjectIds"] = append(paramMap["ProjectIds"], helper.IntInt64(projectIds))
+		}
 	}
 
 	if v, ok := d.GetOk("task_types"); ok {
@@ -203,12 +204,18 @@ func dataSourceTencentCloudRedisInstanceTaskListRead(d *schema.ResourceData, met
 
 	if v, ok := d.GetOk("task_status"); ok {
 		taskStatusSet := v.(*schema.Set).List()
-		paramMap["TaskStatus"] = helper.InterfacesIntInt64Point(taskStatusSet)
+		for i := range taskStatusSet {
+			taskStatus := taskStatusSet[i].(int)
+			paramMap["TaskStatus"] = append(paramMap["TaskStatus"], helper.IntInt64(taskStatus))
+		}
 	}
 
 	if v, ok := d.GetOk("result"); ok {
 		resultSet := v.(*schema.Set).List()
-		paramMap["Result"] = helper.InterfacesIntInt64Point(resultSet)
+		for i := range resultSet {
+			result := resultSet[i].(int)
+			paramMap["Result"] = append(paramMap["Result"], helper.IntInt64(result))
+		}
 	}
 
 	if v, ok := d.GetOk("operate_uin"); ok {
@@ -275,7 +282,7 @@ func dataSourceTencentCloudRedisInstanceTaskListRead(d *schema.ResourceData, met
 				taskInfoDetailMap["result"] = taskInfoDetail.Result
 			}
 
-			ids = append(ids, strconv.FormatInt(*taskInfoDetail.TaskId, 10))
+			ids = append(ids, *taskInfoDetail.InstanceId)
 			tmpList = append(tmpList, taskInfoDetailMap)
 		}
 

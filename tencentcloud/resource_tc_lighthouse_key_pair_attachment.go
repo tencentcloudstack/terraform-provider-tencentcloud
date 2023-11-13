@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_lighthouse_key_pair_attachment" "key_pair_attachment" {
-  key_id = "lhkp-xxxxxx"
-  instance_id = "lhins-xxxxxx"
+  key_ids =
+  instance_ids =
 }
 ```
 
@@ -22,14 +22,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudLighthouseKeyPairAttachment() *schema.Resource {
@@ -41,18 +39,24 @@ func resourceTencentCloudLighthouseKeyPairAttachment() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"key_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Key pair ID.",
+			"key_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Key pair ID list. Each request can contain up to 100 key pairs.",
 			},
 
-			"instance_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Instance ID.",
+			"instance_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Instance ID list. Each request can contain up to 100 instances at a time.",
 			},
 		},
 	}
@@ -65,14 +69,26 @@ func resourceTencentCloudLighthouseKeyPairAttachmentCreate(d *schema.ResourceDat
 	logId := getLogId(contextNil)
 
 	var (
-		request = lighthouse.NewAssociateInstancesKeyPairsRequest()
+		request    = lighthouse.NewAssociateInstancesKeyPairsRequest()
+		response   = lighthouse.NewAssociateInstancesKeyPairsResponse()
+		keyIds     string
+		instanceId string
 	)
+	if v, ok := d.GetOk("key_ids"); ok {
+		keyIdsSet := v.(*schema.Set).List()
+		for i := range keyIdsSet {
+			keyIds := keyIdsSet[i].(string)
+			request.KeyIds = append(request.KeyIds, &keyIds)
+		}
+	}
 
-	keyId := d.Get("key_id").(string)
-	instanceId := d.Get("instance_id").(string)
-
-	request.KeyIds = []*string{&keyId}
-	request.InstanceIds = []*string{&instanceId}
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().AssociateInstancesKeyPairs(request)
@@ -81,6 +97,7 @@ func resourceTencentCloudLighthouseKeyPairAttachmentCreate(d *schema.ResourceDat
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -88,11 +105,12 @@ func resourceTencentCloudLighthouseKeyPairAttachmentCreate(d *schema.ResourceDat
 		return err
 	}
 
-	d.SetId(keyId + FILED_SP + instanceId)
+	keyIds = *response.Response.KeyIds
+	d.SetId(strings.Join([]string{keyIds, instanceId}, FILED_SP))
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(instanceId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseKeyPairAttachmentStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -109,16 +127,16 @@ func resourceTencentCloudLighthouseKeyPairAttachmentRead(d *schema.ResourceData,
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	keyId := idSplit[0]
+	keyIds := idSplit[0]
 	instanceId := idSplit[1]
 
-	keyPairAttachment, err := service.DescribeLighthouseKeyPairAttachmentById(ctx, keyId)
+	keyPairAttachment, err := service.DescribeLighthouseKeyPairAttachmentById(ctx, keyIds, instanceId)
 	if err != nil {
 		return err
 	}
@@ -129,17 +147,12 @@ func resourceTencentCloudLighthouseKeyPairAttachmentRead(d *schema.ResourceData,
 		return nil
 	}
 
-	if keyPairAttachment.KeyId != nil {
-		_ = d.Set("key_id", keyPairAttachment.KeyId)
+	if keyPairAttachment.KeyIds != nil {
+		_ = d.Set("key_ids", keyPairAttachment.KeyIds)
 	}
 
-	if keyPairAttachment.AssociatedInstanceIds != nil {
-		for _, v := range keyPairAttachment.AssociatedInstanceIds {
-			if *v == instanceId {
-				_ = d.Set("instance_id", *v)
-				break
-			}
-		}
+	if keyPairAttachment.InstanceIds != nil {
+		_ = d.Set("instance_ids", keyPairAttachment.InstanceIds)
 	}
 
 	return nil
@@ -152,19 +165,21 @@ func resourceTencentCloudLighthouseKeyPairAttachmentDelete(d *schema.ResourceDat
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	keyId := idSplit[0]
+	keyIds := idSplit[0]
 	instanceId := idSplit[1]
 
-	if err := service.DeleteLighthouseKeyPairAttachmentById(ctx, keyId, instanceId); err != nil {
+	if err := service.DeleteLighthouseKeyPairAttachmentById(ctx, keyIds, instanceId); err != nil {
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(instanceId, []string{}))
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseKeyPairAttachmentStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

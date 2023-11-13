@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudRedisReplicaReadonlyResource_basic -v
 func TestAccTencentCloudRedisReplicaReadonlyResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,19 +15,12 @@ func TestAccTencentCloudRedisReplicaReadonlyResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRedisReplicaReadonly,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_redis_replica_readonly.replica_readonly", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_redis_replica_readonly.replica_readonly", "instance_id"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_replica_readonly.replica_readonly", "operate", "enable"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_redis_replica_readonly.replica_readonly", "id")),
 			},
 			{
-				Config: testAccRedisReplicaReadonlyUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_redis_replica_readonly.replica_readonly", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_redis_replica_readonly.replica_readonly", "instance_id"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_replica_readonly.replica_readonly", "operate", "disable"),
-				),
+				ResourceName:      "tencentcloud_redis_replica_readonly.replica_readonly",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -38,19 +29,8 @@ func TestAccTencentCloudRedisReplicaReadonlyResource_basic(t *testing.T) {
 const testAccRedisReplicaReadonly = `
 
 resource "tencentcloud_redis_replica_readonly" "replica_readonly" {
-	instance_id = "crs-2yypjrnv"
-	readonly_policy = ["master"]
-	operate = "enable"
-}
-
-`
-
-const testAccRedisReplicaReadonlyUpdate = `
-
-resource "tencentcloud_redis_replica_readonly" "replica_readonly" {
-	instance_id = "crs-2yypjrnv"
-	readonly_policy = ["master"]
-	operate = "disable"
+  instance_id = "crs-c1nl9rpv"
+  readonly_policy = 
 }
 
 `

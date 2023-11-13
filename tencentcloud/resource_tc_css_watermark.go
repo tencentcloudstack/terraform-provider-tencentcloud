@@ -5,20 +5,21 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_watermark" "watermark" {
-  picture_url = "picture_url"
-  watermark_name = "watermark_name"
-  x_position = 0
-  y_position = 0
-  width = 0
-  height = 0
+  picture_url = &lt;nil&gt;
+  watermark_name = &lt;nil&gt;
+  x_position = &lt;nil&gt;
+  y_position = &lt;nil&gt;
+  width = &lt;nil&gt;
+  height = &lt;nil&gt;
 }
-
 ```
+
 Import
 
 css watermark can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_css_watermark.watermark watermark_id
+terraform import tencentcloud_css_watermark.watermark watermark_id
 ```
 */
 package tencentcloud
@@ -26,18 +27,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCssWatermark() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCssWatermarkRead,
 		Create: resourceTencentCloudCssWatermarkCreate,
+		Read:   resourceTencentCloudCssWatermarkRead,
 		Update: resourceTencentCloudCssWatermarkUpdate,
 		Delete: resourceTencentCloudCssWatermarkDelete,
 		Importer: &schema.ResourceImporter{
@@ -45,45 +45,39 @@ func resourceTencentCloudCssWatermark() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"picture_url": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "watermark url.",
+				Type:        schema.TypeString,
+				Description: "Watermark url.",
 			},
 
 			"watermark_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "watermark name.",
+				Type:        schema.TypeString,
+				Description: "Watermark name.",
 			},
 
 			"x_position": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "x position of the picture.",
+				Type:        schema.TypeInt,
+				Description: "X position of the picture.",
 			},
 
 			"y_position": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "y position of the picture.",
+				Type:        schema.TypeInt,
+				Description: "Y position of the picture.",
 			},
 
 			"width": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "width of the picture.",
+				Type:        schema.TypeInt,
+				Description: "Width of the picture.",
 			},
 
 			"height": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "height of the picture.",
-			},
-
-			"status": {
 				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "status. 0: not used, 1: used.",
+				Description: "Height of the picture.",
 			},
 		},
 	}
@@ -97,33 +91,30 @@ func resourceTencentCloudCssWatermarkCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request     = css.NewAddLiveWatermarkRequest()
-		response    *css.AddLiveWatermarkResponse
-		watermarkId string
+		response    = css.NewAddLiveWatermarkResponse()
+		watermarkId int
 	)
-
 	if v, ok := d.GetOk("picture_url"); ok {
-
 		request.PictureUrl = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("watermark_name"); ok {
-
 		request.WatermarkName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("x_position"); ok {
+	if v, ok := d.GetOkExists("x_position"); ok {
 		request.XPosition = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("y_position"); ok {
+	if v, ok := d.GetOkExists("y_position"); ok {
 		request.YPosition = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("width"); ok {
+	if v, ok := d.GetOkExists("width"); ok {
 		request.Width = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("height"); ok {
+	if v, ok := d.GetOkExists("height"); ok {
 		request.Height = helper.IntInt64(v.(int))
 	}
 
@@ -132,21 +123,19 @@ func resourceTencentCloudCssWatermarkCreate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create css watermark failed, reason:%+v", logId, err)
 		return err
 	}
 
-	watermarkId = helper.UInt64ToStr(*response.Response.WatermarkId)
+	watermarkId = *response.Response.WatermarkId
+	d.SetId(helper.Int64ToStr(watermarkId))
 
-	d.SetId(watermarkId)
 	return resourceTencentCloudCssWatermarkRead(d, meta)
 }
 
@@ -155,21 +144,22 @@ func resourceTencentCloudCssWatermarkRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	watermarkId := d.Id()
 
-	watermark, err := service.DescribeCssWatermark(ctx, watermarkId)
-
+	watermark, err := service.DescribeCssWatermarkById(ctx, watermarkId)
 	if err != nil {
 		return err
 	}
 
 	if watermark == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `watermark` %s does not exist", watermarkId)
+		log.Printf("[WARN]%s resource `CssWatermark` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if watermark.PictureUrl != nil {
@@ -196,10 +186,6 @@ func resourceTencentCloudCssWatermarkRead(d *schema.ResourceData, meta interface
 		_ = d.Set("height", watermark.Height)
 	}
 
-	if watermark.Status != nil {
-		_ = d.Set("status", watermark.Status)
-	}
-
 	return nil
 }
 
@@ -208,13 +194,20 @@ func resourceTencentCloudCssWatermarkUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := css.NewUpdateLiveWatermarkRequest()
 
 	watermarkId := d.Id()
 
-	request.WatermarkId = helper.StrToInt64Point(watermarkId)
+	request.WatermarkId = &watermarkId
+
+	immutableArgs := []string{"picture_url", "watermark_name", "x_position", "y_position", "width", "height"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("picture_url") {
 		if v, ok := d.GetOk("picture_url"); ok {
@@ -229,25 +222,25 @@ func resourceTencentCloudCssWatermarkUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	if d.HasChange("x_position") {
-		if v, ok := d.GetOk("x_position"); ok {
+		if v, ok := d.GetOkExists("x_position"); ok {
 			request.XPosition = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("y_position") {
-		if v, ok := d.GetOk("y_position"); ok {
+		if v, ok := d.GetOkExists("y_position"); ok {
 			request.YPosition = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("width") {
-		if v, ok := d.GetOk("width"); ok {
+		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("height") {
-		if v, ok := d.GetOk("height"); ok {
+		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntInt64(v.(int))
 		}
 	}
@@ -257,14 +250,12 @@ func resourceTencentCloudCssWatermarkUpdate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create css watermark failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update css watermark failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -279,10 +270,9 @@ func resourceTencentCloudCssWatermarkDelete(d *schema.ResourceData, meta interfa
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	watermarkId := d.Id()
 
-	if err := service.DeleteCssWatermarkById(ctx, helper.StrToInt64Point(watermarkId)); err != nil {
+	if err := service.DeleteCssWatermarkById(ctx, watermarkId); err != nil {
 		return err
 	}
 

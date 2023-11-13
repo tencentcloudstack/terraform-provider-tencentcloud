@@ -5,36 +5,37 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_live_transcode_template" "live_transcode_template" {
-  template_name = "template_name"
-  acodec = "aac"
-  audio_bitrate = 128
-  video_bitrate = 100
-  vcodec = "origin"
-  description = "This_is_a_tf_test_temp."
-  need_video = 1
-  width = 0
-  need_audio = 1
-  height = 0
-  fps = 0
-  gop = 2
-  rotate = 0
-  profile = "baseline"
-  bitrate_to_orig = 0
-  height_to_orig = 0
-  fps_to_orig = 0
-  ai_trans_code = 0
-  adapt_bitrate_percent = 0
-  short_edge_as_height = 0
-  drm_type = "fairplay"
-  drm_tracks = "SD"
+  template_name = &lt;nil&gt;
+  video_bitrate = &lt;nil&gt;
+  acodec = &lt;nil&gt;
+  audio_bitrate = &lt;nil&gt;
+  vcodec = &lt;nil&gt;
+  description = &lt;nil&gt;
+  need_video = &lt;nil&gt;
+  width = &lt;nil&gt;
+  need_audio = &lt;nil&gt;
+  height = &lt;nil&gt;
+  fps = &lt;nil&gt;
+  gop = &lt;nil&gt;
+  rotate = &lt;nil&gt;
+  profile = &lt;nil&gt;
+  bitrate_to_orig = &lt;nil&gt;
+  height_to_orig = &lt;nil&gt;
+  fps_to_orig = &lt;nil&gt;
+  ai_trans_code = &lt;nil&gt;
+  adapt_bitrate_percent = &lt;nil&gt;
+  short_edge_as_height = &lt;nil&gt;
+  d_r_m_type = &lt;nil&gt;
+  d_r_m_tracks = &lt;nil&gt;
 }
-
 ```
+
 Import
 
 css live_transcode_template can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_css_live_transcode_template.live_transcode_template liveTranscodeTemplate_id
+terraform import tencentcloud_css_live_transcode_template.live_transcode_template live_transcode_template_id
 ```
 */
 package tencentcloud
@@ -42,18 +43,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCssLiveTranscodeTemplate() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudCssLiveTranscodeTemplateRead,
 		Create: resourceTencentCloudCssLiveTranscodeTemplateCreate,
+		Read:   resourceTencentCloudCssLiveTranscodeTemplateRead,
 		Update: resourceTencentCloudCssLiveTranscodeTemplateUpdate,
 		Delete: resourceTencentCloudCssLiveTranscodeTemplateDelete,
 		Importer: &schema.ResourceImporter{
@@ -61,134 +61,134 @@ func resourceTencentCloudCssLiveTranscodeTemplate() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"template_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "template name, only support 0-9 and a-z.",
+				Type:        schema.TypeString,
+				Description: "Template name, only support 0-9 and a-z.",
 			},
 
 			"video_bitrate": {
-				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "video bitrate, 0 for origin, range 0kbps - 8000kbps.",
+				Type:        schema.TypeInt,
+				Description: "Video bitrate, 0 for origin, range 0kbps - 8000kbps.",
 			},
 
 			"acodec": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "default aac, not support now.",
+				Type:        schema.TypeString,
+				Description: "Default acc, not support now.",
 			},
 
 			"audio_bitrate": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "default 0, range 0 - 500.",
+				Type:        schema.TypeInt,
+				Description: "Default 0, range 0 - 500.",
 			},
 
 			"vcodec": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "video codec, default origin, support h264/h265/origin.",
+				Type:        schema.TypeString,
+				Description: "Video codec, default origin, support h264/h265/origin.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "template desc.",
+				Type:        schema.TypeString,
+				Description: "Template desc.",
 			},
 
 			"need_video": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "keep video or not, default 1 for yes, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Keep video or not, default 1 for yes, 0 for no.",
 			},
 
 			"width": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "template width, default 0, range 0 - 3000, must be pow of 2.",
+				Type:        schema.TypeInt,
+				Description: "Template width, default 0, range 0 - 3000, must be pow of 2.",
 			},
 
 			"need_audio": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "keep audio or not, default 1 for yes, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Keep audio or not, default 1 for yes, 0 for no.",
 			},
 
 			"height": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "template height, default 0, range 0 - 3000, must be pow of 2, needed while AiTransCode = 1.",
+				Type:        schema.TypeInt,
+				Description: "Template height, default 0, range 0 - 3000, must be pow of 2, needed while AiTransCode = 1.",
 			},
 
 			"fps": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "video fps, default 0, range 0 - 60.",
+				Type:        schema.TypeInt,
+				Description: "Video fps, default 0, range 0 - 60.",
 			},
 
 			"gop": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "gop of the video, second, default origin of the video, range 2 - 6.",
+				Type:        schema.TypeInt,
+				Description: "Gop of the video, second, default origin of the video, range 2 - 6.",
 			},
 
 			"rotate": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "roate degree, default 0, support 0/90/180/270.",
+				Type:        schema.TypeInt,
+				Description: "Roate degree, default 0, support 0/90/180/270.",
 			},
 
 			"profile": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "quality of the video, default baseline, support baseline/main/high.",
+				Type:        schema.TypeString,
+				Description: "Quality of the video, default baseline, support baseline/main/high.",
 			},
 
 			"bitrate_to_orig": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "base on origin bitrate if origin bitrate is lower than the setting bitrate. default 0, 1 for yes, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Base on origin bitrate if origin bitrate is lower than the setting bitrate. default 0, 1 for yes, 0 for no.",
 			},
 
 			"height_to_orig": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "base on origin height if origin height is lower than the setting height. default 0, 1 for yes, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Base on origin height if origin height is lower than the setting height. default 0, 1 for yes, 0 for no.",
 			},
 
 			"fps_to_orig": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "base on origin fps if origin fps is lower than the setting fps. default 0, 1 for yes, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Base on origin fps if origin fps is lower than the setting fps. default 0, 1 for yes, 0 for no.",
 			},
 
 			"ai_trans_code": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "enable high speed mode, default 0, 1 for enable, 0 for no.",
+				Type:        schema.TypeInt,
+				Description: "Enable high speed mode, default 0, 1 for enable, 0 for no.",
 			},
 
 			"adapt_bitrate_percent": {
-				Type:        schema.TypeFloat,
 				Optional:    true,
-				Description: "high speed mode adapt bitrate, support 0 - 0.5.",
+				Type:        schema.TypeFloat,
+				Description: "High speed mode adapt bitrate, support 0 - 0.5.",
 			},
 
 			"short_edge_as_height": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "let the short edge as the height.",
+				Type:        schema.TypeInt,
+				Description: "Let the short edge as the height.",
 			},
 
-			"drm_type": {
-				Type:        schema.TypeString,
+			"d_r_m_type": {
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "DRM type, support fairplay/normalaes/widevine.",
 			},
 
-			"drm_tracks": {
-				Type:        schema.TypeString,
+			"d_r_m_tracks": {
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "DRM tracks, support AUDIO/SD/HD/UHD1/UHD2.",
 			},
 		},
@@ -203,15 +203,14 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 
 	var (
 		request    = css.NewCreateLiveTranscodeTemplateRequest()
-		response   *css.CreateLiveTranscodeTemplateResponse
-		templateId string
+		response   = css.NewCreateLiveTranscodeTemplateResponse()
+		templateId int
 	)
-
 	if v, ok := d.GetOk("template_name"); ok {
 		request.TemplateName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("video_bitrate"); v != nil {
+	if v, ok := d.GetOkExists("video_bitrate"); ok {
 		request.VideoBitrate = helper.IntInt64(v.(int))
 	}
 
@@ -219,7 +218,7 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 		request.Acodec = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("audio_bitrate"); v != nil {
+	if v, ok := d.GetOkExists("audio_bitrate"); ok {
 		request.AudioBitrate = helper.IntInt64(v.(int))
 	}
 
@@ -231,31 +230,31 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 		request.Description = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("need_video"); v != nil {
+	if v, ok := d.GetOkExists("need_video"); ok {
 		request.NeedVideo = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("width"); v != nil {
+	if v, ok := d.GetOkExists("width"); ok {
 		request.Width = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("need_audio"); v != nil {
+	if v, ok := d.GetOkExists("need_audio"); ok {
 		request.NeedAudio = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("height"); v != nil {
+	if v, ok := d.GetOkExists("height"); ok {
 		request.Height = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("fps"); v != nil {
+	if v, ok := d.GetOkExists("fps"); ok {
 		request.Fps = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("gop"); v != nil {
+	if v, ok := d.GetOkExists("gop"); ok {
 		request.Gop = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("rotate"); v != nil {
+	if v, ok := d.GetOkExists("rotate"); ok {
 		request.Rotate = helper.IntInt64(v.(int))
 	}
 
@@ -263,35 +262,35 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 		request.Profile = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("bitrate_to_orig"); v != nil {
+	if v, ok := d.GetOkExists("bitrate_to_orig"); ok {
 		request.BitrateToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("height_to_orig"); v != nil {
+	if v, ok := d.GetOkExists("height_to_orig"); ok {
 		request.HeightToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("fps_to_orig"); v != nil {
+	if v, ok := d.GetOkExists("fps_to_orig"); ok {
 		request.FpsToOrig = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("ai_trans_code"); v != nil {
+	if v, ok := d.GetOkExists("ai_trans_code"); ok {
 		request.AiTransCode = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("adapt_bitrate_percent"); v != nil {
+	if v, ok := d.GetOkExists("adapt_bitrate_percent"); ok {
 		request.AdaptBitratePercent = helper.Float64(v.(float64))
 	}
 
-	if v, _ := d.GetOk("short_edge_as_height"); v != nil {
+	if v, ok := d.GetOkExists("short_edge_as_height"); ok {
 		request.ShortEdgeAsHeight = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("drm_type"); ok {
+	if v, ok := d.GetOk("d_r_m_type"); ok {
 		request.DRMType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("drm_tracks"); ok {
+	if v, ok := d.GetOk("d_r_m_tracks"); ok {
 		request.DRMTracks = helper.String(v.(string))
 	}
 
@@ -300,21 +299,19 @@ func resourceTencentCloudCssLiveTranscodeTemplateCreate(d *schema.ResourceData, 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create css liveTranscodeTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
-	templateId = helper.Int64ToStr(*response.Response.TemplateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(helper.Int64ToStr(templateId))
 
-	d.SetId(templateId)
 	return resourceTencentCloudCssLiveTranscodeTemplateRead(d, meta)
 }
 
@@ -323,21 +320,22 @@ func resourceTencentCloudCssLiveTranscodeTemplateRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateId := d.Id()
+	liveTranscodeTemplateId := d.Id()
 
-	liveTranscodeTemplate, err := service.DescribeCssLiveTranscodeTemplate(ctx, helper.StrToInt64Point(templateId))
-
+	liveTranscodeTemplate, err := service.DescribeCssLiveTranscodeTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
 	if liveTranscodeTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `liveTranscodeTemplate` %s does not exist", templateId)
+		log.Printf("[WARN]%s resource `CssLiveTranscodeTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if liveTranscodeTemplate.TemplateName != nil {
@@ -421,11 +419,11 @@ func resourceTencentCloudCssLiveTranscodeTemplateRead(d *schema.ResourceData, me
 	}
 
 	if liveTranscodeTemplate.DRMType != nil {
-		_ = d.Set("drm_type", liveTranscodeTemplate.DRMType)
+		_ = d.Set("d_r_m_type", liveTranscodeTemplate.DRMType)
 	}
 
 	if liveTranscodeTemplate.DRMTracks != nil {
-		_ = d.Set("drm_tracks", liveTranscodeTemplate.DRMTracks)
+		_ = d.Set("d_r_m_tracks", liveTranscodeTemplate.DRMTracks)
 	}
 
 	return nil
@@ -436,20 +434,23 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := css.NewModifyLiveTranscodeTemplateRequest()
 
-	request.TemplateId = helper.StrToInt64Point(d.Id())
+	liveTranscodeTemplateId := d.Id()
 
-	if d.HasChange("template_name") {
+	request.TemplateId = &templateId
 
-		return fmt.Errorf("`template_name` do not support change now.")
+	immutableArgs := []string{"template_name", "video_bitrate", "acodec", "audio_bitrate", "vcodec", "description", "need_video", "width", "need_audio", "height", "fps", "gop", "rotate", "profile", "bitrate_to_orig", "height_to_orig", "fps_to_orig", "ai_trans_code", "adapt_bitrate_percent", "short_edge_as_height", "d_r_m_type", "d_r_m_tracks"}
 
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("video_bitrate") {
-		if v, _ := d.GetOk("video_bitrate"); v != nil {
+		if v, ok := d.GetOkExists("video_bitrate"); ok {
 			request.VideoBitrate = helper.IntInt64(v.(int))
 		}
 	}
@@ -458,10 +459,6 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("acodec"); ok {
 			request.Acodec = helper.String(v.(string))
 		}
-	}
-
-	if d.HasChange("audio_bitrate") {
-		return fmt.Errorf("`audio_bitrate` do not support change now.")
 	}
 
 	if d.HasChange("vcodec") {
@@ -477,43 +474,43 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("need_video") {
-		if v, _ := d.GetOk("need_video"); v != nil {
+		if v, ok := d.GetOkExists("need_video"); ok {
 			request.NeedVideo = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("width") {
-		if v, _ := d.GetOk("width"); v != nil {
+		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("need_audio") {
-		if v, _ := d.GetOk("need_audio"); v != nil {
+		if v, ok := d.GetOkExists("need_audio"); ok {
 			request.NeedAudio = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("height") {
-		if v, _ := d.GetOk("height"); v != nil {
+		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("fps") {
-		if v, _ := d.GetOk("fps"); v != nil {
+		if v, ok := d.GetOkExists("fps"); ok {
 			request.Fps = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("gop") {
-		if v, _ := d.GetOk("gop"); v != nil {
+		if v, ok := d.GetOkExists("gop"); ok {
 			request.Gop = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("rotate") {
-		if v, _ := d.GetOk("rotate"); v != nil {
+		if v, ok := d.GetOkExists("rotate"); ok {
 			request.Rotate = helper.IntInt64(v.(int))
 		}
 	}
@@ -525,53 +522,45 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if d.HasChange("bitrate_to_orig") {
-		if v, _ := d.GetOk("bitrate_to_orig"); v != nil {
+		if v, ok := d.GetOkExists("bitrate_to_orig"); ok {
 			request.BitrateToOrig = helper.IntInt64(v.(int))
 		}
-
 	}
 
 	if d.HasChange("height_to_orig") {
-		if v, _ := d.GetOk("height_to_orig"); v != nil {
+		if v, ok := d.GetOkExists("height_to_orig"); ok {
 			request.HeightToOrig = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("fps_to_orig") {
-		if v, _ := d.GetOk("fps_to_orig"); v != nil {
+		if v, ok := d.GetOkExists("fps_to_orig"); ok {
 			request.FpsToOrig = helper.IntInt64(v.(int))
 		}
 	}
 
-	if d.HasChange("ai_trans_code") {
-		return fmt.Errorf("`ai_trans_code` do not support change now.")
-	}
-
 	if d.HasChange("adapt_bitrate_percent") {
-		if v, _ := d.GetOk("adapt_bitrate_percent"); v != nil {
+		if v, ok := d.GetOkExists("adapt_bitrate_percent"); ok {
 			request.AdaptBitratePercent = helper.Float64(v.(float64))
 		}
 	}
 
 	if d.HasChange("short_edge_as_height") {
-		if v, _ := d.GetOk("short_edge_as_height"); v != nil {
+		if v, ok := d.GetOkExists("short_edge_as_height"); ok {
 			request.ShortEdgeAsHeight = helper.IntInt64(v.(int))
 		}
-
 	}
 
-	if d.HasChange("drm_type") {
-		if v, ok := d.GetOk("drm_type"); ok {
+	if d.HasChange("d_r_m_type") {
+		if v, ok := d.GetOk("d_r_m_type"); ok {
 			request.DRMType = helper.String(v.(string))
 		}
-
 	}
 
-	if d.HasChange("drm_tracks") {
-		if v, ok := d.GetOk("drm_tracks"); ok {
+	if d.HasChange("d_r_m_tracks") {
+		if v, ok := d.GetOk("d_r_m_tracks"); ok {
 			request.DRMTracks = helper.String(v.(string))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -579,14 +568,12 @@ func resourceTencentCloudCssLiveTranscodeTemplateUpdate(d *schema.ResourceData, 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create css liveTranscodeTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update css liveTranscodeTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -601,10 +588,9 @@ func resourceTencentCloudCssLiveTranscodeTemplateDelete(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
+	liveTranscodeTemplateId := d.Id()
 
-	templateId := d.Id()
-
-	if err := service.DeleteCssLiveTranscodeTemplateById(ctx, helper.StrToInt64Point(templateId)); err != nil {
+	if err := service.DeleteCssLiveTranscodeTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

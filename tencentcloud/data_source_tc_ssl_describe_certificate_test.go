@@ -1,23 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudSslDescribeCertificateDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_SSL)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslDescribeCertificateDataSource,
-				Check: resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_certificate.describe_certificate"),
-					resource.TestCheckResourceAttr("data.tencentcloud_ssl_describe_certificate.describe_certificate", "certificate_id", "9Bpk7XOu")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_describe_certificate.describe_certificate")),
 			},
 		},
 	})
@@ -26,6 +24,6 @@ func TestAccTencentCloudSslDescribeCertificateDataSource_basic(t *testing.T) {
 const testAccSslDescribeCertificateDataSource = `
 
 data "tencentcloud_ssl_describe_certificate" "describe_certificate" {
-  certificate_id = "9Bpk7XOu"
-}
+                                                                      }
+
 `

@@ -1,15 +1,16 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCkafkaTopicSubscribeGroupDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -21,8 +22,10 @@ func TestAccTencentCloudCkafkaTopicSubscribeGroupDataSource_basic(t *testing.T) 
 }
 
 const testAccCkafkaTopicSubscribeGroupDataSource = `
+
 data "tencentcloud_ckafka_topic_subscribe_group" "topic_subscribe_group" {
-	instance_id = "ckafka-vv7wpvae"
-	topic_name = "keep-topic"
-}
+  instance_id = "InstanceId"
+  topic_name = "TopicName"
+  }
+
 `

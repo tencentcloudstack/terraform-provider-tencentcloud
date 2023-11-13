@@ -4,32 +4,12 @@ Provides a resource to create a eb event_rule
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
 resource "tencentcloud_eb_event_rule" "event_rule" {
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-  rule_name    = "tf-event_rule"
-  description  = "event rule desc"
-  enable       = true
-  event_pattern = jsonencode(
-    {
-      source = "apigw.cloud.tencent"
-      type = [
-        "connector:apigw",
-      ]
-    }
-  )
-  tags = {
-    "createdBy" = "terraform"
-  }
+  event_pattern = ""
+  event_bus_id = ""
+  rule_name = ""
+  enable =
+  description = ""
 }
 ```
 
@@ -46,13 +26,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudEbEventRule() *schema.Resource {
@@ -74,7 +53,7 @@ func resourceTencentCloudEbEventRule() *schema.Resource {
 			"event_bus_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "event bus Id.",
+				Description: "Event bus Id.",
 			},
 
 			"rule_name": {
@@ -94,18 +73,6 @@ func resourceTencentCloudEbEventRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Event set description, unlimited character type, description within 200 characters.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
-
-			"rule_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "event rule id.",
-			},
 		},
 	}
 }
@@ -119,8 +86,8 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 	var (
 		request    = eb.NewCreateRuleRequest()
 		response   = eb.NewCreateRuleResponse()
-		eventBusId string
 		ruleId     string
+		eventBusId string
 	)
 	if v, ok := d.GetOk("event_pattern"); ok {
 		request.EventPattern = helper.String(v.(string))
@@ -159,17 +126,7 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 	}
 
 	ruleId = *response.Response.RuleId
-	d.SetId(eventBusId + FILED_SP + ruleId)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:ruleid/%s/%s", region, eventBusId, ruleId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
+	d.SetId(strings.Join([]string{ruleId, eventBusId}, FILED_SP))
 
 	return resourceTencentCloudEbEventRuleRead(d, meta)
 }
@@ -188,10 +145,10 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
+	ruleId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	eventRule, err := service.DescribeEbEventRuleById(ctx, eventBusId, ruleId)
+	eventRule, err := service.DescribeEbEventRuleById(ctx, ruleId, eventBusId)
 	if err != nil {
 		return err
 	}
@@ -201,8 +158,6 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 		log.Printf("[WARN]%s resource `EbEventRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	_ = d.Set("rule_id", ruleId)
 
 	if eventRule.EventPattern != nil {
 		_ = d.Set("event_pattern", eventRule.EventPattern)
@@ -224,14 +179,6 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("description", eventRule.Description)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -247,13 +194,13 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
+	ruleId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	request.EventBusId = &eventBusId
 	request.RuleId = &ruleId
+	request.EventBusId = &eventBusId
 
-	immutableArgs := []string{"event_bus_id", "rule_name"}
+	immutableArgs := []string{"event_pattern", "event_bus_id", "rule_name", "enable", "description"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -264,6 +211,18 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("event_pattern") {
 		if v, ok := d.GetOk("event_pattern"); ok {
 			request.EventPattern = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("event_bus_id") {
+		if v, ok := d.GetOk("event_bus_id"); ok {
+			request.EventBusId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("rule_name") {
+		if v, ok := d.GetOk("rule_name"); ok {
+			request.RuleName = helper.String(v.(string))
 		}
 	}
 
@@ -293,18 +252,6 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudEbEventRuleRead(d, meta)
 }
 
@@ -320,10 +267,10 @@ func resourceTencentCloudEbEventRuleDelete(d *schema.ResourceData, meta interfac
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
+	ruleId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	if err := service.DeleteEbEventRuleById(ctx, eventBusId, ruleId); err != nil {
+	if err := service.DeleteEbEventRuleById(ctx, ruleId, eventBusId); err != nil {
 		return err
 	}
 

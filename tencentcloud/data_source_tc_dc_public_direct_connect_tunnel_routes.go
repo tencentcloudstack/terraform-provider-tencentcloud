@@ -5,15 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dc_public_direct_connect_tunnel_routes" "public_direct_connect_tunnel_routes" {
-  direct_connect_tunnel_id = "dcx-4z49tnws"
-}
+  direct_connect_tunnel_id = "dcx-6mqd6t9j"
+  filters {
+		name = ""
+		values =
+
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
@@ -27,13 +31,13 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource 
 			"direct_connect_tunnel_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "direct connect tunnel id.",
+				Description: "Direct connect tunnel id.",
 			},
 
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "filter condition: route-type: route type, value: BGP/STATIC route-subnet: route cidr, value such as: 192.68.1.0/24.",
+				Description: "Filter condition: route-type: route type, value: BGP/STATIC route-subnet: route cidr, value such as: 192.68.1.0/24.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -47,7 +51,7 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource 
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "filter value of the field.",
+							Description: "Filter value of the field.",
 						},
 					},
 				},
@@ -62,7 +66,7 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource 
 						"route_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "direct connect tunnel route id.",
+							Description: "Direct connect tunnel route id.",
 						},
 						"destination_cidr_block": {
 							Type:        schema.TypeString,
@@ -79,7 +83,7 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource 
 							Computed:    true,
 							Description: "ENABLE: routing is enabled, DISABLE: routing is disabled.",
 						},
-						"as_path": {
+						"a_s_path": {
 							Type: schema.TypeSet,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -178,14 +182,14 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutesRead(d *schema.Resou
 			}
 
 			if directConnectTunnelRoute.ASPath != nil {
-				directConnectTunnelRouteMap["as_path"] = directConnectTunnelRoute.ASPath
+				directConnectTunnelRouteMap["a_s_path"] = directConnectTunnelRoute.ASPath
 			}
 
 			if directConnectTunnelRoute.NextHop != nil {
 				directConnectTunnelRouteMap["next_hop"] = directConnectTunnelRoute.NextHop
 			}
 
-			ids = append(ids, *directConnectTunnelRoute.RouteId)
+			ids = append(ids, *directConnectTunnelRoute.Routes)
 			tmpList = append(tmpList, directConnectTunnelRouteMap)
 		}
 

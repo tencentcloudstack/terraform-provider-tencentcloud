@@ -4,91 +4,33 @@ Provides a resource to create a tse cngw_route
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_tse_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_tse_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
-  description                = "terraform test1"
-  enable_cls                 = true
-  engine_region              = "ap-guangzhou"
-  feature_version            = "STANDARD"
-  gateway_version            = "2.5.1"
-  ingress_class_name         = "tse-nginx-ingress"
-  internet_max_bandwidth_out = 0
-  name                       = "terraform-gateway1"
-  trade_type                 = 0
-  type                       = "kong"
-
-  node_config {
-    number        = 2
-    specification = "1c2g"
-  }
-
-  vpc_config {
-    subnet_id = tencentcloud_subnet.subnet.id
-    vpc_id    = tencentcloud_vpc.vpc.id
-  }
-
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tse_cngw_service" "cngw_service" {
-  gateway_id    = tencentcloud_tse_cngw_gateway.cngw_gateway.id
-  name          = "terraform-test"
-  path          = "/test"
-  protocol      = "http"
-  retries       = 5
-  timeout       = 60000
-  upstream_type = "HostIP"
-
-  upstream_info {
-    algorithm             = "round-robin"
-    auto_scaling_cvm_port = 0
-    host                  = "arunma.cn"
-    port                  = 8012
-    slow_start            = 0
-  }
-}
-
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
-  destination_ports = []
-  gateway_id        = tencentcloud_tse_cngw_gateway.cngw_gateway.id
-  hosts = [
-    "192.168.0.1:9090",
-  ]
-  https_redirect_status_code = 426
-  paths = [
-    "/user",
-  ]
-  headers {
-	key = "req"
-	value = "terraform"
-  }
-  preserve_host = false
-  protocols = [
-    "http",
-    "https",
-  ]
-  route_name = "terraform-route"
-  service_id = tencentcloud_tse_cngw_service.cngw_service.service_id
+  gateway_id = "gateway-xxxxxx"
+  service_i_d = "451a9920-e67a-4519-af41-fccac0e72005"
+  route_name = "routeA"
+  methods =
+  hosts =
+  paths =
+  protocols =
+  preserve_host = true
+  https_redirect_status_code = 302
   strip_path = true
-}
+  force_https =
+  destination_ports =
+  headers {
+		key = "token"
+		value = "xxxxxx"
 
+  }
+}
+```
+
+Import
+
+tse cngw_route can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tse_cngw_route.cngw_route cngw_route_id
 ```
 */
 package tencentcloud
@@ -96,13 +38,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTseCngwRoute() *schema.Resource {
@@ -118,10 +59,10 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
-			"service_id": {
+			"service_i_d": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "ID of the service which the route belongs to.",
@@ -130,7 +71,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 			"route_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "the name of the route, unique in the instance.",
+				Description: "The name of the route, unique in the instance.",
 			},
 
 			"methods": {
@@ -139,7 +80,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "route methods. Reference value:`GET`,`POST`,`DELETE`,`PUT`,`OPTIONS`,`PATCH`,`HEAD`,`ANY`,`TRACE`,`COPY`,`MOVE`,`PROPFIND`,`PROPPATCH`,`MKCOL`,`LOCK`,`UNLOCK`.",
+				Description: "Route methods. Reference value:- GET- POST- DELETE- PUT- OPTIONS- PATCH- HEAD- ANY- TRACE- COPY- MOVE- PROPFIND- PROPPATCH- MKCOL- LOCK- UNLOCK.",
 			},
 
 			"hosts": {
@@ -148,7 +89,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "host list.",
+				Description: "Host list.",
 			},
 
 			"paths": {
@@ -157,7 +98,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "path list.",
+				Description: "Path list.",
 			},
 
 			"protocols": {
@@ -166,32 +107,31 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "the protocol list of route.Reference value:`https`,`http`.",
+				Description: "The protocol list of route.Reference value:- https- http.",
 			},
 
 			"preserve_host": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to keep the host when forwarding to the backend.",
+				Description: "Whether to keep the host when forwarding to the backend.",
 			},
 
 			"https_redirect_status_code": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "https redirection status code.",
+				Description: "Https redirection status code.",
 			},
 
 			"strip_path": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to strip path when forwarding to the backend.",
+				Description: "Whether to strip path when forwarding to the backend.",
 			},
 
 			"force_https": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Deprecated:  "This field has been deprecated and will be deleted in subsequent versions.",
-				Description: "whether to enable forced HTTPS, no longer use.",
+				Description: "Whether to enable forced HTTPS, no longer use.",
 			},
 
 			"destination_ports": {
@@ -200,33 +140,27 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Description: "destination port for Layer 4 matching.",
+				Description: "Destination port for Layer 4 matching.",
 			},
 
 			"headers": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "the headers of route.",
+				Description: "The headers of route.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "key of header.",
+							Description: "Key of header.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "value of header.",
+							Description: "Value of header.",
 						},
 					},
 				},
-			},
-
-			"route_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "the id of the route, unique in the instance.",
 			},
 		},
 	}
@@ -240,22 +174,20 @@ func resourceTencentCloudTseCngwRouteCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request   = tse.NewCreateCloudNativeAPIGatewayRouteRequest()
+		response  = tse.NewCreateCloudNativeAPIGatewayRouteResponse()
 		gatewayId string
-		serviceID string
-		routeName string
+		routeID   string
 	)
 	if v, ok := d.GetOk("gateway_id"); ok {
 		gatewayId = v.(string)
 		request.GatewayId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("service_id"); ok {
-		serviceID = v.(string)
+	if v, ok := d.GetOk("service_i_d"); ok {
 		request.ServiceID = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("route_name"); ok {
-		routeName = v.(string)
 		request.RouteName = helper.String(v.(string))
 	}
 
@@ -336,6 +268,7 @@ func resourceTencentCloudTseCngwRouteCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -343,7 +276,8 @@ func resourceTencentCloudTseCngwRouteCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.SetId(gatewayId + FILED_SP + serviceID + FILED_SP + routeName)
+	gatewayId = *response.Response.GatewayId
+	d.SetId(strings.Join([]string{gatewayId, routeID}, FILED_SP))
 
 	return resourceTencentCloudTseCngwRouteRead(d, meta)
 }
@@ -359,14 +293,13 @@ func resourceTencentCloudTseCngwRouteRead(d *schema.ResourceData, meta interface
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	serviceID := idSplit[1]
-	routeName := idSplit[2]
+	routeID := idSplit[1]
 
-	cngwRoute, err := service.DescribeTseCngwRouteById(ctx, gatewayId, serviceID, routeName)
+	cngwRoute, err := service.DescribeTseCngwRouteById(ctx, gatewayId, routeID)
 	if err != nil {
 		return err
 	}
@@ -377,9 +310,17 @@ func resourceTencentCloudTseCngwRouteRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	_ = d.Set("gateway_id", gatewayId)
-	_ = d.Set("service_id", serviceID)
-	_ = d.Set("route_name", routeName)
+	if cngwRoute.GatewayId != nil {
+		_ = d.Set("gateway_id", cngwRoute.GatewayId)
+	}
+
+	if cngwRoute.ServiceID != nil {
+		_ = d.Set("service_i_d", cngwRoute.ServiceID)
+	}
+
+	if cngwRoute.RouteName != nil {
+		_ = d.Set("route_name", cngwRoute.RouteName)
+	}
 
 	if cngwRoute.Methods != nil {
 		_ = d.Set("methods", cngwRoute.Methods)
@@ -422,12 +363,12 @@ func resourceTencentCloudTseCngwRouteRead(d *schema.ResourceData, meta interface
 		for _, headers := range cngwRoute.Headers {
 			headersMap := map[string]interface{}{}
 
-			if headers.Key != nil {
-				headersMap["key"] = headers.Key
+			if cngwRoute.Headers.Key != nil {
+				headersMap["key"] = cngwRoute.Headers.Key
 			}
 
-			if headers.Value != nil {
-				headersMap["value"] = headers.Value
+			if cngwRoute.Headers.Value != nil {
+				headersMap["value"] = cngwRoute.Headers.Value
 			}
 
 			headersList = append(headersList, headersMap)
@@ -435,10 +376,6 @@ func resourceTencentCloudTseCngwRouteRead(d *schema.ResourceData, meta interface
 
 		_ = d.Set("headers", headersList)
 
-	}
-
-	if cngwRoute.ID != nil {
-		_ = d.Set("route_id", cngwRoute.ID)
 	}
 
 	return nil
@@ -449,38 +386,42 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tse.NewModifyCloudNativeAPIGatewayRouteRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	serviceID := idSplit[1]
-	routeName := idSplit[2]
-
-	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	cngwRoute, err := service.DescribeTseCngwRouteById(ctx, gatewayId, serviceID, routeName)
-	if err != nil {
-		return err
-	}
-
-	if cngwRoute == nil {
-		return fmt.Errorf("The result of querying %s is empty", routeName)
-	}
+	routeID := idSplit[1]
 
 	request.GatewayId = &gatewayId
-	request.ServiceID = &serviceID
-	request.RouteName = &routeName
-	request.RouteID = cngwRoute.ID
+	request.RouteID = &routeID
 
-	immutableArgs := []string{"gateway_id", "service_id", "route_name", "force_https"}
+	immutableArgs := []string{"gateway_id", "service_i_d", "route_name", "methods", "hosts", "paths", "protocols", "preserve_host", "https_redirect_status_code", "strip_path", "force_https", "destination_ports", "headers"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("gateway_id") {
+		if v, ok := d.GetOk("gateway_id"); ok {
+			request.GatewayId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("service_i_d") {
+		if v, ok := d.GetOk("service_i_d"); ok {
+			request.ServiceID = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("route_name") {
+		if v, ok := d.GetOk("route_name"); ok {
+			request.RouteName = helper.String(v.(string))
 		}
 	}
 
@@ -494,27 +435,33 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, ok := d.GetOk("hosts"); ok {
-		hostsSet := v.(*schema.Set).List()
-		for i := range hostsSet {
-			hosts := hostsSet[i].(string)
-			request.Hosts = append(request.Hosts, &hosts)
+	if d.HasChange("hosts") {
+		if v, ok := d.GetOk("hosts"); ok {
+			hostsSet := v.(*schema.Set).List()
+			for i := range hostsSet {
+				hosts := hostsSet[i].(string)
+				request.Hosts = append(request.Hosts, &hosts)
+			}
 		}
 	}
 
-	if v, ok := d.GetOk("paths"); ok {
-		pathsSet := v.(*schema.Set).List()
-		for i := range pathsSet {
-			paths := pathsSet[i].(string)
-			request.Paths = append(request.Paths, &paths)
+	if d.HasChange("paths") {
+		if v, ok := d.GetOk("paths"); ok {
+			pathsSet := v.(*schema.Set).List()
+			for i := range pathsSet {
+				paths := pathsSet[i].(string)
+				request.Paths = append(request.Paths, &paths)
+			}
 		}
 	}
 
-	if v, ok := d.GetOk("protocols"); ok {
-		protocolsSet := v.(*schema.Set).List()
-		for i := range protocolsSet {
-			protocols := protocolsSet[i].(string)
-			request.Protocols = append(request.Protocols, &protocols)
+	if d.HasChange("protocols") {
+		if v, ok := d.GetOk("protocols"); ok {
+			protocolsSet := v.(*schema.Set).List()
+			for i := range protocolsSet {
+				protocols := protocolsSet[i].(string)
+				request.Protocols = append(request.Protocols, &protocols)
+			}
 		}
 	}
 
@@ -555,7 +502,6 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 	if d.HasChange("headers") {
 		if v, ok := d.GetOk("headers"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				kVMapping := tse.KVMapping{}
 				if v, ok := dMap["key"]; ok {
 					kVMapping.Key = helper.String(v.(string))
@@ -568,7 +514,7 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().ModifyCloudNativeAPIGatewayRoute(request)
 		if e != nil {
 			return retryError(e)
@@ -594,14 +540,13 @@ func resourceTencentCloudTseCngwRouteDelete(d *schema.ResourceData, meta interfa
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	// serviceID := idSplit[1]
-	routeName := idSplit[2]
+	routeID := idSplit[1]
 
-	if err := service.DeleteTseCngwRouteById(ctx, gatewayId, routeName); err != nil {
+	if err := service.DeleteTseCngwRouteById(ctx, gatewayId, routeID); err != nil {
 		return err
 	}
 

@@ -10,15 +10,13 @@ data "tencentcloud_tsf_api_detail" "api_detail" {
   method = "GET"
   pkg_version = "20210625192923"
   application_id = "application-a24x29xv"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -32,74 +30,74 @@ func dataSourceTencentCloudTsfApiDetail() *schema.Resource {
 			"microservice_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "microservice id.",
+				Description: "Microservice id.",
 			},
 
 			"path": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "api path.",
+				Description: "Api path.",
 			},
 
 			"method": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "request method.",
+				Description: "Request method.",
 			},
 
 			"pkg_version": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "pkg version.",
+				Description: "Pkg version.",
 			},
 
 			"application_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "application id.",
+				Description: "Application id.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "api detail.",
+				Description: "Api detail.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"request": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "api request description.",
+							Description: "Api request description.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param name.",
+										Description: "Param name.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "type.",
+										Description: "Type.",
 									},
 									"in": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param position.",
+										Description: "Param position.",
 									},
 									"description": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param description.",
+										Description: "Param description.",
 									},
 									"required": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "require or not.",
+										Description: "Require or not.",
 									},
 									"default_value": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "default value.",
+										Description: "Default value.",
 									},
 								},
 							},
@@ -107,23 +105,23 @@ func dataSourceTencentCloudTsfApiDetail() *schema.Resource {
 						"response": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "api response.",
+							Description: "Api response.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param description.",
+										Description: "Param description.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param type.",
+										Description: "Param type.",
 									},
 									"description": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "param description.",
+										Description: "Param description.",
 									},
 								},
 							},
@@ -131,34 +129,34 @@ func dataSourceTencentCloudTsfApiDetail() *schema.Resource {
 						"definitions": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "api data struct.",
+							Description: "Api data struct.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "object name.",
+										Description: "Object name.",
 									},
 									"properties": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "object property list.",
+										Description: "Object property list.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "property name.",
+													Description: "Property name.",
 												},
 												"type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "property type.",
+													Description: "Property type.",
 												},
 												"description": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "property description.",
+													Description: "Property description.",
 												},
 											},
 										},
@@ -169,12 +167,12 @@ func dataSourceTencentCloudTsfApiDetail() *schema.Resource {
 						"request_content_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "api content type.",
+							Description: "Api content type.",
 						},
 						"can_run": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "can debug or not.",
+							Description: "Can debug or not.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
@@ -206,60 +204,51 @@ func dataSourceTencentCloudTsfApiDetailRead(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		microserviceId string
-		path           string
-		method         string
-		pkgVersion     string
-		applicationId  string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("microservice_id"); ok {
-		microserviceId = v.(string)
 		paramMap["MicroserviceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("path"); ok {
-		path = v.(string)
 		paramMap["Path"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("method"); ok {
-		method = v.(string)
 		paramMap["Method"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("pkg_version"); ok {
-		pkgVersion = v.(string)
 		paramMap["PkgVersion"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("application_id"); ok {
-		applicationId = v.(string)
 		paramMap["ApplicationId"] = helper.String(v.(string))
 	}
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var apiDetail *tsf.ApiDetailResponse
+	var result []*tsf.ApiDetailResponse
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfApiDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		apiDetail = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	apiDetailResponseMap := map[string]interface{}{}
-	if apiDetail != nil {
-		if apiDetail.Request != nil {
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		apiDetailResponseMap := map[string]interface{}{}
+
+		if result.Request != nil {
 			requestList := []interface{}{}
-			for _, request := range apiDetail.Request {
+			for _, request := range result.Request {
 				requestMap := map[string]interface{}{}
 
 				if request.Name != nil {
@@ -289,12 +278,12 @@ func dataSourceTencentCloudTsfApiDetailRead(d *schema.ResourceData, meta interfa
 				requestList = append(requestList, requestMap)
 			}
 
-			apiDetailResponseMap["request"] = requestList
+			apiDetailResponseMap["request"] = []interface{}{requestList}
 		}
 
-		if apiDetail.Response != nil {
+		if result.Response != nil {
 			responseList := []interface{}{}
-			for _, response := range apiDetail.Response {
+			for _, response := range result.Response {
 				responseMap := map[string]interface{}{}
 
 				if response.Name != nil {
@@ -312,12 +301,12 @@ func dataSourceTencentCloudTsfApiDetailRead(d *schema.ResourceData, meta interfa
 				responseList = append(responseList, responseMap)
 			}
 
-			apiDetailResponseMap["response"] = responseList
+			apiDetailResponseMap["response"] = []interface{}{responseList}
 		}
 
-		if apiDetail.Definitions != nil {
+		if result.Definitions != nil {
 			definitionsList := []interface{}{}
-			for _, definitions := range apiDetail.Definitions {
+			for _, definitions := range result.Definitions {
 				definitionsMap := map[string]interface{}{}
 
 				if definitions.Name != nil {
@@ -344,35 +333,36 @@ func dataSourceTencentCloudTsfApiDetailRead(d *schema.ResourceData, meta interfa
 						propertiesList = append(propertiesList, propertiesMap)
 					}
 
-					definitionsMap["properties"] = propertiesList
+					definitionsMap["properties"] = []interface{}{propertiesList}
 				}
 
 				definitionsList = append(definitionsList, definitionsMap)
 			}
 
-			apiDetailResponseMap["definitions"] = definitionsList
+			apiDetailResponseMap["definitions"] = []interface{}{definitionsList}
 		}
 
-		if apiDetail.RequestContentType != nil {
-			apiDetailResponseMap["request_content_type"] = apiDetail.RequestContentType
+		if result.RequestContentType != nil {
+			apiDetailResponseMap["request_content_type"] = result.RequestContentType
 		}
 
-		if apiDetail.CanRun != nil {
-			apiDetailResponseMap["can_run"] = apiDetail.CanRun
+		if result.CanRun != nil {
+			apiDetailResponseMap["can_run"] = result.CanRun
 		}
 
-		if apiDetail.Status != nil {
-			apiDetailResponseMap["status"] = apiDetail.Status
+		if result.Status != nil {
+			apiDetailResponseMap["status"] = result.Status
 		}
 
-		if apiDetail.Description != nil {
-			apiDetailResponseMap["description"] = apiDetail.Description
+		if result.Description != nil {
+			apiDetailResponseMap["description"] = result.Description
 		}
 
-		_ = d.Set("result", []interface{}{apiDetailResponseMap})
+		ids = append(ids, *result.MicroserviceId)
+		_ = d.Set("result", apiDetailResponseMap)
 	}
 
-	d.SetId(strings.Join([]string{microserviceId, path, method, pkgVersion, applicationId}, FILED_SP))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), apiDetailResponseMap); e != nil {

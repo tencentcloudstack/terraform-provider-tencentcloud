@@ -5,7 +5,83 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster_instance_groups" "cluster_instance_groups" {
-  cluster_id = xxxxxx;
+  cluster_id = &lt;nil&gt;
+  total_count = &lt;nil&gt;
+  instance_grp_info_list {
+		app_id = &lt;nil&gt;
+		cluster_id = &lt;nil&gt;
+		created_time = &lt;nil&gt;
+		deleted_time = &lt;nil&gt;
+		instance_grp_id = &lt;nil&gt;
+		status = &lt;nil&gt;
+		type = &lt;nil&gt;
+		updated_time = &lt;nil&gt;
+		vip = &lt;nil&gt;
+		vport = &lt;nil&gt;
+		wan_domain = &lt;nil&gt;
+		wan_i_p = &lt;nil&gt;
+		wan_port = &lt;nil&gt;
+		wan_status = &lt;nil&gt;
+		instance_set {
+			uin = &lt;nil&gt;
+			app_id = &lt;nil&gt;
+			cluster_id = &lt;nil&gt;
+			cluster_name = &lt;nil&gt;
+			instance_id = &lt;nil&gt;
+			instance_name = &lt;nil&gt;
+			project_id = &lt;nil&gt;
+			region = &lt;nil&gt;
+			zone = &lt;nil&gt;
+			status = &lt;nil&gt;
+			status_desc = &lt;nil&gt;
+			db_type = &lt;nil&gt;
+			db_version = &lt;nil&gt;
+			cpu = &lt;nil&gt;
+			memory = &lt;nil&gt;
+			storage = &lt;nil&gt;
+			instance_type = &lt;nil&gt;
+			instance_role = &lt;nil&gt;
+			update_time = &lt;nil&gt;
+			create_time = &lt;nil&gt;
+			vpc_id = &lt;nil&gt;
+			subnet_id = &lt;nil&gt;
+			vip = &lt;nil&gt;
+			vport = &lt;nil&gt;
+			pay_mode = &lt;nil&gt;
+			period_end_time = &lt;nil&gt;
+			destroy_deadline_text = &lt;nil&gt;
+			isolate_time = &lt;nil&gt;
+			net_type = &lt;nil&gt;
+			wan_domain = &lt;nil&gt;
+			wan_i_p = &lt;nil&gt;
+			wan_port = &lt;nil&gt;
+			wan_status = &lt;nil&gt;
+			destroy_time = &lt;nil&gt;
+			cynos_version = &lt;nil&gt;
+			processing_task = &lt;nil&gt;
+			renew_flag = &lt;nil&gt;
+			min_cpu = &lt;nil&gt;
+			max_cpu = &lt;nil&gt;
+			serverless_status = &lt;nil&gt;
+			storage_id = &lt;nil&gt;
+			storage_pay_mode = &lt;nil&gt;
+			physical_zone = &lt;nil&gt;
+			business_type = &lt;nil&gt;
+			tasks {
+				task_id = &lt;nil&gt;
+				task_type = &lt;nil&gt;
+				task_status = &lt;nil&gt;
+				object_id = &lt;nil&gt;
+				object_type = &lt;nil&gt;
+			}
+			is_freeze = &lt;nil&gt;
+			resource_tags {
+				tag_key = &lt;nil&gt;
+				tag_value = &lt;nil&gt;
+			}
+		}
+
+  }
 }
 ```
 */
@@ -13,7 +89,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -30,337 +105,276 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 				Description: "The ID of cluster.",
 			},
 
+			"total_count": {
+				Type:        schema.TypeInt,
+				Description: "Number of instance groups.",
+			},
+
 			"instance_grp_info_list": {
 				Type:        schema.TypeList,
-				Computed:    true,
 				Description: "List of instance groups.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"app_id": {
 							Type:        schema.TypeInt,
-							Computed:    true,
 							Description: "App id.",
 						},
 						"cluster_id": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The ID of cluster.",
 						},
 						"created_time": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Created time.",
 						},
 						"deleted_time": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Deleted time.",
 						},
 						"instance_grp_id": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "The ID of instance group.",
 						},
 						"status": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Status.",
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Instance group type. ha-ha group; ro-read-only group.",
 						},
 						"updated_time": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Updated time.",
 						},
 						"vip": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Intranet IP.",
 						},
 						"vport": {
 							Type:        schema.TypeInt,
-							Computed:    true,
 							Description: "Intranet port.",
 						},
 						"wan_domain": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Public domain name.",
 						},
-						"wan_ip": {
+						"wan_i_p": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Public IP.",
 						},
 						"wan_port": {
 							Type:        schema.TypeInt,
-							Computed:    true,
 							Description: "Public port.",
 						},
 						"wan_status": {
 							Type:        schema.TypeString,
-							Computed:    true,
 							Description: "Public status.",
 						},
 						"instance_set": {
 							Type:        schema.TypeList,
-							Computed:    true,
 							Description: "Instance groups contain instance information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"uin": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "User Uin.",
 									},
 									"app_id": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "User app id.",
 									},
 									"cluster_id": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "The id of cluster.",
 									},
 									"cluster_name": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "The name of cluster.",
 									},
 									"instance_id": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "The id of instance.",
 									},
 									"instance_name": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "The name of instance.",
 									},
 									"project_id": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "The id of project.",
 									},
 									"region": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Region.",
 									},
 									"zone": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Availability zone.",
 									},
 									"status": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "The status of instance.",
 									},
 									"status_desc": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Instance state Chinese description.",
 									},
 									"db_type": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Database type.",
 									},
 									"db_version": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Database version.",
 									},
 									"cpu": {
 										Type:        schema.TypeInt,
-										Computed:    true,
-										Description: "Cpu, unit: CORE.",
+										Description: "Cpu，unit: CORE.",
 									},
 									"memory": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Memory, unit: GB.",
 									},
 									"storage": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Storage, unit: GB.",
 									},
 									"instance_type": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Instance type.",
 									},
 									"instance_role": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Instance role.",
 									},
 									"update_time": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Update time.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Create time.",
 									},
 									"vpc_id": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "VPC network ID.",
 									},
 									"subnet_id": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Subnet ID.",
 									},
 									"vip": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Instance intranet IP.",
 									},
 									"vport": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Instance intranet VPort.",
 									},
 									"pay_mode": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Pay mode.",
 									},
 									"period_end_time": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Instance expiration time.",
 									},
 									"destroy_deadline_text": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Destroy deadline.",
 									},
 									"isolate_time": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Isolate time.",
 									},
 									"net_type": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Net type.",
 									},
 									"wan_domain": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Public domain.",
 									},
-									"wan_ip": {
+									"wan_i_p": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Public IP.",
 									},
 									"wan_port": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Public port.",
 									},
 									"wan_status": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Public status.",
 									},
 									"destroy_time": {
 										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Instance destroy time.",
+										Description: "Instance destory time.",
 									},
 									"cynos_version": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Cynos kernel version.",
 									},
 									"processing_task": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Task being processed.",
 									},
 									"renew_flag": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Renew flag.",
 									},
 									"min_cpu": {
 										Type:        schema.TypeFloat,
-										Computed:    true,
 										Description: "Serverless instance minimum cpu.",
 									},
 									"max_cpu": {
 										Type:        schema.TypeFloat,
-										Computed:    true,
 										Description: "Serverless instance maxmum cpu.",
 									},
 									"serverless_status": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Serverless instance status, optional values:resumepause.",
 									},
 									"storage_id": {
 										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Prepaid Storage Id.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Prepaid Storage Id.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"storage_pay_mode": {
 										Type:        schema.TypeInt,
-										Computed:    true,
 										Description: "Storage payment type.",
 									},
 									"physical_zone": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Physical zone.",
 									},
 									"business_type": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Business type.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"tasks": {
 										Type:        schema.TypeList,
-										Computed:    true,
 										Description: "Task list.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"task_id": {
 													Type:        schema.TypeInt,
-													Computed:    true,
 													Description: "Task auto-increment ID.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"task_type": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "Task type.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"task_status": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "Task status.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"object_id": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "Task ID (cluster ID|instance group ID|instance ID).Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"object_type": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "Object type.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
@@ -368,23 +382,19 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 									},
 									"is_freeze": {
 										Type:        schema.TypeString,
-										Computed:    true,
 										Description: "Whether to freeze.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"resource_tags": {
 										Type:        schema.TypeList,
-										Computed:    true,
 										Description: "Resource tags.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"tag_key": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "The key of tag.",
 												},
 												"tag_value": {
 													Type:        schema.TypeString,
-													Computed:    true,
 													Description: "The value of tag.",
 												},
 											},
@@ -414,9 +424,245 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroupsRead(d *schema.ResourceDa
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var clusterId string
+	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
+		paramMap["ClusterId"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("total_count"); v != nil {
+		paramMap["TotalCount"] = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("instance_grp_info_list"); ok {
+		instanceGrpInfoListSet := v.([]interface{})
+		tmpSet := make([]*cynosdb.CynosdbInstanceGrp, 0, len(instanceGrpInfoListSet))
+
+		for _, item := range instanceGrpInfoListSet {
+			cynosdbInstanceGrp := cynosdb.CynosdbInstanceGrp{}
+			cynosdbInstanceGrpMap := item.(map[string]interface{})
+
+			if v, ok := cynosdbInstanceGrpMap["app_id"]; ok {
+				cynosdbInstanceGrp.AppId = helper.IntInt64(v.(int))
+			}
+			if v, ok := cynosdbInstanceGrpMap["cluster_id"]; ok {
+				cynosdbInstanceGrp.ClusterId = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["created_time"]; ok {
+				cynosdbInstanceGrp.CreatedTime = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["deleted_time"]; ok {
+				cynosdbInstanceGrp.DeletedTime = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["instance_grp_id"]; ok {
+				cynosdbInstanceGrp.InstanceGrpId = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["status"]; ok {
+				cynosdbInstanceGrp.Status = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["type"]; ok {
+				cynosdbInstanceGrp.Type = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["updated_time"]; ok {
+				cynosdbInstanceGrp.UpdatedTime = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["vip"]; ok {
+				cynosdbInstanceGrp.Vip = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["vport"]; ok {
+				cynosdbInstanceGrp.Vport = helper.IntInt64(v.(int))
+			}
+			if v, ok := cynosdbInstanceGrpMap["wan_domain"]; ok {
+				cynosdbInstanceGrp.WanDomain = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["wan_i_p"]; ok {
+				cynosdbInstanceGrp.WanIP = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["wan_port"]; ok {
+				cynosdbInstanceGrp.WanPort = helper.IntInt64(v.(int))
+			}
+			if v, ok := cynosdbInstanceGrpMap["wan_status"]; ok {
+				cynosdbInstanceGrp.WanStatus = helper.String(v.(string))
+			}
+			if v, ok := cynosdbInstanceGrpMap["instance_set"]; ok {
+				for _, item := range v.([]interface{}) {
+					instanceSetMap := item.(map[string]interface{})
+					cynosdbInstance := cynosdb.CynosdbInstance{}
+					if v, ok := instanceSetMap["uin"]; ok {
+						cynosdbInstance.Uin = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["app_id"]; ok {
+						cynosdbInstance.AppId = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["cluster_id"]; ok {
+						cynosdbInstance.ClusterId = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["cluster_name"]; ok {
+						cynosdbInstance.ClusterName = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["instance_id"]; ok {
+						cynosdbInstance.InstanceId = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["instance_name"]; ok {
+						cynosdbInstance.InstanceName = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["project_id"]; ok {
+						cynosdbInstance.ProjectId = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["region"]; ok {
+						cynosdbInstance.Region = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["zone"]; ok {
+						cynosdbInstance.Zone = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["status"]; ok {
+						cynosdbInstance.Status = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["status_desc"]; ok {
+						cynosdbInstance.StatusDesc = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["db_type"]; ok {
+						cynosdbInstance.DbType = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["db_version"]; ok {
+						cynosdbInstance.DbVersion = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["cpu"]; ok {
+						cynosdbInstance.Cpu = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["memory"]; ok {
+						cynosdbInstance.Memory = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["storage"]; ok {
+						cynosdbInstance.Storage = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["instance_type"]; ok {
+						cynosdbInstance.InstanceType = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["instance_role"]; ok {
+						cynosdbInstance.InstanceRole = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["update_time"]; ok {
+						cynosdbInstance.UpdateTime = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["create_time"]; ok {
+						cynosdbInstance.CreateTime = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["vpc_id"]; ok {
+						cynosdbInstance.VpcId = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["subnet_id"]; ok {
+						cynosdbInstance.SubnetId = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["vip"]; ok {
+						cynosdbInstance.Vip = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["vport"]; ok {
+						cynosdbInstance.Vport = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["pay_mode"]; ok {
+						cynosdbInstance.PayMode = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["period_end_time"]; ok {
+						cynosdbInstance.PeriodEndTime = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["destroy_deadline_text"]; ok {
+						cynosdbInstance.DestroyDeadlineText = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["isolate_time"]; ok {
+						cynosdbInstance.IsolateTime = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["net_type"]; ok {
+						cynosdbInstance.NetType = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["wan_domain"]; ok {
+						cynosdbInstance.WanDomain = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["wan_i_p"]; ok {
+						cynosdbInstance.WanIP = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["wan_port"]; ok {
+						cynosdbInstance.WanPort = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["wan_status"]; ok {
+						cynosdbInstance.WanStatus = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["destroy_time"]; ok {
+						cynosdbInstance.DestroyTime = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["cynos_version"]; ok {
+						cynosdbInstance.CynosVersion = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["processing_task"]; ok {
+						cynosdbInstance.ProcessingTask = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["renew_flag"]; ok {
+						cynosdbInstance.RenewFlag = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["min_cpu"]; ok {
+						cynosdbInstance.MinCpu = helper.Float64(v.(float64))
+					}
+					if v, ok := instanceSetMap["max_cpu"]; ok {
+						cynosdbInstance.MaxCpu = helper.Float64(v.(float64))
+					}
+					if v, ok := instanceSetMap["serverless_status"]; ok {
+						cynosdbInstance.ServerlessStatus = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["storage_id"]; ok {
+						cynosdbInstance.StorageId = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["storage_pay_mode"]; ok {
+						cynosdbInstance.StoragePayMode = helper.IntInt64(v.(int))
+					}
+					if v, ok := instanceSetMap["physical_zone"]; ok {
+						cynosdbInstance.PhysicalZone = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["business_type"]; ok {
+						cynosdbInstance.BusinessType = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["tasks"]; ok {
+						for _, item := range v.([]interface{}) {
+							tasksMap := item.(map[string]interface{})
+							objectTask := cynosdb.ObjectTask{}
+							if v, ok := tasksMap["task_id"]; ok {
+								objectTask.TaskId = helper.IntInt64(v.(int))
+							}
+							if v, ok := tasksMap["task_type"]; ok {
+								objectTask.TaskType = helper.String(v.(string))
+							}
+							if v, ok := tasksMap["task_status"]; ok {
+								objectTask.TaskStatus = helper.String(v.(string))
+							}
+							if v, ok := tasksMap["object_id"]; ok {
+								objectTask.ObjectId = helper.String(v.(string))
+							}
+							if v, ok := tasksMap["object_type"]; ok {
+								objectTask.ObjectType = helper.String(v.(string))
+							}
+							cynosdbInstance.Tasks = append(cynosdbInstance.Tasks, &objectTask)
+						}
+					}
+					if v, ok := instanceSetMap["is_freeze"]; ok {
+						cynosdbInstance.IsFreeze = helper.String(v.(string))
+					}
+					if v, ok := instanceSetMap["resource_tags"]; ok {
+						for _, item := range v.([]interface{}) {
+							resourceTagsMap := item.(map[string]interface{})
+							tag := cynosdb.Tag{}
+							if v, ok := resourceTagsMap["tag_key"]; ok {
+								tag.TagKey = helper.String(v.(string))
+							}
+							if v, ok := resourceTagsMap["tag_value"]; ok {
+								tag.TagValue = helper.String(v.(string))
+							}
+							cynosdbInstance.ResourceTags = append(cynosdbInstance.ResourceTags, &tag)
+						}
+					}
+					cynosdbInstanceGrp.InstanceSet = append(cynosdbInstanceGrp.InstanceSet, &cynosdbInstance)
+				}
+			}
+			tmpSet = append(tmpSet, &cynosdbInstanceGrp)
+		}
+		paramMap["instance_grp_info_list"] = tmpSet
 	}
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -424,11 +670,11 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroupsRead(d *schema.ResourceDa
 	var instanceGrpInfoList []*cynosdb.CynosdbInstanceGrp
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeClusterInstanceGrps(ctx, clusterId)
+		result, e := service.DescribeCynosdbClusterInstanceGroupsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		instanceGrpInfoList = result.Response.InstanceGrpInfoList
+		instanceGrpInfoList = result
 		return nil
 	})
 	if err != nil {
@@ -437,106 +683,8 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroupsRead(d *schema.ResourceDa
 
 	ids := make([]string, 0, len(instanceGrpInfoList))
 	tmpList := make([]map[string]interface{}, 0, len(instanceGrpInfoList))
-	for _, instanceGrpInfo := range instanceGrpInfoList {
-		ids = append(ids, *instanceGrpInfo.InstanceGrpId)
-		instanceGrpInfoMap := make(map[string]interface{})
-		instanceGrpInfoMap["app_id"] = instanceGrpInfo.AppId
-		instanceGrpInfoMap["cluster_id"] = instanceGrpInfo.ClusterId
-		instanceGrpInfoMap["created_time"] = instanceGrpInfo.CreatedTime
-		instanceGrpInfoMap["deleted_time"] = instanceGrpInfo.DeletedTime
-		instanceGrpInfoMap["instance_grp_id"] = instanceGrpInfo.InstanceGrpId
-		instanceGrpInfoMap["status"] = instanceGrpInfo.Status
-		instanceGrpInfoMap["type"] = instanceGrpInfo.Type
-		instanceGrpInfoMap["updated_time"] = instanceGrpInfo.UpdatedTime
-		instanceGrpInfoMap["vip"] = instanceGrpInfo.Vip
-		instanceGrpInfoMap["vport"] = instanceGrpInfo.Vport
-		instanceGrpInfoMap["wan_domain"] = instanceGrpInfo.WanDomain
-		instanceGrpInfoMap["wan_ip"] = instanceGrpInfo.WanIP
-		instanceGrpInfoMap["wan_port"] = instanceGrpInfo.WanPort
-		instanceGrpInfoMap["wan_status"] = instanceGrpInfo.WanStatus
-		if instanceGrpInfo.InstanceSet != nil {
-			instances := make([]map[string]interface{}, 0)
-			for _, instance := range instanceGrpInfo.InstanceSet {
-				instanceMap := make(map[string]interface{})
-				instanceMap["uin"] = instance.Uin
-				instanceMap["app_id"] = instance.AppId
-				instanceMap["cluster_id"] = instance.ClusterId
-				instanceMap["cluster_name"] = instance.ClusterName
-				instanceMap["instance_id"] = instance.InstanceId
-				instanceMap["instance_name"] = instance.InstanceName
-				instanceMap["project_id"] = instance.ProjectId
-				instanceMap["region"] = instance.Region
-				instanceMap["zone"] = instance.Zone
-				instanceMap["status"] = instance.Status
-				instanceMap["status_desc"] = instance.StatusDesc
-				instanceMap["db_type"] = instance.DbType
-				instanceMap["db_version"] = instance.DbVersion
-				instanceMap["cpu"] = instance.Cpu
-				instanceMap["memory"] = instance.Memory
-				instanceMap["storage"] = instance.Storage
-				instanceMap["instance_type"] = instance.InstanceType
-				instanceMap["instance_role"] = instance.InstanceRole
-				instanceMap["update_time"] = instance.UpdateTime
-				instanceMap["create_time"] = instance.CreateTime
-				instanceMap["vpc_id"] = instance.VpcId
-				instanceMap["subnet_id"] = instance.SubnetId
-				instanceMap["vip"] = instance.Vip
-				instanceMap["vport"] = instance.Vport
-				instanceMap["pay_mode"] = instance.PayMode
-				instanceMap["period_end_time"] = instance.PeriodEndTime
-				instanceMap["destroy_deadline_text"] = instance.DestroyDeadlineText
-				instanceMap["isolate_time"] = instance.IsolateTime
-				instanceMap["net_type"] = instance.NetType
-				instanceMap["wan_domain"] = instance.WanDomain
-				instanceMap["wan_ip"] = instance.WanIP
-				instanceMap["wan_port"] = instance.WanPort
-				instanceMap["wan_status"] = instance.WanStatus
-				instanceMap["destroy_time"] = instance.DestroyTime
-				instanceMap["cynos_version"] = instance.CynosVersion
-				instanceMap["processing_task"] = instance.ProcessingTask
-				instanceMap["renew_flag"] = instance.RenewFlag
-				instanceMap["min_cpu"] = instance.MinCpu
-				instanceMap["max_cpu"] = instance.MaxCpu
-				instanceMap["serverless_status"] = instance.ServerlessStatus
-				instanceMap["storage_id"] = instance.StorageId
-				instanceMap["storage_pay_mode"] = instance.StoragePayMode
-				instanceMap["physical_zone"] = instance.PhysicalZone
-				instanceMap["business_type"] = instance.BusinessType
-				instanceMap["is_freeze"] = instance.IsFreeze
-				tasks := make([]map[string]interface{}, 0)
-				if instance.Tasks != nil {
-					for _, task := range instance.Tasks {
-						taskMap := make(map[string]interface{})
-						taskMap["task_id"] = task.TaskId
-						taskMap["task_type"] = task.TaskType
-						taskMap["task_status"] = task.TaskStatus
-						taskMap["object_id"] = task.ObjectId
-						taskMap["object_type"] = task.ObjectType
-
-						tasks = append(tasks, taskMap)
-					}
-					instanceMap["tasks"] = tasks
-				}
-				tags := make([]map[string]interface{}, 0)
-				if instance.ResourceTags != nil {
-					for _, tag := range instance.ResourceTags {
-						tagMap := make(map[string]interface{})
-						tagMap["tag_key"] = tag.TagKey
-						tagMap["tag_value"] = tag.TagValue
-
-						tags = append(tags, tagMap)
-					}
-					instanceMap["resource_tags"] = tags
-				}
-				instances = append(instances, instanceMap)
-				instanceGrpInfoMap["instance_set"] = instances
-			}
-		}
-		tmpList = append(tmpList, instanceGrpInfoMap)
-	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("instance_grp_info_list", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

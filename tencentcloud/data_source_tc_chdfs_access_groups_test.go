@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsAccessGroupsDataSource_basic(t *testing.T) {
@@ -25,7 +24,8 @@ func TestAccTencentCloudChdfsAccessGroupsDataSource_basic(t *testing.T) {
 const testAccChdfsAccessGroupsDataSource = `
 
 data "tencentcloud_chdfs_access_groups" "access_groups" {
-  vpc_id = "vpc-pewdpc0d"
-}
+  vpc_id = &lt;nil&gt;
+  owner_uin = &lt;nil&gt;
+  }
 
 `

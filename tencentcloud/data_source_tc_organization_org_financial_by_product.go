@@ -4,22 +4,20 @@ Use this data source to query detailed information of organization org_financial
 Example Usage
 
 ```hcl
-
 data "tencentcloud_organization_org_financial_by_product" "org_financial_by_product" {
-  month = "2023-05"
-  end_month = "2023-09"
-  product_codes = ["p_eip"]
-  }
+  month = &lt;nil&gt;
+  end_month = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
+  product_codes = &lt;nil&gt;
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -82,7 +80,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProduct() *schema.Resource 
 						"total_cost": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "Total cost of the product.",
+							Description: "Total cost of the product(¥).",
 						},
 						"ratio": {
 							Type:        schema.TypeString,
@@ -121,15 +119,16 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProductRead(d *schema.Resou
 
 	if v, ok := d.GetOk("member_uins"); ok {
 		memberUinsSet := v.(*schema.Set).List()
-		paramMap["MemberUins"] = helper.InterfacesIntInt64Point(memberUinsSet)
+		for i := range memberUinsSet {
+			memberUins := memberUinsSet[i].(int)
+			paramMap["MemberUins"] = append(paramMap["MemberUins"], helper.IntInt64(memberUins))
+		}
 	}
 
 	if v, ok := d.GetOk("product_codes"); ok {
 		productCodesSet := v.(*schema.Set).List()
 		paramMap["ProductCodes"] = helper.InterfacesStringsPoint(productCodesSet)
 	}
-
-	var response *organization.DescribeOrganizationFinancialByProductResponseParams
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -138,21 +137,20 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProductRead(d *schema.Resou
 		if e != nil {
 			return retryError(e)
 		}
-		response = result
+		totalCost = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	tmpList := make([]map[string]interface{}, 0)
-	if response.TotalCost != nil {
-		_ = d.Set("total_cost", response.TotalCost)
+	ids := make([]string, 0, len(totalCost))
+	if totalCost != nil {
+		_ = d.Set("total_cost", totalCost)
 	}
 
-	if response.Items != nil {
-		for _, orgProductFinancial := range response.Items {
+	if items != nil {
+		for _, orgProductFinancial := range items {
 			orgProductFinancialMap := map[string]interface{}{}
 
 			if orgProductFinancial.ProductName != nil {
@@ -171,7 +169,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProductRead(d *schema.Resou
 				orgProductFinancialMap["ratio"] = orgProductFinancial.Ratio
 			}
 
-			ids = append(ids, *orgProductFinancial.ProductCode)
+			ids = append(ids, *orgProductFinancial.Month)
 			tmpList = append(tmpList, orgProductFinancialMap)
 		}
 
@@ -181,7 +179,7 @@ func dataSourceTencentCloudOrganizationOrgFinancialByProductRead(d *schema.Resou
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

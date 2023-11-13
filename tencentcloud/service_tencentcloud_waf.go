@@ -1075,3 +1075,345 @@ func (me *WafService) DescribeWafInstanceQpsLimitByFilter(ctx context.Context, p
 	instanceQpsLimit = response.Response.QpsData
 	return
 }
+
+func (me *WafService) DescribeWafCipherByFilter(ctx context.Context, param map[string]interface{}) (cipher []*waf.TLSCiphers, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeCiphersDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeCiphersDetail(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Ciphers) < 1 {
+			break
+		}
+		cipher = append(cipher, response.Response.Ciphers...)
+		if len(response.Response.Ciphers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafDomainListByFilter(ctx context.Context, param map[string]interface{}) (domainList []*waf.DomainInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeDomainsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*waf.FiltersItemNew)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeDomains(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Domains) < 1 {
+			break
+		}
+		domainList = append(domainList, response.Response.Domains...)
+		if len(response.Response.Domains) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafFindDomainsByFilter(ctx context.Context, param map[string]interface{}) (findDomains []*waf.FindAllDomainDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeFindDomainListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Key" {
+			request.Key = v.(*string)
+		}
+		if k == "IsWafDomain" {
+			request.IsWafDomain = v.(*string)
+		}
+		if k == "By" {
+			request.By = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeFindDomainList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+		findDomains = append(findDomains, response.Response.List...)
+		if len(response.Response.List) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafInstanceQpsLimitByFilter(ctx context.Context, param map[string]interface{}) (instanceQpsLimit []*waf.QpsData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewGetInstanceQpsLimitRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().GetInstanceQpsLimit(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.QpsData) < 1 {
+			break
+		}
+		instanceQpsLimit = append(instanceQpsLimit, response.Response.QpsData...)
+		if len(response.Response.QpsData) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafPortByFilter(ctx context.Context, param map[string]interface{}) (port []*waf.DescribePortsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribePortsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Edition" {
+			request.Edition = v.(*string)
+		}
+		if k == "InstanceID" {
+			request.InstanceID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribePorts(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.HttpPorts) < 1 {
+			break
+		}
+		port = append(port, response.Response.HttpPorts...)
+		if len(response.Response.HttpPorts) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafTlsVersionByFilter(ctx context.Context, param map[string]interface{}) (tlsVersion []*waf.TLSVersion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeTlsVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeTlsVersion(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.TLS) < 1 {
+			break
+		}
+		tlsVersion = append(tlsVersion, response.Response.TLS...)
+		if len(response.Response.TLS) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DescribeWafUserDomainsByFilter(ctx context.Context, param map[string]interface{}) (userDomains []*waf.UserDomainInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeUserDomainInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeUserDomainInfo(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.UsersInfo) < 1 {
+			break
+		}
+		userDomains = append(userDomains, response.Response.UsersInfo...)
+		if len(response.Response.UsersInfo) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

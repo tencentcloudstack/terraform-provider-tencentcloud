@@ -5,18 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_triggers" "triggers" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-  order_by      = "add_time"
-  order         = "DESC"
-}
+  function_name = "testFunction"
+  namespace = "testNamespace"
+  order_by = "add_time"
+  order = "DESC"
+  filters {
+		name = &lt;nil&gt;
+		values = &lt;nil&gt;
+
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -195,7 +199,7 @@ func dataSourceTencentCloudScfTriggersRead(d *schema.ResourceData, meta interfac
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -269,7 +273,7 @@ func dataSourceTencentCloudScfTriggersRead(d *schema.ResourceData, meta interfac
 				triggerInfoMap["trigger_attribute"] = triggerInfo.TriggerAttribute
 			}
 
-			ids = append(ids, *triggerInfo.TriggerName)
+			ids = append(ids, *triggerInfo.FunctionName)
 			tmpList = append(tmpList, triggerInfoMap)
 		}
 

@@ -1,15 +1,15 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseDiskAttachmentResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
@@ -26,9 +26,12 @@ func TestAccTencentCloudLighthouseDiskAttachmentResource_basic(t *testing.T) {
 	})
 }
 
-const testAccLighthouseDiskAttachment = DefaultLighthoustVariables + `
+const testAccLighthouseDiskAttachment = `
+
 resource "tencentcloud_lighthouse_disk_attachment" "disk_attachment" {
-	disk_id = var.lighthouse_disk_id
-	instance_id = var.lighthouse_id
+  disk_ids = 
+  instance_id = "lhins-123456"
+  renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
+
 `

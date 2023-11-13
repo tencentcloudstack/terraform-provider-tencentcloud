@@ -5,12 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_group" "group" {
-  application_id = "application-xxx"
-  namespace_id = "namespace-aemrxxx"
-  group_name = "terraform-test"
-  cluster_id = "cluster-vwgjxxxx"
-  group_desc = "terraform desc"
-  alias = "terraform test"
+  application_id = ""
+  namespace_id = ""
+  group_name = ""
+  cluster_id = ""
+  group_desc = ""
+  group_resource_type = ""
+  alias = ""
   tags = {
     "createdBy" = "terraform"
   }
@@ -22,7 +23,7 @@ Import
 tsf group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_group.group group-axxx
+terraform import tencentcloud_tsf_group.group group_id
 ```
 */
 package tencentcloud
@@ -30,12 +31,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfGroup() *schema.Resource {
@@ -78,16 +78,16 @@ func resourceTencentCloudTsfGroup() *schema.Resource {
 				Description: "Group description.",
 			},
 
+			"group_resource_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Deployment Group Resource Type.",
+			},
+
 			"alias": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Deployment Group Notes.",
-			},
-
-			"group_resource_type": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Deployment Group Resource Type.",
 			},
 
 			"tags": {
@@ -130,6 +130,10 @@ func resourceTencentCloudTsfGroupCreate(d *schema.ResourceData, meta interface{}
 		request.GroupDesc = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("group_resource_type"); ok {
+		request.GroupResourceType = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("alias"); ok {
 		request.Alias = helper.String(v.(string))
 	}
@@ -149,7 +153,7 @@ func resourceTencentCloudTsfGroupCreate(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	groupId = *response.Response.Result
+	groupId = *response.Response.groupId
 	d.SetId(groupId)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -239,7 +243,7 @@ func resourceTencentCloudTsfGroupUpdate(d *schema.ResourceData, meta interface{}
 
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"application_id", "namespace_id", "cluster_id", "group_resource_type", "alias"}
+	immutableArgs := []string{"application_id", "namespace_id", "group_name", "cluster_id", "group_desc", "group_resource_type", "alias"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

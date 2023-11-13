@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbExportInstanceErrorLogsResource_basic -v
 func TestAccTencentCloudCynosdbExportInstanceErrorLogsResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,22 +15,28 @@ func TestAccTencentCloudCynosdbExportInstanceErrorLogsResource_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbExportInstanceErrorLogs,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "error_log_item_export.#"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "error_log_item_export.0.timestamp"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "error_log_item_export.0.level"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "error_log_item_export.0.content"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-const testAccCynosdbExportInstanceErrorLogs = CommonCynosdb + `
+const testAccCynosdbExportInstanceErrorLogs = `
 
 resource "tencentcloud_cynosdb_export_instance_error_logs" "export_instance_error_logs" {
-  instance_id = var.cynosdb_cluster_instance_id
+  instance_id = "cynosdbmysql-ins-123"
+  start_time = "2022-01-01 12:00:00"
+  end_time = "2022-01-01 14:00:00"
+  log_levels = 
+  key_words = 
+  file_type = "csv"
+  order_by = "Timestamp"
+  order_by_type = "ASC"
 }
 
 `

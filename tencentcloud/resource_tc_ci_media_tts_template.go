@@ -5,22 +5,21 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_tts_template" "media_tts_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "tts_template"
-  mode = "Asyc"
-  codec = "pcm"
-  voice_type = "ruxue"
-  volume = "0"
-  speed = "100"
+  name = &lt;nil&gt;
+  mode = &lt;nil&gt;
+  codec = &lt;nil&gt;
+  voice_type = &lt;nil&gt;
+  volume = &lt;nil&gt;
+  speed = &lt;nil&gt;
 }
 ```
 
 Import
 
-ci media_tts_template can be imported using the bucket#templateId, e.g.
+ci media_tts_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_tts_template.media_tts_template terraform-ci-xxxxxx#t1ed421df8bd2140b6b73474f70f99b0f8
+terraform import tencentcloud_ci_media_tts_template.media_tts_template media_tts_template_id
 ```
 */
 package tencentcloud
@@ -28,13 +27,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaTtsTemplate() *schema.Resource {
@@ -47,12 +44,6 @@ func resourceTencentCloudCiMediaTtsTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -97,53 +88,42 @@ func resourceTencentCloudCiMediaTtsTemplateCreate(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaTtsTemplateOptions{
-			Tag: "Tts",
-		}
+		request    = ci.NewCreateMediaTtsTemplateRequest()
+		response   = ci.NewCreateMediaTtsTemplateResponse()
 		templateId string
-		bucket     string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("mode"); ok {
-		request.Mode = v.(string)
+		request.Mode = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("codec"); ok {
-		request.Codec = v.(string)
+		request.Codec = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("voice_type"); ok {
-		request.VoiceType = v.(string)
+		request.VoiceType = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("volume"); ok {
-		request.Volume = v.(string)
+		request.Volume = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("speed"); ok {
-		request.Speed = v.(string)
+		request.Speed = helper.String(v.(string))
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaTtsTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaTtsTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaTtsTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -153,8 +133,8 @@ func resourceTencentCloudCiMediaTtsTemplateCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaTtsTemplateRead(d, meta)
 }
@@ -164,55 +144,48 @@ func resourceTencentCloudCiMediaTtsTemplateRead(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaTtsTemplateId := d.Id()
 
-	template, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaTtsTemplate, err := service.DescribeCiMediaTtsTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if template == nil {
+	if mediaTtsTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaTtsTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	if template.Name != "" {
-		_ = d.Set("name", template.Name)
+	if mediaTtsTemplate.Name != nil {
+		_ = d.Set("name", mediaTtsTemplate.Name)
 	}
 
-	mediaTtsTemplate := template.TtsTpl
-	if mediaTtsTemplate != nil {
-		if mediaTtsTemplate.Mode != "" {
-			_ = d.Set("mode", mediaTtsTemplate.Mode)
-		}
-
-		if mediaTtsTemplate.Codec != "" {
-			_ = d.Set("codec", mediaTtsTemplate.Codec)
-		}
-
-		if mediaTtsTemplate.VoiceType != "" {
-			_ = d.Set("voice_type", mediaTtsTemplate.VoiceType)
-		}
-
-		if mediaTtsTemplate.Volume != "" {
-			_ = d.Set("volume", mediaTtsTemplate.Volume)
-		}
-
-		if mediaTtsTemplate.Speed != "" {
-			_ = d.Set("speed", mediaTtsTemplate.Speed)
-		}
+	if mediaTtsTemplate.Mode != nil {
+		_ = d.Set("mode", mediaTtsTemplate.Mode)
 	}
+
+	if mediaTtsTemplate.Codec != nil {
+		_ = d.Set("codec", mediaTtsTemplate.Codec)
+	}
+
+	if mediaTtsTemplate.VoiceType != nil {
+		_ = d.Set("voice_type", mediaTtsTemplate.VoiceType)
+	}
+
+	if mediaTtsTemplate.Volume != nil {
+		_ = d.Set("volume", mediaTtsTemplate.Volume)
+	}
+
+	if mediaTtsTemplate.Speed != nil {
+		_ = d.Set("speed", mediaTtsTemplate.Speed)
+	}
+
 	return nil
 }
 
@@ -221,64 +194,32 @@ func resourceTencentCloudCiMediaTtsTemplateUpdate(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaTtsTemplateOptions{
-		Tag: "Tts",
-	}
+	request := ci.NewUpdateMediaTtsTemplateRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaTtsTemplateId := d.Id()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	request.TemplateId = &templateId
 
-	if d.HasChange("mode") {
-		if v, ok := d.GetOk("mode"); ok {
-			request.Mode = v.(string)
-		}
-	}
+	immutableArgs := []string{"name", "mode", "codec", "voice_type", "volume", "speed"}
 
-	if d.HasChange("codec") {
-		if v, ok := d.GetOk("codec"); ok {
-			request.Codec = v.(string)
-		}
-	}
-
-	if d.HasChange("voice_type") {
-		if v, ok := d.GetOk("voice_type"); ok {
-			request.VoiceType = v.(string)
-		}
-	}
-
-	if d.HasChange("volume") {
-		if v, ok := d.GetOk("volume"); ok {
-			request.Volume = v.(string)
-		}
-	}
-
-	if d.HasChange("speed") {
-		if v, ok := d.GetOk("speed"); ok {
-			request.Speed = v.(string)
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaTtsTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaTtsTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaTtsTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaTtsTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaTtsTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -293,14 +234,9 @@ func resourceTencentCloudCiMediaTtsTemplateDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaTtsTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaTtsTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

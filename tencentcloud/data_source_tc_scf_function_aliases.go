@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_function_aliases" "function_aliases" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-}
+  function_name = ""
+  namespace = ""
+  function_version = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -84,7 +84,7 @@ func dataSourceTencentCloudScfFunctionAliases() *schema.Resource {
 											},
 										},
 									},
-									"addition_version_matchs": {
+									"addtion_version_matchs": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Additional version with rule-based routing.",
@@ -215,7 +215,7 @@ func dataSourceTencentCloudScfFunctionAliasesRead(d *schema.ResourceData, meta i
 						additionalVersionWeightsList = append(additionalVersionWeightsList, additionalVersionWeightsMap)
 					}
 
-					routingConfigMap["additional_version_weights"] = additionalVersionWeightsList
+					routingConfigMap["additional_version_weights"] = []interface{}{additionalVersionWeightsList}
 				}
 
 				if alias.RoutingConfig.AddtionVersionMatchs != nil {
@@ -242,7 +242,7 @@ func dataSourceTencentCloudScfFunctionAliasesRead(d *schema.ResourceData, meta i
 						addtionVersionMatchsList = append(addtionVersionMatchsList, addtionVersionMatchsMap)
 					}
 
-					routingConfigMap["addition_version_matchs"] = addtionVersionMatchsList
+					routingConfigMap["addtion_version_matchs"] = []interface{}{addtionVersionMatchsList}
 				}
 
 				aliasMap["routing_config"] = []interface{}{routingConfigMap}
@@ -260,7 +260,7 @@ func dataSourceTencentCloudScfFunctionAliasesRead(d *schema.ResourceData, meta i
 				aliasMap["mod_time"] = alias.ModTime
 			}
 
-			ids = append(ids, *alias.Name)
+			ids = append(ids, *alias.Namespace)
 			tmpList = append(tmpList, aliasMap)
 		}
 

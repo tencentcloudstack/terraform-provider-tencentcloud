@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_update_record_detail" "describe_host_update_record_detail" {
-  deploy_record_id = "35364"
-  }
+  deploy_record_id = ""
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -123,7 +122,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetail() *schema.Resource 
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "protocolNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+										Description: "ProtocolNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 									},
 									"sni_switch": {
 										Type:        schema.TypeInt,
@@ -138,7 +137,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetail() *schema.Resource 
 									"port": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "portNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+										Description: "PortNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 									},
 									"namespace": {
 										Type:        schema.TypeString,
@@ -206,30 +205,29 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var id string
+
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("deploy_record_id"); ok {
-		id = v.(string)
 		paramMap["DeployRecordId"] = helper.String(v.(string))
 	}
 
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var recordDetailList []*ssl.UpdateRecordDetails
-	var successTotalCount, failedTotalCount, runningTotalCount *int64
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, successTotal, failedTotal, runningTotal, e := service.DescribeSslDescribeHostUpdateRecordDetailByFilter(ctx, paramMap)
+		result, e := service.DescribeSslDescribeHostUpdateRecordDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
 		recordDetailList = result
-		successTotalCount, failedTotalCount, runningTotalCount = successTotal, failedTotal, runningTotal
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(recordDetailList))
 	tmpList := make([]map[string]interface{}, 0, len(recordDetailList))
 
 	if recordDetailList != nil {
@@ -241,7 +239,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 			}
 
 			if updateRecordDetails.List != nil {
-				var listList []interface{}
+				listList := []interface{}{}
 				for _, list := range updateRecordDetails.List {
 					listMap := map[string]interface{}{}
 
@@ -336,13 +334,14 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 					listList = append(listList, listMap)
 				}
 
-				updateRecordDetailsMap["list"] = listList
+				updateRecordDetailsMap["list"] = []interface{}{listList}
 			}
 
 			if updateRecordDetails.TotalCount != nil {
 				updateRecordDetailsMap["total_count"] = updateRecordDetails.TotalCount
 			}
 
+			ids = append(ids, *updateRecordDetails.DeployRecordId)
 			tmpList = append(tmpList, updateRecordDetailsMap)
 		}
 
@@ -361,7 +360,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordDetailRead(d *schema.Resou
 		_ = d.Set("running_total_count", runningTotalCount)
 	}
 
-	d.SetId(id)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

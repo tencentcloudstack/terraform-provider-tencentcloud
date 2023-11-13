@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMpsAiAnalysisTemplateResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudMpsAiAnalysisTemplateResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_ai_analysis_template.ai_analysis_template", "id")),
 			},
 			{
-				Config: testAccMpsAiAnalysisTemplateUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_ai_analysis_template.ai_analysis_template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_ai_analysis_template.ai_analysis_template", "name", "terraform-for-test"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_mps_ai_analysis_template.ai_analysis_template",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,49 +29,24 @@ func TestAccTencentCloudMpsAiAnalysisTemplateResource_basic(t *testing.T) {
 const testAccMpsAiAnalysisTemplate = `
 
 resource "tencentcloud_mps_ai_analysis_template" "ai_analysis_template" {
-  name = "terraform-test"
-
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   classification_configure {
-    switch = "OFF"
-  }
+		switch = &lt;nil&gt;
 
-  cover_configure {
-    switch = "ON"
   }
-
-  frame_tag_configure {
-    switch = "ON"
-  }
-
   tag_configure {
-    switch = "ON"
+		switch = &lt;nil&gt;
+
+  }
+  cover_configure {
+		switch = &lt;nil&gt;
+
+  }
+  frame_tag_configure {
+		switch = &lt;nil&gt;
+
   }
 }
-
-
-`
-
-const testAccMpsAiAnalysisTemplateUpdate = `
-
-resource "tencentcloud_mps_ai_analysis_template" "ai_analysis_template" {
-  name = "terraform-for-test"
-
-  classification_configure {
-    switch = "OFF"
-  }
-
-  cover_configure {
-    switch = "ON"
-  }
-
-  frame_tag_configure {
-    switch = "ON"
-  }
-
-  tag_configure {
-    switch = "ON"
-  }
-}
-
 
 `

@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_diag_history" "diag_history" {
-  instance_id = "%s"
-  start_time = "%s"
-  end_time = "%s"
-  product = "mysql"
-}
+  instance_id = ""
+  start_time = ""
+  end_time = ""
+  product = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -30,25 +29,25 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Start time, such as `2019-09-10 12:13:14`.",
+				Description: "Start time, such as 2019-09-10 12:13:14.",
 			},
 
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "End time, such as `2019-09-11 12:13:14`, the interval between the end time and the start time can be up to 2 days.",
+				Description: "End time, such as 2019-09-11 12:13:14, the interval between the end time and the start time can be up to 2 days.",
 			},
 
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include: `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values include：mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
 			},
 
 			"events": {
@@ -70,7 +69,7 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 						"start_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "start Time.",
+							Description: "Start Time.",
 						},
 						"event_id": {
 							Type:        schema.TypeInt,
@@ -80,7 +79,7 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 						"severity": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "severity. The severity is divided into 5 levels, according to the degree of impact from high to low: 1: Fatal, 2: Serious, 3: Warning, 4: Prompt, 5: Healthy.",
+							Description: "Severity. The severity is divided into 5 levels, according to the degree of impact from high to low: 1: Fatal, 2: Serious, 3: Warning, 4: Prompt, 5: Healthy.",
 						},
 						"outline": {
 							Type:        schema.TypeString,
@@ -95,17 +94,17 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance id.",
+							Description: "Instance id.",
 						},
 						"metric": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "reserved text. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Reserved text. Note： This field may return null, indicating that no valid value can be obtained.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region.",
+							Description: "Region.",
 						},
 					},
 				},
@@ -130,19 +129,19 @@ func dataSourceTencentCloudDbbrainDiagHistoryRead(d *schema.ResourceData, meta i
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
-		paramMap["start_time"] = helper.String(v.(string))
+		paramMap["StartTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_time"); ok {
-		paramMap["end_time"] = helper.String(v.(string))
+		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("product"); ok {
-		paramMap["product"] = helper.String(v.(string))
+		paramMap["Product"] = helper.String(v.(string))
 	}
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}

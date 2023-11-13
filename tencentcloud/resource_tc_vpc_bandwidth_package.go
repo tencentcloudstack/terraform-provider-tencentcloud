@@ -4,41 +4,14 @@ Provides a resource to create a vpc bandwidth_package
 Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package" "example" {
-  network_type           = "BGP"
-  charge_type            = "TOP5_POSTPAID_BY_MONTH"
-  bandwidth_package_name = "tf-example"
-  tags                   = {
-    "createdBy" = "terraform"
-  }
-}
-```
-
-PrePaid Bandwidth Package
-
-```hcl
 resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
-  network_type           = "BGP"
-  charge_type            = "FIXED_PREPAID_BY_MONTH"
-  bandwidth_package_name = "test-001"
-  time_span              = 3
-  internet_max_bandwidth = 100
-  tags                   = {
-    "createdBy" = "terraform"
-  }
-}
-````
-
-Bandwidth Package With Egress
-
-```hcl
-resource "tencentcloud_vpc_bandwidth_package" "example" {
-  network_type           = "SINGLEISP_CMCC"
-  charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
-  bandwidth_package_name = "tf-example"
-  internet_max_bandwidth = 400
-  egress                 = "center_egress2"
-  tags                   = {
+  network_type = &lt;nil&gt;
+  charge_type = &lt;nil&gt;
+  bandwidth_package_name = &lt;nil&gt;
+  bandwidth_package_count = &lt;nil&gt;
+  internet_max_bandwidth = &lt;nil&gt;
+  protocol = &lt;nil&gt;
+  tags = {
     "createdBy" = "terraform"
   }
 }
@@ -47,8 +20,9 @@ resource "tencentcloud_vpc_bandwidth_package" "example" {
 Import
 
 vpc bandwidth_package can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_vpc_bandwidth_package.bandwidth_package bandwidthPackage_id
+terraform import tencentcloud_vpc_bandwidth_package.bandwidth_package bandwidth_package_id
 ```
 */
 package tencentcloud
@@ -56,18 +30,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudVpcBandwidthPackageRead,
 		Create: resourceTencentCloudVpcBandwidthPackageCreate,
+		Read:   resourceTencentCloudVpcBandwidthPackageRead,
 		Update: resourceTencentCloudVpcBandwidthPackageUpdate,
 		Delete: resourceTencentCloudVpcBandwidthPackageDelete,
 		Importer: &schema.ResourceImporter{
@@ -75,32 +49,39 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"network_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Description: "Bandwidth packet type, default: `BGP`. " +
-					"Optional value: `BGP`: common BGP shared bandwidth package; `HIGH_QUALITY_BGP`: High Quality BGP Shared Bandwidth Package; " +
-					"`SINGLEISP_CMCC`: CMCC shared bandwidth package; `SINGLEISP_CTCC:`: CTCC shared bandwidth package; `SINGLEISP_CUCC`: CUCC shared bandwidth package.",
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Bandwidth packet type, default:BGP, optional:- `BGP`: common BGP shared bandwidth package- `HIGH_QUALITY_BGP`: Quality BGP Shared Bandwidth Package.",
 			},
 
 			"charge_type": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Description: "Bandwidth package billing type, default: `TOP5_POSTPAID_BY_MONTH`." +
-					" Optional value: `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid; `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid;" +
-					" `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing (Type FIXED_PREPAID_BY_MONTH product API capability is under construction);" +
-					" `BANDWIDTH_POSTPAID_BY_DAY`: bandwidth billed by daily postpaid; `ENHANCED95_POSTPAID_BY_MONTH`: enhanced 95 billed monthly postpaid.",
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Bandwidth package billing type, default: TOP5_POSTPAID_BY_MONTH, optional value:- `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid- `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid- `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing.",
 			},
 
 			"bandwidth_package_name": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Bandwidth package name.",
 			},
 
-			"internet_max_bandwidth": {
-				Type:        schema.TypeInt,
+			"bandwidth_package_count": {
 				Optional:    true,
-				Description: "Bandwidth packet speed limit size. Unit: Mbps, -1 means no speed limit.",
+				Type:        schema.TypeInt,
+				Description: "The number of bandwidth packages (traditional account type can only fill in 1), the value range of standard account type is 1~20.",
+			},
+
+			"internet_max_bandwidth": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Bandwidth packet rate limit size. Unit: Mbps, `-1` means unlimited speed.",
+			},
+
+			"protocol": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Bandwidth packet protocol type. Currently supports `ipv4` and `ipv6` protocol bandwidth packets, the default value is `ipv4`.",
 			},
 
 			"tags": {
@@ -108,35 +89,21 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
-
-			"time_span": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "The purchase duration of the prepaid monthly bandwidth package, unit: month, value range: 1~60.",
-			},
-
-			"egress": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "Network egress. It defaults to `center_egress1`. If you want to try the egress feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
-			},
 		},
 	}
 }
 
 func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bwp_bandwidth_package.create")()
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request  = vpc.NewCreateBandwidthPackageRequest()
-		response *vpc.CreateBandwidthPackageResponse
+		request            = vpc.NewCreateBandwidthPackageRequest()
+		response           = vpc.NewCreateBandwidthPackageResponse()
+		bandwidthPackageId string
 	)
-
 	if v, ok := d.GetOk("network_type"); ok {
 		request.NetworkType = helper.String(v.(string))
 	}
@@ -149,26 +116,16 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("internet_max_bandwidth"); ok {
-		request.InternetMaxBandwidth = helper.IntInt64(v.(int))
+	if v, ok := d.GetOkExists("bandwidth_package_count"); ok {
+		request.BandwidthPackageCount = helper.IntUint64(v.(int))
 	}
 
-	if v := helper.GetTags(d, "tags"); len(v) > 0 {
-		for tagKey, tagValue := range v {
-			tag := vpc.Tag{
-				Key:   helper.String(tagKey),
-				Value: helper.String(tagValue),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
+	if v, ok := d.GetOkExists("internet_max_bandwidth"); ok {
+		request.InternetMaxBandwidth = helper.IntUint64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("time_span"); ok {
-		request.TimeSpan = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("egress"); ok {
-		request.Egress = helper.String(v.(string))
+	if v, ok := d.GetOk("protocol"); ok {
+		request.Protocol = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -176,76 +133,60 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create bwp bandwidthPackage failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create vpc bandwidthPackage failed, reason:%+v", logId, err)
 		return err
 	}
 
-	bandwidthPackageId := *response.Response.BandwidthPackageId
-
+	bandwidthPackageId = *response.Response.BandwidthPackageId
 	d.SetId(bandwidthPackageId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	conf := BuildStateChangeConf([]string{}, []string{"CREATED"}, 3*readRetryTimeout, time.Second, service.VpcBandwidthPackageStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:bandwidthPackage/%s", region, bandwidthPackageId)
+		resourceName := fmt.Sprintf("qcs::vpc:%s:uin/:bandwidthPackage/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
-	}
-
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeVpcBandwidthPackage(ctx, bandwidthPackageId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if instance == nil {
-			return resource.RetryableError(fmt.Errorf("vpc bandwidthPackage instance is being created, retry..."))
-		}
-		if *instance.Status == "CREATED" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("vpc bandwidthPackage instance status is %v, retry...", *instance.Status))
-	})
-	if err != nil {
-		return err
 	}
 
 	return resourceTencentCloudVpcBandwidthPackageRead(d, meta)
 }
 
 func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bwp_bandwidth_package.read")()
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	bandwidthPackageId := d.Id()
 
-	bandwidthPackage, err := service.DescribeVpcBandwidthPackage(ctx, bandwidthPackageId)
-
+	bandwidthPackage, err := service.DescribeVpcBandwidthPackageById(ctx, bandwidthPackageId)
 	if err != nil {
 		return err
 	}
 
 	if bandwidthPackage == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `tencentcloud_vpc_bandwidth_package` [%s] not found, please check if it has been deleted.",
-			logId, bandwidthPackageId,
-		)
+		log.Printf("[WARN]%s resource `VpcBandwidthPackage` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -261,12 +202,16 @@ func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta in
 		_ = d.Set("bandwidth_package_name", bandwidthPackage.BandwidthPackageName)
 	}
 
-	if bandwidthPackage.Bandwidth != nil {
-		_ = d.Set("internet_max_bandwidth", bandwidthPackage.Bandwidth)
+	if bandwidthPackage.BandwidthPackageCount != nil {
+		_ = d.Set("bandwidth_package_count", bandwidthPackage.BandwidthPackageCount)
 	}
 
-	if bandwidthPackage.Egress != nil {
-		_ = d.Set("egress", bandwidthPackage.Egress)
+	if bandwidthPackage.InternetMaxBandwidth != nil {
+		_ = d.Set("internet_max_bandwidth", bandwidthPackage.InternetMaxBandwidth)
+	}
+
+	if bandwidthPackage.Protocol != nil {
+		_ = d.Set("protocol", bandwidthPackage.Protocol)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -285,27 +230,19 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	request := vpc.NewModifyBandwidthPackageAttributeRequest()
 
 	bandwidthPackageId := d.Id()
 
-	immutableArgs := []string{
-		"network_type",
-		"internet_max_bandwidth",
-		"egress",
-	}
+	request.BandwidthPackageId = &bandwidthPackageId
+
+	immutableArgs := []string{"network_type", "charge_type", "bandwidth_package_name", "bandwidth_package_count", "internet_max_bandwidth", "protocol"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-	}
-
-	request := vpc.NewModifyBandwidthPackageAttributeRequest()
-	request.BandwidthPackageId = &bandwidthPackageId
-
-	if v, ok := d.GetOk("bandwidth_package_name"); ok {
-		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
 	if d.HasChange("charge_type") {
@@ -314,23 +251,28 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
+	if d.HasChange("bandwidth_package_name") {
+		if v, ok := d.GetOk("bandwidth_package_name"); ok {
+			request.BandwidthPackageName = helper.String(v.(string))
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyBandwidthPackageAttribute(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create vpc bandwidthPackage failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update vpc bandwidthPackage failed, reason:%+v", logId, err)
 		return err
 	}
 
 	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
@@ -345,14 +287,13 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudVpcBandwidthPackageDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bwp_bandwidth_package.delete")()
+	defer logElapsed("resource.tencentcloud_vpc_bandwidth_package.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	bandwidthPackageId := d.Id()
 
 	if err := service.DeleteVpcBandwidthPackageById(ctx, bandwidthPackageId); err != nil {

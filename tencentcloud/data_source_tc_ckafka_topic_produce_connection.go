@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_topic_produce_connection" "topic_produce_connection" {
-  instance_id = "ckafka-xxxxxx"
-  topic_name = "topic-xxxxxx"
-}
+  instance_id = "InstanceId"
+  topic_name = "TopicName"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -40,18 +39,18 @@ func dataSourceTencentCloudCkafkaTopicProduceConnection() *schema.Resource {
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "link information return result set.",
+				Description: "Link information return result set.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ip_addr": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "ip address.",
+							Description: "Ip address.",
 						},
 						"time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "connect time.",
+							Description: "Connect time.",
 						},
 						"is_un_support_version": {
 							Type:        schema.TypeBool,
@@ -78,19 +77,14 @@ func dataSourceTencentCloudCkafkaTopicProduceConnectionRead(d *schema.ResourceDa
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-		topicName  string
-	)
+
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		paramMap["instance_id"] = helper.String(instanceId)
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("topic_name"); ok {
-		topicName = v.(string)
-		paramMap["topic_name"] = helper.String(topicName)
+		paramMap["TopicName"] = helper.String(v.(string))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -98,18 +92,19 @@ func dataSourceTencentCloudCkafkaTopicProduceConnectionRead(d *schema.ResourceDa
 	var result []*ckafka.DescribeConnectInfoResultDTO
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		topicProduceConnection, e := service.DescribeCkafkaTopicProduceConnectionByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaTopicProduceConnectionByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = topicProduceConnection
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	tmpList := make([]map[string]interface{}, 0)
+	ids := make([]string, 0, len(result))
+	tmpList := make([]map[string]interface{}, 0, len(result))
 
 	if result != nil {
 		for _, describeConnectInfoResultDTO := range result {
@@ -127,14 +122,14 @@ func dataSourceTencentCloudCkafkaTopicProduceConnectionRead(d *schema.ResourceDa
 				describeConnectInfoResultDTOMap["is_un_support_version"] = describeConnectInfoResultDTO.IsUnSupportVersion
 			}
 
+			ids = append(ids, *describeConnectInfoResultDTO.InstanceId)
 			tmpList = append(tmpList, describeConnectInfoResultDTOMap)
 		}
 
 		_ = d.Set("result", tmpList)
 	}
 
-	d.SetId(instanceId + FILED_SP + topicName)
-
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

@@ -5,15 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_clb_instance_list" "describe_host_clb_instance_list" {
-  certificate_id = "8u8DII0l"
-}
+  certificate_id = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  async_cache =
+  old_certificate_id = ""
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -145,7 +152,7 @@ func dataSourceTencentCloudSslDescribeHostClbInstanceList() *schema.Resource {
 									"rules": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "List of listeners&#39; rulesNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+										Description: "List of listeners&amp;#39; rulesNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"location_id": {
@@ -294,7 +301,7 @@ func dataSourceTencentCloudSslDescribeHostClbInstanceListRead(d *schema.Resource
 
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList *ssl.DescribeHostClbInstanceListResponseParams
+	var instanceList []*ssl.ClbInstanceDetail
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeHostClbInstanceListByFilter(ctx, paramMap)
@@ -308,11 +315,11 @@ func dataSourceTencentCloudSslDescribeHostClbInstanceListRead(d *schema.Resource
 		return err
 	}
 
-	ids := make([]string, 0, len(instanceList.InstanceList))
-	tmpList := make([]map[string]interface{}, 0, len(instanceList.InstanceList))
+	ids := make([]string, 0, len(instanceList))
+	tmpList := make([]map[string]interface{}, 0, len(instanceList))
 
-	if instanceList != nil && instanceList.InstanceList != nil {
-		for _, clbInstanceDetail := range instanceList.InstanceList {
+	if instanceList != nil {
+		for _, clbInstanceDetail := range instanceList {
 			clbInstanceDetailMap := map[string]interface{}{}
 
 			if clbInstanceDetail.LoadBalancerId != nil {
@@ -425,23 +432,23 @@ func dataSourceTencentCloudSslDescribeHostClbInstanceListRead(d *schema.Resource
 				clbInstanceDetailMap["listeners"] = []interface{}{listenersList}
 			}
 
-			ids = append(ids, *clbInstanceDetail.LoadBalancerId)
+			ids = append(ids, *clbInstanceDetail.CertificateId)
 			tmpList = append(tmpList, clbInstanceDetailMap)
 		}
 
 		_ = d.Set("instance_list", tmpList)
 	}
 
-	if instanceList.AsyncTotalNum != nil {
-		_ = d.Set("async_total_num", instanceList.AsyncTotalNum)
+	if asyncTotalNum != nil {
+		_ = d.Set("async_total_num", asyncTotalNum)
 	}
 
-	if instanceList.AsyncOffset != nil {
-		_ = d.Set("async_offset", instanceList.AsyncOffset)
+	if asyncOffset != nil {
+		_ = d.Set("async_offset", asyncOffset)
 	}
 
-	if instanceList.AsyncCacheTime != nil {
-		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
+	if asyncCacheTime != nil {
+		_ = d.Set("async_cache_time", asyncCacheTime)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

@@ -3,166 +3,49 @@ Provides a resource to create a waf saas_domain
 
 Example Usage
 
-If upstream_type is 0
-
-Create a basic waf saas domain
-
 ```hcl
-resource "tencentcloud_waf_saas_domain" "example" {
-  instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.example.com"
-  src_list    = [
-    "1.1.1.1"
-  ]
-
+resource "tencentcloud_waf_saas_domain" "saas_domain" {
+  domain = ""
+  cert_type =
+  is_cdn =
+  upstream_type =
+  is_websocket =
+  load_balance = ""
+  cert = ""
+  private_key = ""
+  s_s_l_id = ""
+  resource_id = ""
+  upstream_scheme = ""
+  https_upstream_port = ""
+  is_gray =
+  gray_areas =
+  upstream_domain = ""
+  src_list =
+  is_http2 =
+  https_rewrite =
   ports {
-    port              = "80"
-    protocol          = "http"
-    upstream_port     = "80"
-    upstream_protocol = "http"
+		port = ""
+		protocol = ""
+		upstream_port = ""
+		upstream_protocol = ""
+		nginx_server_id = ""
+
   }
-}
-```
-
-Create a load balancing strategy is weighted polling saas domain
-
-```hcl
-resource "tencentcloud_waf_saas_domain" "example" {
-  instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.example.com"
-  src_list    = [
-    "1.1.1.1",
-    "2.2.2.2"
-  ]
-  load_balance = "2"
-  weights      = [
-    30,
-    50
-  ]
-
-  ports {
-    port              = "80"
-    protocol          = "http"
-    upstream_port     = "80"
-    upstream_protocol = "http"
-  }
-}
-```
-
-If upstream_type is 1
-
-```hcl
-resource "tencentcloud_waf_saas_domain" "example" {
-  instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.example.com"
-  upstream_type   = 1
-  upstream_domain = "test.com"
-
-  ports {
-    port              = "80"
-    protocol          = "http"
-    upstream_port     = "80"
-    upstream_protocol = "http"
-  }
-}
-```
-
-Create a waf saas domain with set Http&Https
-
-```hcl
-resource "tencentcloud_waf_saas_domain" "example" {
-  instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.example.com"
-  is_cdn          = 3
-  cert_type       = 2
-  ssl_id          = "3a6B5y8v"
-  load_balance    = "2"
-  https_rewrite   = 1
-  upstream_scheme = "https"
-  src_list        = [
-    "1.1.1.1",
-    "2.2.2.2"
-  ]
-  weights = [
-    50,
-    60
-  ]
-
-  ports {
-    port              = "80"
-    protocol          = "http"
-    upstream_port     = "80"
-    upstream_protocol = "http"
-  }
-
-  ports {
-    port              = "443"
-    protocol          = "https"
-    upstream_port     = "443"
-    upstream_protocol = "https"
-  }
-
-  ip_headers = [
-    "headers_1",
-    "headers_2",
-    "headers_3",
-  ]
-}
-```
-
-Create a complete waf saas domain
-
-```hcl
-resource "tencentcloud_waf_saas_domain" "example" {
-  instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.example.com"
-  is_cdn          = 3
-  cert_type       = 2
-  ssl_id          = "3a6B5y8v"
-  load_balance    = "2"
-  https_rewrite   = 1
-  is_http2        = 1
-  upstream_scheme = "https"
-  src_list        = [
-    "1.1.1.1",
-    "2.2.2.2"
-  ]
-  weights = [
-    50,
-    60
-  ]
-
-  ports {
-    port              = "80"
-    protocol          = "http"
-    upstream_port     = "80"
-    upstream_protocol = "http"
-  }
-
-  ports {
-    port              = "443"
-    protocol          = "https"
-    upstream_port     = "443"
-    upstream_protocol = "https"
-  }
-
-  ip_headers = [
-    "headers_1",
-    "headers_2",
-    "headers_3",
-  ]
-
-  is_keep_alive      = "1"
-  active_check       = 1
-  tls_version        = 3
-  cipher_template    = 1
-  proxy_read_timeout = 500
-  proxy_send_timeout = 500
-  sni_type           = 3
-  sni_host           = "3.3.3.3"
-  xff_reset          = 1
-  bot_status         = 1
-  api_safe_status    = 1
+  edition = ""
+  is_keep_alive = ""
+  instance_i_d = ""
+  anycast =
+  weights =
+  active_check =
+  t_l_s_version =
+  ciphers =
+  cipher_template =
+  proxy_read_timeout =
+  proxy_send_timeout =
+  sni_type =
+  sni_host = ""
+  ip_headers =
+  x_f_f_reset =
 }
 ```
 
@@ -171,7 +54,7 @@ Import
 waf saas_domain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_saas_domain.example waf_2kxtlbky01b3wceb#tf.example.com#9647c91da0aa5f5aaa49d0ca40e2af24
+terraform import tencentcloud_waf_saas_domain.saas_domain saas_domain_id
 ```
 */
 package tencentcloud
@@ -179,15 +62,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudWafSaasDomain() *schema.Resource {
@@ -200,105 +79,123 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"instance_id": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "Unique ID of Instance.",
-			},
 			"domain": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Domain names that require defense.",
 			},
+
 			"cert_type": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      CERT_TYPE_0,
-				ValidateFunc: validateAllowedIntValue(CERT_TYPES),
-				Description:  "Certificate type, 0 represents no certificate, CertType=1 represents self owned certificate, and 2 represents managed certificate.",
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "Certificate type, 0 represents no certificate, CertType=1 represents self owned certificate, and 2 represents managed certificate.",
 			},
+
+			"is_cdn": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.",
+			},
+
+			"upstream_type": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "Upstream type, 0 represents IP, 1 represents domain name.",
+			},
+
+			"is_websocket": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "Is WebSocket support enabled. 1 means enabled, 0 does not.",
+			},
+
+			"load_balance": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "Load balancing strategy, where 0 represents polling and 1 represents IP hash.",
+			},
+
 			"cert": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Certificate content, When CertType=1, this parameter needs to be filled.",
 			},
+
 			"private_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Certificate key, When CertType=1, this parameter needs to be filled.",
 			},
-			"ssl_id": {
+
+			"s_s_l_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Certificate ID, When CertType=2, this parameter needs to be filled.",
 			},
-			"is_cdn": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      ISCDN_0,
-				ValidateFunc: validateAllowedIntValue(ISCDN_STSTUS),
-				Description:  "Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.",
+
+			"resource_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Waf&amp;amp;#39;s resource ID.",
 			},
+
 			"upstream_scheme": {
-				Optional:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(UPSTREAM_SCHEMES),
-				Description:  "Upstream scheme for https, http or https.",
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Upstream scheme for https, http or https.",
 			},
+
 			"https_upstream_port": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Upstream port for https, When listen ports has https port and UpstreamScheme is HTTP, the current field needs to be filled.",
 			},
-			"upstream_type": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      UP_STREAM_TYPE_0,
-				ValidateFunc: validateAllowedIntValue(UP_STREAM_TYPES),
-				Description:  "Upstream type, 0 represents IP, 1 represents domain name.",
+
+			"is_gray": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether to turn on grayscale, 0 indicates not to turn on grayscale.",
 			},
+
+			"gray_areas": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Grayscale region.",
+			},
+
 			"upstream_domain": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Upstream domain, When UpstreamType=1, this parameter needs to be filled.",
 			},
+
 			"src_list": {
-				Optional:    true,
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Upstream IP List, When UpstreamType=0, this parameter needs to be filled.",
 			},
+
 			"is_http2": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      IS_HTTP2_0,
-				ValidateFunc: validateAllowedIntValue(IS_HTTP2_STATUS),
-				Description:  "Whether enable HTTP2, Enabling HTTP2 requires HTTPS support, 1 means enabled, 0 does not.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether enable HTTP2, Enabling HTTP2 requires HTTPS support.",
 			},
-			"is_websocket": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      IS_WEBSOCKET_0,
-				ValidateFunc: validateAllowedIntValue(IS_WEBSOCKET_STATUS),
-				Description:  "Is WebSocket support enabled. 1 means enabled, 0 does not.",
-			},
-			"load_balance": {
-				Optional:     true,
-				Type:         schema.TypeString,
-				Default:      LOAD_BALANCE_0,
-				ValidateFunc: validateAllowedStringValue(LOAD_BALANCE_STATUS),
-				Description:  "Load balancing strategy, where 0 represents polling and 1 represents IP hash and 2 weighted round robin.",
-			},
+
 			"https_rewrite": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      HTTPS_REWRITE_0,
-				ValidateFunc: validateAllowedIntValue(HTTPS_REWRITE_STATUS),
-				Description:  "Whether redirect to https, 1 will redirect and 0 will not.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether redirect to https, 1 will redirect and 0 will not.",
 			},
+
 			"ports": {
-				Required:    true,
-				Type:        schema.TypeSet,
+				Optional:    true,
+				Type:        schema.TypeList,
 				Description: "This field needs to be set for multiple ports in the upstream server.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -324,121 +221,110 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 						},
 						"nginx_server_id": {
 							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Nginx server ID.",
+							Required:    true,
+							Description: "Nginx&amp;#39;s server ID.",
 						},
 					},
 				},
 			},
-			"is_keep_alive": {
-				Optional:     true,
-				Type:         schema.TypeString,
-				Default:      IS_KEEP_ALIVE_1,
-				ValidateFunc: validateAllowedStringValue(IS_KEEP_ALIVE_STATUS),
-				Description:  "Whether to enable keep-alive, 0 disable, 1 enable.",
-			},
-			"weights": {
+
+			"edition": {
 				Optional:    true,
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeInt},
-				Description: "Weight of each upstream.",
+				Type:        schema.TypeString,
+				Description: "Instance type, sparta-waf represents SAAS WAF, clb-waf represents CLB WAF.",
 			},
-			"active_check": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      ACTIVE_CHECK_0,
-				ValidateFunc: validateAllowedIntValue(ACTIVE_CHECK_STATUS),
-				Description:  "Whether to enable active health detection, 0 represents disable and 1 represents enable.",
+
+			"is_keep_alive": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Whether to enable keep-alive, 0 disable, 1 enable.",
 			},
-			"tls_version": {
+
+			"instance_i_d": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Unique ID of Instance.",
+			},
+
+			"anycast": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     TLS_VERSION_STATUS_3,
+				Description: "Anycast IP switch, 0 represents off and 1 represents on.",
+			},
+
+			"weights": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "Weight of each upstream.",
+			},
+
+			"active_check": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Whether to enable active health detection, 0 represents disable and 1 represents enable.",
+			},
+
+			"t_l_s_version": {
+				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Version of TLS Protocol.",
 			},
+
 			"ciphers": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeInt},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 				Description: "Encryption Suite Information.",
 			},
+
 			"cipher_template": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      CIPHER_TEMPLATE_1,
-				ValidateFunc: validateAllowedIntValue(CIPHER_TEMPLATES),
-				Description:  "Encryption Suite Template, 0:default  1:Universal template 2:Security template 3:Custom template.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Encryption Suite Template, 0:default  1:Universal template 2:Security template 3:Custom template.",
 			},
+
 			"proxy_read_timeout": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     PROXY_READ_TIMEOUT,
 				Description: "300s.",
 			},
+
 			"proxy_send_timeout": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     PROXY_SEND_TIMEOUT,
 				Description: "300s.",
 			},
+
 			"sni_type": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      SNI_TYPE_0,
-				ValidateFunc: validateAllowedIntValue(SNI_TYPES),
-				Description:  "Sni type fo upstream, 0:disable SNI; 1:enable SNI and SNI equal original request host; 2:and SNI equal upstream host 3:enable SNI and equal customize host.",
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Sni type fo upstream, 0:disable SNI；1:enable SNI and SNI equal original request host；2:and SNI equal upstream host 3：enable SNI and equal customize host.",
 			},
+
 			"sni_host": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "When SniType=3, this parameter needs to be filled in to represent a custom host.",
 			},
+
 			"ip_headers": {
-				Optional:    true,
-				Type:        schema.TypeList,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "When is_cdn=3, this parameter needs to be filled in to indicate a custom header.",
 			},
-			"xff_reset": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      XFF_RESET_0,
-				ValidateFunc: validateAllowedIntValue(XFF_RESET_STATUS),
-				Description:  "0:disable xff reset; 1:ensable xff reset.",
-			},
-			"bot_status": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      BOT_STATUS_0,
-				ValidateFunc: validateAllowedIntValue(BOT_STATUS),
-				Description:  "Whether to enable bot, 1 enable, 0 disable.",
-			},
-			"api_safe_status": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      API_SAFE_STATUS_0,
-				ValidateFunc: validateAllowedIntValue(API_SAFE_STATUS),
-				Description:  "Whether to enable api safe, 1 enable, 0 disable.",
-			},
-			//"ipv6_status": {
-			//	Type:         schema.TypeInt,
-			//	Optional:     true,
-			//	Default:      IPV6_STATUS_0,
-			//	ValidateFunc: validateAllowedIntValue(IPV6_STATUS),
-			//	Description:  "Whether to enable ipv6, 1 enable, 0 disable.",
-			//},
-			//"status": {
-			//	Type:         schema.TypeInt,
-			//	Optional:     true,
-			//	Default:      SAAS_DOMAIN_STATUS_1,
-			//	ValidateFunc: validateAllowedIntValue(SAAS_DOMAIN_STATUS),
-			//	Description:  "Binding status between waf and LB, 0:not bind, 1:binding.",
-			//},
-			"domain_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Domain id.",
+
+			"x_f_f_reset": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "0:disable xff reset；1:ensable xff reset.",
 			},
 		},
 	}
@@ -448,183 +334,82 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_waf_saas_domain.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		verifyRequest = waf.NewDescribeDomainVerifyResultRequest()
-		request       = waf.NewAddSpartaProtectionRequest()
-		instanceID    string
-		domain        string
-		domainId      string
-		loadBalance   string
-		botStatus     uint64
-		apiSafeStatus uint64
-		//ipv6Status    int64
-		isCdn int
+		request  = waf.NewAddSpartaProtectionRequest()
+		response = waf.NewAddSpartaProtectionResponse()
+		domainId string
 	)
-
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceID = helper.String(v.(string))
-		instanceID = v.(string)
-	}
-
 	if v, ok := d.GetOk("domain"); ok {
 		request.Domain = helper.String(v.(string))
-		domain = v.(string)
-	}
-
-	// check domain legal
-	verifyRequest.InstanceID = &instanceID
-	verifyRequest.Domain = &domain
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().DescribeDomainVerifyResult(verifyRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-
-		if *result.Response.VerifyCode == DescribeDomainVerifyResultSUCCESS {
-			return nil
-		}
-
-		e = fmt.Errorf("The current domain %s is illegal, errMsg: %s.", domain, *result.Response.Msg)
-		return resource.NonRetryableError(e)
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s verify waf saasDomain failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if v, ok := d.GetOkExists("cert_type"); ok {
 		request.CertType = helper.IntInt64(v.(int))
-
-		cert := d.Get("cert").(string)
-		privateKey := d.Get("private_key").(string)
-		sslId := d.Get("ssl_id").(string)
-
-		certType := v.(int)
-		if certType == CERT_TYPE_0 {
-			if cert != "" || privateKey != "" || sslId != "" {
-				return fmt.Errorf("If `cert_type` is 0, not support setting `cert`, `private_key`, `ssl_id`.")
-			}
-
-		} else if certType == CERT_TYPE_1 {
-			if sslId != "" {
-				return fmt.Errorf("If `cert_type` is 1, not support setting `ssl_id`.")
-			}
-
-			if cert == "" || privateKey == "" {
-				return fmt.Errorf("If `cert_type` is 1, `cert`, `private_key` is required.")
-			}
-
-			request.Cert = &cert
-			request.PrivateKey = &privateKey
-
-		} else {
-			if cert != "" || privateKey != "" {
-				return fmt.Errorf("If `cert_type` is 2, not support setting `cert`, `private_key`.")
-			}
-
-			if sslId == "" {
-				return fmt.Errorf("If `cert_type` is 2, `ssl_id` is required.")
-			}
-
-			request.SSLId = &sslId
-		}
 	}
 
 	if v, ok := d.GetOkExists("is_cdn"); ok {
 		request.IsCdn = helper.IntInt64(v.(int))
-		isCdn = v.(int)
-	}
-
-	if v, ok := d.GetOk("load_balance"); ok {
-		request.LoadBalance = helper.String(v.(string))
-		loadBalance = v.(string)
-	}
-
-	if v, ok := d.GetOk("upstream_scheme"); ok {
-		request.UpstreamScheme = helper.String(v.(string))
-
-		httpsUpstreamPort := d.Get("https_upstream_port").(string)
-
-		upstreamScheme := v.(string)
-		if upstreamScheme == UPSTREAM_SCHEME_HTTP {
-			if httpsUpstreamPort == "" {
-				return fmt.Errorf("If `upstream_scheme` is http, `https_upstream_port` is required.")
-			}
-
-			request.HttpsUpstreamPort = &httpsUpstreamPort
-		}
 	}
 
 	if v, ok := d.GetOkExists("upstream_type"); ok {
 		request.UpstreamType = helper.IntInt64(v.(int))
+	}
 
-		upstreamType := v.(int)
-		if upstreamType == UP_STREAM_TYPE_0 {
-			if _, ok := d.GetOk("upstream_domain"); ok {
-				return fmt.Errorf("If `upstream_type` is 0, not support setting `upstream_domain`.")
-			}
+	if v, ok := d.GetOkExists("is_websocket"); ok {
+		request.IsWebsocket = helper.IntInt64(v.(int))
+	}
 
-			if v, ok := d.GetOk("src_list"); ok {
-				srcListSet := v.([]interface{})
-				for i := range srcListSet {
-					srcList := srcListSet[i].(string)
-					request.SrcList = append(request.SrcList, &srcList)
-				}
+	if v, ok := d.GetOk("load_balance"); ok {
+		request.LoadBalance = helper.String(v.(string))
+	}
 
-				if len(srcListSet) == 1 {
-					if _, ok := d.GetOk("weights"); ok {
-						return fmt.Errorf("If `src_list` length is 1, not support setting `weights`.")
-					}
-				} else {
-					if loadBalance != LOAD_BALANCE_2 {
-						return fmt.Errorf("If `load_balance` is 0 or 1, not support setting `weights`.")
-					}
+	if v, ok := d.GetOk("cert"); ok {
+		request.Cert = helper.String(v.(string))
+	}
 
-					if v, ok := d.GetOk("weights"); ok {
-						weightsSet := v.([]interface{})
-						if len(weightsSet) != len(srcListSet) {
-							return fmt.Errorf("The lengths of `weights` and `src_list` are not equal.")
-						}
+	if v, ok := d.GetOk("private_key"); ok {
+		request.PrivateKey = helper.String(v.(string))
+	}
 
-						for i := range weightsSet {
-							weight := int64(weightsSet[i].(int))
-							request.Weights = append(request.Weights, &weight)
-						}
-					}
-				}
+	if v, ok := d.GetOk("s_s_l_id"); ok {
+		request.SSLId = helper.String(v.(string))
+	}
 
-			} else {
-				return fmt.Errorf("If `upstream_type` is 0, `src_list` is required.")
-			}
+	if v, ok := d.GetOk("resource_id"); ok {
+		request.ResourceId = helper.String(v.(string))
+	}
 
-			if v, ok := d.GetOk("is_keep_alive"); ok {
-				request.IsKeepAlive = helper.String(v.(string))
-			}
+	if v, ok := d.GetOk("upstream_scheme"); ok {
+		request.UpstreamScheme = helper.String(v.(string))
+	}
 
-		} else {
-			if _, ok := d.GetOk("src_list"); ok {
-				return fmt.Errorf("If `upstream_type` is 1, not support setting `src_list`.")
-			}
+	if v, ok := d.GetOk("https_upstream_port"); ok {
+		request.HttpsUpstreamPort = helper.String(v.(string))
+	}
 
-			if _, ok := d.GetOk("weights"); ok {
-				return fmt.Errorf("If `upstream_type` is 1, not support setting `weights`.")
-			}
+	if v, ok := d.GetOkExists("is_gray"); ok {
+		request.IsGray = helper.IntInt64(v.(int))
+	}
 
-			if v, ok := d.GetOk("is_keep_alive"); ok {
-				request.IsKeepAlive = helper.String(v.(string))
-			}
+	if v, ok := d.GetOk("gray_areas"); ok {
+		grayAreasSet := v.(*schema.Set).List()
+		for i := range grayAreasSet {
+			grayAreas := grayAreasSet[i].(string)
+			request.GrayAreas = append(request.GrayAreas, &grayAreas)
+		}
+	}
 
-			if v, ok := d.GetOk("upstream_domain"); ok {
-				request.UpstreamDomain = helper.String(v.(string))
-			} else {
-				return fmt.Errorf("If `upstream_type` is 1, `upstream_domain` is required.")
-			}
+	if v, ok := d.GetOk("upstream_domain"); ok {
+		request.UpstreamDomain = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("src_list"); ok {
+		srcListSet := v.(*schema.Set).List()
+		for i := range srcListSet {
+			srcList := srcListSet[i].(string)
+			request.SrcList = append(request.SrcList, &srcList)
 		}
 	}
 
@@ -632,37 +417,54 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		request.IsHttp2 = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("is_websocket"); ok {
-		request.IsWebsocket = helper.IntInt64(v.(int))
-	}
-
 	if v, ok := d.GetOkExists("https_rewrite"); ok {
 		request.HttpsRewrite = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("ports"); ok {
-		for _, item := range v.(*schema.Set).List() {
+		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			portItem := waf.PortItem{}
 			if v, ok := dMap["port"]; ok {
 				portItem.Port = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["protocol"]; ok {
 				portItem.Protocol = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["upstream_port"]; ok {
 				portItem.UpstreamPort = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["upstream_protocol"]; ok {
 				portItem.UpstreamProtocol = helper.String(v.(string))
 			}
-
-			portItem.NginxServerId = helper.String("0")
-
+			if v, ok := dMap["nginx_server_id"]; ok {
+				portItem.NginxServerId = helper.String(v.(string))
+			}
 			request.Ports = append(request.Ports, &portItem)
+		}
+	}
+
+	if v, ok := d.GetOk("edition"); ok {
+		request.Edition = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("is_keep_alive"); ok {
+		request.IsKeepAlive = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_i_d"); ok {
+		request.InstanceID = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("anycast"); ok {
+		request.Anycast = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("weights"); ok {
+		weightsSet := v.(*schema.Set).List()
+		for i := range weightsSet {
+			weights := weightsSet[i].(int)
+			request.Weights = append(request.Weights, helper.IntInt64(weights))
 		}
 	}
 
@@ -670,28 +472,20 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		request.ActiveCheck = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("tls_version"); ok {
+	if v, ok := d.GetOkExists("t_l_s_version"); ok {
 		request.TLSVersion = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("ciphers"); ok {
+		ciphersSet := v.(*schema.Set).List()
+		for i := range ciphersSet {
+			ciphers := ciphersSet[i].(int)
+			request.Ciphers = append(request.Ciphers, helper.IntInt64(ciphers))
+		}
 	}
 
 	if v, ok := d.GetOkExists("cipher_template"); ok {
 		request.CipherTemplate = helper.IntInt64(v.(int))
-
-		cipherTemplate := v.(int)
-
-		if cipherTemplate != CIPHER_TEMPLATE_3 {
-			if _, ok := d.GetOk("ciphers"); ok {
-				return fmt.Errorf("If `cipher_template` is 1 or 2, not support setting `ciphers`.")
-			}
-		} else {
-			if v, ok := d.GetOk("ciphers"); ok {
-				ciphersSet := v.([]interface{})
-				for i := range ciphersSet {
-					ciphers := ciphersSet[i].(int)
-					request.Ciphers = append(request.Ciphers, helper.IntInt64(ciphers))
-				}
-			}
-		}
 	}
 
 	if v, ok := d.GetOkExists("proxy_read_timeout"); ok {
@@ -711,195 +505,34 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	}
 
 	if v, ok := d.GetOk("ip_headers"); ok {
-		if isCdn == ISCDN_3 {
-			ipHeadersSet := v.([]interface{})
-			for i := range ipHeadersSet {
-				ipHeaders := ipHeadersSet[i].(string)
-				request.IpHeaders = append(request.IpHeaders, &ipHeaders)
-			}
-		} else {
-			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
+		ipHeadersSet := v.(*schema.Set).List()
+		for i := range ipHeadersSet {
+			ipHeaders := ipHeadersSet[i].(string)
+			request.IpHeaders = append(request.IpHeaders, &ipHeaders)
 		}
 	}
 
-	if v, ok := d.GetOkExists("xff_reset"); ok {
+	if v, ok := d.GetOkExists("x_f_f_reset"); ok {
 		request.XFFReset = helper.IntInt64(v.(int))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().AddSpartaProtection(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create waf saasDomain failed, reason:%+v", logId, err)
 		return err
 	}
 
-	// get domain id
-	domainInfo, err := service.DescribeDomainsById(ctx, instanceID, domain)
-	if err != nil {
-		return err
-	}
-
-	if domainInfo == nil {
-		log.Printf("[WARN]%s resource `DescribeDomains` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	if domainInfo.DomainId != nil {
-		domainId = *domainInfo.DomainId
-	}
-
-	d.SetId(strings.Join([]string{instanceID, domain, domainId}, FILED_SP))
-
-	// wait domain state
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeDomainsById(ctx, instanceID, domain)
-		if e != nil {
-			return retryError(e)
-		}
-
-		if *result.State == 0 || *result.State == 1 {
-			return nil
-		}
-
-		return resource.RetryableError(fmt.Errorf("domain is still in state %d", *result.State))
-	})
-
-	if err != nil {
-		return err
-	}
-
-	// set bot
-	if v, ok := d.GetOkExists("bot_status"); ok {
-		tmpBotStatus := v.(int)
-
-		if tmpBotStatus != BOT_STATUS_0 {
-			botStatus = uint64(tmpBotStatus)
-			modifyBotStatusRequest := waf.NewModifyBotStatusRequest()
-			modifyBotStatusRequest.Domain = &domain
-			modifyBotStatusRequest.InstanceID = &instanceID
-			tmpStatus := strconv.FormatUint(botStatus, 10)
-			modifyBotStatusRequest.Status = &tmpStatus
-			modifyBotStatusRequest.Category = common.StringPtr("bot")
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyBotStatus(modifyBotStatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyBotStatusRequest.GetAction(), modifyBotStatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain bot_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-
-	// set api safe
-	if v, ok := d.GetOkExists("api_safe_status"); ok {
-		tmpApiSafeStatus := v.(int)
-
-		if tmpApiSafeStatus != API_SAFE_STATUS_0 {
-			apiSafeStatus = uint64(tmpApiSafeStatus)
-			modifyApiAnalyzeStatusRequest := waf.NewModifyApiAnalyzeStatusRequest()
-			modifyApiAnalyzeStatusRequest.Domain = &domain
-			modifyApiAnalyzeStatusRequest.InstanceId = &instanceID
-			modifyApiAnalyzeStatusRequest.Status = &apiSafeStatus
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyApiAnalyzeStatus(modifyApiAnalyzeStatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyApiAnalyzeStatusRequest.GetAction(), modifyApiAnalyzeStatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain api_safe_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-
-	// set ipv6
-	//if v, ok := d.GetOkExists("ipv6_status"); ok {
-	//	tmpIpv6Status := v.(int)
-	//
-	//	if tmpIpv6Status != IPV6_STATUS_0 {
-	//		ipv6Status = int64(IPV6_ON)
-	//		modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
-	//		modifyDomainIpv6StatusRequest.Domain = &domain
-	//		modifyDomainIpv6StatusRequest.DomainId = &domainId
-	//		modifyDomainIpv6StatusRequest.InstanceId = &instanceID
-	//		modifyDomainIpv6StatusRequest.Status = &ipv6Status
-	//
-	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
-	//			if e != nil {
-	//				return retryError(e)
-	//			} else {
-	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
-	//			}
-	//
-	//			return nil
-	//		})
-	//
-	//		if err != nil {
-	//			log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
-	//			return err
-	//		}
-	//	}
-	//}
-
-	//// set waf status
-	//if v, ok := d.GetOkExists("status"); ok {
-	//	tmpWafStatus := v.(int)
-	//
-	//	if tmpWafStatus != SAAS_DOMAIN_STATUS_1 {
-	//		wafStatus = uint64(tmpWafStatus)
-	//		modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//		modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//			{
-	//				Domain:     common.StringPtr(domain),
-	//				DomainId:   common.StringPtr(domainId),
-	//				Status:     common.Uint64Ptr(wafStatus),
-	//				InstanceID: common.StringPtr(instanceID),
-	//			},
-	//		}
-	//
-	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//			if e != nil {
-	//				return retryError(e)
-	//			} else {
-	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//			}
-	//
-	//			return nil
-	//		})
-	//
-	//		if err != nil {
-	//			log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//			return err
-	//		}
-	//	}
-	//}
+	domainId = *response.Response.DomainId
+	d.SetId(domainId)
 
 	return resourceTencentCloudWafSaasDomainRead(d, meta)
 }
@@ -908,22 +541,15 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_waf_saas_domain.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	instanceID := idSplit[0]
-	domain := idSplit[1]
-	domainId := idSplit[2]
+	service := WafService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	saasDomain, err := service.DescribeWafSaasDomainById(ctx, instanceID, domain, domainId)
+	saasDomainId := d.Id()
+
+	saasDomain, err := service.DescribeWafSaasDomainById(ctx, domainId)
 	if err != nil {
 		return err
 	}
@@ -934,23 +560,28 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		return nil
 	}
 
-	domainInfo, err := service.DescribeDomainsById(ctx, instanceID, domain)
-	if err != nil {
-		return err
+	if saasDomain.Domain != nil {
+		_ = d.Set("domain", saasDomain.Domain)
 	}
-
-	if domainInfo == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeDomains` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	_ = d.Set("instance_id", instanceID)
-
-	_ = d.Set("domain", domain)
 
 	if saasDomain.CertType != nil {
 		_ = d.Set("cert_type", saasDomain.CertType)
+	}
+
+	if saasDomain.IsCdn != nil {
+		_ = d.Set("is_cdn", saasDomain.IsCdn)
+	}
+
+	if saasDomain.UpstreamType != nil {
+		_ = d.Set("upstream_type", saasDomain.UpstreamType)
+	}
+
+	if saasDomain.IsWebsocket != nil {
+		_ = d.Set("is_websocket", saasDomain.IsWebsocket)
+	}
+
+	if saasDomain.LoadBalance != nil {
+		_ = d.Set("load_balance", saasDomain.LoadBalance)
 	}
 
 	if saasDomain.Cert != nil {
@@ -962,11 +593,11 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	}
 
 	if saasDomain.SSLId != nil {
-		_ = d.Set("ssl_id", saasDomain.SSLId)
+		_ = d.Set("s_s_l_id", saasDomain.SSLId)
 	}
 
-	if saasDomain.IsCdn != nil {
-		_ = d.Set("is_cdn", saasDomain.IsCdn)
+	if saasDomain.ResourceId != nil {
+		_ = d.Set("resource_id", saasDomain.ResourceId)
 	}
 
 	if saasDomain.UpstreamScheme != nil {
@@ -977,8 +608,12 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("https_upstream_port", saasDomain.HttpsUpstreamPort)
 	}
 
-	if saasDomain.UpstreamType != nil {
-		_ = d.Set("upstream_type", saasDomain.UpstreamType)
+	if saasDomain.IsGray != nil {
+		_ = d.Set("is_gray", saasDomain.IsGray)
+	}
+
+	if saasDomain.GrayAreas != nil {
+		_ = d.Set("gray_areas", saasDomain.GrayAreas)
 	}
 
 	if saasDomain.UpstreamDomain != nil {
@@ -993,16 +628,6 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("is_http2", saasDomain.IsHttp2)
 	}
 
-	if saasDomain.IsWebsocket != nil {
-		_ = d.Set("is_websocket", saasDomain.IsWebsocket)
-	}
-
-	if saasDomain.LoadBalance != nil {
-		tmpLoadBalance := *saasDomain.LoadBalance
-		loadBalance := strconv.FormatUint(tmpLoadBalance, 10)
-		_ = d.Set("load_balance", loadBalance)
-	}
-
 	if saasDomain.HttpsRewrite != nil {
 		_ = d.Set("https_rewrite", saasDomain.HttpsRewrite)
 	}
@@ -1012,26 +637,24 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		for _, ports := range saasDomain.Ports {
 			portsMap := map[string]interface{}{}
 
-			if ports.Port != nil {
-				portsMap["port"] = ports.Port
+			if saasDomain.Ports.Port != nil {
+				portsMap["port"] = saasDomain.Ports.Port
 			}
 
-			if ports.Protocol != nil {
-				portsMap["protocol"] = ports.Protocol
+			if saasDomain.Ports.Protocol != nil {
+				portsMap["protocol"] = saasDomain.Ports.Protocol
 			}
 
-			if ports.UpstreamPort != nil {
-				portsMap["upstream_port"] = ports.UpstreamPort
+			if saasDomain.Ports.UpstreamPort != nil {
+				portsMap["upstream_port"] = saasDomain.Ports.UpstreamPort
 			}
 
-			if ports.UpstreamProtocol != nil {
-				portsMap["upstream_protocol"] = ports.UpstreamProtocol
+			if saasDomain.Ports.UpstreamProtocol != nil {
+				portsMap["upstream_protocol"] = saasDomain.Ports.UpstreamProtocol
 			}
 
-			if ports.NginxServerId != nil {
-				tmpNginxServerId := *ports.NginxServerId
-				nginxServerId := strconv.FormatUint(tmpNginxServerId, 10)
-				portsMap["nginx_server_id"] = nginxServerId
+			if saasDomain.Ports.NginxServerId != nil {
+				portsMap["nginx_server_id"] = saasDomain.Ports.NginxServerId
 			}
 
 			portsList = append(portsList, portsMap)
@@ -1041,20 +664,24 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 
 	}
 
+	if saasDomain.Edition != nil {
+		_ = d.Set("edition", saasDomain.Edition)
+	}
+
 	if saasDomain.IsKeepAlive != nil {
-		tmpIsKeepAlive := *saasDomain.IsKeepAlive
-		isKeepAlive := strconv.FormatUint(tmpIsKeepAlive, 10)
-		_ = d.Set("is_keep_alive", isKeepAlive)
+		_ = d.Set("is_keep_alive", saasDomain.IsKeepAlive)
+	}
+
+	if saasDomain.InstanceID != nil {
+		_ = d.Set("instance_i_d", saasDomain.InstanceID)
+	}
+
+	if saasDomain.Anycast != nil {
+		_ = d.Set("anycast", saasDomain.Anycast)
 	}
 
 	if saasDomain.Weights != nil {
-		tmpList := make([]int, 0, len(saasDomain.Weights))
-		for _, v := range saasDomain.Weights {
-			item, _ := strconv.Atoi(*v)
-			tmpList = append(tmpList, item)
-		}
-
-		_ = d.Set("weights", tmpList)
+		_ = d.Set("weights", saasDomain.Weights)
 	}
 
 	if saasDomain.ActiveCheck != nil {
@@ -1062,7 +689,7 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	}
 
 	if saasDomain.TLSVersion != nil {
-		_ = d.Set("tls_version", saasDomain.TLSVersion)
+		_ = d.Set("t_l_s_version", saasDomain.TLSVersion)
 	}
 
 	if saasDomain.Ciphers != nil {
@@ -1094,20 +721,8 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	}
 
 	if saasDomain.XFFReset != nil {
-		_ = d.Set("xff_reset", saasDomain.XFFReset)
+		_ = d.Set("x_f_f_reset", saasDomain.XFFReset)
 	}
-
-	if domainInfo.BotStatus != nil {
-		_ = d.Set("bot_status", domainInfo.BotStatus)
-	}
-
-	if domainInfo.ApiStatus != nil {
-		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
-	}
-
-	//if domainInfo.Ipv6Status != nil {
-	//	_ = d.Set("ipv6_status", domainInfo.Ipv6Status)
-	//}
 
 	return nil
 }
@@ -1116,19 +731,18 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_waf_saas_domain.update")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request       = waf.NewModifySpartaProtectionRequest()
-		botStatus     uint64
-		apiSafeStatus uint64
-		//ipv6Status    int64
-		loadBalance string
-		isCdn       int
+		modifySpartaProtectionRequest  = waf.NewModifySpartaProtectionRequest()
+		modifySpartaProtectionResponse = waf.NewModifySpartaProtectionResponse()
 	)
 
-	immutableArgs := []string{"instance_id", "domain"}
+	saasDomainId := d.Id()
+
+	request.DomainId = &domainId
+
+	immutableArgs := []string{"domain", "cert_type", "is_cdn", "upstream_type", "is_websocket", "load_balance", "cert", "private_key", "s_s_l_id", "resource_id", "upstream_scheme", "https_upstream_port", "is_gray", "gray_areas", "upstream_domain", "src_list", "is_http2", "https_rewrite", "ports", "edition", "is_keep_alive", "instance_i_d", "anycast", "weights", "active_check", "t_l_s_version", "ciphers", "cipher_template", "proxy_read_timeout", "proxy_send_timeout", "sni_type", "sni_host", "ip_headers", "x_f_f_reset"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -1136,312 +750,179 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
-
-	instanceID := idSplit[0]
-	domain := idSplit[1]
-	domainId := idSplit[2]
-
-	//// set waf status
-	//if d.HasChange("status") {
-	//	if v, ok := d.GetOkExists("status"); ok {
-	//		tmpWafStatus := v.(int)
-	//		// open first
-	//		if tmpWafStatus == CLB_DOMAIN_STATUS_1 {
-	//			wafStatus = uint64(v.(int))
-	//			modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//			modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//				{
-	//					Domain:     common.StringPtr(domain),
-	//					DomainId:   common.StringPtr(domainId),
-	//					Status:     common.Uint64Ptr(wafStatus),
-	//					InstanceID: common.StringPtr(instanceID),
-	//				},
-	//			}
-	//
-	//			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//				if e != nil {
-	//					return retryError(e)
-	//				} else {
-	//					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//				}
-	//
-	//				return nil
-	//			})
-	//
-	//			if err != nil {
-	//				log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//				return err
-	//			}
-	//		}
-	//	}
-	//}
-
-	// get ports by api
-	saasDomain, err := service.DescribeWafSaasDomainById(ctx, instanceID, domain, domainId)
-	if err != nil {
-		return err
-	}
-
-	if saasDomain == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `WafSaasDomain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	portsList := []interface{}{}
-	if saasDomain.Ports != nil {
-		for _, ports := range saasDomain.Ports {
-			portsMap := map[string]interface{}{}
-
-			if ports.Port != nil {
-				portsMap["port"] = *ports.Port
-			}
-
-			if ports.Protocol != nil {
-				portsMap["protocol"] = *ports.Protocol
-			}
-
-			if ports.UpstreamPort != nil {
-				portsMap["upstream_port"] = *ports.UpstreamPort
-			}
-
-			if ports.UpstreamProtocol != nil {
-				portsMap["upstream_protocol"] = *ports.UpstreamProtocol
-			}
-
-			if ports.NginxServerId != nil {
-				tmpNginxServerId := *ports.NginxServerId
-				nginxServerId := strconv.FormatUint(tmpNginxServerId, 10)
-				portsMap["nginx_server_id"] = nginxServerId
-			}
-
-			portsList = append(portsList, portsMap)
+	if d.HasChange("domain") {
+		if v, ok := d.GetOk("domain"); ok {
+			request.Domain = helper.String(v.(string))
 		}
 	}
 
-	request.Domain = &domain
-	request.DomainId = &domainId
-	request.InstanceID = &instanceID
-
-	if v, ok := d.GetOkExists("cert_type"); ok {
-		request.CertType = helper.IntInt64(v.(int))
-
-		cert := d.Get("cert").(string)
-		privateKey := d.Get("private_key").(string)
-		sslId := d.Get("ssl_id").(string)
-
-		certType := v.(int)
-		if certType == CERT_TYPE_0 {
-			if cert != "" || privateKey != "" || sslId != "" {
-				return fmt.Errorf("If `cert_type` is 0, not support setting `cert`, `private_key`, `ssl_id`.")
-			}
-
-		} else if certType == CERT_TYPE_1 {
-			if sslId != "" {
-				return fmt.Errorf("If `cert_type` is 1, not support setting `ssl_id`.")
-			}
-
-			if cert == "" || privateKey == "" {
-				return fmt.Errorf("If `cert_type` is 1, `cert`, `private_key` is required.")
-			}
-
-			request.Cert = &cert
-			request.PrivateKey = &privateKey
-
-		} else {
-			if cert != "" || privateKey != "" {
-				return fmt.Errorf("If `cert_type` is 2, not support setting `cert`, `private_key`.")
-			}
-
-			if sslId == "" {
-				return fmt.Errorf("If `cert_type` is 2, `ssl_id` is required.")
-			}
-
-			request.SSLId = &sslId
+	if d.HasChange("cert_type") {
+		if v, ok := d.GetOkExists("cert_type"); ok {
+			request.CertType = helper.IntInt64(v.(int))
 		}
 	}
 
-	if v, ok := d.GetOkExists("is_cdn"); ok {
-		request.IsCdn = helper.IntInt64(v.(int))
-		isCdn = v.(int)
-	}
-
-	if v, ok := d.GetOk("load_balance"); ok {
-		loadBalance = v.(string)
-		loadBalanceInt64, _ := strconv.ParseInt(loadBalance, 10, 64)
-		request.LoadBalance = &loadBalanceInt64
-
-	}
-
-	if v, ok := d.GetOk("upstream_scheme"); ok {
-		request.UpstreamScheme = helper.String(v.(string))
-
-		httpsUpstreamPort := d.Get("https_upstream_port").(string)
-
-		upstreamScheme := v.(string)
-		if upstreamScheme == UPSTREAM_SCHEME_HTTP {
-			if httpsUpstreamPort == "" {
-				return fmt.Errorf("If `upstream_scheme` is http, `https_upstream_port` is required.")
-			}
-
-			request.HttpsUpstreamPort = &httpsUpstreamPort
+	if d.HasChange("is_cdn") {
+		if v, ok := d.GetOkExists("is_cdn"); ok {
+			request.IsCdn = helper.IntInt64(v.(int))
 		}
 	}
 
-	if v, ok := d.GetOkExists("upstream_type"); ok {
-		request.UpstreamType = helper.IntInt64(v.(int))
+	if d.HasChange("upstream_type") {
+		if v, ok := d.GetOkExists("upstream_type"); ok {
+			request.UpstreamType = helper.IntInt64(v.(int))
+		}
+	}
 
-		upstreamType := v.(int)
-		if upstreamType == UP_STREAM_TYPE_0 {
-			if _, ok := d.GetOk("upstream_domain"); ok {
-				return fmt.Errorf("If `upstream_type` is 0, not support setting `upstream_domain`.")
+	if d.HasChange("is_websocket") {
+		if v, ok := d.GetOkExists("is_websocket"); ok {
+			request.IsWebsocket = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("load_balance") {
+		if v, ok := d.GetOk("load_balance"); ok {
+			request.LoadBalance = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("cert") {
+		if v, ok := d.GetOk("cert"); ok {
+			request.Cert = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("private_key") {
+		if v, ok := d.GetOk("private_key"); ok {
+			request.PrivateKey = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("s_s_l_id") {
+		if v, ok := d.GetOk("s_s_l_id"); ok {
+			request.SSLId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("upstream_scheme") {
+		if v, ok := d.GetOk("upstream_scheme"); ok {
+			request.UpstreamScheme = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("https_upstream_port") {
+		if v, ok := d.GetOk("https_upstream_port"); ok {
+			request.HttpsUpstreamPort = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("is_gray") {
+		if v, ok := d.GetOkExists("is_gray"); ok {
+			request.IsGray = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("upstream_domain") {
+		if v, ok := d.GetOk("upstream_domain"); ok {
+			request.UpstreamDomain = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("src_list") {
+		if v, ok := d.GetOk("src_list"); ok {
+			srcListSet := v.(*schema.Set).List()
+			for i := range srcListSet {
+				srcList := srcListSet[i].(string)
+				request.SrcList = append(request.SrcList, &srcList)
 			}
+		}
+	}
 
-			if v, ok := d.GetOk("src_list"); ok {
-				srcListSet := v.([]interface{})
-				for i := range srcListSet {
-					srcList := srcListSet[i].(string)
-					request.SrcList = append(request.SrcList, &srcList)
+	if d.HasChange("is_http2") {
+		if v, ok := d.GetOkExists("is_http2"); ok {
+			request.IsHttp2 = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("https_rewrite") {
+		if v, ok := d.GetOkExists("https_rewrite"); ok {
+			request.HttpsRewrite = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("ports") {
+		if v, ok := d.GetOk("ports"); ok {
+			for _, item := range v.([]interface{}) {
+				portItem := waf.PortItem{}
+				if v, ok := dMap["port"]; ok {
+					portItem.Port = helper.String(v.(string))
 				}
-
-				if len(srcListSet) == 1 {
-					if _, ok := d.GetOk("weights"); ok {
-						return fmt.Errorf("If `src_list` length is 1, not support setting `weights`.")
-					}
-				} else {
-					if loadBalance != LOAD_BALANCE_2 {
-						return fmt.Errorf("If `load_balance` is 0 or 1, not support setting `weights`.")
-					}
-
-					if v, ok := d.GetOk("weights"); ok {
-						weightsSet := v.([]interface{})
-						if len(weightsSet) != len(srcListSet) {
-							return fmt.Errorf("The lengths of `weights` and `src_list` are not equal.")
-						}
-
-						for i := range weightsSet {
-							weight := int64(weightsSet[i].(int))
-							request.Weights = append(request.Weights, &weight)
-						}
-					}
+				if v, ok := dMap["protocol"]; ok {
+					portItem.Protocol = helper.String(v.(string))
 				}
-
-			} else {
-				return fmt.Errorf("If `upstream_type` is 0, `src_list` is required.")
-			}
-
-			if v, ok := d.GetOk("is_keep_alive"); ok {
-				request.IsKeepAlive = helper.String(v.(string))
-			}
-
-		} else {
-			if _, ok := d.GetOk("src_list"); ok {
-				return fmt.Errorf("If `upstream_type` is 1, not support setting `src_list`.")
-			}
-
-			if _, ok := d.GetOk("weights"); ok {
-				return fmt.Errorf("If `upstream_type` is 1, not support setting `weights`.")
-			}
-
-			if v, ok := d.GetOk("is_keep_alive"); ok {
-				request.IsKeepAlive = helper.String(v.(string))
-			}
-
-			if v, ok := d.GetOk("upstream_domain"); ok {
-				request.UpstreamDomain = helper.String(v.(string))
-			} else {
-				return fmt.Errorf("If `upstream_type` is 1, `upstream_domain` is required.")
+				if v, ok := dMap["upstream_port"]; ok {
+					portItem.UpstreamPort = helper.String(v.(string))
+				}
+				if v, ok := dMap["upstream_protocol"]; ok {
+					portItem.UpstreamProtocol = helper.String(v.(string))
+				}
+				if v, ok := dMap["nginx_server_id"]; ok {
+					portItem.NginxServerId = helper.String(v.(string))
+				}
+				request.Ports = append(request.Ports, &portItem)
 			}
 		}
 	}
 
-	if v, ok := d.GetOkExists("is_http2"); ok {
-		request.IsHttp2 = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOkExists("is_websocket"); ok {
-		request.IsWebsocket = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOkExists("https_rewrite"); ok {
-		request.HttpsRewrite = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("ports"); ok {
-		// get ports by user
-		tmpPortsList := []interface{}{}
-		for _, item := range v.(*schema.Set).List() {
-			portsMap := map[string]interface{}{}
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["port"]; ok {
-				portsMap["port"] = v.(string)
-			}
-
-			if v, ok := dMap["protocol"]; ok {
-				portsMap["protocol"] = v.(string)
-			}
-
-			if v, ok := dMap["upstream_port"]; ok {
-				portsMap["upstream_port"] = v.(string)
-			}
-
-			if v, ok := dMap["upstream_protocol"]; ok {
-				portsMap["upstream_protocol"] = v.(string)
-			}
-
-			tmpPortsList = append(tmpPortsList, portsMap)
-		}
-
-		// check ports
-		resPort := checkPorts(portsList, tmpPortsList)
-
-		for _, item := range resPort {
-			dMap := item.(map[string]interface{})
-			portItem := waf.SpartaProtectionPort{}
-			if v, ok := dMap["port"]; ok {
-				portItem.Port = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["protocol"]; ok {
-				portItem.Protocol = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["upstream_port"]; ok {
-				portItem.UpstreamPort = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["upstream_protocol"]; ok {
-				portItem.UpstreamProtocol = helper.String(v.(string))
-			}
-
-			if v, ok := dMap["nginx_server_id"]; ok {
-				tmpNginxServerId := v.(string)
-				intNginxServerId, _ := strconv.Atoi(tmpNginxServerId)
-				portItem.NginxServerId = helper.IntUint64(intNginxServerId)
-			}
-
-			request.Ports = append(request.Ports, &portItem)
+	if d.HasChange("edition") {
+		if v, ok := d.GetOk("edition"); ok {
+			request.Edition = helper.String(v.(string))
 		}
 	}
 
-	if v, ok := d.GetOkExists("active_check"); ok {
-		request.ActiveCheck = helper.IntInt64(v.(int))
+	if d.HasChange("is_keep_alive") {
+		if v, ok := d.GetOk("is_keep_alive"); ok {
+			request.IsKeepAlive = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOkExists("tls_version"); ok {
-		request.TLSVersion = helper.IntInt64(v.(int))
+	if d.HasChange("instance_i_d") {
+		if v, ok := d.GetOk("instance_i_d"); ok {
+			request.InstanceID = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOkExists("cipher_template"); ok {
-		request.CipherTemplate = helper.IntInt64(v.(int))
+	if d.HasChange("anycast") {
+		if v, ok := d.GetOkExists("anycast"); ok {
+			request.Anycast = helper.IntInt64(v.(int))
+		}
+	}
 
+	if d.HasChange("weights") {
+		if v, ok := d.GetOk("weights"); ok {
+			weightsSet := v.(*schema.Set).List()
+			for i := range weightsSet {
+				weights := weightsSet[i].(int)
+				request.Weights = append(request.Weights, helper.IntInt64(weights))
+			}
+		}
+	}
+
+	if d.HasChange("active_check") {
+		if v, ok := d.GetOkExists("active_check"); ok {
+			request.ActiveCheck = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("t_l_s_version") {
+		if v, ok := d.GetOkExists("t_l_s_version"); ok {
+			request.TLSVersion = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("ciphers") {
 		if v, ok := d.GetOk("ciphers"); ok {
-			ciphersSet := v.([]interface{})
+			ciphersSet := v.(*schema.Set).List()
 			for i := range ciphersSet {
 				ciphers := ciphersSet[i].(int)
 				request.Ciphers = append(request.Ciphers, helper.IntInt64(ciphers))
@@ -1449,178 +930,65 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if v, ok := d.GetOkExists("proxy_read_timeout"); ok {
-		request.ProxyReadTimeout = helper.IntInt64(v.(int))
+	if d.HasChange("cipher_template") {
+		if v, ok := d.GetOkExists("cipher_template"); ok {
+			request.CipherTemplate = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOkExists("proxy_send_timeout"); ok {
-		request.ProxySendTimeout = helper.IntInt64(v.(int))
+	if d.HasChange("proxy_read_timeout") {
+		if v, ok := d.GetOkExists("proxy_read_timeout"); ok {
+			request.ProxyReadTimeout = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOkExists("sni_type"); ok {
-		request.SniType = helper.IntInt64(v.(int))
+	if d.HasChange("proxy_send_timeout") {
+		if v, ok := d.GetOkExists("proxy_send_timeout"); ok {
+			request.ProxySendTimeout = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOk("sni_host"); ok {
-		request.SniHost = helper.String(v.(string))
+	if d.HasChange("sni_type") {
+		if v, ok := d.GetOkExists("sni_type"); ok {
+			request.SniType = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOk("ip_headers"); ok {
-		if isCdn == ISCDN_3 {
-			ipHeadersSet := v.([]interface{})
+	if d.HasChange("sni_host") {
+		if v, ok := d.GetOk("sni_host"); ok {
+			request.SniHost = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("ip_headers") {
+		if v, ok := d.GetOk("ip_headers"); ok {
+			ipHeadersSet := v.(*schema.Set).List()
 			for i := range ipHeadersSet {
 				ipHeaders := ipHeadersSet[i].(string)
 				request.IpHeaders = append(request.IpHeaders, &ipHeaders)
 			}
-		} else {
-			return fmt.Errorf("If `is_cdn` is %d, not supported setting `ip_headers`.", isCdn)
 		}
 	}
 
-	if v, ok := d.GetOkExists("xff_reset"); ok {
-		request.XFFReset = helper.IntInt64(v.(int))
+	if d.HasChange("x_f_f_reset") {
+		if v, ok := d.GetOkExists("x_f_f_reset"); ok {
+			request.XFFReset = helper.IntInt64(v.(int))
+		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifySpartaProtection(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update waf saasDomain failed, reason:%+v", logId, err)
 		return err
 	}
-
-	// set bot
-	if d.HasChange("bot_status") {
-		if v, ok := d.GetOkExists("bot_status"); ok {
-			botStatus = uint64(v.(int))
-			modifyBotStatusRequest := waf.NewModifyBotStatusRequest()
-			modifyBotStatusRequest.Domain = &domain
-			modifyBotStatusRequest.InstanceID = &instanceID
-			tmpStatus := strconv.FormatUint(botStatus, 10)
-			modifyBotStatusRequest.Status = &tmpStatus
-			modifyBotStatusRequest.Category = common.StringPtr("bot")
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyBotStatus(modifyBotStatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyBotStatusRequest.GetAction(), modifyBotStatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain bot_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-
-	// set api safe
-	if d.HasChange("api_safe_status") {
-		if v, ok := d.GetOkExists("api_safe_status"); ok {
-			apiSafeStatus = uint64(v.(int))
-			modifyApiAnalyzeStatusRequest := waf.NewModifyApiAnalyzeStatusRequest()
-			modifyApiAnalyzeStatusRequest.Domain = &domain
-			modifyApiAnalyzeStatusRequest.InstanceId = &instanceID
-			modifyApiAnalyzeStatusRequest.Status = &apiSafeStatus
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyApiAnalyzeStatus(modifyApiAnalyzeStatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyApiAnalyzeStatusRequest.GetAction(), modifyApiAnalyzeStatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain api_safe_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
-
-	// set ipv6
-	//if d.HasChange("ipv6_status") {
-	//	if v, ok := d.GetOkExists("ipv6_status"); ok {
-	//		tmpIpv6Status := v.(int)
-	//		if tmpIpv6Status == IPV6_STATUS_0 {
-	//			ipv6Status = int64(IPV6_OFF)
-	//		} else {
-	//			ipv6Status = int64(IPV6_ON)
-	//		}
-	//		modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
-	//		modifyDomainIpv6StatusRequest.Domain = &domain
-	//		modifyDomainIpv6StatusRequest.DomainId = &domainId
-	//		modifyDomainIpv6StatusRequest.InstanceId = &instanceID
-	//		modifyDomainIpv6StatusRequest.Status = &ipv6Status
-	//
-	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
-	//			if e != nil {
-	//				return retryError(e)
-	//			} else {
-	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
-	//			}
-	//
-	//			return nil
-	//		})
-	//
-	//		if err != nil {
-	//			log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
-	//			return err
-	//		}
-	//	}
-	//}
-
-	//// set waf status
-	//if d.HasChange("status") {
-	//	if v, ok := d.GetOkExists("status"); ok {
-	//		tmpWafStatus := v.(int)
-	//		// close end
-	//		if tmpWafStatus == CLB_DOMAIN_STATUS_0 {
-	//			wafStatus = uint64(v.(int))
-	//			modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//			modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//				{
-	//					Domain:     common.StringPtr(domain),
-	//					DomainId:   common.StringPtr(domainId),
-	//					Status:     common.Uint64Ptr(wafStatus),
-	//					InstanceID: common.StringPtr(instanceID),
-	//				},
-	//			}
-	//
-	//			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//				if e != nil {
-	//					return retryError(e)
-	//				} else {
-	//					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//				}
-	//
-	//				return nil
-	//			})
-	//
-	//			if err != nil {
-	//				log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//				return err
-	//			}
-	//		}
-	//	}
-	//}
 
 	return resourceTencentCloudWafSaasDomainRead(d, meta)
 }
@@ -1629,66 +997,15 @@ func resourceTencentCloudWafSaasDomainDelete(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_waf_saas_domain.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", idSplit)
-	}
+	service := WafService{client: meta.(*TencentCloudClient).apiV3Conn}
+	saasDomainId := d.Id()
 
-	instanceID := idSplit[0]
-	domain := idSplit[1]
-
-	if err := service.DeleteWafSaasDomainById(ctx, instanceID, domain); err != nil {
+	if err := service.DeleteWafSaasDomainById(ctx, domainId); err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func checkPorts(portsList []interface{}, tmpPortsList []interface{}) (res []interface{}) {
-	for _, tmpItem := range tmpPortsList {
-		loopComplete := true
-		portsMap := map[string]interface{}{}
-		tmpMap := tmpItem.(map[string]interface{})
-		tmpPort := tmpMap["port"]
-		tmpProtocol := tmpMap["protocol"]
-		tmpUpstreamPort := tmpMap["upstream_port"]
-		tmpUpstreamProtocol := tmpMap["upstream_protocol"]
-
-		for _, item := range portsList {
-			dMap := item.(map[string]interface{})
-			dPort := dMap["port"]
-			dProtocol := dMap["protocol"]
-			dUpstreamPort := dMap["upstream_port"]
-			dUpstreamProtocol := dMap["upstream_protocol"]
-			dNginxServerId := dMap["nginx_server_id"]
-
-			if tmpPort == dPort && tmpProtocol == dProtocol && tmpUpstreamPort == dUpstreamPort && tmpUpstreamProtocol == dUpstreamProtocol {
-				portsMap["port"] = tmpPort
-				portsMap["protocol"] = tmpProtocol
-				portsMap["upstream_port"] = tmpUpstreamPort
-				portsMap["upstream_protocol"] = tmpUpstreamProtocol
-				portsMap["nginx_server_id"] = dNginxServerId
-				res = append(res, portsMap)
-				loopComplete = false
-				break
-			}
-		}
-
-		if loopComplete {
-			portsMap["port"] = tmpPort
-			portsMap["protocol"] = tmpProtocol
-			portsMap["upstream_port"] = tmpUpstreamPort
-			portsMap["upstream_protocol"] = tmpUpstreamProtocol
-			portsMap["nginx_server_id"] = "0"
-			res = append(res, portsMap)
-		}
-	}
-
-	return
 }

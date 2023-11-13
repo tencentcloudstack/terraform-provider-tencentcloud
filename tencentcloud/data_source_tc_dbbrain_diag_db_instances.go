@@ -5,20 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_diag_db_instances" "diag_db_instances" {
-	is_supported   = true
-	product        = "mysql"
-	instance_names = ["keep_preset_mysql"]
-}
+  is_supported =
+  product = ""
+  instance_names =
+  instance_ids =
+  regions =
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -29,13 +29,13 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 			"is_supported": {
 				Required:    true,
 				Type:        schema.TypeBool,
-				Description: "whether it is an instance supported by DBbrain, always pass `true`.",
+				Description: "Whether it is an instance supported by DBbrain, always pass true.",
 			},
 
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "service product type, supported values include: `mysql` - cloud database MySQL, `cynosdb` - cloud database TDSQL-C for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database TDSQL-C for MySQL, the default is mysql.",
 			},
 
 			"instance_names": {
@@ -44,7 +44,7 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "query based on the instance name condition.",
+				Description: "Query based on the instance name condition.",
 			},
 
 			"instance_ids": {
@@ -53,7 +53,7 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "query based on the instance ID condition.",
+				Description: "Query based on the instance ID condition.",
 			},
 
 			"regions": {
@@ -62,146 +62,146 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "query based on geographical conditions.",
+				Description: "Query based on geographical conditions.",
 			},
 
 			"db_scan_status": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "all-instance inspection status. `0`: All-instance inspection is enabled; `1`: All-instance inspection is not enabled.",
+				Description: "All-instance inspection status： 0： All-instance inspection is enabled; 1： All-instance inspection is not enabled.",
 			},
 
 			"items": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "information about the instance.",
+				Description: "Information about the instance.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance id.",
+							Description: "Instance id.",
 						},
 						"instance_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance name.",
+							Description: "Instance name.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region.",
+							Description: "Region.",
 						},
 						"health_score": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "health score.",
+							Description: "Health score.",
 						},
 						"product": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "belongs to the product.",
+							Description: "Belongs to the product.",
 						},
 						"event_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "the number of abnormal events.",
+							Description: "The number of abnormal events.",
 						},
 						"instance_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "instance type. `1`: MASTER; `2`: DR, `3`: RO, `4`: SDR.",
+							Description: "Instance type： 1： MASTER; 2： DR, 3： RO, 4： SDR.",
 						},
 						"cpu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of cores.",
+							Description: "Number of cores.",
 						},
 						"memory": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "memory, in MB.",
+							Description: "Memory, in MB.",
 						},
 						"volume": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "hard disk storage, in GB.",
+							Description: "Hard disk storage, in GB.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "database version.",
+							Description: "Database version.",
 						},
 						"vip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "intranet address.",
+							Description: "Intranet address.",
 						},
 						"vport": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "intranet port.",
+							Description: "Intranet port.",
 						},
 						"source": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access source.",
+							Description: "Access source.",
 						},
 						"group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "group ID.",
+							Description: "Group ID.",
 						},
 						"group_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "group name.",
+							Description: "Group name.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Instance status: `0`: Shipping; `1`: Running normally; `4`: Destroying; `5`: Isolating.",
+							Description: "Instance status: 0: Shipping; 1: Running normally; 4: Destroying; 5: Isolating.",
 						},
 						"uniq_subnet_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "subnet uniform ID.",
+							Description: "Subnet uniform ID.",
 						},
 						"deploy_mode": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cdb type.",
+							Description: "Cdb type.",
 						},
 						"init_flag": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "cdb instance initialization flag: `0`: not initialized; `1`: initialized.",
+							Description: "Cdb instance initialization flag: 0: not initialized; 1: initialized.",
 						},
 						"task_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "task status.",
+							Description: "Task status.",
 						},
 						"uniq_vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "the unified ID of the private network.",
+							Description: "The unified ID of the private network.",
 						},
 						"instance_conf": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "status of instance inspection/overview.",
+							Description: "Status of instance inspection/overview.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"daily_inspection": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "database inspection switch, Yes/No.",
+										Description: "Database inspection switch, Yes/No.",
 									},
 									"overview_display": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "instance overview switch, Yes/No.",
+										Description: "Instance overview switch, Yes/No.",
 									},
 									"key_delimiters": {
 										Type: schema.TypeSet,
@@ -209,7 +209,7 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "Custom separator for redis large key analysis, only used by `redis`. Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Custom separator for redis large key analysis, only used by redisNote: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -217,27 +217,27 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 						"deadline_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "resource expiration time.",
+							Description: "Resource expiration time.",
 						},
 						"is_supported": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "whether it is an instance supported by DBbrain.",
+							Description: "Whether it is an instance supported by DBbrain.",
 						},
 						"sec_audit_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "enabled status of the instance security audit log. `ON`: security audit is enabled; `OFF`: security audit is not enabled.",
+							Description: "Enabled status of the instance security audit log: ON: security audit is enabled; OFF: security audit is not enabled.",
 						},
 						"audit_policy_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance audit log enable status. `ALL_AUDIT`: full audit is enabled; `RULE_AUDIT`: rule audit is enabled; `UNBOUND`: audit is not enabled.",
+							Description: "Instance audit log enable status, ALL_AUDIT: full audit is enabled; RULE_AUDIT: rule audit is enabled; UNBOUND: audit is not enabled.",
 						},
 						"audit_running_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Instance audit log running status. `normal`: running; `paused`: arrears suspended.",
+							Description: "Instance audit log running status: normal: running; paused: arrears suspended.",
 						},
 						"internal_vip": {
 							Type:        schema.TypeString,
@@ -252,7 +252,7 @@ func dataSourceTencentCloudDbbrainDiagDbInstances() *schema.Resource {
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 					},
 				},
@@ -301,31 +301,25 @@ func dataSourceTencentCloudDbbrainDiagDbInstancesRead(d *schema.ResourceData, me
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		infos        []*dbbrain.InstanceInfo
-		dbScanStatus *int64
-		e            error
-	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		infos, dbScanStatus, e = service.DescribeDbbrainDiagDbInstancesByFilter(ctx, paramMap)
+		result, e := service.DescribeDbbrainDiagDbInstancesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		dbScanStatus = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(infos))
-	tmpList := make([]map[string]interface{}, 0, len(infos))
+	ids := make([]string, 0, len(dbScanStatus))
 	if dbScanStatus != nil {
 		_ = d.Set("db_scan_status", dbScanStatus)
 	}
 
-	if infos != nil {
-
-		for _, instanceInfo := range infos {
+	if items != nil {
+		for _, instanceInfo := range items {
 			instanceInfoMap := map[string]interface{}{}
 
 			if instanceInfo.InstanceId != nil {
@@ -476,7 +470,7 @@ func dataSourceTencentCloudDbbrainDiagDbInstancesRead(d *schema.ResourceData, me
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

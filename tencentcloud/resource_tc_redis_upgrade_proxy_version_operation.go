@@ -12,19 +12,23 @@ resource "tencentcloud_redis_upgrade_proxy_version_operation" "upgrade_proxy_ver
 }
 ```
 
+Import
+
+redis upgrade_proxy_version_operation can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_redis_upgrade_proxy_version_operation.upgrade_proxy_version_operation upgrade_proxy_version_operation_id
+```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudRedisUpgradeProxyVersionOperation() *schema.Resource {
@@ -72,7 +76,6 @@ func resourceTencentCloudRedisUpgradeProxyVersionOperationCreate(d *schema.Resou
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = redis.NewUpgradeProxyVersionRequest()
@@ -111,29 +114,15 @@ func resourceTencentCloudRedisUpgradeProxyVersionOperationCreate(d *schema.Resou
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	taskId := *response.Response.FlowId
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("upgrade proxy version is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s redis upgrade proxy version fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 30*readRetryTimeout, time.Second, service.RedisUpgradeProxyVersionOperationStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudRedisUpgradeProxyVersionOperationRead(d, meta)

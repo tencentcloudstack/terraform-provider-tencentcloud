@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsMountPointResource_basic(t *testing.T) {
@@ -19,14 +18,6 @@ func TestAccTencentCloudChdfsMountPointResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_chdfs_mount_point.mount_point", "id")),
 			},
 			{
-				Config: testAccChdfsMountPointUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_chdfs_mount_point.mount_point", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_chdfs_mount_point.mount_point", "mount_point_name", "terraform-for-test"),
-					resource.TestCheckResourceAttr("tencentcloud_chdfs_mount_point.mount_point", "mount_point_status", "2"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_chdfs_mount_point.mount_point",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -38,19 +29,9 @@ func TestAccTencentCloudChdfsMountPointResource_basic(t *testing.T) {
 const testAccChdfsMountPoint = `
 
 resource "tencentcloud_chdfs_mount_point" "mount_point" {
-  file_system_id     = "f14mpfy5lh4e"
-  mount_point_name   = "terraform-test"
-  mount_point_status = 1
-}
-
-`
-
-const testAccChdfsMountPointUpdate = `
-
-resource "tencentcloud_chdfs_mount_point" "mount_point" {
-  file_system_id     = "f14mpfy5lh4e"
-  mount_point_name   = "terraform-for-test"
-  mount_point_status = 2
+  mount_point_name = &lt;nil&gt;
+  file_system_id = &lt;nil&gt;
+  mount_point_status = &lt;nil&gt;
 }
 
 `

@@ -5,21 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dcdb_account" "account" {
-	instance_id = "tdsqlshard-kkpoxvnv"
-	user_name = "mysql"
-	host = "127.0.0.1"
-	password = "===password==="
-	read_only = 0
-	description = "this is a test account"
-	max_user_connections = 10
+  instance_id = &lt;nil&gt;
+  user_name = &lt;nil&gt;
+  host = &lt;nil&gt;
+  password = &lt;nil&gt;
+  read_only = &lt;nil&gt;
+  description = &lt;nil&gt;
+  max_user_connections = &lt;nil&gt;
 }
-
 ```
+
 Import
 
 dcdb account can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_dcdb_account.account account_id
+terraform import tencentcloud_dcdb_account.account account_id
 ```
 */
 package tencentcloud
@@ -27,20 +28,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudDcdbAccount() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudDcdbAccountRead,
 		Create: resourceTencentCloudDcdbAccountCreate,
+		Read:   resourceTencentCloudDcdbAccountRead,
 		Update: resourceTencentCloudDcdbAccountUpdate,
 		Delete: resourceTencentCloudDcdbAccountDelete,
 		Importer: &schema.ResourceImporter{
@@ -48,46 +47,45 @@ func resourceTencentCloudDcdbAccount() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "instance id.",
+				Type:        schema.TypeString,
+				Description: "Instance id.",
 			},
 
 			"user_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "account name.",
+				Type:        schema.TypeString,
+				Description: "Account name.",
 			},
 
 			"host": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "db host.",
+				Type:        schema.TypeString,
+				Description: "Db host.",
 			},
 
 			"password": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "password.",
-				Sensitive:   true,
+				Type:        schema.TypeString,
+				Description: "Password.",
 			},
 
 			"read_only": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "whether the account is readonly. 0 means not a readonly account.",
+				Type:        schema.TypeInt,
+				Description: "Whether the account is readonly. 0 means not a readonly account.",
 			},
 
 			"description": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "description for account.",
+				Type:        schema.TypeString,
+				Description: "Description for account.",
 			},
 
 			"max_user_connections": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "max user connections.",
+				Type:        schema.TypeInt,
+				Description: "Max user connections.",
 			},
 		},
 	}
@@ -101,12 +99,12 @@ func resourceTencentCloudDcdbAccountCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request    = dcdb.NewCreateAccountRequest()
-		response   *dcdb.CreateAccountResponse
+		response   = dcdb.NewCreateAccountResponse()
 		instanceId string
 		userName   string
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
@@ -116,26 +114,23 @@ func resourceTencentCloudDcdbAccountCreate(d *schema.ResourceData, meta interfac
 	}
 
 	if v, ok := d.GetOk("host"); ok {
-
 		request.Host = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("password"); ok {
-
 		request.Password = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("read_only"); ok {
+	if v, ok := d.GetOkExists("read_only"); ok {
 		request.ReadOnly = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
-
 		request.Description = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("max_user_connections"); ok {
-		request.MaxUserConnections = helper.IntUint64(v.(int))
+	if v, ok := d.GetOkExists("max_user_connections"); ok {
+		request.MaxUserConnections = helper.IntInt64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -143,21 +138,19 @@ func resourceTencentCloudDcdbAccountCreate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create dcdb account failed, reason:%+v", logId, err)
 		return err
 	}
 
 	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, userName}, FILED_SP))
 
-	d.SetId(instanceId + FILED_SP + userName)
 	return resourceTencentCloudDcdbAccountRead(d, meta)
 }
 
@@ -166,6 +159,7 @@ func resourceTencentCloudDcdbAccountRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -177,38 +171,43 @@ func resourceTencentCloudDcdbAccountRead(d *schema.ResourceData, meta interface{
 	instanceId := idSplit[0]
 	userName := idSplit[1]
 
-	account, err := service.DescribeDcdbAccount(ctx, instanceId, userName)
-
+	account, err := service.DescribeDcdbAccountById(ctx, instanceId, userName)
 	if err != nil {
 		return err
 	}
 
 	if account == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `account` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `DcdbAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if account.InstanceId != nil {
 		_ = d.Set("instance_id", account.InstanceId)
 	}
 
-	if account.Users[0] != nil {
-		log.Printf("[DEBUG]tencentcloud_dcdb_account.read Users:%v", account.Users[0])
-		if account.Users[0].UserName != nil {
-			_ = d.Set("user_name", account.Users[0].UserName)
-		}
+	if account.UserName != nil {
+		_ = d.Set("user_name", account.UserName)
+	}
 
-		if account.Users[0].Host != nil {
-			_ = d.Set("host", account.Users[0].Host)
-		}
+	if account.Host != nil {
+		_ = d.Set("host", account.Host)
+	}
 
-		if account.Users[0].ReadOnly != nil {
-			_ = d.Set("read_only", account.Users[0].ReadOnly)
-		}
+	if account.Password != nil {
+		_ = d.Set("password", account.Password)
+	}
 
-		if account.Users[0].Description != nil {
-			_ = d.Set("description", account.Users[0].Description)
-		}
+	if account.ReadOnly != nil {
+		_ = d.Set("read_only", account.ReadOnly)
+	}
+
+	if account.Description != nil {
+		_ = d.Set("description", account.Description)
+	}
+
+	if account.MaxUserConnections != nil {
+		_ = d.Set("max_user_connections", account.MaxUserConnections)
 	}
 
 	return nil
@@ -219,7 +218,6 @@ func resourceTencentCloudDcdbAccountUpdate(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := dcdb.NewModifyAccountDescriptionRequest()
 
@@ -233,56 +231,18 @@ func resourceTencentCloudDcdbAccountUpdate(d *schema.ResourceData, meta interfac
 	request.InstanceId = &instanceId
 	request.UserName = &userName
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
+	immutableArgs := []string{"instance_id", "user_name", "host", "password", "read_only", "description", "max_user_connections"}
 
-	if d.HasChange("user_name") {
-		return fmt.Errorf("`user_name` do not support change now.")
-	}
-
-	if d.HasChange("password") {
-		// return fmt.Errorf("`password` do not support change now.")
-		if v, ok := d.GetOk("password"); ok {
-			request := dcdb.NewResetAccountPasswordRequest()
-			request.InstanceId = &instanceId
-			request.UserName = &userName
-			if v, ok := d.GetOk("host"); ok {
-				request.Host = helper.String(v.(string))
-			}
-			request.Password = helper.String(v.(string))
-
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ResetAccountPassword(request)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s operate dcdb resetAccountPasswordOperation failed, reason:%+v", logId, err)
-				return err
-			}
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-	}
-
-	if d.HasChange("read_only") {
-		return fmt.Errorf("`read_only` do not support change now.")
 	}
 
 	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-		if v, ok := d.GetOk("host"); ok {
-			request.Host = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("max_user_connections") {
-		return fmt.Errorf("`max_user_connections` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -290,14 +250,12 @@ func resourceTencentCloudDcdbAccountUpdate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create dcdb account failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update dcdb account failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -307,33 +265,20 @@ func resourceTencentCloudDcdbAccountUpdate(d *schema.ResourceData, meta interfac
 func resourceTencentCloudDcdbAccountDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dcdb_account.delete")()
 	defer inconsistentCheck(d, meta)()
-	var host string
+
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken, %s", d.Id())
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
-	if v, ok := d.GetOk("host"); ok {
-		host = v.(string)
-	} else {
-		return fmt.Errorf("host is broken, %s", host)
-	}
-
 	instanceId := idSplit[0]
 	userName := idSplit[1]
 
-	if err := service.DeleteDcdbAccountById(ctx, instanceId, userName, host); err != nil {
+	if err := service.DeleteDcdbAccountById(ctx, instanceId, userName); err != nil {
 		return err
-	}
-
-	conf := BuildStateChangeConf([]string{}, []string{"deleted"}, readRetryTimeout, time.Second, service.DcdbAccountRefreshFunc(instanceId, userName, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
 	}
 
 	return nil

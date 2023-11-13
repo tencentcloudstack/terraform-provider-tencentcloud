@@ -5,15 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_tke_instance_list" "describe_host_tke_instance_list" {
-  certificate_id = "8u8DII0l"
-}
+  certificate_id = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  async_cache =
+  old_certificate_id = ""
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -93,7 +100,7 @@ func dataSourceTencentCloudSslDescribeHostTkeInstanceList() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "namespace name.",
+										Description: "Namespace name.",
 									},
 									"secret_list": {
 										Type:        schema.TypeList,
@@ -243,17 +250,13 @@ func dataSourceTencentCloudSslDescribeHostTkeInstanceListRead(d *schema.Resource
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var instanceList []*ssl.TkeInstanceDetail
-	var asyncTotalNum, asyncOffset *int64
-	var asyncCacheTime *string
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, total, offset, cacheTime, e := service.DescribeSslDescribeHostTkeInstanceListByFilter(ctx, paramMap)
+		result, e := service.DescribeSslDescribeHostTkeInstanceListByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
 		instanceList = result
-		asyncTotalNum = total
-		asyncOffset = offset
-		asyncCacheTime = cacheTime
 		return nil
 	})
 	if err != nil {
@@ -344,7 +347,7 @@ func dataSourceTencentCloudSslDescribeHostTkeInstanceListRead(d *schema.Resource
 				tkeInstanceDetailMap["cluster_version"] = tkeInstanceDetail.ClusterVersion
 			}
 
-			ids = append(ids, *tkeInstanceDetail.ClusterId)
+			ids = append(ids, *tkeInstanceDetail.CertificateId)
 			tmpList = append(tmpList, tkeInstanceDetailMap)
 		}
 

@@ -720,3 +720,370 @@ func (me *SesService) CheckEmailIdentityById(ctx context.Context, emailIdentity 
 
 	return
 }
+
+func (me *SesService) DescribeSesSendEmailStatusByFilter(ctx context.Context, param map[string]interface{}) (sendEmailStatus []*ses.SendEmailStatus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewGetSendEmailStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RequestDate" {
+			request.RequestDate = v.(*string)
+		}
+		if k == "MessageId" {
+			request.MessageId = v.(*string)
+		}
+		if k == "ToEmailAddress" {
+			request.ToEmailAddress = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().GetSendEmailStatus(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EmailStatusList) < 1 {
+			break
+		}
+		sendEmailStatus = append(sendEmailStatus, response.Response.EmailStatusList...)
+		if len(response.Response.EmailStatusList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesListBlackEmailAddressByFilter(ctx context.Context, param map[string]interface{}) (listBlackEmailAddress []*ses.BlackEmailAddress, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewListBlackEmailAddressRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "EmailAddress" {
+			request.EmailAddress = v.(*string)
+		}
+		if k == "TaskID" {
+			request.TaskID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().ListBlackEmailAddress(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BlackList) < 1 {
+			break
+		}
+		listBlackEmailAddress = append(listBlackEmailAddress, response.Response.BlackList...)
+		if len(response.Response.BlackList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesListEmailIdentitiesByFilter(ctx context.Context, param map[string]interface{}) (listEmailIdentities []*ses.EmailIdentity, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewListEmailIdentitiesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().ListEmailIdentities(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EmailIdentities) < 1 {
+			break
+		}
+		listEmailIdentities = append(listEmailIdentities, response.Response.EmailIdentities...)
+		if len(response.Response.EmailIdentities) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesListReceiversByFilter(ctx context.Context, param map[string]interface{}) (listReceivers []*ses.ReceiverData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewListReceiversRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Status" {
+			request.Status = v.(*uint64)
+		}
+		if k == "KeyWord" {
+			request.KeyWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().ListReceivers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		listReceivers = append(listReceivers, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesListSendTasksByFilter(ctx context.Context, param map[string]interface{}) (listSendTasks []*ses.SendTaskData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewListSendTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Status" {
+			request.Status = v.(*uint64)
+		}
+		if k == "ReceiverId" {
+			request.ReceiverId = v.(*uint64)
+		}
+		if k == "TaskType" {
+			request.TaskType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().ListSendTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		listSendTasks = append(listSendTasks, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesStatisticsReportByFilter(ctx context.Context, param map[string]interface{}) (statisticsReport []*ses.Volume, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ses.NewGetStatisticsReportRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+		if k == "ReceivingMailboxType" {
+			request.ReceivingMailboxType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().GetStatisticsReport(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DailyVolumes) < 1 {
+			break
+		}
+		statisticsReport = append(statisticsReport, response.Response.DailyVolumes...)
+		if len(response.Response.DailyVolumes) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesDomainById(ctx context.Context, emailIdentity string) (domain *ses.GetEmailIdentityResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ses.NewGetEmailIdentityRequest()
+	request.EmailIdentity = &emailIdentity
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSesClient().GetEmailIdentity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	domain = response.Response
+	return
+}
+
+func (me *SesService) DeleteSesDomainById(ctx context.Context, emailIdentity string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ses.NewDeleteEmailIdentityRequest()
+	request.EmailIdentity = &emailIdentity
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSesClient().DeleteEmailIdentity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

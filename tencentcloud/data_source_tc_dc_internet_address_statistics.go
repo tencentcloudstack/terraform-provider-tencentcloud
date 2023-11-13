@@ -4,14 +4,14 @@ Use this data source to query detailed information of dc internet_address_statis
 Example Usage
 
 ```hcl
-data "tencentcloud_dc_internet_address_statistics" "internet_address_statistics" {}
+data "tencentcloud_dc_internet_address_statistics" "internet_address_statistics" {
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
@@ -31,7 +31,7 @@ func dataSourceTencentCloudDcInternetAddressStatistics() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region.",
+							Description: "Region.",
 						},
 						"subnet_num": {
 							Type:        schema.TypeInt,
@@ -59,12 +59,13 @@ func dataSourceTencentCloudDcInternetAddressStatisticsRead(d *schema.ResourceDat
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var internetAddressStatistics []*dc.InternetAddressStatistics
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeDcInternetAddressStatistics(ctx)
+		result, e := service.DescribeDcInternetAddressStatisticsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -90,7 +91,7 @@ func dataSourceTencentCloudDcInternetAddressStatisticsRead(d *schema.ResourceDat
 				internetAddressStatisticsMap["subnet_num"] = internetAddressStatistics.SubnetNum
 			}
 
-			ids = append(ids, *internetAddressStatistics.Region)
+			ids = append(ids, *internetAddressStatistics.InternetAddressStatistics)
 			tmpList = append(tmpList, internetAddressStatisticsMap)
 		}
 

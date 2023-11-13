@@ -5,17 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_life_cycle_rule" "life_cycle_rule" {
-  file_system_id = "f14mpfy5lh4e"
-
+  file_system_id = &lt;nil&gt;
   life_cycle_rule {
-    life_cycle_rule_name = "terraform-test"
-    path                 = "/test"
-    status               = 1
+		life_cycle_rule_name = &lt;nil&gt;
+		path = &lt;nil&gt;
+		transitions {
+			days = &lt;nil&gt;
+			type = &lt;nil&gt;
+		}
+		status =
 
-    transitions {
-      days = 30
-      type = 1
-    }
   }
 }
 ```
@@ -25,7 +24,7 @@ Import
 chdfs life_cycle_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_chdfs_life_cycle_rule.life_cycle_rule file_system_id#life_cycle_rule_id
+terraform import tencentcloud_chdfs_life_cycle_rule.life_cycle_rule life_cycle_rule_id
 ```
 */
 package tencentcloud
@@ -33,13 +32,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
@@ -55,47 +52,46 @@ func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 			"file_system_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "file system id.",
+				Description: "File system id.",
 			},
 
 			"life_cycle_rule": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "life cycle rule.",
+				Description: "Life cycle rule.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"life_cycle_rule_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "single rule id.",
+							Description: "Single rule id.",
 						},
 						"life_cycle_rule_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "rule name.",
+							Description: "Rule name.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "rule op path.",
+							Description: "Rule op path.",
 						},
 						"transitions": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "life cycle rule transition list.",
+							Description: "Life cycle rule transition list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"days": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "trigger days(n day).",
+										Description: "Trigger days(n day).",
 									},
 									"type": {
 										Type:        schema.TypeInt,
 										Required:    true,
-										Description: "transition type, 1: archive, 2: delete, 3: low rate.",
+										Description: "Transition type, 1: archive, 2: delete, 3: low rate.",
 									},
 								},
 							},
@@ -103,12 +99,12 @@ func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 						"status": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "rule status, 1:open, 2:close.",
+							Description: "Rule status, 1:open, 2:close.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "rule create time.",
+							Description: "Rule create time.",
 						},
 					},
 				},
@@ -125,8 +121,8 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 
 	var (
 		request      = chdfs.NewCreateLifeCycleRulesRequest()
+		response     = chdfs.NewCreateLifeCycleRulesResponse()
 		fileSystemId string
-		path         string
 	)
 	if v, ok := d.GetOk("file_system_id"); ok {
 		fileSystemId = v.(string)
@@ -139,7 +135,6 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 			lifeCycleRule.LifeCycleRuleName = helper.String(v.(string))
 		}
 		if v, ok := dMap["path"]; ok {
-			path = v.(string)
 			lifeCycleRule.Path = helper.String(v.(string))
 		}
 		if v, ok := dMap["transitions"]; ok {
@@ -158,7 +153,7 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		if v, ok := dMap["status"]; ok {
 			lifeCycleRule.Status = helper.IntUint64(v.(int))
 		}
-		request.LifeCycleRules = append(request.LifeCycleRules, &lifeCycleRule)
+		request.LifeCycleRule = &lifeCycleRule
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -168,7 +163,7 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		//response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -176,14 +171,8 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	lifeCycleRule, err := service.DescribeChdfsLifeCycleRuleByPath(ctx, fileSystemId, path)
-	if err != nil {
-		return err
-	}
-
-	d.SetId(fileSystemId + FILED_SP + helper.UInt64ToStr(*lifeCycleRule.LifeCycleRuleId))
+	fileSystemId = *response.Response.FileSystemId
+	d.SetId(fileSystemId)
 
 	return resourceTencentCloudChdfsLifeCycleRuleRead(d, meta)
 }
@@ -198,14 +187,9 @@ func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta int
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	fileSystemId := idSplit[0]
-	lifeCycleRuleId := idSplit[1]
+	lifeCycleRuleId := d.Id()
 
-	lifeCycleRule, err := service.DescribeChdfsLifeCycleRuleById(ctx, fileSystemId, lifeCycleRuleId)
+	lifeCycleRule, err := service.DescribeChdfsLifeCycleRuleById(ctx, fileSystemId)
 	if err != nil {
 		return err
 	}
@@ -216,26 +200,28 @@ func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta int
 		return nil
 	}
 
-	_ = d.Set("file_system_id", fileSystemId)
+	if lifeCycleRule.FileSystemId != nil {
+		_ = d.Set("file_system_id", lifeCycleRule.FileSystemId)
+	}
 
-	if lifeCycleRule != nil {
+	if lifeCycleRule.LifeCycleRule != nil {
 		lifeCycleRuleMap := map[string]interface{}{}
 
-		if lifeCycleRule.LifeCycleRuleId != nil {
-			lifeCycleRuleMap["life_cycle_rule_id"] = lifeCycleRule.LifeCycleRuleId
+		if lifeCycleRule.LifeCycleRule.LifeCycleRuleId != nil {
+			lifeCycleRuleMap["life_cycle_rule_id"] = lifeCycleRule.LifeCycleRule.LifeCycleRuleId
 		}
 
-		if lifeCycleRule.LifeCycleRuleName != nil {
-			lifeCycleRuleMap["life_cycle_rule_name"] = lifeCycleRule.LifeCycleRuleName
+		if lifeCycleRule.LifeCycleRule.LifeCycleRuleName != nil {
+			lifeCycleRuleMap["life_cycle_rule_name"] = lifeCycleRule.LifeCycleRule.LifeCycleRuleName
 		}
 
-		if lifeCycleRule.Path != nil {
-			lifeCycleRuleMap["path"] = lifeCycleRule.Path
+		if lifeCycleRule.LifeCycleRule.Path != nil {
+			lifeCycleRuleMap["path"] = lifeCycleRule.LifeCycleRule.Path
 		}
 
-		if lifeCycleRule.Transitions != nil {
+		if lifeCycleRule.LifeCycleRule.Transitions != nil {
 			transitionsList := []interface{}{}
-			for _, transitions := range lifeCycleRule.Transitions {
+			for _, transitions := range lifeCycleRule.LifeCycleRule.Transitions {
 				transitionsMap := map[string]interface{}{}
 
 				if transitions.Days != nil {
@@ -249,15 +235,15 @@ func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta int
 				transitionsList = append(transitionsList, transitionsMap)
 			}
 
-			lifeCycleRuleMap["transitions"] = transitionsList
+			lifeCycleRuleMap["transitions"] = []interface{}{transitionsList}
 		}
 
-		if lifeCycleRule.Status != nil {
-			lifeCycleRuleMap["status"] = lifeCycleRule.Status
+		if lifeCycleRule.LifeCycleRule.Status != nil {
+			lifeCycleRuleMap["status"] = lifeCycleRule.LifeCycleRule.Status
 		}
 
-		if lifeCycleRule.CreateTime != nil {
-			lifeCycleRuleMap["create_time"] = lifeCycleRule.CreateTime
+		if lifeCycleRule.LifeCycleRule.CreateTime != nil {
+			lifeCycleRuleMap["create_time"] = lifeCycleRule.LifeCycleRule.CreateTime
 		}
 
 		_ = d.Set("life_cycle_rule", []interface{}{lifeCycleRuleMap})
@@ -274,18 +260,21 @@ func resourceTencentCloudChdfsLifeCycleRuleUpdate(d *schema.ResourceData, meta i
 
 	request := chdfs.NewModifyLifeCycleRulesRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
+	lifeCycleRuleId := d.Id()
 
-	lifeCycleRuleId := idSplit[1]
+	request.FileSystemId = &fileSystemId
+
+	immutableArgs := []string{"file_system_id", "life_cycle_rule"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("life_cycle_rule") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "life_cycle_rule"); ok {
 			lifeCycleRule := chdfs.LifeCycleRule{}
-
-			lifeCycleRule.LifeCycleRuleId = helper.StrToUint64Point(lifeCycleRuleId)
 			if v, ok := dMap["life_cycle_rule_name"]; ok {
 				lifeCycleRule.LifeCycleRuleName = helper.String(v.(string))
 			}
@@ -308,7 +297,7 @@ func resourceTencentCloudChdfsLifeCycleRuleUpdate(d *schema.ResourceData, meta i
 			if v, ok := dMap["status"]; ok {
 				lifeCycleRule.Status = helper.IntUint64(v.(int))
 			}
-			request.LifeCycleRules = append(request.LifeCycleRules, &lifeCycleRule)
+			request.LifeCycleRule = &lifeCycleRule
 		}
 	}
 
@@ -337,14 +326,9 @@ func resourceTencentCloudChdfsLifeCycleRuleDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
+	lifeCycleRuleId := d.Id()
 
-	lifeCycleRuleId := idSplit[1]
-
-	if err := service.DeleteChdfsLifeCycleRuleById(ctx, lifeCycleRuleId); err != nil {
+	if err := service.DeleteChdfsLifeCycleRuleById(ctx, fileSystemId); err != nil {
 		return err
 	}
 

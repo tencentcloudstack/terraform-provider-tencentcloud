@@ -1,14 +1,16 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseKeyPairAttachmentResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -24,11 +26,11 @@ func TestAccTencentCloudLighthouseKeyPairAttachmentResource_basic(t *testing.T) 
 	})
 }
 
-const testAccLighthouseKeyPairAttachment = DefaultLighthoustVariables + `
+const testAccLighthouseKeyPairAttachment = `
 
 resource "tencentcloud_lighthouse_key_pair_attachment" "key_pair_attachment" {
-  key_id = "lhkp-d8zf3jmv"
-  instance_id = var.lighthouse_id
+  key_ids = 
+  instance_ids = 
 }
 
 `

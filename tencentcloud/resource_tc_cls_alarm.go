@@ -5,42 +5,44 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cls_alarm" "alarm" {
-  name             = "terraform-alarm-test"
-  alarm_notice_ids = [
-    "notice-0850756b-245d-4bc7-bb27-2a58fffc780b",
-  ]
-  alarm_period     = 15
-  condition        = "test"
-  message_template = "{{.Label}}"
-  status           = true
-  tags             = {
-    "createdBy" = "terraform"
-  }
-  trigger_count = 1
-
+  name = "alarm"
   alarm_targets {
-    end_time_offset   = 0
-    logset_id         = "33aaf0ae-6163-411b-a415-9f27450f68db"
-    number            = 1
-    query             = "status:>500 | select count(*) as errorCounts"
-    start_time_offset = -15
-    topic_id          = "88735a07-bea4-4985-8763-e9deb6da4fad"
+		topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
+		query = "* | select count(*) as count"
+		number = 1
+		start_time_offset = 0
+		end_time_offset = 0
+		logset_id = "5cd3a17e-1111-418c-afd7-77b365397426"
+
   }
-
-  analysis {
-    content = "__FILENAME__"
-    name    = "terraform"
-    type    = "field"
-
-    config_info {
-      key   = "QueryIndex"
-      value = "1"
-    }
-  }
-
   monitor_time {
-    time = 1
-    type = "Period"
+		type = "Period"
+		time = 1
+
+  }
+  condition = "$1&gt;100"
+  trigger_count = 5
+  alarm_period = 5
+  alarm_notice_ids =
+  status = true
+  message_template = "test"
+  call_back {
+		body = "test"
+		headers =
+
+  }
+  analysis {
+		name = "analysis"
+		type = "query"
+		content = "content"
+		config_info {
+			key = "key"
+			value = "value"
+		}
+
+  }
+  tags = {
+    "createdBy" = "terraform"
   }
 }
 ```
@@ -58,12 +60,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudClsAlarm() *schema.Resource {
@@ -79,44 +80,44 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "log alarm name.",
+				Description: "Log alarm name.",
 			},
 
 			"alarm_targets": {
 				Required:    true,
 				Type:        schema.TypeList,
-				Description: "list of alarm target.",
+				Description: "List of alarm target.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"topic_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "topic id.",
+							Description: "Topic id.",
 						},
 						"query": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "query rules.",
+							Description: "Query rules.",
 						},
 						"number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "the number of alarm object.",
+							Description: "The number of alarm object.",
 						},
 						"start_time_offset": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "search start time of offset.",
+							Description: "Search start time of offset.",
 						},
 						"end_time_offset": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "search end time of offset.",
+							Description: "Search end time of offset.",
 						},
 						"logset_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "logset id.",
+							Description: "Logset id.",
 						},
 					},
 				},
@@ -126,7 +127,7 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "monitor task execution time.",
+				Description: "Monitor task execution time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
@@ -137,7 +138,7 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 						"time": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "time period or point in time.",
+							Description: "Time period or point in time.",
 						},
 					},
 				},
@@ -146,19 +147,19 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 			"condition": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "triggering conditions.",
+				Description: "Triggering conditions.",
 			},
 
 			"trigger_count": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "continuous cycle.",
+				Description: "Continuous cycle.",
 			},
 
 			"alarm_period": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "alarm repeat cycle.",
+				Description: "Alarm repeat cycle.",
 			},
 
 			"alarm_notice_ids": {
@@ -167,32 +168,32 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "list of alarm notice id.",
+				Description: "List of alarm notice id.",
 			},
 
 			"status": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to enable the alarm policy.",
+				Description: "Whether to enable the alarm policy.",
 			},
 
 			"message_template": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "user define alarm notice.",
+				Description: "User define alarm notice.",
 			},
 
 			"call_back": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "user define callback.",
+				Description: "User define callback.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"body": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "callback body.",
+							Description: "Callback body.",
 						},
 						"headers": {
 							Type: schema.TypeSet,
@@ -200,7 +201,7 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "callback headers.",
+							Description: "Callback headers.",
 						},
 					},
 				},
@@ -209,39 +210,39 @@ func resourceTencentCloudClsAlarm() *schema.Resource {
 			"analysis": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "multidimensional analysis.",
+				Description: "Multidimensional analysis.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "analysis name.",
+							Description: "Analysis name.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "analysis type.",
+							Description: "Analysis type.",
 						},
 						"content": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "analysis content.",
+							Description: "Analysis content.",
 						},
 						"config_info": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "configuration.",
+							Description: "Configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "key.",
+										Description: "Key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "value.",
+										Description: "Value.",
 									},
 								},
 							},
@@ -444,31 +445,31 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 
 	if alarm.AlarmTargets != nil {
 		alarmTargetsList := []interface{}{}
-		for _, alarmTarget := range alarm.AlarmTargets {
+		for _, alarmTargets := range alarm.AlarmTargets {
 			alarmTargetsMap := map[string]interface{}{}
 
-			if alarmTarget.TopicId != nil {
-				alarmTargetsMap["topic_id"] = alarmTarget.TopicId
+			if alarm.AlarmTargets.TopicId != nil {
+				alarmTargetsMap["topic_id"] = alarm.AlarmTargets.TopicId
 			}
 
-			if alarmTarget.Query != nil {
-				alarmTargetsMap["query"] = alarmTarget.Query
+			if alarm.AlarmTargets.Query != nil {
+				alarmTargetsMap["query"] = alarm.AlarmTargets.Query
 			}
 
-			if alarmTarget.Number != nil {
-				alarmTargetsMap["number"] = alarmTarget.Number
+			if alarm.AlarmTargets.Number != nil {
+				alarmTargetsMap["number"] = alarm.AlarmTargets.Number
 			}
 
-			if alarmTarget.StartTimeOffset != nil {
-				alarmTargetsMap["start_time_offset"] = alarmTarget.StartTimeOffset
+			if alarm.AlarmTargets.StartTimeOffset != nil {
+				alarmTargetsMap["start_time_offset"] = alarm.AlarmTargets.StartTimeOffset
 			}
 
-			if alarmTarget.EndTimeOffset != nil {
-				alarmTargetsMap["end_time_offset"] = alarmTarget.EndTimeOffset
+			if alarm.AlarmTargets.EndTimeOffset != nil {
+				alarmTargetsMap["end_time_offset"] = alarm.AlarmTargets.EndTimeOffset
 			}
 
-			if alarmTarget.LogsetId != nil {
-				alarmTargetsMap["logset_id"] = alarmTarget.LogsetId
+			if alarm.AlarmTargets.LogsetId != nil {
+				alarmTargetsMap["logset_id"] = alarm.AlarmTargets.LogsetId
 			}
 
 			alarmTargetsList = append(alarmTargetsList, alarmTargetsMap)
@@ -535,21 +536,21 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 		for _, analysis := range alarm.Analysis {
 			analysisMap := map[string]interface{}{}
 
-			if analysis.Name != nil {
-				analysisMap["name"] = analysis.Name
+			if alarm.Analysis.Name != nil {
+				analysisMap["name"] = alarm.Analysis.Name
 			}
 
-			if analysis.Type != nil {
-				analysisMap["type"] = analysis.Type
+			if alarm.Analysis.Type != nil {
+				analysisMap["type"] = alarm.Analysis.Type
 			}
 
-			if analysis.Content != nil {
-				analysisMap["content"] = analysis.Content
+			if alarm.Analysis.Content != nil {
+				analysisMap["content"] = alarm.Analysis.Content
 			}
 
-			if analysis.ConfigInfo != nil {
+			if alarm.Analysis.ConfigInfo != nil {
 				configInfoList := []interface{}{}
-				for _, configInfo := range analysis.ConfigInfo {
+				for _, configInfo := range alarm.Analysis.ConfigInfo {
 					configInfoMap := map[string]interface{}{}
 
 					if configInfo.Key != nil {
@@ -563,7 +564,7 @@ func resourceTencentCloudClsAlarmRead(d *schema.ResourceData, meta interface{}) 
 					configInfoList = append(configInfoList, configInfoMap)
 				}
 
-				analysisMap["config_info"] = configInfoList
+				analysisMap["config_info"] = []interface{}{configInfoList}
 			}
 
 			analysisList = append(analysisList, analysisMap)
@@ -589,7 +590,6 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	needChange := false
 
 	request := cls.NewModifyAlarmRequest()
 
@@ -597,29 +597,24 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 
 	request.AlarmId = &alarmId
 
-	mutableArgs := []string{
-		"name", "alarm_targets", "monitor_time", "condition",
-		"trigger_count", "alarm_period", "alarm_notice_ids",
-		"status", "message_template", "call_back", "analysis",
-	}
+	immutableArgs := []string{"name", "alarm_targets", "monitor_time", "condition", "trigger_count", "alarm_period", "alarm_notice_ids", "status", "message_template", "call_back", "analysis"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("alarm_targets") {
 		if v, ok := d.GetOk("alarm_targets"); ok {
 			for _, item := range v.([]interface{}) {
 				alarmTarget := cls.AlarmTarget{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["topic_id"]; ok {
 					alarmTarget.TopicId = helper.String(v.(string))
 				}
@@ -641,7 +636,9 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				request.AlarmTargets = append(request.AlarmTargets, &alarmTarget)
 			}
 		}
+	}
 
+	if d.HasChange("monitor_time") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "monitor_time"); ok {
 			monitorTime := cls.MonitorTime{}
 			if v, ok := dMap["type"]; ok {
@@ -652,19 +649,27 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			}
 			request.MonitorTime = &monitorTime
 		}
+	}
 
+	if d.HasChange("condition") {
 		if v, ok := d.GetOk("condition"); ok {
 			request.Condition = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("trigger_count") {
 		if v, ok := d.GetOkExists("trigger_count"); ok {
 			request.TriggerCount = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("alarm_period") {
 		if v, ok := d.GetOkExists("alarm_period"); ok {
 			request.AlarmPeriod = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("alarm_notice_ids") {
 		if v, ok := d.GetOk("alarm_notice_ids"); ok {
 			alarmNoticeIdsSet := v.(*schema.Set).List()
 			for i := range alarmNoticeIdsSet {
@@ -672,15 +677,21 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				request.AlarmNoticeIds = append(request.AlarmNoticeIds, &alarmNoticeIds)
 			}
 		}
+	}
 
+	if d.HasChange("status") {
 		if v, ok := d.GetOkExists("status"); ok {
 			request.Status = helper.Bool(v.(bool))
 		}
+	}
 
+	if d.HasChange("message_template") {
 		if v, ok := d.GetOk("message_template"); ok {
 			request.MessageTemplate = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("call_back") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "call_back"); ok {
 			callBackInfo := cls.CallBackInfo{}
 			if v, ok := dMap["body"]; ok {
@@ -695,11 +706,12 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 			}
 			request.CallBack = &callBackInfo
 		}
+	}
 
+	if d.HasChange("analysis") {
 		if v, ok := d.GetOk("analysis"); ok {
 			for _, item := range v.([]interface{}) {
 				analysisDimensional := cls.AnalysisDimensional{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["name"]; ok {
 					analysisDimensional.Name = helper.String(v.(string))
 				}
@@ -725,20 +737,20 @@ func resourceTencentCloudClsAlarmUpdate(d *schema.ResourceData, meta interface{}
 				request.Analysis = append(request.Analysis, &analysisDimensional)
 			}
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyAlarm(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cls alarm failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClsClient().ModifyAlarm(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cls alarm failed, reason:%+v", logId, err)
+		return err
 	}
 
 	if d.HasChange("tags") {

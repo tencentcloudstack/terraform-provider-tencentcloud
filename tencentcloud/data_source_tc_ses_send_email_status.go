@@ -8,14 +8,13 @@ data "tencentcloud_ses_send_email_status" "send_email_status" {
   request_date = "2020-09-22"
   message_id = "qcloudses-30-4123414323-date-20210101094334-syNARhMTbKI1"
   to_email_address = "example@cloud.com"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
@@ -68,7 +67,7 @@ func dataSourceTencentCloudSesSendEmailStatus() *schema.Resource {
 						"send_status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Tencent Cloud processing status: `0`: Successful. `1001`: Internal system exception. `1002`: Internal system exception. `1003`: Internal system exception. `1003`: Internal system exception. `1004`: Email sending timed out. `1005`: Internal system exception. `1006`: You have sent too many emails to the same address in a short period. `1007`: The email address is in the blocklist. `1008`: The sender domain is rejected by the recipient. `1009`: Internal system exception. `1010`: The daily email sending limit is exceeded. `1011`: You have no permission to send custom content. Use a template. `1013`: The sender domain is unsubscribed from by the recipient. `2001`: No results were found. `3007`: The template ID is invalid or the template is unavailable. `3008`: The sender domain is temporarily blocked by the recipient domain. `3009`: You have no permission to use this template. `3010`: The format of the TemplateData field is incorrect. `3014`: The email cannot be sent because the sender domain is not verified. `3020`: The recipient email address is in the blocklist. `3024`: Failed to precheck the email address format. `3030`: Email sending is restricted temporarily due to a high bounce rate. `3033`: The account has insufficient balance or overdue payment.",
+							Description: "Tencent Cloud processing status0: Successful.1001: Internal system exception.1002: Internal system exception.1003: Internal system exception.1003: Internal system exception.1004: Email sending timed out.1005: Internal system exception.1006: You have sent too many emails to the same address in a short period.1007: The email address is in the blocklist.1008: The sender domain is rejected by the recipient.1009: Internal system exception.1010: The daily email sending limit is exceeded.1011: You have no permission to send custom content. Use a template.1013: The sender domain is unsubscribed from by the recipient.2001: No results were found.3007: The template ID is invalid or the template is unavailable.3008: The sender domain is temporarily blocked by the recipient domain.3009: You have no permission to use this template.3010: The format of the TemplateData field is incorrect. 3014: The email cannot be sent because the sender domain is not verified.3020: The recipient email address is in the blocklist.3024: Failed to precheck the email address format.3030: Email sending is restricted temporarily due to a high bounce rate.3033: The account has insufficient balance or overdue payment.",
 						},
 						"deliver_status": {
 							Type:        schema.TypeInt,
@@ -215,7 +214,7 @@ func dataSourceTencentCloudSesSendEmailStatusRead(d *schema.ResourceData, meta i
 				sendEmailStatusMap["user_complainted"] = sendEmailStatus.UserComplainted
 			}
 
-			ids = append(ids, *sendEmailStatus.MessageId)
+			ids = append(ids, *sendEmailStatus.EmailAddress)
 			tmpList = append(tmpList, sendEmailStatusMap)
 		}
 

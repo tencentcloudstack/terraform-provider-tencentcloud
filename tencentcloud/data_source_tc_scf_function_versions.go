@@ -5,19 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_function_versions" "function_versions" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-}
+  function_name = ""
+  namespace = ""
+  order = ""
+  order_by = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -47,6 +47,15 @@ func dataSourceTencentCloudScfFunctionVersions() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "It specifies the sorting order of the results according to a specified field, such as `AddTime`, `ModTime`.",
+			},
+
+			"function_version": {
+				Computed: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Function version.",
 			},
 
 			"versions": {
@@ -120,22 +129,24 @@ func dataSourceTencentCloudScfFunctionVersionsRead(d *schema.ResourceData, meta 
 
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var versions []*scf.FunctionVersion
+	var functionVersion []*string
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeScfFunctionVersionsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		versions = result
+		functionVersion = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(versions))
-	tmpList := make([]map[string]interface{}, 0, len(versions))
+	ids := make([]string, 0, len(functionVersion))
+	if functionVersion != nil {
+		_ = d.Set("function_version", functionVersion)
+	}
 
 	if versions != nil {
 		for _, functionVersion := range versions {
@@ -161,7 +172,7 @@ func dataSourceTencentCloudScfFunctionVersionsRead(d *schema.ResourceData, meta 
 				functionVersionMap["status"] = functionVersion.Status
 			}
 
-			ids = append(ids, *functionVersion.Version)
+			ids = append(ids, *functionVersion.FunctionName)
 			tmpList = append(tmpList, functionVersionMap)
 		}
 
@@ -171,7 +182,7 @@ func dataSourceTencentCloudScfFunctionVersionsRead(d *schema.ResourceData, meta 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}
