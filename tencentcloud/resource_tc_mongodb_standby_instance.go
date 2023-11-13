@@ -388,6 +388,17 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	_ = d.Set("machine_type", *instance.MachineType)
 	_ = d.Set("available_zone", instance.Zone)
 	_ = d.Set("vpc_id", instance.VpcId)

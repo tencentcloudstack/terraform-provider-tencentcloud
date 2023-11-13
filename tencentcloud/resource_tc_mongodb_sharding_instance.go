@@ -404,8 +404,9 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	for _, group := range groups {
 		groupIds = append(groupIds, *group.SecurityGroupId)
 	}
-	_ = d.Set("security_groups", groupIds)
-
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
 	if err != nil {
 		return err

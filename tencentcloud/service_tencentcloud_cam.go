@@ -1914,3 +1914,53 @@ func (me *CamService) DescribeCamAccountSummaryByFilter(ctx context.Context) (Ac
 	AccountSummary = response.Response
 	return
 }
+
+func (me *CamService) DescribeCamGroupUserAccountByFilter(ctx context.Context, param map[string]interface{}) (GroupUserAccount []*cam.GroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewListGroupsForUserRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Uid" {
+			request.Uid = v.(*uint64)
+		}
+		if k == "SubUin" {
+			request.SubUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	pageStart := uint64(1)
+	rp := uint64(PAGE_ITEM) //to save in extension
+	result := make([]*cam.GroupInfo, 0)
+	for {
+		request.Page = &pageStart
+		request.Rp = &rp
+		response, err := me.client.UseCamClient().ListGroupsForUser(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.GroupInfo) < 1 {
+			break
+		}
+		result = append(result, response.Response.GroupInfo...)
+		if len(response.Response.GroupInfo) < PAGE_ITEM {
+			break
+		}
+
+		pageStart += 1
+	}
+	GroupUserAccount = result
+	return
+}

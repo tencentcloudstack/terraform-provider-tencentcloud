@@ -13,9 +13,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TestAccTencentCloudDnspodRecord(t *testing.T) {
+func TestAccTencentCloudDnspodRecordResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDnspodRecordDestroy,
 		Steps: []resource.TestStep{
@@ -23,13 +24,26 @@ func TestAccTencentCloudDnspodRecord(t *testing.T) {
 				Config: testAccTencentCloudDnspodRecord,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "terraform.com"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "A"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
+				),
+			},
+			{
+				Config: testAccTencentCloudDnspodRecordRemarkUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "demo"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "A"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test1"),
 				),
 			},
 			{
@@ -119,12 +133,22 @@ func testAccCheckDnspodRecordDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudDnspodRecord = `
-resource "tencentcloud_dnspod_record" "demo" {
-  domain="terraform.com"
-  record_type="A"
-  record_line="默认"
-  value="1.2.3.9"
-  sub_domain="demo"
-  remark="terraform-test"
-}
+	resource "tencentcloud_dnspod_record" "demo" {
+	domain="iac-tf.cloud"
+	record_type="A"
+	record_line="默认"
+	value="1.2.3.9"
+	sub_domain="demo"
+	remark="terraform-test"
+	}
+`
+const testAccTencentCloudDnspodRecordRemarkUp = `
+	resource "tencentcloud_dnspod_record" "demo" {
+	domain="iac-tf.cloud"
+	record_type="A"
+	record_line="默认"
+	value="1.2.3.9"
+	sub_domain="demo"
+	remark="terraform-test1"
+	}
 `

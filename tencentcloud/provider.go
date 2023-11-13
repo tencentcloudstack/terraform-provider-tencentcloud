@@ -228,6 +228,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_account_summary
     tencentcloud_cam_policy_granting_service_access
     tencentcloud_cam_oidc_config
+    tencentcloud_cam_group_user_account
 
   Resource
     tencentcloud_cam_role
@@ -749,9 +750,13 @@ Cloud Monitor(Monitor)
     tencentcloud_monitor_alarm_notices
     tencentcloud_monitor_alarm_history
     tencentcloud_monitor_alarm_metric
+    tencentcloud_monitor_alarm_policy
     tencentcloud_monitor_alarm_basic_alarms
     tencentcloud_monitor_alarm_basic_metric
     tencentcloud_monitor_alarm_conditions_template
+    tencentcloud_monitor_alarm_notice_callbacks
+    tencentcloud_monitor_alarm_all_namespaces
+    tencentcloud_monitor_alarm_monitor_type
 
   Resource
     tencentcloud_monitor_policy_group
@@ -764,8 +769,11 @@ Cloud Monitor(Monitor)
 
 
 Managed Service for Prometheus(TMP)
+  Data Source
+    tencentcloud_monitor_tmp_regions
+
   Resource
-      tencentcloud_monitor_tmp_instance
+    tencentcloud_monitor_tmp_instance
     tencentcloud_monitor_tmp_alert_rule
     tencentcloud_monitor_tmp_exporter_integration
     tencentcloud_monitor_tmp_cvm_agent
@@ -1987,9 +1995,23 @@ Cloud Firewall(CFW)
     tencentcloud_cfw_vpc_firewall_switch
     tencentcloud_cfw_edge_firewall_switch
 
+Bastion Host(BH)
+  Resource
+    tencentcloud_dasb_acl
+    tencentcloud_dasb_cmd_template
+    tencentcloud_dasb_device_group
+    tencentcloud_dasb_user
+    tencentcloud_dasb_device_account
+    tencentcloud_dasb_device_group_members
+    tencentcloud_dasb_user_group_members
+    tencentcloud_dasb_bind_device_resource
+    tencentcloud_dasb_resource
+    tencentcloud_dasb_device
+
 Cwp
   Data Source
     tencentcloud_cwp_machines_simple
+
   Resource
     tencentcloud_cwp_license_order
     tencentcloud_cwp_license_bind_attachment
@@ -2413,11 +2435,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_product_namespace":                    dataSourceTencentMonitorProductNamespace(),
 			"tencentcloud_monitor_alarm_notices":                        dataSourceTencentMonitorAlarmNotices(),
 			"tencentcloud_monitor_alarm_metric":                         dataSourceTencentCloudMonitorAlarmMetric(),
+			"tencentcloud_monitor_alarm_policy":                         dataSourceTencentCloudMonitorAlarmPolicy(),
 			"tencentcloud_monitor_alarm_history":                        dataSourceTencentCloudMonitorAlarmHistory(),
 			"tencentcloud_monitor_alarm_basic_alarms":                   dataSourceTencentCloudMonitorAlarmBasicAlarms(),
 			"tencentcloud_monitor_alarm_basic_metric":                   dataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            dataSourceTencentCloudMonitorAlarmConditionsTemplate(),
 			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_alarm_notice_callbacks":               dataSourceTencentCloudMonitorAlarmNoticeCallbacks(),
+			"tencentcloud_monitor_alarm_all_namespaces":                 dataSourceTencentCloudMonitorAlarmAllNamespaces(),
+			"tencentcloud_monitor_alarm_monitor_type":                   dataSourceTencentCloudMonitorAlarmMonitorType(),
+			"tencentcloud_monitor_statistic_data":                       dataSourceTencentCloudMonitorStatisticData(),
+			"tencentcloud_monitor_tmp_regions":                          dataSourceTencentCloudMonitorTmpRegions(),
 			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
@@ -2819,6 +2847,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":           dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
+			"tencentcloud_cam_group_user_account":                       dataSourceTencentCloudCamGroupUserAccount(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback":  dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_upgrade":   dataSourceTencentCloudDlcCheckDataEngineImageCanBeUpgrade(),
 			"tencentcloud_dlc_describe_user_type":                       dataSourceTencentCloudDlcDescribeUserType(),
@@ -3718,6 +3747,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_dasb_acl":                                            resourceTencentCloudDasbAcl(),
+			"tencentcloud_dasb_cmd_template":                                   resourceTencentCloudDasbCmdTemplate(),
+			"tencentcloud_dasb_device_group":                                   resourceTencentCloudDasbDeviceGroup(),
+			"tencentcloud_dasb_user":                                           resourceTencentCloudDasbUser(),
+			"tencentcloud_dasb_device_account":                                 resourceTencentCloudDasbDeviceAccount(),
+			"tencentcloud_dasb_device_group_members":                           resourceTencentCloudDasbDeviceGroupMembers(),
+			"tencentcloud_dasb_user_group_members":                             resourceTencentCloudDasbUserGroupMembers(),
+			"tencentcloud_dasb_bind_device_resource":                           resourceTencentCloudDasbBindDeviceResource(),
+			"tencentcloud_dasb_resource":                                       resourceTencentCloudDasbResource(),
+			"tencentcloud_dasb_device":                                         resourceTencentCloudDasbDevice(),
 			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),

@@ -1,6 +1,8 @@
 /*
 Provide a resource to create a DnsPod record.
 
+~> **NOTE:** Versions before v1.81.43 (including v1.81.43) do not support modifying remark or modifying remark has bug.
+
 Example Usage
 
 ```hcl
@@ -103,7 +105,7 @@ func resourceTencentCloudDnspodRecord() *schema.Resource {
 			},
 			"remark": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Optional:    true,
 				Description: "The Remark of record.",
 			},
 		},
@@ -113,8 +115,12 @@ func resourceTencentCloudDnspodRecord() *schema.Resource {
 func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dnspod_record.create")()
 	logId := getLogId(contextNil)
+
+	var (
+		recordId uint64
+	)
 	request := dnspod.NewCreateRecordRequest()
-	requestRemark := dnspod.NewModifyDomainRemarkRequest()
+	requestRemark := dnspod.NewModifyRecordRemarkRequest()
 
 	domain := d.Get("domain").(string)
 	recordType := d.Get("record_type").(string)
@@ -142,10 +148,9 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 		if e != nil {
 			return retryError(e)
 		}
-		recordId := *response.Response.RecordId
+		recordId = *response.Response.RecordId
 
 		d.SetId(domain + FILED_SP + fmt.Sprint(recordId))
-
 		return nil
 	})
 	if err != nil {
@@ -155,9 +160,10 @@ func resourceTencentCloudDnspodRecordCreate(d *schema.ResourceData, meta interfa
 
 	if v, ok := d.GetOk("remark"); ok {
 		requestRemark.Domain = helper.String(domain)
+		requestRemark.RecordId = helper.Uint64(recordId)
 		requestRemark.Remark = helper.String(v.(string))
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyDomainRemark(requestRemark)
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyRecordRemark(requestRemark)
 			if e != nil {
 				return retryError(e)
 			}
@@ -239,7 +245,7 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 	request := dnspod.NewModifyRecordRequest()
-	requestRemark := dnspod.NewModifyDomainRemarkRequest()
+	requestRemark := dnspod.NewModifyRecordRemarkRequest()
 	request.Domain = &domain
 	request.RecordId = helper.IntUint64(recordId)
 	recordType := d.Get("record_type").(string)
@@ -285,8 +291,9 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		remark := d.Get("remark").(string)
 		requestRemark.Domain = helper.String(domain)
 		requestRemark.Remark = helper.String(remark)
+		requestRemark.RecordId = helper.IntUint64(recordId)
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyDomainRemark(requestRemark)
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifyRecordRemark(requestRemark)
 			if e != nil {
 				return retryError(e)
 			}

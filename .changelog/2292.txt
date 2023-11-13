@@ -1,0 +1,3 @@
+```release-note:new-data-source
+tencentcloud_cam_group_user_account
+```
