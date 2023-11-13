@@ -1075,3 +1075,108 @@ func (me *WafService) DescribeWafInstanceQpsLimitByFilter(ctx context.Context, p
 	instanceQpsLimit = response.Response.QpsData
 	return
 }
+
+func (me *WafService) DescribeWafAutoDenyRulesById(ctx context.Context, domain string) (autoDenyRules *waf.DescribeWafAutoDenyRulesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeWafAutoDenyRulesRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeWafAutoDenyRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	autoDenyRules = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafModuleStatusById(ctx context.Context, domain string) (moduleStatus *waf.DescribeModuleStatusResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeModuleStatusRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeModuleStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	moduleStatus = response.Response
+	return
+}
+
+func (me *WafService) DescribeSpartaProtectionInfoById(ctx context.Context, domain, edition string) (protectionInfo *waf.DescribeSpartaProtectionInfoResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeSpartaProtectionInfoRequest()
+	request.Domain = &domain
+	request.Edition = &edition
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeSpartaProtectionInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	protectionInfo = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafWebShellById(ctx context.Context, domain string) (webShell *waf.DescribeWebshellStatusResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeWebshellStatusRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeWebshellStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	webShell = response.Response
+	return
+}

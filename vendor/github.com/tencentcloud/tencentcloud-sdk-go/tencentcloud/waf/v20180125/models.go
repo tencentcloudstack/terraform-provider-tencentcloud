@@ -1078,6 +1078,57 @@ func (r *AddSpartaProtectionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ApiPkg struct {
+	// 资源id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceIds *string `json:"ResourceIds,omitnil" name:"ResourceIds"`
+
+	// 状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil" name:"Status"`
+
+	// 地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *int64 `json:"Region,omitnil" name:"Region"`
+
+	// 开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BeginTime *string `json:"BeginTime,omitnil" name:"BeginTime"`
+
+	// 结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
+
+	// 申请数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InquireNum *int64 `json:"InquireNum,omitnil" name:"InquireNum"`
+
+	// 使用数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UsedNum *int64 `json:"UsedNum,omitnil" name:"UsedNum"`
+
+	// 续费标志
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RenewFlag *uint64 `json:"RenewFlag,omitnil" name:"RenewFlag"`
+
+	// 计费项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BillingItem *string `json:"BillingItem,omitnil" name:"BillingItem"`
+
+	// 1 API安全6折
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	APICPWaf *int64 `json:"APICPWaf,omitnil" name:"APICPWaf"`
+
+	// 1 表示5折折扣
+	// 2 表示4折折扣
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	APINPWaf *int64 `json:"APINPWaf,omitnil" name:"APINPWaf"`
+
+	// api安全7天试用标识。1试用。0没试用
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsAPISecurityTrial *int64 `json:"IsAPISecurityTrial,omitnil" name:"IsAPISecurityTrial"`
+}
+
 type AttackLogInfo struct {
 	// 攻击日志的详情内容
 	Content *string `json:"Content,omitnil" name:"Content"`
@@ -1191,6 +1242,10 @@ type BotPkg struct {
 	// 控制台买bot5折
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BotNPWaf *int64 `json:"BotNPWaf,omitnil" name:"BotNPWaf"`
+
+	// 7天bot试用标识 1 试用 0 没有试用
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsBotTrial *int64 `json:"IsBotTrial,omitnil" name:"IsBotTrial"`
 }
 
 type BotQPS struct {
@@ -3159,6 +3214,19 @@ type DescribeAntiInfoLeakRulesStrategyItem struct {
 type DescribeAntiInfoLeakageRulesRequestParams struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// 翻页支持，读取偏移
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 翻页支持，读取长度限制
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 排序方式，asc或者desc
+	Order *string `json:"Order,omitnil" name:"Order"`
+
+	// 过滤器,可以允许如下的值：
+	// RuleId,Match_field,Name,Action,Status
+	Filters []*FiltersItemNew `json:"Filters,omitnil" name:"Filters"`
 }
 
 type DescribeAntiInfoLeakageRulesRequest struct {
@@ -3166,6 +3234,19 @@ type DescribeAntiInfoLeakageRulesRequest struct {
 	
 	// 域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// 翻页支持，读取偏移
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 翻页支持，读取长度限制
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 排序方式，asc或者desc
+	Order *string `json:"Order,omitnil" name:"Order"`
+
+	// 过滤器,可以允许如下的值：
+	// RuleId,Match_field,Name,Action,Status
+	Filters []*FiltersItemNew `json:"Filters,omitnil" name:"Filters"`
 }
 
 func (r *DescribeAntiInfoLeakageRulesRequest) ToJsonString() string {
@@ -3181,6 +3262,10 @@ func (r *DescribeAntiInfoLeakageRulesRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "Domain")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "Order")
+	delete(f, "Filters")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAntiInfoLeakageRulesRequest has unknown keys!", "")
 	}
@@ -3766,12 +3851,45 @@ func (r *DescribeBatchIpAccessControlResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeCCRuleListRequestParams struct {
+	// 需要查询的API所属的域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
 
+	// 偏移
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 容量
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 目前支持根据ts_version排序
+	By *string `json:"By,omitnil" name:"By"`
+
+	// 过滤数组,name可以是如下的值： RuleID,ParamName,Url,Action,Method,Source,Status
+	Filters []*FiltersItemNew `json:"Filters,omitnil" name:"Filters"`
+
+	// asc或者desc
+	Order *string `json:"Order,omitnil" name:"Order"`
 }
 
 type DescribeCCRuleListRequest struct {
 	*tchttp.BaseRequest
 	
+	// 需要查询的API所属的域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// 偏移
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 容量
+	Limit *uint64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 目前支持根据ts_version排序
+	By *string `json:"By,omitnil" name:"By"`
+
+	// 过滤数组,name可以是如下的值： RuleID,ParamName,Url,Action,Method,Source,Status
+	Filters []*FiltersItemNew `json:"Filters,omitnil" name:"Filters"`
+
+	// asc或者desc
+	Order *string `json:"Order,omitnil" name:"Order"`
 }
 
 func (r *DescribeCCRuleListRequest) ToJsonString() string {
@@ -3786,7 +3904,12 @@ func (r *DescribeCCRuleListRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "Domain")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "By")
+	delete(f, "Filters")
+	delete(f, "Order")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCCRuleListRequest has unknown keys!", "")
 	}
@@ -5638,6 +5761,78 @@ func (r *DescribeIpHitItemsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeIpHitItemsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeModuleStatusRequestParams struct {
+	// 要查询状态的域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+}
+
+type DescribeModuleStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 要查询状态的域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+}
+
+func (r *DescribeModuleStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeModuleStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeModuleStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeModuleStatusResponseParams struct {
+	// WEB安全规则是否开启
+	WebSecurity *uint64 `json:"WebSecurity,omitnil" name:"WebSecurity"`
+
+	// 访问控制规则是否开启
+	AccessControl *int64 `json:"AccessControl,omitnil" name:"AccessControl"`
+
+	// CC防护是否开启
+	CcProtection *uint64 `json:"CcProtection,omitnil" name:"CcProtection"`
+
+	// 网页防篡改是否开启
+	AntiTamper *uint64 `json:"AntiTamper,omitnil" name:"AntiTamper"`
+
+	// 信息防泄漏是否开启
+	AntiLeakage *uint64 `json:"AntiLeakage,omitnil" name:"AntiLeakage"`
+
+	// API安全是否开启
+	ApiProtection *uint64 `json:"ApiProtection,omitnil" name:"ApiProtection"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeModuleStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeModuleStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeModuleStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeModuleStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8024,6 +8219,94 @@ type GoodNews struct {
 	RegionId *int64 `json:"RegionId,omitnil" name:"RegionId"`
 }
 
+type Goods struct {
+	// 付费类型，1:预付费，0:后付费
+	PayMode *int64 `json:"PayMode,omitnil" name:"PayMode"`
+
+	// 商品数量
+	GoodsNum *int64 `json:"GoodsNum,omitnil" name:"GoodsNum"`
+
+	// 商品明细
+	GoodsDetail *GoodsDetail `json:"GoodsDetail,omitnil" name:"GoodsDetail"`
+
+	// 默认为0
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProjectId *int64 `json:"ProjectId,omitnil" name:"ProjectId"`
+
+	// 计费类目ID，对应cid
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GoodsCategoryId *int64 `json:"GoodsCategoryId,omitnil" name:"GoodsCategoryId"`
+
+	// 平台类型，默认1
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Platform *int64 `json:"Platform,omitnil" name:"Platform"`
+
+	// 购买waf实例区域ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionId *int64 `json:"RegionId,omitnil" name:"RegionId"`
+}
+
+type GoodsDetail struct {
+	// 时间间隔
+	TimeSpan *int64 `json:"TimeSpan,omitnil" name:"TimeSpan"`
+
+	// 单位，支持m、y、d
+	TimeUnit *string `json:"TimeUnit,omitnil" name:"TimeUnit"`
+
+	// 产品码
+	ProductCode *string `json:"ProductCode,omitnil" name:"ProductCode"`
+
+	// 二级产品码
+	SubProductCode *string `json:"SubProductCode,omitnil" name:"SubProductCode"`
+
+	// 计费策略id
+	Pid *int64 `json:"Pid,omitnil" name:"Pid"`
+
+	// waf产品码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProductInfo []*ProductInfo `json:"ProductInfo,omitnil" name:"ProductInfo"`
+
+	// waf实例名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitnil" name:"InstanceName"`
+
+	// QPS数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ElasticQps *int64 `json:"ElasticQps,omitnil" name:"ElasticQps"`
+
+	// 弹性账单
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlexBill *int64 `json:"FlexBill,omitnil" name:"FlexBill"`
+
+	// 1:自动续费，0:不自动续费
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
+
+	// waf购买的实际地域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RealRegion *int64 `json:"RealRegion,omitnil" name:"RealRegion"`
+
+	// Waf实例对应的二级产品码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 计费细项标签数组
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelTypes []*string `json:"LabelTypes,omitnil" name:"LabelTypes"`
+
+	// 计费细项标签数量，一般和SvLabelType一一对应
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelCounts []*int64 `json:"LabelCounts,omitnil" name:"LabelCounts"`
+
+	// 变配使用，实例到期时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurDeadline *string `json:"CurDeadline,omitnil" name:"CurDeadline"`
+
+	// 对存在的实例购买bot 或api 安全
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+}
+
 type GoodsDetailNew struct {
 	// 时间间隔
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -8352,6 +8635,10 @@ type InstanceInfo struct {
 	// 混合云子节点包
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HybridPkg *HybridPkg `json:"HybridPkg,omitnil" name:"HybridPkg"`
+
+	// API安全资源包
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiPkg *ApiPkg `json:"ApiPkg,omitnil" name:"ApiPkg"`
 }
 
 type IpAccessControlData struct {
@@ -9852,6 +10139,71 @@ func (r *ModifyDomainsCLSStatusResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyGenerateDealsRequestParams struct {
+	// 计费下单入参
+	Goods []*Goods `json:"Goods,omitnil" name:"Goods"`
+}
+
+type ModifyGenerateDealsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 计费下单入参
+	Goods []*Goods `json:"Goods,omitnil" name:"Goods"`
+}
+
+func (r *ModifyGenerateDealsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGenerateDealsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Goods")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyGenerateDealsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyGenerateDealsResponseParams struct {
+	// 计费下单响应结构体
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data *DealData `json:"Data,omitnil" name:"Data"`
+
+	// 1:成功，0:失败
+	Status *int64 `json:"Status,omitnil" name:"Status"`
+
+	// 返回message
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnMessage *string `json:"ReturnMessage,omitnil" name:"ReturnMessage"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyGenerateDealsResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyGenerateDealsResponseParams `json:"Response"`
+}
+
+func (r *ModifyGenerateDealsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyGenerateDealsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyHostFlowModeRequestParams struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
@@ -10403,12 +10755,51 @@ func (r *ModifyInstanceRenewFlagResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyModuleStatusRequestParams struct {
+	// 需要设置的domain
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
 
+	// WEB 安全模块开关，0或1
+	WebSecurity *uint64 `json:"WebSecurity,omitnil" name:"WebSecurity"`
+
+	// 访问控制模块开关，0或者1
+	AccessControl *uint64 `json:"AccessControl,omitnil" name:"AccessControl"`
+
+	// CC模块开关，0或者1
+	CcProtection *uint64 `json:"CcProtection,omitnil" name:"CcProtection"`
+
+	// API安全模块开关，0或者1
+	ApiProtection *uint64 `json:"ApiProtection,omitnil" name:"ApiProtection"`
+
+	// 防篡改模块开关，0或者1
+	AntiTamper *uint64 `json:"AntiTamper,omitnil" name:"AntiTamper"`
+
+	// 防泄漏模块开关，0或者1
+	AntiLeakage *uint64 `json:"AntiLeakage,omitnil" name:"AntiLeakage"`
 }
 
 type ModifyModuleStatusRequest struct {
 	*tchttp.BaseRequest
 	
+	// 需要设置的domain
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// WEB 安全模块开关，0或1
+	WebSecurity *uint64 `json:"WebSecurity,omitnil" name:"WebSecurity"`
+
+	// 访问控制模块开关，0或者1
+	AccessControl *uint64 `json:"AccessControl,omitnil" name:"AccessControl"`
+
+	// CC模块开关，0或者1
+	CcProtection *uint64 `json:"CcProtection,omitnil" name:"CcProtection"`
+
+	// API安全模块开关，0或者1
+	ApiProtection *uint64 `json:"ApiProtection,omitnil" name:"ApiProtection"`
+
+	// 防篡改模块开关，0或者1
+	AntiTamper *uint64 `json:"AntiTamper,omitnil" name:"AntiTamper"`
+
+	// 防泄漏模块开关，0或者1
+	AntiLeakage *uint64 `json:"AntiLeakage,omitnil" name:"AntiLeakage"`
 }
 
 func (r *ModifyModuleStatusRequest) ToJsonString() string {
@@ -10423,7 +10814,13 @@ func (r *ModifyModuleStatusRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "Domain")
+	delete(f, "WebSecurity")
+	delete(f, "AccessControl")
+	delete(f, "CcProtection")
+	delete(f, "ApiProtection")
+	delete(f, "AntiTamper")
+	delete(f, "AntiLeakage")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyModuleStatusRequest has unknown keys!", "")
 	}
@@ -11558,6 +11955,16 @@ func (r *PostAttackDownloadTaskResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *PostAttackDownloadTaskResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type ProductInfo struct {
+	// 产品名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitnil" name:"Value"`
 }
 
 type QPSPackageNew struct {
