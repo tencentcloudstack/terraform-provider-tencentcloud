@@ -236,22 +236,12 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Description: "Tags of the SCF function.",
 			},
 			"async_run_enable": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				Computed: true,
-				ValidateFunc: helper.ComposeValidateFunc(
-					func(v interface{}, k string) (wss []string, errs []error) {
-						if v != nil {
-							str := v.(string)
-							if str != "TRUE" && str != "FALSE" {
-								errs = append(errs, errors.Errorf("%s should take the value TRUE or FALSE", k))
-							}
-						}
-						return
-					},
-				),
-				Description: "Whether SCF function asynchronous attribute is enabled. `TRUE` is on, `FALSE` is off.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{SCF_FUNCTION_OPEN, SCF_FUNCTION_CLOSE}),
+				Description:  "Whether SCF function asynchronous attribute is enabled. `TRUE` is open, `FALSE` is close.",
 			},
 			"enable_public_net": {
 				Type:        schema.TypeBool,
