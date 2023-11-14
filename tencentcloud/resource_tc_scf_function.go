@@ -236,10 +236,22 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Description: "Tags of the SCF function.",
 			},
 			"async_run_enable": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				Description: "Whether SCF function asynchronous attribute is enabled. Default `false`.",
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Computed: true,
+				ValidateFunc: helper.ComposeValidateFunc(
+					func(v interface{}, k string) (wss []string, errs []error) {
+						if v != nil {
+							str := v.(string)
+							if str != "TRUE" && str != "FALSE" {
+								errs = append(errs, errors.Errorf("%s should take the value TRUE or FALSE", k))
+							}
+						}
+						return
+					},
+				),
+				Description: "Whether SCF function asynchronous attribute is enabled. `TRUE` is on, `FALSE` is off.",
 			},
 			"enable_public_net": {
 				Type:        schema.TypeBool,
@@ -739,12 +751,8 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	}
 
 	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {
-		enable := v.(bool)
-		if enable {
-			functionInfo.asyncRunEnable = helper.String("TRUE")
-		} else {
-			functionInfo.asyncRunEnable = helper.String("FALSE")
-		}
+		enableStr := v.(string)
+		functionInfo.asyncRunEnable = helper.String(enableStr)
 	}
 
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
@@ -865,7 +873,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 		tags[*tag.Key] = *tag.Value
 	}
 	_ = d.Set("tags", tags)
-	_ = d.Set("async_run_enable", *resp.AsyncRunEnable == "TRUE")
+	_ = d.Set("async_run_enable", resp.AsyncRunEnable)
 
 	_ = d.Set("modify_time", resp.ModTime)
 	_ = d.Set("code_size", resp.CodeSize)
