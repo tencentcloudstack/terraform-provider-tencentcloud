@@ -44,6 +44,8 @@ type scfFunctionInfo struct {
 	cfsConfig *scf.CfsConfig
 
 	tags map[string]string
+
+	asyncRunEnable *string
 }
 
 type scfTrigger struct {
@@ -111,6 +113,8 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 			})
 		}
 	}
+
+	request.AsyncRunEnable = info.asyncRunEnable
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

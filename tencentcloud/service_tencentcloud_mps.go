@@ -1490,20 +1490,8 @@ func (me *MpsService) DescribeMpsContentReviewTemplatesByFilter(ctx context.Cont
 		if k == "Definitions" {
 			request.Definitions = v.([]*int64)
 		}
-		if k == "Offset" {
-			request.Offset = v.(*uint64)
-		}
-		if k == "Limit" {
-			request.Limit = v.(*uint64)
-		}
 		if k == "Type" {
 			request.Type = v.(*string)
-		}
-		if k == "TotalCount" {
-			request.TotalCount = v.(*uint64)
-		}
-		if k == "ContentReviewTemplateSet" {
-			request.ContentReviewTemplateSet = v.([]*mps.ContentReviewTemplateItem)
 		}
 	}
 
@@ -1528,6 +1516,54 @@ func (me *MpsService) DescribeMpsContentReviewTemplatesByFilter(ctx context.Cont
 		}
 		contentReviewTemplates = append(contentReviewTemplates, response.Response.ContentReviewTemplateSet...)
 		if len(response.Response.ContentReviewTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsDescribeMediaMetaDataByFilter(ctx context.Context, param map[string]interface{}) (describeMediaMetaData []*mps.MediaMetaData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeMediaMetaDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InputInfo" {
+			request.InputInfo = v.(map[string]interface{})
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeMediaMetaData(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MetaData) < 1 {
+			break
+		}
+		describeMediaMetaData = append(describeMediaMetaData, response.Response.MetaData...)
+		if len(response.Response.MetaData) < int(limit) {
 			break
 		}
 
@@ -1591,6 +1627,153 @@ func (me *MpsService) DescribeMpsImageSpriteTemplatesByFilter(ctx context.Contex
 		}
 		imageSpriteTemplates = append(imageSpriteTemplates, response.Response.ImageSpriteTemplateSet...)
 		if len(response.Response.ImageSpriteTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsMediaMetaDataByFilter(ctx context.Context, param map[string]interface{}) (mediaMetaData []*mps.MediaMetaData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeMediaMetaDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InputInfo" {
+			request.InputInfo = v.(map[string]interface{})
+		}
+		if k == "MetaData" {
+			request.MetaData = v.(map[string]interface{})
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeMediaMetaData(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MetaData) < 1 {
+			break
+		}
+		mediaMetaData = append(mediaMetaData, response.Response.MetaData...)
+		if len(response.Response.MetaData) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsParseLiveStreamProcessNotificationByFilter(ctx context.Context, param map[string]interface{}) (parseLiveStreamProcessNotification []*mps.ParseLiveStreamProcessNotificationResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewParseLiveStreamProcessNotificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Content" {
+			request.Content = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().ParseLiveStreamProcessNotification(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NotificationType) < 1 {
+			break
+		}
+		parseLiveStreamProcessNotification = append(parseLiveStreamProcessNotification, response.Response.NotificationType...)
+		if len(response.Response.NotificationType) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsParseNotificationByFilter(ctx context.Context, param map[string]interface{}) (parseNotification []*mps.ParseNotificationResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewParseNotificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Content" {
+			request.Content = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().ParseNotification(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventType) < 1 {
+			break
+		}
+		parseNotification = append(parseNotification, response.Response.EventType...)
+		if len(response.Response.EventType) < int(limit) {
 			break
 		}
 
@@ -1729,6 +1912,60 @@ func (me *MpsService) DescribeMpsSampleSnapshotTemplatesByFilter(ctx context.Con
 	return
 }
 
+func (me *MpsService) DescribeMpsSchedulesByFilter(ctx context.Context, param map[string]interface{}) (schedules []*mps.SchedulesInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeSchedulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ScheduleIds" {
+			request.ScheduleIds = v.([]*int64)
+		}
+		if k == "TriggerType" {
+			request.TriggerType = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeSchedules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ScheduleInfoSet) < 1 {
+			break
+		}
+		schedules = append(schedules, response.Response.ScheduleInfoSet...)
+		if len(response.Response.ScheduleInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *MpsService) DescribeMpsSnapshotByTimeoffsetTemplatesByFilter(ctx context.Context, param map[string]interface{}) (snapshotByTimeoffsetTemplates []*mps.SnapshotByTimeOffsetTemplate, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -1783,6 +2020,54 @@ func (me *MpsService) DescribeMpsSnapshotByTimeoffsetTemplatesByFilter(ctx conte
 		}
 		snapshotByTimeoffsetTemplates = append(snapshotByTimeoffsetTemplates, response.Response.SnapshotByTimeOffsetTemplateSet...)
 		if len(response.Response.SnapshotByTimeOffsetTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MpsService) DescribeMpsTasksByFilter(ctx context.Context, param map[string]interface{}) (tasks []*mps.TaskSimpleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mps.NewDescribeTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMpsClient().DescribeTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.TaskSet) < 1 {
+			break
+		}
+		tasks = append(tasks, response.Response.TaskSet...)
+		if len(response.Response.TaskSet) < int(limit) {
 			break
 		}
 

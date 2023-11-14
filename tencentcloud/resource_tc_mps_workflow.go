@@ -733,7 +733,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
+																Description: "Encoding format of audio stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
 															},
 															"bitrate": {
 																Type:        schema.TypeInt,
@@ -1113,7 +1113,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Enter the type of source object, which supports COS and URL.",
+																Description: "The type of source object, which supports COS and URL.",
 															},
 															"cos_input_info": {
 																Type:        schema.TypeList,

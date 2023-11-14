@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_org_member_policy" "org_member_policy" {
-  member_uin = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
   policy_name = &lt;nil&gt;
   identity_id = &lt;nil&gt;
   description = &lt;nil&gt;
@@ -24,7 +24,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
@@ -36,34 +35,40 @@ func resourceTencentCloudOrganizationOrgMemberPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudOrganizationOrgMemberPolicyCreate,
 		Read:   resourceTencentCloudOrganizationOrgMemberPolicyRead,
-		Update: resourceTencentCloudOrganizationOrgMemberPolicyUpdate,
 		Delete: resourceTencentCloudOrganizationOrgMemberPolicyDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"member_uin": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				Description: "Organization member uin.",
+			"member_uins": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "Member Uin list. Up to 10.",
 			},
 
 			"policy_name": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Policy name.The maximum length is 128 characters, supporting English letters, numbers, and symbols +=,.@_-.",
 			},
 
 			"identity_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Organization identity ID.",
 			},
 
 			"description": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Notes.",
+				Description: "Notes.The maximum length is 128 characters.",
 			},
 		},
 	}
@@ -76,12 +81,16 @@ func resourceTencentCloudOrganizationOrgMemberPolicyCreate(d *schema.ResourceDat
 	logId := getLogId(contextNil)
 
 	var (
-		request  = organization.NewCreateOrganizationMemberPolicyRequest()
-		response = organization.NewCreateOrganizationMemberPolicyResponse()
+		request  = organization.NewCreateOrganizationMembersPolicyRequest()
+		response = organization.NewCreateOrganizationMembersPolicyResponse()
 		policyId int
 	)
-	if v, ok := d.GetOkExists("member_uin"); ok {
-		request.MemberUin = helper.IntInt64(v.(int))
+	if v, ok := d.GetOk("member_uins"); ok {
+		memberUinsSet := v.(*schema.Set).List()
+		for i := range memberUinsSet {
+			memberUins := memberUinsSet[i].(int)
+			request.MemberUins = append(request.MemberUins, helper.IntInt64(memberUins))
+		}
 	}
 
 	if v, ok := d.GetOk("policy_name"); ok {
@@ -97,7 +106,7 @@ func resourceTencentCloudOrganizationOrgMemberPolicyCreate(d *schema.ResourceDat
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().CreateOrganizationMemberPolicy(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().CreateOrganizationMembersPolicy(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -140,8 +149,8 @@ func resourceTencentCloudOrganizationOrgMemberPolicyRead(d *schema.ResourceData,
 		return nil
 	}
 
-	if orgMemberPolicy.MemberUin != nil {
-		_ = d.Set("member_uin", orgMemberPolicy.MemberUin)
+	if orgMemberPolicy.MemberUins != nil {
+		_ = d.Set("member_uins", orgMemberPolicy.MemberUins)
 	}
 
 	if orgMemberPolicy.PolicyName != nil {
@@ -157,22 +166,6 @@ func resourceTencentCloudOrganizationOrgMemberPolicyRead(d *schema.ResourceData,
 	}
 
 	return nil
-}
-
-func resourceTencentCloudOrganizationOrgMemberPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_organization_org_member_policy.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	immutableArgs := []string{"member_uin", "policy_name", "identity_id", "description"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-	return resourceTencentCloudOrganizationOrgMemberPolicyRead(d, meta)
 }
 
 func resourceTencentCloudOrganizationOrgMemberPolicyDelete(d *schema.ResourceData, meta interface{}) error {

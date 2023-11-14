@@ -29,7 +29,7 @@ func TestAccTencentCloudOrganizationOrgMemberPolicyResource_basic(t *testing.T) 
 const testAccOrganizationOrgMemberPolicy = `
 
 resource "tencentcloud_organization_org_member_policy" "org_member_policy" {
-  member_uin = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
   policy_name = &lt;nil&gt;
   identity_id = &lt;nil&gt;
   description = &lt;nil&gt;

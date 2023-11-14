@@ -5,102 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mps_content_review_templates" "content_review_templates" {
-  definitions = &lt;nil&gt;
-  offset = &lt;nil&gt;
-  limit = &lt;nil&gt;
-  type = &lt;nil&gt;
-  total_count = &lt;nil&gt;
-  content_review_template_set {
-		definition = &lt;nil&gt;
-		name = &lt;nil&gt;
-		comment = &lt;nil&gt;
-		porn_configure {
-			img_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			asr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			ocr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-		}
-		terrorism_configure {
-			img_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			ocr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-		}
-		political_configure {
-			img_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			asr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			ocr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-		}
-		prohibited_configure {
-			asr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			ocr_review_info {
-				switch = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-		}
-		user_define_configure {
-			face_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			asr_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-			ocr_review_info {
-				switch = &lt;nil&gt;
-				label_set = &lt;nil&gt;
-				block_confidence = &lt;nil&gt;
-				review_confidence = &lt;nil&gt;
-			}
-		}
-		create_time = &lt;nil&gt;
-		update_time = &lt;nil&gt;
-		type = &lt;nil&gt;
-
+  definitions =
+  type = ""
   }
-}
 ```
 */
 package tencentcloud
@@ -123,121 +30,118 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Description: "The content review template uniquely identifies the filter condition, and the array length limit: 50.",
-			},
-
-			"offset": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Page offset, default: 0.",
-			},
-
-			"limit": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "Return the number of records, default value: 10, maximum value: 100.",
+				Description: "The IDs of the content moderation templates to query. Array length limit: 50.",
 			},
 
 			"type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Template type filter condition, optional value:Preset: system preset template.Custom: user-defined template.",
-			},
-
-			"total_count": {
-				Type:        schema.TypeInt,
-				Description: "Total number of records matching filter condition.",
+				Description: "The filter for querying templates. If this parameter is left empty, both preset and custom templates are returned. Valid values:* Preset* Custom.",
 			},
 
 			"content_review_template_set": {
+				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Content review template details list.",
+				Description: "List of content audit template details.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"definition": {
 							Type:        schema.TypeInt,
-							Description: "The unique identifier of the content review template.",
+							Computed:    true,
+							Description: "Unique ID of a content audit template.",
 						},
 						"name": {
 							Type:        schema.TypeString,
-							Description: "Content review template name, length limit: 64 characters.",
+							Computed:    true,
+							Description: "Name of a content audit template. Length limit: 64 characters.",
 						},
 						"comment": {
 							Type:        schema.TypeString,
-							Description: "Content review template description information, length limit: 256 characters.",
+							Computed:    true,
+							Description: "Description of a content audit template. Length limit: 256 characters.",
 						},
 						"porn_configure": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
-							Description: "Control parameters for porn image.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "Porn information detection control parameter.Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"img_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Porn image Identification Control Parameters.",
+										Computed:    true,
+										Description: "Control parameter of porn information detection in image.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Porn screen task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a porn information detection in image task. Valid values:&amp;lt;li&amp;gt;ON: Enables a porn information detection in image task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a porn information detection in image task.&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "Porn image filter label, if the review result contains the selected label, the result will be returned. If the filter label is empty, all the review results will be returned. The optional value is:porn, vulgar, intimacy, sexy.",
+													Computed:    true,
+													Description: "Filter tag for porn information detection in image. If an audit result contains the selected tag, it will be returned; if the filter tag is empty, all audit results will be returned. Valid values:&amp;lt;li&amp;gt;porn: Porn;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;vulgar: Vulgarity;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;intimacy: Intimacy;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;sexy: Sexiness.&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 90 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 90 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 0. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 0 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"asr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Voice pornography control parameters.",
+										Computed:    true,
+										Description: "Control parameter of porn information detection in speech.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Voice pornography task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a porn information detection in speech task. Valid values:&amp;lt;li&amp;gt;ON: Enables a porn information detection in speech task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a porn information detection in speech task.&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"ocr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Ocr pornography control parameters.",
+										Computed:    true,
+										Description: "Control parameter of porn information detection in text.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Ocr pornography task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a porn information detection in text task. Valid values:&amp;lt;li&amp;gt;ON: Enables a porn information detection in text task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a porn information detection in text task.&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
@@ -247,55 +151,62 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 						},
 						"terrorism_configure": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
-							Description: "Control parameters for unsafe information.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "The parameters for detecting sensitive information.Note: This field may return `null`, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"img_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Terrorism image task control parameters.",
+										Computed:    true,
+										Description: "The parameters for detecting sensitive information in images.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Terrorism image task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Whether to detect sensitive information in images. Valid values:&amp;lt;li&amp;gt;ON&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "Terrorism image filter tag, if the review result contains the selected tag, the result will be returned, if the filter tag is empty, all the review results will be returned, the optional value is:guns, crowd, bloody, police, banners, militant, explosion, terrorists, scenario.",
+													Computed:    true,
+													Description: "The filter labels for sensitive information detection in images, which specify the types of sensitive information to return. If this parameter is left empty, the detection results for all labels are returned. Valid values:&amp;lt;li&amp;gt;guns&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;crowd&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;bloody&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;police&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;banners (sensitive flags)&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;militant&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;explosion&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;terrorists&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;scenario (sensitive scenes) &amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 90 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 90 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 80 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 80 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"ocr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Ocr terrorism task Control Parameters.",
+										Computed:    true,
+										Description: "The parameters for detecting sensitive information based on OCR.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Ocr terrorism image task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Whether to detect sensitive information based on OCR. Valid values:&amp;lt;li&amp;gt;ON&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0–100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0–100.",
 												},
 											},
 										},
@@ -305,76 +216,86 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 						},
 						"political_configure": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
-							Description: "Political control parameters.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "The parameters for detecting sensitive information.Note: This field may return `null`, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"img_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Political image control parameters.",
+										Computed:    true,
+										Description: "The parameters for detecting sensitive information in images.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Political image task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Whether to detect sensitive information in images. Valid values:&amp;lt;li&amp;gt;ON&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "Political image filter tag, if the review result contains the selected tag, the result will be returned, if the filter tag is empty, all the review results will be returned, the optional value is:violation_photo, politician, entertainment, sport, entrepreneur, scholar, celebrity, military.",
+													Computed:    true,
+													Description: "The filter labels for sensitive information detection in images, which specify the types of sensitive information to return. If this parameter is left empty, the detection results for all labels are returned. Valid values:&amp;lt;li&amp;gt;violation_photo (banned icons)&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;politician&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;entertainment (people in the entertainment industry)&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;sport (people in the sports industry)&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;entrepreneur&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;scholar&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;celebrity&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;military (people in military)&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 97 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 97 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 95 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 95 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"asr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Political asr control parameters.",
+										Computed:    true,
+										Description: "The parameters for detecting sensitive information based on ASR.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Political asr task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Whether to detect sensitive information based on ASR. Valid values:&amp;lt;li&amp;gt;ON&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"ocr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Political ocr control parameters.",
+										Computed:    true,
+										Description: "The parameters for detecting sensitive information based on OCR.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Political ocr task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Whether to detect sensitive information based on OCR. Valid values:&amp;lt;li&amp;gt;ON&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
@@ -384,48 +305,54 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 						},
 						"prohibited_configure": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
-							Description: "Prohibited control parameters. Prohibited content includes:abuse, drug-related violations.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "Control parameter of prohibited information detection. Prohibited information includes:&amp;lt;li&amp;gt;Abusive;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;Drug-related.&amp;lt;/li&amp;gt;Note: this field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"asr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Voice Prohibition Control Parameters.Note: This field may return null, indicating that no valid value can be obtained.",
+										Computed:    true,
+										Description: "Control parameter of prohibited information detection in speech.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Voice Prohibition task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of prohibited information detection in speech task. Valid values:&amp;lt;li&amp;gt;ON: enables prohibited information detection in speech task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: disables prohibited information detection in speech task.&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0–100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0–100.",
 												},
 											},
 										},
 									},
 									"ocr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "Ocr Prohibition Control Parameters.Note: This field may return null, indicating that no valid value can be obtained.",
+										Computed:    true,
+										Description: "Control parameter of prohibited information detection in text.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "Ocr Prohibition task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of prohibited information detection in text task. Valid values:&amp;lt;li&amp;gt;ON: enables prohibited information detection in text task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: disables prohibited information detection in text task.&amp;lt;/li&amp;gt;.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0–100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0–100.",
 												},
 											},
 										},
@@ -435,90 +362,102 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 						},
 						"user_define_configure": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
-							Description: "User-Defined Content Moderation Control Parameters.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "Custom content audit control parameter.Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"face_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "User-defined face review control parameters.",
+										Computed:    true,
+										Description: "Control parameter of custom figure audit.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "User-defined face review task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a custom figure audit task. Valid values:&amp;lt;li&amp;gt;ON: Enables a custom figure audit task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a custom figure audit task.&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "User-defined face review tags, the review result contains the selected tag and returns the result, if the filter tag is empty, all review results are returned. If you want to use the tag filtering function, when adding a face library, you need to add the corresponding character tag.The maximum number of tags is 10, and the length of each tag is up to 16 characters.",
+													Computed:    true,
+													Description: "Custom figure filter tag. If an audit result contains the selected tag, it will be returned; if the filter tag is empty, all audit results will be returned. To use the tag filtering feature, you need to add the corresponding tag when adding materials for the custom figure library.There can be up to 10 tags, each with a length limit of 16 characters.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 97 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 95 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"asr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "User-defined asr text review control parameters.",
+										Computed:    true,
+										Description: "Control parameter of custom speech audit.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "User-defined asr review task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a custom speech audit task. Valid values:&amp;lt;li&amp;gt;ON: Enables a custom speech audit task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a custom speech audit task.&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "User-defined asr tags, the review result contains the selected tag and returns the result, if the filter tag is empty, all review results are returned. If you want to use the tag filtering function, when adding a asr library, you need to add the corresponding character tag.The maximum number of tags is 10, and the length of each tag is up to 16 characters.",
+													Computed:    true,
+													Description: "Custom speech filter tag. If an audit result contains the selected tag, it will be returned; if the filter tag is empty, all audit results will be returned. To use the tag filtering feature, you need to add the corresponding tag when adding materials for custom speech keywords.There can be up to 10 tags, each with a length limit of 16 characters.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
 									},
 									"ocr_review_info": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
-										Description: "User-defined ocr text review control parameters.",
+										Computed:    true,
+										Description: "Control parameter of custom text audit.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"switch": {
 													Type:        schema.TypeString,
-													Description: "User-defined ocr text review task switch, optional value:ON/OFF.",
+													Computed:    true,
+													Description: "Switch of a custom text audit task. Valid values:&amp;lt;li&amp;gt;ON: Enables a custom text audit task;&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;OFF: Disables a custom text audit task.&amp;lt;/li&amp;gt;.",
 												},
 												"label_set": {
 													Type: schema.TypeSet,
 													Elem: &schema.Schema{
 														Type: schema.TypeString,
 													},
-													Description: "User-defined ocr tags, the review result contains the selected tag and returns the result, if the filter tag is empty, all review results are returned. If you want to use the tag filtering function, when adding a ocr library, you need to add the corresponding character tag.The maximum number of tags is 10, and the length of each tag is up to 16 characters.",
+													Computed:    true,
+													Description: "Custom text filter tag. If an audit result contains the selected tag, it will be returned; if the filter tag is empty, all audit results will be returned. To use the tag filtering feature, you need to add the corresponding tag when adding materials for custom text keywords.There can be up to 10 tags, each with a length limit of 16 characters.",
 												},
 												"block_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging suspected violations. When the smart review reaches the score above, it is considered suspected violations. If it is not filled, the default is 100 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for violation. If this score is reached or exceeded during intelligent audit, it will be deemed that a suspected violation has occurred. If this parameter is left empty, 100 will be used by default. Value range: 0-100.",
 												},
 												"review_confidence": {
 													Type:        schema.TypeInt,
-													Description: "The score threshold for judging whether manual review is required for violations. When the intelligent review reaches the score above, it is considered that manual review is required. If it is not filled, the default is 75 points. Value range: 0~100.",
+													Computed:    true,
+													Description: "Threshold score for human audit. If this score is reached or exceeded during intelligent audit, human audit will be considered necessary. If this parameter is left empty, 75 will be used by default. Value range: 0-100.",
 												},
 											},
 										},
@@ -528,15 +467,18 @@ func dataSourceTencentCloudMpsContentReviewTemplates() *schema.Resource {
 						},
 						"create_time": {
 							Type:        schema.TypeString,
-							Description: "Template creation time, in [ISO date format](https://cloud.tencent.com/document/product/862/37710#52).",
+							Computed:    true,
+							Description: "Creation time of a template in [ISO date format](https://intl.cloud.tencent.com/document/product/266/11732?from_cn_redirect=1#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F).",
 						},
 						"update_time": {
 							Type:        schema.TypeString,
-							Description: "Template last modified time, using [ISO date format](https://cloud.tencent.com/document/product/862/37710#52).",
+							Computed:    true,
+							Description: "Last modified time of a template in [ISO date format](https://intl.cloud.tencent.com/document/product/266/11732?from_cn_redirect=1#iso-.E6.97.A5.E6.9C.9F.E6.A0.BC.E5.BC.8F).",
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Description: "Template type, optional value:Preset: system preset template.Custom: user-defined template.Note: This field may return null, indicating that no valid value can be obtained.",
+							Computed:    true,
+							Description: "The template type. Valid values:* Preset* CustomNote: This field may return `null`, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -568,264 +510,8 @@ func dataSourceTencentCloudMpsContentReviewTemplatesRead(d *schema.ResourceData,
 		}
 	}
 
-	if v, _ := d.GetOk("offset"); v != nil {
-		paramMap["Offset"] = helper.IntUint64(v.(int))
-	}
-
-	if v, _ := d.GetOk("limit"); v != nil {
-		paramMap["Limit"] = helper.IntUint64(v.(int))
-	}
-
 	if v, ok := d.GetOk("type"); ok {
 		paramMap["Type"] = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("total_count"); v != nil {
-		paramMap["TotalCount"] = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("content_review_template_set"); ok {
-		contentReviewTemplateSetSet := v.([]interface{})
-		tmpSet := make([]*mps.ContentReviewTemplateItem, 0, len(contentReviewTemplateSetSet))
-
-		for _, item := range contentReviewTemplateSetSet {
-			contentReviewTemplateItem := mps.ContentReviewTemplateItem{}
-			contentReviewTemplateItemMap := item.(map[string]interface{})
-
-			if v, ok := contentReviewTemplateItemMap["definition"]; ok {
-				contentReviewTemplateItem.Definition = helper.IntInt64(v.(int))
-			}
-			if v, ok := contentReviewTemplateItemMap["name"]; ok {
-				contentReviewTemplateItem.Name = helper.String(v.(string))
-			}
-			if v, ok := contentReviewTemplateItemMap["comment"]; ok {
-				contentReviewTemplateItem.Comment = helper.String(v.(string))
-			}
-			if pornConfigureMap, ok := helper.InterfaceToMap(contentReviewTemplateItemMap, "porn_configure"); ok {
-				pornConfigureInfo := mps.PornConfigureInfo{}
-				if imgReviewInfoMap, ok := helper.InterfaceToMap(pornConfigureMap, "img_review_info"); ok {
-					pornImgReviewTemplateInfo := mps.PornImgReviewTemplateInfo{}
-					if v, ok := imgReviewInfoMap["switch"]; ok {
-						pornImgReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := imgReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						pornImgReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := imgReviewInfoMap["block_confidence"]; ok {
-						pornImgReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := imgReviewInfoMap["review_confidence"]; ok {
-						pornImgReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					pornConfigureInfo.ImgReviewInfo = &pornImgReviewTemplateInfo
-				}
-				if asrReviewInfoMap, ok := helper.InterfaceToMap(pornConfigureMap, "asr_review_info"); ok {
-					pornAsrReviewTemplateInfo := mps.PornAsrReviewTemplateInfo{}
-					if v, ok := asrReviewInfoMap["switch"]; ok {
-						pornAsrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := asrReviewInfoMap["block_confidence"]; ok {
-						pornAsrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := asrReviewInfoMap["review_confidence"]; ok {
-						pornAsrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					pornConfigureInfo.AsrReviewInfo = &pornAsrReviewTemplateInfo
-				}
-				if ocrReviewInfoMap, ok := helper.InterfaceToMap(pornConfigureMap, "ocr_review_info"); ok {
-					pornOcrReviewTemplateInfo := mps.PornOcrReviewTemplateInfo{}
-					if v, ok := ocrReviewInfoMap["switch"]; ok {
-						pornOcrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := ocrReviewInfoMap["block_confidence"]; ok {
-						pornOcrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := ocrReviewInfoMap["review_confidence"]; ok {
-						pornOcrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					pornConfigureInfo.OcrReviewInfo = &pornOcrReviewTemplateInfo
-				}
-				contentReviewTemplateItem.PornConfigure = &pornConfigureInfo
-			}
-			if terrorismConfigureMap, ok := helper.InterfaceToMap(contentReviewTemplateItemMap, "terrorism_configure"); ok {
-				terrorismConfigureInfo := mps.TerrorismConfigureInfo{}
-				if imgReviewInfoMap, ok := helper.InterfaceToMap(terrorismConfigureMap, "img_review_info"); ok {
-					terrorismImgReviewTemplateInfo := mps.TerrorismImgReviewTemplateInfo{}
-					if v, ok := imgReviewInfoMap["switch"]; ok {
-						terrorismImgReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := imgReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						terrorismImgReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := imgReviewInfoMap["block_confidence"]; ok {
-						terrorismImgReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := imgReviewInfoMap["review_confidence"]; ok {
-						terrorismImgReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					terrorismConfigureInfo.ImgReviewInfo = &terrorismImgReviewTemplateInfo
-				}
-				if ocrReviewInfoMap, ok := helper.InterfaceToMap(terrorismConfigureMap, "ocr_review_info"); ok {
-					terrorismOcrReviewTemplateInfo := mps.TerrorismOcrReviewTemplateInfo{}
-					if v, ok := ocrReviewInfoMap["switch"]; ok {
-						terrorismOcrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := ocrReviewInfoMap["block_confidence"]; ok {
-						terrorismOcrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := ocrReviewInfoMap["review_confidence"]; ok {
-						terrorismOcrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					terrorismConfigureInfo.OcrReviewInfo = &terrorismOcrReviewTemplateInfo
-				}
-				contentReviewTemplateItem.TerrorismConfigure = &terrorismConfigureInfo
-			}
-			if politicalConfigureMap, ok := helper.InterfaceToMap(contentReviewTemplateItemMap, "political_configure"); ok {
-				politicalConfigureInfo := mps.PoliticalConfigureInfo{}
-				if imgReviewInfoMap, ok := helper.InterfaceToMap(politicalConfigureMap, "img_review_info"); ok {
-					politicalImgReviewTemplateInfo := mps.PoliticalImgReviewTemplateInfo{}
-					if v, ok := imgReviewInfoMap["switch"]; ok {
-						politicalImgReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := imgReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						politicalImgReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := imgReviewInfoMap["block_confidence"]; ok {
-						politicalImgReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := imgReviewInfoMap["review_confidence"]; ok {
-						politicalImgReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					politicalConfigureInfo.ImgReviewInfo = &politicalImgReviewTemplateInfo
-				}
-				if asrReviewInfoMap, ok := helper.InterfaceToMap(politicalConfigureMap, "asr_review_info"); ok {
-					politicalAsrReviewTemplateInfo := mps.PoliticalAsrReviewTemplateInfo{}
-					if v, ok := asrReviewInfoMap["switch"]; ok {
-						politicalAsrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := asrReviewInfoMap["block_confidence"]; ok {
-						politicalAsrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := asrReviewInfoMap["review_confidence"]; ok {
-						politicalAsrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					politicalConfigureInfo.AsrReviewInfo = &politicalAsrReviewTemplateInfo
-				}
-				if ocrReviewInfoMap, ok := helper.InterfaceToMap(politicalConfigureMap, "ocr_review_info"); ok {
-					politicalOcrReviewTemplateInfo := mps.PoliticalOcrReviewTemplateInfo{}
-					if v, ok := ocrReviewInfoMap["switch"]; ok {
-						politicalOcrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := ocrReviewInfoMap["block_confidence"]; ok {
-						politicalOcrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := ocrReviewInfoMap["review_confidence"]; ok {
-						politicalOcrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					politicalConfigureInfo.OcrReviewInfo = &politicalOcrReviewTemplateInfo
-				}
-				contentReviewTemplateItem.PoliticalConfigure = &politicalConfigureInfo
-			}
-			if prohibitedConfigureMap, ok := helper.InterfaceToMap(contentReviewTemplateItemMap, "prohibited_configure"); ok {
-				prohibitedConfigureInfo := mps.ProhibitedConfigureInfo{}
-				if asrReviewInfoMap, ok := helper.InterfaceToMap(prohibitedConfigureMap, "asr_review_info"); ok {
-					prohibitedAsrReviewTemplateInfo := mps.ProhibitedAsrReviewTemplateInfo{}
-					if v, ok := asrReviewInfoMap["switch"]; ok {
-						prohibitedAsrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := asrReviewInfoMap["block_confidence"]; ok {
-						prohibitedAsrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := asrReviewInfoMap["review_confidence"]; ok {
-						prohibitedAsrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					prohibitedConfigureInfo.AsrReviewInfo = &prohibitedAsrReviewTemplateInfo
-				}
-				if ocrReviewInfoMap, ok := helper.InterfaceToMap(prohibitedConfigureMap, "ocr_review_info"); ok {
-					prohibitedOcrReviewTemplateInfo := mps.ProhibitedOcrReviewTemplateInfo{}
-					if v, ok := ocrReviewInfoMap["switch"]; ok {
-						prohibitedOcrReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := ocrReviewInfoMap["block_confidence"]; ok {
-						prohibitedOcrReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := ocrReviewInfoMap["review_confidence"]; ok {
-						prohibitedOcrReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					prohibitedConfigureInfo.OcrReviewInfo = &prohibitedOcrReviewTemplateInfo
-				}
-				contentReviewTemplateItem.ProhibitedConfigure = &prohibitedConfigureInfo
-			}
-			if userDefineConfigureMap, ok := helper.InterfaceToMap(contentReviewTemplateItemMap, "user_define_configure"); ok {
-				userDefineConfigureInfo := mps.UserDefineConfigureInfo{}
-				if faceReviewInfoMap, ok := helper.InterfaceToMap(userDefineConfigureMap, "face_review_info"); ok {
-					userDefineFaceReviewTemplateInfo := mps.UserDefineFaceReviewTemplateInfo{}
-					if v, ok := faceReviewInfoMap["switch"]; ok {
-						userDefineFaceReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := faceReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						userDefineFaceReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := faceReviewInfoMap["block_confidence"]; ok {
-						userDefineFaceReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := faceReviewInfoMap["review_confidence"]; ok {
-						userDefineFaceReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					userDefineConfigureInfo.FaceReviewInfo = &userDefineFaceReviewTemplateInfo
-				}
-				if asrReviewInfoMap, ok := helper.InterfaceToMap(userDefineConfigureMap, "asr_review_info"); ok {
-					userDefineAsrTextReviewTemplateInfo := mps.UserDefineAsrTextReviewTemplateInfo{}
-					if v, ok := asrReviewInfoMap["switch"]; ok {
-						userDefineAsrTextReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := asrReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						userDefineAsrTextReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := asrReviewInfoMap["block_confidence"]; ok {
-						userDefineAsrTextReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := asrReviewInfoMap["review_confidence"]; ok {
-						userDefineAsrTextReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					userDefineConfigureInfo.AsrReviewInfo = &userDefineAsrTextReviewTemplateInfo
-				}
-				if ocrReviewInfoMap, ok := helper.InterfaceToMap(userDefineConfigureMap, "ocr_review_info"); ok {
-					userDefineOcrTextReviewTemplateInfo := mps.UserDefineOcrTextReviewTemplateInfo{}
-					if v, ok := ocrReviewInfoMap["switch"]; ok {
-						userDefineOcrTextReviewTemplateInfo.Switch = helper.String(v.(string))
-					}
-					if v, ok := ocrReviewInfoMap["label_set"]; ok {
-						labelSetSet := v.(*schema.Set).List()
-						userDefineOcrTextReviewTemplateInfo.LabelSet = helper.InterfacesStringsPoint(labelSetSet)
-					}
-					if v, ok := ocrReviewInfoMap["block_confidence"]; ok {
-						userDefineOcrTextReviewTemplateInfo.BlockConfidence = helper.IntInt64(v.(int))
-					}
-					if v, ok := ocrReviewInfoMap["review_confidence"]; ok {
-						userDefineOcrTextReviewTemplateInfo.ReviewConfidence = helper.IntInt64(v.(int))
-					}
-					userDefineConfigureInfo.OcrReviewInfo = &userDefineOcrTextReviewTemplateInfo
-				}
-				contentReviewTemplateItem.UserDefineConfigure = &userDefineConfigureInfo
-			}
-			if v, ok := contentReviewTemplateItemMap["create_time"]; ok {
-				contentReviewTemplateItem.CreateTime = helper.String(v.(string))
-			}
-			if v, ok := contentReviewTemplateItemMap["update_time"]; ok {
-				contentReviewTemplateItem.UpdateTime = helper.String(v.(string))
-			}
-			if v, ok := contentReviewTemplateItemMap["type"]; ok {
-				contentReviewTemplateItem.Type = helper.String(v.(string))
-			}
-			tmpSet = append(tmpSet, &contentReviewTemplateItem)
-		}
-		paramMap["content_review_template_set"] = tmpSet
 	}
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -846,6 +532,329 @@ func dataSourceTencentCloudMpsContentReviewTemplatesRead(d *schema.ResourceData,
 
 	ids := make([]string, 0, len(contentReviewTemplateSet))
 	tmpList := make([]map[string]interface{}, 0, len(contentReviewTemplateSet))
+
+	if contentReviewTemplateSet != nil {
+		for _, contentReviewTemplateItem := range contentReviewTemplateSet {
+			contentReviewTemplateItemMap := map[string]interface{}{}
+
+			if contentReviewTemplateItem.Definition != nil {
+				contentReviewTemplateItemMap["definition"] = contentReviewTemplateItem.Definition
+			}
+
+			if contentReviewTemplateItem.Name != nil {
+				contentReviewTemplateItemMap["name"] = contentReviewTemplateItem.Name
+			}
+
+			if contentReviewTemplateItem.Comment != nil {
+				contentReviewTemplateItemMap["comment"] = contentReviewTemplateItem.Comment
+			}
+
+			if contentReviewTemplateItem.PornConfigure != nil {
+				pornConfigureMap := map[string]interface{}{}
+
+				if contentReviewTemplateItem.PornConfigure.ImgReviewInfo != nil {
+					imgReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PornConfigure.ImgReviewInfo.Switch != nil {
+						imgReviewInfoMap["switch"] = contentReviewTemplateItem.PornConfigure.ImgReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PornConfigure.ImgReviewInfo.LabelSet != nil {
+						imgReviewInfoMap["label_set"] = contentReviewTemplateItem.PornConfigure.ImgReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.PornConfigure.ImgReviewInfo.BlockConfidence != nil {
+						imgReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PornConfigure.ImgReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PornConfigure.ImgReviewInfo.ReviewConfidence != nil {
+						imgReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PornConfigure.ImgReviewInfo.ReviewConfidence
+					}
+
+					pornConfigureMap["img_review_info"] = []interface{}{imgReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.PornConfigure.AsrReviewInfo != nil {
+					asrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PornConfigure.AsrReviewInfo.Switch != nil {
+						asrReviewInfoMap["switch"] = contentReviewTemplateItem.PornConfigure.AsrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PornConfigure.AsrReviewInfo.BlockConfidence != nil {
+						asrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PornConfigure.AsrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PornConfigure.AsrReviewInfo.ReviewConfidence != nil {
+						asrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PornConfigure.AsrReviewInfo.ReviewConfidence
+					}
+
+					pornConfigureMap["asr_review_info"] = []interface{}{asrReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.PornConfigure.OcrReviewInfo != nil {
+					ocrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PornConfigure.OcrReviewInfo.Switch != nil {
+						ocrReviewInfoMap["switch"] = contentReviewTemplateItem.PornConfigure.OcrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PornConfigure.OcrReviewInfo.BlockConfidence != nil {
+						ocrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PornConfigure.OcrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PornConfigure.OcrReviewInfo.ReviewConfidence != nil {
+						ocrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PornConfigure.OcrReviewInfo.ReviewConfidence
+					}
+
+					pornConfigureMap["ocr_review_info"] = []interface{}{ocrReviewInfoMap}
+				}
+
+				contentReviewTemplateItemMap["porn_configure"] = []interface{}{pornConfigureMap}
+			}
+
+			if contentReviewTemplateItem.TerrorismConfigure != nil {
+				terrorismConfigureMap := map[string]interface{}{}
+
+				if contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo != nil {
+					imgReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.Switch != nil {
+						imgReviewInfoMap["switch"] = contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.LabelSet != nil {
+						imgReviewInfoMap["label_set"] = contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.BlockConfidence != nil {
+						imgReviewInfoMap["block_confidence"] = contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.ReviewConfidence != nil {
+						imgReviewInfoMap["review_confidence"] = contentReviewTemplateItem.TerrorismConfigure.ImgReviewInfo.ReviewConfidence
+					}
+
+					terrorismConfigureMap["img_review_info"] = []interface{}{imgReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo != nil {
+					ocrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.Switch != nil {
+						ocrReviewInfoMap["switch"] = contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.BlockConfidence != nil {
+						ocrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.ReviewConfidence != nil {
+						ocrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.TerrorismConfigure.OcrReviewInfo.ReviewConfidence
+					}
+
+					terrorismConfigureMap["ocr_review_info"] = []interface{}{ocrReviewInfoMap}
+				}
+
+				contentReviewTemplateItemMap["terrorism_configure"] = []interface{}{terrorismConfigureMap}
+			}
+
+			if contentReviewTemplateItem.PoliticalConfigure != nil {
+				politicalConfigureMap := map[string]interface{}{}
+
+				if contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo != nil {
+					imgReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.Switch != nil {
+						imgReviewInfoMap["switch"] = contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.LabelSet != nil {
+						imgReviewInfoMap["label_set"] = contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.BlockConfidence != nil {
+						imgReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.ReviewConfidence != nil {
+						imgReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PoliticalConfigure.ImgReviewInfo.ReviewConfidence
+					}
+
+					politicalConfigureMap["img_review_info"] = []interface{}{imgReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo != nil {
+					asrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.Switch != nil {
+						asrReviewInfoMap["switch"] = contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.BlockConfidence != nil {
+						asrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.ReviewConfidence != nil {
+						asrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PoliticalConfigure.AsrReviewInfo.ReviewConfidence
+					}
+
+					politicalConfigureMap["asr_review_info"] = []interface{}{asrReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo != nil {
+					ocrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.Switch != nil {
+						ocrReviewInfoMap["switch"] = contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.BlockConfidence != nil {
+						ocrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.ReviewConfidence != nil {
+						ocrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.PoliticalConfigure.OcrReviewInfo.ReviewConfidence
+					}
+
+					politicalConfigureMap["ocr_review_info"] = []interface{}{ocrReviewInfoMap}
+				}
+
+				contentReviewTemplateItemMap["political_configure"] = []interface{}{politicalConfigureMap}
+			}
+
+			if contentReviewTemplateItem.ProhibitedConfigure != nil {
+				prohibitedConfigureMap := map[string]interface{}{}
+
+				if contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo != nil {
+					asrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.Switch != nil {
+						asrReviewInfoMap["switch"] = contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.BlockConfidence != nil {
+						asrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.ReviewConfidence != nil {
+						asrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.ProhibitedConfigure.AsrReviewInfo.ReviewConfidence
+					}
+
+					prohibitedConfigureMap["asr_review_info"] = []interface{}{asrReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo != nil {
+					ocrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.Switch != nil {
+						ocrReviewInfoMap["switch"] = contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.BlockConfidence != nil {
+						ocrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.ReviewConfidence != nil {
+						ocrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.ProhibitedConfigure.OcrReviewInfo.ReviewConfidence
+					}
+
+					prohibitedConfigureMap["ocr_review_info"] = []interface{}{ocrReviewInfoMap}
+				}
+
+				contentReviewTemplateItemMap["prohibited_configure"] = []interface{}{prohibitedConfigureMap}
+			}
+
+			if contentReviewTemplateItem.UserDefineConfigure != nil {
+				userDefineConfigureMap := map[string]interface{}{}
+
+				if contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo != nil {
+					faceReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.Switch != nil {
+						faceReviewInfoMap["switch"] = contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.LabelSet != nil {
+						faceReviewInfoMap["label_set"] = contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.BlockConfidence != nil {
+						faceReviewInfoMap["block_confidence"] = contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.ReviewConfidence != nil {
+						faceReviewInfoMap["review_confidence"] = contentReviewTemplateItem.UserDefineConfigure.FaceReviewInfo.ReviewConfidence
+					}
+
+					userDefineConfigureMap["face_review_info"] = []interface{}{faceReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo != nil {
+					asrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.Switch != nil {
+						asrReviewInfoMap["switch"] = contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.LabelSet != nil {
+						asrReviewInfoMap["label_set"] = contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.BlockConfidence != nil {
+						asrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.ReviewConfidence != nil {
+						asrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.UserDefineConfigure.AsrReviewInfo.ReviewConfidence
+					}
+
+					userDefineConfigureMap["asr_review_info"] = []interface{}{asrReviewInfoMap}
+				}
+
+				if contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo != nil {
+					ocrReviewInfoMap := map[string]interface{}{}
+
+					if contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.Switch != nil {
+						ocrReviewInfoMap["switch"] = contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.Switch
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.LabelSet != nil {
+						ocrReviewInfoMap["label_set"] = contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.LabelSet
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.BlockConfidence != nil {
+						ocrReviewInfoMap["block_confidence"] = contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.BlockConfidence
+					}
+
+					if contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.ReviewConfidence != nil {
+						ocrReviewInfoMap["review_confidence"] = contentReviewTemplateItem.UserDefineConfigure.OcrReviewInfo.ReviewConfidence
+					}
+
+					userDefineConfigureMap["ocr_review_info"] = []interface{}{ocrReviewInfoMap}
+				}
+
+				contentReviewTemplateItemMap["user_define_configure"] = []interface{}{userDefineConfigureMap}
+			}
+
+			if contentReviewTemplateItem.CreateTime != nil {
+				contentReviewTemplateItemMap["create_time"] = contentReviewTemplateItem.CreateTime
+			}
+
+			if contentReviewTemplateItem.UpdateTime != nil {
+				contentReviewTemplateItemMap["update_time"] = contentReviewTemplateItem.UpdateTime
+			}
+
+			if contentReviewTemplateItem.Type != nil {
+				contentReviewTemplateItemMap["type"] = contentReviewTemplateItem.Type
+			}
+
+			ids = append(ids, *contentReviewTemplateItem.Definition)
+			tmpList = append(tmpList, contentReviewTemplateItemMap)
+		}
+
+		_ = d.Set("content_review_template_set", tmpList)
+	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")

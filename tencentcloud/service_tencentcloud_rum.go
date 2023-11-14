@@ -2382,3 +2382,2038 @@ func (me *RumService) DescribeRumLogExportListByFilter(ctx context.Context, para
 
 	return
 }
+
+func (me *RumService) DescribeRumProjectStatusAttachmentById(ctx context.Context, projectId string) (projectStatusAttachment *rum.RumProject, errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDescribeProjectsRequest()
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeProjects(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RumProject) < 1 {
+		return
+	}
+
+	projectStatusAttachment = response.Response.RumProject[0]
+	return
+}
+
+func (me *RumService) DeleteRumProjectStatusAttachmentById(ctx context.Context, projectId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewStopProjectRequest()
+	request.ProjectId = &projectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().StopProject(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RumService) DescribeRumInstanceStatusAttachmentById(ctx context.Context, instanceId string) (instanceStatusAttachment *rum.RumInstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDescribeTawInstancesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeTawInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RumInstanceInfo) < 1 {
+		return
+	}
+
+	instanceStatusAttachment = response.Response.RumInstanceInfo[0]
+	return
+}
+
+func (me *RumService) DeleteRumInstanceStatusAttachmentById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewStopInstanceRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().StopInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RumService) DescribeRumCustomUrlByFilter(ctx context.Context, param map[string]interface{}) (customUrl []*rum.DescribeDataCustomUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataCustomUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataCustomUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		customUrl = append(customUrl, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumEventUrlByFilter(ctx context.Context, param map[string]interface{}) (eventUrl []*rum.DescribeDataEventUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataEventUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataEventUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		eventUrl = append(eventUrl, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumFetchUrlByFilter(ctx context.Context, param map[string]interface{}) (fetchUrl []*rum.DescribeDataFetchUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataFetchUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "Ret" {
+			request.Ret = v.(*string)
+		}
+		if k == "NetStatus" {
+			request.NetStatus = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataFetchUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		fetchUrl = append(fetchUrl, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumFetchUrlInfoByFilter(ctx context.Context, param map[string]interface{}) (fetchUrlInfo []*rum.DescribeDataFetchUrlInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataFetchUrlInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataFetchUrlInfo(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		fetchUrlInfo = append(fetchUrlInfo, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumLogUrlInfoByFilter(ctx context.Context, param map[string]interface{}) (logUrlInfo []*rum.DescribeDataLogUrlInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataLogUrlInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataLogUrlInfo(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		logUrlInfo = append(logUrlInfo, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumLogUrlStatisticsByFilter(ctx context.Context, param map[string]interface{}) (logUrlStatistics []*rum.DescribeDataLogUrlStatisticsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataLogUrlStatisticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataLogUrlStatistics(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		logUrlStatistics = append(logUrlStatistics, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumPerformancePageByFilter(ctx context.Context, param map[string]interface{}) (performancePage []*rum.DescribeDataPerformancePageResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataPerformancePageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+		if k == "NetStatus" {
+			request.NetStatus = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataPerformancePage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		performancePage = append(performancePage, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumPvUrlStatisticsByFilter(ctx context.Context, param map[string]interface{}) (pvUrlStatistics []*rum.DescribeDataPvUrlStatisticsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataPvUrlStatisticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+		if k == "GroupByType" {
+			request.GroupByType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataPvUrlStatistics(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		pvUrlStatistics = append(pvUrlStatistics, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumReportCountByFilter(ctx context.Context, param map[string]interface{}) (reportCount []*rum.DescribeDataReportCountResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataReportCountRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ReportType" {
+			request.ReportType = v.(*string)
+		}
+		if k == "InstanceID" {
+			request.InstanceID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataReportCount(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		reportCount = append(reportCount, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumSetUrlStatisticsByFilter(ctx context.Context, param map[string]interface{}) (setUrlStatistics []*rum.DescribeDataSetUrlStatisticsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataSetUrlStatisticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+		if k == "PackageType" {
+			request.PackageType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataSetUrlStatistics(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		setUrlStatistics = append(setUrlStatistics, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumStaticProjectByFilter(ctx context.Context, param map[string]interface{}) (staticProject []*rum.DescribeDataStaticProjectResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataStaticProjectRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataStaticProject(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		staticProject = append(staticProject, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumStaticResourceByFilter(ctx context.Context, param map[string]interface{}) (staticResource []*rum.DescribeDataStaticResourceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataStaticResourceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataStaticResource(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		staticResource = append(staticResource, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumStaticUrlByFilter(ctx context.Context, param map[string]interface{}) (staticUrl []*rum.DescribeDataStaticUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataStaticUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Url" {
+			request.Url = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataStaticUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		staticUrl = append(staticUrl, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumWebVitalsPageByFilter(ctx context.Context, param map[string]interface{}) (webVitalsPage []*rum.DescribeDataWebVitalsPageResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeDataWebVitalsPageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "ExtSecond" {
+			request.ExtSecond = v.(*string)
+		}
+		if k == "Engine" {
+			request.Engine = v.(*string)
+		}
+		if k == "Isp" {
+			request.Isp = v.(*string)
+		}
+		if k == "From" {
+			request.From = v.(*string)
+		}
+		if k == "Level" {
+			request.Level = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*string)
+		}
+		if k == "Brand" {
+			request.Brand = v.(*string)
+		}
+		if k == "Area" {
+			request.Area = v.(*string)
+		}
+		if k == "VersionNum" {
+			request.VersionNum = v.(*string)
+		}
+		if k == "Platform" {
+			request.Platform = v.(*string)
+		}
+		if k == "ExtThird" {
+			request.ExtThird = v.(*string)
+		}
+		if k == "ExtFirst" {
+			request.ExtFirst = v.(*string)
+		}
+		if k == "NetType" {
+			request.NetType = v.(*string)
+		}
+		if k == "Device" {
+			request.Device = v.(*string)
+		}
+		if k == "IsAbroad" {
+			request.IsAbroad = v.(*string)
+		}
+		if k == "Os" {
+			request.Os = v.(*string)
+		}
+		if k == "Browser" {
+			request.Browser = v.(*string)
+		}
+		if k == "CostType" {
+			request.CostType = v.(*string)
+		}
+		if k == "Env" {
+			request.Env = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeDataWebVitalsPage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		webVitalsPage = append(webVitalsPage, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumLogExportByFilter(ctx context.Context, param map[string]interface{}) (logExport []*rum.DescribeRumLogExportResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumLogExportRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "Query" {
+			request.Query = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "Fields" {
+			request.Fields = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeRumLogExport(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		logExport = append(logExport, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumLogExportListByFilter(ctx context.Context, param map[string]interface{}) (logExportList []*rum.DescribeRumLogExportsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumLogExportsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeRumLogExports(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		logExportList = append(logExportList, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumGroupLogByFilter(ctx context.Context, param map[string]interface{}) (groupLog []*rum.DescribeRumGroupLogResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumGroupLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Query" {
+			request.Query = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "GroupField" {
+			request.GroupField = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeRumGroupLog(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		groupLog = append(groupLog, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumLogListByFilter(ctx context.Context, param map[string]interface{}) (logList []*rum.DescribeRumLogListResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumLogListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Query" {
+			request.Query = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeRumLogList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		logList = append(logList, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumRumLogStatsLogListByFilter(ctx context.Context, param map[string]interface{}) (rumLogStatsLogList []*rum.DescribeRumStatsLogListResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumStatsLogListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "Query" {
+			request.Query = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeRumStatsLogList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		rumLogStatsLogList = append(rumLogStatsLogList, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumSignByFilter(ctx context.Context, param map[string]interface{}) (sign []*rum.DescribeReleaseFileSignResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeReleaseFileSignRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Timeout" {
+			request.Timeout = v.(*int64)
+		}
+		if k == "FileType" {
+			request.FileType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeReleaseFileSign(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SecretKey) < 1 {
+			break
+		}
+		sign = append(sign, response.Response.SecretKey...)
+		if len(response.Response.SecretKey) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumScoresByFilter(ctx context.Context, param map[string]interface{}) (scores []*rum.ScoreInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeScoresRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "ID" {
+			request.ID = v.(*int64)
+		}
+		if k == "IsDemo" {
+			request.IsDemo = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeScores(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ScoreSet) < 1 {
+			break
+		}
+		scores = append(scores, response.Response.ScoreSet...)
+		if len(response.Response.ScoreSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RumService) DescribeRumTawAreaByFilter(ctx context.Context, param map[string]interface{}) (tawArea []*rum.RumAreaInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeTawAreasRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AreaIds" {
+			request.AreaIds = v.([]*int64)
+		}
+		if k == "AreaKeys" {
+			request.AreaKeys = v.([]*string)
+		}
+		if k == "AreaStatuses" {
+			request.AreaStatuses = v.([]*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRumClient().DescribeTawAreas(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AreaSet) < 1 {
+			break
+		}
+		tawArea = append(tawArea, response.Response.AreaSet...)
+		if len(response.Response.AreaSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
