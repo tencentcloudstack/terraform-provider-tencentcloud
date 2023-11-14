@@ -1965,6 +1965,10 @@ Web Application Firewall(WAF)
     tencentcloud_waf_saas_instance
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
+    tencentcloud_waf_auto_deny_rules
+    tencentcloud_waf_module_status
+    tencentcloud_waf_protection_mode
+    tencentcloud_waf_web_shell
 
 Wedata
   Data Source
@@ -3735,6 +3739,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_waf_auto_deny_rules":                                 resourceTencentCloudWafAutoDenyRules(),
+			"tencentcloud_waf_module_status":                                   resourceTencentCloudWafModuleStatus(),
+			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
+			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
 			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),

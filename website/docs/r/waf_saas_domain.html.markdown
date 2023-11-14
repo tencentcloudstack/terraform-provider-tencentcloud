@@ -205,6 +205,7 @@ The following arguments are supported:
 * `sni_type` - (Optional, Int) Sni type fo upstream, 0:disable SNI; 1:enable SNI and SNI equal original request host; 2:and SNI equal upstream host 3:enable SNI and equal customize host.
 * `src_list` - (Optional, List: [`String`]) Upstream IP List, When UpstreamType=0, this parameter needs to be filled.
 * `ssl_id` - (Optional, String) Certificate ID, When CertType=2, this parameter needs to be filled.
+* `status` - (Optional, Int) Binding status between waf and LB, 0:not bind, 1:binding.
 * `tls_version` - (Optional, Int) Version of TLS Protocol.
 * `upstream_domain` - (Optional, String) Upstream domain, When UpstreamType=1, this parameter needs to be filled.
 * `upstream_scheme` - (Optional, String) Upstream scheme for https, http or https.
