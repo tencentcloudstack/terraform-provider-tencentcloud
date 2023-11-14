@@ -1535,6 +1535,9 @@ Cloud Streaming Services(CSS)
     tencentcloud_css_timeshift_template
     tencentcloud_css_timeshift_rule_attachment
     tencentcloud_css_stream_monitor
+    tencentcloud_css_start_stream_monitor
+    tencentcloud_css_pull_stream_task_restart
+
   Data Source
     tencentcloud_css_domains
     tencentcloud_css_backup_stream
@@ -3482,6 +3485,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_timeshift_template":                              resourceTencentCloudCssTimeshiftTemplate(),
 			"tencentcloud_css_timeshift_rule_attachment":                       resourceTencentCloudCssTimeshiftRuleAttachment(),
 			"tencentcloud_css_stream_monitor":                                  resourceTencentCloudCssStreamMonitor(),
+			"tencentcloud_css_start_stream_monitor":                            resourceTencentCloudCssStartStreamMonitor(),
+			"tencentcloud_css_pull_stream_task_restart":                        resourceTencentCloudCssPullStreamTaskRestart(),
 			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),

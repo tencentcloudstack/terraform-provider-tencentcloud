@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_css_start_stream_monitor
+```
+
+```release-note:new-resource
+tencentcloud_css_pull_stream_task_restart
+```
