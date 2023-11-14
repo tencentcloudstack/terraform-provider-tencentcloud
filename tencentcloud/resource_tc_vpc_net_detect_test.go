@@ -36,14 +36,13 @@ func TestAccTencentCloudVpcNetDetectResource_basic(t *testing.T) {
 const testAccVpcNetDetect = `
 
 resource "tencentcloud_vpc_net_detect" "net_detect" {
-  net_detect_name       = "terrform-test"
-  vpc_id                = "vpc-4owdpnwr"
-  subnet_id             = "subnet-c1l35990"
-  next_hop_destination  = "172.16.128.57"
-  next_hop_type         = "NORMAL_CVM"
+  net_detect_name       = "terraform-test"
+  vpc_id                = "vpc-jxnxbc07"
+  subnet_id             = "subnet-ev908x0w"
+  next_hop_destination  = "nat-bfnnl8wg"
+  next_hop_type         = "NAT"
   detect_destination_ip = [
-    "10.0.0.1",
-    "10.0.0.2",
+    "172.16.128.110"
   ]
 }
 
@@ -53,13 +52,12 @@ const testAccVpcNetDetectUpdate = `
 
 resource "tencentcloud_vpc_net_detect" "net_detect" {
   net_detect_name       = "terraform-for-test"
-  vpc_id                = "vpc-4owdpnwr"
-  subnet_id             = "subnet-c1l35990"
-  next_hop_destination  = "172.16.128.57"
-  next_hop_type         = "NORMAL_CVM"
+  vpc_id                = "vpc-jxnxbc07"
+  subnet_id             = "subnet-ev908x0w"
+  next_hop_destination  = "nat-bfnnl8wg"
+  next_hop_type         = "NAT"
   detect_destination_ip = [
-    "10.0.0.1",
-    "10.0.0.2",
+    "172.16.128.110"
   ]
 }
 

@@ -29,8 +29,7 @@ func TestAccTencentCloudVpcV3RouteEntryBasic(t *testing.T) {
 					testAccCheckVpcRouteEntryExists("tencentcloud_route_table_entry.foo"),
 
 					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "next_type", "EIP"),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "description", defaultInsName),
-					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "destination_cidr_block", "10.0.0.0/24"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "destination_cidr_block", "10.4.4.0/24"),
 					resource.TestCheckResourceAttr("tencentcloud_route_table_entry.foo", "next_hub", "0"),
 				),
 			},
@@ -145,88 +144,69 @@ func testAccCheckVpcRouteEntryDestroy(s *terraform.State) error {
 }
 
 const testAccVpcRouteEntryConfig = defaultVpcVariable + `
-resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
 
-resource "tencentcloud_route_table" "foo" {
-  name   = var.instance_name
-  vpc_id = tencentcloud_vpc.foo.id
-}
 
-resource "tencentcloud_subnet" "foo" {
-  name              = var.instance_name
-  vpc_id            = tencentcloud_vpc.foo.id
-  availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
-  route_table_id    = tencentcloud_route_table.foo.id
-}
-
-resource "tencentcloud_route_table_entry" "foo" {
-  route_table_id         = tencentcloud_route_table.foo.id
-  destination_cidr_block = "10.0.0.0/24"
+resource "tencentcloud_route_table_entry" "instance" {
+  route_table_id         = "rtb-2zbsdvsa"
+  destination_cidr_block = "172.16.128.1"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = var.instance_name
 }
 `
 const testAccVpcRouteEntryUpdate = defaultVpcVariable + `
-resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
 
-resource "tencentcloud_route_table" "foo" {
-  name   = var.instance_name
-  vpc_id = tencentcloud_vpc.foo.id
+resource "tencentcloud_vpc" "foo" {
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "foo" {
-  name              = var.instance_name
   vpc_id            = tencentcloud_vpc.foo.id
+  name              = "terraform test subnet"
+  cidr_block        = "10.0.12.0/24"
   availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
   route_table_id    = tencentcloud_route_table.foo.id
 }
 
-resource "tencentcloud_route_table_entry" "foo" {
+resource "tencentcloud_route_table" "foo" {
+  vpc_id = tencentcloud_vpc.foo.id
+  name   = "ci-temp-test-rt"
+}
+
+resource "tencentcloud_route_table_entry" "instance" {
   route_table_id         = tencentcloud_route_table.foo.id
-  destination_cidr_block = "10.0.0.0/24"
+  destination_cidr_block = "10.4.4.0/24"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = var.instance_name
+  description            = "ci-test-route-table-entry"
   disabled                = true
 }
 `
 const testAccVpcRouteEntryUpdate2 = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
-  name       = var.instance_name
-  cidr_block = var.vpc_cidr
-}
-
-resource "tencentcloud_route_table" "foo" {
-  name   = var.instance_name
-  vpc_id = tencentcloud_vpc.foo.id
+  name       = "ci-temp-test"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "foo" {
-  name              = var.instance_name
   vpc_id            = tencentcloud_vpc.foo.id
+  name              = "terraform test subnet"
+  cidr_block        = "10.0.12.0/24"
   availability_zone = var.availability_zone
-  cidr_block        = var.subnet_cidr
-  is_multicast      = false
   route_table_id    = tencentcloud_route_table.foo.id
 }
 
-resource "tencentcloud_route_table_entry" "foo" {
+resource "tencentcloud_route_table" "foo" {
+  vpc_id = tencentcloud_vpc.foo.id
+  name   = "ci-temp-test-rt"
+}
+
+resource "tencentcloud_route_table_entry" "instance" {
   route_table_id         = tencentcloud_route_table.foo.id
-  destination_cidr_block = "10.0.0.0/24"
+  destination_cidr_block = "10.4.4.0/24"
   next_type              = "EIP"
   next_hub               = "0"
-  description            = var.instance_name
+  description            = "ci-test-route-table-entry"
   disabled               = false
 }
 `

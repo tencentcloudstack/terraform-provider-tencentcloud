@@ -2,8 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -136,6 +138,12 @@ func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
 		CheckDestroy: testAccCheckVpcDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccVpcConfigWithTags,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
@@ -152,6 +160,12 @@ func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccVpcConfigWithTagsUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),

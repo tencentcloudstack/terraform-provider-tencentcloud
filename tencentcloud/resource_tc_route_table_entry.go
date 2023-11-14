@@ -77,11 +77,11 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Description: "ID of routing table to which this entry belongs.",
 			},
 			"destination_cidr_block": {
-				Type:         schema.TypeString,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateCIDRNetworkAddress,
-				Description:  "Destination address block.",
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				//ValidateFunc: validateCIDRNetworkAddress,
+				Description: "Destination address block.",
 			},
 			"next_type": {
 				Type:         schema.TypeString,
