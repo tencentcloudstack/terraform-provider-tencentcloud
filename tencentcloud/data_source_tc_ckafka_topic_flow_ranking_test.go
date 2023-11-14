@@ -1,15 +1,16 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCkafkaTopicFlowRankingDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -21,10 +22,12 @@ func TestAccTencentCloudCkafkaTopicFlowRankingDataSource_basic(t *testing.T) {
 }
 
 const testAccCkafkaTopicFlowRankingDataSource = `
+
 data "tencentcloud_ckafka_topic_flow_ranking" "topic_flow_ranking" {
-	instance_id = "ckafka-vv7wpvae"
-	ranking_type = "PRO"
-	begin_date = "2023-05-29T00:00:00+08:00"
-	end_date = "2021-05-29T23:59:59+08:00"
-}
+  instance_id = "InstanceId"
+  ranking_type = "PRO"
+  begin_date = "2021-05-13T07:23:11+08:00"
+  end_date = "2021-05-14T07:23:11+08:00"
+  }
+
 `

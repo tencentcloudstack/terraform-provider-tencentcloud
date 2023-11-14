@@ -3,87 +3,14 @@ Provides a resource to create a redis account
 
 Example Usage
 
-Create an account with read and write permissions
-
 ```hcl
-data "tencentcloud_redis_zone_config" "zone" {
-  type_id = 7
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_redis_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = data.tencentcloud_redis_zone_config.zone.list[1].zone
-  name              = "tf_redis_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-resource "tencentcloud_redis_instance" "foo" {
-  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[1].zone
-  type_id            = data.tencentcloud_redis_zone_config.zone.list[1].type_id
-  password           = "test12345789"
-  mem_size           = 8192
-  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[1].redis_shard_nums[0]
-  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[1].redis_replicas_nums[0]
-  name               = "terrform_test"
-  port               = 6379
-  vpc_id             = tencentcloud_vpc.vpc.id
-  subnet_id          = tencentcloud_subnet.subnet.id
-}
-
 resource "tencentcloud_redis_account" "account" {
-  instance_id 	   = tencentcloud_redis_instance.foo.id
-  account_name 	   = "account_test"
-  account_password = "test1234"
-  remark 		   = "master"
-  readonly_policy  = ["master"]
-  privilege 	   = "rw"
-}
-```
-
-Create an account with read-only permissions
-
-```hcl
-data "tencentcloud_redis_zone_config" "zone" {
-  type_id = 7
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_redis_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = data.tencentcloud_redis_zone_config.zone.list[1].zone
-  name              = "tf_redis_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-resource "tencentcloud_redis_instance" "foo" {
-  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[1].zone
-  type_id            = data.tencentcloud_redis_zone_config.zone.list[1].type_id
-  password           = "test12345789"
-  mem_size           = 8192
-  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[1].redis_shard_nums[0]
-  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[1].redis_replicas_nums[0]
-  name               = "terrform_test"
-  port               = 6379
-  vpc_id             = tencentcloud_vpc.vpc.id
-  subnet_id          = tencentcloud_subnet.subnet.id
-}
-
-resource "tencentcloud_redis_account" "account" {
-  instance_id 	   = tencentcloud_redis_instance.foo.id
-  account_name 	   = "account_test"
-  account_password = "test1234"
-  remark 		   = "master"
-  readonly_policy  = ["master"]
-  privilege 	   = "r"
+  instance_id = "crs-c1nl9rpv"
+  account_name = "user"
+  account_password = &lt;nil&gt;
+  remark = &lt;nil&gt;
+  readonly_policy =
+  privilege = "rw"
 }
 ```
 
@@ -92,7 +19,7 @@ Import
 redis account can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_redis_account.account crs-xxxxxx#account_test
+terraform import tencentcloud_redis_account.account account_id
 ```
 */
 package tencentcloud
@@ -100,15 +27,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"strings"
 	"time"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudRedisAccount() *schema.Resource {
@@ -136,8 +61,7 @@ func resourceTencentCloudRedisAccount() *schema.Resource {
 			"account_password": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Sensitive:   true,
-				Description: "1: Length 8-30 digits, it is recommended to use a password of more than 12 digits; 2: Cannot start with `/`; 3: Include at least two items: a.Lowercase letters `a-z`; b.Uppercase letters `A-Z` c.Numbers `0-9`;  d.`()`~!@#$%^&*-+=_|{}[]:;<>,.?/`.",
+				Description: "1. Length 8-30 digits, it is recommended to use a password of more than 12 digits .2. Cannot start with /.3. Include at least two items.  a.Lowercase letters a-z.  b.Uppercase letters A-Z c.Numbers 0-9.  d.()`~!@#$%^&amp;amp;amp;*-+=_| {}[]:;&amp;amp;lt;&amp;amp;gt;,.?/.",
 			},
 
 			"remark": {
@@ -152,13 +76,13 @@ func resourceTencentCloudRedisAccount() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Routing policy: Enter master or replication, which indicates the master node or slave node, cannot be empty when modifying operations.",
+				Description: "Routing policy: Enter master or replication, which indicates the master node or slave node.",
 			},
 
 			"privilege": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Read and write policy: Enter R and RW to indicate read-only, read-write, cannot be empty when modifying operations.",
+				Description: "Read and write policy: Enter R and RW to indicate read-only, read-write.",
 			},
 		},
 	}
@@ -169,7 +93,6 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request     = redis.NewCreateInstanceAccountRequest()
@@ -210,11 +133,6 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().CreateInstanceAccount(request)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if ee.Code == "FailedOperation.SystemError" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -227,38 +145,12 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + accountName)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, accountName}, FILED_SP))
 
-	taskId := *response.Response.TaskId
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("create account is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s redis create account fail, reason:%s\n", logId, err.Error())
-		return err
-	}
-
-	conf := BuildStateChangeConf(
-		[]string{},
-		[]string{"2"},
-		6*readRetryTimeout,
-		time.Second,
-		service.RedisAccountStateRefreshFunc(instanceId, accountName, []string{}),
-	)
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 60*readRetryTimeout, time.Second, service.RedisAccountStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -272,6 +164,7 @@ func resourceTencentCloudRedisAccountRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -302,9 +195,9 @@ func resourceTencentCloudRedisAccountRead(d *schema.ResourceData, meta interface
 		_ = d.Set("account_name", account.AccountName)
 	}
 
-	// if account.AccountPassword != nil {
-	// 	_ = d.Set("account_password", account.AccountPassword)
-	// }
+	if account.AccountPassword != nil {
+		_ = d.Set("account_password", account.AccountPassword)
+	}
 
 	if account.Remark != nil {
 		_ = d.Set("remark", account.Remark)
@@ -326,10 +219,8 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := redis.NewModifyInstanceAccountRequest()
-	response := redis.NewModifyInstanceAccountResponse()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -341,11 +232,23 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 	request.InstanceId = &instanceId
 	request.AccountName = &accountName
 
-	immutableArgs := []string{"instance_id", "account_name"}
+	immutableArgs := []string{"instance_id", "account_name", "account_password", "remark", "readonly_policy", "privilege"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("instance_id") {
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("account_name") {
+		if v, ok := d.GetOk("account_name"); ok {
+			request.AccountName = helper.String(v.(string))
 		}
 	}
 
@@ -361,31 +264,29 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if v, ok := d.GetOk("readonly_policy"); ok {
-		readonlyPolicySet := v.(*schema.Set).List()
-		for i := range readonlyPolicySet {
-			readonlyPolicy := readonlyPolicySet[i].(string)
-			request.ReadonlyPolicy = append(request.ReadonlyPolicy, &readonlyPolicy)
+	if d.HasChange("readonly_policy") {
+		if v, ok := d.GetOk("readonly_policy"); ok {
+			readonlyPolicySet := v.(*schema.Set).List()
+			for i := range readonlyPolicySet {
+				readonlyPolicy := readonlyPolicySet[i].(string)
+				request.ReadonlyPolicy = append(request.ReadonlyPolicy, &readonlyPolicy)
+			}
 		}
 	}
 
-	if v, ok := d.GetOk("privilege"); ok {
-		request.Privilege = helper.String(v.(string))
+	if d.HasChange("privilege") {
+		if v, ok := d.GetOk("privilege"); ok {
+			request.Privilege = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().ModifyInstanceAccount(request)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if ee.Code == "FailedOperation.SystemError" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -393,36 +294,9 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	taskId := *response.Response.TaskId
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("change account is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s redis change account fail, reason:%s\n", logId, err.Error())
-		return err
-	}
-
-	conf := BuildStateChangeConf(
-		[]string{},
-		[]string{"2"},
-		6*readRetryTimeout,
-		time.Second,
-		service.RedisAccountStateRefreshFunc(instanceId, accountName, []string{}),
-	)
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 60*readRetryTimeout, time.Second, service.RedisAccountStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -437,8 +311,8 @@ func resourceTencentCloudRedisAccountDelete(d *schema.ResourceData, meta interfa
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -446,30 +320,16 @@ func resourceTencentCloudRedisAccountDelete(d *schema.ResourceData, meta interfa
 	instanceId := idSplit[0]
 	accountName := idSplit[1]
 
-	taskId, err := service.DeleteRedisAccountById(ctx, instanceId, accountName)
-	if err != nil {
+	if err := service.DeleteRedisAccountById(ctx, instanceId, accountName); err != nil {
 		return err
 	}
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("delete account is processing"))
-		}
-	})
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if err != nil {
-		log.Printf("[CRITAL]%s redis delete account fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 60*readRetryTimeout, time.Second, service.RedisAccountStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

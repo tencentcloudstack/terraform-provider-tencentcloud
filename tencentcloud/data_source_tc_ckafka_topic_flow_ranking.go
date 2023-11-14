@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_topic_flow_ranking" "topic_flow_ranking" {
-  instance_id = "ckafka-xxxxxx"
+  instance_id = "InstanceId"
   ranking_type = "PRO"
-  begin_date = "2023-05-29T00:00:00+08:00"
-  end_date = "2021-05-29T23:59:59+08:00"
-}
+  begin_date = "2021-05-13T07:23:11+08:00"
+  end_date = "2021-05-14T07:23:11+08:00"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -36,7 +35,7 @@ func dataSourceTencentCloudCkafkaTopicFlowRanking() *schema.Resource {
 			"ranking_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Ranking type. `PRO`: topic production flow, `CON`: topic consumption traffic.",
+				Description: "RankingType.",
 			},
 
 			"begin_date": {
@@ -54,7 +53,7 @@ func dataSourceTencentCloudCkafkaTopicFlowRanking() *schema.Resource {
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "result.",
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"topic_flow": {
@@ -66,17 +65,17 @@ func dataSourceTencentCloudCkafkaTopicFlowRanking() *schema.Resource {
 									"topic_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "topicId.",
+										Description: "TopicId.",
 									},
 									"topic_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "topicName.",
+										Description: "TopicName.",
 									},
 									"partition_num": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "partitionNum.",
+										Description: "PartitionNum.",
 									},
 									"replica_num": {
 										Type:        schema.TypeInt,
@@ -124,12 +123,12 @@ func dataSourceTencentCloudCkafkaTopicFlowRanking() *schema.Resource {
 									"topic_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "topicId.",
+										Description: "TopicId.",
 									},
 									"topic_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "topicName.",
+										Description: "TopicName.",
 									},
 									"partition_num": {
 										Type:        schema.TypeInt,
@@ -174,42 +173,41 @@ func dataSourceTencentCloudCkafkaTopicFlowRankingRead(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var instanceId string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		paramMap["instance_id"] = helper.String(instanceId)
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("ranking_type"); ok {
-		paramMap["ranking_type"] = helper.String(v.(string))
+		paramMap["RankingType"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("begin_date"); ok {
-		paramMap["begin_date"] = helper.String(v.(string))
+		paramMap["BeginDate"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_date"); ok {
-		paramMap["end_date"] = helper.String(v.(string))
+		paramMap["EndDate"] = helper.String(v.(string))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *ckafka.TopicFlowRankingResult
+	var result []*ckafka.TopicFlowRankingResult
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		topicFlowRanking, e := service.DescribeCkafkaTopicFlowRankingByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaTopicFlowRankingByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = topicFlowRanking
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	topicFlowRankingResultMapList := make([]interface{}, 0)
+
+	ids := make([]string, 0, len(result))
 	if result != nil {
 		topicFlowRankingResultMap := map[string]interface{}{}
 
@@ -245,7 +243,7 @@ func dataSourceTencentCloudCkafkaTopicFlowRankingRead(d *schema.ResourceData, me
 				topicFlowList = append(topicFlowList, topicFlowMap)
 			}
 
-			topicFlowRankingResultMap["topic_flow"] = topicFlowList
+			topicFlowRankingResultMap["topic_flow"] = []interface{}{topicFlowList}
 		}
 
 		if result.ConsumeSpeed != nil {
@@ -264,7 +262,7 @@ func dataSourceTencentCloudCkafkaTopicFlowRankingRead(d *schema.ResourceData, me
 				consumeSpeedList = append(consumeSpeedList, consumeSpeedMap)
 			}
 
-			topicFlowRankingResultMap["consume_speed"] = consumeSpeedList
+			topicFlowRankingResultMap["consume_speed"] = []interface{}{consumeSpeedList}
 		}
 
 		if result.TopicMessageHeap != nil {
@@ -299,16 +297,17 @@ func dataSourceTencentCloudCkafkaTopicFlowRankingRead(d *schema.ResourceData, me
 				topicMessageHeapList = append(topicMessageHeapList, topicMessageHeapMap)
 			}
 
-			topicFlowRankingResultMap["topic_message_heap"] = topicMessageHeapList
+			topicFlowRankingResultMap["topic_message_heap"] = []interface{}{topicMessageHeapList}
 		}
-		topicFlowRankingResultMapList = append(topicFlowRankingResultMapList, topicFlowRankingResultMap)
-		_ = d.Set("result", topicFlowRankingResultMapList)
+
+		ids = append(ids, *result.InstanceId)
+		_ = d.Set("result", topicFlowRankingResultMap)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), topicFlowRankingResultMapList); e != nil {
+		if e := writeToFile(output.(string), topicFlowRankingResultMap); e != nil {
 			return e
 		}
 	}

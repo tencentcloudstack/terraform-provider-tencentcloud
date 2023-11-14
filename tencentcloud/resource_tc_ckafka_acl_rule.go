@@ -18,6 +18,7 @@ resource "tencentcloud_ckafka_acl_rule" "acl_rule" {
   }
   pattern = "prefix"
   is_applied = 1
+  comment = "CommentOfRule"
 }
 ```
 
@@ -33,15 +34,13 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCkafkaAclRule() *schema.Resource {
@@ -56,35 +55,30 @@ func resourceTencentCloudCkafkaAclRule() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"resource_type": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Acl resource type, currently only supports Topic, enumeration value list{Topic}.",
 			},
 
 			"pattern_type": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Match type, currently supports prefix matching and preset strategy, enumeration value list{PREFIXED/PRESET}.",
 			},
 
 			"rule_name": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "rule name.",
+				Description: "Rule name.",
 			},
 
 			"rule_list": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "List of configured ACL rules.",
 				Elem: &schema.Resource{
@@ -92,25 +86,21 @@ func resourceTencentCloudCkafkaAclRule() *schema.Resource {
 						"operation": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Acl operation mode, enumeration value (all operations All, read Read, write Write).",
 						},
 						"permission_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
-							Description: "permission type, (Deny|Allow).",
+							Description: "Permission type, (Deny|Allow).",
 						},
 						"host": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "The default is *, which means that any host can be accessed. Currently, ckafka does not support host and ip network segment.",
 						},
 						"principal": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "User list, the default is User:, which means that any user can access, and the current user can only be the user included in the user list. The input format needs to be prefixed with [User:]. For example, user A is passed in as User:A.",
 						},
 					},
@@ -119,7 +109,6 @@ func resourceTencentCloudCkafkaAclRule() *schema.Resource {
 
 			"pattern": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "A value representing the prefix that the prefix matches.",
 			},
@@ -128,6 +117,12 @@ func resourceTencentCloudCkafkaAclRule() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Whether the preset ACL rule is applied to the newly added topic.",
+			},
+
+			"comment": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Notes on ACL rules.",
 			},
 		},
 	}
@@ -141,12 +136,13 @@ func resourceTencentCloudCkafkaAclRuleCreate(d *schema.ResourceData, meta interf
 
 	var (
 		request    = ckafka.NewCreateAclRuleRequest()
+		response   = ckafka.NewCreateAclRuleResponse()
 		instanceId string
 		ruleName   string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("resource_type"); ok {
@@ -159,7 +155,7 @@ func resourceTencentCloudCkafkaAclRuleCreate(d *schema.ResourceData, meta interf
 
 	if v, ok := d.GetOk("rule_name"); ok {
 		ruleName = v.(string)
-		request.RuleName = helper.String(ruleName)
+		request.RuleName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("rule_list"); ok {
@@ -190,6 +186,10 @@ func resourceTencentCloudCkafkaAclRuleCreate(d *schema.ResourceData, meta interf
 		request.IsApplied = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOk("comment"); ok {
+		request.Comment = helper.String(v.(string))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().CreateAclRule(request)
 		if e != nil {
@@ -197,6 +197,7 @@ func resourceTencentCloudCkafkaAclRuleCreate(d *schema.ResourceData, meta interf
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -204,7 +205,8 @@ func resourceTencentCloudCkafkaAclRuleCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + ruleName)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, ruleName}, FILED_SP))
 
 	return resourceTencentCloudCkafkaAclRuleRead(d, meta)
 }
@@ -253,36 +255,31 @@ func resourceTencentCloudCkafkaAclRuleRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("rule_name", aclRule.RuleName)
 	}
 
-	if aclRule.AclList != nil {
-		aclMapList := []interface{}{}
-		aclList := make([]*ckafka.AclRuleInfo, 0)
-		err := json.Unmarshal([]byte(*aclRule.AclList), &aclList)
-		if err != nil {
-			return err
-		}
-		for _, acl := range aclList {
-			AclListMap := map[string]interface{}{}
+	if aclRule.RuleList != nil {
+		ruleListList := []interface{}{}
+		for _, ruleList := range aclRule.RuleList {
+			ruleListMap := map[string]interface{}{}
 
-			if acl.Operation != nil {
-				AclListMap["operation"] = acl.Operation
+			if aclRule.RuleList.Operation != nil {
+				ruleListMap["operation"] = aclRule.RuleList.Operation
 			}
 
-			if acl.PermissionType != nil {
-				AclListMap["permission_type"] = acl.PermissionType
+			if aclRule.RuleList.PermissionType != nil {
+				ruleListMap["permission_type"] = aclRule.RuleList.PermissionType
 			}
 
-			if acl.Host != nil {
-				AclListMap["host"] = acl.Host
+			if aclRule.RuleList.Host != nil {
+				ruleListMap["host"] = aclRule.RuleList.Host
 			}
 
-			if acl.Principal != nil {
-				AclListMap["principal"] = acl.Principal
+			if aclRule.RuleList.Principal != nil {
+				ruleListMap["principal"] = aclRule.RuleList.Principal
 			}
 
-			aclMapList = append(aclMapList, AclListMap)
+			ruleListList = append(ruleListList, ruleListMap)
 		}
 
-		_ = d.Set("rule_list", aclMapList)
+		_ = d.Set("rule_list", ruleListList)
 
 	}
 
@@ -292,6 +289,10 @@ func resourceTencentCloudCkafkaAclRuleRead(d *schema.ResourceData, meta interfac
 
 	if aclRule.IsApplied != nil {
 		_ = d.Set("is_applied", aclRule.IsApplied)
+	}
+
+	if aclRule.Comment != nil {
+		_ = d.Set("comment", aclRule.Comment)
 	}
 
 	return nil
@@ -315,18 +316,32 @@ func resourceTencentCloudCkafkaAclRuleUpdate(d *schema.ResourceData, meta interf
 	request.InstanceId = &instanceId
 	request.RuleName = &ruleName
 
-	var hasChange bool
+	immutableArgs := []string{"instance_id", "resource_type", "pattern_type", "rule_name", "rule_list", "pattern", "is_applied", "comment"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("instance_id") {
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("rule_name") {
+		if v, ok := d.GetOk("rule_name"); ok {
+			request.RuleName = helper.String(v.(string))
+		}
+	}
 
 	if d.HasChange("is_applied") {
 		if v, ok := d.GetOkExists("is_applied"); ok {
 			request.IsApplied = helper.IntInt64(v.(int))
-			hasChange = true
 		}
 	}
 
-	if !hasChange {
-		return resourceTencentCloudCkafkaAclRuleRead(d, meta)
-	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().ModifyAclRule(request)
 		if e != nil {

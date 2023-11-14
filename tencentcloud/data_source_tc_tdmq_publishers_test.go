@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTdmqPublishersDataSource_basic -v
 func TestAccTencentCloudTdmqPublishersDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,26 +15,28 @@ func TestAccTencentCloudTdmqPublishersDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTdmqPublishersDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_publishers.publishers"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_publishers.publishers")),
 			},
 		},
 	})
 }
 
 const testAccTdmqPublishersDataSource = `
+
 data "tencentcloud_tdmq_publishers" "publishers" {
-  cluster_id = "pulsar-9n95ax58b9vn"
-  namespace  = "keep-ns"
-  topic      = "keep-topic"
+  cluster_id = ""
+  namespace = ""
+  topic = ""
   filters {
-    name   = "ProducerName"
-    values = ["test"]
+		name = ""
+		values = 
+
   }
   sort {
-    name  = "ProducerName"
-    order = "DESC"
+		name = ""
+		order = ""
+
   }
-}
+  }
+
 `

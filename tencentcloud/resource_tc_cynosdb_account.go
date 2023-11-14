@@ -5,12 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_account" "account" {
-  cluster_id           = "cynosdbmysql-bws8h88b"
-  account_name         = "terraform_test"
-  account_password     = "Password@1234"
-  host                 = "%"
-  description          = "terraform test"
-  max_user_connections = 2
+  cluster_id = "xxx"
+  accounts {
+		account_name = ""
+		account_password = ""
+		host = ""
+		description = ""
+		max_user_connections =
+
+  }
 }
 ```
 
@@ -27,13 +30,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCynosdbAccount() *schema.Resource {
@@ -52,31 +54,39 @@ func resourceTencentCloudCynosdbAccount() *schema.Resource {
 				Description: "Cluster ID.",
 			},
 
-			"account_name": {
-				Type:        schema.TypeString,
+			"accounts": {
 				Required:    true,
-				Description: "Account name, including alphanumeric _, Start with a letter, end with a letter or number, length 1-16.",
-			},
-			"account_password": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Sensitive:   true,
-				Description: "Password, with a length range of 8 to 64 characters.",
-			},
-			"host": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "main engine.",
-			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "describe.",
-			},
-			"max_user_connections": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "The maximum number of user connections cannot be greater than 10240.",
+				Type:        schema.TypeList,
+				Description: "New Account List.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"account_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Account name, including alphanumeric _, Start with a letter, end with a letter or number, length 1-16.",
+						},
+						"account_password": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Password, with a length range of 8 to 64 characters.",
+						},
+						"host": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Main engine.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Describe.",
+						},
+						"max_user_connections": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The maximum number of user connections cannot be greater than 10240.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -89,35 +99,38 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request     = cynosdb.NewCreateAccountsRequest()
-		clusterId   string
-		accountName string
-		host        string
+		request   = cynosdb.NewCreateAccountsRequest()
+		response  = cynosdb.NewCreateAccountsResponse()
+		clusterId string
+		account   string
 	)
 	if v, ok := d.GetOk("cluster_id"); ok {
 		clusterId = v.(string)
 		request.ClusterId = helper.String(v.(string))
 	}
 
-	newAccount := cynosdb.NewAccount{}
-	if v, ok := d.GetOk("account_name"); ok {
-		accountName = v.(string)
-		newAccount.AccountName = helper.String(v.(string))
+	if v, ok := d.GetOk("accounts"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			newAccount := cynosdb.NewAccount{}
+			if v, ok := dMap["account_name"]; ok {
+				newAccount.AccountName = helper.String(v.(string))
+			}
+			if v, ok := dMap["account_password"]; ok {
+				newAccount.AccountPassword = helper.String(v.(string))
+			}
+			if v, ok := dMap["host"]; ok {
+				newAccount.Host = helper.String(v.(string))
+			}
+			if v, ok := dMap["description"]; ok {
+				newAccount.Description = helper.String(v.(string))
+			}
+			if v, ok := dMap["max_user_connections"]; ok {
+				newAccount.MaxUserConnections = helper.IntInt64(v.(int))
+			}
+			request.Accounts = append(request.Accounts, &newAccount)
+		}
 	}
-	if v, ok := d.GetOk("account_password"); ok {
-		newAccount.AccountPassword = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("host"); ok {
-		host = v.(string)
-		newAccount.Host = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("description"); ok {
-		newAccount.Description = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("max_user_connections"); ok {
-		newAccount.MaxUserConnections = helper.IntInt64(v.(int))
-	}
-	request.Accounts = append(request.Accounts, &newAccount)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().CreateAccounts(request)
@@ -126,6 +139,7 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -133,7 +147,8 @@ func resourceTencentCloudCynosdbAccountCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + accountName + FILED_SP + host)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, account}, FILED_SP))
 
 	return resourceTencentCloudCynosdbAccountRead(d, meta)
 }
@@ -149,14 +164,13 @@ func resourceTencentCloudCynosdbAccountRead(d *schema.ResourceData, meta interfa
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	accountName := idSplit[1]
-	host := idSplit[2]
+	account := idSplit[1]
 
-	account, err := service.DescribeCynosdbAccountById(ctx, clusterId, accountName, host)
+	account, err := service.DescribeCynosdbAccountById(ctx, clusterId, account)
 	if err != nil {
 		return err
 	}
@@ -167,26 +181,40 @@ func resourceTencentCloudCynosdbAccountRead(d *schema.ResourceData, meta interfa
 		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
-
-	if account.AccountName != nil {
-		_ = d.Set("account_name", account.AccountName)
+	if account.ClusterId != nil {
+		_ = d.Set("cluster_id", account.ClusterId)
 	}
 
-	// if account.AccountPassword != nil {
-	// 	_ = d.Set("account_password", account.AccountPassword)
-	// }
+	if account.Accounts != nil {
+		accountsList := []interface{}{}
+		for _, accounts := range account.Accounts {
+			accountsMap := map[string]interface{}{}
 
-	if account.Host != nil {
-		_ = d.Set("host", account.Host)
-	}
+			if account.Accounts.AccountName != nil {
+				accountsMap["account_name"] = account.Accounts.AccountName
+			}
 
-	if account.Description != nil {
-		_ = d.Set("description", account.Description)
-	}
+			if account.Accounts.AccountPassword != nil {
+				accountsMap["account_password"] = account.Accounts.AccountPassword
+			}
 
-	if account.MaxUserConnections != nil {
-		_ = d.Set("max_user_connections", account.MaxUserConnections)
+			if account.Accounts.Host != nil {
+				accountsMap["host"] = account.Accounts.Host
+			}
+
+			if account.Accounts.Description != nil {
+				accountsMap["description"] = account.Accounts.Description
+			}
+
+			if account.Accounts.MaxUserConnections != nil {
+				accountsMap["max_user_connections"] = account.Accounts.MaxUserConnections
+			}
+
+			accountsList = append(accountsList, accountsMap)
+		}
+
+		_ = d.Set("accounts", accountsList)
+
 	}
 
 	return nil
@@ -198,130 +226,47 @@ func resourceTencentCloudCynosdbAccountUpdate(d *schema.ResourceData, meta inter
 
 	logId := getLogId(contextNil)
 
+	var (
+		resetAccountPasswordRequest  = cynosdb.NewResetAccountPasswordRequest()
+		resetAccountPasswordResponse = cynosdb.NewResetAccountPasswordResponse()
+	)
+
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	accountName := idSplit[1]
-	host := idSplit[2]
+	account := idSplit[1]
+
+	request.ClusterId = &clusterId
+	request.Account = &account
 
 	immutableArgs := []string{"cluster_id", "accounts"}
+
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if d.HasChange("account_password") {
-		request := cynosdb.NewResetAccountPasswordRequest()
-		request.ClusterId = &clusterId
-		request.AccountName = &accountName
-		request.Host = &host
-		if v, ok := d.GetOk("account_password"); ok {
-			request.AccountPassword = helper.String(v.(string))
-		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ResetAccountPassword(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb account failed, reason:%+v", logId, err)
-			return err
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
 		}
 	}
 
-	if d.HasChange("description") {
-		request := cynosdb.NewModifyAccountDescriptionRequest()
-		request.ClusterId = &clusterId
-		request.AccountName = &accountName
-		request.Host = &host
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ResetAccountPassword(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyAccountDescription(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb account failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
-	if d.HasChange("host") {
-		request := cynosdb.NewModifyAccountHostRequest()
-		request.ClusterId = &clusterId
-		request.Account = &cynosdb.InputAccount{
-			AccountName: &accountName,
-			Host:        &host,
-		}
-
-		var newHost string
-		if v, ok := d.GetOk("host"); ok {
-			newHost = v.(string)
-			request.NewHost = helper.String(v.(string))
-		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyAccountHost(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb account failed, reason:%+v", logId, err)
-			return err
-		}
-
-		d.SetId(clusterId + FILED_SP + accountName + FILED_SP + newHost)
-	}
-
-	if d.HasChange("max_user_connections") {
-		request := cynosdb.NewModifyAccountParamsRequest()
-		request.ClusterId = &clusterId
-		request.Account = &cynosdb.InputAccount{
-			AccountName: &accountName,
-			Host:        &host,
-		}
-		if v, ok := d.GetOk("max_user_connections"); ok {
-			request.AccountParams = []*cynosdb.AccountParam{
-				{
-					ParamName:  helper.String("max_user_connections"),
-					ParamValue: helper.String(fmt.Sprint(v)),
-				},
-			}
-
-		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyAccountParams(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update cynosdb account failed, reason:%+v", logId, err)
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cynosdb account failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudCynosdbAccountRead(d, meta)
@@ -336,14 +281,13 @@ func resourceTencentCloudCynosdbAccountDelete(d *schema.ResourceData, meta inter
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	accountName := idSplit[1]
-	host := idSplit[2]
+	account := idSplit[1]
 
-	if err := service.DeleteCynosdbAccountById(ctx, clusterId, accountName, host); err != nil {
+	if err := service.DeleteCynosdbAccountById(ctx, clusterId, account); err != nil {
 		return err
 	}
 

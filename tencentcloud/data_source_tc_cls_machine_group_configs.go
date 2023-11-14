@@ -4,32 +4,15 @@ Use this data source to query detailed information of cls machine_group_configs
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_machine_group" "group" {
-  group_name        = "tf-describe-mg-config-test"
-  service_logging   = true
-  auto_update       = true
-  update_end_time   = "19:05:00"
-  update_start_time = "17:05:00"
-
-  machine_group_type {
-    type   = "ip"
-    values = [
-      "192.168.1.1",
-      "192.168.1.2",
-    ]
-  }
-}
-
 data "tencentcloud_cls_machine_group_configs" "machine_group_configs" {
-  group_id = tencentcloud_cls_machine_group.group.id
-}
+  group_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
@@ -43,39 +26,39 @@ func dataSourceTencentCloudClsMachineGroupConfigs() *schema.Resource {
 			"group_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "group id.",
+				Description: "Group id.",
 			},
 
 			"configs": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "scrape config list.",
+				Description: "Scrape config list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"config_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "scrape config id.",
+							Description: "Scrape config id.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "scrape config name.",
+							Description: "Scrape config name.",
 						},
 						"log_format": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "style of log format.",
+							Description: "Style of log format.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "scrape log path.",
+							Description: "Scrape log path.",
 						},
 						"log_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "log type.",
+							Description: "Log type.",
 						},
 						"extract_rule": {
 							Type:        schema.TypeList,
@@ -150,7 +133,7 @@ func dataSourceTencentCloudClsMachineGroupConfigs() *schema.Resource {
 										Computed:    true,
 										Description: "Size of the data to be rewound in incremental collection mode. Default value: -1 (full collection).",
 									},
-									"is_gbk": {
+									"is_g_b_k": {
 										Type:        schema.TypeInt,
 										Computed:    true,
 										Description: "GBK encoding. Default 0.",
@@ -158,48 +141,48 @@ func dataSourceTencentCloudClsMachineGroupConfigs() *schema.Resource {
 									"json_standard": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "standard json. Default 0.",
+										Description: "Standard json. Default 0.",
 									},
 									"protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "syslog protocol, tcp or udp.",
+										Description: "Syslog protocol, tcp or udp.",
 									},
 									"address": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "syslog system log collection specifies the address and port that the collector listens to.",
+										Description: "Syslog system log collection specifies the address and port that the collector listens to.",
 									},
 									"parse_protocol": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "parse protocol.",
+										Description: "Parse protocol.",
 									},
 									"metadata_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "metadata type.",
+										Description: "Metadata type.",
 									},
 									"path_regex": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "metadata path regex.",
+										Description: "Metadata path regex.",
 									},
 									"meta_tags": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "metadata tags.",
+										Description: "Metadata tags.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "tag key.",
+													Description: "Tag key.",
 												},
 												"value": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "tag value.",
+													Description: "Tag value.",
 												},
 											},
 										},
@@ -229,22 +212,22 @@ func dataSourceTencentCloudClsMachineGroupConfigs() *schema.Resource {
 						"output": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "topicid.",
+							Description: "Topicid.",
 						},
 						"update_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "update time.",
+							Description: "Update time.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 						"user_define_rule": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "user define rule.",
+							Description: "User define rule.",
 						},
 					},
 				},
@@ -358,7 +341,7 @@ func dataSourceTencentCloudClsMachineGroupConfigsRead(d *schema.ResourceData, me
 						filterKeyRegexList = append(filterKeyRegexList, filterKeyRegexMap)
 					}
 
-					extractRuleMap["filter_key_regex"] = filterKeyRegexList
+					extractRuleMap["filter_key_regex"] = []interface{}{filterKeyRegexList}
 				}
 
 				if configInfo.ExtractRule.UnMatchUpLoadSwitch != nil {
@@ -374,7 +357,7 @@ func dataSourceTencentCloudClsMachineGroupConfigsRead(d *schema.ResourceData, me
 				}
 
 				if configInfo.ExtractRule.IsGBK != nil {
-					extractRuleMap["is_gbk"] = configInfo.ExtractRule.IsGBK
+					extractRuleMap["is_g_b_k"] = configInfo.ExtractRule.IsGBK
 				}
 
 				if configInfo.ExtractRule.JsonStandard != nil {
@@ -417,7 +400,7 @@ func dataSourceTencentCloudClsMachineGroupConfigsRead(d *schema.ResourceData, me
 						metaTagsList = append(metaTagsList, metaTagsMap)
 					}
 
-					extractRuleMap["meta_tags"] = metaTagsList
+					extractRuleMap["meta_tags"] = []interface{}{metaTagsList}
 				}
 
 				configInfoMap["extract_rule"] = []interface{}{extractRuleMap}
@@ -439,7 +422,7 @@ func dataSourceTencentCloudClsMachineGroupConfigsRead(d *schema.ResourceData, me
 					excludePathsList = append(excludePathsList, excludePathsMap)
 				}
 
-				configInfoMap["exclude_paths"] = excludePathsList
+				configInfoMap["exclude_paths"] = []interface{}{excludePathsList}
 			}
 
 			if configInfo.Output != nil {

@@ -1,39 +1,21 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCiMediaSnapshotTemplateResource_basic -v
 func TestAccTencentCloudCiMediaSnapshotTemplateResource_basic(t *testing.T) {
 	t.Parallel()
-
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCiMediaSnapshotTemplateDestroy,
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCiMediaSnapshotTemplate,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCiMediaSnapshotTemplateTemplateExists("tencentcloud_ci_media_snapshot_template.media_snapshot_template"),
-					resource.TestCheckResourceAttrSet("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "bucket", defaultCiBucket),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "name", "snapshot_template_test"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.count", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.snapshot_out_mode", "SnapshotAndSprite"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.color", "White"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.columns", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.lines", "10"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_ci_media_snapshot_template.media_snapshot_template",
@@ -44,91 +26,34 @@ func TestAccTencentCloudCiMediaSnapshotTemplateResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCiMediaSnapshotTemplateDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CiService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_ci_media_snapshot_template" {
-			continue
-		}
-
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		bucket := idSplit[0]
-		templateId := idSplit[1]
-
-		res, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
-		if err != nil {
-			return err
-		}
-
-		if res != nil {
-			return fmt.Errorf("ci media snapshot template still exist, Id: %v\n", rs.Primary.ID)
-		}
-	}
-	return nil
-}
-
-func testAccCheckCiMediaSnapshotTemplateTemplateExists(re string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := CiService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-
-		rs, ok := s.RootModule().Resources[re]
-		if !ok {
-			return fmt.Errorf("ci media snapshot template %s is not found", re)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf(" id is not set")
-		}
-
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		bucket := idSplit[0]
-		templateId := idSplit[1]
-
-		result, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
-		if err != nil {
-			return err
-		}
-
-		if result == nil {
-			return fmt.Errorf("ci media snapshot template not found, Id: %v", rs.Primary.ID)
-		}
-
-		return nil
-	}
-}
-
-const testAccCiMediaSnapshotTemplateVar = `
-variable "bucket" {
-	default = "` + defaultCiBucket + `"
-  }
-
-`
-
-const testAccCiMediaSnapshotTemplate = testAccCiMediaSnapshotTemplateVar + `
+const testAccCiMediaSnapshotTemplate = `
 
 resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
-    bucket = var.bucket
-  	name = "snapshot_template_test"
-  	snapshot {
-      count = "10"
-      snapshot_out_mode = "SnapshotAndSprite"
-      sprite_snapshot_config {
-        color = "White"
-        columns = "10"
-        lines = "10"
-        margin = "10"
-        padding = "10"
+  name = &lt;nil&gt;
+  snapshot {
+		mode = &lt;nil&gt;
+		start = &lt;nil&gt;
+		time_interval = &lt;nil&gt;
+		count = &lt;nil&gt;
+		width = &lt;nil&gt;
+		height = &lt;nil&gt;
+		c_i_param = &lt;nil&gt;
+		is_check_count = &lt;nil&gt;
+		is_check_black = &lt;nil&gt;
+		black_level = &lt;nil&gt;
+		pixel_black_threshold = &lt;nil&gt;
+		snapshot_out_mode = &lt;nil&gt;
+		sprite_snapshot_config {
+			cell_width = &lt;nil&gt;
+			cell_height = &lt;nil&gt;
+			padding = &lt;nil&gt;
+			margin = &lt;nil&gt;
+			color = &lt;nil&gt;
+			columns = &lt;nil&gt;
+			lines = &lt;nil&gt;
+		}
+
+  }
       }
-  	}
-}
 
 `

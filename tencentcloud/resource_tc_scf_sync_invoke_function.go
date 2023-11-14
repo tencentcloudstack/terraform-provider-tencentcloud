@@ -4,22 +4,32 @@ Provides a resource to create a scf sync_invoke_function
 Example Usage
 
 ```hcl
-resource "tencentcloud_scf_sync_invoke_function" "invoke_function" {
-  function_name = "keep-1676351130"
-  qualifier     = "2"
-  namespace     = "default"
+resource "tencentcloud_scf_sync_invoke_function" "sync_invoke_function" {
+  function_name = "test_function"
+  qualifier = ""
+  event = ""
+  log_type = ""
+  namespace = ""
+  routing_key = ""
 }
+```
+
+Import
+
+scf sync_invoke_function can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_scf_sync_invoke_function.sync_invoke_function sync_invoke_function_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudScfSyncInvokeFunction() *schema.Resource {
@@ -27,6 +37,9 @@ func resourceTencentCloudScfSyncInvokeFunction() *schema.Resource {
 		Create: resourceTencentCloudScfSyncInvokeFunctionCreate,
 		Read:   resourceTencentCloudScfSyncInvokeFunctionRead,
 		Delete: resourceTencentCloudScfSyncInvokeFunctionDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"function_name": {
 				Required:    true,
@@ -60,7 +73,7 @@ func resourceTencentCloudScfSyncInvokeFunction() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Namespace. default is used if it's left empty.",
+				Description: "Namespace. default is used if it’s left empty.",
 			},
 
 			"routing_key": {
@@ -123,7 +136,7 @@ func resourceTencentCloudScfSyncInvokeFunctionCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	functionRequestId = *response.Response.Result.FunctionRequestId
+	functionRequestId = *response.Response.FunctionRequestId
 	d.SetId(functionRequestId)
 
 	return resourceTencentCloudScfSyncInvokeFunctionRead(d, meta)

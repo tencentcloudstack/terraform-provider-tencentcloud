@@ -5,16 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_cdn_instance_list" "describe_host_cdn_instance_list" {
-  certificate_id = "8u8DII0l"
-  resource_type = "cdn"
-}
+  certificate_id = ""
+  resource_type = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  old_certificate_id = ""
+  async_cache =
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -84,7 +91,7 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceList() *schema.Resource {
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "domain name.",
+							Description: "Domain name.",
 						},
 						"cert_id": {
 							Type:        schema.TypeString,
@@ -182,7 +189,7 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var instanceList *ssl.DescribeHostCdnInstanceListResponseParams
+	var instanceList []*ssl.CdnInstanceDetail
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeHostCdnInstanceListByFilter(ctx, paramMap)
@@ -196,11 +203,11 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 		return err
 	}
 
-	ids := make([]string, 0, len(instanceList.InstanceList))
-	tmpList := make([]map[string]interface{}, 0, len(instanceList.InstanceList))
+	ids := make([]string, 0, len(instanceList))
+	tmpList := make([]map[string]interface{}, 0, len(instanceList))
 
-	if instanceList != nil && instanceList.InstanceList != nil {
-		for _, cdnInstanceDetail := range instanceList.InstanceList {
+	if instanceList != nil {
+		for _, cdnInstanceDetail := range instanceList {
 			cdnInstanceDetailMap := map[string]interface{}{}
 
 			if cdnInstanceDetail.Domain != nil {
@@ -219,24 +226,25 @@ func dataSourceTencentCloudSslDescribeHostCdnInstanceListRead(d *schema.Resource
 				cdnInstanceDetailMap["https_billing_switch"] = cdnInstanceDetail.HttpsBillingSwitch
 			}
 
-			ids = append(ids, *cdnInstanceDetail.CertId)
+			ids = append(ids, *cdnInstanceDetail.CertificateId)
 			tmpList = append(tmpList, cdnInstanceDetailMap)
 		}
 
 		_ = d.Set("instance_list", tmpList)
 	}
 
-	if instanceList.AsyncTotalNum != nil {
-		_ = d.Set("async_total_num", instanceList.AsyncTotalNum)
+	if asyncTotalNum != nil {
+		_ = d.Set("async_total_num", asyncTotalNum)
 	}
 
-	if instanceList.AsyncOffset != nil {
-		_ = d.Set("async_offset", instanceList.AsyncOffset)
+	if asyncOffset != nil {
+		_ = d.Set("async_offset", asyncOffset)
 	}
 
-	if instanceList.AsyncCacheTime != nil {
-		_ = d.Set("async_cache_time", instanceList.AsyncCacheTime)
+	if asyncCacheTime != nil {
+		_ = d.Set("async_cache_time", asyncCacheTime)
 	}
+
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

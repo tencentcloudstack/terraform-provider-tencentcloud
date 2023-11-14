@@ -5,17 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mongodb_instance_current_op" "instance_current_op" {
-  instance_id = "cmgo-b43i3wkj"
-  op = "command"
+  instance_id = "cmgo-9d0p6umb"
+  ns = ""
+  millisecond_running = 10
+  op = "update"
+  replica_set_name = ""
+  state = "secondary"
+  limit = 10
+  offset = 0
+  order_by = ""
   order_by_type = "desc"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
@@ -53,13 +59,25 @@ func dataSourceTencentCloudMongodbInstanceCurrentOp() *schema.Resource {
 			"replica_set_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "filter condition, shard name.",
+				Description: "Filter condition, shard name.",
 			},
 
 			"state": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Filter condition, node status, possible value: primary, secondary.",
+			},
+
+			"limit": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "The number returned by a single request, the default value is 100, and the value range is [0,100].",
+			},
+
+			"offset": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Offset, the default value is 0, and the value range is [0,10000].",
 			},
 
 			"order_by": {
@@ -77,28 +95,28 @@ func dataSourceTencentCloudMongodbInstanceCurrentOp() *schema.Resource {
 			"current_ops": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "current operation list.",
+				Description: "Current operation list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"op_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "operation id.",
+							Description: "Operation id.",
 						},
 						"ns": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "operation namespace.",
+							Description: "Operation namespace.",
 						},
 						"query": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "operation query.",
+							Description: "Operation query.",
 						},
 						"op": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "operation value.",
+							Description: "Operation value.",
 						},
 						"replica_set_name": {
 							Type:        schema.TypeString,
@@ -108,12 +126,12 @@ func dataSourceTencentCloudMongodbInstanceCurrentOp() *schema.Resource {
 						"state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "operation state.",
+							Description: "Operation state.",
 						},
 						"operation": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "operation info.",
+							Description: "Operation info.",
 						},
 						"node_name": {
 							Type:        schema.TypeString,
@@ -123,7 +141,7 @@ func dataSourceTencentCloudMongodbInstanceCurrentOp() *schema.Resource {
 						"microsecs_running": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "running time(ms).",
+							Description: "Running time(ms).",
 						},
 					},
 				},
@@ -148,35 +166,43 @@ func dataSourceTencentCloudMongodbInstanceCurrentOpRead(d *schema.ResourceData, 
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("ns"); ok {
-		paramMap["ns"] = helper.String(v.(string))
+		paramMap["Ns"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("millisecond_running"); ok {
-		paramMap["millisecond_running"] = helper.IntUint64(v.(int))
+	if v, _ := d.GetOk("millisecond_running"); v != nil {
+		paramMap["MillisecondRunning"] = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("op"); ok {
-		paramMap["op"] = helper.String(v.(string))
+		paramMap["Op"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("replica_set_name"); ok {
-		paramMap["replica_set_name"] = helper.String(v.(string))
+		paramMap["ReplicaSetName"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("state"); ok {
-		paramMap["state"] = helper.String(v.(string))
+		paramMap["State"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntUint64(v.(int))
+	}
+
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("order_by"); ok {
-		paramMap["order_by"] = helper.String(v.(string))
+		paramMap["OrderBy"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("order_by_type"); ok {
-		paramMap["order_by_type"] = helper.String(v.(string))
+		paramMap["OrderByType"] = helper.String(v.(string))
 	}
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -238,7 +264,7 @@ func dataSourceTencentCloudMongodbInstanceCurrentOpRead(d *schema.ResourceData, 
 				currentOpMap["microsecs_running"] = currentOp.MicrosecsRunning
 			}
 
-			ids = append(ids, helper.Int64ToStr(*currentOp.OpId))
+			ids = append(ids, *currentOp.InstanceId)
 			tmpList = append(tmpList, currentOpMap)
 		}
 

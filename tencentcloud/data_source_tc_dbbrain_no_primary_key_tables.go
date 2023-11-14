@@ -15,11 +15,8 @@ package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -30,7 +27,7 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTables() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"date": {
@@ -42,19 +39,25 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTables() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values: `mysql` - ApsaraDB for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values： mysql - ApsaraDB for MySQL, the default is mysql.",
 			},
 
-			"timestamp": {
+			"no_primary_key_table_count": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Collection timestamp (seconds).",
+				Description: "The total number of tables without a primary key.",
 			},
 
 			"no_primary_key_table_count_diff": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "The difference with yesterday&amp;#39;s scan of the table without a primary key. A positive number means an increase, a negative number means a decrease, and 0 means no change.",
+				Description: "The difference with yesterday&amp;amp;#39;s scan of the table without a primary key. A positive number means an increase, a negative number means a decrease, and 0 means no change.",
+			},
+
+			"no_primary_key_table_record_count": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "The total number of recorded non-primary key tables (no more than the total number of non-primary key tables), which can be used for pagination query.",
 			},
 
 			"no_primary_key_tables": {
@@ -66,12 +69,12 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTables() *schema.Resource {
 						"table_schema": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "library name.",
+							Description: "Library name.",
 						},
 						"table_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "tableName.",
+							Description: "TableName.",
 						},
 						"engine": {
 							Type:        schema.TypeString,
@@ -81,7 +84,7 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTables() *schema.Resource {
 						"table_rows": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "rows.",
+							Description: "Rows.",
 						},
 						"total_length": {
 							Type:        schema.TypeFloat,
@@ -90,6 +93,12 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTables() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"timestamp": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Collection timestamp (seconds).",
 			},
 
 			"result_output_file": {
@@ -108,14 +117,10 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTablesRead(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("date"); ok {
@@ -128,37 +133,33 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTablesRead(d *schema.ResourceData,
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var (
-		tables []*dbbrain.Table
-		resp   *dbbrain.DescribeNoPrimaryKeyTablesResponseParams
-		e      error
-	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		tables, resp, e = service.DescribeDbbrainNoPrimaryKeyTablesByFilter(ctx, paramMap)
+		result, e := service.DescribeDbbrainNoPrimaryKeyTablesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
+		noPrimaryKeyTableCount = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(tables))
-	tmpList := make([]map[string]interface{}, 0, len(tables))
-
-	if resp != nil {
-		if resp.NoPrimaryKeyTableCountDiff != nil {
-			_ = d.Set("no_primary_key_table_count_diff", resp.NoPrimaryKeyTableCountDiff)
-		}
-
-		if resp.Timestamp != nil {
-			_ = d.Set("timestamp", resp.Timestamp)
-		}
+	ids := make([]string, 0, len(noPrimaryKeyTableCount))
+	if noPrimaryKeyTableCount != nil {
+		_ = d.Set("no_primary_key_table_count", noPrimaryKeyTableCount)
 	}
 
-	if tables != nil {
-		for _, table := range tables {
+	if noPrimaryKeyTableCountDiff != nil {
+		_ = d.Set("no_primary_key_table_count_diff", noPrimaryKeyTableCountDiff)
+	}
+
+	if noPrimaryKeyTableRecordCount != nil {
+		_ = d.Set("no_primary_key_table_record_count", noPrimaryKeyTableRecordCount)
+	}
+
+	if noPrimaryKeyTables != nil {
+		for _, table := range noPrimaryKeyTables {
 			tableMap := map[string]interface{}{}
 
 			if table.TableSchema != nil {
@@ -181,17 +182,21 @@ func dataSourceTencentCloudDbbrainNoPrimaryKeyTablesRead(d *schema.ResourceData,
 				tableMap["total_length"] = table.TotalLength
 			}
 
-			ids = append(ids, strings.Join([]string{instanceId, *table.TableSchema, *table.TableName}, FILED_SP))
+			ids = append(ids, *table.InstanceId)
 			tmpList = append(tmpList, tableMap)
 		}
 
 		_ = d.Set("no_primary_key_tables", tmpList)
 	}
 
+	if timestamp != nil {
+		_ = d.Set("timestamp", timestamp)
+	}
+
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

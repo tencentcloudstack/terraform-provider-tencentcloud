@@ -5,20 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_super_resolution_template" "media_super_resolution_template" {
-  bucket = "terraform-ci-1308919341"
-  name = "super_resolution_template"
-  resolution = "sdtohd"
-  enable_scale_up = "true"
-  version = "Enhance"
+  name = &lt;nil&gt;
+  resolution = &lt;nil&gt;
+  enable_scale_up = &lt;nil&gt;
+  version = &lt;nil&gt;
 }
 ```
 
 Import
 
-ci media_super_resolution_template can be imported using the bucket#templateId, e.g.
+ci media_super_resolution_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_super_resolution_template.media_super_resolution_template terraform-ci-xxxxxx#t1d707eb2be3294e22b47123894f85cb8f
+terraform import tencentcloud_ci_media_super_resolution_template.media_super_resolution_template media_super_resolution_template_id
 ```
 */
 package tencentcloud
@@ -26,13 +25,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaSuperResolutionTemplate() *schema.Resource {
@@ -45,12 +42,6 @@ func resourceTencentCloudCiMediaSuperResolutionTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -72,7 +63,7 @@ func resourceTencentCloudCiMediaSuperResolutionTemplate() *schema.Resource {
 			"version": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "version, default value Base, Base: basic version, Enhance: enhanced version.",
+				Description: "Version, default value Base, Base: basic version, Enhance: enhanced version.",
 			},
 		},
 	}
@@ -83,45 +74,34 @@ func resourceTencentCloudCiMediaSuperResolutionTemplateCreate(d *schema.Resource
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaSuperResolutionTemplateOptions{
-			Tag: "SuperResolution",
-		}
-		bucket     string
+		request    = ci.NewCreateMediaSuperResolutionTemplateRequest()
+		response   = ci.NewCreateMediaSuperResolutionTemplateResponse()
 		templateId string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("resolution"); ok {
-		request.Resolution = v.(string)
+		request.Resolution = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("enable_scale_up"); ok {
-		request.EnableScaleUp = v.(string)
+		request.EnableScaleUp = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("version"); ok {
-		request.Version = v.(string)
+		request.Version = helper.String(v.(string))
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaSuperResolutionTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaSuperResolutionTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaSnapshotTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -131,8 +111,8 @@ func resourceTencentCloudCiMediaSuperResolutionTemplateCreate(d *schema.Resource
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaSuperResolutionTemplateRead(d, meta)
 }
@@ -142,46 +122,38 @@ func resourceTencentCloudCiMediaSuperResolutionTemplateRead(d *schema.ResourceDa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSuperResolutionTemplateId := d.Id()
 
-	template, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaSuperResolutionTemplate, err := service.DescribeCiMediaSuperResolutionTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
-	if template == nil {
+	if mediaSuperResolutionTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaSuperResolutionTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if template.Name != "" {
-		_ = d.Set("name", template.Name)
+	if mediaSuperResolutionTemplate.Name != nil {
+		_ = d.Set("name", mediaSuperResolutionTemplate.Name)
 	}
 
-	if template.SuperResolution != nil {
-		mediaSuperResolutionTemplate := template.SuperResolution
-		if mediaSuperResolutionTemplate.Resolution != "" {
-			_ = d.Set("resolution", mediaSuperResolutionTemplate.Resolution)
-		}
+	if mediaSuperResolutionTemplate.Resolution != nil {
+		_ = d.Set("resolution", mediaSuperResolutionTemplate.Resolution)
+	}
 
-		if mediaSuperResolutionTemplate.EnableScaleUp != "" {
-			_ = d.Set("enable_scale_up", mediaSuperResolutionTemplate.EnableScaleUp)
-		}
+	if mediaSuperResolutionTemplate.EnableScaleUp != nil {
+		_ = d.Set("enable_scale_up", mediaSuperResolutionTemplate.EnableScaleUp)
+	}
 
-		if mediaSuperResolutionTemplate.Version != "" {
-			_ = d.Set("version", mediaSuperResolutionTemplate.Version)
-		}
+	if mediaSuperResolutionTemplate.Version != nil {
+		_ = d.Set("version", mediaSuperResolutionTemplate.Version)
 	}
 
 	return nil
@@ -192,50 +164,32 @@ func resourceTencentCloudCiMediaSuperResolutionTemplateUpdate(d *schema.Resource
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaSuperResolutionTemplateOptions{
-		Tag: "SuperResolution",
-	}
+	request := ci.NewUpdateMediaSuperResolutionTemplateRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSuperResolutionTemplateId := d.Id()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	request.TemplateId = &templateId
 
-	if v, ok := d.GetOk("resolution"); ok {
-		request.Resolution = v.(string)
-	}
+	immutableArgs := []string{"name", "resolution", "enable_scale_up", "version"}
 
-	if d.HasChange("enable_scale_up") {
-		if v, ok := d.GetOk("enable_scale_up"); ok {
-			request.EnableScaleUp = v.(string)
-		}
-	}
-
-	if d.HasChange("version") {
-		if v, ok := d.GetOk("version"); ok {
-			request.Version = v.(string)
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaSuperResolutionTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaSuperResolutionTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaSuperResolutionTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaSuperResolutionTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaSuperResolutionTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -250,14 +204,9 @@ func resourceTencentCloudCiMediaSuperResolutionTemplateDelete(d *schema.Resource
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSuperResolutionTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaSuperResolutionTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

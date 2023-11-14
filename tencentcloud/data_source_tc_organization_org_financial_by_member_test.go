@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudOrganizationOrgFinancialByMemberDataSource_basic(t *testing.T) {
@@ -25,9 +24,10 @@ func TestAccTencentCloudOrganizationOrgFinancialByMemberDataSource_basic(t *test
 const testAccOrganizationOrgFinancialByMemberDataSource = `
 
 data "tencentcloud_organization_org_financial_by_member" "org_financial_by_member" {
-  month = "2023-05"
-  end_month = "2023-10"
-  member_uins = [100015591986,100029796005]
+  month = &lt;nil&gt;
+  end_month = &lt;nil&gt;
+  member_uins = &lt;nil&gt;
+  product_codes = &lt;nil&gt;
     }
 
 `

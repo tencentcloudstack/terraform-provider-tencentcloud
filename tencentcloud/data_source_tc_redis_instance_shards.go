@@ -6,15 +6,14 @@ Example Usage
 ```hcl
 data "tencentcloud_redis_instance_shards" "instance_shards" {
   instance_id = "crs-c1nl9rpv"
-  filter_slave = false
-}
+  filter_slave = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
@@ -56,7 +55,7 @@ func dataSourceTencentCloudRedisInstanceShards() *schema.Resource {
 						"role": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "role.",
+							Description: "Role.",
 						},
 						"keys": {
 							Type:        schema.TypeInt,
@@ -106,12 +105,11 @@ func dataSourceTencentCloudRedisInstanceShardsRead(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var instanceId string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
@@ -135,7 +133,9 @@ func dataSourceTencentCloudRedisInstanceShardsRead(d *schema.ResourceData, meta 
 		return err
 	}
 
+	ids := make([]string, 0, len(instanceShards))
 	tmpList := make([]map[string]interface{}, 0, len(instanceShards))
+
 	if instanceShards != nil {
 		for _, instanceClusterShard := range instanceShards {
 			instanceClusterShardMap := map[string]interface{}{}
@@ -176,13 +176,14 @@ func dataSourceTencentCloudRedisInstanceShardsRead(d *schema.ResourceData, meta 
 				instanceClusterShardMap["connected"] = instanceClusterShard.Connected
 			}
 
+			ids = append(ids, *instanceClusterShard.InstanceId)
 			tmpList = append(tmpList, instanceClusterShardMap)
 		}
 
 		_ = d.Set("instance_shards", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

@@ -4,31 +4,22 @@ Provides a resource to create a tdmqRocketmq group
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace_name = "tf_example"
-  remark         = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_group" "example" {
-  group_name       = "tf_example"
-  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace        = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
-  read_enable      = true
-  broadcast_enable = true
-  remark           = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_group" "group" {
+  group_id = &lt;nil&gt;
+  namespaces = &lt;nil&gt;
+  read_enable = &lt;nil&gt;
+  broadcast_enable = &lt;nil&gt;
+  cluster_id = &lt;nil&gt;
+  remark = &lt;nil&gt;
+                    }
 ```
+
 Import
 
 tdmqRocketmq group can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_group.group group_id
+terraform import tencentcloud_tdmq_rocketmq_group.group group_id
 ```
 */
 package tencentcloud
@@ -36,115 +27,120 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqGroupRead,
 		Create: resourceTencentCloudTdmqRocketmqGroupCreate,
+		Read:   resourceTencentCloudTdmqRocketmqGroupRead,
 		Update: resourceTencentCloudTdmqRocketmqGroupUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqGroupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"group_name": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
+			"group_id": {
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Group name (8-64 characters).",
 			},
 
-			"namespace": {
-				Type:        schema.TypeString,
-				ForceNew:    true,
-				Required:    true,
+			"namespaces": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Namespace. Currently, only one namespace is supported.",
 			},
 
 			"read_enable": {
-				Type:        schema.TypeBool,
 				Required:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether to enable consumption.",
 			},
 
 			"broadcast_enable": {
-				Type:        schema.TypeBool,
 				Required:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether to enable broadcast consumption.",
 			},
 
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
 			"remark": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Remarks (up to 128 characters).",
 			},
 
-			"consumer_num": {
-				Type:        schema.TypeInt,
+			"name": {
 				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Consumer group name.",
+			},
+
+			"consumer_num": {
+				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "The number of online consumers.",
 			},
 
-			"tps": {
-				Type:        schema.TypeInt,
+			"t_p_s": {
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Consumption TPS.",
 			},
 
 			"total_accumulative": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "The total number of heaped messages.",
 			},
 
 			"consumption_mode": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "`0`: Cluster consumption mode; `1`: Broadcast consumption mode; `-1`: Unknown.",
 			},
 
 			"retry_partition_num": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "The number of partitions in a retry topic.",
 			},
 
 			"create_time": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Creation time in milliseconds.",
 			},
 
 			"update_time": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Modification time in milliseconds.",
 			},
 
 			"client_protocol": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Client protocol.",
 			},
 
 			"consumer_type": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Consumer type. Enumerated values: ACTIVELY or PASSIVELY.",
 			},
 		},
@@ -152,33 +148,36 @@ func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_group.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_group.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request       = tdmqRocketmq.NewCreateRocketMQGroupRequest()
-		clusterId     string
-		namespaceName string
-		groupName     string
+		request     = tdmqRocketmq.NewCreateRocketMQGroupRequest()
+		response    = tdmqRocketmq.NewCreateRocketMQGroupResponse()
+		clusterId   string
+		namespaceId string
+		groupId     string
 	)
-
-	if v, ok := d.GetOk("group_name"); ok {
-		groupName = v.(string)
+	if v, ok := d.GetOk("group_id"); ok {
+		groupId = v.(string)
 		request.GroupId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("namespace"); ok {
-		namespaceName = v.(string)
-		request.Namespaces = []*string{&namespaceName}
+	if v, ok := d.GetOk("namespaces"); ok {
+		namespacesSet := v.(*schema.Set).List()
+		for i := range namespacesSet {
+			namespaces := namespacesSet[i].(string)
+			request.Namespaces = append(request.Namespaces, &namespaces)
+		}
 	}
 
-	if v, _ := d.GetOk("read_enable"); v != nil {
+	if v, ok := d.GetOkExists("read_enable"); ok {
 		request.ReadEnable = helper.Bool(v.(bool))
 	}
 
-	if v, _ := d.GetOk("broadcast_enable"); v != nil {
+	if v, ok := d.GetOkExists("broadcast_enable"); ok {
 		request.BroadcastEnable = helper.Bool(v.(bool))
 	}
 
@@ -192,30 +191,32 @@ func resourceTencentCloudTdmqRocketmqGroupCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateRocketMQGroup(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateRocketMQGroup(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq group failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + namespaceName + FILED_SP + groupName)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, namespaceId, groupId}, FILED_SP))
+
 	return resourceTencentCloudTdmqRocketmqGroupRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_group.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -225,41 +226,89 @@ func resourceTencentCloudTdmqRocketmqGroupRead(d *schema.ResourceData, meta inte
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	clusterId := idSplit[0]
-	namespaceName := idSplit[1]
-	groupName := idSplit[2]
+	namespaceId := idSplit[1]
+	groupId := idSplit[2]
 
-	groupList, err := service.DescribeTdmqRocketmqGroup(ctx, clusterId, namespaceName, groupName)
-
+	group, err := service.DescribeTdmqRocketmqGroupById(ctx, clusterId, namespaceId, groupId)
 	if err != nil {
 		return err
 	}
 
-	if len(groupList) == 0 {
+	if group == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `group` %s does not exist", groupName)
+		log.Printf("[WARN]%s resource `TdmqRocketmqGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-	group := groupList[0]
-	_ = d.Set("group_name", group.Name)
-	_ = d.Set("namespace", namespaceName)
-	_ = d.Set("read_enable", group.ReadEnabled)
-	_ = d.Set("broadcast_enable", group.BroadcastEnabled)
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("remark", group.Remark)
-	_ = d.Set("consumer_num", group.ConsumerNum)
-	_ = d.Set("tps", group.TPS)
-	_ = d.Set("total_accumulative", group.TotalAccumulative)
-	_ = d.Set("consumption_mode", group.ConsumptionMode)
-	_ = d.Set("retry_partition_num", group.RetryPartitionNum)
-	_ = d.Set("create_time", group.CreateTime)
-	_ = d.Set("update_time", group.UpdateTime)
-	_ = d.Set("client_protocol", group.ClientProtocol)
-	_ = d.Set("consumer_type", group.ConsumerType)
+
+	if group.GroupId != nil {
+		_ = d.Set("group_id", group.GroupId)
+	}
+
+	if group.Namespaces != nil {
+		_ = d.Set("namespaces", group.Namespaces)
+	}
+
+	if group.ReadEnable != nil {
+		_ = d.Set("read_enable", group.ReadEnable)
+	}
+
+	if group.BroadcastEnable != nil {
+		_ = d.Set("broadcast_enable", group.BroadcastEnable)
+	}
+
+	if group.ClusterId != nil {
+		_ = d.Set("cluster_id", group.ClusterId)
+	}
+
+	if group.Remark != nil {
+		_ = d.Set("remark", group.Remark)
+	}
+
+	if group.Name != nil {
+		_ = d.Set("name", group.Name)
+	}
+
+	if group.ConsumerNum != nil {
+		_ = d.Set("consumer_num", group.ConsumerNum)
+	}
+
+	if group.TPS != nil {
+		_ = d.Set("t_p_s", group.TPS)
+	}
+
+	if group.TotalAccumulative != nil {
+		_ = d.Set("total_accumulative", group.TotalAccumulative)
+	}
+
+	if group.ConsumptionMode != nil {
+		_ = d.Set("consumption_mode", group.ConsumptionMode)
+	}
+
+	if group.RetryPartitionNum != nil {
+		_ = d.Set("retry_partition_num", group.RetryPartitionNum)
+	}
+
+	if group.CreateTime != nil {
+		_ = d.Set("create_time", group.CreateTime)
+	}
+
+	if group.UpdateTime != nil {
+		_ = d.Set("update_time", group.UpdateTime)
+	}
+
+	if group.ClientProtocol != nil {
+		_ = d.Set("client_protocol", group.ClientProtocol)
+	}
+
+	if group.ConsumerType != nil {
+		_ = d.Set("consumer_type", group.ConsumerType)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_group.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_group.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -278,14 +327,22 @@ func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta in
 	request.NamespaceId = &namespaceId
 	request.GroupId = &groupId
 
+	immutableArgs := []string{"group_id", "namespaces", "read_enable", "broadcast_enable", "cluster_id", "remark", "name", "consumer_num", "t_p_s", "total_accumulative", "consumption_mode", "retry_partition_num", "create_time", "update_time", "client_protocol", "consumer_type"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("read_enable") {
-		if v, ok := d.GetOk("read_enable"); ok {
+		if v, ok := d.GetOkExists("read_enable"); ok {
 			request.ReadEnable = helper.Bool(v.(bool))
 		}
 	}
 
 	if d.HasChange("broadcast_enable") {
-		if v, ok := d.GetOk("broadcast_enable"); ok {
+		if v, ok := d.GetOkExists("broadcast_enable"); ok {
 			request.BroadcastEnable = helper.Bool(v.(bool))
 		}
 	}
@@ -297,18 +354,16 @@ func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRocketMQGroup(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyRocketMQGroup(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq group failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq group failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -316,14 +371,13 @@ func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudTdmqRocketmqGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_group.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_group.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())

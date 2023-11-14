@@ -4,173 +4,37 @@ Provides a resource to create a monitor tmp_tke_basic_config
 Example Usage
 
 ```hcl
-variable "default_instance_type" {
-  default = "SA1.MEDIUM2"
-}
-
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
-
-variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-locals {
-  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
-  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
-  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
-  sg_id            = tencentcloud_security_group.sg.id
-  image_id         = data.tencentcloud_images.default.image_id
-}
-
-data "tencentcloud_vpc_subnets" "vpc_one" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-data "tencentcloud_vpc_subnets" "vpc_two" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
-
-resource "tencentcloud_security_group" "sg" {
-  name = "tf-example-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
-  security_group_id = tencentcloud_security_group.sg.id
-
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
-
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
-}
-
-data "tencentcloud_images" "default" {
-  image_type       = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
-}
-
-resource "tencentcloud_kubernetes_cluster" "example" {
-  vpc_id                          = local.first_vpc_id
-  cluster_cidr                    = var.example_cluster_cidr
-  cluster_max_pod_num             = 32
-  cluster_name                    = "tf_example_cluster"
-  cluster_desc                    = "example for tke cluster"
-  cluster_max_service_num         = 32
-  cluster_internet                = false
-  cluster_internet_security_group = local.sg_id
-  cluster_version                 = "1.22.5"
-  cluster_deploy_type             = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # key_ids                   = ["skey-11112222"]
-    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.second_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # key_ids                   = ["skey-11112222"]
-    cam_role_name = "CVM_QcsRole"
-    password      = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
-
-
-# create monitor
-variable "zone" {
-  default = "ap-guangzhou"
-}
-
-variable "cluster_type" {
-  default = "tke"
-}
-
-resource "tencentcloud_monitor_tmp_instance" "foo" {
-  instance_name       = "tf-tmp-instance"
-  vpc_id              = local.first_vpc_id
-  subnet_id           = local.first_subnet_id
-  data_retention_time = 30
-  zone                = var.availability_zone_second
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-# tmp tke bind
-resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
-  instance_id = tencentcloud_monitor_tmp_instance.foo.id
-
-  agents {
-    region          = var.zone
-    cluster_type    = var.cluster_type
-    cluster_id      = tencentcloud_kubernetes_cluster.example.id
-    enable_external = false
-  }
-}
-
 resource "tencentcloud_monitor_tmp_tke_basic_config" "tmp_tke_basic_config" {
-  instance_id  = tencentcloud_monitor_tmp_instance.foo.id
-  cluster_type = var.cluster_type
-  cluster_id   = tencentcloud_kubernetes_cluster.example.id
-  name = "kube-system/kube-state-metrics"
-  metrics_name = ["kube_job_status_succeeded"]
+  instance_id = ""
+  cluster_type = ""
+  cluster_id = ""
+  service_monitors {
+		name = ""
+		config = ""
+		template_id = ""
 
-  depends_on = [tencentcloud_monitor_tmp_tke_cluster_agent.foo]
+  }
+  pod_monitors {
+		name = ""
+		config = ""
+		template_id = ""
+
+  }
+  raw_jobs {
+		name = ""
+		config = ""
+		template_id = ""
+
+  }
 }
+```
 
+Import
+
+monitor tmp_tke_basic_config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_monitor_tmp_tke_basic_config.tmp_tke_basic_config tmp_tke_basic_config_id
 ```
 */
 package tencentcloud
@@ -178,18 +42,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
-)
-
-const (
-	SERVICE_MONITORS string = "service_monitors"
-	POD_MONITORS     string = "pod_monitors"
-	RAW_JOBS         string = "raw_jobs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMonitorTmpTkeBasicConfig() *schema.Resource {
@@ -198,7 +56,9 @@ func resourceTencentCloudMonitorTmpTkeBasicConfig() *schema.Resource {
 		Read:   resourceTencentCloudMonitorTmpTkeBasicConfigRead,
 		Update: resourceTencentCloudMonitorTmpTkeBasicConfigUpdate,
 		Delete: resourceTencentCloudMonitorTmpTkeBasicConfigDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -218,32 +78,79 @@ func resourceTencentCloudMonitorTmpTkeBasicConfig() *schema.Resource {
 				Description: "ID of cluster.",
 			},
 
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Name. The naming rule is: namespace/name. If you don&#39;t have any namespace, use the default namespace: kube-system, otherwise use the specified one.",
-			},
-
-			"metrics_name": {
-				Type:     schema.TypeSet,
-				Required: true,
-				Elem: &schema.Schema{
-					Type:         schema.TypeString,
-					ValidateFunc: validateNotEmpty,
+			"service_monitors": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Configuration of the service monitors.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Name. The naming rule is: namespace/name. If you don&amp;#39;t have any namespace, use the default namespace: kube-system, otherwise use the specified one.",
+						},
+						"config": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Config.",
+						},
+						"template_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Used for output parameters, if the configuration comes from a template, it is the template id.",
+						},
+					},
 				},
-				Description: "Configure the name of the metric to keep on.",
 			},
 
-			"config_type": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "config type, `service_monitors`, `pod_monitors`, `raw_jobs`.",
+			"pod_monitors": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Configuration of the pod monitors.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Name. The naming rule is: namespace/name. If you don&amp;#39;t have any namespace, use the default namespace: kube-system, otherwise use the specified one.",
+						},
+						"config": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Config.",
+						},
+						"template_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Used for output parameters, if the configuration comes from a template, it is the template id.",
+						},
+					},
+				},
 			},
 
-			"config": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Full configuration in yaml format.",
+			"raw_jobs": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Configuration of the native prometheus job.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Name.",
+						},
+						"config": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Config.",
+						},
+						"template_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Used for output parameters, if the configuration comes from a template, it is the template id.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -253,26 +160,22 @@ func resourceTencentCloudMonitorTmpTkeBasicConfigCreate(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_monitor_tmp_tke_basic_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		instanceId  string
-		clusterType string
-		clusterId   string
-		name        string
-	)
+	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
+
+	var clusterType string
 	if v, ok := d.GetOk("cluster_type"); ok {
 		clusterType = v.(string)
 	}
-	if v, ok := d.GetOk("name"); ok {
-		name = v.(string)
+
+	var clusterId string
+	if v, ok := d.GetOk("cluster_id"); ok {
+		clusterId = v.(string)
 	}
 
-	d.SetId(strings.Join([]string{instanceId, clusterType, clusterId, name}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, clusterType, clusterId}, FILED_SP))
 
 	return resourceTencentCloudMonitorTmpTkeBasicConfigUpdate(d, meta)
 }
@@ -282,19 +185,20 @@ func resourceTencentCloudMonitorTmpTkeBasicConfigRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	clusterType := idSplit[1]
 	clusterId := idSplit[2]
-	name := idSplit[3]
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-	tmpTkeBasicConfig, err := service.DescribeTkeTmpBasicConfigById(ctx, clusterId, clusterType, instanceId)
+	tmpTkeBasicConfig, err := service.DescribeMonitorTmpTkeBasicConfigById(ctx, instanceId, clusterType, clusterId)
 	if err != nil {
 		return err
 	}
@@ -305,17 +209,89 @@ func resourceTencentCloudMonitorTmpTkeBasicConfigRead(d *schema.ResourceData, me
 		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("cluster_type", clusterType)
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("name", name)
-
-	configType, config, err := service.GetConfigType(name, tmpTkeBasicConfig)
-	if err != nil {
-		return err
+	if tmpTkeBasicConfig.InstanceId != nil {
+		_ = d.Set("instance_id", tmpTkeBasicConfig.InstanceId)
 	}
-	_ = d.Set("config_type", configType)
-	_ = d.Set("config", config.Config)
+
+	if tmpTkeBasicConfig.ClusterType != nil {
+		_ = d.Set("cluster_type", tmpTkeBasicConfig.ClusterType)
+	}
+
+	if tmpTkeBasicConfig.ClusterId != nil {
+		_ = d.Set("cluster_id", tmpTkeBasicConfig.ClusterId)
+	}
+
+	if tmpTkeBasicConfig.ServiceMonitors != nil {
+		serviceMonitorsList := []interface{}{}
+		for _, serviceMonitors := range tmpTkeBasicConfig.ServiceMonitors {
+			serviceMonitorsMap := map[string]interface{}{}
+
+			if tmpTkeBasicConfig.ServiceMonitors.Name != nil {
+				serviceMonitorsMap["name"] = tmpTkeBasicConfig.ServiceMonitors.Name
+			}
+
+			if tmpTkeBasicConfig.ServiceMonitors.Config != nil {
+				serviceMonitorsMap["config"] = tmpTkeBasicConfig.ServiceMonitors.Config
+			}
+
+			if tmpTkeBasicConfig.ServiceMonitors.TemplateId != nil {
+				serviceMonitorsMap["template_id"] = tmpTkeBasicConfig.ServiceMonitors.TemplateId
+			}
+
+			serviceMonitorsList = append(serviceMonitorsList, serviceMonitorsMap)
+		}
+
+		_ = d.Set("service_monitors", serviceMonitorsList)
+
+	}
+
+	if tmpTkeBasicConfig.PodMonitors != nil {
+		podMonitorsList := []interface{}{}
+		for _, podMonitors := range tmpTkeBasicConfig.PodMonitors {
+			podMonitorsMap := map[string]interface{}{}
+
+			if tmpTkeBasicConfig.PodMonitors.Name != nil {
+				podMonitorsMap["name"] = tmpTkeBasicConfig.PodMonitors.Name
+			}
+
+			if tmpTkeBasicConfig.PodMonitors.Config != nil {
+				podMonitorsMap["config"] = tmpTkeBasicConfig.PodMonitors.Config
+			}
+
+			if tmpTkeBasicConfig.PodMonitors.TemplateId != nil {
+				podMonitorsMap["template_id"] = tmpTkeBasicConfig.PodMonitors.TemplateId
+			}
+
+			podMonitorsList = append(podMonitorsList, podMonitorsMap)
+		}
+
+		_ = d.Set("pod_monitors", podMonitorsList)
+
+	}
+
+	if tmpTkeBasicConfig.RawJobs != nil {
+		rawJobsList := []interface{}{}
+		for _, rawJobs := range tmpTkeBasicConfig.RawJobs {
+			rawJobsMap := map[string]interface{}{}
+
+			if tmpTkeBasicConfig.RawJobs.Name != nil {
+				rawJobsMap["name"] = tmpTkeBasicConfig.RawJobs.Name
+			}
+
+			if tmpTkeBasicConfig.RawJobs.Config != nil {
+				rawJobsMap["config"] = tmpTkeBasicConfig.RawJobs.Config
+			}
+
+			if tmpTkeBasicConfig.RawJobs.TemplateId != nil {
+				rawJobsMap["template_id"] = tmpTkeBasicConfig.RawJobs.TemplateId
+			}
+
+			rawJobsList = append(rawJobsList, rawJobsMap)
+		}
+
+		_ = d.Set("raw_jobs", rawJobsList)
+
+	}
 
 	return nil
 }
@@ -325,69 +301,98 @@ func resourceTencentCloudMonitorTmpTkeBasicConfigUpdate(d *schema.ResourceData, 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := monitor.NewModifyPrometheusConfigRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 4 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	clusterType := idSplit[1]
 	clusterId := idSplit[2]
-	name := idSplit[3]
 
 	request.InstanceId = &instanceId
 	request.ClusterType = &clusterType
 	request.ClusterId = &clusterId
 
-	if v, ok := d.GetOk("metrics_name"); ok {
-		regexs := []string{}
-		regexSet := v.(*schema.Set).List()
-		for i := range regexSet {
-			regex := regexSet[i].(string)
-			regexs = append(regexs, regex)
-		}
+	immutableArgs := []string{"instance_id", "cluster_type", "cluster_id", "service_monitors", "pod_monitors", "raw_jobs"}
 
-		service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-		tmpTkeBasicConfig, err := service.DescribeTkeTmpBasicConfigById(ctx, clusterId, clusterType, instanceId)
-		if err != nil {
-			return err
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-		configType, config, err := service.GetConfigType(name, tmpTkeBasicConfig)
-		if err != nil {
-			return err
-		}
+	}
 
-		serviceMonitors, podMonitors, rawMobs, err := configInit(configType, config, regexs)
-		if err != nil {
-			return err
+	if d.HasChange("instance_id") {
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
 		}
+	}
 
-		if serviceMonitors != "" {
-			prometheusConfig := []*monitor.PrometheusConfigItem{}
-			prometheusConfig = append(prometheusConfig, &monitor.PrometheusConfigItem{
-				Name:   &name,
-				Config: &serviceMonitors,
-			})
-			request.ServiceMonitors = prometheusConfig
+	if d.HasChange("cluster_type") {
+		if v, ok := d.GetOk("cluster_type"); ok {
+			request.ClusterType = helper.String(v.(string))
 		}
-		if podMonitors != "" {
-			prometheusConfig := []*monitor.PrometheusConfigItem{}
-			prometheusConfig = append(prometheusConfig, &monitor.PrometheusConfigItem{
-				Name:   &name,
-				Config: &podMonitors,
-			})
-			request.PodMonitors = prometheusConfig
+	}
+
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
 		}
-		if rawMobs != "" {
-			prometheusConfig := []*monitor.PrometheusConfigItem{}
-			prometheusConfig = append(prometheusConfig, &monitor.PrometheusConfigItem{
-				Name:   &name,
-				Config: &rawMobs,
-			})
-			request.RawJobs = prometheusConfig
+	}
+
+	if d.HasChange("service_monitors") {
+		if v, ok := d.GetOk("service_monitors"); ok {
+			for _, item := range v.([]interface{}) {
+				prometheusConfigItem := monitor.PrometheusConfigItem{}
+				if v, ok := dMap["name"]; ok {
+					prometheusConfigItem.Name = helper.String(v.(string))
+				}
+				if v, ok := dMap["config"]; ok {
+					prometheusConfigItem.Config = helper.String(v.(string))
+				}
+				if v, ok := dMap["template_id"]; ok {
+					prometheusConfigItem.TemplateId = helper.String(v.(string))
+				}
+				request.ServiceMonitors = append(request.ServiceMonitors, &prometheusConfigItem)
+			}
+		}
+	}
+
+	if d.HasChange("pod_monitors") {
+		if v, ok := d.GetOk("pod_monitors"); ok {
+			for _, item := range v.([]interface{}) {
+				prometheusConfigItem := monitor.PrometheusConfigItem{}
+				if v, ok := dMap["name"]; ok {
+					prometheusConfigItem.Name = helper.String(v.(string))
+				}
+				if v, ok := dMap["config"]; ok {
+					prometheusConfigItem.Config = helper.String(v.(string))
+				}
+				if v, ok := dMap["template_id"]; ok {
+					prometheusConfigItem.TemplateId = helper.String(v.(string))
+				}
+				request.PodMonitors = append(request.PodMonitors, &prometheusConfigItem)
+			}
+		}
+	}
+
+	if d.HasChange("raw_jobs") {
+		if v, ok := d.GetOk("raw_jobs"); ok {
+			for _, item := range v.([]interface{}) {
+				prometheusConfigItem := monitor.PrometheusConfigItem{}
+				if v, ok := dMap["name"]; ok {
+					prometheusConfigItem.Name = helper.String(v.(string))
+				}
+				if v, ok := dMap["config"]; ok {
+					prometheusConfigItem.Config = helper.String(v.(string))
+				}
+				if v, ok := dMap["template_id"]; ok {
+					prometheusConfigItem.TemplateId = helper.String(v.(string))
+				}
+				request.RawJobs = append(request.RawJobs, &prometheusConfigItem)
+			}
 		}
 	}
 
@@ -413,59 +418,4 @@ func resourceTencentCloudMonitorTmpTkeBasicConfigDelete(d *schema.ResourceData, 
 	defer inconsistentCheck(d, meta)()
 
 	return nil
-}
-
-func configInit(configType string, respParams *monitor.PrometheusConfigItem, regexs []string) (serviceMonitorConfig, podMonitorConfig, rawMobConfig string, errRet error) {
-	config := PrometheusConfig{
-		Config: respParams.Config,
-		Regex:  regexs,
-	}
-	switch configType {
-	case SERVICE_MONITORS:
-		serviceMonitor, err := config.UnmarshalToMap()
-		if err != nil {
-			errRet = err
-			return
-		}
-		spec := serviceMonitor["spec"].(map[interface{}]interface{})["endpoints"].([]interface{})
-		serviceMonitors, err := config.SetRegex(spec)
-		serviceMonitor["spec"].(map[interface{}]interface{})["endpoints"] = serviceMonitors
-		if err != nil {
-			errRet = err
-			return
-		}
-		serviceMonitorConfig, errRet = config.MarshalToYaml(&serviceMonitor)
-		return
-	case POD_MONITORS:
-		serviceMonitor, err := config.UnmarshalToMap()
-		if err != nil {
-			errRet = err
-			return
-		}
-		spec := serviceMonitor["spec"].(map[interface{}]interface{})["podMetricsEndpoints"].([]interface{})
-		serviceMonitors, err := config.SetRegex(spec)
-		serviceMonitor["spec"].(map[interface{}]interface{})["podMetricsEndpoints"] = serviceMonitors
-		if err != nil {
-			errRet = err
-			return
-		}
-		podMonitorConfig, errRet = config.MarshalToYaml(&serviceMonitor)
-		return
-	case RAW_JOBS:
-		rawMob, err := config.UnmarshalToMap()
-		if err != nil {
-			errRet = err
-			return
-		}
-		configs := rawMob["scrape_configs"].([]interface{})
-		rawMobConfigs, err := config.SetRegex(configs)
-		rawMob["scrape_configs"] = rawMobConfigs
-		if err != nil {
-			errRet = err
-			return
-		}
-		rawMobConfig, errRet = config.MarshalToYaml(&rawMob)
-		return
-	}
-	return
 }

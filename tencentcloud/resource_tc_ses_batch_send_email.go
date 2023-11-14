@@ -5,38 +5,57 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ses_batch_send_email" "batch_send_email" {
-  from_email_address = "aaa@iac-tf.cloud"
-  receiver_id        = 1063742
-  subject            = "terraform test"
-  task_type          = 1
+  from_email_address = "Tencent Cloud team &lt;noreply@mail.qcloud.com&gt;"
+  receiver_id = 123
+  subject = "test"
+  task_type = 1
   reply_to_addresses = "reply@mail.qcloud.com"
   template {
-    template_id   = 99629
-    template_data = "{\"name\":\"xxx\",\"age\":\"xx\"}"
+		template_i_d = 5432
+		template_data = "{&quot;name&quot;:&quot;xxx&quot;,&quot;age&quot;:&quot;xx&quot;}"
 
   }
+  simple {
+		html = ""
+		text = ""
 
+  }
+  attachments {
+		file_name = "doc.zip"
+		content = ""
+
+  }
   cycle_param {
-    begin_time = "2023-09-07 15:10:00"
-    interval_time = 1
+		begin_time = "2021-09-10 11:10:11"
+		interval_time = 2
+		term_cycle = 0
+
   }
   timed_param {
-    begin_time = "2023-09-07 15:20:00"
+		begin_time = "2021-09-11 09:10:11"
+
   }
-  unsubscribe = "0"
-  ad_location = 0
+  unsubscribe = "1"
+  a_d_location = 1
 }
+```
+
+Import
+
+ses batch_send_email can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_ses_batch_send_email.batch_send_email batch_send_email_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudSesBatchSendEmail() *schema.Resource {
@@ -91,15 +110,37 @@ func resourceTencentCloudSesBatchSendEmail() *schema.Resource {
 				Description: "Template when emails are sent using a template.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"template_id": {
+						"template_i_d": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "Template ID. If you do not have any template, please create one.",
+							Description: "Template ID. If you don’t have any template, please create one.",
 						},
 						"template_data": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Variable parameters in the template. Please use json.dump to format the JSON object into a string type.The object is a set of key-value pairs. Each key denotes a variable, which is represented by {{key}}. The key will be replaced with the correspondingvalue (represented by {{value}}) when sending the email.Note: The parameter value cannot be data of a complex type such as HTML.Example: {name:xxx,age:xx}.",
+							Description: "Variable parameters in the template. Please use json.dump to format the JSON object into a string type. The object is a set of key-value pairs. Each key denotes a variable, which is represented by {{key}}. The key will be replaced with the corresponding value (represented by {{value}}) when sending the email.Note: The parameter value cannot be data of a complex type such as HTML.Example: {name:xxx,age:xx}.",
+						},
+					},
+				},
+			},
+
+			"simple": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Disused, obsolete.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"html": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "HTML code after base64 encoding. To ensure correct display, this parameter should include all code information and cannot contain external CSS.",
+						},
+						"text": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Plain text content after base64 encoding. If HTML is not involved, the plain text will be displayed in the email. Otherwise, this parameter represents the plain text style of the email.",
 						},
 					},
 				},
@@ -120,7 +161,7 @@ func resourceTencentCloudSesBatchSendEmail() *schema.Resource {
 						"content": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Base64-encoded attachment content. You can send attachments of up to 4 MB in the total size.Note: The TencentCloud API supports a request packet of up to 8 MB in size, and the size of the attachmentcontent will increase by 1.5 times after Base64 encoding. Therefore, you need to keep the total size of allattachments below 4 MB. If the entire request exceeds 8 MB, the API will return an error.",
+							Description: "Base64-encoded attachment content. You can send attachments of up to 4 MB in the total size. Note: The TencentCloud API supports a request packet of up to 8 MB in size, and the size of the attachment content will increase by 1.5 times after Base64 encoding. Therefore, you need to keep the total size of all attachments below 4 MB. If the entire request exceeds 8 MB, the API will return an error.",
 						},
 					},
 				},
@@ -174,10 +215,10 @@ func resourceTencentCloudSesBatchSendEmail() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Unsubscribe link option.  0: Do not add unsubscribe link; 1: English 2: Simplified Chinese;  3: Traditional Chinese; 4: Spanish; 5: French;  6: German; 7: Japanese; 8: Korean;  9: Arabic; 10: Thai.",
+				Description: "Unsubscribe link option.   0: Do not add unsubscribe link; 1: English 2: Simplified Chinese;   3: Traditional Chinese; 4: Spanish; 5: French;   6: German; 7: Japanese; 8: Korean;   9: Arabic; 10: Thai.",
 			},
 
-			"ad_location": {
+			"a_d_location": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
@@ -196,7 +237,7 @@ func resourceTencentCloudSesBatchSendEmailCreate(d *schema.ResourceData, meta in
 	var (
 		request  = ses.NewBatchSendEmailRequest()
 		response = ses.NewBatchSendEmailResponse()
-		taskId   uint64
+		taskId   int
 	)
 	if v, ok := d.GetOk("from_email_address"); ok {
 		request.FromEmailAddress = helper.String(v.(string))
@@ -220,7 +261,7 @@ func resourceTencentCloudSesBatchSendEmailCreate(d *schema.ResourceData, meta in
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "template"); ok {
 		template := ses.Template{}
-		if v, ok := dMap["template_id"]; ok {
+		if v, ok := dMap["template_i_d"]; ok {
 			template.TemplateID = helper.IntUint64(v.(int))
 		}
 		if v, ok := dMap["template_data"]; ok {
@@ -229,9 +270,19 @@ func resourceTencentCloudSesBatchSendEmailCreate(d *schema.ResourceData, meta in
 		request.Template = &template
 	}
 
+	if dMap, ok := helper.InterfacesHeadMap(d, "simple"); ok {
+		simple := ses.Simple{}
+		if v, ok := dMap["html"]; ok {
+			simple.Html = helper.String(v.(string))
+		}
+		if v, ok := dMap["text"]; ok {
+			simple.Text = helper.String(v.(string))
+		}
+		request.Simple = &simple
+	}
+
 	if v, ok := d.GetOk("attachments"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
 			attachment := ses.Attachment{}
 			if v, ok := dMap["file_name"]; ok {
 				attachment.FileName = helper.String(v.(string))
@@ -269,7 +320,7 @@ func resourceTencentCloudSesBatchSendEmailCreate(d *schema.ResourceData, meta in
 		request.Unsubscribe = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("ad_location"); v != nil {
+	if v, _ := d.GetOk("a_d_location"); v != nil {
 		request.ADLocation = helper.IntUint64(v.(int))
 	}
 
@@ -289,7 +340,7 @@ func resourceTencentCloudSesBatchSendEmailCreate(d *schema.ResourceData, meta in
 	}
 
 	taskId = *response.Response.TaskId
-	d.SetId(helper.UInt64ToStr(taskId))
+	d.SetId(helper.Int64ToStr(int64(taskId)))
 
 	return resourceTencentCloudSesBatchSendEmailRead(d, meta)
 }

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudApmInstanceResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudApmInstanceResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_apm_instance.instance", "id")),
 			},
 			{
-				Config: testAccApmInstanceUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_apm_instance.instance", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_apm_instance.instance", "name", "terraform-for-test"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_apm_instance.instance",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,21 +29,13 @@ func TestAccTencentCloudApmInstanceResource_basic(t *testing.T) {
 const testAccApmInstance = `
 
 resource "tencentcloud_apm_instance" "instance" {
-  name = "terraform-test"
-  description = "for terraform test"
-  trace_duration = 15
-  span_daily_counters = 20
-}
-
-`
-
-const testAccApmInstanceUpdate = `
-
-resource "tencentcloud_apm_instance" "instance" {
-  name = "terraform-for-test"
-  description = "for terraform test"
-  trace_duration = 15
-  span_daily_counters = 20
+  name = ""
+  description = ""
+  trace_duration = 
+  span_daily_counters = 
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 
 `

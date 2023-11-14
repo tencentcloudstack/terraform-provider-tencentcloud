@@ -5,35 +5,34 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_ai_recognition_template" "ai_recognition_template" {
-  name = "terraform-test"
-
-  asr_full_text_configure {
-    switch = "OFF"
-  }
-
-  asr_words_configure {
-    label_set = []
-    switch    = "OFF"
-  }
-
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   face_configure {
-    default_library_label_set     = [
-      "entertainment",
-      "sport",
-    ]
-    face_library                  = "All"
-    score                         = 85
-    switch                        = "ON"
-    user_define_library_label_set = []
-  }
+		switch = &lt;nil&gt;
+		score =
+		default_library_label_set = &lt;nil&gt;
+		user_define_library_label_set = &lt;nil&gt;
+		face_library = "All"
 
+  }
   ocr_full_text_configure {
-    switch = "OFF"
-  }
+		switch = &lt;nil&gt;
 
+  }
   ocr_words_configure {
-    label_set = []
-    switch    = "OFF"
+		switch = &lt;nil&gt;
+		label_set = &lt;nil&gt;
+
+  }
+  asr_full_text_configure {
+		switch = &lt;nil&gt;
+		subtitle_format = &lt;nil&gt;
+
+  }
+  asr_words_configure {
+		switch = &lt;nil&gt;
+		label_set = &lt;nil&gt;
+
   }
 }
 ```
@@ -50,12 +49,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsAiRecognitionTemplate() *schema.Resource {
@@ -219,7 +218,7 @@ func resourceTencentCloudMpsAiRecognitionTemplateCreate(d *schema.ResourceData, 
 	var (
 		request    = mps.NewCreateAIRecognitionTemplateRequest()
 		response   = mps.NewCreateAIRecognitionTemplateResponse()
-		definition int64
+		definition int
 	)
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -285,7 +284,7 @@ func resourceTencentCloudMpsAiRecognitionTemplateCreate(d *schema.ResourceData, 
 		if v, ok := dMap["switch"]; ok {
 			asrFullTextConfigureInfo.Switch = helper.String(v.(string))
 		}
-		if v := dMap["subtitle_format"]; v != "" {
+		if v, ok := dMap["subtitle_format"]; ok {
 			asrFullTextConfigureInfo.SubtitleFormat = helper.String(v.(string))
 		}
 		request.AsrFullTextConfigure = &asrFullTextConfigureInfo
@@ -337,7 +336,7 @@ func resourceTencentCloudMpsAiRecognitionTemplateRead(d *schema.ResourceData, me
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	aiRecognitionTemplateId := d.Id()
 
 	aiRecognitionTemplate, err := service.DescribeMpsAiRecognitionTemplateById(ctx, definition)
 	if err != nil {
@@ -447,32 +446,33 @@ func resourceTencentCloudMpsAiRecognitionTemplateUpdate(d *schema.ResourceData, 
 
 	request := mps.NewModifyAIRecognitionTemplateRequest()
 
-	definition := d.Id()
+	aiRecognitionTemplateId := d.Id()
 
-	request.Definition = helper.StrToInt64Point(definition)
+	request.Definition = &definition
 
-	mutableArgs := []string{"name", "comment", "face_configure", "ocr_full_text_configure", "ocr_words_configure", "asr_full_text_configure", "asr_words_configure"}
+	immutableArgs := []string{"name", "comment", "face_configure", "ocr_full_text_configure", "ocr_words_configure", "asr_full_text_configure", "asr_words_configure"}
 
-	needChange := false
-
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("face_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "face_configure"); ok {
-			faceConfigureInfo := mps.FaceConfigureInfoForUpdate{}
+			faceConfigureInfo := mps.FaceConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				faceConfigureInfo.Switch = helper.String(v.(string))
 			}
@@ -498,17 +498,21 @@ func resourceTencentCloudMpsAiRecognitionTemplateUpdate(d *schema.ResourceData, 
 			}
 			request.FaceConfigure = &faceConfigureInfo
 		}
+	}
 
+	if d.HasChange("ocr_full_text_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ocr_full_text_configure"); ok {
-			ocrFullTextConfigureInfo := mps.OcrFullTextConfigureInfoForUpdate{}
+			ocrFullTextConfigureInfo := mps.OcrFullTextConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				ocrFullTextConfigureInfo.Switch = helper.String(v.(string))
 			}
 			request.OcrFullTextConfigure = &ocrFullTextConfigureInfo
 		}
+	}
 
+	if d.HasChange("ocr_words_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ocr_words_configure"); ok {
-			ocrWordsConfigureInfo := mps.OcrWordsConfigureInfoForUpdate{}
+			ocrWordsConfigureInfo := mps.OcrWordsConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				ocrWordsConfigureInfo.Switch = helper.String(v.(string))
 			}
@@ -521,20 +525,24 @@ func resourceTencentCloudMpsAiRecognitionTemplateUpdate(d *schema.ResourceData, 
 			}
 			request.OcrWordsConfigure = &ocrWordsConfigureInfo
 		}
+	}
 
+	if d.HasChange("asr_full_text_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "asr_full_text_configure"); ok {
-			asrFullTextConfigureInfo := mps.AsrFullTextConfigureInfoForUpdate{}
+			asrFullTextConfigureInfo := mps.AsrFullTextConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				asrFullTextConfigureInfo.Switch = helper.String(v.(string))
 			}
-			if v := dMap["subtitle_format"]; v != "" {
+			if v, ok := dMap["subtitle_format"]; ok {
 				asrFullTextConfigureInfo.SubtitleFormat = helper.String(v.(string))
 			}
 			request.AsrFullTextConfigure = &asrFullTextConfigureInfo
 		}
+	}
 
+	if d.HasChange("asr_words_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "asr_words_configure"); ok {
-			asrWordsConfigureInfo := mps.AsrWordsConfigureInfoForUpdate{}
+			asrWordsConfigureInfo := mps.AsrWordsConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				asrWordsConfigureInfo.Switch = helper.String(v.(string))
 			}
@@ -547,20 +555,20 @@ func resourceTencentCloudMpsAiRecognitionTemplateUpdate(d *schema.ResourceData, 
 			}
 			request.AsrWordsConfigure = &asrWordsConfigureInfo
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIRecognitionTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps aiRecognitionTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIRecognitionTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps aiRecognitionTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsAiRecognitionTemplateRead(d, meta)
@@ -574,7 +582,7 @@ func resourceTencentCloudMpsAiRecognitionTemplateDelete(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	aiRecognitionTemplateId := d.Id()
 
 	if err := service.DeleteMpsAiRecognitionTemplateById(ctx, definition); err != nil {
 		return err

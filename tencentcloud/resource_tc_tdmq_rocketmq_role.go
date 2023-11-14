@@ -4,22 +4,19 @@ Provides a resource to create a tdmqRocketmq role
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_role" "example" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  role_name  = "tf_example"
-  remark     = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_role" "role" {
+  role_name = &lt;nil&gt;
+  remark = &lt;nil&gt;
+  cluster_id = &lt;nil&gt;
+      }
 ```
+
 Import
 
 tdmqRocketmq role can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_role.role role_id
+terraform import tencentcloud_tdmq_rocketmq_role.role role_id
 ```
 */
 package tencentcloud
@@ -27,19 +24,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqRocketmqRole() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqRoleRead,
 		Create: resourceTencentCloudTdmqRocketmqRoleCreate,
+		Read:   resourceTencentCloudTdmqRocketmqRoleRead,
 		Update: resourceTencentCloudTdmqRocketmqRoleUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqRoleDelete,
 		Importer: &schema.ResourceImporter{
@@ -47,38 +43,38 @@ func resourceTencentCloudTdmqRocketmqRole() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"role_name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Role name, which can contain up to 32 letters, digits, hyphens, and underscores.",
 			},
 
 			"remark": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Remarks (up to 128 characters).",
 			},
 
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID (required).",
 			},
 
 			"token": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Value of the role token.",
 			},
 
 			"create_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creation time.",
 			},
 
 			"update_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Update time.",
 			},
 		},
@@ -86,24 +82,23 @@ func resourceTencentCloudTdmqRocketmqRole() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqRoleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_role.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_role.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
 		request   = tdmqRocketmq.NewCreateRoleRequest()
+		response  = tdmqRocketmq.NewCreateRoleResponse()
 		clusterId string
 		roleName  string
 	)
-
 	if v, ok := d.GetOk("role_name"); ok {
 		roleName = v.(string)
 		request.RoleName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-
 		request.Remark = helper.String(v.(string))
 	}
 
@@ -113,30 +108,32 @@ func resourceTencentCloudTdmqRocketmqRoleCreate(d *schema.ResourceData, meta int
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateRole(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateRole(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq role failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + roleName)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, roleName}, FILED_SP))
+
 	return resourceTencentCloudTdmqRocketmqRoleRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqRoleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_role.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_role.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -148,29 +145,46 @@ func resourceTencentCloudTdmqRocketmqRoleRead(d *schema.ResourceData, meta inter
 	clusterId := idSplit[0]
 	roleName := idSplit[1]
 
-	role, err := service.DescribeTdmqRocketmqRole(ctx, clusterId, roleName)
-
+	role, err := service.DescribeTdmqRocketmqRoleById(ctx, clusterId, roleName)
 	if err != nil {
 		return err
 	}
 
 	if role == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `role` %s does not exist", roleName)
+		log.Printf("[WARN]%s resource `TdmqRocketmqRole` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("role_name", role.RoleName)
-	_ = d.Set("remark", role.Remark)
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("token", role.Token)
-	_ = d.Set("create_time", role.CreateTime)
-	_ = d.Set("update_time", role.UpdateTime)
+	if role.RoleName != nil {
+		_ = d.Set("role_name", role.RoleName)
+	}
+
+	if role.Remark != nil {
+		_ = d.Set("remark", role.Remark)
+	}
+
+	if role.ClusterId != nil {
+		_ = d.Set("cluster_id", role.ClusterId)
+	}
+
+	if role.Token != nil {
+		_ = d.Set("token", role.Token)
+	}
+
+	if role.CreateTime != nil {
+		_ = d.Set("create_time", role.CreateTime)
+	}
+
+	if role.UpdateTime != nil {
+		_ = d.Set("update_time", role.UpdateTime)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudTdmqRocketmqRoleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_role.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_role.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -187,38 +201,31 @@ func resourceTencentCloudTdmqRocketmqRoleUpdate(d *schema.ResourceData, meta int
 	request.ClusterId = &clusterId
 	request.RoleName = &roleName
 
-	if d.HasChange("role_name") {
+	immutableArgs := []string{"role_name", "remark", "cluster_id", "token", "create_time", "update_time"}
 
-		return fmt.Errorf("`role_name` do not support change now.")
-
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRole(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyRole(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq role failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq role failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -226,14 +233,13 @@ func resourceTencentCloudTdmqRocketmqRoleUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudTdmqRocketmqRoleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_role.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_role.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())

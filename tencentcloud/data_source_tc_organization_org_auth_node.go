@@ -5,6 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_organization_org_auth_node" "org_auth_node" {
+  auth_name = &lt;nil&gt;
   }
 ```
 */
@@ -12,7 +13,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
@@ -143,9 +143,9 @@ func dataSourceTencentCloudOrganizationOrgAuthNodeRead(d *schema.ResourceData, m
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	output3, ok := d.GetOk("result_output_file")
-	if ok && output3.(string) != "" {
-		if e := writeToFile(output3.(string), tmpList); e != nil {
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

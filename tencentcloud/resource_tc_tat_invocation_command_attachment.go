@@ -5,36 +5,40 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tat_invocation_command_attachment" "invocation_command_attachment" {
-  content = base64encode("pwd")
-  instance_id = "ins-881b1c8w"
-  command_name = "terraform-test"
-  description = "shell test"
-  command_type = "SHELL"
-  working_directory = "/root"
-  timeout = 100
-  save_command = false
-  enable_parameter = false
-  # default_parameters = "{\"varA\": \"222\"}"
-  # parameters = "{\"varA\": \"222\"}"
-  username = "root"
-  output_cos_bucket_url = "https://BucketName-123454321.cos.ap-beijing.myqcloud.com"
-  output_cos_key_prefix = "log"
+  content = ""
+  instance_ids =
+  command_name = ""
+  description = ""
+  command_type = ""
+  working_directory = ""
+  timeout =
+  save_command =
+  enable_parameter =
+  default_parameters = ""
+  parameters = ""
+  username = ""
+  output_c_o_s_bucket_url = ""
+  output_c_o_s_key_prefix = ""
 }
 ```
 
+Import
+
+tat invocation_command_attachment can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tat_invocation_command_attachment.invocation_command_attachment invocation_command_attachment_id
+```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
@@ -42,9 +46,9 @@ func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 		Create: resourceTencentCloudTatInvocationCommandAttachmentCreate,
 		Read:   resourceTencentCloudTatInvocationCommandAttachmentRead,
 		Delete: resourceTencentCloudTatInvocationCommandAttachmentDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"content": {
 				Required:    true,
@@ -53,11 +57,14 @@ func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 				Description: "Base64-encoded command. The maximum length is 64 KB.",
 			},
 
-			"instance_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "ID of instances about to execute commands. Supported instance types:  CVM  LIGHTHOUSE.",
+			"instance_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "IDs of instances about to execute commands. Up to 100 IDs are allowed. Supported instance types:CVMLIGHTHOUSE.",
 			},
 
 			"command_name": {
@@ -84,7 +91,6 @@ func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 			"working_directory": {
 				Optional:    true,
 				ForceNew:    true,
-				Default:     "/root",
 				Type:        schema.TypeString,
 				Description: "Command execution path. The default value is /root for SHELL commands and C:Program Filesqcloudtat_agentworkdir for POWERSHELL commands.",
 			},
@@ -131,24 +137,18 @@ func resourceTencentCloudTatInvocationCommandAttachment() *schema.Resource {
 				Description: "The username used to execute the command on the CVM or Lighthouse instance.The principle of least privilege is the best practice for permission management. We recommend you execute TAT commands as a general user. By default, the user root is used to execute commands on Linux and the user System is used on Windows.",
 			},
 
-			"output_cos_bucket_url": {
+			"output_c_o_s_bucket_url": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "The COS bucket URL for uploading logs; The URL must start with https, such as https://BucketName-123454321.cos.ap-beijing.myqcloud.com.",
+				Description: "The COS bucket URL for uploading logs. The URL must start with https, such as https://BucketName-123454321.cos.ap-beijing.myqcloud.com.",
 			},
 
-			"output_cos_key_prefix": {
+			"output_c_o_s_key_prefix": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "The COS bucket directory where the logs are saved; Check below for the rules of the directory name: 1 It must be a combination of number, letters, and visible characters, Up to 60 characters are allowed; 2 Use a slash (/) to create a subdirectory; 3 can not be used as the folder name; It cannot start with a slash (/), and cannot contain consecutive slashes.",
-			},
-
-			"command_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Command ID.",
+				Description: "The COS bucket directory where the logs are saved. Check below for the rules of the directory name.1. It must be a combination of number, letters, and visible characters. Up to 60 characters are allowed.2. Use a slash (/) to create a subdirectory.3. .. can not be used as the folder name. It cannot start with a slash (/), and cannot contain consecutive slashes.",
 			},
 		},
 	}
@@ -164,15 +164,17 @@ func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.Resource
 		request      = tat.NewRunCommandRequest()
 		response     = tat.NewRunCommandResponse()
 		invocationId string
-		instanceId   string
 	)
 	if v, ok := d.GetOk("content"); ok {
 		request.Content = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceIds = []*string{helper.String(v.(string))}
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
 	}
 
 	if v, ok := d.GetOk("command_name"); ok {
@@ -215,11 +217,11 @@ func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.Resource
 		request.Username = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("output_cos_bucket_url"); ok {
+	if v, ok := d.GetOk("output_c_o_s_bucket_url"); ok {
 		request.OutputCOSBucketUrl = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("output_cos_key_prefix"); ok {
+	if v, ok := d.GetOk("output_c_o_s_key_prefix"); ok {
 		request.OutputCOSKeyPrefix = helper.String(v.(string))
 	}
 
@@ -239,7 +241,7 @@ func resourceTencentCloudTatInvocationCommandAttachmentCreate(d *schema.Resource
 	}
 
 	invocationId = *response.Response.InvocationId
-	d.SetId(invocationId + FILED_SP + instanceId)
+	d.SetId(invocationId)
 
 	return resourceTencentCloudTatInvocationCommandAttachmentRead(d, meta)
 }
@@ -254,80 +256,73 @@ func resourceTencentCloudTatInvocationCommandAttachmentRead(d *schema.ResourceDa
 
 	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	invocationId := idSplit[0]
-	instanceId := idSplit[1]
+	invocationCommandAttachmentId := d.Id()
 
-	invocation, err := service.DescribeTatInvocationById(ctx, invocationId)
+	invocationCommandAttachment, err := service.DescribeTatInvocationCommandAttachmentById(ctx, invocationId)
 	if err != nil {
 		return err
 	}
 
-	if invocation == nil {
+	if invocationCommandAttachment == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `TatInvocationCommandAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if invocation.CommandContent != nil {
-		_ = d.Set("content", invocation.CommandContent)
+	if invocationCommandAttachment.Content != nil {
+		_ = d.Set("content", invocationCommandAttachment.Content)
 	}
 
-	_ = d.Set("instance_id", instanceId)
-
-	// if invocation.CommandName != nil {
-	// 	_ = d.Set("command_name", invocation.CommandName)
-	// }
-
-	// if invocation.Description != nil {
-	// 	_ = d.Set("description", invocation.Description)
-	// }
-
-	if invocation.CommandType != nil {
-		_ = d.Set("command_type", invocation.CommandType)
+	if invocationCommandAttachment.InstanceIds != nil {
+		_ = d.Set("instance_ids", invocationCommandAttachment.InstanceIds)
 	}
 
-	if invocation.WorkingDirectory != nil {
-		_ = d.Set("working_directory", invocation.WorkingDirectory)
+	if invocationCommandAttachment.CommandName != nil {
+		_ = d.Set("command_name", invocationCommandAttachment.CommandName)
 	}
 
-	if invocation.Timeout != nil {
-		_ = d.Set("timeout", invocation.Timeout)
+	if invocationCommandAttachment.Description != nil {
+		_ = d.Set("description", invocationCommandAttachment.Description)
 	}
 
-	// if invocation.SaveCommand != nil {
-	// 	_ = d.Set("save_command", invocation.SaveCommand)
-	// }
-
-	// if invocation.EnableParameter != nil {
-	// 	_ = d.Set("enable_parameter", invocation.EnableParameter)
-	// }
-
-	if invocation.DefaultParameters != nil {
-		_ = d.Set("default_parameters", invocation.DefaultParameters)
+	if invocationCommandAttachment.CommandType != nil {
+		_ = d.Set("command_type", invocationCommandAttachment.CommandType)
 	}
 
-	if invocation.Parameters != nil {
-		_ = d.Set("parameters", invocation.Parameters)
+	if invocationCommandAttachment.WorkingDirectory != nil {
+		_ = d.Set("working_directory", invocationCommandAttachment.WorkingDirectory)
 	}
 
-	if invocation.Username != nil {
-		_ = d.Set("username", invocation.Username)
+	if invocationCommandAttachment.Timeout != nil {
+		_ = d.Set("timeout", invocationCommandAttachment.Timeout)
 	}
 
-	if invocation.OutputCOSBucketUrl != nil {
-		_ = d.Set("output_cos_bucket_url", invocation.OutputCOSBucketUrl)
+	if invocationCommandAttachment.SaveCommand != nil {
+		_ = d.Set("save_command", invocationCommandAttachment.SaveCommand)
 	}
 
-	if invocation.OutputCOSKeyPrefix != nil {
-		_ = d.Set("output_cos_key_prefix", invocation.OutputCOSKeyPrefix)
+	if invocationCommandAttachment.EnableParameter != nil {
+		_ = d.Set("enable_parameter", invocationCommandAttachment.EnableParameter)
 	}
 
-	if invocation.CommandId != nil {
-		_ = d.Set("command_id", invocation.CommandId)
+	if invocationCommandAttachment.DefaultParameters != nil {
+		_ = d.Set("default_parameters", invocationCommandAttachment.DefaultParameters)
+	}
+
+	if invocationCommandAttachment.Parameters != nil {
+		_ = d.Set("parameters", invocationCommandAttachment.Parameters)
+	}
+
+	if invocationCommandAttachment.Username != nil {
+		_ = d.Set("username", invocationCommandAttachment.Username)
+	}
+
+	if invocationCommandAttachment.OutputCOSBucketUrl != nil {
+		_ = d.Set("output_c_o_s_bucket_url", invocationCommandAttachment.OutputCOSBucketUrl)
+	}
+
+	if invocationCommandAttachment.OutputCOSKeyPrefix != nil {
+		_ = d.Set("output_c_o_s_key_prefix", invocationCommandAttachment.OutputCOSKeyPrefix)
 	}
 
 	return nil
@@ -341,15 +336,9 @@ func resourceTencentCloudTatInvocationCommandAttachmentDelete(d *schema.Resource
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	invocationCommandAttachmentId := d.Id()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	invocationId := idSplit[0]
-	instanceId := idSplit[1]
-
-	if err := service.DeleteTatInvocationById(ctx, invocationId, instanceId); err != nil {
+	if err := service.DeleteTatInvocationCommandAttachmentById(ctx, invocationId); err != nil {
 		return err
 	}
 

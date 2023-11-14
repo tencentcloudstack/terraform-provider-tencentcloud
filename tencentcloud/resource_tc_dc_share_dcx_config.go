@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dc_share_dcx_config" "share_dcx_config" {
-  direct_connect_tunnel_id = "dcx-4z49tnws"
-  enable = false
+  direct_connect_tunnel_id = "dcx-test1234"
+  enable = true
 }
 ```
 
@@ -15,18 +15,18 @@ Import
 dc share_dcx_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dc_share_dcx_config.share_dcx_config dcx_id
+terraform import tencentcloud_dc_share_dcx_config.share_dcx_config share_dcx_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	"log"
 )
 
 func resourceTencentCloudDcShareDcxConfig() *schema.Resource {
@@ -42,13 +42,13 @@ func resourceTencentCloudDcShareDcxConfig() *schema.Resource {
 			"direct_connect_tunnel_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "the direct connect owner accept or reject the apply of direct connect tunnel.",
+				Description: "The direct connect owner accept or reject the apply of direct connect tunnel.",
 			},
 
 			"enable": {
 				Required:    true,
 				Type:        schema.TypeBool,
-				Description: "if accept or reject direct connect tunnel.",
+				Description: "If accept or reject direct connect tunnel.",
 			},
 		},
 	}
@@ -58,9 +58,12 @@ func resourceTencentCloudDcShareDcxConfigCreate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dc_share_dcx_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	dcxId := d.Get("direct_connect_tunnel_id").(string)
+	var directConnectTunnelId string
+	if v, ok := d.GetOk("direct_connect_tunnel_id"); ok {
+		directConnectTunnelId = v.(string)
+	}
 
-	d.SetId(dcxId)
+	d.SetId(directConnectTunnelId)
 
 	return resourceTencentCloudDcShareDcxConfigUpdate(d, meta)
 }
@@ -75,9 +78,9 @@ func resourceTencentCloudDcShareDcxConfigRead(d *schema.ResourceData, meta inter
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	dcxId := d.Id()
+	shareDcxConfigId := d.Id()
 
-	ShareDcxConfig, err := service.DescribeDcShareDcxConfigById(ctx, dcxId)
+	ShareDcxConfig, err := service.DescribeDcShareDcxConfigById(ctx, directConnectTunnelId)
 	if err != nil {
 		return err
 	}
@@ -92,12 +95,8 @@ func resourceTencentCloudDcShareDcxConfigRead(d *schema.ResourceData, meta inter
 		_ = d.Set("direct_connect_tunnel_id", ShareDcxConfig.DirectConnectTunnelId)
 	}
 
-	if *ShareDcxConfig.State == "AVAILABLE" {
-		_ = d.Set("enable", true)
-	}
-
-	if *ShareDcxConfig.State == "REJECTED" {
-		_ = d.Set("enable", false)
+	if ShareDcxConfig.Enable != nil {
+		_ = d.Set("enable", ShareDcxConfig.Enable)
 	}
 
 	return nil
@@ -110,49 +109,34 @@ func resourceTencentCloudDcShareDcxConfigUpdate(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	var (
-		enable        bool
-		acceptRequest = dc.NewAcceptDirectConnectTunnelRequest()
-		rejectRequest = dc.NewRejectDirectConnectTunnelRequest()
+		acceptDirectConnectTunnelRequest  = dc.NewAcceptDirectConnectTunnelRequest()
+		acceptDirectConnectTunnelResponse = dc.NewAcceptDirectConnectTunnelResponse()
 	)
 
-	dcxId := d.Id()
+	shareDcxConfigId := d.Id()
 
-	if v, ok := d.GetOkExists("enable"); ok {
-		enable = v.(bool)
+	request.DirectConnectTunnelId = &directConnectTunnelId
+
+	immutableArgs := []string{"direct_connect_tunnel_id", "enable"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if enable {
-		acceptRequest.DirectConnectTunnelId = &dcxId
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().AcceptDirectConnectTunnel(acceptRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, acceptRequest.GetAction(), acceptRequest.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update dc ShareDcxConfig failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().AcceptDirectConnectTunnel(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-	} else {
-		rejectRequest.DirectConnectTunnelId = &dcxId
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().RejectDirectConnectTunnel(rejectRequest)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, rejectRequest.GetAction(), rejectRequest.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update dc ShareDcxConfig failed, reason:%+v", logId, err)
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update dc ShareDcxConfig failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudDcShareDcxConfigRead(d, meta)

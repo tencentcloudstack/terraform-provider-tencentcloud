@@ -5,27 +5,45 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_lane" "lane" {
-  lane_name = "lane-name-1"
-  remark = "lane desc1"
+  lane_name = ""
+  remark = ""
   lane_group_list {
-		group_id = "group-yn7j5l8a"
-		entrance = true
+		group_id = ""
+		entrance =
+		lane_group_id = ""
+		lane_id = ""
+		group_name = ""
+		application_id = ""
+		application_name = ""
+		namespace_id = ""
+		namespace_name = ""
+		create_time =
+		update_time =
+		cluster_type = ""
+
   }
-}
+  program_id_list =
+        }
 ```
 
+Import
+
+tsf lane can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_lane.lane lane_id
+```
 */
 package tencentcloud
 
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfLane() *schema.Resource {
@@ -34,16 +52,10 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 		Read:   resourceTencentCloudTsfLaneRead,
 		Update: resourceTencentCloudTsfLaneUpdate,
 		Delete: resourceTencentCloudTsfLaneDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
-			"lane_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Lane id.",
-			},
-
 			"lane_name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -54,17 +66,6 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Lane Remarks.",
-			},
-
-			"create_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "creation time.",
-			},
-			"update_time": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "update time.",
 			},
 
 			"lane_group_list": {
@@ -96,17 +97,17 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 						"group_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "deployment group name.",
+							Description: "Deployment group name.",
 						},
 						"application_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "application ID.",
+							Description: "Application ID.",
 						},
 						"application_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "application name.",
+							Description: "Application name.",
 						},
 						"namespace_id": {
 							Type:        schema.TypeString,
@@ -116,22 +117,22 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 						"namespace_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "namespace name.",
+							Description: "Namespace name.",
 						},
 						"create_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "creation time.",
+							Description: "Creation time.",
 						},
 						"update_time": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "update time.",
+							Description: "Update time.",
 						},
 						"cluster_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "cluster type.",
+							Description: "Cluster type.",
 						},
 					},
 				},
@@ -146,17 +147,30 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 				Description: "Program id list.",
 			},
 
-			"entrance": {
-				Type:        schema.TypeBool,
+			"create_time": {
 				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Creation time.",
+			},
+
+			"update_time": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Update time.",
+			},
+
+			"entrance": {
+				Computed:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether to enter the application.",
 			},
+
 			"namespace_id_list": {
-				Type: schema.TypeSet,
+				Computed: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Computed:    true,
 				Description: "A list of namespaces to which the swimlane has associated deployment groups.",
 			},
 		},
@@ -249,7 +263,7 @@ func resourceTencentCloudTsfLaneCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	laneId = *response.Response.Result
+	laneId = *response.Response.LaneId
 	d.SetId(laneId)
 
 	return resourceTencentCloudTsfLaneRead(d, meta)
@@ -278,8 +292,6 @@ func resourceTencentCloudTsfLaneRead(d *schema.ResourceData, meta interface{}) e
 		return nil
 	}
 
-	_ = d.Set("lane_id", laneId)
-
 	if lane.LaneName != nil {
 		_ = d.Set("lane_name", lane.LaneName)
 	}
@@ -293,52 +305,52 @@ func resourceTencentCloudTsfLaneRead(d *schema.ResourceData, meta interface{}) e
 		for _, laneGroupList := range lane.LaneGroupList {
 			laneGroupListMap := map[string]interface{}{}
 
-			if laneGroupList.GroupId != nil {
-				laneGroupListMap["group_id"] = laneGroupList.GroupId
+			if lane.LaneGroupList.GroupId != nil {
+				laneGroupListMap["group_id"] = lane.LaneGroupList.GroupId
 			}
 
-			if laneGroupList.Entrance != nil {
-				laneGroupListMap["entrance"] = laneGroupList.Entrance
+			if lane.LaneGroupList.Entrance != nil {
+				laneGroupListMap["entrance"] = lane.LaneGroupList.Entrance
 			}
 
-			if laneGroupList.LaneGroupId != nil {
-				laneGroupListMap["lane_group_id"] = laneGroupList.LaneGroupId
+			if lane.LaneGroupList.LaneGroupId != nil {
+				laneGroupListMap["lane_group_id"] = lane.LaneGroupList.LaneGroupId
 			}
 
-			if laneGroupList.LaneId != nil {
-				laneGroupListMap["lane_id"] = laneGroupList.LaneId
+			if lane.LaneGroupList.LaneId != nil {
+				laneGroupListMap["lane_id"] = lane.LaneGroupList.LaneId
 			}
 
-			if laneGroupList.GroupName != nil {
-				laneGroupListMap["group_name"] = laneGroupList.GroupName
+			if lane.LaneGroupList.GroupName != nil {
+				laneGroupListMap["group_name"] = lane.LaneGroupList.GroupName
 			}
 
-			if laneGroupList.ApplicationId != nil {
-				laneGroupListMap["application_id"] = laneGroupList.ApplicationId
+			if lane.LaneGroupList.ApplicationId != nil {
+				laneGroupListMap["application_id"] = lane.LaneGroupList.ApplicationId
 			}
 
-			if laneGroupList.ApplicationName != nil {
-				laneGroupListMap["application_name"] = laneGroupList.ApplicationName
+			if lane.LaneGroupList.ApplicationName != nil {
+				laneGroupListMap["application_name"] = lane.LaneGroupList.ApplicationName
 			}
 
-			if laneGroupList.NamespaceId != nil {
-				laneGroupListMap["namespace_id"] = laneGroupList.NamespaceId
+			if lane.LaneGroupList.NamespaceId != nil {
+				laneGroupListMap["namespace_id"] = lane.LaneGroupList.NamespaceId
 			}
 
-			if laneGroupList.NamespaceName != nil {
-				laneGroupListMap["namespace_name"] = laneGroupList.NamespaceName
+			if lane.LaneGroupList.NamespaceName != nil {
+				laneGroupListMap["namespace_name"] = lane.LaneGroupList.NamespaceName
 			}
 
-			if laneGroupList.CreateTime != nil {
-				laneGroupListMap["create_time"] = laneGroupList.CreateTime
+			if lane.LaneGroupList.CreateTime != nil {
+				laneGroupListMap["create_time"] = lane.LaneGroupList.CreateTime
 			}
 
-			if laneGroupList.UpdateTime != nil {
-				laneGroupListMap["update_time"] = laneGroupList.UpdateTime
+			if lane.LaneGroupList.UpdateTime != nil {
+				laneGroupListMap["update_time"] = lane.LaneGroupList.UpdateTime
 			}
 
-			if laneGroupList.ClusterType != nil {
-				laneGroupListMap["cluster_type"] = laneGroupList.ClusterType
+			if lane.LaneGroupList.ClusterType != nil {
+				laneGroupListMap["cluster_type"] = lane.LaneGroupList.ClusterType
 			}
 
 			laneGroupListList = append(laneGroupListList, laneGroupListMap)
@@ -348,9 +360,9 @@ func resourceTencentCloudTsfLaneRead(d *schema.ResourceData, meta interface{}) e
 
 	}
 
-	// if lane.ProgramIdList != nil {
-	// 	_ = d.Set("program_id_list", lane.ProgramIdList)
-	// }
+	if lane.ProgramIdList != nil {
+		_ = d.Set("program_id_list", lane.ProgramIdList)
+	}
 
 	if lane.CreateTime != nil {
 		_ = d.Set("create_time", lane.CreateTime)
@@ -359,6 +371,7 @@ func resourceTencentCloudTsfLaneRead(d *schema.ResourceData, meta interface{}) e
 	if lane.UpdateTime != nil {
 		_ = d.Set("update_time", lane.UpdateTime)
 	}
+
 	if lane.Entrance != nil {
 		_ = d.Set("entrance", lane.Entrance)
 	}
@@ -382,7 +395,7 @@ func resourceTencentCloudTsfLaneUpdate(d *schema.ResourceData, meta interface{})
 
 	request.LaneId = &laneId
 
-	immutableArgs := []string{"lane_group_list", "program_id_list", "result"}
+	immutableArgs := []string{"lane_name", "remark", "lane_group_list", "program_id_list", "create_time", "update_time", "entrance", "namespace_id_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -390,8 +403,10 @@ func resourceTencentCloudTsfLaneUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if v, ok := d.GetOk("lane_name"); ok {
-		request.LaneName = helper.String(v.(string))
+	if d.HasChange("lane_name") {
+		if v, ok := d.GetOk("lane_name"); ok {
+			request.LaneName = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("remark") {

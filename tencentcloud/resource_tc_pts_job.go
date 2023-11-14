@@ -5,19 +5,20 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_pts_job" "job" {
-  scenario_id = "scenario-22q19f3k"
-  job_owner = "username"
-  project_id = "project-45vw7v82"
-  # debug = ""
-  note = "desc"
-}
-
+  scenario_id = &lt;nil&gt;
+  job_owner = &lt;nil&gt;
+  project_id = &lt;nil&gt;
+  debug = &lt;nil&gt;
+  note = &lt;nil&gt;
+                                                        }
 ```
+
 Import
 
-pts job can be imported using the projectId#scenarioId#jobId, e.g.
+pts job can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_pts_job.job project-45vw7v82#scenario-22q19f3k#job-dtm93vx0
+terraform import tencentcloud_pts_job.job job_id
 ```
 */
 package tencentcloud
@@ -25,19 +26,17 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudPtsJob() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudPtsJobRead,
 		Create: resourceTencentCloudPtsJobCreate,
+		Read:   resourceTencentCloudPtsJobRead,
 		Update: resourceTencentCloudPtsJobUpdate,
 		Delete: resourceTencentCloudPtsJobDelete,
 		Importer: &schema.ResourceImporter{
@@ -45,38 +44,38 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"scenario_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Pts scenario id.",
 			},
 
 			"job_owner": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Job owner.",
 			},
 
 			"project_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Project ID.",
 			},
 
 			"debug": {
-				Type:        schema.TypeBool,
 				Optional:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether to debug.",
 			},
 
 			"note": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Note.",
 			},
 
 			"load": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Pressure configuration of job.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -261,8 +260,8 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"datasets": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Dataset file for the job.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -335,123 +334,114 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"status": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "The running status of the task; `0`: JobUnknown, `1`: JobCreated, `2`: JobPending, `3`: JobPreparing, `4`: JobSelectClustering, `5`: JobCreateTasking, `6`: JobSyncTasking, `11`: JobRunning, `12`: JobFinished, `13`: JobPrepareException, `14`: JobFinishException, `15`: JobAborting, `16`: JobAborted, `17`: JobAbortException, `18`: JobDeleted, `19`: JobSelectClusterException, `20`: JobCreateTaskException, `21`: JobSyncTaskException.",
 			},
 
 			"start_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Start time of the job.",
 			},
 
 			"end_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "End time of the job.",
 			},
 
 			"max_virtual_user_count": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Maximum number of VU for the job.",
 			},
 
 			"error_rate": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Percentage of error rate.",
 			},
 
 			"duration": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Job duration.",
 			},
 
 			"max_requests_per_second": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Maximum requests per second.",
 			},
 
 			"request_total": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Total number of requests.",
 			},
 
 			"requests_per_second": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Average number of requests per second.",
 			},
 
 			"response_time_average": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Average response time.",
 			},
 
 			"response_time_p99": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "99th percentile response time.",
 			},
 
 			"response_time_p95": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "95th percentile response time.",
 			},
 
 			"response_time_p90": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "90th percentile response time.",
 			},
 
 			"response_time_max": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Maximum response time.",
 			},
 
 			"response_time_min": {
-				Type:        schema.TypeFloat,
 				Computed:    true,
 				Description: "Minimum response time.",
 			},
 
-			// "load_source_infos": {
-			// 	Type:        schema.TypeList,
-			// 	Computed:    true,
-			// 	Description: "Host message of generating voltage.",
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			"ip": {
-			// 				Type:        schema.TypeString,
-			// 				Optional:    true,
-			// 				Description: "IP of host.",
-			// 			},
-			// 			"pod_name": {
-			// 				Type:        schema.TypeString,
-			// 				Optional:    true,
-			// 				Description: "Pod of host.",
-			// 			},
-			// 			"region": {
-			// 				Type:        schema.TypeString,
-			// 				Optional:    true,
-			// 				Description: "Region to which it belongs.",
-			// 			},
-			// 		},
-			// 	},
-			// },
+			"load_source_infos": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Host message of generating voltage.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"i_p": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "IP of host.",
+						},
+						"pod_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Pod of host.",
+						},
+						"region": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Region to which it belongs.",
+						},
+					},
+				},
+			},
 
 			"test_scripts": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Test script information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -495,8 +485,8 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"protocols": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Protocol script information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -530,8 +520,8 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"request_files": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Request file information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -565,8 +555,8 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"plugins": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Expansion package file information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -600,20 +590,20 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"cron_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Scheduled job ID.",
 			},
 
 			"type": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Scene Type.",
 			},
 
 			"domain_name_config": {
-				Type:        schema.TypeList,
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Domain name binding configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -631,7 +621,7 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 										Optional:    true,
 										Description: "List of domain names to be bound.",
 									},
-									"ip": {
+									"i_p": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "The IP address to be bound.",
@@ -639,7 +629,7 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 								},
 							},
 						},
-						"dns_config": {
+						"d_n_s_config": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
@@ -662,45 +652,39 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 			},
 
 			"abort_reason": {
-				Type:        schema.TypeInt,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Cause of interruption.",
 			},
 
-			"job_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Job Id.",
-			},
-
 			"created_at": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Creation time of the job.",
 			},
 
-			// "notification_hooks": {
-			// 	Type:        schema.TypeList,
-			// 	Computed:    true,
-			// 	Description: "Notification event callback.",
-			// 	Elem: &schema.Resource{
-			// 		Schema: map[string]*schema.Schema{
-			// 			"events": {
-			// 				Type: schema.TypeSet,
-			// 				Elem: &schema.Schema{
-			// 					Type: schema.TypeString,
-			// 				},
-			// 				Optional:    true,
-			// 				Description: "Notification event.",
-			// 			},
-			// 			"url": {
-			// 				Type:        schema.TypeString,
-			// 				Optional:    true,
-			// 				Description: "Callback URL.",
-			// 			},
-			// 		},
-			// 	},
-			// },
+			"notification_hooks": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Notification event callback.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"events": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							Description: "Notification event.",
+						},
+						"u_r_l": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Callback URL.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -712,15 +696,11 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 	logId := getLogId(contextNil)
 
 	var (
-		request    = pts.NewStartJobRequest()
-		response   *pts.StartJobResponse
-		projectId  string
-		jobId      string
-		scenarioId string
+		request  = pts.NewStartJobRequest()
+		response = pts.NewStartJobResponse()
+		jobId    string
 	)
-
 	if v, ok := d.GetOk("scenario_id"); ok {
-		scenarioId = v.(string)
 		request.ScenarioId = helper.String(v.(string))
 	}
 
@@ -729,11 +709,10 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
-		projectId = v.(string)
 		request.ProjectId = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("debug"); v != nil {
+	if v, ok := d.GetOkExists("debug"); ok {
 		request.Debug = helper.Bool(v.(bool))
 	}
 
@@ -746,21 +725,19 @@ func resourceTencentCloudPtsJobCreate(d *schema.ResourceData, meta interface{}) 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create pts job failed, reason:%+v", logId, err)
 		return err
 	}
 
 	jobId = *response.Response.JobId
+	d.SetId(jobId)
 
-	d.SetId(projectId + FILED_SP + scenarioId + FILED_SP + jobId)
 	return resourceTencentCloudPtsJobRead(d, meta)
 }
 
@@ -769,30 +746,23 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	projectId := idSplit[0]
-	scenarioId := idSplit[1]
-	jobId := idSplit[2]
+	jobId := d.Id()
 
-	job, err := service.DescribePtsJob(ctx, projectId, scenarioId, jobId)
-
+	job, err := service.DescribePtsJobById(ctx, jobId)
 	if err != nil {
 		return err
 	}
 
 	if job == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `job` %s does not exist", jobId)
+		log.Printf("[WARN]%s resource `PtsJob` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-
-	_ = d.Set("job_id", jobId)
 
 	if job.ScenarioId != nil {
 		_ = d.Set("scenario_id", job.ScenarioId)
@@ -816,68 +786,88 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 
 	if job.Load != nil {
 		loadMap := map[string]interface{}{}
+
 		if job.Load.LoadSpec != nil {
 			loadSpecMap := map[string]interface{}{}
+
 			if job.Load.LoadSpec.Concurrency != nil {
 				concurrencyMap := map[string]interface{}{}
+
 				if job.Load.LoadSpec.Concurrency.Stages != nil {
 					stagesList := []interface{}{}
 					for _, stages := range job.Load.LoadSpec.Concurrency.Stages {
 						stagesMap := map[string]interface{}{}
+
 						if stages.DurationSeconds != nil {
 							stagesMap["duration_seconds"] = stages.DurationSeconds
 						}
+
 						if stages.TargetVirtualUsers != nil {
 							stagesMap["target_virtual_users"] = stages.TargetVirtualUsers
 						}
 
 						stagesList = append(stagesList, stagesMap)
 					}
-					concurrencyMap["stages"] = stagesList
+
+					concurrencyMap["stages"] = []interface{}{stagesList}
 				}
+
 				if job.Load.LoadSpec.Concurrency.IterationCount != nil {
 					concurrencyMap["iteration_count"] = job.Load.LoadSpec.Concurrency.IterationCount
 				}
+
 				if job.Load.LoadSpec.Concurrency.MaxRequestsPerSecond != nil {
 					concurrencyMap["max_requests_per_second"] = job.Load.LoadSpec.Concurrency.MaxRequestsPerSecond
 				}
+
 				if job.Load.LoadSpec.Concurrency.GracefulStopSeconds != nil {
 					concurrencyMap["graceful_stop_seconds"] = job.Load.LoadSpec.Concurrency.GracefulStopSeconds
 				}
 
 				loadSpecMap["concurrency"] = []interface{}{concurrencyMap}
 			}
+
 			if job.Load.LoadSpec.RequestsPerSecond != nil {
 				requestsPerSecondMap := map[string]interface{}{}
+
 				if job.Load.LoadSpec.RequestsPerSecond.MaxRequestsPerSecond != nil {
 					requestsPerSecondMap["max_requests_per_second"] = job.Load.LoadSpec.RequestsPerSecond.MaxRequestsPerSecond
 				}
+
 				if job.Load.LoadSpec.RequestsPerSecond.DurationSeconds != nil {
 					requestsPerSecondMap["duration_seconds"] = job.Load.LoadSpec.RequestsPerSecond.DurationSeconds
 				}
+
 				if job.Load.LoadSpec.RequestsPerSecond.Resources != nil {
 					requestsPerSecondMap["resources"] = job.Load.LoadSpec.RequestsPerSecond.Resources
 				}
+
 				if job.Load.LoadSpec.RequestsPerSecond.StartRequestsPerSecond != nil {
 					requestsPerSecondMap["start_requests_per_second"] = job.Load.LoadSpec.RequestsPerSecond.StartRequestsPerSecond
 				}
+
 				if job.Load.LoadSpec.RequestsPerSecond.TargetRequestsPerSecond != nil {
 					requestsPerSecondMap["target_requests_per_second"] = job.Load.LoadSpec.RequestsPerSecond.TargetRequestsPerSecond
 				}
+
 				if job.Load.LoadSpec.RequestsPerSecond.GracefulStopSeconds != nil {
 					requestsPerSecondMap["graceful_stop_seconds"] = job.Load.LoadSpec.RequestsPerSecond.GracefulStopSeconds
 				}
 
 				loadSpecMap["requests_per_second"] = []interface{}{requestsPerSecondMap}
 			}
+
 			if job.Load.LoadSpec.ScriptOrigin != nil {
 				scriptOriginMap := map[string]interface{}{}
+
 				if job.Load.LoadSpec.ScriptOrigin.MachineNumber != nil {
 					scriptOriginMap["machine_number"] = job.Load.LoadSpec.ScriptOrigin.MachineNumber
 				}
+
 				if job.Load.LoadSpec.ScriptOrigin.MachineSpecification != nil {
 					scriptOriginMap["machine_specification"] = job.Load.LoadSpec.ScriptOrigin.MachineSpecification
 				}
+
 				if job.Load.LoadSpec.ScriptOrigin.DurationSeconds != nil {
 					scriptOriginMap["duration_seconds"] = job.Load.LoadSpec.ScriptOrigin.DurationSeconds
 				}
@@ -887,40 +877,50 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 
 			loadMap["load_spec"] = []interface{}{loadSpecMap}
 		}
+
 		if job.Load.VpcLoadDistribution != nil {
 			vpcLoadDistributionMap := map[string]interface{}{}
+
 			if job.Load.VpcLoadDistribution.RegionId != nil {
 				vpcLoadDistributionMap["region_id"] = job.Load.VpcLoadDistribution.RegionId
 			}
+
 			if job.Load.VpcLoadDistribution.Region != nil {
 				vpcLoadDistributionMap["region"] = job.Load.VpcLoadDistribution.Region
 			}
+
 			if job.Load.VpcLoadDistribution.VpcId != nil {
 				vpcLoadDistributionMap["vpc_id"] = job.Load.VpcLoadDistribution.VpcId
 			}
+
 			if job.Load.VpcLoadDistribution.SubnetIds != nil {
 				vpcLoadDistributionMap["subnet_ids"] = job.Load.VpcLoadDistribution.SubnetIds
 			}
 
 			loadMap["vpc_load_distribution"] = []interface{}{vpcLoadDistributionMap}
 		}
+
 		if job.Load.GeoRegionsLoadDistribution != nil {
 			geoRegionsLoadDistributionList := []interface{}{}
 			for _, geoRegionsLoadDistribution := range job.Load.GeoRegionsLoadDistribution {
 				geoRegionsLoadDistributionMap := map[string]interface{}{}
+
 				if geoRegionsLoadDistribution.RegionId != nil {
 					geoRegionsLoadDistributionMap["region_id"] = geoRegionsLoadDistribution.RegionId
 				}
+
 				if geoRegionsLoadDistribution.Region != nil {
 					geoRegionsLoadDistributionMap["region"] = geoRegionsLoadDistribution.Region
 				}
+
 				if geoRegionsLoadDistribution.Percentage != nil {
 					geoRegionsLoadDistributionMap["percentage"] = geoRegionsLoadDistribution.Percentage
 				}
 
 				geoRegionsLoadDistributionList = append(geoRegionsLoadDistributionList, geoRegionsLoadDistributionMap)
 			}
-			loadMap["geo_regions_load_distribution"] = geoRegionsLoadDistributionList
+
+			loadMap["geo_regions_load_distribution"] = []interface{}{geoRegionsLoadDistributionList}
 		}
 
 		_ = d.Set("load", []interface{}{loadMap})
@@ -930,43 +930,56 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		datasetsList := []interface{}{}
 		for _, datasets := range job.Datasets {
 			datasetsMap := map[string]interface{}{}
-			if datasets.Name != nil {
-				datasetsMap["name"] = datasets.Name
+
+			if job.Datasets.Name != nil {
+				datasetsMap["name"] = job.Datasets.Name
 			}
-			if datasets.Split != nil {
-				datasetsMap["split"] = datasets.Split
+
+			if job.Datasets.Split != nil {
+				datasetsMap["split"] = job.Datasets.Split
 			}
-			if datasets.HeaderInFile != nil {
-				datasetsMap["header_in_file"] = datasets.HeaderInFile
+
+			if job.Datasets.HeaderInFile != nil {
+				datasetsMap["header_in_file"] = job.Datasets.HeaderInFile
 			}
-			if datasets.HeaderColumns != nil {
-				datasetsMap["header_columns"] = datasets.HeaderColumns
+
+			if job.Datasets.HeaderColumns != nil {
+				datasetsMap["header_columns"] = job.Datasets.HeaderColumns
 			}
-			if datasets.LineCount != nil {
-				datasetsMap["line_count"] = datasets.LineCount
+
+			if job.Datasets.LineCount != nil {
+				datasetsMap["line_count"] = job.Datasets.LineCount
 			}
-			if datasets.UpdatedAt != nil {
-				datasetsMap["updated_at"] = datasets.UpdatedAt
+
+			if job.Datasets.UpdatedAt != nil {
+				datasetsMap["updated_at"] = job.Datasets.UpdatedAt
 			}
-			if datasets.Size != nil {
-				datasetsMap["size"] = datasets.Size
+
+			if job.Datasets.Size != nil {
+				datasetsMap["size"] = job.Datasets.Size
 			}
-			if datasets.HeadLines != nil {
-				datasetsMap["head_lines"] = datasets.HeadLines
+
+			if job.Datasets.HeadLines != nil {
+				datasetsMap["head_lines"] = job.Datasets.HeadLines
 			}
-			if datasets.TailLines != nil {
-				datasetsMap["tail_lines"] = datasets.TailLines
+
+			if job.Datasets.TailLines != nil {
+				datasetsMap["tail_lines"] = job.Datasets.TailLines
 			}
-			if datasets.Type != nil {
-				datasetsMap["type"] = datasets.Type
+
+			if job.Datasets.Type != nil {
+				datasetsMap["type"] = job.Datasets.Type
 			}
-			if datasets.FileId != nil {
-				datasetsMap["file_id"] = datasets.FileId
+
+			if job.Datasets.FileId != nil {
+				datasetsMap["file_id"] = job.Datasets.FileId
 			}
 
 			datasetsList = append(datasetsList, datasetsMap)
 		}
+
 		_ = d.Set("datasets", datasetsList)
+
 	}
 
 	if job.Status != nil {
@@ -993,9 +1006,9 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("duration", job.Duration)
 	}
 
-	// if job.MaxRequestsPerSecond != nil {
-	// 	_ = d.Set("max_requests_per_second", job.MaxRequestsPerSecond)
-	// }
+	if job.MaxRequestsPerSecond != nil {
+		_ = d.Set("max_requests_per_second", job.MaxRequestsPerSecond)
+	}
 
 	if job.RequestTotal != nil {
 		_ = d.Set("request_total", job.RequestTotal)
@@ -1029,133 +1042,164 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("response_time_min", job.ResponseTimeMin)
 	}
 
-	// if job.LoadSourceInfos != nil {
-	// 	loadSourceInfosList := []interface{}{}
-	// 	for _, loadSourceInfos := range job.LoadSourceInfos {
-	// 		loadSourceInfosMap := map[string]interface{}{}
-	// 		if loadSourceInfos.IP != nil {
-	// 			loadSourceInfosMap["ip"] = loadSourceInfos.IP
-	// 		}
-	// 		if loadSourceInfos.PodName != nil {
-	// 			loadSourceInfosMap["pod_name"] = loadSourceInfos.PodName
-	// 		}
-	// 		if loadSourceInfos.Region != nil {
-	// 			loadSourceInfosMap["region"] = loadSourceInfos.Region
-	// 		}
+	if job.LoadSourceInfos != nil {
+		loadSourceInfosList := []interface{}{}
+		for _, loadSourceInfos := range job.LoadSourceInfos {
+			loadSourceInfosMap := map[string]interface{}{}
 
-	// 		loadSourceInfosList = append(loadSourceInfosList, loadSourceInfosMap)
-	// 	}
-	// 	_ = d.Set("load_source_infos", loadSourceInfosList)
-	// }
+			if job.LoadSourceInfos.IP != nil {
+				loadSourceInfosMap["i_p"] = job.LoadSourceInfos.IP
+			}
+
+			if job.LoadSourceInfos.PodName != nil {
+				loadSourceInfosMap["pod_name"] = job.LoadSourceInfos.PodName
+			}
+
+			if job.LoadSourceInfos.Region != nil {
+				loadSourceInfosMap["region"] = job.LoadSourceInfos.Region
+			}
+
+			loadSourceInfosList = append(loadSourceInfosList, loadSourceInfosMap)
+		}
+
+		_ = d.Set("load_source_infos", loadSourceInfosList)
+
+	}
 
 	if job.TestScripts != nil {
 		testScriptsList := []interface{}{}
 		for _, testScripts := range job.TestScripts {
 			testScriptsMap := map[string]interface{}{}
-			if testScripts.Name != nil {
-				testScriptsMap["name"] = testScripts.Name
+
+			if job.TestScripts.Name != nil {
+				testScriptsMap["name"] = job.TestScripts.Name
 			}
-			if testScripts.Size != nil {
-				testScriptsMap["size"] = testScripts.Size
+
+			if job.TestScripts.Size != nil {
+				testScriptsMap["size"] = job.TestScripts.Size
 			}
-			if testScripts.Type != nil {
-				testScriptsMap["type"] = testScripts.Type
+
+			if job.TestScripts.Type != nil {
+				testScriptsMap["type"] = job.TestScripts.Type
 			}
-			if testScripts.UpdatedAt != nil {
-				testScriptsMap["updated_at"] = testScripts.UpdatedAt
+
+			if job.TestScripts.UpdatedAt != nil {
+				testScriptsMap["updated_at"] = job.TestScripts.UpdatedAt
 			}
-			if testScripts.EncodedContent != nil {
-				content, err := Base64ToString(*testScripts.EncodedContent)
-				if err != nil {
-					return fmt.Errorf("`testScripts.EncodedContent` %s does not be decoded to string", *testScripts.EncodedContent)
-				}
-				testScriptsMap["encoded_content"] = content
+
+			if job.TestScripts.EncodedContent != nil {
+				testScriptsMap["encoded_content"] = job.TestScripts.EncodedContent
 			}
-			if testScripts.EncodedHttpArchive != nil {
-				testScriptsMap["encoded_http_archive"] = testScripts.EncodedHttpArchive
+
+			if job.TestScripts.EncodedHttpArchive != nil {
+				testScriptsMap["encoded_http_archive"] = job.TestScripts.EncodedHttpArchive
 			}
-			if testScripts.LoadWeight != nil {
-				testScriptsMap["load_weight"] = testScripts.LoadWeight
+
+			if job.TestScripts.LoadWeight != nil {
+				testScriptsMap["load_weight"] = job.TestScripts.LoadWeight
 			}
 
 			testScriptsList = append(testScriptsList, testScriptsMap)
 		}
+
 		_ = d.Set("test_scripts", testScriptsList)
+
 	}
 
 	if job.Protocols != nil {
 		protocolsList := []interface{}{}
 		for _, protocols := range job.Protocols {
 			protocolsMap := map[string]interface{}{}
-			if protocols.Name != nil {
-				protocolsMap["name"] = protocols.Name
+
+			if job.Protocols.Name != nil {
+				protocolsMap["name"] = job.Protocols.Name
 			}
-			if protocols.Size != nil {
-				protocolsMap["size"] = protocols.Size
+
+			if job.Protocols.Size != nil {
+				protocolsMap["size"] = job.Protocols.Size
 			}
-			if protocols.Type != nil {
-				protocolsMap["type"] = protocols.Type
+
+			if job.Protocols.Type != nil {
+				protocolsMap["type"] = job.Protocols.Type
 			}
-			if protocols.UpdatedAt != nil {
-				protocolsMap["updated_at"] = protocols.UpdatedAt
+
+			if job.Protocols.UpdatedAt != nil {
+				protocolsMap["updated_at"] = job.Protocols.UpdatedAt
 			}
-			if protocols.FileId != nil {
-				protocolsMap["file_id"] = protocols.FileId
+
+			if job.Protocols.FileId != nil {
+				protocolsMap["file_id"] = job.Protocols.FileId
 			}
 
 			protocolsList = append(protocolsList, protocolsMap)
 		}
+
 		_ = d.Set("protocols", protocolsList)
+
 	}
 
 	if job.RequestFiles != nil {
 		requestFilesList := []interface{}{}
 		for _, requestFiles := range job.RequestFiles {
 			requestFilesMap := map[string]interface{}{}
-			if requestFiles.Name != nil {
-				requestFilesMap["name"] = requestFiles.Name
+
+			if job.RequestFiles.Name != nil {
+				requestFilesMap["name"] = job.RequestFiles.Name
 			}
-			if requestFiles.Size != nil {
-				requestFilesMap["size"] = requestFiles.Size
+
+			if job.RequestFiles.Size != nil {
+				requestFilesMap["size"] = job.RequestFiles.Size
 			}
-			if requestFiles.Type != nil {
-				requestFilesMap["type"] = requestFiles.Type
+
+			if job.RequestFiles.Type != nil {
+				requestFilesMap["type"] = job.RequestFiles.Type
 			}
-			if requestFiles.UpdatedAt != nil {
-				requestFilesMap["updated_at"] = requestFiles.UpdatedAt
+
+			if job.RequestFiles.UpdatedAt != nil {
+				requestFilesMap["updated_at"] = job.RequestFiles.UpdatedAt
 			}
-			if requestFiles.FileId != nil {
-				requestFilesMap["file_id"] = requestFiles.FileId
+
+			if job.RequestFiles.FileId != nil {
+				requestFilesMap["file_id"] = job.RequestFiles.FileId
 			}
 
 			requestFilesList = append(requestFilesList, requestFilesMap)
 		}
+
 		_ = d.Set("request_files", requestFilesList)
+
 	}
 
 	if job.Plugins != nil {
 		pluginsList := []interface{}{}
 		for _, plugins := range job.Plugins {
 			pluginsMap := map[string]interface{}{}
-			if plugins.Name != nil {
-				pluginsMap["name"] = plugins.Name
+
+			if job.Plugins.Name != nil {
+				pluginsMap["name"] = job.Plugins.Name
 			}
-			if plugins.Size != nil {
-				pluginsMap["size"] = plugins.Size
+
+			if job.Plugins.Size != nil {
+				pluginsMap["size"] = job.Plugins.Size
 			}
-			if plugins.Type != nil {
-				pluginsMap["type"] = plugins.Type
+
+			if job.Plugins.Type != nil {
+				pluginsMap["type"] = job.Plugins.Type
 			}
-			if plugins.UpdatedAt != nil {
-				pluginsMap["updated_at"] = plugins.UpdatedAt
+
+			if job.Plugins.UpdatedAt != nil {
+				pluginsMap["updated_at"] = job.Plugins.UpdatedAt
 			}
-			if plugins.FileId != nil {
-				pluginsMap["file_id"] = plugins.FileId
+
+			if job.Plugins.FileId != nil {
+				pluginsMap["file_id"] = job.Plugins.FileId
 			}
 
 			pluginsList = append(pluginsList, pluginsMap)
 		}
+
 		_ = d.Set("plugins", pluginsList)
+
 	}
 
 	if job.CronId != nil {
@@ -1168,28 +1212,34 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 
 	if job.DomainNameConfig != nil {
 		domainNameConfigMap := map[string]interface{}{}
+
 		if job.DomainNameConfig.HostAliases != nil {
 			hostAliasesList := []interface{}{}
 			for _, hostAliases := range job.DomainNameConfig.HostAliases {
 				hostAliasesMap := map[string]interface{}{}
+
 				if hostAliases.HostNames != nil {
 					hostAliasesMap["host_names"] = hostAliases.HostNames
 				}
+
 				if hostAliases.IP != nil {
-					hostAliasesMap["ip"] = hostAliases.IP
+					hostAliasesMap["i_p"] = hostAliases.IP
 				}
 
 				hostAliasesList = append(hostAliasesList, hostAliasesMap)
 			}
-			domainNameConfigMap["host_aliases"] = hostAliasesList
+
+			domainNameConfigMap["host_aliases"] = []interface{}{hostAliasesList}
 		}
+
 		if job.DomainNameConfig.DNSConfig != nil {
 			dNSConfigMap := map[string]interface{}{}
+
 			if job.DomainNameConfig.DNSConfig.Nameservers != nil {
 				dNSConfigMap["nameservers"] = job.DomainNameConfig.DNSConfig.Nameservers
 			}
 
-			domainNameConfigMap["dns_config"] = []interface{}{dNSConfigMap}
+			domainNameConfigMap["d_n_s_config"] = []interface{}{dNSConfigMap}
 		}
 
 		_ = d.Set("domain_name_config", []interface{}{domainNameConfigMap})
@@ -1203,21 +1253,25 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("created_at", job.CreatedAt)
 	}
 
-	// if job.NotificationHooks != nil {
-	// 	notificationHooksList := []interface{}{}
-	// 	for _, notificationHooks := range job.NotificationHooks {
-	// 		notificationHooksMap := map[string]interface{}{}
-	// 		if notificationHooks.Events != nil {
-	// 			notificationHooksMap["events"] = notificationHooks.Events
-	// 		}
-	// 		if notificationHooks.URL != nil {
-	// 			notificationHooksMap["url"] = notificationHooks.URL
-	// 		}
+	if job.NotificationHooks != nil {
+		notificationHooksList := []interface{}{}
+		for _, notificationHooks := range job.NotificationHooks {
+			notificationHooksMap := map[string]interface{}{}
 
-	// 		notificationHooksList = append(notificationHooksList, notificationHooksMap)
-	// 	}
-	// 	_ = d.Set("notification_hooks", notificationHooksList)
-	// }
+			if job.NotificationHooks.Events != nil {
+				notificationHooksMap["events"] = job.NotificationHooks.Events
+			}
+
+			if job.NotificationHooks.URL != nil {
+				notificationHooksMap["u_r_l"] = job.NotificationHooks.URL
+			}
+
+			notificationHooksList = append(notificationHooksList, notificationHooksMap)
+		}
+
+		_ = d.Set("notification_hooks", notificationHooksList)
+
+	}
 
 	return nil
 }
@@ -1230,24 +1284,28 @@ func resourceTencentCloudPtsJobUpdate(d *schema.ResourceData, meta interface{}) 
 
 	request := pts.NewUpdateJobRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	projectId := idSplit[0]
-	scenarioId := idSplit[1]
-	jobId := idSplit[2]
+	jobId := d.Id()
 
-	request.ProjectId = &projectId
-	request.ScenarioId = &scenarioId
 	request.JobId = &jobId
 
-	if d.HasChange("job_owner") {
-		return fmt.Errorf("`job_owner` do not support change now.")
+	immutableArgs := []string{"scenario_id", "job_owner", "project_id", "debug", "note", "load", "datasets", "status", "start_time", "end_time", "max_virtual_user_count", "error_rate", "duration", "max_requests_per_second", "request_total", "requests_per_second", "response_time_average", "response_time_p99", "response_time_p95", "response_time_p90", "response_time_max", "response_time_min", "load_source_infos", "test_scripts", "protocols", "request_files", "plugins", "cron_id", "type", "domain_name_config", "abort_reason", "created_at", "notification_hooks"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if d.HasChange("debug") {
-		return fmt.Errorf("`debug` do not support change now.")
+	if d.HasChange("scenario_id") {
+		if v, ok := d.GetOk("scenario_id"); ok {
+			request.ScenarioId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("project_id") {
+		if v, ok := d.GetOk("project_id"); ok {
+			request.ProjectId = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("note") {
@@ -1261,14 +1319,12 @@ func resourceTencentCloudPtsJobUpdate(d *schema.ResourceData, meta interface{}) 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create pts job failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update pts job failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -1283,16 +1339,9 @@ func resourceTencentCloudPtsJobDelete(d *schema.ResourceData, meta interface{}) 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	jobId := d.Id()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	projectId := idSplit[0]
-	scenarioId := idSplit[1]
-	jobId := idSplit[2]
-
-	if err := service.DeletePtsJobById(ctx, projectId, scenarioId, jobId); err != nil {
+	if err := service.DeletePtsJobById(ctx, jobId); err != nil {
 		return err
 	}
 

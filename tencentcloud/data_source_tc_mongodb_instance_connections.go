@@ -13,7 +13,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
@@ -36,20 +35,20 @@ func dataSourceTencentCloudMongodbInstanceConnections() *schema.Resource {
 				Description: "Client connection info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"ip": {
+						"i_p": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "client connection ip.",
+							Description: "Client connection ip.",
 						},
 						"count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "client connection count.",
+							Description: "Client connection count.",
 						},
 						"internal_service": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "is internal.",
+							Description: "Is internal.",
 						},
 					},
 				},
@@ -74,7 +73,7 @@ func dataSourceTencentCloudMongodbInstanceConnectionsRead(d *schema.ResourceData
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -101,7 +100,7 @@ func dataSourceTencentCloudMongodbInstanceConnectionsRead(d *schema.ResourceData
 			clientConnectionMap := map[string]interface{}{}
 
 			if clientConnection.IP != nil {
-				clientConnectionMap["ip"] = clientConnection.IP
+				clientConnectionMap["i_p"] = clientConnection.IP
 			}
 
 			if clientConnection.Count != nil {
@@ -112,7 +111,7 @@ func dataSourceTencentCloudMongodbInstanceConnectionsRead(d *schema.ResourceData
 				clientConnectionMap["internal_service"] = clientConnection.InternalService
 			}
 
-			ids = append(ids, *clientConnection.IP)
+			ids = append(ids, *clientConnection.InstanceId)
 			tmpList = append(tmpList, clientConnectionMap)
 		}
 

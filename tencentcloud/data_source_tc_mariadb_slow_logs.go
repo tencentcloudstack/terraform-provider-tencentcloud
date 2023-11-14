@@ -5,19 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_slow_logs" "slow_logs" {
-  instance_id   = "tdsql-9vqvls95"
-  start_time    = "2023-06-01 14:55:20"
-  order_by      = "query_time_sum"
-  order_by_type = "desc"
-  slave         = 0
-}
+  instance_id = ""
+  start_time = ""
+  end_time = ""
+  db = ""
+  order_by = ""
+  order_by_type = ""
+  slave =
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -33,36 +34,43 @@ func dataSourceTencentCloudMariadbSlowLogs() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID in the format of `tdsql-ow728lmc`.",
 			},
+
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Query start time in the format of 2016-07-23 14:55:20.",
 			},
+
 			"end_time": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Query end time in the format of 2016-08-22 14:55:20.",
 			},
+
 			"db": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Specific name of the database to be queried.",
 			},
+
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sorting metric. Valid values: query_time_sum, query_count.",
 			},
+
 			"order_by_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sorting order. Valid values: desc, asc.",
 			},
+
 			"slave": {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Query slow queries from either the primary or the replica. Valid values: 0 (primary), 1 (replica).",
 			},
+
 			"data": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -167,21 +175,25 @@ func dataSourceTencentCloudMariadbSlowLogs() *schema.Resource {
 					},
 				},
 			},
+
 			"lock_time_sum": {
 				Computed:    true,
 				Type:        schema.TypeFloat,
 				Description: "Total statement lock time.",
 			},
+
 			"query_count": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Total number of statement queries.",
 			},
+
 			"query_time_sum": {
 				Computed:    true,
 				Type:        schema.TypeFloat,
 				Description: "Total statement query time.",
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -195,18 +207,13 @@ func dataSourceTencentCloudMariadbSlowLogsRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_mariadb_slow_logs.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		data       *mariadb.DescribeDBSlowLogsResponseParams
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -233,24 +240,27 @@ func dataSourceTencentCloudMariadbSlowLogsRead(d *schema.ResourceData, meta inte
 		paramMap["Slave"] = helper.IntInt64(v.(int))
 	}
 
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var data []*mariadb.SlowLogData
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMariadbSlowLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		data = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	tmpList := make([]map[string]interface{}, 0)
+	ids := make([]string, 0, len(data))
+	tmpList := make([]map[string]interface{}, 0, len(data))
 
 	if data != nil {
-		for _, slowLogData := range data.Data {
+		for _, slowLogData := range data {
 			slowLogDataMap := map[string]interface{}{}
 
 			if slowLogData.CheckSum != nil {
@@ -329,31 +339,31 @@ func dataSourceTencentCloudMariadbSlowLogsRead(d *schema.ResourceData, meta inte
 				slowLogDataMap["host"] = slowLogData.Host
 			}
 
+			ids = append(ids, *slowLogData.InstanceId)
 			tmpList = append(tmpList, slowLogDataMap)
 		}
 
 		_ = d.Set("data", tmpList)
-
-		if data.LockTimeSum != nil {
-			_ = d.Set("lock_time_sum", data.LockTimeSum)
-		}
-
-		if data.QueryCount != nil {
-			_ = d.Set("query_count", data.QueryCount)
-		}
-
-		if data.QueryTimeSum != nil {
-			_ = d.Set("query_time_sum", data.QueryTimeSum)
-		}
 	}
 
-	d.SetId(instanceId)
+	if lockTimeSum != nil {
+		_ = d.Set("lock_time_sum", lockTimeSum)
+	}
+
+	if queryCount != nil {
+		_ = d.Set("query_count", queryCount)
+	}
+
+	if queryTimeSum != nil {
+		_ = d.Set("query_time_sum", queryTimeSum)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

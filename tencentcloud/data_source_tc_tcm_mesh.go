@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcm_mesh" "mesh" {
-  mesh_id = ["mesh-xxxxxx"]
-  mesh_name = ["KEEP_MASH"]
-  tags = ["key"]
-  mesh_cluster = ["cls-xxxx"]
-}
+  mesh_id =
+  mesh_name =
+  tags =
+  mesh_cluster =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
@@ -42,7 +41,7 @@ func dataSourceTencentCloudTcmMesh() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "Display name.",
+				Description: "Mesh name.",
 			},
 
 			"tags": {
@@ -51,7 +50,7 @@ func dataSourceTencentCloudTcmMesh() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "tag key.",
+				Description: "Mesh name.",
 			},
 
 			"mesh_cluster": {
@@ -95,6 +94,131 @@ func dataSourceTencentCloudTcmMesh() *schema.Resource {
 							Description: "Mesh configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
+									"tracing": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Tracing config.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable": {
+													Type:        schema.TypeBool,
+													Computed:    true,
+													Description: "Whether enable tracing.",
+												},
+												"a_p_m": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "APM config.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"enable": {
+																Type:        schema.TypeBool,
+																Computed:    true,
+																Description: "Whether enable APM.",
+															},
+															"region": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Region.",
+															},
+															"instance_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Instance id of the APM.",
+															},
+														},
+													},
+												},
+												"sampling": {
+													Type:        schema.TypeFloat,
+													Computed:    true,
+													Description: "Tracing sampling, 0.0-1.0.",
+												},
+												"zipkin": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Third party zipkin config.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"address": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Zipkin address.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+									"prometheus": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "Prometheus configuration.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"vpc_id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Vpc id.",
+												},
+												"subnet_id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Subnet id.",
+												},
+												"region": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Region.",
+												},
+												"instance_id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Instance id.",
+												},
+												"custom_prom": {
+													Type:        schema.TypeList,
+													Computed:    true,
+													Description: "Custom prometheus.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"is_public_addr": {
+																Type:        schema.TypeBool,
+																Computed:    true,
+																Description: "Whether it is public address, default false.",
+															},
+															"vpc_id": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Vpc id.",
+															},
+															"url": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Url of the prometheus.",
+															},
+															"auth_type": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Authentication type of the prometheus.",
+															},
+															"username": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Username of the prometheus, used in basic authentication type.",
+															},
+															"password": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Password of the prometheus, used in basic authentication type.",
+															},
+														},
+													},
+												},
+											},
+										},
+									},
 									"istio": {
 										Type:        schema.TypeList,
 										Computed:    true,
@@ -111,28 +235,28 @@ func dataSourceTencentCloudTcmMesh() *schema.Resource {
 													Computed:    true,
 													Description: "Disable policy checks.",
 												},
-												"enable_pilot_http": {
+												"enable_pilot_h_t_t_p": {
 													Type:        schema.TypeBool,
 													Computed:    true,
 													Description: "Enable HTTP/1.0 support.",
 												},
-												"disable_http_retry": {
+												"disable_h_t_t_p_retry": {
 													Type:        schema.TypeBool,
 													Computed:    true,
 													Description: "Disable http retry.",
 												},
-												"smart_dns": {
+												"smart_d_n_s": {
 													Type:        schema.TypeList,
 													Computed:    true,
 													Description: "SmartDNS configuration.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"istio_meta_dns_capture": {
+															"istio_meta_d_n_s_capture": {
 																Type:        schema.TypeBool,
 																Computed:    true,
 																Description: "Enable dns proxy.",
 															},
-															"istio_meta_dns_auto_allocate": {
+															"istio_meta_d_n_s_auto_allocate": {
 																Type:        schema.TypeBool,
 																Computed:    true,
 																Description: "Enable auto allocate address.",
@@ -191,15 +315,15 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	paramMap := make(map[string][]*string)
+	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("mesh_id"); ok {
 		meshIdSet := v.(*schema.Set).List()
 		paramMap["MeshId"] = helper.InterfacesStringsPoint(meshIdSet)
 	}
 
 	if v, ok := d.GetOk("mesh_name"); ok {
-		meshName := v.(*schema.Set).List()
-		paramMap["MeshName"] = helper.InterfacesStringsPoint(meshName)
+		meshNameSet := v.(*schema.Set).List()
+		paramMap["MeshName"] = helper.InterfacesStringsPoint(meshNameSet)
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -254,6 +378,100 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 			if mesh.Config != nil {
 				configMap := map[string]interface{}{}
 
+				if mesh.Config.Tracing != nil {
+					tracingMap := map[string]interface{}{}
+
+					if mesh.Config.Tracing.Enable != nil {
+						tracingMap["enable"] = mesh.Config.Tracing.Enable
+					}
+
+					if mesh.Config.Tracing.APM != nil {
+						aPMMap := map[string]interface{}{}
+
+						if mesh.Config.Tracing.APM.Enable != nil {
+							aPMMap["enable"] = mesh.Config.Tracing.APM.Enable
+						}
+
+						if mesh.Config.Tracing.APM.Region != nil {
+							aPMMap["region"] = mesh.Config.Tracing.APM.Region
+						}
+
+						if mesh.Config.Tracing.APM.InstanceId != nil {
+							aPMMap["instance_id"] = mesh.Config.Tracing.APM.InstanceId
+						}
+
+						tracingMap["a_p_m"] = []interface{}{aPMMap}
+					}
+
+					if mesh.Config.Tracing.Sampling != nil {
+						tracingMap["sampling"] = mesh.Config.Tracing.Sampling
+					}
+
+					if mesh.Config.Tracing.Zipkin != nil {
+						zipkinMap := map[string]interface{}{}
+
+						if mesh.Config.Tracing.Zipkin.Address != nil {
+							zipkinMap["address"] = mesh.Config.Tracing.Zipkin.Address
+						}
+
+						tracingMap["zipkin"] = []interface{}{zipkinMap}
+					}
+
+					configMap["tracing"] = []interface{}{tracingMap}
+				}
+
+				if mesh.Config.Prometheus != nil {
+					prometheusMap := map[string]interface{}{}
+
+					if mesh.Config.Prometheus.VpcId != nil {
+						prometheusMap["vpc_id"] = mesh.Config.Prometheus.VpcId
+					}
+
+					if mesh.Config.Prometheus.SubnetId != nil {
+						prometheusMap["subnet_id"] = mesh.Config.Prometheus.SubnetId
+					}
+
+					if mesh.Config.Prometheus.Region != nil {
+						prometheusMap["region"] = mesh.Config.Prometheus.Region
+					}
+
+					if mesh.Config.Prometheus.InstanceId != nil {
+						prometheusMap["instance_id"] = mesh.Config.Prometheus.InstanceId
+					}
+
+					if mesh.Config.Prometheus.CustomProm != nil {
+						customPromMap := map[string]interface{}{}
+
+						if mesh.Config.Prometheus.CustomProm.IsPublicAddr != nil {
+							customPromMap["is_public_addr"] = mesh.Config.Prometheus.CustomProm.IsPublicAddr
+						}
+
+						if mesh.Config.Prometheus.CustomProm.VpcId != nil {
+							customPromMap["vpc_id"] = mesh.Config.Prometheus.CustomProm.VpcId
+						}
+
+						if mesh.Config.Prometheus.CustomProm.Url != nil {
+							customPromMap["url"] = mesh.Config.Prometheus.CustomProm.Url
+						}
+
+						if mesh.Config.Prometheus.CustomProm.AuthType != nil {
+							customPromMap["auth_type"] = mesh.Config.Prometheus.CustomProm.AuthType
+						}
+
+						if mesh.Config.Prometheus.CustomProm.Username != nil {
+							customPromMap["username"] = mesh.Config.Prometheus.CustomProm.Username
+						}
+
+						if mesh.Config.Prometheus.CustomProm.Password != nil {
+							customPromMap["password"] = mesh.Config.Prometheus.CustomProm.Password
+						}
+
+						prometheusMap["custom_prom"] = []interface{}{customPromMap}
+					}
+
+					configMap["prometheus"] = []interface{}{prometheusMap}
+				}
+
 				if mesh.Config.Istio != nil {
 					istioMap := map[string]interface{}{}
 
@@ -266,25 +484,25 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 					}
 
 					if mesh.Config.Istio.EnablePilotHTTP != nil {
-						istioMap["enable_pilot_http"] = mesh.Config.Istio.EnablePilotHTTP
+						istioMap["enable_pilot_h_t_t_p"] = mesh.Config.Istio.EnablePilotHTTP
 					}
 
 					if mesh.Config.Istio.DisableHTTPRetry != nil {
-						istioMap["disable_http_retry"] = mesh.Config.Istio.DisableHTTPRetry
+						istioMap["disable_h_t_t_p_retry"] = mesh.Config.Istio.DisableHTTPRetry
 					}
 
 					if mesh.Config.Istio.SmartDNS != nil {
 						smartDNSMap := map[string]interface{}{}
 
 						if mesh.Config.Istio.SmartDNS.IstioMetaDNSCapture != nil {
-							smartDNSMap["istio_meta_dns_capture"] = mesh.Config.Istio.SmartDNS.IstioMetaDNSCapture
+							smartDNSMap["istio_meta_d_n_s_capture"] = mesh.Config.Istio.SmartDNS.IstioMetaDNSCapture
 						}
 
 						if mesh.Config.Istio.SmartDNS.IstioMetaDNSAutoAllocate != nil {
-							smartDNSMap["istio_meta_dns_auto_allocate"] = mesh.Config.Istio.SmartDNS.IstioMetaDNSAutoAllocate
+							smartDNSMap["istio_meta_d_n_s_auto_allocate"] = mesh.Config.Istio.SmartDNS.IstioMetaDNSAutoAllocate
 						}
 
-						istioMap["smart_dns"] = []interface{}{smartDNSMap}
+						istioMap["smart_d_n_s"] = []interface{}{smartDNSMap}
 					}
 
 					configMap["istio"] = []interface{}{istioMap}
@@ -313,17 +531,14 @@ func dataSourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{})
 					tagListList = append(tagListList, tagListMap)
 				}
 
-				meshMap["tag_list"] = tagListList
+				meshMap["tag_list"] = []interface{}{tagListList}
 			}
 
 			ids = append(ids, *mesh.MeshId)
 			tmpList = append(tmpList, meshMap)
 		}
 
-		err := d.Set("mesh_list", tmpList)
-		if err != nil {
-			return err
-		}
+		_ = d.Set("mesh_list", tmpList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

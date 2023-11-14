@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverRollbackTimeDataSource_basic -v
 func TestAccTencentCloudSqlserverRollbackTimeDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,15 +15,17 @@ func TestAccTencentCloudSqlserverRollbackTimeDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverRollbackTimeDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_rollback_time.example")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_rollback_time.rollback_time")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverRollbackTimeDataSource = `
-data "tencentcloud_sqlserver_rollback_time" "example" {
-  instance_id = "mssql-qelbzgwf"
-  dbs         = ["keep_pubsub_db"]
-}
+
+data "tencentcloud_sqlserver_rollback_time" "rollback_time" {
+  instance_id = "mssql-j8kv137v"
+  d_bs = 
+  }
+
 `

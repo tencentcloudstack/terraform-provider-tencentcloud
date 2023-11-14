@@ -8,7 +8,7 @@ resource "tencentcloud_cvm_import_image" "import_image" {
   architecture = "x86_64"
   os_type = "CentOS"
   os_version = "7"
-  image_url = ""
+  image_url = "http://111-1251233127.cosd.myqcloud.com/Windows%20Server%202008%20R2%20x64a.vmdk"
   image_name = "sample"
   image_description = "sampleimage"
   dry_run = false
@@ -40,12 +40,11 @@ terraform import tencentcloud_cvm_import_image.import_image import_image_id
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCvmImportImage() *schema.Resource {
@@ -161,6 +160,12 @@ func resourceTencentCloudCvmImportImage() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Boot mode.",
 			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -173,6 +178,7 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 
 	var (
 		request  = cvm.NewImportImageRequest()
+		response = cvm.NewImportImageResponse()
 		imageUrl string
 	)
 	if v, ok := d.GetOk("architecture"); ok {
@@ -189,7 +195,7 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("image_url"); ok {
 		imageUrl = v.(string)
-		request.ImageUrl = helper.String(imageUrl)
+		request.ImageUrl = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("image_name"); ok {
@@ -210,7 +216,6 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("tag_specification"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
 			tagSpecification := cvm.TagSpecification{}
 			if v, ok := dMap["resource_type"]; ok {
 				tagSpecification.ResourceType = helper.String(v.(string))
@@ -247,6 +252,7 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -254,6 +260,7 @@ func resourceTencentCloudCvmImportImageCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	imageUrl = *response.Response.ImageUrl
 	d.SetId(imageUrl)
 
 	return resourceTencentCloudCvmImportImageRead(d, meta)

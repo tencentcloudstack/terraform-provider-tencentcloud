@@ -5,52 +5,90 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_workload" "workload" {
-  application_id     = "app-j4d3x6kj"
-  environment_id     = "en-85377m6j"
-  deploy_version     = "hello-world"
-  deploy_mode        = "IMAGE"
-  img_repo           = "tem_demo/tem_demo"
-  repo_server        = "ccr.ccs.tencentyun.com"
-  init_pod_num       = 1
-  cpu_spec           = 1
-  memory_spec        = 1
-  # liveness {
-  #   type                  = "HttpGet"
-  #   protocol              = "HTTP"
-  #   path                  = "/"
-  #   port                  = 8080
-  #   initial_delay_seconds = 0
-  #   timeout_seconds       = 1
-  #   period_seconds        = 10
+  application_id = "app-xxx"
+  environment_id = "en-xxx"
+  deploy_version = "hello-world"
+  deploy_mode = "IMAGE"
+  img_repo = "tem_demo/tem_demo"
+  init_pod_num = 1
+  cpu_spec =
+  memory_spec =
+  post_start = &lt;nil&gt;
+  pre_stop = &lt;nil&gt;
+  security_group_ids =
+  repo_type = 3
+  repo_server = &lt;nil&gt;
+  tcr_instance_id = &lt;nil&gt;
+  env_conf {
+		key = "key"
+		value = "value"
+		type = "default"
+		config = "config-name"
+		secret = "secret-name"
 
-  # }
-  # readiness {
-  #   type                  = "HttpGet"
-  #   protocol              = "HTTP"
-  #   path                  = "/"
-  #   port                  = 8000
-  #   initial_delay_seconds = 0
-  #   timeout_seconds       = 1
-  #   period_seconds        = 10
+  }
+  storage_confs {
+		storage_vol_name = "xxx"
+		storage_vol_ip = "0.0.0.0"
+		storage_vol_path = "/"
 
-  # }
-  # startup_probe {
-  #   type                  = "HttpGet"
-  #   protocol              = "HTTP"
-  #   path                  = "/"
-  #   port                  = 36000
-  #   initial_delay_seconds = 0
-  #   timeout_seconds       = 1
-  #   period_seconds        = 10
+  }
+  storage_mount_confs {
+		volume_name = "xxx"
+		mount_path = "/"
 
-  # }
+  }
+  liveness {
+		type = "HttpGet"
+		protocol = "HTTP"
+		path = "/"
+		exec = ""
+		port = 80
+		initial_delay_seconds = 0
+		timeout_seconds = 1
+		period_seconds = 10
+
+  }
+  readiness {
+		type = "HttpGet"
+		protocol = "HTTP"
+		path = "/"
+		exec = ""
+		port = 80
+		initial_delay_seconds = 0
+		timeout_seconds = 1
+		period_seconds = 10
+
+  }
+  startup_probe {
+		type = "HttpGet"
+		protocol = "HTTP"
+		path = "/"
+		exec = ""
+		port = 80
+		initial_delay_seconds = 0
+		timeout_seconds = 1
+		period_seconds = 10
+
+  }
+  deploy_strategy_conf {
+		deploy_strategy_type = 0
+		beta_batch_num = 0
+		total_batch_count = 1
+		batch_interval = 200
+		min_available = -1
+		force = true
+
+  }
 }
 ```
+
 Import
 
 tem workload can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_workload.workload envirnomentId#applicationId
+terraform import tencentcloud_tem_workload.workload workload_id
 ```
 */
 package tencentcloud
@@ -58,19 +96,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemWorkload() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemWorkloadRead,
 		Create: resourceTencentCloudTemWorkloadCreate,
+		Read:   resourceTencentCloudTemWorkloadRead,
 		Update: resourceTencentCloudTemWorkloadUpdate,
 		Delete: resourceTencentCloudTemWorkloadDelete,
 		Importer: &schema.ResourceImporter{
@@ -78,364 +115,359 @@ func resourceTencentCloudTemWorkload() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"application_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "application ID.",
+				Type:        schema.TypeString,
+				Description: "Application ID.",
 			},
 
 			"environment_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "environment ID.",
+				Type:        schema.TypeString,
+				Description: "Environment ID.",
 			},
 
 			"deploy_version": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "deploy version.",
+				Type:        schema.TypeString,
+				Description: "Deploy version.",
 			},
 
 			"deploy_mode": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "deploy mode, support IMAGE.",
+				Type:        schema.TypeString,
+				Description: "Deploy mode, support IMAGE.",
 			},
 
 			"img_repo": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "repository name.",
+				Type:        schema.TypeString,
+				Description: "Repository name.",
 			},
 
 			"init_pod_num": {
-				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "initial pod number.",
+				Type:        schema.TypeInt,
+				Description: "Initial pod number.",
 			},
 
 			"cpu_spec": {
-				Type:        schema.TypeFloat,
 				Required:    true,
-				Description: "cpu.",
+				Type:        schema.TypeFloat,
+				Description: "Cpu.",
 			},
 
 			"memory_spec": {
-				Type:        schema.TypeFloat,
 				Required:    true,
-				Description: "mem.",
+				Type:        schema.TypeFloat,
+				Description: "Mem.",
 			},
 
 			"post_start": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "mem.",
+				Type:        schema.TypeString,
+				Description: "Mem.",
 			},
 
 			"pre_stop": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "mem.",
+				Type:        schema.TypeString,
+				Description: "Mem.",
 			},
 
 			"security_group_ids": {
-				Type: schema.TypeSet,
+				Optional: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Optional:    true,
-				Description: "security groups.",
+				Description: "Security groups.",
 			},
 
 			"repo_type": {
-				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "repo type when deploy: 0: tcr personal; 1: tcr enterprise; 2: public repository; 3: tem host tcr; 4: demo repo.",
+				Type:        schema.TypeInt,
+				Description: "Repo type when deploy: 0: tcr personal; 1: tcr enterprise; 2: public repository; 3: tem host tcr; 4: demo repo.",
 			},
 
 			"repo_server": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "repo server addr when deploy by image.",
+				Description: "Repo server addr when deploy by image.",
 			},
 
 			"tcr_instance_id": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "tcr instance id when deploy by image.",
+				Description: "Tcr instance id when deploy by image.",
 			},
 
 			"env_conf": {
-				Type:        schema.TypeList,
 				Optional:    true,
-				Computed:    true,
+				Type:        schema.TypeList,
 				Description: ".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "env key.",
+							Description: "Env key.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "env value.",
+							Description: "Env value.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "env type, support default, referenced.",
+							Description: "Env type.",
 						},
 						"config": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "referenced config name when type=referenced.",
+							Description: "Referenced config name.",
 						},
 						"secret": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "referenced secret name when type=referenced.",
+							Description: "Referenced secret name.",
 						},
 					},
 				},
 			},
 
 			"storage_confs": {
-				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "storage configuration.",
+				Type:        schema.TypeList,
+				Description: "Storage configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"storage_vol_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "volume name.",
+							Description: "Volume name.",
 						},
 						"storage_vol_ip": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "volume ip.",
+							Description: "Volume ip.",
 						},
 						"storage_vol_path": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "volume path.",
+							Description: "Volume path.",
 						},
 					},
 				},
 			},
 
 			"storage_mount_confs": {
-				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "storage mount configuration.",
+				Type:        schema.TypeList,
+				Description: "Storage mount configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"volume_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "volume name.",
+							Description: "Volume name.",
 						},
 						"mount_path": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "mount path.",
+							Description: "Mount path.",
 						},
 					},
 				},
 			},
 
 			"liveness": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
-				Description: "liveness config.",
+				Description: "Liveness config.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "check type, support HttpGet, TcpSocket and Exec.",
+							Description: "Check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "protocol.",
+							Description: "Protocol.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "path.",
+							Description: "Path.",
 						},
 						"exec": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "script.",
+							Description: "Script.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "liveness check port.",
+							Description: "Liveness check port.",
 						},
 						"initial_delay_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "initial delay seconds for liveness check.",
+							Description: "Initial delay seconds for liveness check.",
 						},
 						"timeout_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "timeout seconds for liveness check.",
+							Description: "Timeout seconds for liveness check.",
 						},
 						"period_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "period seconds for liveness check.",
+							Description: "Period seconds for liveness check.",
 						},
 					},
 				},
 			},
 
 			"readiness": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
 				Description: ".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "check type, support HttpGet, TcpSocket and Exec.",
+							Description: "Check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "protocol.",
+							Description: "Protocol.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "path.",
+							Description: "Path.",
 						},
 						"exec": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "script.",
+							Description: "Script.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "readiness check port.",
+							Description: "Readiness check port.",
 						},
 						"initial_delay_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "initial delay seconds for readiness check.",
+							Description: "Initial delay seconds for readiness check.",
 						},
 						"timeout_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "timeout seconds for readiness check.",
+							Description: "Timeout seconds for readiness check.",
 						},
 						"period_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "period seconds for readiness check.",
+							Description: "Period seconds for readiness check.",
 						},
 					},
 				},
 			},
 
 			"startup_probe": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
 				Description: ".",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "check type, support HttpGet, TcpSocket and Exec.",
+							Description: "Check type, support HttpGet, TcpSocket and Exec.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "protocol.",
+							Description: "Protocol.",
 						},
 						"path": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "path.",
+							Description: "Path.",
 						},
 						"exec": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "script.",
+							Description: "Script.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "startup check port.",
+							Description: "Startup check port.",
 						},
 						"initial_delay_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "initial delay seconds for startup check.",
+							Description: "Initial delay seconds for startup check.",
 						},
 						"timeout_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "timeout seconds for startup check.",
+							Description: "Timeout seconds for startup check.",
 						},
 						"period_seconds": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "period seconds for startup check.",
+							Description: "Period seconds for startup check.",
 						},
 					},
 				},
 			},
 
 			"deploy_strategy_conf": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
-				Description: "deploy strategy.",
+				Description: "Deploy strategy.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"deploy_strategy_type": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "strategy type, 0 means auto, 1 means manual, 2 means manual with beta batch.",
+							Description: "Strategy type, 0 means auto, 1 means manual, 2 means manual with beta batch.",
 						},
 						"beta_batch_num": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "beta batch number.",
+							Description: "Beta batch number.",
 						},
 						"total_batch_count": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "total batch number.",
+							Description: "Total batch number.",
 						},
 						"batch_interval": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "interval between batches.",
+							Description: "Interval between batches.",
 						},
 						"min_available": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "minimal available instances duration deployment.",
+							Description: "Minimal availabe instances duration deployment.",
 						},
 						"force": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "force update.",
+							Description: "Force update.",
 						},
 					},
 				},
@@ -452,10 +484,10 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request       = tem.NewDeployApplicationRequest()
+		response      = tem.NewDeployApplicationResponse()
 		applicationId string
 		environmentId string
 	)
-
 	if v, ok := d.GetOk("application_id"); ok {
 		applicationId = v.(string)
 		request.ApplicationId = helper.String(v.(string))
@@ -478,15 +510,15 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		request.ImgRepo = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("init_pod_num"); ok {
+	if v, ok := d.GetOkExists("init_pod_num"); ok {
 		request.InitPodNum = helper.IntUint64(v.(int))
 	}
 
-	if v, ok := d.GetOk("cpu_spec"); ok {
+	if v, ok := d.GetOkExists("cpu_spec"); ok {
 		request.CpuSpec = helper.Float64(v.(float64))
 	}
 
-	if v, ok := d.GetOk("memory_spec"); ok {
+	if v, ok := d.GetOkExists("memory_spec"); ok {
 		request.MemorySpec = helper.Float64(v.(float64))
 	}
 
@@ -506,16 +538,14 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if v, ok := d.GetOk("repo_type"); ok {
+	if v, ok := d.GetOkExists("repo_type"); ok {
 		request.RepoType = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("repo_server"); ok {
-		request.RepoServer = helper.String(v.(string))
+	if v, _ := d.GetOk("repo_server"); v != nil {
 	}
 
-	if v, ok := d.GetOk("tcr_instance_id"); ok {
-		request.TcrInstanceId = helper.String(v.(string))
+	if v, _ := d.GetOk("tcr_instance_id"); v != nil {
 	}
 
 	if v, ok := d.GetOk("env_conf"); ok {
@@ -555,7 +585,6 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 				storageConf.StorageVolPath = helper.String(v.(string))
 			}
 			request.StorageConfs = append(request.StorageConfs, &storageConf)
-
 		}
 	}
 
@@ -658,7 +687,6 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			healthCheckConfig.PeriodSeconds = helper.IntInt64(v.(int))
 		}
 		request.StartupProbe = &healthCheckConfig
-
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "deploy_strategy_conf"); ok {
@@ -682,7 +710,6 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 			deployStrategyConf.Force = helper.Bool(v.(bool))
 		}
 		request.DeployStrategyConf = &deployStrategyConf
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -690,18 +717,19 @@ func resourceTencentCloudTemWorkloadCreate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem workload failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + applicationId)
+	applicationId = *response.Response.ApplicationId
+	d.SetId(strings.Join([]string{applicationId, environmentId}, FILED_SP))
+
 	return resourceTencentCloudTemWorkloadRead(d, meta)
 }
 
@@ -710,6 +738,7 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -718,20 +747,18 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	environmentId := idSplit[0]
-	applicationId := idSplit[1]
+	applicationId := idSplit[0]
+	environmentId := idSplit[1]
 
-	workloads, err := service.DescribeTemWorkload(ctx, environmentId, applicationId)
-
-	workload := workloads.Result
-
+	workload, err := service.DescribeTemWorkloadById(ctx, applicationId, environmentId)
 	if err != nil {
 		return err
 	}
 
 	if workload == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `workload` does not exist")
+		log.Printf("[WARN]%s resource `TemWorkload` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if workload.ApplicationId != nil {
@@ -751,7 +778,7 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 	}
 
 	if workload.ImgRepo != nil {
-		_ = d.Set("img_repo", workload.ImgName)
+		_ = d.Set("img_repo", workload.ImgRepo)
 	}
 
 	if workload.InitPodNum != nil {
@@ -794,87 +821,109 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 		envConfList := []interface{}{}
 		for _, envConf := range workload.EnvConf {
 			envConfMap := map[string]interface{}{}
-			if envConf.Type != nil {
-				if *envConf.Type != "reserved" {
-					envConfMap["type"] = envConf.Type
-					if envConf.Key != nil {
-						envConfMap["key"] = envConf.Key
-					}
-					if envConf.Value != nil {
-						envConfMap["value"] = envConf.Value
-					}
-					if envConf.Config != nil {
-						envConfMap["config"] = envConf.Config
-					}
-					if envConf.Secret != nil {
-						envConfMap["secret"] = envConf.Secret
-					}
-					envConfList = append(envConfList, envConfMap)
-				}
+
+			if workload.EnvConf.Key != nil {
+				envConfMap["key"] = workload.EnvConf.Key
 			}
 
+			if workload.EnvConf.Value != nil {
+				envConfMap["value"] = workload.EnvConf.Value
+			}
+
+			if workload.EnvConf.Type != nil {
+				envConfMap["type"] = workload.EnvConf.Type
+			}
+
+			if workload.EnvConf.Config != nil {
+				envConfMap["config"] = workload.EnvConf.Config
+			}
+
+			if workload.EnvConf.Secret != nil {
+				envConfMap["secret"] = workload.EnvConf.Secret
+			}
+
+			envConfList = append(envConfList, envConfMap)
 		}
+
 		_ = d.Set("env_conf", envConfList)
+
 	}
 
 	if workload.StorageConfs != nil {
 		storageConfsList := []interface{}{}
 		for _, storageConfs := range workload.StorageConfs {
 			storageConfsMap := map[string]interface{}{}
-			if storageConfs.StorageVolName != nil {
-				storageConfsMap["storage_vol_name"] = storageConfs.StorageVolName
+
+			if workload.StorageConfs.StorageVolName != nil {
+				storageConfsMap["storage_vol_name"] = workload.StorageConfs.StorageVolName
 			}
-			if storageConfs.StorageVolIp != nil {
-				storageConfsMap["storage_vol_ip"] = storageConfs.StorageVolIp
+
+			if workload.StorageConfs.StorageVolIp != nil {
+				storageConfsMap["storage_vol_ip"] = workload.StorageConfs.StorageVolIp
 			}
-			if storageConfs.StorageVolPath != nil {
-				storageConfsMap["storage_vol_path"] = storageConfs.StorageVolPath
+
+			if workload.StorageConfs.StorageVolPath != nil {
+				storageConfsMap["storage_vol_path"] = workload.StorageConfs.StorageVolPath
 			}
 
 			storageConfsList = append(storageConfsList, storageConfsMap)
 		}
+
 		_ = d.Set("storage_confs", storageConfsList)
+
 	}
 
 	if workload.StorageMountConfs != nil {
 		storageMountConfsList := []interface{}{}
 		for _, storageMountConfs := range workload.StorageMountConfs {
 			storageMountConfsMap := map[string]interface{}{}
-			if storageMountConfs.VolumeName != nil {
-				storageMountConfsMap["volume_name"] = storageMountConfs.VolumeName
+
+			if workload.StorageMountConfs.VolumeName != nil {
+				storageMountConfsMap["volume_name"] = workload.StorageMountConfs.VolumeName
 			}
-			if storageMountConfs.MountPath != nil {
-				storageMountConfsMap["mount_path"] = storageMountConfs.MountPath
+
+			if workload.StorageMountConfs.MountPath != nil {
+				storageMountConfsMap["mount_path"] = workload.StorageMountConfs.MountPath
 			}
 
 			storageMountConfsList = append(storageMountConfsList, storageMountConfsMap)
 		}
+
 		_ = d.Set("storage_mount_confs", storageMountConfsList)
+
 	}
 
 	if workload.Liveness != nil {
 		livenessMap := map[string]interface{}{}
+
 		if workload.Liveness.Type != nil {
 			livenessMap["type"] = workload.Liveness.Type
 		}
+
 		if workload.Liveness.Protocol != nil {
 			livenessMap["protocol"] = workload.Liveness.Protocol
 		}
+
 		if workload.Liveness.Path != nil {
 			livenessMap["path"] = workload.Liveness.Path
 		}
+
 		if workload.Liveness.Exec != nil {
 			livenessMap["exec"] = workload.Liveness.Exec
 		}
+
 		if workload.Liveness.Port != nil {
 			livenessMap["port"] = workload.Liveness.Port
 		}
+
 		if workload.Liveness.InitialDelaySeconds != nil {
 			livenessMap["initial_delay_seconds"] = workload.Liveness.InitialDelaySeconds
 		}
+
 		if workload.Liveness.TimeoutSeconds != nil {
 			livenessMap["timeout_seconds"] = workload.Liveness.TimeoutSeconds
 		}
+
 		if workload.Liveness.PeriodSeconds != nil {
 			livenessMap["period_seconds"] = workload.Liveness.PeriodSeconds
 		}
@@ -884,27 +933,35 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 
 	if workload.Readiness != nil {
 		readinessMap := map[string]interface{}{}
+
 		if workload.Readiness.Type != nil {
 			readinessMap["type"] = workload.Readiness.Type
 		}
+
 		if workload.Readiness.Protocol != nil {
 			readinessMap["protocol"] = workload.Readiness.Protocol
 		}
+
 		if workload.Readiness.Path != nil {
 			readinessMap["path"] = workload.Readiness.Path
 		}
+
 		if workload.Readiness.Exec != nil {
 			readinessMap["exec"] = workload.Readiness.Exec
 		}
+
 		if workload.Readiness.Port != nil {
 			readinessMap["port"] = workload.Readiness.Port
 		}
+
 		if workload.Readiness.InitialDelaySeconds != nil {
 			readinessMap["initial_delay_seconds"] = workload.Readiness.InitialDelaySeconds
 		}
+
 		if workload.Readiness.TimeoutSeconds != nil {
 			readinessMap["timeout_seconds"] = workload.Readiness.TimeoutSeconds
 		}
+
 		if workload.Readiness.PeriodSeconds != nil {
 			readinessMap["period_seconds"] = workload.Readiness.PeriodSeconds
 		}
@@ -914,32 +971,70 @@ func resourceTencentCloudTemWorkloadRead(d *schema.ResourceData, meta interface{
 
 	if workload.StartupProbe != nil {
 		startupProbeMap := map[string]interface{}{}
+
 		if workload.StartupProbe.Type != nil {
 			startupProbeMap["type"] = workload.StartupProbe.Type
 		}
+
 		if workload.StartupProbe.Protocol != nil {
 			startupProbeMap["protocol"] = workload.StartupProbe.Protocol
 		}
+
 		if workload.StartupProbe.Path != nil {
 			startupProbeMap["path"] = workload.StartupProbe.Path
 		}
+
 		if workload.StartupProbe.Exec != nil {
 			startupProbeMap["exec"] = workload.StartupProbe.Exec
 		}
+
 		if workload.StartupProbe.Port != nil {
 			startupProbeMap["port"] = workload.StartupProbe.Port
 		}
+
 		if workload.StartupProbe.InitialDelaySeconds != nil {
 			startupProbeMap["initial_delay_seconds"] = workload.StartupProbe.InitialDelaySeconds
 		}
+
 		if workload.StartupProbe.TimeoutSeconds != nil {
 			startupProbeMap["timeout_seconds"] = workload.StartupProbe.TimeoutSeconds
 		}
+
 		if workload.StartupProbe.PeriodSeconds != nil {
 			startupProbeMap["period_seconds"] = workload.StartupProbe.PeriodSeconds
 		}
 
 		_ = d.Set("startup_probe", []interface{}{startupProbeMap})
+	}
+
+	if workload.DeployStrategyConf != nil {
+		deployStrategyConfMap := map[string]interface{}{}
+
+		if workload.DeployStrategyConf.DeployStrategyType != nil {
+			deployStrategyConfMap["deploy_strategy_type"] = workload.DeployStrategyConf.DeployStrategyType
+		}
+
+		if workload.DeployStrategyConf.BetaBatchNum != nil {
+			deployStrategyConfMap["beta_batch_num"] = workload.DeployStrategyConf.BetaBatchNum
+		}
+
+		if workload.DeployStrategyConf.TotalBatchCount != nil {
+			deployStrategyConfMap["total_batch_count"] = workload.DeployStrategyConf.TotalBatchCount
+		}
+
+		if workload.DeployStrategyConf.BatchInterval != nil {
+			deployStrategyConfMap["batch_interval"] = workload.DeployStrategyConf.BatchInterval
+		}
+
+		if workload.DeployStrategyConf.MinAvailable != nil {
+			deployStrategyConfMap["min_available"] = workload.DeployStrategyConf.MinAvailable
+		}
+
+		if workload.DeployStrategyConf.Force != nil {
+			deployStrategyConfMap["force"] = workload.DeployStrategyConf.Force
+		}
+
+		_ = d.Set("deploy_strategy_conf", []interface{}{deployStrategyConfMap})
 	}
 
 	return nil
@@ -951,57 +1046,75 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(contextNil)
 
-	var (
-		request = tem.NewDeployApplicationRequest()
-	)
+	request := tem.NewDeployApplicationRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	environmentId := idSplit[0]
-	applicationId := idSplit[1]
+	applicationId := idSplit[0]
+	environmentId := idSplit[1]
 
-	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
+	request.EnvironmentId = &environmentId
 
-	if d.HasChange("deploy_version") || d.HasChange("deploy_mode") || d.HasChange("img_repo") || d.HasChange("init_pod_num") ||
-		d.HasChange("cpu_spec") || d.HasChange("memory_spec") || d.HasChange("post_start") || d.HasChange("pre_stop") || d.HasChange("security_group_ids") ||
-		d.HasChange("repo_type") || d.HasChange("repo_server") || d.HasChange("tcr_instance_id") || d.HasChange("env_conf") || d.HasChange("storage_confs") ||
-		d.HasChange("storage_mount_confs") || d.HasChange("liveness") || d.HasChange("readiness") || d.HasChange("startup_probe") || d.HasChange("deploy_strategy_conf") {
+	immutableArgs := []string{"application_id", "environment_id", "deploy_version", "deploy_mode", "img_repo", "init_pod_num", "cpu_spec", "memory_spec", "post_start", "pre_stop", "security_group_ids", "repo_type", "repo_server", "tcr_instance_id", "env_conf", "storage_confs", "storage_mount_confs", "liveness", "readiness", "startup_probe", "deploy_strategy_conf"}
 
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("deploy_version") {
 		if v, ok := d.GetOk("deploy_version"); ok {
 			request.DeployVersion = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("deploy_mode") {
 		if v, ok := d.GetOk("deploy_mode"); ok {
 			request.DeployMode = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("img_repo") {
 		if v, ok := d.GetOk("img_repo"); ok {
 			request.ImgRepo = helper.String(v.(string))
 		}
+	}
 
-		if v, ok := d.GetOk("init_pod_num"); ok {
+	if d.HasChange("init_pod_num") {
+		if v, ok := d.GetOkExists("init_pod_num"); ok {
 			request.InitPodNum = helper.IntUint64(v.(int))
 		}
+	}
 
-		if v, ok := d.GetOk("cpu_spec"); ok {
+	if d.HasChange("cpu_spec") {
+		if v, ok := d.GetOkExists("cpu_spec"); ok {
 			request.CpuSpec = helper.Float64(v.(float64))
 		}
+	}
 
-		if v, ok := d.GetOk("memory_spec"); ok {
+	if d.HasChange("memory_spec") {
+		if v, ok := d.GetOkExists("memory_spec"); ok {
 			request.MemorySpec = helper.Float64(v.(float64))
 		}
+	}
 
+	if d.HasChange("post_start") {
 		if v, ok := d.GetOk("post_start"); ok {
 			request.PostStart = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("pre_stop") {
 		if v, ok := d.GetOk("pre_stop"); ok {
 			request.PreStop = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("security_group_ids") {
 		if v, ok := d.GetOk("security_group_ids"); ok {
 			securityGroupIdsSet := v.(*schema.Set).List()
 			for i := range securityGroupIdsSet {
@@ -1009,22 +1122,23 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 				request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupIds)
 			}
 		}
+	}
 
-		if v, ok := d.GetOk("repo_type"); ok {
+	if d.HasChange("repo_type") {
+		if v, ok := d.GetOkExists("repo_type"); ok {
 			request.RepoType = helper.IntInt64(v.(int))
 		}
+	}
 
-		if v, ok := d.GetOk("repo_server"); ok {
-			request.RepoServer = helper.String(v.(string))
-		}
+	if v, _ := d.GetOk("repo_server"); v != nil {
+	}
 
-		if v, ok := d.GetOk("tcr_instance_id"); ok {
-			request.TcrInstanceId = helper.String(v.(string))
-		}
+	if v, _ := d.GetOk("tcr_instance_id"); v != nil {
+	}
 
+	if d.HasChange("env_conf") {
 		if v, ok := d.GetOk("env_conf"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				pair := tem.Pair{}
 				if v, ok := dMap["key"]; ok {
 					pair.Key = helper.String(v.(string))
@@ -1044,10 +1158,11 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 				request.EnvConf = append(request.EnvConf, &pair)
 			}
 		}
+	}
 
+	if d.HasChange("storage_confs") {
 		if v, ok := d.GetOk("storage_confs"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				storageConf := tem.StorageConf{}
 				if v, ok := dMap["storage_vol_name"]; ok {
 					storageConf.StorageVolName = helper.String(v.(string))
@@ -1061,10 +1176,11 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 				request.StorageConfs = append(request.StorageConfs, &storageConf)
 			}
 		}
+	}
 
+	if d.HasChange("storage_mount_confs") {
 		if v, ok := d.GetOk("storage_mount_confs"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				storageMountConf := tem.StorageMountConf{}
 				if v, ok := dMap["volume_name"]; ok {
 					storageMountConf.VolumeName = helper.String(v.(string))
@@ -1075,7 +1191,9 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 				request.StorageMountConfs = append(request.StorageMountConfs, &storageMountConf)
 			}
 		}
+	}
 
+	if d.HasChange("liveness") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "liveness"); ok {
 			healthCheckConfig := tem.HealthCheckConfig{}
 			if v, ok := dMap["type"]; ok {
@@ -1104,7 +1222,9 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.Liveness = &healthCheckConfig
 		}
+	}
 
+	if d.HasChange("readiness") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "readiness"); ok {
 			healthCheckConfig := tem.HealthCheckConfig{}
 			if v, ok := dMap["type"]; ok {
@@ -1133,7 +1253,9 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.Readiness = &healthCheckConfig
 		}
+	}
 
+	if d.HasChange("startup_probe") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "startup_probe"); ok {
 			healthCheckConfig := tem.HealthCheckConfig{}
 			if v, ok := dMap["type"]; ok {
@@ -1162,7 +1284,9 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 			}
 			request.StartupProbe = &healthCheckConfig
 		}
+	}
 
+	if d.HasChange("deploy_strategy_conf") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "deploy_strategy_conf"); ok {
 			deployStrategyConf := tem.DeployStrategyConf{}
 			if v, ok := dMap["deploy_strategy_type"]; ok {
@@ -1192,13 +1316,12 @@ func resourceTencentCloudTemWorkloadUpdate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem workload failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -1217,10 +1340,10 @@ func resourceTencentCloudTemWorkloadDelete(d *schema.ResourceData, meta interfac
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	environmentId := idSplit[0]
-	applicationId := idSplit[1]
+	applicationId := idSplit[0]
+	environmentId := idSplit[1]
 
-	if err := service.DeleteTemWorkloadById(ctx, environmentId, applicationId); err != nil {
+	if err := service.DeleteTemWorkloadById(ctx, applicationId, environmentId); err != nil {
 		return err
 	}
 

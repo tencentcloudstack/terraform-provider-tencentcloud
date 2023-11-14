@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_instance_node_info" "instance_node_info" {
-  instance_id = local.dcdb_id
-}
+  instance_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -71,14 +70,10 @@ func dataSourceTencentCloudDcdbInstanceNodeInfoRead(d *schema.ResourceData, meta
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -97,6 +92,7 @@ func dataSourceTencentCloudDcdbInstanceNodeInfoRead(d *schema.ResourceData, meta
 		return err
 	}
 
+	ids := make([]string, 0, len(nodesInfo))
 	tmpList := make([]map[string]interface{}, 0, len(nodesInfo))
 
 	if nodesInfo != nil {
@@ -115,13 +111,14 @@ func dataSourceTencentCloudDcdbInstanceNodeInfoRead(d *schema.ResourceData, meta
 				briefNodeInfoMap["shard_id"] = briefNodeInfo.ShardId
 			}
 
+			ids = append(ids, *briefNodeInfo.InstanceId)
 			tmpList = append(tmpList, briefNodeInfoMap)
 		}
 
 		_ = d.Set("nodes_info", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

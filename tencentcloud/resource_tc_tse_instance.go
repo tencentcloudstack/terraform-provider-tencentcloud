@@ -3,97 +3,54 @@ Provides a resource to create a tse instance
 
 Example Usage
 
-Create zookeeper standard version
 ```hcl
-resource "tencentcloud_tse_instance" "zookeeper_standard" {
-  engine_type = "zookeeper"
-  engine_version = "3.5.9.4"
+resource "tencentcloud_tse_instance" "instance" {
+  engine_type = "nacos"
+  engine_version = "2.0.3"
   engine_product_version = "STANDARD"
   engine_region = "ap-guangzhou"
-  engine_name = "zookeeper-test"
+  engine_name = "nacos-test"
   trade_type = 0
-  engine_resource_spec = "spec-qvj6k7t4q"
+  engine_resource_spec = "STANDARD"
   engine_node_num = 3
-  vpc_id = "vpc-4owdpnwr"
-  subnet_id = "subnet-dwj7ipnc"
+  vpc_id = "vpc-xxxxxx"
+  subnet_id = "subnet-xxxxxx"
+  apollo_env_params {
+		name = "dev"
+		engine_resource_spec = "1C2G"
+		engine_node_num = 3
+		storage_capacity = 20
+		vpc_id = "vpc-xxxxxx"
+		subnet_id = "subnet-xxxxxx"
+		env_desc = "dev env"
 
-  tags = {
-    "createdBy" = "terraform"
   }
-}
-```
+  engine_tags {
+		tag_key = ""
+		tag_value = ""
 
-Create zookeeper professional version
-```hcl
-resource "tencentcloud_tse_instance" "zookeeper_professional" {
-  engine_type = "zookeeper"
-  engine_version = "3.5.9.4"
-  engine_product_version = "PROFESSIONAL"
-  engine_region = "ap-guangzhou"
-  engine_name = "zookeeper-test"
-  trade_type = 0
-  engine_resource_spec = "spec-qvj6k7t4q"
-  engine_node_num = 3
-  vpc_id = "vpc-4owdpnwr"
-  subnet_id = "subnet-dwj7ipnc"
+  }
+  engine_admin {
+		name = "admin"
+		password = "admin"
+		token = "xxxxxx"
 
+  }
+  prepaid_period = 0
+  prepaid_renew_flag = 1
   engine_region_infos {
-    engine_region = "ap-guangzhou"
-    replica       = 3
+		engine_region = "ap-guangzhou"
+		replica = 3
+		vpc_infos {
+			vpc_id = "vpc-xxxxxx"
+			subnet_id = "subnet-xxxxxx"
+			intranet_address = ""
+		}
 
-    vpc_infos {
-        subnet_id = "subnet-dwj7ipnc"
-        vpc_id    = "vpc-4owdpnwr"
-    }
-    vpc_infos {
-        subnet_id = "subnet-403mgks4"
-        vpc_id    = "vpc-b1puef4z"
-    }
   }
   tags = {
     "createdBy" = "terraform"
   }
-}
-```
-
-Create nacos standard version
-```hcl
-resource "tencentcloud_tse_instance" "nacos" {
-    enable_client_internet_access = false
-    engine_name                   = "test"
-    engine_node_num               = 3
-    engine_product_version        = "STANDARD"
-    engine_region                 = "ap-guangzhou"
-    engine_resource_spec          = "spec-1160a35a"
-    engine_type                   = "nacos"
-    engine_version                = "2.0.3.4"
-    subnet_id                     = "subnet-5vpegquy"
-    trade_type                    = 0
-    vpc_id                        = "vpc-99xmasf9"
-
-	tags = {
-    	"createdBy" = "terraform"
-    }
-}
-```
-
-Create polaris base version
-```hcl
-resource "tencentcloud_tse_instance" "polaris" {
-    enable_client_internet_access = false
-    engine_name                   = "test"
-    engine_node_num               = 2
-    engine_product_version        = "BASE"
-    engine_region                 = "ap-guangzhou"
-    engine_resource_spec          = "spec-c160bas1"
-    engine_type                   = "polaris"
-    engine_version                = "1.16.0.1"
-    subnet_id                     = "subnet-5vpegquy"
-    trade_type                    = 0
-    vpc_id                        = "vpc-99xmasf9"
-	tags = {
-    	"createdBy" = "terraform"
-    }
 }
 ```
 
@@ -110,12 +67,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTseInstance() *schema.Resource {
@@ -131,7 +87,7 @@ func resourceTencentCloudTseInstance() *schema.Resource {
 			"engine_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engine type. Reference value: `zookeeper`, `nacos`, `polaris`.",
+				Description: "Engine type. Reference value：- zookeeper- nacos- consul- apollo- eureka- polaris.",
 			},
 
 			"engine_version": {
@@ -143,67 +99,158 @@ func resourceTencentCloudTseInstance() *schema.Resource {
 			"engine_product_version": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Engine product version. Reference value: `Nacos`: `TRIAL`: Development version, optional node num: `1`, optional spec list: `1C1G`; `STANDARD`: Standard versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`. `Zookeeper`: `TRIAL`: Development version, optional node num: `1`, optional spec list: `1C1G`; `STANDARD`: Standard versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`; `PROFESSIONAL`: professional versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`. `Polarismesh`: `BASE`: Base version, optional node num: `1`, optional spec list: `NUM50`; `PROFESSIONAL`: Enterprise versions, optional node num: `2`, `3`, optional spec list: `NUM50`, `NUM100`, `NUM200`, `NUM500`, `NUM1000`, `NUM5000`, `NUM10000`, `NUM50000`.",
+				Description: "Engine product version. Reference value：- STANDARD： Standard editionEngine versions and optional specifications and number of nodes:：apollo - STANDARD versionspec list：1C2G、2C4G、4C8G、8C16G、16C32Gnode num：1，2，3，4，5eureka - STANDARD versionspec list：1C2G、2C4G、4C8G、8C16G、16C32Gnode num：3，4，5polarismesh - STANDARD versionspec list：NUM50、NUM100、NUM200、NUM500、NUM1000、NUM5000、NUM10000、NUM50000.",
 			},
 
 			"engine_region": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engine deploy region. Reference value: `China area` Reference value: `ap-guangzhou`, `ap-beijing`, `ap-chengdu`, `ap-chongqing`, `ap-nanjing`, `ap-shanghai` `ap-beijing-fsi`, `ap-shanghai-fsi`, `ap-shenzhen-fsi`. `Asia Pacific` area Reference value: `ap-hongkong`, `ap-taipei`, `ap-jakarta`, `ap-singapore`, `ap-bangkok`, `ap-seoul`, `ap-tokyo`. `North America area` Reference value: `na-toronto`, `sa-saopaulo`, `na-siliconvalley`, `na-ashburn`.",
+				Description: "Engine deploy region. Reference value： China area Reference value：- ap-guangzhou：guangzhou- ap-beijing：beijing- ap-chengdu：chengdu- ap-chongqing：chongqing- ap-nanjing：nanjing- ap-shanghai：shanghai- ap-hongkong：hongkong- ap-taipei：taipeiAsia Pacific area Reference value：- ap-jakarta：jakarta- ap-singapore：singaporeNorth America area Reference value：- na-toronto：torontoFinancial area Reference value- ap-beijing-fsi：beijing-fsi- ap-shanghai-fsi：shanghai-fsi- ap-shenzhen-fsi：shenzhen-fsi.",
 			},
 
 			"engine_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engien name. Reference value: nacos-test.",
+				Description: "Engien name. Reference value：- nacos-test.",
 			},
 
 			"trade_type": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "trade type. Reference value:- 0:postpaid- 1:Prepaid (Interface does not support the creation of prepaid instances yet).",
+				Description: "Trade type. Reference value：- 0：postpaid- 1：Prepaid (Interface does not support the creation of prepaid instances yet).",
 			},
 
 			"engine_resource_spec": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "engine spec ID. see EngineProductVersion.",
+				Description: "Engine spec ID. see EngineProductVersion.",
 			},
 
 			"engine_node_num": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "engine node num. see EngineProductVersion.",
+				Description: "Engine node num. see EngineProductVersion.",
 			},
 
 			"vpc_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "VPC ID. Assign an IP address to the engine in the VPC subnet. Reference value: vpc-conz6aix.",
+				Description: "VPC ID. Assign an IP address to the engine in the VPC subnet. Reference value：- vpc-conz6aix.",
 			},
 
 			"subnet_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value: subnet-ahde9me9.",
+				Description: "Subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value：- subnet-ahde9me9.",
+			},
+
+			"apollo_env_params": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Apollo env config param list. Reference value：If the Apollo type is created, this parameter is a mandatory environment list. You can select a maximum of four environments. Description of environmental information parameters：- Name：env name. Reference value：prod, dev, fat, uat- EngineResourceSpec：env engine spec id. see EngineProductVersion- EngineNodeNum：env engien node num. see EngineProductVersion，prod  env 2，3，4，5- StorageCapacity：Configure the storage space size，The unit is GB， The step is 5， Reference value： 35- VpcId：VPC ID. Reference value：vpc-conz6aix- SubnetId：subnet ID. Reference value：subnet-ahde9me9.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Env name.",
+						},
+						"engine_resource_spec": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Node spec ID of the engine in the environment -1C2G-2C4G.",
+						},
+						"engine_node_num": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Number of engine nodes in the environment.",
+						},
+						"storage_capacity": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Configure the storage space size， in GB.",
+						},
+						"vpc_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "VPC ID. Assign an IP address to the VPC subnet as the ConfigServer access address.",
+						},
+						"subnet_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Subnet ID. Assign an IP address to the VPC subnet as the ConfigServer access address.",
+						},
+						"env_desc": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Env desc.",
+						},
+					},
+				},
+			},
+
+			"engine_tags": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "List of tags for the engine. The value is a user-defined key/value without reference value.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Tag val.",
+						},
+					},
+				},
+			},
+
+			"engine_admin": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Initial account information of the engine. Configurable parameters：- Name：Initial user name of the console- Password：Console initial password- Token：Engine interface admin Token.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Initial user name of the console.",
+						},
+						"password": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Console initial password.",
+						},
+						"token": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Engine interface admin Token.",
+						},
+					},
+				},
 			},
 
 			"prepaid_period": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Prepaid time, in monthly units.",
+				Description: "Prepaid time， in monthly units.",
 			},
 
 			"prepaid_renew_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Automatic renewal mark, prepaid only.  Reference value: `0`: No automatic renewal, `1`: Automatic renewal.",
+				Description: "Automatic renewal mark， prepaid only.  Reference value：- 0：No automatic renewal- 1：Automatic renewal.",
 			},
 
 			"engine_region_infos": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Details about the regional configuration of the engine in cross-region deployment, only zookeeper professional requires the use of the EngineRegionInfos parameter.",
+				Description: "Details about the regional configuration of the engine in cross-region deployment.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"engine_region": {
@@ -235,19 +282,13 @@ func resourceTencentCloudTseInstance() *schema.Resource {
 									"intranet_address": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Intranet access addressNote: This field may return null, indicating that a valid value is not available..",
+										Description: "Intranet access addressNote: This field may return null, indicating that a valid value is not available.. .",
 									},
 								},
 							},
 						},
 					},
 				},
-			},
-
-			"enable_client_internet_access": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Client public network access, `true`: on, `false`: off, default: false.",
 			},
 
 			"tags": {
@@ -264,7 +305,6 @@ func resourceTencentCloudTseInstanceCreate(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = tse.NewCreateEngineRequest()
@@ -311,6 +351,35 @@ func resourceTencentCloudTseInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SubnetId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("apollo_env_params"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			apolloEnvParam := tse.ApolloEnvParam{}
+			if v, ok := dMap["name"]; ok {
+				apolloEnvParam.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["engine_resource_spec"]; ok {
+				apolloEnvParam.EngineResourceSpec = helper.String(v.(string))
+			}
+			if v, ok := dMap["engine_node_num"]; ok {
+				apolloEnvParam.EngineNodeNum = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["storage_capacity"]; ok {
+				apolloEnvParam.StorageCapacity = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["vpc_id"]; ok {
+				apolloEnvParam.VpcId = helper.String(v.(string))
+			}
+			if v, ok := dMap["subnet_id"]; ok {
+				apolloEnvParam.SubnetId = helper.String(v.(string))
+			}
+			if v, ok := dMap["env_desc"]; ok {
+				apolloEnvParam.EnvDesc = helper.String(v.(string))
+			}
+			request.ApolloEnvParams = append(request.ApolloEnvParams, &apolloEnvParam)
+		}
+	}
+
 	if v, ok := d.GetOk("engine_tags"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -323,6 +392,20 @@ func resourceTencentCloudTseInstanceCreate(d *schema.ResourceData, meta interfac
 			}
 			request.EngineTags = append(request.EngineTags, &instanceTagInfo)
 		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "engine_admin"); ok {
+		engineAdmin := tse.EngineAdmin{}
+		if v, ok := dMap["name"]; ok {
+			engineAdmin.Name = helper.String(v.(string))
+		}
+		if v, ok := dMap["password"]; ok {
+			engineAdmin.Password = helper.String(v.(string))
+		}
+		if v, ok := dMap["token"]; ok {
+			engineAdmin.Token = helper.String(v.(string))
+		}
+		request.EngineAdmin = &engineAdmin
 	}
 
 	if v, ok := d.GetOkExists("prepaid_period"); ok {
@@ -381,11 +464,7 @@ func resourceTencentCloudTseInstanceCreate(d *schema.ResourceData, meta interfac
 	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
-	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if err := service.CheckTseInstanceStatusById(ctx, instanceId, "create"); err != nil {
-		return err
-	}
-
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -403,6 +482,7 @@ func resourceTencentCloudTseInstanceRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -420,57 +500,97 @@ func resourceTencentCloudTseInstanceRead(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	if instance.Type != nil {
-		_ = d.Set("engine_type", instance.Type)
+	if instance.EngineType != nil {
+		_ = d.Set("engine_type", instance.EngineType)
 	}
 
-	if instance.Edition != nil {
-		_ = d.Set("engine_version", instance.Edition)
+	if instance.EngineVersion != nil {
+		_ = d.Set("engine_version", instance.EngineVersion)
 	}
 
-	if instance.FeatureVersion != nil {
-		_ = d.Set("engine_product_version", instance.FeatureVersion)
+	if instance.EngineProductVersion != nil {
+		_ = d.Set("engine_product_version", instance.EngineProductVersion)
 	}
 
 	if instance.EngineRegion != nil {
 		_ = d.Set("engine_region", instance.EngineRegion)
 	}
 
-	if instance.Name != nil {
-		_ = d.Set("engine_name", instance.Name)
+	if instance.EngineName != nil {
+		_ = d.Set("engine_name", instance.EngineName)
 	}
 
 	if instance.TradeType != nil {
 		_ = d.Set("trade_type", instance.TradeType)
 	}
 
-	if instance.SpecId != nil {
-		_ = d.Set("engine_resource_spec", instance.SpecId)
+	if instance.EngineResourceSpec != nil {
+		_ = d.Set("engine_resource_spec", instance.EngineResourceSpec)
 	}
 
-	if instance.Replica != nil {
-		_ = d.Set("engine_node_num", instance.Replica)
+	if instance.EngineNodeNum != nil {
+		_ = d.Set("engine_node_num", instance.EngineNodeNum)
 	}
 
 	if instance.VpcId != nil {
 		_ = d.Set("vpc_id", instance.VpcId)
 	}
 
-	if instance.SubnetIds != nil {
-		_ = d.Set("subnet_id", instance.SubnetIds[0])
+	if instance.SubnetId != nil {
+		_ = d.Set("subnet_id", instance.SubnetId)
 	}
 
-	if instance.Tags != nil {
-		engineTagsList := []interface{}{}
-		for _, engineTags := range instance.Tags {
-			engineTagsMap := map[string]interface{}{}
+	if instance.ApolloEnvParams != nil {
+		apolloEnvParamsList := []interface{}{}
+		for _, apolloEnvParams := range instance.ApolloEnvParams {
+			apolloEnvParamsMap := map[string]interface{}{}
 
-			if engineTags.Key != nil {
-				engineTagsMap["tag_key"] = engineTags.Key
+			if instance.ApolloEnvParams.Name != nil {
+				apolloEnvParamsMap["name"] = instance.ApolloEnvParams.Name
 			}
 
-			if engineTags.Value != nil {
-				engineTagsMap["tag_value"] = engineTags.Value
+			if instance.ApolloEnvParams.EngineResourceSpec != nil {
+				apolloEnvParamsMap["engine_resource_spec"] = instance.ApolloEnvParams.EngineResourceSpec
+			}
+
+			if instance.ApolloEnvParams.EngineNodeNum != nil {
+				apolloEnvParamsMap["engine_node_num"] = instance.ApolloEnvParams.EngineNodeNum
+			}
+
+			if instance.ApolloEnvParams.StorageCapacity != nil {
+				apolloEnvParamsMap["storage_capacity"] = instance.ApolloEnvParams.StorageCapacity
+			}
+
+			if instance.ApolloEnvParams.VpcId != nil {
+				apolloEnvParamsMap["vpc_id"] = instance.ApolloEnvParams.VpcId
+			}
+
+			if instance.ApolloEnvParams.SubnetId != nil {
+				apolloEnvParamsMap["subnet_id"] = instance.ApolloEnvParams.SubnetId
+			}
+
+			if instance.ApolloEnvParams.EnvDesc != nil {
+				apolloEnvParamsMap["env_desc"] = instance.ApolloEnvParams.EnvDesc
+			}
+
+			apolloEnvParamsList = append(apolloEnvParamsList, apolloEnvParamsMap)
+		}
+
+		_ = d.Set("apollo_env_params", apolloEnvParamsList)
+
+	}
+
+	if instance.EngineTags != nil {
+		engineTagsList := []interface{}{}
+		for _, engineTags := range instance.EngineTags {
+			engineTagsMap := map[string]interface{}{}
+
+			if instance.EngineTags.TagKey != nil {
+				engineTagsMap["tag_key"] = instance.EngineTags.TagKey
+			}
+
+			if instance.EngineTags.TagValue != nil {
+				engineTagsMap["tag_value"] = instance.EngineTags.TagValue
 			}
 
 			engineTagsList = append(engineTagsList, engineTagsMap)
@@ -480,22 +600,48 @@ func resourceTencentCloudTseInstanceRead(d *schema.ResourceData, meta interface{
 
 	}
 
-	if instance.RegionInfos != nil && *instance.Type == "zookeeper" && *instance.FeatureVersion == "PROFESSIONAL" {
+	if instance.EngineAdmin != nil {
+		engineAdminMap := map[string]interface{}{}
+
+		if instance.EngineAdmin.Name != nil {
+			engineAdminMap["name"] = instance.EngineAdmin.Name
+		}
+
+		if instance.EngineAdmin.Password != nil {
+			engineAdminMap["password"] = instance.EngineAdmin.Password
+		}
+
+		if instance.EngineAdmin.Token != nil {
+			engineAdminMap["token"] = instance.EngineAdmin.Token
+		}
+
+		_ = d.Set("engine_admin", []interface{}{engineAdminMap})
+	}
+
+	if instance.PrepaidPeriod != nil {
+		_ = d.Set("prepaid_period", instance.PrepaidPeriod)
+	}
+
+	if instance.PrepaidRenewFlag != nil {
+		_ = d.Set("prepaid_renew_flag", instance.PrepaidRenewFlag)
+	}
+
+	if instance.EngineRegionInfos != nil {
 		engineRegionInfosList := []interface{}{}
-		for _, engineRegionInfos := range instance.RegionInfos {
+		for _, engineRegionInfos := range instance.EngineRegionInfos {
 			engineRegionInfosMap := map[string]interface{}{}
 
-			if engineRegionInfos.EngineRegion != nil {
-				engineRegionInfosMap["engine_region"] = engineRegionInfos.EngineRegion
+			if instance.EngineRegionInfos.EngineRegion != nil {
+				engineRegionInfosMap["engine_region"] = instance.EngineRegionInfos.EngineRegion
 			}
 
-			if engineRegionInfos.Replica != nil {
-				engineRegionInfosMap["replica"] = engineRegionInfos.Replica
+			if instance.EngineRegionInfos.Replica != nil {
+				engineRegionInfosMap["replica"] = instance.EngineRegionInfos.Replica
 			}
 
-			if engineRegionInfos.IntranetVpcInfos != nil {
+			if instance.EngineRegionInfos.VpcInfos != nil {
 				vpcInfosList := []interface{}{}
-				for _, vpcInfos := range engineRegionInfos.IntranetVpcInfos {
+				for _, vpcInfos := range instance.EngineRegionInfos.VpcInfos {
 					vpcInfosMap := map[string]interface{}{}
 
 					if vpcInfos.VpcId != nil {
@@ -513,7 +659,7 @@ func resourceTencentCloudTseInstanceRead(d *schema.ResourceData, meta interface{
 					vpcInfosList = append(vpcInfosList, vpcInfosMap)
 				}
 
-				engineRegionInfosMap["vpc_infos"] = vpcInfosList
+				engineRegionInfosMap["vpc_infos"] = []interface{}{vpcInfosList}
 			}
 
 			engineRegionInfosList = append(engineRegionInfosList, engineRegionInfosMap)
@@ -521,10 +667,6 @@ func resourceTencentCloudTseInstanceRead(d *schema.ResourceData, meta interface{
 
 		_ = d.Set("engine_region_infos", engineRegionInfosList)
 
-	}
-
-	if instance.EnableInternet != nil {
-		_ = d.Set("enable_client_internet_access", instance.EnableInternet)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -543,13 +685,14 @@ func resourceTencentCloudTseInstanceUpdate(d *schema.ResourceData, meta interfac
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tse.NewUpdateEngineInternetAccessRequest()
+
 	instanceId := d.Id()
+
 	request.InstanceId = &instanceId
 
-	immutableArgs := []string{"engine_type", "engine_version", "engine_product_version", "engine_region", "engine_name", "trade_type", "engine_resource_spec", "engine_node_num", "vpc_id", "subnet_id", "engine_tags", "prepaid_period", "prepaid_renew_flag", "engine_region_infos"}
+	immutableArgs := []string{"engine_type", "engine_version", "engine_product_version", "engine_region", "engine_name", "trade_type", "engine_resource_spec", "engine_node_num", "vpc_id", "subnet_id", "apollo_env_params", "engine_tags", "engine_admin", "prepaid_period", "prepaid_renew_flag", "engine_region_infos"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -557,13 +700,9 @@ func resourceTencentCloudTseInstanceUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("enable_client_internet_access") {
+	if d.HasChange("engine_type") {
 		if v, ok := d.GetOk("engine_type"); ok {
 			request.EngineType = helper.String(v.(string))
-		}
-
-		if v, _ := d.GetOk("enable_client_internet_access"); v != nil {
-			request.EnableClientInternetAccess = helper.Bool(v.(bool))
 		}
 	}
 
@@ -578,11 +717,6 @@ func resourceTencentCloudTseInstanceUpdate(d *schema.ResourceData, meta interfac
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s update tse instance failed, reason:%+v", logId, err)
-		return err
-	}
-
-	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if err := service.CheckTseInstanceStatusById(ctx, instanceId, "update"); err != nil {
 		return err
 	}
 
@@ -612,9 +746,6 @@ func resourceTencentCloudTseInstanceDelete(d *schema.ResourceData, meta interfac
 	instanceId := d.Id()
 
 	if err := service.DeleteTseInstanceById(ctx, instanceId); err != nil {
-		return err
-	}
-	if err := service.CheckTseInstanceStatusById(ctx, instanceId, "delete"); err != nil {
 		return err
 	}
 

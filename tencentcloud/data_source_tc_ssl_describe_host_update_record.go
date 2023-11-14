@@ -5,7 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_update_record" "describe_host_update_record" {
-  old_certificate_id = "8u8DII0l"
+  certificate_id = ""
+  old_certificate_id = ""
   }
 ```
 */
@@ -13,7 +14,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -173,7 +173,7 @@ func dataSourceTencentCloudSslDescribeHostUpdateRecordRead(d *schema.ResourceDat
 				updateRecordInfoMap["update_time"] = updateRecordInfo.UpdateTime
 			}
 
-			ids = append(ids, helper.UInt64ToStr(*updateRecordInfo.Id))
+			ids = append(ids, *updateRecordInfo.Id)
 			tmpList = append(tmpList, updateRecordInfoMap)
 		}
 

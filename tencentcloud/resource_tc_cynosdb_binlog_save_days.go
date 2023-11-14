@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_binlog_save_days" "binlog_save_days" {
-  cluster_id       = "cynosdbmysql-123"
+  cluster_id = "cynosdbmysql-123"
   binlog_save_days = 7
 }
 ```
@@ -22,12 +22,11 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbBinlogSaveDays() *schema.Resource {
@@ -42,7 +41,6 @@ func resourceTencentCloudCynosdbBinlogSaveDays() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
@@ -75,11 +73,13 @@ func resourceTencentCloudCynosdbBinlogSaveDaysRead(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	clusterId := d.Id()
+	binlogSaveDaysId := d.Id()
+
 	binlogSaveDays, err := service.DescribeCynosdbBinlogSaveDaysById(ctx, clusterId)
 	if err != nil {
 		return err
@@ -91,10 +91,12 @@ func resourceTencentCloudCynosdbBinlogSaveDaysRead(d *schema.ResourceData, meta 
 		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
+	if binlogSaveDays.ClusterId != nil {
+		_ = d.Set("cluster_id", binlogSaveDays.ClusterId)
+	}
 
-	if binlogSaveDays != nil {
-		_ = d.Set("binlog_save_days", binlogSaveDays)
+	if binlogSaveDays.BinlogSaveDays != nil {
+		_ = d.Set("binlog_save_days", binlogSaveDays.BinlogSaveDays)
 	}
 
 	return nil
@@ -108,11 +110,16 @@ func resourceTencentCloudCynosdbBinlogSaveDaysUpdate(d *schema.ResourceData, met
 
 	request := cynosdb.NewModifyBinlogSaveDaysRequest()
 
-	clusterId := d.Id()
+	binlogSaveDaysId := d.Id()
+
 	request.ClusterId = &clusterId
 
-	if v, ok := d.GetOk("binlog_save_days"); ok {
-		request.BinlogSaveDays = helper.IntInt64(v.(int))
+	immutableArgs := []string{"cluster_id", "binlog_save_days"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

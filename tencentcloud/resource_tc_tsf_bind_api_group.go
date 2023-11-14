@@ -5,8 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_bind_api_group" "bind_api_group" {
-  gateway_deploy_group_id = "group-vzd97zpy"
-  group_id = "grp-qp0rj3zi"
+  group_gateway_list {
+		gateway_deploy_group_id = "group-vzd97zpy"
+		group_id = "grp-qp0rj3zi"
+
+  }
 }
 ```
 
@@ -22,13 +25,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTsfBindApiGroup() *schema.Resource {
@@ -40,18 +42,25 @@ func resourceTencentCloudTsfBindApiGroup() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"gateway_deploy_group_id": {
+			"group_gateway_list": {
 				Required:    true,
 				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "gateway group id.",
-			},
-
-			"group_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "group id.",
+				Type:        schema.TypeList,
+				Description: "Api group bind with gateway Group.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"gateway_deploy_group_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Gateway group id.",
+						},
+						"group_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Group id.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -65,21 +74,22 @@ func resourceTencentCloudTsfBindApiGroupCreate(d *schema.ResourceData, meta inte
 
 	var (
 		request              = tsf.NewBindApiGroupRequest()
+		response             = tsf.NewBindApiGroupResponse()
 		groupId              string
 		gatewayDeployGroupId string
 	)
-	if v, ok := d.GetOk("gateway_deploy_group_id"); ok {
-		gatewayDeployGroupId = v.(string)
-	}
-
-	if v, ok := d.GetOk("group_id"); ok {
-		groupId = v.(string)
-	}
-	request.GroupGatewayList = []*tsf.GatewayGroupIds{
-		{
-			GatewayDeployGroupId: &gatewayDeployGroupId,
-			GroupId:              &groupId,
-		},
+	if v, ok := d.GetOk("group_gateway_list"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			gatewayGroupIds := tsf.GatewayGroupIds{}
+			if v, ok := dMap["gateway_deploy_group_id"]; ok {
+				gatewayGroupIds.GatewayDeployGroupId = helper.String(v.(string))
+			}
+			if v, ok := dMap["group_id"]; ok {
+				gatewayGroupIds.GroupId = helper.String(v.(string))
+			}
+			request.GroupGatewayList = append(request.GroupGatewayList, &gatewayGroupIds)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -89,6 +99,7 @@ func resourceTencentCloudTsfBindApiGroupCreate(d *schema.ResourceData, meta inte
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -96,6 +107,7 @@ func resourceTencentCloudTsfBindApiGroupCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
+	groupId = *response.Response.groupId
 	d.SetId(strings.Join([]string{groupId, gatewayDeployGroupId}, FILED_SP))
 
 	return resourceTencentCloudTsfBindApiGroupRead(d, meta)
@@ -106,7 +118,9 @@ func resourceTencentCloudTsfBindApiGroupRead(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -127,8 +141,25 @@ func resourceTencentCloudTsfBindApiGroupRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	_ = d.Set("gateway_deploy_group_id", gatewayDeployGroupId)
-	_ = d.Set("group_id", groupId)
+	if bindApiGroup.GroupGatewayList != nil {
+		groupGatewayListList := []interface{}{}
+		for _, groupGatewayList := range bindApiGroup.GroupGatewayList {
+			groupGatewayListMap := map[string]interface{}{}
+
+			if bindApiGroup.GroupGatewayList.GatewayDeployGroupId != nil {
+				groupGatewayListMap["gateway_deploy_group_id"] = bindApiGroup.GroupGatewayList.GatewayDeployGroupId
+			}
+
+			if bindApiGroup.GroupGatewayList.GroupId != nil {
+				groupGatewayListMap["group_id"] = bindApiGroup.GroupGatewayList.GroupId
+			}
+
+			groupGatewayListList = append(groupGatewayListList, groupGatewayListMap)
+		}
+
+		_ = d.Set("group_gateway_list", groupGatewayListList)
+
+	}
 
 	return nil
 }

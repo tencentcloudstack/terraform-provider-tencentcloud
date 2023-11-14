@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixVpcTrafficPackageResource_basic(t *testing.T) {
+func TestAccTencentCloudVpcTrafficPackageResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -31,5 +30,6 @@ const testAccVpcTrafficPackage = `
 
 resource "tencentcloud_vpc_traffic_package" "traffic_package" {
   traffic_amount = 10
-}
+      }
+
 `

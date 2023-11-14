@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCiamUserStoreResource_basic(t *testing.T) {
@@ -30,9 +29,9 @@ func TestAccTencentCloudCiamUserStoreResource_basic(t *testing.T) {
 const testAccCiamUserStore = `
 
 resource "tencentcloud_ciam_user_store" "user_store" {
-  user_pool_name = "tf_user_store"
-  user_pool_desc = "for terraform test"
-  user_pool_logo = "https://ciam-prd-1302490086.cos.ap-guangzhou.myqcloud.com/temporary/92630252a2c5422d9663db5feafd619b.png"
+  user_pool_name = ""
+  user_pool_desc = ""
+  user_pool_logo = ""
 }
 
 `

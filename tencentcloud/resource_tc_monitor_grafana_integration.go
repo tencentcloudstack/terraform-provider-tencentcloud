@@ -1,44 +1,22 @@
 /*
-Provides a resource to create a monitor grafanaIntegration
+Provides a resource to create a monitor grafana_integration
 
 Example Usage
 
-Create a grafan instance and integrate the configuration
-
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-6"
+resource "tencentcloud_monitor_grafana_integration" "grafana_integration" {
+  instance_id = &lt;nil&gt;
+    kind = &lt;nil&gt;
+  content = &lt;nil&gt;
 }
+```
 
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_monitor_vpc"
-}
+Import
 
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_monitor_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
+monitor grafana_integration can be imported using the id, e.g.
 
-resource "tencentcloud_monitor_grafana_instance" "foo" {
-  instance_name         = "test-grafana"
-  vpc_id                = tencentcloud_vpc.vpc.id
-  subnet_ids            = [tencentcloud_subnet.subnet.id]
-  grafana_init_password = "1234567890"
-  enable_internet = false
-
-  tags = {
-    "createdBy" = "test"
-  }
-}
-
-resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
-  instance_id = tencentcloud_monitor_grafana_instance.foo.id
-  kind        = "tencentcloud-monitor-app"
-  content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"12345678\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
-}
+```
+terraform import tencentcloud_monitor_grafana_integration.grafana_integration grafana_integration_id
 ```
 */
 package tencentcloud
@@ -46,54 +24,48 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudMonitorGrafanaIntegration() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorGrafanaIntegrationRead,
 		Create: resourceTencentCloudMonitorGrafanaIntegrationCreate,
+		Read:   resourceTencentCloudMonitorGrafanaIntegrationRead,
 		Update: resourceTencentCloudMonitorGrafanaIntegrationUpdate,
 		Delete: resourceTencentCloudMonitorGrafanaIntegrationDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "grafana instance id.",
+				Type:        schema.TypeString,
+				Description: "Grafana instance id.",
 			},
 
 			"integration_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "integration id.",
+				Type:        schema.TypeString,
+				Description: "Integration id.",
 			},
 
 			"kind": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "integration json schema kind.",
+				Type:        schema.TypeString,
+				Description: "Integration json schema kind.",
 			},
 
 			"content": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "generated json string of given integration json schema.",
-			},
-
-			"description": {
 				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "integration desc.",
+				Description: "Generated json string of given integration json schema.",
 			},
 		},
 	}
@@ -107,17 +79,16 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 
 	var (
 		request       = monitor.NewCreateGrafanaIntegrationRequest()
-		response      *monitor.CreateGrafanaIntegrationResponse
+		response      = monitor.NewCreateGrafanaIntegrationResponse()
 		integrationId string
-		instanceId    string
+		kind          string
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("kind"); ok {
+		kind = v.(string)
 		request.Kind = helper.String(v.(string))
 	}
 
@@ -130,21 +101,19 @@ func resourceTencentCloudMonitorGrafanaIntegrationCreate(d *schema.ResourceData,
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor grafanaIntegration failed, reason:%+v", logId, err)
 		return err
 	}
 
 	integrationId = *response.Response.IntegrationId
+	d.SetId(strings.Join([]string{integrationId, kind}, FILED_SP))
 
-	d.SetId(strings.Join([]string{integrationId, instanceId}, FILED_SP))
 	return resourceTencentCloudMonitorGrafanaIntegrationRead(d, meta)
 }
 
@@ -153,6 +122,7 @@ func resourceTencentCloudMonitorGrafanaIntegrationRead(d *schema.ResourceData, m
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -162,20 +132,22 @@ func resourceTencentCloudMonitorGrafanaIntegrationRead(d *schema.ResourceData, m
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	integrationId := idSplit[0]
-	instanceId := idSplit[1]
+	kind := idSplit[1]
 
-	grafanaIntegration, err := service.DescribeMonitorGrafanaIntegration(ctx, integrationId, instanceId)
-
+	grafanaIntegration, err := service.DescribeMonitorGrafanaIntegrationById(ctx, integrationId, kind)
 	if err != nil {
 		return err
 	}
 
 	if grafanaIntegration == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `grafanaIntegration` %s does not exist", integrationId)
+		log.Printf("[WARN]%s resource `MonitorGrafanaIntegration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
+	if grafanaIntegration.InstanceId != nil {
+		_ = d.Set("instance_id", grafanaIntegration.InstanceId)
+	}
 
 	if grafanaIntegration.IntegrationId != nil {
 		_ = d.Set("integration_id", grafanaIntegration.IntegrationId)
@@ -185,9 +157,9 @@ func resourceTencentCloudMonitorGrafanaIntegrationRead(d *schema.ResourceData, m
 		_ = d.Set("kind", grafanaIntegration.Kind)
 	}
 
-	//if grafanaIntegration.Content != nil {
-	//	_ = d.Set("content", grafanaIntegration.Content)
-	//}
+	if grafanaIntegration.Content != nil {
+		_ = d.Set("content", grafanaIntegration.Content)
+	}
 
 	return nil
 }
@@ -205,20 +177,16 @@ func resourceTencentCloudMonitorGrafanaIntegrationUpdate(d *schema.ResourceData,
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	integrationId := idSplit[0]
-	instanceId := idSplit[1]
+	kind := idSplit[1]
 
 	request.IntegrationId = &integrationId
-	request.InstanceId = &instanceId
+	request.Kind = &kind
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
+	immutableArgs := []string{"instance_id", "integration_id", "kind", "content"}
 
-	if d.HasChange("kind") {
-		return fmt.Errorf("`kind` do not support change now.")
-	} else {
-		if v, ok := d.GetOk("kind"); ok {
-			request.Kind = helper.String(v.(string))
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
@@ -233,13 +201,12 @@ func resourceTencentCloudMonitorGrafanaIntegrationUpdate(d *schema.ResourceData,
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update monitor grafanaIntegration failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -254,15 +221,14 @@ func resourceTencentCloudMonitorGrafanaIntegrationDelete(d *schema.ResourceData,
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	integrationId := idSplit[0]
-	instanceId := idSplit[1]
+	kind := idSplit[1]
 
-	if err := service.DeleteMonitorGrafanaIntegrationById(ctx, integrationId, instanceId); err != nil {
+	if err := service.DeleteMonitorGrafanaIntegrationById(ctx, integrationId, kind); err != nil {
 		return err
 	}
 

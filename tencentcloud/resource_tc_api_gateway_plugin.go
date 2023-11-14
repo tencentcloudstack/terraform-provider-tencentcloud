@@ -4,14 +4,11 @@ Provides a resource to create a apiGateway plugin
 Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_plugin" "example" {
-  plugin_name = "tf-example"
-  plugin_type = "IPControl"
-  plugin_data = jsonencode({
-    "type" : "white_list",
-    "blocks" : "1.1.1.1",
-  })
-  description = "desc."
+resource "tencentcloud_api_gateway_plugin" "plugin" {
+  plugin_name = ""
+  plugin_type = ""
+  plugin_data = ""
+  description = ""
 }
 ```
 
@@ -28,20 +25,19 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apiGateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
-func resourceTencentCloudAPIGatewayPlugin() *schema.Resource {
+func resourceTencentCloudApiGatewayPlugin() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudAPIGatewayPluginCreate,
-		Read:   resourceTencentCloudAPIGatewayPluginRead,
-		Update: resourceTencentCloudAPIGatewayPluginUpdate,
-		Delete: resourceTencentCloudAPIGatewayPluginDelete,
+		Create: resourceTencentCloudApiGatewayPluginCreate,
+		Read:   resourceTencentCloudApiGatewayPluginRead,
+		Update: resourceTencentCloudApiGatewayPluginUpdate,
+		Delete: resourceTencentCloudApiGatewayPluginDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -51,16 +47,19 @@ func resourceTencentCloudAPIGatewayPlugin() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Name of the user define plugin. It must start with a letter and end with letter or number, the rest can contain letters, numbers and dashes(-). The length range is from 2 to 50.",
 			},
+
 			"plugin_type": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Type of plugin. Now support IPControl, TrafficControl, Cors, CustomReq, CustomAuth, Routing, TrafficControlByParameter, CircuitBreaker, ProxyCache.",
 			},
+
 			"plugin_data": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Statement to define plugin.",
 			},
+
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -70,16 +69,17 @@ func resourceTencentCloudAPIGatewayPlugin() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudAPIGatewayPluginCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudApiGatewayPluginCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_plugin.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId    = getLogId(contextNil)
 		request  = apiGateway.NewCreatePluginRequest()
 		response = apiGateway.NewCreatePluginResponse()
+		pluginId string
 	)
-
 	if v, ok := d.GetOk("plugin_name"); ok {
 		request.PluginName = helper.String(v.(string))
 	}
@@ -97,37 +97,37 @@ func resourceTencentCloudAPIGatewayPluginCreate(d *schema.ResourceData, meta int
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAPIGatewayClient().CreatePlugin(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseApiGatewayClient().CreatePlugin(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create apiGateway plugin failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(*response.Response.Result.PluginId)
+	pluginId = *response.Response.PluginId
+	d.SetId(pluginId)
 
-	return resourceTencentCloudAPIGatewayPluginRead(d, meta)
+	return resourceTencentCloudApiGatewayPluginRead(d, meta)
 }
 
-func resourceTencentCloudAPIGatewayPluginRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudApiGatewayPluginRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_plugin.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		pluginId = d.Id()
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := ApiGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	pluginId := d.Id()
 
 	plugin, err := service.DescribeApiGatewayPluginById(ctx, pluginId)
 	if err != nil {
@@ -136,7 +136,8 @@ func resourceTencentCloudAPIGatewayPluginRead(d *schema.ResourceData, meta inter
 
 	if plugin == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `ApiGatewayPlugin` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `ApiGatewayPlugin` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if plugin.PluginName != nil {
@@ -158,24 +159,25 @@ func resourceTencentCloudAPIGatewayPluginRead(d *schema.ResourceData, meta inter
 	return nil
 }
 
-func resourceTencentCloudAPIGatewayPluginUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudApiGatewayPluginUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_plugin.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId    = getLogId(contextNil)
-		request  = apiGateway.NewModifyPluginRequest()
-		pluginId = d.Id()
-	)
+	logId := getLogId(contextNil)
 
-	unsupportedUpdateFields := []string{"plugin_type"}
-	for _, field := range unsupportedUpdateFields {
-		if d.HasChange(field) {
-			return fmt.Errorf("tencentcloud_api_gateway_plugin update on %s is not support yet", field)
-		}
-	}
+	request := apiGateway.NewModifyPluginRequest()
+
+	pluginId := d.Id()
 
 	request.PluginId = &pluginId
+
+	immutableArgs := []string{"plugin_name", "plugin_type", "plugin_data", "description"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("plugin_name") {
 		if v, ok := d.GetOk("plugin_name"); ok {
@@ -196,7 +198,7 @@ func resourceTencentCloudAPIGatewayPluginUpdate(d *schema.ResourceData, meta int
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAPIGatewayClient().ModifyPlugin(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseApiGatewayClient().ModifyPlugin(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -204,25 +206,23 @@ func resourceTencentCloudAPIGatewayPluginUpdate(d *schema.ResourceData, meta int
 		}
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s update apiGateway plugin failed, reason:%+v", logId, err)
 		return err
 	}
 
-	return resourceTencentCloudAPIGatewayPluginRead(d, meta)
+	return resourceTencentCloudApiGatewayPluginRead(d, meta)
 }
 
-func resourceTencentCloudAPIGatewayPluginDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudApiGatewayPluginDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_plugin.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		pluginId = d.Id()
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := ApiGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
+	pluginId := d.Id()
 
 	if err := service.DeleteApiGatewayPluginById(ctx, pluginId); err != nil {
 		return err

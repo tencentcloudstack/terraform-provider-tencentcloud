@@ -4,19 +4,19 @@ Use this data source to query detailed information of tdmq pro_instances
 Example Usage
 
 ```hcl
-data "tencentcloud_tdmq_pro_instances" "pro_instances_filter" {
+data "tencentcloud_tdmq_pro_instances" "pro_instances" {
   filters {
-    name   = "InstanceName"
-    values = ["keep"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -30,7 +30,7 @@ func dataSourceTencentCloudTdmqProInstances() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "query condition filter.",
+				Description: "Query condition filter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -44,11 +44,12 @@ func dataSourceTencentCloudTdmqProInstances() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "value.",
+							Description: "Value.",
 						},
 					},
 				},
 			},
+
 			"instances": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -138,6 +139,7 @@ func dataSourceTencentCloudTdmqProInstances() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -151,12 +153,9 @@ func dataSourceTencentCloudTdmqProInstancesRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_tdmq_pro_instances.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		instances []*tdmq.PulsarProInstance
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("filters"); ok {
@@ -179,16 +178,18 @@ func dataSourceTencentCloudTdmqProInstancesRead(d *schema.ResourceData, meta int
 		paramMap["filters"] = tmpSet
 	}
 
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var instances []*tdmq.PulsarProInstance
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqProInstancesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		instances = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -264,7 +265,7 @@ func dataSourceTencentCloudTdmqProInstancesRead(d *schema.ResourceData, meta int
 				pulsarProInstanceMap["max_band_width"] = pulsarProInstance.MaxBandWidth
 			}
 
-			ids = append(ids, *pulsarProInstance.InstanceId)
+			ids = append(ids, *pulsarProInstance.ClusterId)
 			tmpList = append(tmpList, pulsarProInstanceMap)
 		}
 
@@ -278,6 +279,5 @@ func dataSourceTencentCloudTdmqProInstancesRead(d *schema.ResourceData, meta int
 			return e
 		}
 	}
-
 	return nil
 }

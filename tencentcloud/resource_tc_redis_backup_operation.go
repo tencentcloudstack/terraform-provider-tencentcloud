@@ -3,30 +3,32 @@ Provides a resource to create a redis backup_operation
 
 Example Usage
 
-Manually back up the Redis instance, and the backup data is kept for 7 days
-
 ```hcl
-data "tencentcloud_mysql_instance" "foo" {}
-
 resource "tencentcloud_redis_backup_operation" "backup_operation" {
-  instance_id = data.tencentcloud_mysql_instance.foo.instance_list[0].mysql_id
-  remark = "manually back"
+  instance_id = "crs-c1nl9rpv"
+  remark = &lt;nil&gt;
   storage_days = 7
 }
+```
+
+Import
+
+redis backup_operation can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_redis_backup_operation.backup_operation backup_operation_id
 ```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudRedisBackupOperation() *schema.Resource {
@@ -34,7 +36,9 @@ func resourceTencentCloudRedisBackupOperation() *schema.Resource {
 		Create: resourceTencentCloudRedisBackupOperationCreate,
 		Read:   resourceTencentCloudRedisBackupOperationRead,
 		Delete: resourceTencentCloudRedisBackupOperationDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -65,12 +69,12 @@ func resourceTencentCloudRedisBackupOperationCreate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = redis.NewManualBackupInstanceRequest()
 		response   = redis.NewManualBackupInstanceResponse()
 		instanceId string
+		backupId   string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -100,31 +104,15 @@ func resourceTencentCloudRedisBackupOperationCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	taskId := *response.Response.TaskId
-	d.SetId(instanceId)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, backupId}, FILED_SP))
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if taskId > 0 {
-		err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-			ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-			if err != nil {
-				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-			if ok {
-				return nil
-			} else {
-				return resource.RetryableError(fmt.Errorf("redis backupOperation is processing"))
-			}
-		})
 
-		if err != nil {
-			log.Printf("[CRITAL]%s redis backupOperation fail, reason:%s\n", logId, err.Error())
-			return err
-		}
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 30*readRetryTimeout, time.Second, service.RedisBackupOperationStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudRedisBackupOperationRead(d, meta)

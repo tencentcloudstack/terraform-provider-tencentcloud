@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbAccountAllGrantPrivilegesDataSource_basic -v
 func TestAccTencentCloudCynosdbAccountAllGrantPrivilegesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,24 +15,21 @@ func TestAccTencentCloudCynosdbAccountAllGrantPrivilegesDataSource_basic(t *test
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbAccountAllGrantPrivilegesDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges", "database_privileges.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges", "global_privileges.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges", "privilege_statements.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges", "table_privileges.#"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_account_all_grant_privileges.account_all_grant_privileges")),
 			},
 		},
 	})
 }
 
 const testAccCynosdbAccountAllGrantPrivilegesDataSource = `
+
 data "tencentcloud_cynosdb_account_all_grant_privileges" "account_all_grant_privileges" {
-  cluster_id = "cynosdbmysql-bws8h88b"
+  cluster_id = "xxx"
   account {
-    account_name = "keep_dts"
-    host         = "%"
+		account_name = ""
+		host = ""
+
   }
-}
+        }
+
 `

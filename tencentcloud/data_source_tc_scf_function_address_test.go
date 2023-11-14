@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfFunctionAddressDataSource_basic(t *testing.T) {
@@ -25,9 +24,9 @@ func TestAccTencentCloudScfFunctionAddressDataSource_basic(t *testing.T) {
 const testAccScfFunctionAddressDataSource = `
 
 data "tencentcloud_scf_function_address" "function_address" {
-  function_name = "keep-1676351130"
-  namespace     = "default"
-  qualifier     = "$LATEST"
-}
+  function_name = ""
+  qualifier = ""
+  namespace = ""
+    }
 
 `

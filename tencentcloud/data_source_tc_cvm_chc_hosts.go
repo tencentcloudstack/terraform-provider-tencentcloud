@@ -5,19 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_chc_hosts" "chc_hosts" {
-  chc_ids = ["chc-xxxxxx"]
+  chc_ids =
   filters {
-    name = "zone"
-    values = ["ap-guangzhou-7"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -38,20 +38,15 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 			},
 
 			"filters": {
-				Optional: true,
-				Type:     schema.TypeList,
-				Description: "- `zone` Filter by the availability zone, such as ap-guangzhou-1. Valid values: See [Regions and Availability Zones](https://www.tencentcloud.com/document/product/213/6091?from_cn_redirect=1).\n" +
-					"- `instance-name` Filter by the instance name.\n" +
-					"- `instance-state` Filter by the instance status. For status details, see [InstanceStatus](https://www.tencentcloud.com/document/api/213/15753?from_cn_redirect=1#InstanceStatus).\n" +
-					"- `device-type` Filter by the device type.\n" +
-					"- `vpc-id` Filter by the unique VPC ID.\n" +
-					"- `subnet-id` Filter by the unique VPC subnet ID.",
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;zone&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;availability zone&amp;amp;lt;/strong&amp;amp;gt;, such as ap-guangzhou-1.&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Valid values: See [Regions and Availability Zones](https://www.tencentcloud.com/document/product/213/6091?from_cn_redirect=1)&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;instance-name&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;instance name&amp;amp;lt;/strong&amp;amp;gt;.&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;instance-state&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;instance status&amp;amp;lt;/strong&amp;amp;gt;. For status details, see [InstanceStatus](https://www.tencentcloud.com/document/api/213/15753?from_cn_redirect=1#InstanceStatus).&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;device-type&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;device type&amp;amp;lt;/strong&amp;amp;gt;.&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;vpc-id&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;unique VPC ID&amp;amp;lt;/strong&amp;amp;gt;.&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;&amp;amp;lt;strong&amp;amp;gt;subnet-id&amp;amp;lt;/strong&amp;amp;gt;&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Filter by the &amp;amp;lt;strong&amp;amp;gt;unique VPC subnet ID&amp;amp;lt;/strong&amp;amp;gt;.&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Type: String&amp;amp;lt;/p&amp;amp;gt;&amp;amp;lt;p style=padding-left: 30px;&amp;amp;gt;Optional&amp;amp;lt;/p&amp;amp;gt;.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Filter name.",
+							Description: "Filters.",
 						},
 						"values": {
 							Type: schema.TypeSet,
@@ -89,7 +84,7 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 						"instance_state": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "CHC host status&lt;br/&gt;&lt;ul&gt;&lt;li&gt;REGISTERED: The CHC host is registered, but the out-of-band network and deployment network are not configured.&lt;/li&gt;&lt;li&gt;VPC_READY: The out-of-band network and deployment network are configured.&lt;/li&gt;&lt;li&gt;PREPARED: It&#39;s ready and can be associated with a CVM.&lt;/li&gt;&lt;li&gt;ONLINE: It&#39;s already associated with a CVM.&lt;/li&gt;&lt;/ul&gt;.",
+							Description: "CHC host status&amp;lt;br/&amp;gt;&amp;lt;ul&amp;gt;&amp;lt;li&amp;gt;REGISTERED: The CHC host is registered, but the out-of-band network and deployment network are not configured.&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;VPC_READY: The out-of-band network and deployment network are configured.&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;PREPARED: It&amp;#39;s ready and can be associated with a CVM.&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;ONLINE: It&amp;#39;s already associated with a CVM.&amp;lt;/li&amp;gt;&amp;lt;/ul&amp;gt;.",
 						},
 						"device_type": {
 							Type:        schema.TypeString,
@@ -155,7 +150,7 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 									"as_vpc_gateway": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Whether to use a CVM instance as a public gateway. The public gateway is only available when the instance has a public IP and resides in a VPC. Valid values:&lt;br&gt;&lt;li&gt;TRUE: yes;&lt;br&gt;&lt;li&gt;FALSE: no&lt;br&gt;&lt;br&gt;Default: FALSE.",
+										Description: "Whether to use a CVM instance as a public gateway. The public gateway is only available when the instance has a public IP and resides in a VPC. Valid values:&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;TRUE: yes;&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;FALSE: no&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;Default: FALSE.",
 									},
 									"private_ip_addresses": {
 										Type: schema.TypeSet,
@@ -205,7 +200,7 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 									"as_vpc_gateway": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "Whether to use a CVM instance as a public gateway. The public gateway is only available when the instance has a public IP and resides in a VPC. Valid values:&lt;br&gt;&lt;li&gt;TRUE: yes;&lt;br&gt;&lt;li&gt;FALSE: no&lt;br&gt;&lt;br&gt;Default: FALSE.",
+										Description: "Whether to use a CVM instance as a public gateway. The public gateway is only available when the instance has a public IP and resides in a VPC. Valid values:&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;TRUE: yes;&amp;lt;br&amp;gt;&amp;lt;li&amp;gt;FALSE: no&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;Default: FALSE.",
 									},
 									"private_ip_addresses": {
 										Type: schema.TypeSet,
@@ -251,7 +246,7 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 							Computed:    true,
 							Description: "Instance hardware description, including CPU cores, memory capacity and disk capacity.Note: This field may return null, indicating that no valid values can be obtained.",
 						},
-						"cpu": {
+						"c_p_u": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "CPU cores of the CHC hostNote: This field may return null, indicating that no valid values can be obtained.",
@@ -266,12 +261,12 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 							Computed:    true,
 							Description: "Disk capacity of the CHC hostNote: This field may return null, indicating that no valid values can be obtained.",
 						},
-						"bmc_mac": {
+						"bmc_m_a_c": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "MAC address assigned under the out-of-band networkNote: This field may return null, indicating that no valid values can be obtained.",
 						},
-						"deploy_mac": {
+						"deploy_m_a_c": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "MAC address assigned under the deployment networkNote: This field may return null, indicating that no valid values can be obtained.",
@@ -280,6 +275,11 @@ func dataSourceTencentCloudCvmChcHosts() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Management typeHOSTING: HostingTENANT: LeasingNote: This field may return null, indicating that no valid values can be obtained.",
+						},
+						"deploy_extra_config": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "CHC DHCP option, which is used for MiniOS debugging.Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -478,7 +478,7 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 			}
 
 			if chcHost.CPU != nil {
-				chcHostMap["cpu"] = chcHost.CPU
+				chcHostMap["c_p_u"] = chcHost.CPU
 			}
 
 			if chcHost.Memory != nil {
@@ -490,15 +490,19 @@ func dataSourceTencentCloudCvmChcHostsRead(d *schema.ResourceData, meta interfac
 			}
 
 			if chcHost.BmcMAC != nil {
-				chcHostMap["bmc_mac"] = chcHost.BmcMAC
+				chcHostMap["bmc_m_a_c"] = chcHost.BmcMAC
 			}
 
 			if chcHost.DeployMAC != nil {
-				chcHostMap["deploy_mac"] = chcHost.DeployMAC
+				chcHostMap["deploy_m_a_c"] = chcHost.DeployMAC
 			}
 
 			if chcHost.TenantType != nil {
 				chcHostMap["tenant_type"] = chcHost.TenantType
+			}
+
+			if chcHost.DeployExtraConfig != nil {
+				chcHostMap["deploy_extra_config"] = chcHost.DeployExtraConfig
 			}
 
 			ids = append(ids, *chcHost.ChcId)

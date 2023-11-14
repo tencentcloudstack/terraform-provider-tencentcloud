@@ -4,32 +4,21 @@ Use this data source to query detailed information of eb bus
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
 data "tencentcloud_eb_bus" "bus" {
-  order_by = "AddTime"
-  order = "DESC"
+  order_by = ""
+  order = ""
   filters {
-		values = ["Custom"]
-		name = "Type"
-  }
+		values =
+		name = ""
 
-  depends_on = [ tencentcloud_eb_event_bus.foo ]
-}
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
@@ -55,7 +44,7 @@ func dataSourceTencentCloudEbBus() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter conditions. The upper limit of Filters per request is 10, and the upper limit of Filter.Values 5.",
+				Description: "Filter conditions, see the following table for details: Instance filter conditions table. The upper limit of Filters per request is 10, and the upper limit of Filter.Values 5.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"values": {
@@ -78,13 +67,13 @@ func dataSourceTencentCloudEbBus() *schema.Resource {
 			"event_buses": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "event set information.",
+				Description: "Event set information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"mod_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "update time.",
+							Description: "Update time.",
 						},
 						"description": {
 							Type:        schema.TypeString,
@@ -94,7 +83,7 @@ func dataSourceTencentCloudEbBus() *schema.Resource {
 						"add_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 						"event_bus_name": {
 							Type:        schema.TypeString,
@@ -104,12 +93,12 @@ func dataSourceTencentCloudEbBus() *schema.Resource {
 						"event_bus_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "event bus Id.",
+							Description: "Event bus Id.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "event bus type.",
+							Description: "Event bus type.",
 						},
 						"pay_mode": {
 							Type:        schema.TypeString,

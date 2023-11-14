@@ -5,25 +5,25 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_ai_analysis_template" "ai_analysis_template" {
-  name = "terraform-test"
-
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   classification_configure {
-    switch = "OFF"
-  }
+		switch = &lt;nil&gt;
 
-  cover_configure {
-    switch = "ON"
   }
-
-  frame_tag_configure {
-    switch = "ON"
-  }
-
   tag_configure {
-    switch = "ON"
+		switch = &lt;nil&gt;
+
+  }
+  cover_configure {
+		switch = &lt;nil&gt;
+
+  }
+  frame_tag_configure {
+		switch = &lt;nil&gt;
+
   }
 }
-
 ```
 
 Import
@@ -38,12 +38,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsAiAnalysisTemplate() *schema.Resource {
@@ -144,7 +144,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateCreate(d *schema.ResourceData, met
 	var (
 		request    = mps.NewCreateAIAnalysisTemplateRequest()
 		response   = mps.NewCreateAIAnalysisTemplateResponse()
-		definition int64
+		definition int
 	)
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -217,7 +217,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateRead(d *schema.ResourceData, meta 
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	aiAnalysisTemplateId := d.Id()
 
 	aiAnalysisTemplate, err := service.DescribeMpsAiAnalysisTemplateById(ctx, definition)
 	if err != nil {
@@ -289,74 +289,82 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 
 	request := mps.NewModifyAIAnalysisTemplateRequest()
 
-	definition := d.Id()
-	needChange := false
+	aiAnalysisTemplateId := d.Id()
 
-	request.Definition = helper.StrToInt64Point(definition)
+	request.Definition = &definition
 
-	mutableArgs := []string{"name", "comment", "classification_configure", "tag_configure", "cover_configure", "frame_tag_configure"}
+	immutableArgs := []string{"name", "comment", "classification_configure", "tag_configure", "cover_configure", "frame_tag_configure"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("classification_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "classification_configure"); ok {
-			classificationConfigureInfo := mps.ClassificationConfigureInfoForUpdate{}
+			classificationConfigureInfo := mps.ClassificationConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				classificationConfigureInfo.Switch = helper.String(v.(string))
 			}
 			request.ClassificationConfigure = &classificationConfigureInfo
 		}
+	}
 
+	if d.HasChange("tag_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "tag_configure"); ok {
-			tagConfigureInfo := mps.TagConfigureInfoForUpdate{}
+			tagConfigureInfo := mps.TagConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				tagConfigureInfo.Switch = helper.String(v.(string))
 			}
 			request.TagConfigure = &tagConfigureInfo
 		}
+	}
 
+	if d.HasChange("cover_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "cover_configure"); ok {
-			coverConfigureInfo := mps.CoverConfigureInfoForUpdate{}
+			coverConfigureInfo := mps.CoverConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				coverConfigureInfo.Switch = helper.String(v.(string))
 			}
 			request.CoverConfigure = &coverConfigureInfo
 		}
+	}
 
+	if d.HasChange("frame_tag_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "frame_tag_configure"); ok {
-			frameTagConfigureInfo := mps.FrameTagConfigureInfoForUpdate{}
+			frameTagConfigureInfo := mps.FrameTagConfigureInfo{}
 			if v, ok := dMap["switch"]; ok {
 				frameTagConfigureInfo.Switch = helper.String(v.(string))
 			}
 			request.FrameTagConfigure = &frameTagConfigureInfo
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIAnalysisTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps aiAnalysisTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIAnalysisTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps aiAnalysisTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsAiAnalysisTemplateRead(d, meta)
@@ -370,7 +378,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateDelete(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	aiAnalysisTemplateId := d.Id()
 
 	if err := service.DeleteMpsAiAnalysisTemplateById(ctx, definition); err != nil {
 		return err

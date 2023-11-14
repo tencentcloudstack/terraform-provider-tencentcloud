@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tdmq_vip_instance" "vip_instance" {
-  cluster_id = "rocketmq-rd3545bkkj49"
-}
+  cluster_id = &lt;nil&gt;
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -29,7 +28,7 @@ func dataSourceTencentCloudTdmqVipInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
-			// computed
+
 			"cluster_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -100,7 +99,7 @@ func dataSourceTencentCloudTdmqVipInstance() *schema.Resource {
 							Computed:    true,
 							Description: "Whether it is a dedicated instanceNote: This field may return null, indicating that no valid value can be obtained.",
 						},
-						"rocket_mq_flag": {
+						"rocket_m_q_flag": {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Rocketmq cluster identificationNote: This field may return null, indicating that no valid value can be obtained.",
@@ -128,6 +127,7 @@ func dataSourceTencentCloudTdmqVipInstance() *schema.Resource {
 					},
 				},
 			},
+
 			"instance_config": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -230,6 +230,7 @@ func dataSourceTencentCloudTdmqVipInstance() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -243,75 +244,70 @@ func dataSourceTencentCloudTdmqVipInstanceRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_tdmq_vip_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
-		service     = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		vipInstance *tdmq.DescribeRocketMQVipInstanceDetailResponseParams
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
 	}
 
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var clusterInfo []*tdmq.RocketMQClusterInfo
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqVipInstanceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
-		if result == nil {
-			return nil
-		}
-
-		vipInstance = result
+		clusterInfo = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	if vipInstance.ClusterInfo != nil {
+	ids := make([]string, 0, len(clusterInfo))
+	if clusterInfo != nil {
 		rocketMQClusterInfoMap := map[string]interface{}{}
 
-		if vipInstance.ClusterInfo.ClusterId != nil {
-			rocketMQClusterInfoMap["cluster_id"] = vipInstance.ClusterInfo.ClusterId
+		if clusterInfo.ClusterId != nil {
+			rocketMQClusterInfoMap["cluster_id"] = clusterInfo.ClusterId
 		}
 
-		if vipInstance.ClusterInfo.ClusterName != nil {
-			rocketMQClusterInfoMap["cluster_name"] = vipInstance.ClusterInfo.ClusterName
+		if clusterInfo.ClusterName != nil {
+			rocketMQClusterInfoMap["cluster_name"] = clusterInfo.ClusterName
 		}
 
-		if vipInstance.ClusterInfo.Region != nil {
-			rocketMQClusterInfoMap["region"] = vipInstance.ClusterInfo.Region
+		if clusterInfo.Region != nil {
+			rocketMQClusterInfoMap["region"] = clusterInfo.Region
 		}
 
-		if vipInstance.ClusterInfo.CreateTime != nil {
-			rocketMQClusterInfoMap["create_time"] = vipInstance.ClusterInfo.CreateTime
+		if clusterInfo.CreateTime != nil {
+			rocketMQClusterInfoMap["create_time"] = clusterInfo.CreateTime
 		}
 
-		if vipInstance.ClusterInfo.Remark != nil {
-			rocketMQClusterInfoMap["remark"] = vipInstance.ClusterInfo.Remark
+		if clusterInfo.Remark != nil {
+			rocketMQClusterInfoMap["remark"] = clusterInfo.Remark
 		}
 
-		if vipInstance.ClusterInfo.PublicEndPoint != nil {
-			rocketMQClusterInfoMap["public_end_point"] = vipInstance.ClusterInfo.PublicEndPoint
+		if clusterInfo.PublicEndPoint != nil {
+			rocketMQClusterInfoMap["public_end_point"] = clusterInfo.PublicEndPoint
 		}
 
-		if vipInstance.ClusterInfo.VpcEndPoint != nil {
-			rocketMQClusterInfoMap["vpc_end_point"] = vipInstance.ClusterInfo.VpcEndPoint
+		if clusterInfo.VpcEndPoint != nil {
+			rocketMQClusterInfoMap["vpc_end_point"] = clusterInfo.VpcEndPoint
 		}
 
-		if vipInstance.ClusterInfo.SupportNamespaceEndpoint != nil {
-			rocketMQClusterInfoMap["support_namespace_endpoint"] = vipInstance.ClusterInfo.SupportNamespaceEndpoint
+		if clusterInfo.SupportNamespaceEndpoint != nil {
+			rocketMQClusterInfoMap["support_namespace_endpoint"] = clusterInfo.SupportNamespaceEndpoint
 		}
 
-		if vipInstance.ClusterInfo.Vpcs != nil {
+		if clusterInfo.Vpcs != nil {
 			vpcsList := []interface{}{}
-			for _, vpcs := range vipInstance.ClusterInfo.Vpcs {
+			for _, vpcs := range clusterInfo.Vpcs {
 				vpcsMap := map[string]interface{}{}
 
 				if vpcs.VpcId != nil {
@@ -328,76 +324,76 @@ func dataSourceTencentCloudTdmqVipInstanceRead(d *schema.ResourceData, meta inte
 			rocketMQClusterInfoMap["vpcs"] = []interface{}{vpcsList}
 		}
 
-		if vipInstance.ClusterInfo.IsVip != nil {
-			rocketMQClusterInfoMap["is_vip"] = vipInstance.ClusterInfo.IsVip
+		if clusterInfo.IsVip != nil {
+			rocketMQClusterInfoMap["is_vip"] = clusterInfo.IsVip
 		}
 
-		if vipInstance.ClusterInfo.RocketMQFlag != nil {
-			rocketMQClusterInfoMap["rocket_mq_flag"] = vipInstance.ClusterInfo.RocketMQFlag
+		if clusterInfo.RocketMQFlag != nil {
+			rocketMQClusterInfoMap["rocket_m_q_flag"] = clusterInfo.RocketMQFlag
 		}
 
-		if vipInstance.ClusterInfo.Status != nil {
-			rocketMQClusterInfoMap["status"] = vipInstance.ClusterInfo.Status
+		if clusterInfo.Status != nil {
+			rocketMQClusterInfoMap["status"] = clusterInfo.Status
 		}
 
-		if vipInstance.ClusterInfo.IsolateTime != nil {
-			rocketMQClusterInfoMap["isolate_time"] = vipInstance.ClusterInfo.IsolateTime
+		if clusterInfo.IsolateTime != nil {
+			rocketMQClusterInfoMap["isolate_time"] = clusterInfo.IsolateTime
 		}
 
-		if vipInstance.ClusterInfo.HttpPublicEndpoint != nil {
-			rocketMQClusterInfoMap["http_public_endpoint"] = vipInstance.ClusterInfo.HttpPublicEndpoint
+		if clusterInfo.HttpPublicEndpoint != nil {
+			rocketMQClusterInfoMap["http_public_endpoint"] = clusterInfo.HttpPublicEndpoint
 		}
 
-		if vipInstance.ClusterInfo.HttpVpcEndpoint != nil {
-			rocketMQClusterInfoMap["http_vpc_endpoint"] = vipInstance.ClusterInfo.HttpVpcEndpoint
+		if clusterInfo.HttpVpcEndpoint != nil {
+			rocketMQClusterInfoMap["http_vpc_endpoint"] = clusterInfo.HttpVpcEndpoint
 		}
 
-		ids = append(ids, *vipInstance.ClusterInfo.ClusterId)
+		ids = append(ids, *clusterInfo.ClusterId)
 		_ = d.Set("cluster_info", rocketMQClusterInfoMap)
 	}
 
-	if vipInstance.InstanceConfig != nil {
+	if instanceConfig != nil {
 		rocketMQInstanceConfigMap := map[string]interface{}{}
 
-		if vipInstance.InstanceConfig.MaxTpsPerNamespace != nil {
-			rocketMQInstanceConfigMap["max_tps_per_namespace"] = vipInstance.InstanceConfig.MaxTpsPerNamespace
+		if instanceConfig.MaxTpsPerNamespace != nil {
+			rocketMQInstanceConfigMap["max_tps_per_namespace"] = instanceConfig.MaxTpsPerNamespace
 		}
 
-		if vipInstance.InstanceConfig.MaxNamespaceNum != nil {
-			rocketMQInstanceConfigMap["max_namespace_num"] = vipInstance.InstanceConfig.MaxNamespaceNum
+		if instanceConfig.MaxNamespaceNum != nil {
+			rocketMQInstanceConfigMap["max_namespace_num"] = instanceConfig.MaxNamespaceNum
 		}
 
-		if vipInstance.InstanceConfig.UsedNamespaceNum != nil {
-			rocketMQInstanceConfigMap["used_namespace_num"] = vipInstance.InstanceConfig.UsedNamespaceNum
+		if instanceConfig.UsedNamespaceNum != nil {
+			rocketMQInstanceConfigMap["used_namespace_num"] = instanceConfig.UsedNamespaceNum
 		}
 
-		if vipInstance.InstanceConfig.MaxTopicNum != nil {
-			rocketMQInstanceConfigMap["max_topic_num"] = vipInstance.InstanceConfig.MaxTopicNum
+		if instanceConfig.MaxTopicNum != nil {
+			rocketMQInstanceConfigMap["max_topic_num"] = instanceConfig.MaxTopicNum
 		}
 
-		if vipInstance.InstanceConfig.UsedTopicNum != nil {
-			rocketMQInstanceConfigMap["used_topic_num"] = vipInstance.InstanceConfig.UsedTopicNum
+		if instanceConfig.UsedTopicNum != nil {
+			rocketMQInstanceConfigMap["used_topic_num"] = instanceConfig.UsedTopicNum
 		}
 
-		if vipInstance.InstanceConfig.MaxGroupNum != nil {
-			rocketMQInstanceConfigMap["max_group_num"] = vipInstance.InstanceConfig.MaxGroupNum
+		if instanceConfig.MaxGroupNum != nil {
+			rocketMQInstanceConfigMap["max_group_num"] = instanceConfig.MaxGroupNum
 		}
 
-		if vipInstance.InstanceConfig.UsedGroupNum != nil {
-			rocketMQInstanceConfigMap["used_group_num"] = vipInstance.InstanceConfig.UsedGroupNum
+		if instanceConfig.UsedGroupNum != nil {
+			rocketMQInstanceConfigMap["used_group_num"] = instanceConfig.UsedGroupNum
 		}
 
-		if vipInstance.InstanceConfig.ConfigDisplay != nil {
-			rocketMQInstanceConfigMap["config_display"] = vipInstance.InstanceConfig.ConfigDisplay
+		if instanceConfig.ConfigDisplay != nil {
+			rocketMQInstanceConfigMap["config_display"] = instanceConfig.ConfigDisplay
 		}
 
-		if vipInstance.InstanceConfig.NodeCount != nil {
-			rocketMQInstanceConfigMap["node_count"] = vipInstance.InstanceConfig.NodeCount
+		if instanceConfig.NodeCount != nil {
+			rocketMQInstanceConfigMap["node_count"] = instanceConfig.NodeCount
 		}
 
-		if vipInstance.InstanceConfig.NodeDistribution != nil {
+		if instanceConfig.NodeDistribution != nil {
 			nodeDistributionList := []interface{}{}
-			for _, nodeDistribution := range vipInstance.InstanceConfig.NodeDistribution {
+			for _, nodeDistribution := range instanceConfig.NodeDistribution {
 				nodeDistributionMap := map[string]interface{}{}
 
 				if nodeDistribution.ZoneName != nil {
@@ -418,9 +414,9 @@ func dataSourceTencentCloudTdmqVipInstanceRead(d *schema.ResourceData, meta inte
 			rocketMQInstanceConfigMap["node_distribution"] = []interface{}{nodeDistributionList}
 		}
 
-		if vipInstance.InstanceConfig.TopicDistribution != nil {
+		if instanceConfig.TopicDistribution != nil {
 			topicDistributionList := []interface{}{}
-			for _, topicDistribution := range vipInstance.InstanceConfig.TopicDistribution {
+			for _, topicDistribution := range instanceConfig.TopicDistribution {
 				topicDistributionMap := map[string]interface{}{}
 
 				if topicDistribution.TopicType != nil {
@@ -437,20 +433,20 @@ func dataSourceTencentCloudTdmqVipInstanceRead(d *schema.ResourceData, meta inte
 			rocketMQInstanceConfigMap["topic_distribution"] = []interface{}{topicDistributionList}
 		}
 
-		if vipInstance.InstanceConfig.MaxQueuesPerTopic != nil {
-			rocketMQInstanceConfigMap["max_queues_per_topic"] = vipInstance.InstanceConfig.MaxQueuesPerTopic
+		if instanceConfig.MaxQueuesPerTopic != nil {
+			rocketMQInstanceConfigMap["max_queues_per_topic"] = instanceConfig.MaxQueuesPerTopic
 		}
 
+		ids = append(ids, *instanceConfig.ClusterId)
 		_ = d.Set("instance_config", rocketMQInstanceConfigMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string), rocketMQClusterInfoMap); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

@@ -1,13 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixWafUserDomainsDataSource_basic -v
-func TestAccTencentCloudNeedFixWafUserDomainsDataSource_basic(t *testing.T) {
+func TestAccTencentCloudWafUserDomainsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,14 +15,15 @@ func TestAccTencentCloudNeedFixWafUserDomainsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccWafUserDomainsDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_waf_user_domains.example"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_waf_user_domains.user_domains")),
 			},
 		},
 	})
 }
 
 const testAccWafUserDomainsDataSource = `
-data "tencentcloud_waf_user_domains" "example" {}
+
+data "tencentcloud_waf_user_domains" "user_domains" {
+  }
+
 `

@@ -5,20 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_redis_top_big_keys" "redis_top_big_keys" {
-	instance_id = local.redis_id
-	date        = "%s"
-	product     = "redis"
-	sort_by     = "Capacity"
-	key_type    = "string"
-}
+  instance_id = ""
+  date = ""
+  product = ""
+  sort_by = ""
+  key_type = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -32,7 +30,7 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeys() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"date": {
@@ -44,41 +42,41 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeys() *schema.Resource {
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include `redis` - cloud database Redis.",
+				Description: "Service product type, supported values include redis - cloud database Redis.",
 			},
 
 			"sort_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sorting field, the value includes `Capacity` - memory, `ItemCount` - number of elements, the default is `Capacity`.",
+				Description: "Sorting field, the value includes Capacity - memory, ItemCount - number of elements, the default is Capacity.",
 			},
 
 			"key_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Key type filter condition, the default is no filter, the value includes `string`, `list`, `set`, `hash`, `sortedset`, `stream`.",
+				Description: "Key type filter condition, the default is no filter, the value includes string, list, set, hash, sortedset, stream.",
 			},
 
 			"top_keys": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "list of top keys.",
+				Description: "List of top keys.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "key name.",
+							Description: "Key name。.",
 						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "key type.",
+							Description: "Key type。.",
 						},
 						"encoding": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "key encoding method.",
+							Description: "Key encoding method.",
 						},
 						"expire_time": {
 							Type:        schema.TypeInt,
@@ -93,7 +91,7 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeys() *schema.Resource {
 						"item_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of elements.",
+							Description: "Number of elements.",
 						},
 						"max_element_size": {
 							Type:        schema.TypeInt,
@@ -102,6 +100,12 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeys() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"timestamp": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Collection timestamp (seconds).",
 			},
 
 			"result_output_file": {
@@ -120,14 +124,10 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeysRead(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("date"); ok {
@@ -197,11 +197,15 @@ func dataSourceTencentCloudDbbrainRedisTopBigKeysRead(d *schema.ResourceData, me
 				redisKeySpaceDataMap["max_element_size"] = redisKeySpaceData.MaxElementSize
 			}
 
-			ids = append(ids, strings.Join([]string{instanceId, *redisKeySpaceData.Key}, FILED_SP))
+			ids = append(ids, *redisKeySpaceData.InstanceId)
 			tmpList = append(tmpList, redisKeySpaceDataMap)
 		}
 
 		_ = d.Set("top_keys", tmpList)
+	}
+
+	if timestamp != nil {
+		_ = d.Set("timestamp", timestamp)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

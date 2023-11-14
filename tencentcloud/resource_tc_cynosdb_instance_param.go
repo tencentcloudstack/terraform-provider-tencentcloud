@@ -5,15 +5,30 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_instance_param" "instance_param" {
-  cluster_id            = "cynosdbmysql-bws8h88b"
-  instance_id           = "cynosdbmysql-ins-rikr6z4o"
-  is_in_maintain_period = "no"
+  cluster_id = ""
+  instance_ids =
+  cluster_param_list {
+		param_name = ""
+		current_value = ""
+		old_value = ""
 
-  instance_param_list {
-    current_value = "0"
-    param_name    = "init_connect"
   }
+  instance_param_list {
+		param_name = ""
+		current_value = ""
+		old_value = ""
+
+  }
+  is_in_maintain_period = ""
 }
+```
+
+Import
+
+cynosdb instance_param can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_instance_param.instance_param instance_param_id
 ```
 */
 package tencentcloud
@@ -21,14 +36,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCynosdbInstanceParam() *schema.Resource {
@@ -37,25 +49,53 @@ func resourceTencentCloudCynosdbInstanceParam() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbInstanceParamRead,
 		Update: resourceTencentCloudCynosdbInstanceParamUpdate,
 		Delete: resourceTencentCloudCynosdbInstanceParamDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
-			"instance_id": {
-				Optional:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
+			"instance_ids": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Instance ID.",
+			},
+
+			"cluster_param_list": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Cluster parameter list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"param_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Parameter Name.",
+						},
+						"current_value": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Current value of parameter.",
+						},
+						"old_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Parameter old value (only useful when generating parameters) Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
 			},
 
 			"instance_param_list": {
 				Optional:    true,
-				Type:        schema.TypeSet,
+				Type:        schema.TypeList,
 				Description: "Instance parameter list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -68,6 +108,11 @@ func resourceTencentCloudCynosdbInstanceParam() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Current value of parameter.",
+						},
+						"old_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Parameter old value (only useful when generating parameters) Note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 					},
 				},
@@ -86,17 +131,12 @@ func resourceTencentCloudCynosdbInstanceParamCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_cynosdb_instance_param.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var clusterId string
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-	}
-
 	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
-	d.SetId(clusterId + FILED_SP + instanceId)
+	d.SetId(instanceId)
 
 	return resourceTencentCloudCynosdbInstanceParamUpdate(d, meta)
 }
@@ -106,18 +146,14 @@ func resourceTencentCloudCynosdbInstanceParamRead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	instanceId := idSplit[1]
+	instanceParamId := d.Id()
 
-	instanceParam, err := service.DescribeCynosdbInstanceParamById(ctx, clusterId, instanceId)
+	instanceParam, err := service.DescribeCynosdbInstanceParamById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -128,34 +164,64 @@ func resourceTencentCloudCynosdbInstanceParamRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("instance_id", instanceId)
+	if instanceParam.ClusterId != nil {
+		_ = d.Set("cluster_id", instanceParam.ClusterId)
+	}
 
-	if instanceParam.ParamsItems != nil {
-		checkFlag := true
-		paramItem := make(map[string]string)
-		if v, ok := d.GetOk("instance_param_list"); ok {
-			for _, v := range v.(*schema.Set).List() {
-				dMap := v.(map[string]interface{})
-				key := dMap["param_name"].(string)
-				value := dMap["current_value"].(string)
-				paramItem[key] = value
+	if instanceParam.InstanceIds != nil {
+		_ = d.Set("instance_ids", instanceParam.InstanceIds)
+	}
+
+	if instanceParam.ClusterParamList != nil {
+		clusterParamListList := []interface{}{}
+		for _, clusterParamList := range instanceParam.ClusterParamList {
+			clusterParamListMap := map[string]interface{}{}
+
+			if instanceParam.ClusterParamList.ParamName != nil {
+				clusterParamListMap["param_name"] = instanceParam.ClusterParamList.ParamName
 			}
-		} else {
-			checkFlag = false
+
+			if instanceParam.ClusterParamList.CurrentValue != nil {
+				clusterParamListMap["current_value"] = instanceParam.ClusterParamList.CurrentValue
+			}
+
+			if instanceParam.ClusterParamList.OldValue != nil {
+				clusterParamListMap["old_value"] = instanceParam.ClusterParamList.OldValue
+			}
+
+			clusterParamListList = append(clusterParamListList, clusterParamListMap)
 		}
 
-		paramInfoSetList := []interface{}{}
-		for _, paramInfoSet := range instanceParam.ParamsItems {
-			if _, ok := paramItem[*paramInfoSet.ParamName]; !ok && checkFlag {
-				continue
+		_ = d.Set("cluster_param_list", clusterParamListList)
+
+	}
+
+	if instanceParam.InstanceParamList != nil {
+		instanceParamListList := []interface{}{}
+		for _, instanceParamList := range instanceParam.InstanceParamList {
+			instanceParamListMap := map[string]interface{}{}
+
+			if instanceParam.InstanceParamList.ParamName != nil {
+				instanceParamListMap["param_name"] = instanceParam.InstanceParamList.ParamName
 			}
-			paramInfoSetList = append(paramInfoSetList, map[string]interface{}{
-				"param_name":    *paramInfoSet.ParamName,
-				"current_value": *paramInfoSet.CurrentValue,
-			})
+
+			if instanceParam.InstanceParamList.CurrentValue != nil {
+				instanceParamListMap["current_value"] = instanceParam.InstanceParamList.CurrentValue
+			}
+
+			if instanceParam.InstanceParamList.OldValue != nil {
+				instanceParamListMap["old_value"] = instanceParam.InstanceParamList.OldValue
+			}
+
+			instanceParamListList = append(instanceParamListList, instanceParamListMap)
 		}
-		_ = d.Set("instance_param_list", paramInfoSetList)
+
+		_ = d.Set("instance_param_list", instanceParamListList)
+
+	}
+
+	if instanceParam.IsInMaintainPeriod != nil {
+		_ = d.Set("is_in_maintain_period", instanceParam.IsInMaintainPeriod)
 	}
 
 	return nil
@@ -166,50 +232,19 @@ func resourceTencentCloudCynosdbInstanceParamUpdate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
 	request := cynosdb.NewModifyInstanceParamRequest()
-	response := cynosdb.NewModifyInstanceParamResponse()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	instanceId := idSplit[1]
-	request.ClusterId = &clusterId
-	request.InstanceIds = []*string{&instanceId}
+	instanceParamId := d.Id()
 
-	if d.HasChange("instance_param_list") {
-		oldParam, _ := d.GetChange("instance_param_list")
-		oldItem := oldParam.(*schema.Set).List()
-		oldParamItem := make(map[string]string)
-		for _, v := range oldItem {
-			dMap := v.(map[string]interface{})
-			key := dMap["param_name"].(string)
-			value := dMap["current_value"].(string)
-			oldParamItem[key] = value
+	request.InstanceId = &instanceId
+
+	immutableArgs := []string{"cluster_id", "instance_ids", "cluster_param_list", "instance_param_list", "is_in_maintain_period"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-
-		if v, ok := d.GetOk("instance_param_list"); ok {
-			for _, item := range v.(*schema.Set).List() {
-				dMap := item.(map[string]interface{})
-				paramItem := cynosdb.ModifyParamItem{}
-				if v, ok := dMap["param_name"]; ok {
-					paramItem.ParamName = helper.String(v.(string))
-				}
-				if v, ok := dMap["current_value"]; ok {
-					paramItem.CurrentValue = helper.String(v.(string))
-				}
-				if oldParamItem[*paramItem.ParamName] != "" {
-					paramItem.OldValue = helper.String(oldParamItem[*paramItem.ParamName])
-				}
-				request.InstanceParamList = append(request.InstanceParamList, &paramItem)
-			}
-		}
-	}
-
-	if v, ok := d.GetOk("is_in_maintain_period"); ok {
-		request.IsInMaintainPeriod = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -219,7 +254,6 @@ func resourceTencentCloudCynosdbInstanceParamUpdate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -227,27 +261,12 @@ func resourceTencentCloudCynosdbInstanceParamUpdate(d *schema.ResourceData, meta
 		return err
 	}
 
-	flowId := *response.Response.FlowId
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("update cynosdb instanceParam is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s update cynosdb instanceParam fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbInstanceParamStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudCynosdbInstanceParamRead(d, meta)

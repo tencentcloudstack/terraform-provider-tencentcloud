@@ -205,3 +205,113 @@ func (me *CwpService) DescribeCwpMachinesSimpleByFilter(ctx context.Context, par
 
 	return
 }
+
+func (me *CwpService) DescribeCwpDescribeMachinesSimpleByFilter(ctx context.Context, param map[string]interface{}) (describeMachinesSimple []*cwp.MachineSimple, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cwp.NewDescribeMachinesSimpleRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MachineType" {
+			request.MachineType = v.(*string)
+		}
+		if k == "MachineRegion" {
+			request.MachineRegion = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*cwp.Filter)
+		}
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCwpClient().DescribeMachinesSimple(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Machines) < 1 {
+			break
+		}
+		describeMachinesSimple = append(describeMachinesSimple, response.Response.Machines...)
+		if len(response.Response.Machines) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CwpService) DescribeCwpLicenseOperationById(ctx context.Context, resourceId string) (licenseOperation *cwp.LicenseBindDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cwp.NewDescribeLicenseBindListRequest()
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCwpClient().DescribeLicenseBindList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LicenseBindDetail) < 1 {
+		return
+	}
+
+	licenseOperation = response.Response.LicenseBindDetail[0]
+	return
+}
+
+func (me *CwpService) DeleteCwpLicenseOperationById(ctx context.Context, resourceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cwp.NewModifyLicenseUnBindsRequest()
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCwpClient().ModifyLicenseUnBinds(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

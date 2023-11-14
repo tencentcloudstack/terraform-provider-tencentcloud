@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixScfAsyncEventStatusDataSource_basic(t *testing.T) {
+func TestAccTencentCloudScfAsyncEventStatusDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -25,7 +24,7 @@ func TestAccTencentCloudNeedFixScfAsyncEventStatusDataSource_basic(t *testing.T)
 const testAccScfAsyncEventStatusDataSource = `
 
 data "tencentcloud_scf_async_event_status" "async_event_status" {
-  invoke_request_id = "9de9405a-e33a-498d-bb59-e80b7bed1191"
-}
+  invoke_request_id = ""
+  }
 
 `

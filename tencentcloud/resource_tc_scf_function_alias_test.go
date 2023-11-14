@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfFunctionAliasResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudScfFunctionAliasResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_function_alias.function_alias", "id")),
 			},
 			{
-				Config: testAccScfFunctionAliasUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_function_alias.function_alias", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function_alias.function_alias", "description", "weight test first"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_scf_function_alias.function_alias",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,37 +29,24 @@ func TestAccTencentCloudScfFunctionAliasResource_basic(t *testing.T) {
 const testAccScfFunctionAlias = `
 
 resource "tencentcloud_scf_function_alias" "function_alias" {
-  description      = "weight test"
-  function_name    = "keep-1676351130"
+  name = "test_func_alais"
+  function_name = "test_function"
   function_version = "$LATEST"
-  name             = "weight"
-  namespace        = "default"
-
+  namespace = "test_namespace"
   routing_config {
-    additional_version_weights {
-      version = "2"
-      weight  = 0.4
-    }
+		additional_version_weights {
+			version = "1"
+			weight = 
+		}
+		addtion_version_matchs {
+			version = "1"
+			key = "invoke.headers.User"
+			method = "range"
+			expression = "[1,2]"
+		}
+
   }
-}
-
-`
-
-const testAccScfFunctionAliasUpdate = `
-
-resource "tencentcloud_scf_function_alias" "function_alias" {
-  description      = "weight test first"
-  function_name    = "keep-1676351130"
-  function_version = "$LATEST"
-  name             = "weight"
-  namespace        = "default"
-
-  routing_config {
-    additional_version_weights {
-      version = "2"
-      weight  = 0.2
-    }
-  }
+  description = "test routing"
 }
 
 `

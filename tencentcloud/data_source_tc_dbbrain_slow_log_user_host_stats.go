@@ -4,19 +4,19 @@ Use this data source to query detailed information of dbbrain slow_log_user_host
 Example Usage
 
 ```hcl
-data "tencentcloud_dbbrain_slow_log_user_host_stats" "test" {
-  instance_id = "%s"
-  start_time = "%s"
-  end_time = "%s"
-  product = "mysql"
-}
+data "tencentcloud_dbbrain_slow_log_user_host_stats" "slow_log_user_host_stats" {
+  instance_id = ""
+  start_time = ""
+  end_time = ""
+  product = ""
+  md5 = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -30,31 +30,37 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStats() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Start time of the query range, time format such as: 2019-09-10 12:13:14.",
+				Description: "Start time of the query range, time format such as：2019-09-10 12:13:14。.",
 			},
 
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "EndTime time of the query range, time format such as: 2019-09-10 12:13:14.",
+				Description: "EndTime time of the query range, time format such as：2019-09-10 12:13:14。.",
 			},
 
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Types of service products, supported values:`mysql` - Cloud Database MySQL; `cynosdb` - Cloud Database TDSQL-C for MySQL, defaults to `mysql`.",
+				Description: "Types of service products, supported values：mysql - Cloud Database MySQL; cynosdb - Cloud Database TDSQL-C for MySQL, defaults to mysql.",
 			},
 
 			"md5": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "MD5 value of SOL template.",
+			},
+
+			"total_count": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Number of source addresses.",
 			},
 
 			"items": {
@@ -66,7 +72,7 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStats() *schema.Resource {
 						"user_host": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "source address.",
+							Description: "Source address.",
 						},
 						"ratio": {
 							Type:        schema.TypeFloat,
@@ -97,29 +103,27 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStatsRead(d *schema.ResourceDat
 
 	logId := getLogId(contextNil)
 
-	var id string
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
-		id = v.(string)
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
-		paramMap["start_time"] = helper.String(v.(string))
+		paramMap["StartTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_time"); ok {
-		paramMap["end_time"] = helper.String(v.(string))
+		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("product"); ok {
-		paramMap["product"] = helper.String(v.(string))
+		paramMap["Product"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("md5"); ok {
-		paramMap["md5"] = helper.String(v.(string))
+		paramMap["Md5"] = helper.String(v.(string))
 	}
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -138,7 +142,12 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStatsRead(d *schema.ResourceDat
 		return err
 	}
 
+	ids := make([]string, 0, len(items))
 	tmpList := make([]map[string]interface{}, 0, len(items))
+
+	if totalCount != nil {
+		_ = d.Set("total_count", totalCount)
+	}
 
 	if items != nil {
 		for _, slowLogHost := range items {
@@ -156,13 +165,14 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStatsRead(d *schema.ResourceDat
 				slowLogHostMap["count"] = slowLogHost.Count
 			}
 
+			ids = append(ids, *slowLogHost.InstanceId)
 			tmpList = append(tmpList, slowLogHostMap)
 		}
 
 		_ = d.Set("items", tmpList)
 	}
 
-	d.SetId(id)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

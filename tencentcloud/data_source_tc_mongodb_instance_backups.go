@@ -7,14 +7,13 @@ Example Usage
 data "tencentcloud_mongodb_instance_backups" "instance_backups" {
   instance_id = "cmgo-9d0p6umb"
   backup_method = 0
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
@@ -40,7 +39,7 @@ func dataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
 			"backup_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "backup list.",
+				Description: "Backup list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -71,12 +70,12 @@ func dataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
 						"start_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "start time of backup.",
+							Description: "Start time of backup.",
 						},
 						"end_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "end time of backup.",
+							Description: "End time of backup.",
 						},
 						"status": {
 							Type:        schema.TypeInt,
@@ -111,11 +110,11 @@ func dataSourceTencentCloudMongodbInstanceBackupsRead(d *schema.ResourceData, me
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("backup_method"); ok {
-		paramMap["backup_method"] = helper.IntInt64(v.(int))
+	if v, _ := d.GetOk("backup_method"); v != nil {
+		paramMap["BackupMethod"] = helper.IntInt64(v.(int))
 	}
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}

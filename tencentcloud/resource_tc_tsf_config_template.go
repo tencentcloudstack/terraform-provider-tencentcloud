@@ -5,31 +5,32 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_config_template" "config_template" {
-  config_template_name = "terraform-template-name"
-  config_template_type = "Ribbon"
-  config_template_value = <<-EOT
-    ribbon.ReadTimeout: 5000
-    ribbon.ConnectTimeout: 2000
-    ribbon.MaxAutoRetries: 0
-    ribbon.MaxAutoRetriesNextServer: 1
-    ribbon.OkToRetryOnAllOperations: true
-  EOT
-  config_template_desc = "terraform-test"
-}
+  config_template_name = ""
+  config_template_type = ""
+  config_template_value = ""
+  config_template_desc = ""
+  program_id_list =
+      }
 ```
 
+Import
+
+tsf config_template can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_config_template.config_template config_template_id
+```
 */
 package tencentcloud
 
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfConfigTemplate() *schema.Resource {
@@ -38,9 +39,9 @@ func resourceTencentCloudTsfConfigTemplate() *schema.Resource {
 		Read:   resourceTencentCloudTsfConfigTemplateRead,
 		Update: resourceTencentCloudTsfConfigTemplateUpdate,
 		Delete: resourceTencentCloudTsfConfigTemplateDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"config_template_name": {
 				Required:    true,
@@ -78,13 +79,13 @@ func resourceTencentCloudTsfConfigTemplate() *schema.Resource {
 			"create_time": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "creation time.",
+				Description: "Creation time.",
 			},
 
 			"update_time": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "update time.",
+				Description: "Update time.",
 			},
 
 			"config_template_id": {
@@ -103,8 +104,8 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request    = tsf.NewCreateConfigTemplateWithDetailRespRequest()
-		response   = tsf.NewCreateConfigTemplateWithDetailRespResponse()
+		request    = tsf.NewCreateConfigTemplateRequest()
+		response   = tsf.NewCreateConfigTemplateResponse()
 		templateId string
 	)
 	if v, ok := d.GetOk("config_template_name"); ok {
@@ -132,7 +133,7 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfigTemplateWithDetailResp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfigTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -146,7 +147,7 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	templateId = *response.Response.Result.ConfigTemplateId
+	templateId = *response.Response.templateId
 	d.SetId(templateId)
 
 	return resourceTencentCloudTsfConfigTemplateRead(d, meta)
@@ -162,7 +163,7 @@ func resourceTencentCloudTsfConfigTemplateRead(d *schema.ResourceData, meta inte
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateId := d.Id()
+	configTemplateId := d.Id()
 
 	configTemplate, err := service.DescribeTsfConfigTemplateById(ctx, templateId)
 	if err != nil {
@@ -191,9 +192,9 @@ func resourceTencentCloudTsfConfigTemplateRead(d *schema.ResourceData, meta inte
 		_ = d.Set("config_template_desc", configTemplate.ConfigTemplateDesc)
 	}
 
-	// if configTemplate.ProgramIdList != nil {
-	// 	_ = d.Set("program_id_list", configTemplate.ProgramIdList)
-	// }
+	if configTemplate.ProgramIdList != nil {
+		_ = d.Set("program_id_list", configTemplate.ProgramIdList)
+	}
 
 	if configTemplate.CreateTime != nil {
 		_ = d.Set("create_time", configTemplate.CreateTime)
@@ -218,11 +219,11 @@ func resourceTencentCloudTsfConfigTemplateUpdate(d *schema.ResourceData, meta in
 
 	request := tsf.NewUpdateConfigTemplateRequest()
 
-	templateId := d.Id()
+	configTemplateId := d.Id()
 
-	request.ConfigTemplateId = &templateId
+	request.TemplateId = &templateId
 
-	immutableArgs := []string{"program_id_list", "create_time", "update_time", "config_template_id"}
+	immutableArgs := []string{"config_template_name", "config_template_type", "config_template_value", "config_template_desc", "program_id_list", "create_time", "update_time", "config_template_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -230,12 +231,16 @@ func resourceTencentCloudTsfConfigTemplateUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	if v, ok := d.GetOk("config_template_name"); ok {
-		request.ConfigTemplateName = helper.String(v.(string))
+	if d.HasChange("config_template_name") {
+		if v, ok := d.GetOk("config_template_name"); ok {
+			request.ConfigTemplateName = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOk("config_template_type"); ok {
-		request.ConfigTemplateType = helper.String(v.(string))
+	if d.HasChange("config_template_type") {
+		if v, ok := d.GetOk("config_template_type"); ok {
+			request.ConfigTemplateType = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("config_template_value") {
@@ -275,7 +280,7 @@ func resourceTencentCloudTsfConfigTemplateDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	templateId := d.Id()
+	configTemplateId := d.Id()
 
 	if err := service.DeleteTsfConfigTemplateById(ctx, templateId); err != nil {
 		return err

@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_microservice" "microservice" {
-  namespace_id = "namespace-vjlkzkgy"
-  microservice_name = "test-microservice"
-  microservice_desc = "desc-microservice"
+  namespace_id = ""
+  microservice_name = ""
+  microservice_desc = ""
   tags = {
     "createdBy" = "terraform"
   }
@@ -16,10 +16,10 @@ resource "tencentcloud_tsf_microservice" "microservice" {
 
 Import
 
-tsf microservice can be imported using the namespaceId#microserviceId, e.g.
+tsf microservice can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_microservice.microservice namespace-vjlkzkgy#ms-vjeb43lw
+terraform import tencentcloud_tsf_microservice.microservice microservice_id
 ```
 */
 package tencentcloud
@@ -27,13 +27,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfMicroservice() *schema.Resource {
@@ -78,22 +76,17 @@ func resourceTencentCloudTsfMicroserviceCreate(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request          = tsf.NewCreateMicroserviceRequest()
-		response         = tsf.NewCreateMicroserviceResponse()
-		microserviceName string
-		namespaceId      string
-		microserviceId   string
+		request        = tsf.NewCreateMicroserviceRequest()
+		response       = tsf.NewCreateMicroserviceResponse()
+		microserviceId string
 	)
 	if v, ok := d.GetOk("namespace_id"); ok {
-		namespaceId = v.(string)
 		request.NamespaceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("microservice_name"); ok {
-		microserviceName = v.(string)
 		request.MicroserviceName = helper.String(v.(string))
 	}
 
@@ -116,23 +109,14 @@ func resourceTencentCloudTsfMicroserviceCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	if *response.Response.Result {
-		service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-		microservice, err := service.DescribeTsfMicroserviceById(ctx, namespaceId, "", microserviceName)
-		if err != nil {
-			return err
-		}
+	microserviceId = *response.Response.MicroserviceId
+	d.SetId(microserviceId)
 
-		microserviceId = *microservice.MicroserviceId
-		d.SetId(namespaceId + FILED_SP + microserviceId)
-	} else {
-		return fmt.Errorf("[DEBUG]%s api[%s] Creation failed, and the return result of interface creation is false", logId, request.GetAction())
-	}
-
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tsf:%s:uin/:microservice/%s", region, microserviceId)
+		resourceName := fmt.Sprintf("qcs::tsf:%s:uin/:microserviceId/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -151,14 +135,9 @@ func resourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta interf
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	namespaceId := idSplit[0]
-	microserviceId := idSplit[1]
+	microserviceId := d.Id()
 
-	microservice, err := service.DescribeTsfMicroserviceById(ctx, namespaceId, microserviceId, "")
+	microservice, err := service.DescribeTsfMicroserviceById(ctx, microserviceId)
 	if err != nil {
 		return err
 	}
@@ -168,6 +147,7 @@ func resourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta interf
 		log.Printf("[WARN]%s resource `TsfMicroservice` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
 	if microservice.NamespaceId != nil {
 		_ = d.Set("namespace_id", microservice.NamespaceId)
 	}
@@ -182,7 +162,7 @@ func resourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta interf
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "tsf", "microservice", tcClient.Region, microserviceId)
+	tags, err := tagService.DescribeResourceTags(ctx, "tsf", "microserviceId", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -196,20 +176,14 @@ func resourceTencentCloudTsfMicroserviceUpdate(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tsf.NewModifyMicroserviceRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	// namespaceId := idSplit[0]
-	microserviceId := idSplit[1]
+	microserviceId := d.Id()
 
 	request.MicroserviceId = &microserviceId
 
-	immutableArgs := []string{"namespace_id", "microservice_name"}
+	immutableArgs := []string{"namespace_id", "microservice_name", "microservice_desc"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -238,11 +212,12 @@ func resourceTencentCloudTsfMicroserviceUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tsf", "microservice", tcClient.Region, microserviceId)
+		resourceName := BuildTagResourceName("tsf", "microserviceId", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -259,12 +234,7 @@ func resourceTencentCloudTsfMicroserviceDelete(d *schema.ResourceData, meta inte
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	// namespaceId := idSplit[0]
-	microserviceId := idSplit[1]
+	microserviceId := d.Id()
 
 	if err := service.DeleteTsfMicroserviceById(ctx, microserviceId); err != nil {
 		return err

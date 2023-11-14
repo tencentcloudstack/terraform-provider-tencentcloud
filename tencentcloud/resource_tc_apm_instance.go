@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_apm_instance" "instance" {
-  name = "terraform-test"
-  description = "for terraform test"
-  trace_duration = 15
-  span_daily_counters = 20
+  name = ""
+  description = ""
+  trace_duration =
+  span_daily_counters =
   tags = {
     "createdBy" = "terraform"
   }
@@ -28,12 +28,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudApmInstance() *schema.Resource {
@@ -128,7 +127,7 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::apm:%s:uin/:apm-instance/%s", region, d.Id())
+		resourceName := fmt.Sprintf("qcs::apm:%s:uin/:instanceId/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -178,7 +177,7 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "apm", "apm-instance", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "apm", "instanceId", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -195,53 +194,54 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	request := apm.NewModifyApmInstanceRequest()
 
-	needChange := false
-
 	instanceId := d.Id()
 
 	request.InstanceId = &instanceId
 
-	mutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters"}
+	immutableArgs := []string{"name", "description", "trace_duration", "span_daily_counters"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("trace_duration") {
 		if v, ok := d.GetOkExists("trace_duration"); ok {
 			request.TraceDuration = helper.IntInt64(v.(int))
 		}
+	}
 
+	if d.HasChange("span_daily_counters") {
 		if v, ok := d.GetOkExists("span_daily_counters"); ok {
 			request.SpanDailyCounters = helper.IntUint64(v.(int))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseApmClient().ModifyApmInstance(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update apm instance failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseApmClient().ModifyApmInstance(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update apm instance failed, reason:%+v", logId, err)
+		return err
 	}
 
 	if d.HasChange("tags") {
@@ -250,7 +250,7 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("apm", "apm-instance", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("apm", "instanceId", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

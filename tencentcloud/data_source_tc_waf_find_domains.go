@@ -3,28 +3,19 @@ Use this data source to query detailed information of waf find_domains
 
 Example Usage
 
-Find all domains
-
 ```hcl
-data "tencentcloud_waf_find_domains" "example" {}
-```
-
-Find domains by filter
-
-```hcl
-data "tencentcloud_waf_find_domains" "example" {
-  key           = "keyWord"
-  is_waf_domain = "1"
-  by            = "FindTime"
-  order         = "asc"
-}
+data "tencentcloud_waf_find_domains" "find_domains" {
+  key = ""
+  is_waf_domain = ""
+  by = ""
+  order = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
@@ -36,26 +27,29 @@ func dataSourceTencentCloudWafFindDomains() *schema.Resource {
 		Read: dataSourceTencentCloudWafFindDomainsRead,
 		Schema: map[string]*schema.Schema{
 			"key": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Filter condition.",
 			},
+
 			"is_waf_domain": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Whether access to waf or not.",
 			},
+
 			"by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sorting parameter, eg: FindTime.",
+				Description: "Sorting parameter.",
 			},
+
 			"order": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Default:     ORDER_DESC,
-				Description: "Sorting type, eg: desc, asc.",
+				Description: "Sorting type.",
 			},
+
 			"list": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -73,8 +67,10 @@ func dataSourceTencentCloudWafFindDomains() *schema.Resource {
 							Description: "Domain name.",
 						},
 						"ips": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Computed:    true,
 							Description: "Domain ip.",
 						},
@@ -106,6 +102,7 @@ func dataSourceTencentCloudWafFindDomains() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -119,24 +116,17 @@ func dataSourceTencentCloudWafFindDomainsRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_waf_find_domains.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		list    []*waf.FindAllDomainDetail
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("key"); ok {
 		paramMap["Key"] = helper.String(v.(string))
-	} else {
-		paramMap["Key"] = helper.String("")
 	}
 
 	if v, ok := d.GetOk("is_waf_domain"); ok {
 		paramMap["IsWafDomain"] = helper.String(v.(string))
-	} else {
-		paramMap["IsWafDomain"] = helper.String("")
 	}
 
 	if v, ok := d.GetOk("by"); ok {
@@ -147,16 +137,18 @@ func dataSourceTencentCloudWafFindDomainsRead(d *schema.ResourceData, meta inter
 		paramMap["Order"] = helper.String(v.(string))
 	}
 
+	service := WafService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var list []*waf.FindAllDomainDetail
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeWafFindDomainsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		list = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -214,6 +206,5 @@ func dataSourceTencentCloudWafFindDomainsRead(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
-
 	return nil
 }

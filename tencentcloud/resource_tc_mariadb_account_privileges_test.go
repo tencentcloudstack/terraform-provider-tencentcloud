@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbAccountPrivilegesResource_basic -v
 func TestAccTencentCloudMariadbAccountPrivilegesResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,9 +15,7 @@ func TestAccTencentCloudMariadbAccountPrivilegesResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbAccountPrivileges,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_account_privileges.account_privileges", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mariadb_account_privileges.account_privileges", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_mariadb_account_privileges.account_privileges",
@@ -31,12 +27,51 @@ func TestAccTencentCloudMariadbAccountPrivilegesResource_basic(t *testing.T) {
 }
 
 const testAccMariadbAccountPrivileges = `
+
 resource "tencentcloud_mariadb_account_privileges" "account_privileges" {
-  instance_id = "tdsql-9vqvls95"
+  instance_id = "tdsql-e9tklsgz"
   accounts {
-		user = "keep-modify-privileges"
-		host = "127.0.0.1"
+		user = ""
+		host = ""
+
   }
-  global_privileges = ["ALTER", "CREATE", "DELETE", "SELECT", "UPDATE", "DROP"]
+  global_privileges = 
+  database_privileges {
+		privileges = 
+		database = ""
+
+  }
+  table_privileges {
+		database = ""
+		table = ""
+		privileges = 
+
+  }
+  column_privileges {
+		database = ""
+		table = ""
+		column = ""
+		privileges = 
+
+  }
+  view_privileges {
+		database = ""
+		view = ""
+		privileges = 
+
+  }
+  function_privileges {
+		database = ""
+		function_name = ""
+		privileges = 
+
+  }
+  procedure_privileges {
+		database = ""
+		procedure = ""
+		privileges = 
+
+  }
 }
+
 `

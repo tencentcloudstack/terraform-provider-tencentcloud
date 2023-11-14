@@ -5,14 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_datahub_topic" "datahub_topic" {
-}
+  search_word = "topicName"
+  offset = 0
+  limit = 20
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -26,63 +28,75 @@ func dataSourceTencentCloudCkafkaDatahubTopic() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "query key word.",
+				Description: "Query key word.",
 			},
 
 			"offset": {
 				Optional:    true,
-				Default:     0,
 				Type:        schema.TypeInt,
 				Description: "The offset position of this query, the default is 0.",
 			},
 
 			"limit": {
 				Optional:    true,
-				Default:     50,
 				Type:        schema.TypeInt,
 				Description: "The maximum number of results returned this time, the default is 50, and the maximum value is 50.",
 			},
 
-			"topic_list": {
-				Type:        schema.TypeList,
+			"result": {
 				Computed:    true,
+				Type:        schema.TypeList,
 				Description: "Topic list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "name.",
-						},
-						"topic_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Topic name.",
-						},
-						"topic_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Topic Id.",
-						},
-						"partition_num": {
+						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of partitions.",
+							Description: "Total Count.",
 						},
-						"retention_ms": {
-							Type:        schema.TypeInt,
+						"topic_list": {
+							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Expiration.",
-						},
-						"note": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Remark.",
-						},
-						"status": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Status, 1 in use, 2 in deletion.",
+							Description: "Topic list.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Name.",
+									},
+									"topic_name": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Topic name.",
+									},
+									"topic_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Topic Id.",
+									},
+									"partition_num": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Number of partitions.",
+									},
+									"retention_ms": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Expiration.",
+									},
+									"note": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Remark.",
+									},
+									"status": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Status, 1 in use, 2 in deletion.",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -107,82 +121,88 @@ func dataSourceTencentCloudCkafkaDatahubTopicRead(d *schema.ResourceData, meta i
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("search_word"); ok {
-		paramMap["search_word"] = v.(string)
+		paramMap["SearchWord"] = helper.String(v.(string))
 	}
 
 	if v, _ := d.GetOk("offset"); v != nil {
-		paramMap["offset"] = v.(int)
+		paramMap["Offset"] = helper.IntUint64(v.(int))
 	}
 
 	if v, _ := d.GetOk("limit"); v != nil {
-		paramMap["limit"] = v.(int)
+		paramMap["Limit"] = helper.IntUint64(v.(int))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var describeDatahubTopicsResp *ckafka.DescribeDatahubTopicsResp
+	var result []*ckafka.DescribeDatahubTopicsResp
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeCkafkaDatahubTopicByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaDatahubTopicByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		describeDatahubTopicsResp = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	topicList := make([]map[string]interface{}, 0)
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		describeDatahubTopicsRespMap := map[string]interface{}{}
 
-	if describeDatahubTopicsResp != nil {
+		if result.TotalCount != nil {
+			describeDatahubTopicsRespMap["total_count"] = result.TotalCount
+		}
 
-		if len(describeDatahubTopicsResp.TopicList) != 0 {
-			for _, topic := range describeDatahubTopicsResp.TopicList {
-				topicMap := map[string]interface{}{}
+		if result.TopicList != nil {
+			topicListList := []interface{}{}
+			for _, topicList := range result.TopicList {
+				topicListMap := map[string]interface{}{}
 
-				if topic.Name != nil {
-					topicMap["name"] = topic.Name
+				if topicList.Name != nil {
+					topicListMap["name"] = topicList.Name
 				}
 
-				if topic.TopicName != nil {
-					topicMap["topic_name"] = topic.TopicName
-					ids = append(ids, *topic.TopicName)
+				if topicList.TopicName != nil {
+					topicListMap["topic_name"] = topicList.TopicName
 				}
 
-				if topic.TopicId != nil {
-					topicMap["topic_id"] = topic.TopicId
+				if topicList.TopicId != nil {
+					topicListMap["topic_id"] = topicList.TopicId
 				}
 
-				if topic.PartitionNum != nil {
-					topicMap["partition_num"] = topic.PartitionNum
+				if topicList.PartitionNum != nil {
+					topicListMap["partition_num"] = topicList.PartitionNum
 				}
 
-				if topic.RetentionMs != nil {
-					topicMap["retention_ms"] = topic.RetentionMs
+				if topicList.RetentionMs != nil {
+					topicListMap["retention_ms"] = topicList.RetentionMs
 				}
 
-				if topic.Note != nil {
-					topicMap["note"] = topic.Note
+				if topicList.Note != nil {
+					topicListMap["note"] = topicList.Note
 				}
 
-				if topic.Status != nil {
-					topicMap["status"] = topic.Status
+				if topicList.Status != nil {
+					topicListMap["status"] = topicList.Status
 				}
 
-				topicList = append(topicList, topicMap)
+				topicListList = append(topicListList, topicListMap)
 			}
 
+			describeDatahubTopicsRespMap["topic_list"] = []interface{}{topicListList}
 		}
-	}
-	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("topic_list", topicList)
 
+		ids = append(ids, *result.TopicName)
+		_ = d.Set("result", describeDatahubTopicsRespMap)
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), topicList); e != nil {
+		if e := writeToFile(output.(string), describeDatahubTopicsRespMap); e != nil {
 			return e
 		}
 	}

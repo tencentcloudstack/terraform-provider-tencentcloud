@@ -5,22 +5,27 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_start_backup_full_migration" "start_backup_full_migration" {
-  instance_id         = "mssql-i1z41iwd"
-  backup_migration_id = "mssql-backup-migration-kpl74n9l"
+  instance_id = "mssql-i1z41iwd"
+  backup_migration_id = ""
 }
+```
+
+Import
+
+sqlserver start_backup_full_migration can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_sqlserver_start_backup_full_migration.start_backup_full_migration start_backup_full_migration_id
 ```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudSqlserverStartBackupFullMigration() *schema.Resource {
@@ -28,7 +33,9 @@ func resourceTencentCloudSqlserverStartBackupFullMigration() *schema.Resource {
 		Create: resourceTencentCloudSqlserverStartBackupFullMigrationCreate,
 		Read:   resourceTencentCloudSqlserverStartBackupFullMigrationRead,
 		Delete: resourceTencentCloudSqlserverStartBackupFullMigrationDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -36,6 +43,7 @@ func resourceTencentCloudSqlserverStartBackupFullMigration() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "ID of imported target instance.",
 			},
+
 			"backup_migration_id": {
 				Required:    true,
 				ForceNew:    true,
@@ -50,17 +58,16 @@ func resourceTencentCloudSqlserverStartBackupFullMigrationCreate(d *schema.Resou
 	defer logElapsed("resource.tencentcloud_sqlserver_start_backup_full_migration.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = sqlserver.NewStartBackupMigrationRequest()
+		response   = sqlserver.NewStartBackupMigrationResponse()
 		instanceId string
-		flowId     uint64
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
 		instanceId = v.(string)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("backup_migration_id"); ok {
@@ -74,49 +81,15 @@ func resourceTencentCloudSqlserverStartBackupFullMigrationCreate(d *schema.Resou
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		flowId = *result.Response.FlowId
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s operate sqlserver startBackupFullMigration failed, reason:%+v", logId, err)
 		return err
 	}
 
-	// wait
-	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeCloneStatusByFlowId(ctx, int64(flowId))
-		if e != nil {
-			return retryError(e)
-		}
-
-		if result == nil {
-			e = fmt.Errorf("sqlserver startBackupFullMigration instanceId %s flowId %d not exists", instanceId, flowId)
-			return resource.NonRetryableError(e)
-		}
-
-		if *result.Status == SQLSERVER_TASK_RUNNING {
-			return resource.RetryableError(fmt.Errorf("sqlserver startBackupFullMigration task status is running"))
-		}
-
-		if *result.Status == SQLSERVER_TASK_SUCCESS {
-			return nil
-		}
-
-		if *result.Status == SQLSERVER_TASK_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("sqlserver startBackupFullMigration task status is failed"))
-		}
-
-		e = fmt.Errorf("sqlserver startBackupFullMigration task status is %v, we won't wait for it finish", *result.Status)
-		return resource.NonRetryableError(e)
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s sqlserver startBackupFullMigration task fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
-
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverStartBackupFullMigrationRead(d, meta)

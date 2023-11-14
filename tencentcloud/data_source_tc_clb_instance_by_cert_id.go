@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_instance_by_cert_id" "instance_by_cert_id" {
-  cert_ids = ["3a6B5y8v"]
-}
+  cert_ids =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -241,7 +240,7 @@ func dataSourceTencentCloudClbInstanceByCertId() *schema.Resource {
 									"backup_zone_set": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "backup zone.",
+										Description: "Backup zone.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"zone_id": {
@@ -369,7 +368,7 @@ func dataSourceTencentCloudClbInstanceByCertId() *schema.Resource {
 											},
 										},
 									},
-									"is_ddos": {
+									"is_d_dos": {
 										Type:        schema.TypeBool,
 										Computed:    true,
 										Description: "Whether an Anti-DDoS Pro instance can be bound. Note: This field may return null, indicating that no valid values can be obtained.",
@@ -441,7 +440,7 @@ func dataSourceTencentCloudClbInstanceByCertId() *schema.Resource {
 												"classical_cluster": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "vpcgw cluster. Note: this field may return null, indicating that no valid values can be obtained.",
+													Description: "Vpcgw cluster. Note: this field may return null, indicating that no valid values can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"cluster_id": {
@@ -465,7 +464,7 @@ func dataSourceTencentCloudClbInstanceByCertId() *schema.Resource {
 											},
 										},
 									},
-									"ipv6_mode": {
+									"i_pv6_mode": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "This field is meaningful only when the IP address version is ipv6. Valid values: IPv6Nat64, IPv6FullChain. Note: this field may return null, indicating that no valid values can be obtained.",
@@ -603,7 +602,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 	var certSet []*clb.CertIdRelatedWithLoadBalancers
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeClbInstanceByCertId(ctx, paramMap)
+		result, e := service.DescribeClbInstanceByCertIdByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -710,7 +709,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 							tagsList = append(tagsList, tagsMap)
 						}
 
-						loadBalancersMap["tags"] = tagsList
+						loadBalancersMap["tags"] = []interface{}{tagsList}
 					}
 
 					if loadBalancers.SecureGroups != nil {
@@ -809,7 +808,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 							backupZoneSetList = append(backupZoneSetList, backupZoneSetMap)
 						}
 
-						loadBalancersMap["backup_zone_set"] = backupZoneSetList
+						loadBalancersMap["backup_zone_set"] = []interface{}{backupZoneSetList}
 					}
 
 					if loadBalancers.IsolatedTime != nil {
@@ -883,7 +882,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 					}
 
 					if loadBalancers.IsDDos != nil {
-						loadBalancersMap["is_ddos"] = loadBalancers.IsDDos
+						loadBalancersMap["is_d_dos"] = loadBalancers.IsDDos
 					}
 
 					if loadBalancers.ConfigId != nil {
@@ -917,7 +916,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 								l4ClustersList = append(l4ClustersList, l4ClustersMap)
 							}
 
-							exclusiveClusterMap["l4_clusters"] = l4ClustersList
+							exclusiveClusterMap["l4_clusters"] = []interface{}{l4ClustersList}
 						}
 
 						if loadBalancers.ExclusiveCluster.L7Clusters != nil {
@@ -940,7 +939,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 								l7ClustersList = append(l7ClustersList, l7ClustersMap)
 							}
 
-							exclusiveClusterMap["l7_clusters"] = l7ClustersList
+							exclusiveClusterMap["l7_clusters"] = []interface{}{l7ClustersList}
 						}
 
 						if loadBalancers.ExclusiveCluster.ClassicalCluster != nil {
@@ -965,7 +964,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 					}
 
 					if loadBalancers.IPv6Mode != nil {
-						loadBalancersMap["ipv6_mode"] = loadBalancers.IPv6Mode
+						loadBalancersMap["i_pv6_mode"] = loadBalancers.IPv6Mode
 					}
 
 					if loadBalancers.SnatPro != nil {
@@ -988,7 +987,7 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 							snatIpsList = append(snatIpsList, snatIpsMap)
 						}
 
-						loadBalancersMap["snat_ips"] = snatIpsList
+						loadBalancersMap["snat_ips"] = []interface{}{snatIpsList}
 					}
 
 					if loadBalancers.SlaType != nil {
@@ -1046,10 +1045,10 @@ func dataSourceTencentCloudClbInstanceByCertIdRead(d *schema.ResourceData, meta 
 					loadBalancersList = append(loadBalancersList, loadBalancersMap)
 				}
 
-				certIdRelatedWithLoadBalancersMap["load_balancers"] = loadBalancersList
+				certIdRelatedWithLoadBalancersMap["load_balancers"] = []interface{}{loadBalancersList}
 			}
 
-			ids = append(ids, *certIdRelatedWithLoadBalancers.CertId)
+			ids = append(ids, *certIdRelatedWithLoadBalancers.LoadBalancerId)
 			tmpList = append(tmpList, certIdRelatedWithLoadBalancersMap)
 		}
 

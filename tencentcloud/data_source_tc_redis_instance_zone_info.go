@@ -6,17 +6,15 @@ Example Usage
 ```hcl
 data "tencentcloud_redis_instance_zone_info" "instance_zone_info" {
   instance_id = "crs-c1nl9rpv"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -50,7 +48,7 @@ func dataSourceTencentCloudRedisInstanceZoneInfo() *schema.Resource {
 						"zone_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "he availability zone ID of the node, such as ap-guangzhou-1.",
+							Description: "He availability zone ID of the node, such as ap-guangzhou-1.",
 						},
 						"role": {
 							Type:        schema.TypeString,
@@ -109,12 +107,11 @@ func dataSourceTencentCloudRedisInstanceZoneInfoRead(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var instanceId string
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
@@ -125,11 +122,6 @@ func dataSourceTencentCloudRedisInstanceZoneInfoRead(d *schema.ResourceData, met
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeRedisInstanceZoneInfoByFilter(ctx, paramMap)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if ee.Code == "FailedOperation.UnSupportError" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		}
 		replicaGroups = result
@@ -139,6 +131,7 @@ func dataSourceTencentCloudRedisInstanceZoneInfoRead(d *schema.ResourceData, met
 		return err
 	}
 
+	ids := make([]string, 0, len(replicaGroups))
 	tmpList := make([]map[string]interface{}, 0, len(replicaGroups))
 
 	if replicaGroups != nil {
@@ -189,16 +182,17 @@ func dataSourceTencentCloudRedisInstanceZoneInfoRead(d *schema.ResourceData, met
 					redisNodesList = append(redisNodesList, redisNodesMap)
 				}
 
-				replicaGroupMap["redis_nodes"] = redisNodesList
+				replicaGroupMap["redis_nodes"] = []interface{}{redisNodesList}
 			}
 
+			ids = append(ids, *replicaGroup.InstanceId)
 			tmpList = append(tmpList, replicaGroupMap)
 		}
 
 		_ = d.Set("replica_groups", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

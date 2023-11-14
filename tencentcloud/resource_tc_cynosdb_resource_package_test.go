@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixCynosdbResourcePackageResource_basic(t *testing.T) {
+func TestAccTencentCloudCynosdbResourcePackageResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -37,7 +36,7 @@ resource "tencentcloud_cynosdb_resource_package" "resource_package" {
   package_spec = 
   expire_day = 180
   package_count = 1
-  package_name = "PackageName"
+  package_name = "资源包_1"
 }
 
 `

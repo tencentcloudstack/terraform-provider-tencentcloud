@@ -1,61 +1,21 @@
 /*
-Provides a resource to create a tcr service account.
+Provides a resource to create a tcr service_account
 
 Example Usage
 
-Create custom account with specified duration days
-
 ```hcl
-resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr-instance"
-  instance_type = "basic"
-  delete_bucket = true
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tcr_namespace" "example" {
-  instance_id    = tencentcloud_tcr_instance.example.id
-  name           = "tf_test_tcr_namespace"
-  is_public      = true
-  is_auto_scan   = true
-  is_prevent_vul = true
-  severity       = "medium"
-  cve_whitelist_items {
-    cve_id = "tf_example_cve_id"
-  }
-}
-
-resource "tencentcloud_tcr_service_account" "example" {
-  registry_id = tencentcloud_tcr_instance.example.id
-  name        = "tf_example_account"
+resource "tencentcloud_tcr_service_account" "service_account" {
+  registry_id = "tcr-xxx"
+  name = "robot"
   permissions {
-    resource = tencentcloud_tcr_namespace.example.name
-    actions  = ["tcr:PushRepository", "tcr:PullRepository"]
-  }
-  description = "tf example for tcr custom account"
-  duration    = 10
-  disable     = false
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-```
+		resource = "library"
+		actions =
 
-With specified expiration time
-
-```hcl
-resource "tencentcloud_tcr_service_account" "example" {
-  registry_id = tencentcloud_tcr_instance.example.id
-  name        = "tf_example_account"
-  permissions {
-    resource = tencentcloud_tcr_namespace.example.name
-    actions  = ["tcr:PushRepository", "tcr:PullRepository"]
   }
-  description = "tf example for tcr custom account"
-  expires_at  = 1676897989000 //time stamp
-  disable     = false
+  description = "for namespace library"
+  duration = 10
+  expires_at = 1676897989000
+  disable = false
   tags = {
     "createdBy" = "terraform"
   }
@@ -67,7 +27,7 @@ Import
 tcr service_account can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_service_account.service_account registry_id#account_name
+terraform import tencentcloud_tcr_service_account.service_account service_account_id
 ```
 */
 package tencentcloud
@@ -75,13 +35,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTcrServiceAccount() *schema.Resource {
@@ -97,7 +56,7 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 			"registry_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"name": {
@@ -109,13 +68,13 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 			"permissions": {
 				Required:    true,
 				Type:        schema.TypeList,
-				Description: "strategy list.",
+				Description: "Strategy list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"resource": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "resource path, currently only supports Namespace. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Resource path, currently only supports Namespace. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"actions": {
 							Type: schema.TypeSet,
@@ -123,7 +82,7 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "Actions, currently support: `tcr:PushRepository`, `tcr:PullRepository`, `tcr:CreateRepository`, `tcr:CreateHelmChart`, `tcr:DescribeHelmCharts`. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Actions, currently only support: tcr:PushRepository, tcr:PullRepository. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -138,12 +97,11 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 			"duration": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.",
+				Description: "Expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.",
 			},
 
 			"expires_at": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Service account expiration time (time stamp, unit: milliseconds).",
 			},
@@ -151,13 +109,7 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 			"disable": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to disable Service accounts.",
-			},
-
-			"password": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Password of the service account.",
+				Description: "Whether to disable Service accounts.",
 			},
 
 			"tags": {
@@ -182,13 +134,13 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 		name       string
 	)
 	if v, ok := d.GetOk("registry_id"); ok {
-		request.RegistryId = helper.String(v.(string))
 		registryId = v.(string)
+		request.RegistryId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = helper.String(v.(string))
 		name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("permissions"); ok {
@@ -201,10 +153,8 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 			if v, ok := dMap["actions"]; ok {
 				actionsSet := v.(*schema.Set).List()
 				for i := range actionsSet {
-					if actionsSet[i] != nil {
-						actions := actionsSet[i].(string)
-						permission.Actions = append(permission.Actions, &actions)
-					}
+					actions := actionsSet[i].(string)
+					permission.Actions = append(permission.Actions, &actions)
 				}
 			}
 			request.Permissions = append(request.Permissions, &permission)
@@ -228,7 +178,7 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateServiceAccount(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().CreateServiceAccount(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -242,16 +192,8 @@ func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	if !strings.Contains(*response.Response.Name, name) {
-		return fmt.Errorf("The name[%s] return from response is not equal to the name[%s] of tf code.", *response.Response.Name, name)
-	}
-
+	registryId = *response.Response.RegistryId
 	d.SetId(strings.Join([]string{registryId, name}, FILED_SP))
-
-	pw := response.Response.Password
-	if pw != nil {
-		_ = d.Set("password", *pw)
-	}
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -274,7 +216,7 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -294,20 +236,25 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	_ = d.Set("registry_id", registryId)
-	_ = d.Set("name", name)
+	if ServiceAccount.RegistryId != nil {
+		_ = d.Set("registry_id", ServiceAccount.RegistryId)
+	}
+
+	if ServiceAccount.Name != nil {
+		_ = d.Set("name", ServiceAccount.Name)
+	}
 
 	if ServiceAccount.Permissions != nil {
 		permissionsList := []interface{}{}
-		for _, permission := range ServiceAccount.Permissions {
+		for _, permissions := range ServiceAccount.Permissions {
 			permissionsMap := map[string]interface{}{}
 
-			if permission.Resource != nil {
-				permissionsMap["resource"] = permission.Resource
+			if ServiceAccount.Permissions.Resource != nil {
+				permissionsMap["resource"] = ServiceAccount.Permissions.Resource
 			}
 
-			if len(permission.Actions) > 0 {
-				permissionsMap["actions"] = helper.StringsInterfaces(permission.Actions)
+			if ServiceAccount.Permissions.Actions != nil {
+				permissionsMap["actions"] = ServiceAccount.Permissions.Actions
 			}
 
 			permissionsList = append(permissionsList, permissionsMap)
@@ -319,6 +266,10 @@ func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta inte
 
 	if ServiceAccount.Description != nil {
 		_ = d.Set("description", ServiceAccount.Description)
+	}
+
+	if ServiceAccount.Duration != nil {
+		_ = d.Set("duration", ServiceAccount.Duration)
 	}
 
 	if ServiceAccount.ExpiresAt != nil {
@@ -356,9 +307,9 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 	name := idSplit[1]
 
 	request.RegistryId = &registryId
-	request.Name = helper.String(TCR_NAME_PREFIX + name)
+	request.Name = &name
 
-	immutableArgs := []string{"registry_id", "name"}
+	immutableArgs := []string{"registry_id", "name", "permissions", "description", "duration", "expires_at", "disable"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -366,21 +317,30 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
+	if d.HasChange("registry_id") {
+		if v, ok := d.GetOk("registry_id"); ok {
+			request.RegistryId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
+		}
+	}
+
 	if d.HasChange("permissions") {
 		if v, ok := d.GetOk("permissions"); ok {
 			for _, item := range v.([]interface{}) {
 				permission := tcr.Permission{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["resource"]; ok {
 					permission.Resource = helper.String(v.(string))
 				}
 				if v, ok := dMap["actions"]; ok {
 					actionsSet := v.(*schema.Set).List()
 					for i := range actionsSet {
-						if actionsSet[i] != nil {
-							actions := actionsSet[i].(string)
-							permission.Actions = append(permission.Actions, &actions)
-						}
+						actions := actionsSet[i].(string)
+						permission.Actions = append(permission.Actions, &actions)
 					}
 				}
 				request.Permissions = append(request.Permissions, &permission)
@@ -413,7 +373,7 @@ func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().ModifyServiceAccount(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().ModifyServiceAccount(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -448,13 +408,13 @@ func resourceTencentCloudTcrServiceAccountDelete(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	registryId := idSplit[0]
-	name := TCR_NAME_PREFIX + idSplit[1]
+	name := idSplit[1]
 
 	if err := service.DeleteTcrServiceAccountById(ctx, registryId, name); err != nil {
 		return err

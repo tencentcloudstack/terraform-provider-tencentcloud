@@ -5,22 +5,33 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_scf_invoke_function" "invoke_function" {
-  function_name = "keep-1676351130"
-  qualifier     = "2"
-  namespace     = "default"
+  function_name = "test_function"
+  invocation_type = ""
+  qualifier = ""
+  client_context = ""
+  log_type = ""
+  namespace = "test_namespace"
+  routing_key = ""
 }
 ```
 
+Import
+
+scf invoke_function can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_scf_invoke_function.invoke_function invoke_function_id
+```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudScfInvokeFunction() *schema.Resource {
@@ -28,6 +39,9 @@ func resourceTencentCloudScfInvokeFunction() *schema.Resource {
 		Create: resourceTencentCloudScfInvokeFunctionCreate,
 		Read:   resourceTencentCloudScfInvokeFunctionRead,
 		Delete: resourceTencentCloudScfInvokeFunctionDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"function_name": {
 				Required:    true,
@@ -88,10 +102,13 @@ func resourceTencentCloudScfInvokeFunctionCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request  = scf.NewInvokeRequest()
-		response = scf.NewInvokeResponse()
+		request      = scf.NewInvokeRequest()
+		response     = scf.NewInvokeResponse()
+		functionName string
+		namespace    string
 	)
 	if v, ok := d.GetOk("function_name"); ok {
+		functionName = v.(string)
 		request.FunctionName = helper.String(v.(string))
 	}
 
@@ -112,6 +129,7 @@ func resourceTencentCloudScfInvokeFunctionCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("namespace"); ok {
+		namespace = v.(string)
 		request.Namespace = helper.String(v.(string))
 	}
 
@@ -134,9 +152,8 @@ func resourceTencentCloudScfInvokeFunctionCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	functionRequestId := *response.Response.Result.FunctionRequestId
-
-	d.SetId(functionRequestId)
+	functionName = *response.Response.FunctionName
+	d.SetId(strings.Join([]string{functionName, namespace}, FILED_SP))
 
 	return resourceTencentCloudScfInvokeFunctionRead(d, meta)
 }

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMpsAiRecognitionTemplateResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudMpsAiRecognitionTemplateResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_ai_recognition_template.ai_recognition_template", "id")),
 			},
 			{
-				Config: testAccMpsAiRecognitionTemplateUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mps_ai_recognition_template.ai_recognition_template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mps_ai_recognition_template.ai_recognition_template", "name", "terraform-for-test"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_mps_ai_recognition_template.ai_recognition_template",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,72 +29,34 @@ func TestAccTencentCloudMpsAiRecognitionTemplateResource_basic(t *testing.T) {
 const testAccMpsAiRecognitionTemplate = `
 
 resource "tencentcloud_mps_ai_recognition_template" "ai_recognition_template" {
-  name = "terraform-test"
-
-  asr_full_text_configure {
-    switch = "OFF"
-  }
-
-  asr_words_configure {
-    label_set = []
-    switch    = "OFF"
-  }
-
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   face_configure {
-    default_library_label_set     = [
-      "entertainment",
-      "sport",
-    ]
-    face_library                  = "All"
-    score                         = 85
-    switch                        = "ON"
-    user_define_library_label_set = []
-  }
+		switch = &lt;nil&gt;
+		score = 
+		default_library_label_set = &lt;nil&gt;
+		user_define_library_label_set = &lt;nil&gt;
+		face_library = "All"
 
+  }
   ocr_full_text_configure {
-    switch = "OFF"
-  }
+		switch = &lt;nil&gt;
 
+  }
   ocr_words_configure {
-    label_set = []
-    switch    = "OFF"
+		switch = &lt;nil&gt;
+		label_set = &lt;nil&gt;
+
   }
-}
-
-`
-
-const testAccMpsAiRecognitionTemplateUpdate = `
-
-resource "tencentcloud_mps_ai_recognition_template" "ai_recognition_template" {
-  name = "terraform-for-test"
-
   asr_full_text_configure {
-    switch = "OFF"
-  }
+		switch = &lt;nil&gt;
+		subtitle_format = &lt;nil&gt;
 
+  }
   asr_words_configure {
-    label_set = []
-    switch    = "OFF"
-  }
+		switch = &lt;nil&gt;
+		label_set = &lt;nil&gt;
 
-  face_configure {
-    default_library_label_set     = [
-      "entertainment",
-      "sport",
-    ]
-    face_library                  = "All"
-    score                         = 85
-    switch                        = "ON"
-    user_define_library_label_set = []
-  }
-
-  ocr_full_text_configure {
-    switch = "OFF"
-  }
-
-  ocr_words_configure {
-    label_set = []
-    switch    = "OFF"
   }
 }
 

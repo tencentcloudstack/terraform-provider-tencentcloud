@@ -5,7 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_zookeeper_replicas" "zookeeper_replicas" {
-  instance_id = "ins-7eb7eea7"
+  instance_id = "ins-xxxxxx"
+    tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 */
@@ -13,7 +16,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -27,7 +29,7 @@ func dataSourceTencentCloudTseZookeeperReplicas() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engine instance ID.",
+				Description: "Engine instance ID.",
 			},
 
 			"replicas": {
@@ -39,17 +41,17 @@ func dataSourceTencentCloudTseZookeeperReplicas() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "name.",
+							Description: "Name.",
 						},
 						"role": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "role.",
+							Description: "Role.",
 						},
 						"status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "status.",
+							Description: "Status.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
@@ -69,7 +71,7 @@ func dataSourceTencentCloudTseZookeeperReplicas() *schema.Resource {
 						"alias_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "aliasNote: This field may return null, indicating that a valid value is not available.",
+							Description: "AliasNote: This field may return null, indicating that a valid value is not available.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -80,6 +82,11 @@ func dataSourceTencentCloudTseZookeeperReplicas() *schema.Resource {
 				},
 			},
 
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -96,11 +103,9 @@ func dataSourceTencentCloudTseZookeeperReplicasRead(d *schema.ResourceData, meta
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	instanceId := ""
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
@@ -120,6 +125,7 @@ func dataSourceTencentCloudTseZookeeperReplicasRead(d *schema.ResourceData, meta
 		return err
 	}
 
+	ids := make([]string, 0, len(replicas))
 	tmpList := make([]map[string]interface{}, 0, len(replicas))
 
 	if replicas != nil {
@@ -158,13 +164,14 @@ func dataSourceTencentCloudTseZookeeperReplicasRead(d *schema.ResourceData, meta
 				zookeeperReplicaMap["vpc_id"] = zookeeperReplica.VpcId
 			}
 
+			ids = append(ids, *zookeeperReplica.InstanceId)
 			tmpList = append(tmpList, zookeeperReplicaMap)
 		}
 
 		_ = d.Set("replicas", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

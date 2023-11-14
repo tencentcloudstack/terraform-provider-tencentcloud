@@ -5,19 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_flow" "flow" {
-  flow_id = 1307
-}
+  flow_id =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -30,11 +27,13 @@ func dataSourceTencentCloudMariadbFlow() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Flow ID returned by async request API.",
 			},
+
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Flow status. 0: succeeded, 1: failed, 2: running.",
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -48,46 +47,40 @@ func dataSourceTencentCloudMariadbFlowRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_mariadb_flow.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		status  *mariadb.DescribeFlowResponseParams
-		flowId  int
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("flow_id"); v != nil {
 		paramMap["FlowId"] = helper.IntInt64(v.(int))
-		flowId = v.(int)
 	}
+
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMariadbFlowByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		status = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	if status.Status != nil {
-		_ = d.Set("status", status.Status)
+	ids := make([]string, 0, len(status))
+	if status != nil {
+		_ = d.Set("status", status)
 	}
 
-	d.SetId(strconv.Itoa(flowId))
-
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

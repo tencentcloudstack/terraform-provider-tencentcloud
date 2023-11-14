@@ -6,18 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_redis_backup" "backup" {
   instance_id = "crs-c1nl9rpv"
-  begin_time = "2023-04-07 03:57:30"
-  end_time = "2023-04-07 03:57:56"
-  status = [2]
-  instance_name = "Keep-terraform"
-}
+  begin_time = "2017-02-08 19:09:26"
+  end_time = "2017-02-08 19:09:26"
+  status = &lt;nil&gt;
+  instance_name = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
@@ -37,7 +36,7 @@ func dataSourceTencentCloudRedisBackup() *schema.Resource {
 			"begin_time": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "start time, such as 2017-02-08 19:09:26.Query the list of backups that the instance started backing up during the [beginTime, endTime] time period.",
+				Description: "Start time, such as 2017-02-08 19:09:26.Query the list of backups that the instance started backing up during the [beginTime, endTime] time period.",
 			},
 
 			"end_time": {
@@ -165,25 +164,23 @@ func dataSourceTencentCloudRedisBackupRead(d *schema.ResourceData, meta interfac
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("begin_time"); ok {
-		paramMap["begin_time"] = helper.String(v.(string))
+		paramMap["BeginTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("end_time"); ok {
-		paramMap["end_time"] = helper.String(v.(string))
+		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("status"); ok {
 		statusSet := v.(*schema.Set).List()
-		statusList := []*int64{}
 		for i := range statusSet {
 			status := statusSet[i].(int)
-			statusList = append(statusList, helper.IntInt64(status))
+			paramMap["Status"] = append(paramMap["Status"], helper.IntInt64(status))
 		}
-		paramMap["status"] = statusList
 	}
 
 	if v, ok := d.GetOk("instance_name"); ok {

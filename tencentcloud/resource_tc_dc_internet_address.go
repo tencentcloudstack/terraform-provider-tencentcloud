@@ -23,12 +23,11 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudDcInternetAddress() *schema.Resource {
@@ -51,14 +50,14 @@ func resourceTencentCloudDcInternetAddress() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "0: BGP, 1: china telecom, 2: china mobile, 3: china unicom.",
+				Description: "0: BGP1：china telecom2：china mobile3：china unicom.",
 			},
 
 			"addr_proto": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "0: IPv4, 1: IPv6.",
+				Description: "0：IPv41: IPv6.",
 			},
 		},
 	}
@@ -118,7 +117,7 @@ func resourceTencentCloudDcInternetAddressRead(d *schema.ResourceData, meta inte
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
+	internetAddressId := d.Id()
 
 	internetAddress, err := service.DescribeDcInternetAddressById(ctx, instanceId)
 	if err != nil {
@@ -154,7 +153,7 @@ func resourceTencentCloudDcInternetAddressDelete(d *schema.ResourceData, meta in
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := d.Id()
+	internetAddressId := d.Id()
 
 	if err := service.DeleteDcInternetAddressById(ctx, instanceId); err != nil {
 		return err

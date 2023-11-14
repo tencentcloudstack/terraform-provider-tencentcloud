@@ -18,8 +18,6 @@ package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
@@ -33,74 +31,74 @@ func dataSourceTencentCloudTcrImages() *schema.Resource {
 			"registry_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"namespace_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "namespace name.",
+				Description: "Namespace name.",
 			},
 
 			"repository_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "repository name.",
+				Description: "Repository name.",
 			},
 
 			"image_version": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "image version name, default is fuzzy match.",
+				Description: "Image version name, default is fuzzy match.",
 			},
 
 			"digest": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "specify image digest for lookup.",
+				Description: "Specify image digest for lookup.",
 			},
 
 			"exact_match": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "specifies whether it is an exact match, true is an exact match, and not filled is a fuzzy match.",
+				Description: "Specifies whether it is an exact match, true is an exact match, and not filled is a fuzzy match.",
 			},
 
 			"image_info_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "container image information list.",
+				Description: "Container image information list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"digest": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "hash value.",
+							Description: "Hash value.",
 						},
 						"size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "image size (unit: byte).",
+							Description: "Image size (unit: byte).",
 						},
 						"image_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "tag name.",
+							Description: "Tag name.",
 						},
 						"update_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "update time.",
+							Description: "Update time.",
 						},
 						"kind": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "product type,note: this field may return null, indicating that no valid value can be obtained.",
+							Description: "Product type,note: this field may return null, indicating that no valid value can be obtained.",
 						},
 						"kms_signature": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "kms signature information,note: this field may return null, indicating that no valid value can be obtained.",
+							Description: "Kms signature information,note: this field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -119,43 +117,36 @@ func dataSourceTencentCloudTcrImagesRead(d *schema.ResourceData, meta interface{
 	defer logElapsed("data_source.tencentcloud_tcr_images.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		registryId    string
-		namespaceName string
-		repoName      string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("registry_id"); ok {
-		paramMap["registry_id"] = helper.String(v.(string))
-		registryId = v.(string)
+		paramMap["RegistryId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("namespace_name"); ok {
-		paramMap["namespace_name"] = helper.String(v.(string))
-		namespaceName = v.(string)
+		paramMap["NamespaceName"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("repository_name"); ok {
-		paramMap["repository_name"] = helper.String(v.(string))
-		repoName = v.(string)
+		paramMap["RepositoryName"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("image_version"); ok {
-		paramMap["image_version"] = helper.String(v.(string))
+		paramMap["ImageVersion"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("digest"); ok {
-		paramMap["digest"] = helper.String(v.(string))
+		paramMap["Digest"] = helper.String(v.(string))
 	}
 
 	if v, _ := d.GetOk("exact_match"); v != nil {
-		paramMap["exact_match"] = helper.Bool(v.(bool))
+		paramMap["ExactMatch"] = helper.Bool(v.(bool))
 	}
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var imageInfoList []*tcr.TcrImageInfo
 
@@ -202,7 +193,7 @@ func dataSourceTencentCloudTcrImagesRead(d *schema.ResourceData, meta interface{
 				tcrImageInfoMap["kms_signature"] = tcrImageInfo.KmsSignature
 			}
 
-			ids = append(ids, strings.Join([]string{registryId, namespaceName, repoName, *tcrImageInfo.ImageVersion}, FILED_SP))
+			ids = append(ids, *tcrImageInfo.RegistryId)
 			tmpList = append(tmpList, tcrImageInfoMap)
 		}
 

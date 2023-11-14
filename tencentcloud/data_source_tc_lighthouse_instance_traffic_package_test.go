@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseInstanceTrafficPackageDataSource_basic(t *testing.T) {
@@ -23,6 +22,11 @@ func TestAccTencentCloudLighthouseInstanceTrafficPackageDataSource_basic(t *test
 }
 
 const testAccLighthouseInstanceTrafficPackageDataSource = `
+
 data "tencentcloud_lighthouse_instance_traffic_package" "instance_traffic_package" {
+  instance_ids = 
+  offset = 0
+  limit = 20
 }
+
 `

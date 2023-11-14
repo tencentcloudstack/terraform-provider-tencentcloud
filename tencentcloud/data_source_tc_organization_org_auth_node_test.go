@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudOrganizationOrgAuthNodeDataSource_basic(t *testing.T) {
@@ -25,6 +24,7 @@ func TestAccTencentCloudOrganizationOrgAuthNodeDataSource_basic(t *testing.T) {
 const testAccOrganizationOrgAuthNodeDataSource = `
 
 data "tencentcloud_organization_org_auth_node" "org_auth_node" {
+  auth_name = &lt;nil&gt;
   }
 
 `

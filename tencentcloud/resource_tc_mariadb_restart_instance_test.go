@@ -1,13 +1,12 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbRestartInstanceResource_basic -v
 func TestAccTencentCloudMariadbRestartInstanceResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -16,16 +15,22 @@ func TestAccTencentCloudMariadbRestartInstanceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMariadbRestartInstance,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_restart_instance.restart_instance", "id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mariadb_restart_instance.restart_instance", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_mariadb_restart_instance.restart_instance",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
 const testAccMariadbRestartInstance = `
+
 resource "tencentcloud_mariadb_restart_instance" "restart_instance" {
-  instance_id = "tdsql-9vqvls95"
+  instance_ids = 
+  restart_time = ""
 }
+
 `

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMongodbInstanceSlowLogDataSource_basic(t *testing.T) {
@@ -15,9 +14,8 @@ func TestAccTencentCloudMongodbInstanceSlowLogDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccMongodbInstanceSlowLogDataSource,
-				Check:     resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_slow_log.instance_slow_log")),
+				Config: testAccMongodbInstanceSlowLogDataSource,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_slow_log.instance_slow_log")),
 			},
 		},
 	})
@@ -26,11 +24,11 @@ func TestAccTencentCloudMongodbInstanceSlowLogDataSource_basic(t *testing.T) {
 const testAccMongodbInstanceSlowLogDataSource = `
 
 data "tencentcloud_mongodb_instance_slow_log" "instance_slow_log" {
-  instance_id = "cmgo-gwqk8669"
-  start_time = "2023-05-10 10:00:00"
-  end_time = "2023-05-10 12:47:00"
-  slow_ms = 100
+  instance_id = "cmgo-9d0p6umb"
+  start_time = "2019-06-01 10:00:00"
+  end_time = "2019-06-02 12:00:00"
+  slow_m_s = 100
   format = "json"
-}
+  }
 
 `

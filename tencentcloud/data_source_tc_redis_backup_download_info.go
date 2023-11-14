@@ -5,27 +5,26 @@ Example Usage
 
 ```hcl
 data "tencentcloud_redis_backup_download_info" "backup_download_info" {
-  instance_id = "crs-iw7d9wdd"
-  backup_id = "641186639-8362913-1516672770"
-  # limit_type = "NoLimit"
-  # vpc_comparison_symbol = "In"
-  # ip_comparison_symbol = "In"
-  # limit_vpc {
-	# 	region = "ap-guangzhou"
-	# 	vpc_list = [""]
-  # }
-  # limit_ip = [""]
-}
+  instance_id = "crs-c1nl9rpv"
+  backup_id = "123456789-123456-1234567812"
+  limit_type = "NoLimit"
+  vpc_comparison_symbol = "In"
+  ip_comparison_symbol = "In"
+  limit_vpc {
+		region = "ap-guangzhou"
+		vpc_list =
+
+  }
+  limit_ip =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -145,23 +144,23 @@ func dataSourceTencentCloudRedisBackupDownloadInfoRead(d *schema.ResourceData, m
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("backup_id"); ok {
-		paramMap["backup_id"] = helper.String(v.(string))
+		paramMap["BackupId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("limit_type"); ok {
-		paramMap["limit_type"] = helper.String(v.(string))
+		paramMap["LimitType"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("vpc_comparison_symbol"); ok {
-		paramMap["vpc_comparison_symbol"] = helper.String(v.(string))
+		paramMap["VpcComparisonSymbol"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("ip_comparison_symbol"); ok {
-		paramMap["ip_comparison_symbol"] = helper.String(v.(string))
+		paramMap["IpComparisonSymbol"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("limit_vpc"); ok {
@@ -186,7 +185,7 @@ func dataSourceTencentCloudRedisBackupDownloadInfoRead(d *schema.ResourceData, m
 
 	if v, ok := d.GetOk("limit_ip"); ok {
 		limitIpSet := v.(*schema.Set).List()
-		paramMap["limit_ip"] = helper.InterfacesStringsPoint(limitIpSet)
+		paramMap["LimitIp"] = helper.InterfacesStringsPoint(limitIpSet)
 	}
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -196,11 +195,6 @@ func dataSourceTencentCloudRedisBackupDownloadInfoRead(d *schema.ResourceData, m
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeRedisBackupDownloadInfoByFilter(ctx, paramMap)
 		if e != nil {
-			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if ee.Code == "FailedOperation.SystemError" {
-					return resource.NonRetryableError(e)
-				}
-			}
 			return retryError(e)
 		}
 		backupInfos = result
@@ -233,7 +227,7 @@ func dataSourceTencentCloudRedisBackupDownloadInfoRead(d *schema.ResourceData, m
 				backupDownloadInfoMap["inner_download_url"] = backupDownloadInfo.InnerDownloadUrl
 			}
 
-			ids = append(ids, *backupDownloadInfo.FileName)
+			ids = append(ids, *backupDownloadInfo.InstanceId)
 			tmpList = append(tmpList, backupDownloadInfoMap)
 		}
 

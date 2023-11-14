@@ -6,17 +6,16 @@ Example Usage
 ```hcl
 data "tencentcloud_ses_statistics_report" "statistics_report" {
   start_date = "2020-10-01"
-  end_date = "2023-09-05"
-  domain = "iac-tf.cloud"
+  end_date = "2020-10-03"
+  domain = "qcloud.com"
   receiving_mailbox_type = "gmail.com"
-}
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
@@ -187,24 +186,25 @@ func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta 
 
 	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var statisticsReport *ses.GetStatisticsReportResponseParams
+	var dailyVolumes []*ses.Volume
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSesStatisticsReportByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		statisticsReport = result
+		dailyVolumes = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(statisticsReport.DailyVolumes))
-	tmpList := make([]map[string]interface{}, 0, len(statisticsReport.DailyVolumes))
+	ids := make([]string, 0, len(dailyVolumes))
+	tmpList := make([]map[string]interface{}, 0, len(dailyVolumes))
 
-	if statisticsReport.DailyVolumes != nil {
-		for _, volume := range statisticsReport.DailyVolumes {
+	if dailyVolumes != nil {
+		for _, volume := range dailyVolumes {
 			volumeMap := map[string]interface{}{}
 
 			if volume.SendDate != nil {
@@ -239,15 +239,14 @@ func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta 
 				volumeMap["unsubscribe_count"] = volume.UnsubscribeCount
 			}
 
-			ids = append(ids, *volume.SendDate)
+			ids = append(ids, *volume.StatisticsReport)
 			tmpList = append(tmpList, volumeMap)
 		}
 
 		_ = d.Set("daily_volumes", tmpList)
 	}
 
-	if statisticsReport.OverallVolume != nil {
-		overallVolume := statisticsReport.OverallVolume
+	if overallVolume != nil {
 		volumeMap := map[string]interface{}{}
 
 		if overallVolume.SendDate != nil {
@@ -282,13 +281,14 @@ func dataSourceTencentCloudSesStatisticsReportRead(d *schema.ResourceData, meta 
 			volumeMap["unsubscribe_count"] = overallVolume.UnsubscribeCount
 		}
 
-		_ = d.Set("overall_volume", []interface{}{volumeMap})
+		ids = append(ids, *overallVolume.StatisticsReport)
+		_ = d.Set("overall_volume", volumeMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

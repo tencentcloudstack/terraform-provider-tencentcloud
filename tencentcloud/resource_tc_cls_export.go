@@ -5,15 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cls_export" "export" {
-  topic_id  = "7e34a3a7-635e-4da8-9005-88106c1fde69"
-  log_count = 2
-  query     = "select count(*) as count"
-  from      = 1607499107000
-  to        = 1607499108000
-  order     = "desc"
-  format    = "json"
+  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
+  query = "* | select count(*) as count"
+  from = 1607499107000
+  order = "desc"
+  format = "json"
 }
-
 ```
 
 Import
@@ -21,7 +18,7 @@ Import
 cls export can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_export.export topic_id#export_id
+terraform import tencentcloud_cls_export.export export_id
 ```
 */
 package tencentcloud
@@ -29,19 +26,19 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudClsExport() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClsExportCreate,
 		Read:   resourceTencentCloudClsExportRead,
+		Update: resourceTencentCloudClsExportUpdate,
 		Delete: resourceTencentCloudClsExportDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -50,50 +47,31 @@ func resourceTencentCloudClsExport() *schema.Resource {
 			"topic_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "topic id.",
+				Description: "Topic id.",
 			},
 
 			"query": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "export query rules.",
-			},
-
-			"log_count": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				ForceNew:    true,
-				Description: "export amount of log.",
+				Description: "Export query rules.",
 			},
 
 			"from": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				ForceNew:    true,
-				Description: "export start time.",
-			},
-
-			"to": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				ForceNew:    true,
-				Description: "export end time.",
+				Description: "Export start time.",
 			},
 
 			"order": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "log export time sorting. desc or asc.",
+				Description: "Log export time sorting. desc or asc.",
 			},
 
 			"format": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "log export format.",
+				Description: "Log export format.",
 			},
 		},
 	}
@@ -116,20 +94,12 @@ func resourceTencentCloudClsExportCreate(d *schema.ResourceData, meta interface{
 		request.TopicId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("log_count"); ok {
-		request.Count = helper.IntUint64(v.(int))
-	}
-
 	if v, ok := d.GetOk("query"); ok {
 		request.Query = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("from"); ok {
 		request.From = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOkExists("to"); ok {
-		request.To = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("order"); ok {
@@ -155,8 +125,8 @@ func resourceTencentCloudClsExportCreate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	exportId = *response.Response.ExportId
-	d.SetId(topicId + FILED_SP + exportId)
+	topicId = *response.Response.TopicId
+	d.SetId(strings.Join([]string{topicId, exportId}, FILED_SP))
 
 	return resourceTencentCloudClsExportRead(d, meta)
 }
@@ -193,20 +163,12 @@ func resourceTencentCloudClsExportRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("topic_id", export.TopicId)
 	}
 
-	if export.Count != nil {
-		_ = d.Set("log_count", export.Count)
-	}
-
 	if export.Query != nil {
 		_ = d.Set("query", export.Query)
 	}
 
 	if export.From != nil {
 		_ = d.Set("from", export.From)
-	}
-
-	if export.To != nil {
-		_ = d.Set("to", export.To)
 	}
 
 	if export.Order != nil {
@@ -220,6 +182,22 @@ func resourceTencentCloudClsExportRead(d *schema.ResourceData, meta interface{})
 	return nil
 }
 
+func resourceTencentCloudClsExportUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cls_export.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	immutableArgs := []string{"topic_id", "query", "from", "order", "format"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return resourceTencentCloudClsExportRead(d, meta)
+}
+
 func resourceTencentCloudClsExportDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_export.delete")()
 	defer inconsistentCheck(d, meta)()
@@ -229,10 +207,13 @@ func resourceTencentCloudClsExportDelete(d *schema.ResourceData, meta interface{
 
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	topicId := idSplit[0]
 	exportId := idSplit[1]
 
-	if err := service.DeleteClsExportById(ctx, exportId); err != nil {
+	if err := service.DeleteClsExportById(ctx, topicId, exportId); err != nil {
 		return err
 	}
 

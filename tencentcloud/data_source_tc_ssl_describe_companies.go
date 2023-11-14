@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_companies" "describe_companies" {
-  company_id = 122
+  company_id =
   }
 ```
 */
@@ -13,7 +13,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -69,12 +68,12 @@ func dataSourceTencentCloudSslDescribeCompanies() *schema.Resource {
 						"company_phone": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "company phone.",
+							Description: "Company phone.",
 						},
 						"id_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "typeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+							Description: "TypeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
 						"id_number": {
 							Type:        schema.TypeString,
@@ -166,7 +165,7 @@ func dataSourceTencentCloudSslDescribeCompaniesRead(d *schema.ResourceData, meta
 				companyInfoMap["id_number"] = companyInfo.IdNumber
 			}
 
-			ids = append(ids, helper.Int64ToStr(*companyInfo.CompanyId))
+			ids = append(ids, *companyInfo.CompanyId)
 			tmpList = append(tmpList, companyInfoMap)
 		}
 

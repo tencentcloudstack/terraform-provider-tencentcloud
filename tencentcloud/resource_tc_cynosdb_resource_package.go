@@ -12,7 +12,7 @@ resource "tencentcloud_cynosdb_resource_package" "resource_package" {
   package_spec =
   expire_day = 180
   package_count = 1
-  package_name = "PackageName"
+  package_name = "资源包_1"
 }
 ```
 
@@ -29,12 +29,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbResourcePackage() *schema.Resource {
@@ -105,9 +104,9 @@ func resourceTencentCloudCynosdbResourcePackageCreate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	var (
-		request = cynosdb.NewCreateResourcePackageRequest()
-		// response  = cynosdb.NewCreateResourcePackageResponse()
-		// packageId string
+		request   = cynosdb.NewCreateResourcePackageRequest()
+		response  = cynosdb.NewCreateResourcePackageResponse()
+		packageId string
 	)
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
@@ -148,7 +147,7 @@ func resourceTencentCloudCynosdbResourcePackageCreate(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -156,8 +155,8 @@ func resourceTencentCloudCynosdbResourcePackageCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	// packageId = *response.Response.PackageId
-	// d.SetId(helper.String(packageId))
+	packageId = *response.Response.PackageId
+	d.SetId(packageId)
 
 	return resourceTencentCloudCynosdbResourcePackageRead(d, meta)
 }
@@ -172,7 +171,8 @@ func resourceTencentCloudCynosdbResourcePackageRead(d *schema.ResourceData, meta
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	packageId := d.Id()
+	resourcePackageId := d.Id()
+
 	resourcePackage, err := service.DescribeCynosdbResourcePackageById(ctx, packageId)
 	if err != nil {
 		return err
@@ -184,37 +184,37 @@ func resourceTencentCloudCynosdbResourcePackageRead(d *schema.ResourceData, meta
 		return nil
 	}
 
-	// if resourcePackage.InstanceType != nil {
-	// 	_ = d.Set("instance_type", resourcePackage.InstanceType)
-	// }
+	if resourcePackage.InstanceType != nil {
+		_ = d.Set("instance_type", resourcePackage.InstanceType)
+	}
 
-	// if resourcePackage.PackageRegion != nil {
-	// 	_ = d.Set("package_region", resourcePackage.PackageRegion)
-	// }
+	if resourcePackage.PackageRegion != nil {
+		_ = d.Set("package_region", resourcePackage.PackageRegion)
+	}
 
-	// if resourcePackage.PackageType != nil {
-	// 	_ = d.Set("package_type", resourcePackage.PackageType)
-	// }
+	if resourcePackage.PackageType != nil {
+		_ = d.Set("package_type", resourcePackage.PackageType)
+	}
 
-	// if resourcePackage.PackageVersion != nil {
-	// 	_ = d.Set("package_version", resourcePackage.PackageVersion)
-	// }
+	if resourcePackage.PackageVersion != nil {
+		_ = d.Set("package_version", resourcePackage.PackageVersion)
+	}
 
-	// if resourcePackage.PackageSpec != nil {
-	// 	_ = d.Set("package_spec", resourcePackage.PackageSpec)
-	// }
+	if resourcePackage.PackageSpec != nil {
+		_ = d.Set("package_spec", resourcePackage.PackageSpec)
+	}
 
-	// if resourcePackage.ExpireDay != nil {
-	// 	_ = d.Set("expire_day", resourcePackage.ExpireDay)
-	// }
+	if resourcePackage.ExpireDay != nil {
+		_ = d.Set("expire_day", resourcePackage.ExpireDay)
+	}
 
-	// if resourcePackage.PackageCount != nil {
-	// 	_ = d.Set("package_count", resourcePackage.PackageCount)
-	// }
+	if resourcePackage.PackageCount != nil {
+		_ = d.Set("package_count", resourcePackage.PackageCount)
+	}
 
-	// if resourcePackage.PackageName != nil {
-	// 	_ = d.Set("package_name", resourcePackage.PackageName)
-	// }
+	if resourcePackage.PackageName != nil {
+		_ = d.Set("package_name", resourcePackage.PackageName)
+	}
 
 	return nil
 }
@@ -227,7 +227,7 @@ func resourceTencentCloudCynosdbResourcePackageUpdate(d *schema.ResourceData, me
 
 	request := cynosdb.NewModifyResourcePackageNameRequest()
 
-	packageId := d.Id()
+	resourcePackageId := d.Id()
 
 	request.PackageId = &packageId
 
@@ -270,7 +270,7 @@ func resourceTencentCloudCynosdbResourcePackageDelete(d *schema.ResourceData, me
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	packageId := d.Id()
+	resourcePackageId := d.Id()
 
 	if err := service.DeleteCynosdbResourcePackageById(ctx, packageId); err != nil {
 		return err

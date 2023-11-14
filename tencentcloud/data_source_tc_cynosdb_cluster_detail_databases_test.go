@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbClusterDetailDatabasesDataSource_basic -v
 func TestAccTencentCloudCynosdbClusterDetailDatabasesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,17 +15,17 @@ func TestAccTencentCloudCynosdbClusterDetailDatabasesDataSource_basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbClusterDetailDatabasesDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_cluster_detail_databases.cluster_detail_databases"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_cluster_detail_databases.cluster_detail_databases")),
 			},
 		},
 	})
 }
 
 const testAccCynosdbClusterDetailDatabasesDataSource = `
+
 data "tencentcloud_cynosdb_cluster_detail_databases" "cluster_detail_databases" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  db_name    = "users"
-}
+  cluster_id = "cynosdbmysql-xxxxxxx"
+  db_name = "test"
+  }
+
 `

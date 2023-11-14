@@ -9,7 +9,10 @@ resource "tencentcloud_tsf_application" "application" {
   application_type = "C"
   microservice_type = "M"
   application_desc = "This is my application"
+  application_log_config = ""
+  application_resource_type = ""
   application_runtime_type = "Java"
+  program_id = "p-123456"
   service_config_list {
 		name = "my-service"
 		ports {
@@ -19,9 +22,19 @@ resource "tencentcloud_tsf_application" "application" {
 		health_check {
 			path = "/health"
 		}
+
   }
   ignore_create_image_repository = true
+  program_id_list =
 }
+```
+
+Import
+
+tsf application can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_application.application application_id
 ```
 */
 package tencentcloud
@@ -29,12 +42,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfApplication() *schema.Resource {
@@ -43,9 +55,9 @@ func resourceTencentCloudTsfApplication() *schema.Resource {
 		Read:   resourceTencentCloudTsfApplicationRead,
 		Update: resourceTencentCloudTsfApplicationUpdate,
 		Delete: resourceTencentCloudTsfApplicationDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"application_name": {
 				Required:    true,
@@ -79,7 +91,6 @@ func resourceTencentCloudTsfApplication() *schema.Resource {
 
 			"application_resource_type": {
 				Optional:    true,
-				Default:     "DEF",
 				Type:        schema.TypeString,
 				Description: "Application resource type, deprecated parameter.",
 			},
@@ -264,7 +275,7 @@ func resourceTencentCloudTsfApplicationCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	applicationId = *response.Response.Result
+	applicationId = *response.Response.ApplicationId
 	d.SetId(applicationId)
 
 	return resourceTencentCloudTsfApplicationRead(d, meta)
@@ -309,34 +320,34 @@ func resourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("application_desc", application.ApplicationDesc)
 	}
 
-	// if application.ApplicationLogConfig != nil {
-	// 	_ = d.Set("application_log_config", application.ApplicationLogConfig)
-	// }
+	if application.ApplicationLogConfig != nil {
+		_ = d.Set("application_log_config", application.ApplicationLogConfig)
+	}
 
 	if application.ApplicationResourceType != nil {
 		_ = d.Set("application_resource_type", application.ApplicationResourceType)
 	}
 
-	// if application.ApplicationRuntimeType != nil {
-	// 	_ = d.Set("application_runtime_type", application.ApplicationRuntimeType)
-	// }
+	if application.ApplicationRuntimeType != nil {
+		_ = d.Set("application_runtime_type", application.ApplicationRuntimeType)
+	}
 
-	// if application.ProgramId != nil {
-	// 	_ = d.Set("program_id", application.ProgramId)
-	// }
+	if application.ProgramId != nil {
+		_ = d.Set("program_id", application.ProgramId)
+	}
 
 	if application.ServiceConfigList != nil {
 		serviceConfigListList := []interface{}{}
 		for _, serviceConfigList := range application.ServiceConfigList {
 			serviceConfigListMap := map[string]interface{}{}
 
-			if serviceConfigList.Name != nil {
-				serviceConfigListMap["name"] = serviceConfigList.Name
+			if application.ServiceConfigList.Name != nil {
+				serviceConfigListMap["name"] = application.ServiceConfigList.Name
 			}
 
-			if serviceConfigList.Ports != nil {
+			if application.ServiceConfigList.Ports != nil {
 				portsList := []interface{}{}
-				for _, ports := range serviceConfigList.Ports {
+				for _, ports := range application.ServiceConfigList.Ports {
 					portsMap := map[string]interface{}{}
 
 					if ports.TargetPort != nil {
@@ -350,14 +361,14 @@ func resourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta interfa
 					portsList = append(portsList, portsMap)
 				}
 
-				serviceConfigListMap["ports"] = portsList
+				serviceConfigListMap["ports"] = []interface{}{portsList}
 			}
 
-			if serviceConfigList.HealthCheck != nil {
+			if application.ServiceConfigList.HealthCheck != nil {
 				healthCheckMap := map[string]interface{}{}
 
-				if serviceConfigList.HealthCheck.Path != nil {
-					healthCheckMap["path"] = serviceConfigList.HealthCheck.Path
+				if application.ServiceConfigList.HealthCheck.Path != nil {
+					healthCheckMap["path"] = application.ServiceConfigList.HealthCheck.Path
 				}
 
 				serviceConfigListMap["health_check"] = []interface{}{healthCheckMap}
@@ -374,9 +385,9 @@ func resourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("ignore_create_image_repository", application.IgnoreCreateImageRepository)
 	}
 
-	// if application.ProgramIdList != nil {
-	// 	_ = d.Set("program_id_list", application.ProgramIdList)
-	// }
+	if application.ProgramIdList != nil {
+		_ = d.Set("program_id_list", application.ProgramIdList)
+	}
 
 	return nil
 }
@@ -393,7 +404,7 @@ func resourceTencentCloudTsfApplicationUpdate(d *schema.ResourceData, meta inter
 
 	request.ApplicationId = &applicationId
 
-	immutableArgs := []string{"application_type", "microservice_type", "application_log_config", "application_resource_type", "application_runtime_type", "program_id", "ignore_create_image_repository", "program_id_list"}
+	immutableArgs := []string{"application_name", "application_type", "microservice_type", "application_desc", "application_log_config", "application_resource_type", "application_runtime_type", "program_id", "service_config_list", "ignore_create_image_repository", "program_id_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -416,7 +427,6 @@ func resourceTencentCloudTsfApplicationUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("service_config_list") {
 		if v, ok := d.GetOk("service_config_list"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				serviceConfig := tsf.ServiceConfig{}
 				if v, ok := dMap["name"]; ok {
 					serviceConfig.Name = helper.String(v.(string))

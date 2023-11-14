@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfReservedConcurrencyConfigResource_basic(t *testing.T) {
@@ -30,9 +29,9 @@ func TestAccTencentCloudScfReservedConcurrencyConfigResource_basic(t *testing.T)
 const testAccScfReservedConcurrencyConfig = `
 
 resource "tencentcloud_scf_reserved_concurrency_config" "reserved_concurrency_config" {
-  function_name = "keep-1676351130"
+  function_name = "test_function"
   reserved_concurrency_mem = 128000
-  namespace     = "default"
+  namespace = "test_namespace"
 }
 
 `

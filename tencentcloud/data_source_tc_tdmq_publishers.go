@@ -5,25 +5,26 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tdmq_publishers" "publishers" {
-  cluster_id = "pulsar-9n95ax58b9vn"
-  namespace  = "keep-ns"
-  topic      = "keep-topic"
+  cluster_id = ""
+  namespace = ""
+  topic = ""
   filters {
-    name   = "ProducerName"
-    values = ["test"]
+		name = ""
+		values =
+
   }
   sort {
-    name  = "ProducerName"
-    order = "DESC"
+		name = ""
+		order = ""
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -39,16 +40,19 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"namespace": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "namespace name.",
+				Description: "Namespace name.",
 			},
+
 			"topic": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "topic name.",
+				Description: "Topic name.",
 			},
+
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -61,25 +65,28 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 							Description: "The name of the filter parameter.",
 						},
 						"values": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
-							Description: "value.",
+							Description: "Value.",
 						},
 					},
 				},
 			},
+
 			"sort": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "sorter.",
+				Description: "Sorter.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "sorter.",
+							Description: "Sorter.",
 						},
 						"order": {
 							Type:        schema.TypeString,
@@ -89,7 +96,7 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 					},
 				},
 			},
-			// computed
+
 			"publishers": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -99,22 +106,22 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 						"producer_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "producer idNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Producer idNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"producer_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "producer nameNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Producer nameNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"address": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "producer addressNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Producer addressNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"client_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "client versionNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Client versionNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"msg_rate_in": {
 							Type:        schema.TypeFloat,
@@ -134,7 +141,7 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 						"connected_since": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "connection timeNote: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Connection timeNote: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"partition": {
 							Type:        schema.TypeInt,
@@ -144,6 +151,7 @@ func dataSourceTencentCloudTdmqPublishers() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -157,35 +165,27 @@ func dataSourceTencentCloudTdmqPublishersRead(d *schema.ResourceData, meta inter
 	defer logElapsed("data_source.tencentcloud_tdmq_publishers.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		publishers []*tdmq.Publisher
-		clusterId  string
-		Namespace  string
-		Topic      string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
 
 	if v, ok := d.GetOk("namespace"); ok {
 		paramMap["Namespace"] = helper.String(v.(string))
-		Namespace = v.(string)
 	}
 
 	if v, ok := d.GetOk("topic"); ok {
 		paramMap["Topic"] = helper.String(v.(string))
-		Topic = v.(string)
 	}
 
 	if v, ok := d.GetOk("filters"); ok {
 		filtersSet := v.([]interface{})
 		tmpSet := make([]*tdmq.Filter, 0, len(filtersSet))
+
 		for _, item := range filtersSet {
 			filter := tdmq.Filter{}
 			filterMap := item.(map[string]interface{})
@@ -213,21 +213,23 @@ func dataSourceTencentCloudTdmqPublishersRead(d *schema.ResourceData, meta inter
 		paramMap["sort"] = &sort
 	}
 
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var publishers []*tdmq.Publisher
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqPublishersByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		publishers = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
+	ids := make([]string, 0, len(publishers))
 	tmpList := make([]map[string]interface{}, 0, len(publishers))
 
 	if publishers != nil {
@@ -270,15 +272,13 @@ func dataSourceTencentCloudTdmqPublishersRead(d *schema.ResourceData, meta inter
 				publisherMap["partition"] = publisher.Partition
 			}
 
+			ids = append(ids, *publisher.ClusterId)
 			tmpList = append(tmpList, publisherMap)
 		}
 
 		_ = d.Set("publishers", tmpList)
 	}
 
-	ids = append(ids, clusterId)
-	ids = append(ids, Namespace)
-	ids = append(ids, Topic)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
@@ -286,6 +286,5 @@ func dataSourceTencentCloudTdmqPublishersRead(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
-
 	return nil
 }

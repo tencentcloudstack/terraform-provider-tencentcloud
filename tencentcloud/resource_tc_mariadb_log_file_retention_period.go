@@ -5,16 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_log_file_retention_period" "log_file_retention_period" {
-  instance_id = "tdsql-4pzs5b67"
-  days = "8"
+  instance_id = &lt;nil&gt;
+  days = &lt;nil&gt;
 }
-
 ```
+
 Import
 
 mariadb log_file_retention_period can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_mariadb_log_file_retention_period.log_file_retention_period tdsql-4pzs5b67
+terraform import tencentcloud_mariadb_log_file_retention_period.log_file_retention_period log_file_retention_period_id
 ```
 */
 package tencentcloud
@@ -22,18 +23,16 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMariadbLogFileRetentionPeriod() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMariadbLogFileRetentionPeriodRead,
 		Create: resourceTencentCloudMariadbLogFileRetentionPeriodCreate,
+		Read:   resourceTencentCloudMariadbLogFileRetentionPeriodRead,
 		Update: resourceTencentCloudMariadbLogFileRetentionPeriodUpdate,
 		Delete: resourceTencentCloudMariadbLogFileRetentionPeriodDelete,
 		Importer: &schema.ResourceImporter{
@@ -41,15 +40,15 @@ func resourceTencentCloudMariadbLogFileRetentionPeriod() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "instance id.",
+				Type:        schema.TypeString,
+				Description: "Instance id.",
 			},
 
 			"days": {
+				Optional:    true,
 				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "The number of days to save, cannot exceed 30.",
+				Description: "Retention days.",
 			},
 		},
 	}
@@ -65,6 +64,7 @@ func resourceTencentCloudMariadbLogFileRetentionPeriodCreate(d *schema.ResourceD
 	}
 
 	d.SetId(instanceId)
+
 	return resourceTencentCloudMariadbLogFileRetentionPeriodUpdate(d, meta)
 }
 
@@ -73,21 +73,22 @@ func resourceTencentCloudMariadbLogFileRetentionPeriodRead(d *schema.ResourceDat
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
+	logFileRetentionPeriodId := d.Id()
 
-	logFileRetentionPeriod, err := service.DescribeMariadbLogFileRetentionPeriod(ctx, instanceId)
-
+	logFileRetentionPeriod, err := service.DescribeMariadbLogFileRetentionPeriodById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	if logFileRetentionPeriod == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `logFileRetentionPeriod` %s does not exist", instanceId)
+		log.Printf("[WARN]%s resource `MariadbLogFileRetentionPeriod` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if logFileRetentionPeriod.InstanceId != nil {
@@ -95,7 +96,7 @@ func resourceTencentCloudMariadbLogFileRetentionPeriodRead(d *schema.ResourceDat
 	}
 
 	if logFileRetentionPeriod.Days != nil {
-		_ = d.Set("days", int(*logFileRetentionPeriod.Days))
+		_ = d.Set("days", logFileRetentionPeriod.Days)
 	}
 
 	return nil
@@ -109,12 +110,16 @@ func resourceTencentCloudMariadbLogFileRetentionPeriodUpdate(d *schema.ResourceD
 
 	request := mariadb.NewModifyLogFileRetentionPeriodRequest()
 
-	instanceId := d.Id()
+	logFileRetentionPeriodId := d.Id()
 
 	request.InstanceId = &instanceId
 
-	if v, ok := d.GetOk("days"); ok {
-		request.Days = helper.Uint64(uint64(v.(int)))
+	immutableArgs := []string{"instance_id", "days"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -122,14 +127,12 @@ func resourceTencentCloudMariadbLogFileRetentionPeriodUpdate(d *schema.ResourceD
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb logFileRetentionPeriod failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update mariadb logFileRetentionPeriod failed, reason:%+v", logId, err)
 		return err
 	}
 

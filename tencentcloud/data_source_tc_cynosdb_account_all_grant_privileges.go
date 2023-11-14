@@ -5,22 +5,21 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_account_all_grant_privileges" "account_all_grant_privileges" {
-  cluster_id = "cynosdbmysql-bws8h88b"
+  cluster_id = "xxx"
   account {
-    account_name = "keep_dts"
-    host         = "%"
+		account_name = ""
+		host = ""
+
   }
-}
+        }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -33,11 +32,12 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivileges() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"account": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "account information.",
+				Description: "Account information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"account_name": {
@@ -48,23 +48,30 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivileges() *schema.Resource {
 						"host": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Host, default `%`.",
+							Description: "Host, default &amp;#39;%&amp;#39;.",
 						},
 					},
 				},
 			},
+
 			"privilege_statements": {
-				Computed:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Permission statement note: This field may return null, indicating that a valid value cannot be obtained.",
 			},
+
 			"global_privileges": {
-				Computed:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Computed: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Global permission note: This field may return null, indicating that a valid value cannot be obtained.",
 			},
+
 			"database_privileges": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -74,17 +81,20 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivileges() *schema.Resource {
 						"db": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "database.",
+							Description: "Database.",
 						},
 						"privileges": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Computed:    true,
 							Description: "Permission List.",
 						},
 					},
 				},
 			},
+
 			"table_privileges": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -112,6 +122,7 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivileges() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -125,18 +136,13 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivilegesRead(d *schema.Resour
 	defer logElapsed("data_source.tencentcloud_cynosdb_account_all_grant_privileges.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId                     = getLogId(contextNil)
-		ctx                       = context.WithValue(context.TODO(), logIdKey, logId)
-		service                   = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		accountAllGrantPrivileges *cynosdb.DescribeAccountAllGrantPrivilegesResponseParams
-		clusterId                 string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "account"); ok {
@@ -147,34 +153,36 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivilegesRead(d *schema.Resour
 		if v, ok := dMap["host"]; ok {
 			inputAccount.Host = helper.String(v.(string))
 		}
-		paramMap["Account"] = &inputAccount
+		paramMap["account"] = &inputAccount
 	}
+
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var privilegeStatements []*string
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbAccountAllGrantPrivilegesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
-		accountAllGrantPrivileges = result
+		privilegeStatements = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	if accountAllGrantPrivileges.PrivilegeStatements != nil {
-		_ = d.Set("privilege_statements", accountAllGrantPrivileges.PrivilegeStatements)
+	ids := make([]string, 0, len(privilegeStatements))
+	if privilegeStatements != nil {
+		_ = d.Set("privilege_statements", privilegeStatements)
 	}
 
-	if accountAllGrantPrivileges.GlobalPrivileges != nil {
-		_ = d.Set("global_privileges", accountAllGrantPrivileges.GlobalPrivileges)
+	if globalPrivileges != nil {
+		_ = d.Set("global_privileges", globalPrivileges)
 	}
 
-	if accountAllGrantPrivileges.DatabasePrivileges != nil {
-		tmpList := []interface{}{}
-		for _, databasePrivileges := range accountAllGrantPrivileges.DatabasePrivileges {
+	if databasePrivileges != nil {
+		for _, databasePrivileges := range databasePrivileges {
 			databasePrivilegesMap := map[string]interface{}{}
 
 			if databasePrivileges.Db != nil {
@@ -185,15 +193,15 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivilegesRead(d *schema.Resour
 				databasePrivilegesMap["privileges"] = databasePrivileges.Privileges
 			}
 
+			ids = append(ids, *databasePrivileges.TableName)
 			tmpList = append(tmpList, databasePrivilegesMap)
 		}
 
 		_ = d.Set("database_privileges", tmpList)
 	}
 
-	if accountAllGrantPrivileges.TablePrivileges != nil {
-		tmpList := []interface{}{}
-		for _, tablePrivileges := range accountAllGrantPrivileges.TablePrivileges {
+	if tablePrivileges != nil {
+		for _, tablePrivileges := range tablePrivileges {
 			tablePrivilegesMap := map[string]interface{}{}
 
 			if tablePrivileges.Db != nil {
@@ -208,19 +216,19 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivilegesRead(d *schema.Resour
 				tablePrivilegesMap["privileges"] = tablePrivileges.Privileges
 			}
 
+			ids = append(ids, *tablePrivileges.TableName)
 			tmpList = append(tmpList, tablePrivilegesMap)
 		}
 
 		_ = d.Set("table_privileges", tmpList)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

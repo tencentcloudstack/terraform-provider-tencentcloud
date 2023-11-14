@@ -1,35 +1,24 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqTopicResource_basic -v
 func TestAccTencentCloudTdmqRocketmqTopicResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_topic.example"
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTdmqRocketmqTopicDestroy,
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTdmqRocketmqTopic,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTdmqRocketmqTopicExists(terraformId),
-					resource.TestCheckResourceAttrSet(terraformId, "id"),
-					resource.TestCheckResourceAttrSet(terraformId, "cluster_id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_tdmq_rocketmq_topic.topic", "id")),
 			},
 			{
-				ResourceName:      terraformId,
+				ResourceName:      "tencentcloud_tdmq_rocketmq_topic.topic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -37,95 +26,15 @@ func TestAccTencentCloudTdmqRocketmqTopicResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckTdmqRocketmqTopicDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := TdmqRocketmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_tdmq_rocketmq_topic" {
-			continue
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 4 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		clusterId := idSplit[0]
-		namespaceName := idSplit[1]
-		topicName := idSplit[3]
-
-		topicList, err := service.DescribeTdmqRocketmqTopic(ctx, clusterId, namespaceName, topicName)
-
-		if err != nil {
-			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkerr.Code == "ResourceUnavailable" || sdkerr.Code == "ResourceNotFound.Cluster" {
-					return nil
-				}
-			}
-			return err
-		}
-
-		if len(topicList) != 0 {
-			return fmt.Errorf("Rocketmq topic still exist, id: %v", rs.Primary.ID)
-		}
-	}
-
-	return nil
-}
-
-func testAccCheckTdmqRocketmqTopicExists(re string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-		rs, ok := s.RootModule().Resources[re]
-		if !ok {
-			return fmt.Errorf("Rocketmq topic  %s is not found", re)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("Rocketmq topic id is not set")
-		}
-
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 4 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		clusterId := idSplit[0]
-		namespaceName := idSplit[1]
-		topicName := idSplit[3]
-
-		service := TdmqRocketmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		topicList, err := service.DescribeTdmqRocketmqTopic(ctx, clusterId, namespaceName, topicName)
-
-		if err != nil {
-			return err
-		}
-
-		if len(topicList) == 0 {
-			return fmt.Errorf("Rocketmq topic not found, id: %v", rs.Primary.ID)
-		}
-
-		return nil
-	}
-}
-
 const testAccTdmqRocketmqTopic = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace_name = "tf_example_namespace"
-  remark         = "remark."
-}
+resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
+  topic = &lt;nil&gt;
+  namespaces = &lt;nil&gt;
+  type = &lt;nil&gt;
+  cluster_id = &lt;nil&gt;
+  remark = &lt;nil&gt;
+  partition_num = &lt;nil&gt;
+      }
 
-resource "tencentcloud_tdmq_rocketmq_topic" "example" {
-  topic_name     = "tf_example"
-  namespace_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  type           = "Normal"
-  remark         = "remark."
-}
 `

@@ -5,15 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_lighthouse_firewall_rules_template" "firewall_rules_template" {
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"encoding/json"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -81,12 +79,13 @@ func dataSourceTencentCloudLighthouseFirewallRulesTemplateRead(d *schema.Resourc
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	paramMap := make(map[string]interface{})
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var firewallRuleSet []*lighthouse.FirewallRuleInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeLighthouseFirewallRulesTemplateByFilter(ctx)
+		result, e := service.DescribeLighthouseFirewallRulesTemplateByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -127,11 +126,8 @@ func dataSourceTencentCloudLighthouseFirewallRulesTemplateRead(d *schema.Resourc
 			if firewallRuleInfo.FirewallRuleDescription != nil {
 				firewallRuleInfoMap["firewall_rule_description"] = firewallRuleInfo.FirewallRuleDescription
 			}
-			firewallRuleInfoJson, err := json.Marshal(*firewallRuleInfo)
-			if err != nil {
-				return err
-			}
-			ids = append(ids, string(firewallRuleInfoJson))
+
+			ids = append(ids, *firewallRuleInfo.AppType)
 			tmpList = append(tmpList, firewallRuleInfoMap)
 		}
 

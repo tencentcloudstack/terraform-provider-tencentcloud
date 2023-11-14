@@ -5,59 +5,55 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "concat_templates"
+  name = &lt;nil&gt;
   concat_template {
 		concat_fragment {
-			url = "https://terraform-ci-xxxxxx.cos.ap-guangzhou.myqcloud.com/mp4%2Fmp4-test.mp4"
-			mode = "Start"
-		}
-    concat_fragment {
-			url = "https://terraform-ci-xxxxxx.cos.ap-guangzhou.myqcloud.com/mp4%2Fmp4-test.mp4"
-			mode = "End"
+			url = &lt;nil&gt;
+			mode = &lt;nil&gt;
 		}
 		audio {
-			codec = "mp3"
-			samplerate = ""
-			bitrate = ""
-			channels = ""
+			codec = &lt;nil&gt;
+			samplerate = &lt;nil&gt;
+			bitrate = &lt;nil&gt;
+			channels = &lt;nil&gt;
 		}
 		video {
-			codec = "H.264"
-			width = "1280"
-			height = ""
-      		bitrate = "1000"
-			fps = "25"
-			crf = ""
-			remove = ""
-			rotate = ""
+			codec = &lt;nil&gt;
+			width = &lt;nil&gt;
+			height = &lt;nil&gt;
+			bitrate = &lt;nil&gt;
+			fps = &lt;nil&gt;
+			crf = &lt;nil&gt;
+			remove = &lt;nil&gt;
+			rotate = &lt;nil&gt;
 		}
 		container {
-			format = "mp4"
+			format = &lt;nil&gt;
 		}
 		audio_mix {
-			audio_source = "https://terraform-ci-xxxxxx.cos.ap-guangzhou.myqcloud.com/mp3%2Fnizhan-test.mp3"
-			mix_mode = "Once"
-			replace = "true"
+			audio_source = &lt;nil&gt;
+			mix_mode = &lt;nil&gt;
+			replace = &lt;nil&gt;
 			effect_config {
-				enable_start_fadein = "true"
-				start_fadein_time = "3"
-				enable_end_fadeout = "false"
-				end_fadeout_time = "0.1"
-				enable_bgm_fade = "true"
-				bgm_fade_time = "1.7"
+				enable_start_fadein = &lt;nil&gt;
+				start_fadein_time = &lt;nil&gt;
+				enable_end_fadeout = &lt;nil&gt;
+				end_fadeout_time = &lt;nil&gt;
+				enable_bgm_fade = &lt;nil&gt;
+				bgm_fade_time = &lt;nil&gt;
 			}
 		}
+
   }
 }
 ```
 
 Import
 
-ci media_concat_template can be imported using the bucket#templateId, e.g.
+ci media_concat_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_concat_template.media_concat_template id=terraform-ci-xxxxxx#t1cb115dfa1fcc414284f83b7c69bcedcf
+terraform import tencentcloud_ci_media_concat_template.media_concat_template media_concat_template_id
 ```
 */
 package tencentcloud
@@ -65,14 +61,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
@@ -85,12 +78,6 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -101,7 +88,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "stitching template.",
+				Description: "Stitching template.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"concat_fragment": {
@@ -118,7 +105,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"mode": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "node type, `start`, `end`.",
+										Description: "Node type, `start`, `end`.",
 									},
 								},
 							},
@@ -127,7 +114,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "audio parameters, the target file does not require Audio information, need to set Audio.Remove to true.",
+							Description: "Audio parameters, the target file does not require Audio information, need to set Audio.Remove to true.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"codec": {
@@ -148,7 +135,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"channels": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "number of channels- When Codec is set to aac, support 1, 2, 4, 5, 6, 8- When Codec is set to mp3, support 1, 2.",
+										Description: "Number of channels- When Codec is set to aac, support 1, 2, 4, 5, 6, 8- When Codec is set to mp3, support 1, 2.",
 									},
 								},
 							},
@@ -157,7 +144,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "video information, do not upload Video, which is equivalent to deleting video information.",
+							Description: "Video information, do not upload Video, which is equivalent to deleting video information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"codec": {
@@ -168,7 +155,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"width": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "width, value range: [128, 4096], Unit: px, If only Width is set, Height is calculated according to the original ratio of the video, must be even.",
+										Description: "Width, value range: [128, 4096], Unit: px, If only Width is set, Height is calculated according to the original ratio of the video, must be even.",
 									},
 									"height": {
 										Type:        schema.TypeString,
@@ -178,7 +165,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"bitrate": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Original audio bit rate, unit: Kbps, Value range: [8, 1000].",
+										Description: "Bit rate of video output file, value range: [10, 50000], unit: Kbps, auto means adaptive bit rate.",
 									},
 									"fps": {
 										Type:        schema.TypeString,
@@ -193,7 +180,6 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"remove": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "Whether to delete the source audio stream, the value is true, false.",
 									},
 									"rotate": {
@@ -222,7 +208,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 						"audio_mix": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "mixing parameters.",
+							Description: "Mixing parameters.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"audio_source": {
@@ -250,7 +236,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 												"enable_start_fadein": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "enable fade in.",
+													Description: "Enable fade in.",
 												},
 												"start_fadein_time": {
 													Type:        schema.TypeString,
@@ -260,13 +246,12 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 												"enable_end_fadeout": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "enable fade out.",
+													Description: "Enable fade out.",
 												},
 												"end_fadeout_time": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Computed:    true,
-													Description: "fade out time, greater than 0, support floating point numbers.",
+													Description: "Fade out time, greater than 0, support floating point numbers.",
 												},
 												"enable_bgm_fade": {
 													Type:        schema.TypeString,
@@ -276,7 +261,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 												"bgm_fade_time": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "bgm transition fade-in duration, support floating point numbers.",
+													Description: "Bgm transition fade-in duration, support floating point numbers.",
 												},
 											},
 										},
@@ -296,140 +281,129 @@ func resourceTencentCloudCiMediaConcatTemplateCreate(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaConcatTemplateOptions{
-			Tag: "Concat",
-		}
+		request    = ci.NewCreateMediaConcatTemplateRequest()
+		response   = ci.NewCreateMediaConcatTemplateResponse()
 		templateId string
-		bucket     string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "concat_template"); ok {
-		concatTemplate := cos.ConcatTemplate{}
+		concatTemplate := ci.ConcatTemplate{}
 		if v, ok := dMap["concat_fragment"]; ok {
 			for _, item := range v.([]interface{}) {
 				concatFragmentMap := item.(map[string]interface{})
-				concatFragment := cos.ConcatFragment{}
+				concatTemplate := ci.ConcatTemplate{}
 				if v, ok := concatFragmentMap["url"]; ok {
-					concatFragment.Url = v.(string)
+					concatTemplate.Url = helper.String(v.(string))
 				}
 				if v, ok := concatFragmentMap["mode"]; ok {
-					concatFragment.Mode = v.(string)
+					concatTemplate.Mode = helper.String(v.(string))
 				}
-				concatTemplate.ConcatFragment = append(concatTemplate.ConcatFragment, concatFragment)
+				concatTemplate.ConcatFragment = append(concatTemplate.ConcatFragment, &concatTemplate)
 			}
 		}
 		if audioMap, ok := helper.InterfaceToMap(dMap, "audio"); ok {
-			audio := cos.Audio{}
+			audio := ci.Audio{}
 			if v, ok := audioMap["codec"]; ok {
-				audio.Codec = v.(string)
+				audio.Codec = helper.String(v.(string))
 			}
 			if v, ok := audioMap["samplerate"]; ok {
-				audio.Samplerate = v.(string)
+				audio.Samplerate = helper.String(v.(string))
 			}
 			if v, ok := audioMap["bitrate"]; ok {
-				audio.Bitrate = v.(string)
+				audio.Bitrate = helper.String(v.(string))
 			}
 			if v, ok := audioMap["channels"]; ok {
-				audio.Channels = v.(string)
+				audio.Channels = helper.String(v.(string))
 			}
 			concatTemplate.Audio = &audio
 		}
 		if videoMap, ok := helper.InterfaceToMap(dMap, "video"); ok {
-			video := cos.Video{}
+			video := ci.Video{}
 			if v, ok := videoMap["codec"]; ok {
-				video.Codec = v.(string)
+				video.Codec = helper.String(v.(string))
 			}
 			if v, ok := videoMap["width"]; ok {
-				video.Width = v.(string)
+				video.Width = helper.String(v.(string))
 			}
 			if v, ok := videoMap["height"]; ok {
-				video.Height = v.(string)
+				video.Height = helper.String(v.(string))
 			}
 			if v, ok := videoMap["bitrate"]; ok {
-				video.Bitrate = v.(string)
+				video.Bitrate = helper.String(v.(string))
 			}
 			if v, ok := videoMap["fps"]; ok {
-				video.Fps = v.(string)
+				video.Fps = helper.String(v.(string))
 			}
 			if v, ok := videoMap["crf"]; ok {
-				video.Crf = v.(string)
+				video.Crf = helper.String(v.(string))
 			}
 			if v, ok := videoMap["remove"]; ok {
-				video.Remove = v.(string)
+				video.Remove = helper.String(v.(string))
 			}
 			if v, ok := videoMap["rotate"]; ok {
-				video.Rotate = v.(string)
+				video.Rotate = helper.String(v.(string))
 			}
 			concatTemplate.Video = &video
 		}
 		if containerMap, ok := helper.InterfaceToMap(dMap, "container"); ok {
-			container := cos.Container{}
+			container := ci.Container{}
 			if v, ok := containerMap["format"]; ok {
-				container.Format = v.(string)
+				container.Format = helper.String(v.(string))
 			}
 			concatTemplate.Container = &container
 		}
 		if v, ok := dMap["audio_mix"]; ok {
 			for _, item := range v.([]interface{}) {
 				audioMixMap := item.(map[string]interface{})
-				audioMix := cos.AudioMix{}
+				audioMix := ci.AudioMix{}
 				if v, ok := audioMixMap["audio_source"]; ok {
-					audioMix.AudioSource = v.(string)
+					audioMix.AudioSource = helper.String(v.(string))
 				}
 				if v, ok := audioMixMap["mix_mode"]; ok {
-					audioMix.MixMode = v.(string)
+					audioMix.MixMode = helper.String(v.(string))
 				}
 				if v, ok := audioMixMap["replace"]; ok {
-					audioMix.Replace = v.(string)
+					audioMix.Replace = helper.String(v.(string))
 				}
 				if effectConfigMap, ok := helper.InterfaceToMap(audioMixMap, "effect_config"); ok {
-					effectConfig := cos.EffectConfig{}
+					effectConfig := ci.EffectConfig{}
 					if v, ok := effectConfigMap["enable_start_fadein"]; ok {
-						effectConfig.EnableStartFadein = v.(string)
+						effectConfig.EnableStartFadein = helper.String(v.(string))
 					}
 					if v, ok := effectConfigMap["start_fadein_time"]; ok {
-						effectConfig.StartFadeinTime = v.(string)
+						effectConfig.StartFadeinTime = helper.String(v.(string))
 					}
 					if v, ok := effectConfigMap["enable_end_fadeout"]; ok {
-						effectConfig.EnableEndFadeout = v.(string)
+						effectConfig.EnableEndFadeout = helper.String(v.(string))
 					}
 					if v, ok := effectConfigMap["end_fadeout_time"]; ok {
-						effectConfig.EndFadeoutTime = v.(string)
+						effectConfig.EndFadeoutTime = helper.String(v.(string))
 					}
 					if v, ok := effectConfigMap["enable_bgm_fade"]; ok {
-						effectConfig.EnableBgmFade = v.(string)
+						effectConfig.EnableBgmFade = helper.String(v.(string))
 					}
 					if v, ok := effectConfigMap["bgm_fade_time"]; ok {
-						effectConfig.BgmFadeTime = v.(string)
+						effectConfig.BgmFadeTime = helper.String(v.(string))
 					}
 					audioMix.EffectConfig = &effectConfig
 				}
-				concatTemplate.AudioMixArray = append(concatTemplate.AudioMixArray, audioMix)
+				concatTemplate.AudioMix = append(concatTemplate.AudioMix, &audioMix)
 			}
 		}
 		request.ConcatTemplate = &concatTemplate
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaConcatTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaConcatTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaConcatTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -439,8 +413,8 @@ func resourceTencentCloudCiMediaConcatTemplateCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaConcatTemplateRead(d, meta)
 }
@@ -450,30 +424,25 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaConcatTemplateId := d.Id()
 
-	mediaConcatTemplate, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaConcatTemplate, err := service.DescribeCiMediaConcatTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
 	if mediaConcatTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaConcatTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if mediaConcatTemplate.Name != "" {
+	if mediaConcatTemplate.Name != nil {
 		_ = d.Set("name", mediaConcatTemplate.Name)
 	}
 
@@ -484,33 +453,37 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 			concatFragmentList := []interface{}{}
 			for _, concatFragment := range mediaConcatTemplate.ConcatTemplate.ConcatFragment {
 				concatFragmentMap := map[string]interface{}{}
-				if concatFragment.Url != "" {
+
+				if concatFragment.Url != nil {
 					concatFragmentMap["url"] = concatFragment.Url
 				}
-				if concatFragment.Mode != "" {
+
+				if concatFragment.Mode != nil {
 					concatFragmentMap["mode"] = concatFragment.Mode
 				}
+
 				concatFragmentList = append(concatFragmentList, concatFragmentMap)
 			}
-			concatTemplateMap["concat_fragment"] = concatFragmentList
+
+			concatTemplateMap["concat_fragment"] = []interface{}{concatFragmentList}
 		}
 
 		if mediaConcatTemplate.ConcatTemplate.Audio != nil {
 			audioMap := map[string]interface{}{}
 
-			if mediaConcatTemplate.ConcatTemplate.Audio.Codec != "" {
+			if mediaConcatTemplate.ConcatTemplate.Audio.Codec != nil {
 				audioMap["codec"] = mediaConcatTemplate.ConcatTemplate.Audio.Codec
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Audio.Samplerate != "" {
+			if mediaConcatTemplate.ConcatTemplate.Audio.Samplerate != nil {
 				audioMap["samplerate"] = mediaConcatTemplate.ConcatTemplate.Audio.Samplerate
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Audio.Bitrate != "" {
+			if mediaConcatTemplate.ConcatTemplate.Audio.Bitrate != nil {
 				audioMap["bitrate"] = mediaConcatTemplate.ConcatTemplate.Audio.Bitrate
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Audio.Channels != "" {
+			if mediaConcatTemplate.ConcatTemplate.Audio.Channels != nil {
 				audioMap["channels"] = mediaConcatTemplate.ConcatTemplate.Audio.Channels
 			}
 
@@ -520,35 +493,35 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 		if mediaConcatTemplate.ConcatTemplate.Video != nil {
 			videoMap := map[string]interface{}{}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Codec != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Codec != nil {
 				videoMap["codec"] = mediaConcatTemplate.ConcatTemplate.Video.Codec
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Width != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Width != nil {
 				videoMap["width"] = mediaConcatTemplate.ConcatTemplate.Video.Width
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Height != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Height != nil {
 				videoMap["height"] = mediaConcatTemplate.ConcatTemplate.Video.Height
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Bitrate != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Bitrate != nil {
 				videoMap["bitrate"] = mediaConcatTemplate.ConcatTemplate.Video.Bitrate
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Fps != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Fps != nil {
 				videoMap["fps"] = mediaConcatTemplate.ConcatTemplate.Video.Fps
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Crf != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Crf != nil {
 				videoMap["crf"] = mediaConcatTemplate.ConcatTemplate.Video.Crf
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Remove != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Remove != nil {
 				videoMap["remove"] = mediaConcatTemplate.ConcatTemplate.Video.Remove
 			}
 
-			if mediaConcatTemplate.ConcatTemplate.Video.Rotate != "" {
+			if mediaConcatTemplate.ConcatTemplate.Video.Rotate != nil {
 				videoMap["rotate"] = mediaConcatTemplate.ConcatTemplate.Video.Rotate
 			}
 
@@ -558,54 +531,54 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 		if mediaConcatTemplate.ConcatTemplate.Container != nil {
 			containerMap := map[string]interface{}{}
 
-			if mediaConcatTemplate.ConcatTemplate.Container.Format != "" {
+			if mediaConcatTemplate.ConcatTemplate.Container.Format != nil {
 				containerMap["format"] = mediaConcatTemplate.ConcatTemplate.Container.Format
 			}
 
 			concatTemplateMap["container"] = []interface{}{containerMap}
 		}
 
-		if mediaConcatTemplate.ConcatTemplate.AudioMixArray != nil {
+		if mediaConcatTemplate.ConcatTemplate.AudioMix != nil {
 			audioMixList := []interface{}{}
-			for _, audioMix := range mediaConcatTemplate.ConcatTemplate.AudioMixArray {
+			for _, audioMix := range mediaConcatTemplate.ConcatTemplate.AudioMix {
 				audioMixMap := map[string]interface{}{}
 
-				if audioMix.AudioSource != "" {
+				if audioMix.AudioSource != nil {
 					audioMixMap["audio_source"] = audioMix.AudioSource
 				}
 
-				if audioMix.MixMode != "" {
+				if audioMix.MixMode != nil {
 					audioMixMap["mix_mode"] = audioMix.MixMode
 				}
 
-				if audioMix.Replace != "" {
+				if audioMix.Replace != nil {
 					audioMixMap["replace"] = audioMix.Replace
 				}
 
 				if audioMix.EffectConfig != nil {
 					effectConfigMap := map[string]interface{}{}
 
-					if audioMix.EffectConfig.EnableStartFadein != "" {
+					if audioMix.EffectConfig.EnableStartFadein != nil {
 						effectConfigMap["enable_start_fadein"] = audioMix.EffectConfig.EnableStartFadein
 					}
 
-					if audioMix.EffectConfig.StartFadeinTime != "" {
+					if audioMix.EffectConfig.StartFadeinTime != nil {
 						effectConfigMap["start_fadein_time"] = audioMix.EffectConfig.StartFadeinTime
 					}
 
-					if audioMix.EffectConfig.EnableEndFadeout != "" {
+					if audioMix.EffectConfig.EnableEndFadeout != nil {
 						effectConfigMap["enable_end_fadeout"] = audioMix.EffectConfig.EnableEndFadeout
 					}
 
-					if audioMix.EffectConfig.EndFadeoutTime != "" {
+					if audioMix.EffectConfig.EndFadeoutTime != nil {
 						effectConfigMap["end_fadeout_time"] = audioMix.EffectConfig.EndFadeoutTime
 					}
 
-					if audioMix.EffectConfig.EnableBgmFade != "" {
+					if audioMix.EffectConfig.EnableBgmFade != nil {
 						effectConfigMap["enable_bgm_fade"] = audioMix.EffectConfig.EnableBgmFade
 					}
 
-					if audioMix.EffectConfig.BgmFadeTime != "" {
+					if audioMix.EffectConfig.BgmFadeTime != nil {
 						effectConfigMap["bgm_fade_time"] = audioMix.EffectConfig.BgmFadeTime
 					}
 
@@ -615,7 +588,7 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 				audioMixList = append(audioMixList, audioMixMap)
 			}
 
-			concatTemplateMap["audio_mix"] = audioMixList
+			concatTemplateMap["audio_mix"] = []interface{}{audioMixList}
 		}
 
 		_ = d.Set("concat_template", []interface{}{concatTemplateMap})
@@ -629,143 +602,32 @@ func resourceTencentCloudCiMediaConcatTemplateUpdate(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaConcatTemplateOptions{
-		Tag: "Concat",
-	}
+	request := ci.NewUpdateMediaConcatTemplateRequest()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	mediaConcatTemplateId := d.Id()
 
-	if d.HasChange("concat_template") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "concat_template"); ok {
-			concatTemplate := cos.ConcatTemplate{}
-			if v, ok := dMap["concat_fragment"]; ok {
-				for _, item := range v.([]interface{}) {
-					concatFragmentMap := item.(map[string]interface{})
-					concatFragment := cos.ConcatFragment{}
-					if v, ok := concatFragmentMap["url"]; ok {
-						concatFragment.Url = v.(string)
-					}
-					if v, ok := concatFragmentMap["mode"]; ok {
-						concatFragment.Mode = v.(string)
-					}
-					concatTemplate.ConcatFragment = append(concatTemplate.ConcatFragment, concatFragment)
-				}
-			}
-			if audioMap, ok := helper.InterfaceToMap(dMap, "audio"); ok {
-				audio := cos.Audio{}
-				if v, ok := audioMap["codec"]; ok {
-					audio.Codec = v.(string)
-				}
-				if v, ok := audioMap["samplerate"]; ok {
-					audio.Samplerate = v.(string)
-				}
-				if v, ok := audioMap["bitrate"]; ok {
-					audio.Bitrate = v.(string)
-				}
-				if v, ok := audioMap["channels"]; ok {
-					audio.Channels = v.(string)
-				}
-				concatTemplate.Audio = &audio
-			}
-			if videoMap, ok := helper.InterfaceToMap(dMap, "video"); ok {
-				video := cos.Video{}
-				if v, ok := videoMap["codec"]; ok {
-					video.Codec = v.(string)
-				}
-				if v, ok := videoMap["width"]; ok {
-					video.Width = v.(string)
-				}
-				if v, ok := videoMap["height"]; ok {
-					video.Height = v.(string)
-				}
-				if v, ok := videoMap["bitrate"]; ok {
-					video.Bitrate = v.(string)
-				}
-				if v, ok := videoMap["fps"]; ok {
-					video.Fps = v.(string)
-				}
-				if v, ok := videoMap["crf"]; ok {
-					video.Crf = v.(string)
-				}
-				if v, ok := videoMap["remove"]; ok {
-					video.Remove = v.(string)
-				}
-				if v, ok := videoMap["rotate"]; ok {
-					video.Rotate = v.(string)
-				}
-				concatTemplate.Video = &video
-			}
-			if containerMap, ok := helper.InterfaceToMap(dMap, "container"); ok {
-				container := cos.Container{}
-				if v, ok := containerMap["format"]; ok {
-					container.Format = v.(string)
-				}
-				concatTemplate.Container = &container
-			}
-			if v, ok := dMap["audio_mix"]; ok {
-				for _, item := range v.([]interface{}) {
-					audioMixMap := item.(map[string]interface{})
-					audioMix := cos.AudioMix{}
-					if v, ok := audioMixMap["audio_source"]; ok {
-						audioMix.AudioSource = v.(string)
-					}
-					if v, ok := audioMixMap["mix_mode"]; ok {
-						audioMix.MixMode = v.(string)
-					}
-					if v, ok := audioMixMap["replace"]; ok {
-						audioMix.Replace = v.(string)
-					}
-					if effectConfigMap, ok := helper.InterfaceToMap(audioMixMap, "effect_config"); ok {
-						effectConfig := cos.EffectConfig{}
-						if v, ok := effectConfigMap["enable_start_fadein"]; ok {
-							effectConfig.EnableStartFadein = v.(string)
-						}
-						if v, ok := effectConfigMap["start_fadein_time"]; ok {
-							effectConfig.StartFadeinTime = v.(string)
-						}
-						if v, ok := effectConfigMap["enable_end_fadeout"]; ok {
-							effectConfig.EnableEndFadeout = v.(string)
-						}
-						if v, ok := effectConfigMap["end_fadeout_time"]; ok {
-							effectConfig.EndFadeoutTime = v.(string)
-						}
-						if v, ok := effectConfigMap["enable_bgm_fade"]; ok {
-							effectConfig.EnableBgmFade = v.(string)
-						}
-						if v, ok := effectConfigMap["bgm_fade_time"]; ok {
-							effectConfig.BgmFadeTime = v.(string)
-						}
-						audioMix.EffectConfig = &effectConfig
-					}
-					concatTemplate.AudioMixArray = append(concatTemplate.AudioMixArray, audioMix)
-				}
-			}
-			request.ConcatTemplate = &concatTemplate
+	request.TemplateId = &templateId
+
+	immutableArgs := []string{"name", "concat_template"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaConcatTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaConcatTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaConcatTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaConcatTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaConcatTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -780,14 +642,9 @@ func resourceTencentCloudCiMediaConcatTemplateDelete(d *schema.ResourceData, met
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaConcatTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaConcatTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

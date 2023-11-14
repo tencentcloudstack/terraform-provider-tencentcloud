@@ -5,18 +5,19 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_target_group_list" "target_group_list" {
+  target_group_ids =
   filters {
-    name = "TargetGroupName"
-    values = ["keep-tgg"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -73,7 +74,7 @@ func dataSourceTencentCloudClbTargetGroupList() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "vpcid of target group.",
+							Description: "Vpcid of target group.",
 						},
 						"target_group_name": {
 							Type:        schema.TypeString,
@@ -193,7 +194,7 @@ func dataSourceTencentCloudClbTargetGroupListRead(d *schema.ResourceData, meta i
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}

@@ -5,21 +5,26 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_cancel_dcn_job" "cancel_dcn_job" {
-  instance_id = "tdsql-9vqvls95"
+  instance_id = ""
 }
+```
+
+Import
+
+mariadb cancel_dcn_job can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_mariadb_cancel_dcn_job.cancel_dcn_job cancel_dcn_job_id
 ```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMariadbCancelDcnJob() *schema.Resource {
@@ -27,7 +32,9 @@ func resourceTencentCloudMariadbCancelDcnJob() *schema.Resource {
 		Create: resourceTencentCloudMariadbCancelDcnJobCreate,
 		Read:   resourceTencentCloudMariadbCancelDcnJobRead,
 		Delete: resourceTencentCloudMariadbCancelDcnJobDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -43,16 +50,15 @@ func resourceTencentCloudMariadbCancelDcnJobCreate(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_mariadb_cancel_dcn_job.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request    = mariadb.NewCancelDcnJobRequest()
-		instanceId string
-		flowId     int64
-	)
+	logId := getLogId(contextNil)
 
+	var (
+		request    = mariadb.NewCancelDcnJobRequest()
+		response   = mariadb.NewCancelDcnJobResponse()
+		instanceId string
+	)
 	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
@@ -63,39 +69,15 @@ func resourceTencentCloudMariadbCancelDcnJobCreate(d *schema.ResourceData, meta 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		flowId = *result.Response.FlowId
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s operate mariadb cancelDcnJob failed, reason:%+v", logId, err)
 		return err
 	}
 
-	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeFlowById(ctx, flowId)
-		if e != nil {
-			return retryError(e)
-		}
-
-		if *result.Status == MARIADB_TASK_SUCCESS {
-			return nil
-		} else if *result.Status == MARIADB_TASK_RUNNING {
-			return resource.RetryableError(fmt.Errorf("operate mariadb cancelDcnJob status is running"))
-		} else if *result.Status == MARIADB_TASK_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("operate mariadb cancelDcnJob status is fail"))
-		} else {
-			e = fmt.Errorf("operate mariadb cancelDcnJob status illegal")
-			return resource.NonRetryableError(e)
-		}
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s operate mariadb cancelDcnJob task failed, reason:%+v", logId, err)
-		return err
-	}
-
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	return resourceTencentCloudMariadbCancelDcnJobRead(d, meta)

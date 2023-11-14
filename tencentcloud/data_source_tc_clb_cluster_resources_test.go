@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbClusterResourcesDataSource_basic(t *testing.T) {
@@ -26,9 +25,10 @@ const testAccClbClusterResourcesDataSource = `
 
 data "tencentcloud_clb_cluster_resources" "cluster_resources" {
   filters {
-    name = "idle"
-    values = ["True"]
+		name = ""
+		values = 
+
   }
-}
+  }
 
 `

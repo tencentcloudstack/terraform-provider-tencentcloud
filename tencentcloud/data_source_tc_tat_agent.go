@@ -5,19 +5,21 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tat_agent" "agent" {
-  # instance_ids = ["ins-f9jr4bd2"]
+  instance_ids =
   filters {
-		name = "environment"
-		values = ["Linux"]
+		name = ""
+		values =
+
   }
-}
+  limit =
+  offset =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
@@ -40,7 +42,7 @@ func dataSourceTencentCloudTatAgent() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter conditions. agent-status - String - Required: No - (Filter condition) Filter by agent status. Valid values: Online, Offline. environment - String - Required: No - (Filter condition) Filter by the agent environment. Valid value: Linux. instance-id - String - Required: No - (Filter condition) Filter by the instance ID. Up to 10 Filters allowed in one request. For each filter, five Filter.Values can be specified. InstanceIds and Filters cannot be specified at the same time.",
+				Description: "Filter conditions.agent-status - String - Required: No - (Filter condition) Filter by agent status. Valid values: Online, Offline.environment - String - Required: No - (Filter condition) Filter by the agent environment. Valid value: Linux.instance-id - String - Required: No - (Filter condition) Filter by the instance ID. Up to 10 Filters allowed in one request. For each filter, five Filter.Values can be specified. InstanceIds and Filters cannot be specified at the same time.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -58,6 +60,18 @@ func dataSourceTencentCloudTatAgent() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"limit": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Limit,default 20,maxsize 100.Further introduction about `Limit` ,please refer to API [Introduction](https://cloud.tencent.com/document/api/213/15688).",
+			},
+
+			"offset": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Offset,default 0.Further introduction about `Offset` ,please refer to API [Introduction](https://cloud.tencent.com/document/api/213/15688).",
 			},
 
 			"automation_agent_set": {
@@ -84,12 +98,12 @@ func dataSourceTencentCloudTatAgent() *schema.Resource {
 						"agent_status": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Agent status.Ranges:&lt;li&gt; Online:Online&lt;li&gt; Offline:Offline.",
+							Description: "Agent status.Ranges:Online:OnlineOffline:Offline.",
 						},
 						"environment": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Environment for Agent.Ranges:&lt;li&gt; Linux:Linux instance&lt;li&gt; Windows:Windows instance.",
+							Description: "Environment for Agent.Ranges:Linux:Linux instanceWindows:Windows instance.",
 						},
 						"support_features": {
 							Type: schema.TypeSet,
@@ -144,6 +158,14 @@ func dataSourceTencentCloudTatAgentRead(d *schema.ResourceData, meta interface{}
 			tmpSet = append(tmpSet, &filter)
 		}
 		paramMap["filters"] = tmpSet
+	}
+
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntUint64(v.(int))
+	}
+
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntUint64(v.(int))
 	}
 
 	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}

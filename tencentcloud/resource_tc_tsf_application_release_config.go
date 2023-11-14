@@ -5,32 +5,29 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_application_release_config" "application_release_config" {
-  config_id = "dcfg-nalqbqwv"
-  group_id = "group-yxmz72gv"
-  release_desc = "terraform-test"
+  config_id = ""
+  group_id = ""
+  release_desc = ""
 }
 ```
 
 Import
 
-tsf application_release_config can be imported using the configId#groupId#configReleaseId, e.g.
+tsf application_release_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_application_release_config.application_release_config dcfg-nalqbqwv#group-yxmz72gv#dcfgr-maeeq2ea
+terraform import tencentcloud_tsf_application_release_config.application_release_config application_release_config_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfApplicationReleaseConfig() *schema.Resource {
@@ -46,82 +43,21 @@ func resourceTencentCloudTsfApplicationReleaseConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Configuration ID.",
+				Description: "Config Id.",
 			},
 
 			"group_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "deployment group ID.",
+				Description: "Group Id.",
 			},
 
 			"release_desc": {
 				Optional:    true,
-				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "release description.",
-			},
-
-			"config_release_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "configuration item release ID.",
-			},
-
-			"config_name": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "configuration item name.",
-			},
-
-			"config_version": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "configuration item version.",
-			},
-
-			"release_time": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "release time.",
-			},
-
-			"group_name": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "deployment group name.",
-			},
-
-			"namespace_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Namespace ID.",
-			},
-
-			"namespace_name": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "namespace name.",
-			},
-
-			"cluster_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "cluster ID.",
-			},
-
-			"cluster_name": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "cluster name.",
-			},
-
-			"application_id": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Application ID.",
+				Description: "Release Desc.",
 			},
 		},
 	}
@@ -137,7 +73,6 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 		request  = tsf.NewReleaseConfigWithDetailRespRequest()
 		response = tsf.NewReleaseConfigWithDetailRespResponse()
 		configId string
-		groupId  string
 	)
 	if v, ok := d.GetOk("config_id"); ok {
 		configId = v.(string)
@@ -145,7 +80,6 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 	}
 
 	if v, ok := d.GetOk("group_id"); ok {
-		groupId = v.(string)
 		request.GroupId = helper.String(v.(string))
 	}
 
@@ -168,8 +102,8 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 		return err
 	}
 
-	configReleaseId := *response.Response.Result.ConfigReleaseId
-	d.SetId(configId + FILED_SP + groupId + FILED_SP + configReleaseId)
+	configId = *response.Response.ConfigId
+	d.SetId(configId)
 
 	return resourceTencentCloudTsfApplicationReleaseConfigRead(d, meta)
 }
@@ -184,14 +118,9 @@ func resourceTencentCloudTsfApplicationReleaseConfigRead(d *schema.ResourceData,
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	configId := idSplit[0]
-	groupId := idSplit[1]
+	applicationReleaseConfigId := d.Id()
 
-	applicationReleaseConfig, err := service.DescribeTsfApplicationReleaseConfigById(ctx, configId, groupId)
+	applicationReleaseConfig, err := service.DescribeTsfApplicationReleaseConfigById(ctx, configId)
 	if err != nil {
 		return err
 	}
@@ -214,46 +143,6 @@ func resourceTencentCloudTsfApplicationReleaseConfigRead(d *schema.ResourceData,
 		_ = d.Set("release_desc", applicationReleaseConfig.ReleaseDesc)
 	}
 
-	if applicationReleaseConfig.ConfigReleaseId != nil {
-		_ = d.Set("config_release_id", applicationReleaseConfig.ConfigReleaseId)
-	}
-
-	if applicationReleaseConfig.ConfigName != nil {
-		_ = d.Set("config_name", applicationReleaseConfig.ConfigName)
-	}
-
-	if applicationReleaseConfig.ConfigVersion != nil {
-		_ = d.Set("config_version", applicationReleaseConfig.ConfigVersion)
-	}
-
-	if applicationReleaseConfig.ReleaseTime != nil {
-		_ = d.Set("release_time", applicationReleaseConfig.ReleaseTime)
-	}
-
-	if applicationReleaseConfig.GroupName != nil {
-		_ = d.Set("group_name", applicationReleaseConfig.GroupName)
-	}
-
-	if applicationReleaseConfig.NamespaceId != nil {
-		_ = d.Set("namespace_id", applicationReleaseConfig.NamespaceId)
-	}
-
-	if applicationReleaseConfig.NamespaceName != nil {
-		_ = d.Set("namespace_name", applicationReleaseConfig.NamespaceName)
-	}
-
-	if applicationReleaseConfig.ClusterId != nil {
-		_ = d.Set("cluster_id", applicationReleaseConfig.ClusterId)
-	}
-
-	if applicationReleaseConfig.ClusterName != nil {
-		_ = d.Set("cluster_name", applicationReleaseConfig.ClusterName)
-	}
-
-	if applicationReleaseConfig.ApplicationId != nil {
-		_ = d.Set("application_id", applicationReleaseConfig.ApplicationId)
-	}
-
 	return nil
 }
 
@@ -265,11 +154,7 @@ func resourceTencentCloudTsfApplicationReleaseConfigDelete(d *schema.ResourceDat
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	configId := idSplit[2]
+	applicationReleaseConfigId := d.Id()
 
 	if err := service.DeleteTsfApplicationReleaseConfigById(ctx, configId); err != nil {
 		return err

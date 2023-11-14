@@ -4,17 +4,19 @@ Use this data source to query detailed information of scf layers
 Example Usage
 
 ```hcl
-data "tencentcloud_scf_layers" "layers" {}
+data "tencentcloud_scf_layers" "layers" {
+  compatible_runtime = ""
+  search_key = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	scf "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

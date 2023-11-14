@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_sale_info" "sale_info" {
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -26,49 +25,49 @@ func dataSourceTencentCloudMariadbSaleInfo() *schema.Resource {
 			"region_list": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "list of sale region info.",
+				Description: "List of sale region info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region name(en).",
+							Description: "Region name(en).",
 						},
 						"region_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "region id.",
+							Description: "Region id.",
 						},
 						"region_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region name(zh).",
+							Description: "Region name(zh).",
 						},
 						"zone_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "list of az zone.",
+							Description: "List of az zone.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"zone": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "zone name(en).",
+										Description: "Zone name(en).",
 									},
 									"zone_id": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "zone id.",
+										Description: "Zone id.",
 									},
 									"zone_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "zone name(zh).",
+										Description: "Zone name(zh).",
 									},
 									"on_sale": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "is zone on sale.",
+										Description: "Is zone on sale.",
 									},
 								},
 							},
@@ -76,34 +75,34 @@ func dataSourceTencentCloudMariadbSaleInfo() *schema.Resource {
 						"available_choice": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "available zone choice.",
+							Description: "Available zone choice.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"master_zone": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "master zone.",
+										Description: "Master zone.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"zone": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(en).",
+													Description: "Zone name(en).",
 												},
 												"zone_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "zone id.",
+													Description: "Zone id.",
 												},
 												"zone_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(zh).",
+													Description: "Zone name(zh).",
 												},
 												"on_sale": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "is zone on sale.",
+													Description: "Is zone on sale.",
 												},
 											},
 										},
@@ -111,28 +110,28 @@ func dataSourceTencentCloudMariadbSaleInfo() *schema.Resource {
 									"slave_zones": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "slave zones.",
+										Description: "Slave zones.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"zone": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(en).",
+													Description: "Zone name(en).",
 												},
 												"zone_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "zone id.",
+													Description: "Zone id.",
 												},
 												"zone_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "zone name(zh).",
+													Description: "Zone name(zh).",
 												},
 												"on_sale": {
 													Type:        schema.TypeBool,
 													Computed:    true,
-													Description: "is zone on sale.",
+													Description: "Is zone on sale.",
 												},
 											},
 										},
@@ -143,6 +142,7 @@ func dataSourceTencentCloudMariadbSaleInfo() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -156,23 +156,23 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 	defer logElapsed("data_source.tencentcloud_mariadb_sale_info.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		regionList []*mariadb.RegionInfo
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var regionList []*mariadb.RegionInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeMariadbSaleInfoByFilter(ctx)
+		result, e := service.DescribeMariadbSaleInfoByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		regionList = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -220,7 +220,7 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 					zoneListList = append(zoneListList, zoneListMap)
 				}
 
-				regionInfoMap["zone_list"] = zoneListList
+				regionInfoMap["zone_list"] = []interface{}{zoneListList}
 			}
 
 			if regionInfo.AvailableChoice != nil {
@@ -229,7 +229,6 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 					availableChoiceMap := map[string]interface{}{}
 
 					if availableChoice.MasterZone != nil {
-						masterZoneList := []interface{}{}
 						masterZoneMap := map[string]interface{}{}
 
 						if availableChoice.MasterZone.Zone != nil {
@@ -248,8 +247,7 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 							masterZoneMap["on_sale"] = availableChoice.MasterZone.OnSale
 						}
 
-						masterZoneList = append(masterZoneList, masterZoneMap)
-						availableChoiceMap["master_zone"] = masterZoneList
+						availableChoiceMap["master_zone"] = []interface{}{masterZoneMap}
 					}
 
 					if availableChoice.SlaveZones != nil {
@@ -276,16 +274,16 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 							slaveZonesList = append(slaveZonesList, slaveZonesMap)
 						}
 
-						availableChoiceMap["slave_zones"] = slaveZonesList
+						availableChoiceMap["slave_zones"] = []interface{}{slaveZonesList}
 					}
 
 					availableChoiceList = append(availableChoiceList, availableChoiceMap)
 				}
 
-				regionInfoMap["available_choice"] = availableChoiceList
+				regionInfoMap["available_choice"] = []interface{}{availableChoiceList}
 			}
 
-			ids = append(ids, *regionInfo.Region)
+			ids = append(ids, *regionInfo.Zone)
 			tmpList = append(tmpList, regionInfoMap)
 		}
 
@@ -299,6 +297,5 @@ func dataSourceTencentCloudMariadbSaleInfoRead(d *schema.ResourceData, meta inte
 			return e
 		}
 	}
-
 	return nil
 }

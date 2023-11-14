@@ -5,13 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_acceleration_domain" "acceleration_domain" {
-    zone_id     = "zone-2o0i41pv2h8c"
-    domain_name = "aaa.makn.cn"
+  zone_id = ""
+  domain_name = ""
+  origin_info {
+		origin_type = ""
+		origin = ""
+		backup_origin = ""
+		private_access = ""
+		private_parameters {
+			name = ""
+			value = ""
+		}
 
-    origin_info {
-        origin      = "150.109.8.1"
-        origin_type = "IP_DOMAIN"
-    }
+  }
 }
 ```
 
@@ -28,35 +34,33 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
-func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
+func resourceTencentCloudTeoAcceleration_domain() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTeoAccelerationDomainCreate,
-		Read:   resourceTencentCloudTeoAccelerationDomainRead,
-		Update: resourceTencentCloudTeoAccelerationDomainUpdate,
-		Delete: resourceTencentCloudTeoAccelerationDomainDelete,
+		Create: resourceTencentCloudTeoAcceleration_domainCreate,
+		Read:   resourceTencentCloudTeoAcceleration_domainRead,
+		Update: resourceTencentCloudTeoAcceleration_domainUpdate,
+		Delete: resourceTencentCloudTeoAcceleration_domainDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "ID of the site related with the accelerated domain name.",
+				Description: "Site ID to which the acceleration domain name belongs.",
 			},
 
 			"domain_name": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Accelerated domain name.",
 			},
@@ -65,13 +69,13 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "Details of the origin.",
+				Description: "Origin information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"origin_type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The origin type. Values: `IP_DOMAIN`: IPv4/IPv6 address or domain name; `COS`: COS bucket address; `ORIGIN_GROUP`: Origin group; `AWS_S3`: AWS S3 bucket address; `SPACE`: EdgeOne Shield Space.",
+							Description: "The origin type. Values:&amp;lt;li&amp;gt;`IP_DOMAIN`: IPv4/IPv6 address or domain name&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`COS`: COS bucket address &amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`ORIGIN_GROUP`: Origin group &amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`AWS_S3`: AWS S3 bucket address &amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`SPACE`: EdgeOne Shield Space &amp;lt;/li&amp;gt;.",
 						},
 						"origin": {
 							Type:        schema.TypeString,
@@ -81,12 +85,12 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 						"backup_origin": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "ID of the secondary origin group (valid when `OriginType=ORIGIN_GROUP`). If it is not specified, it indicates that secondary origins are not used.",
+							Description: "ID of the secondary origin group (valid when `OriginType=ORIGIN_GROUP`). If it’s not specified, it indicates that secondary origins are not used.",
 						},
 						"private_access": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values: `on`: Enable private authentication; `off`: Disable private authentication. If this field is not specified, the default value `off` is used.",
+							Description: "Whether to authenticate access to the private object storage origin (valid when `OriginType=COS/AWS_S3`). Values: &amp;lt;li&amp;gt;`on`: Enable private authentication.&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`off`: Disable private authentication.&amp;lt;/li&amp;gt;If this field is not specified, the default value `off` is used.",
 						},
 						"private_parameters": {
 							Type:        schema.TypeList,
@@ -97,7 +101,7 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 									"name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The parameter name. Valid values: `AccessKeyId`: Access Key ID; `SecretAccessKey`: Secret Access Key.",
+										Description: "The parameter name. Values&amp;lt;li&amp;gt;`AccessKeyId`: Access Key ID&amp;lt;/li&amp;gt;&amp;lt;li&amp;gt;`SecretAccessKey`: Secret Access Key&amp;lt;/li&amp;gt;.",
 									},
 									"value": {
 										Type:        schema.TypeString,
@@ -110,31 +114,19 @@ func resourceTencentCloudTeoAccelerationDomain() *schema.Resource {
 					},
 				},
 			},
-
-			"status": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Accelerated domain name status, the values are: `online`: enabled; `offline`: disabled.",
-			},
-
-			"cname": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "CNAME address.",
-			},
 		},
 	}
 }
 
-func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTeoAcceleration_domainCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = teo.NewCreateAccelerationDomainRequest()
+		response   = teo.NewCreateAccelerationDomainResponse()
 		zoneId     string
 		domainName string
 	)
@@ -185,25 +177,29 @@ func resourceTencentCloudTeoAccelerationDomainCreate(d *schema.ResourceData, met
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo accelerationDomain failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create teo acceleration_domain failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(zoneId + FILED_SP + domainName)
+	zoneId = *response.Response.ZoneId
+	d.SetId(strings.Join([]string{zoneId, domainName}, FILED_SP))
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
-	if err != nil {
-		return err
+
+	conf := BuildStateChangeConf([]string{}, []string{"online"}, 1*readRetryTimeout, time.Second, service.TeoAcceleration_domainStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
-	return resourceTencentCloudTeoAccelerationDomainRead(d, meta)
+	return resourceTencentCloudTeoAcceleration_domainRead(d, meta)
 }
 
-func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTeoAcceleration_domainRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -220,52 +216,47 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 	zoneId := idSplit[0]
 	domainName := idSplit[1]
 
-	accelerationDomain, err := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
+	acceleration_domain, err := service.DescribeTeoAcceleration_domainById(ctx, zoneId, domainName)
 	if err != nil {
 		return err
 	}
 
-	if accelerationDomain == nil {
+	if acceleration_domain == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TeoAccelerationDomain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `TeoAcceleration_domain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if accelerationDomain.ZoneId != nil {
-		_ = d.Set("zone_id", accelerationDomain.ZoneId)
+	if acceleration_domain.ZoneId != nil {
+		_ = d.Set("zone_id", acceleration_domain.ZoneId)
 	}
 
-	if accelerationDomain.DomainName != nil {
-		_ = d.Set("domain_name", accelerationDomain.DomainName)
+	if acceleration_domain.DomainName != nil {
+		_ = d.Set("domain_name", acceleration_domain.DomainName)
 	}
 
-	if accelerationDomain.Cname != nil {
-		_ = d.Set("cname", accelerationDomain.Cname)
-	}
-
-	if accelerationDomain.OriginDetail != nil {
+	if acceleration_domain.OriginInfo != nil {
 		originInfoMap := map[string]interface{}{}
-		originDetail := accelerationDomain.OriginDetail
 
-		if originDetail.OriginType != nil {
-			originInfoMap["origin_type"] = originDetail.OriginType
+		if acceleration_domain.OriginInfo.OriginType != nil {
+			originInfoMap["origin_type"] = acceleration_domain.OriginInfo.OriginType
 		}
 
-		if originDetail.Origin != nil {
-			originInfoMap["origin"] = originDetail.Origin
+		if acceleration_domain.OriginInfo.Origin != nil {
+			originInfoMap["origin"] = acceleration_domain.OriginInfo.Origin
 		}
 
-		if originDetail.BackupOrigin != nil {
-			originInfoMap["backup_origin"] = originDetail.BackupOrigin
+		if acceleration_domain.OriginInfo.BackupOrigin != nil {
+			originInfoMap["backup_origin"] = acceleration_domain.OriginInfo.BackupOrigin
 		}
 
-		if originDetail.PrivateAccess != nil {
-			originInfoMap["private_access"] = originDetail.PrivateAccess
+		if acceleration_domain.OriginInfo.PrivateAccess != nil {
+			originInfoMap["private_access"] = acceleration_domain.OriginInfo.PrivateAccess
 		}
 
-		if originDetail.PrivateParameters != nil {
+		if acceleration_domain.OriginInfo.PrivateParameters != nil {
 			privateParametersList := []interface{}{}
-			for _, privateParameters := range originDetail.PrivateParameters {
+			for _, privateParameters := range acceleration_domain.OriginInfo.PrivateParameters {
 				privateParametersMap := map[string]interface{}{}
 
 				if privateParameters.Name != nil {
@@ -279,7 +270,7 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 				privateParametersList = append(privateParametersList, privateParametersMap)
 			}
 
-			originInfoMap["private_parameters"] = privateParametersList
+			originInfoMap["private_parameters"] = []interface{}{privateParametersList}
 		}
 
 		_ = d.Set("origin_info", []interface{}{originInfoMap})
@@ -288,12 +279,16 @@ func resourceTencentCloudTeoAccelerationDomainRead(d *schema.ResourceData, meta 
 	return nil
 }
 
-func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTeoAcceleration_domainUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	var (
+		modifyAccelerationDomainRequest  = teo.NewModifyAccelerationDomainRequest()
+		modifyAccelerationDomainResponse = teo.NewModifyAccelerationDomainResponse()
+	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -302,11 +297,30 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 	zoneId := idSplit[0]
 	domainName := idSplit[1]
 
-	if d.HasChange("origin_info") {
-		request := teo.NewModifyAccelerationDomainRequest()
-		request.ZoneId = &zoneId
-		request.DomainName = &domainName
+	request.ZoneId = &zoneId
+	request.DomainName = &domainName
 
+	immutableArgs := []string{"zone_id", "domain_name", "origin_info"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("zone_id") {
+		if v, ok := d.GetOk("zone_id"); ok {
+			request.ZoneId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("domain_name") {
+		if v, ok := d.GetOk("domain_name"); ok {
+			request.DomainName = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("origin_info") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "origin_info"); ok {
 			originInfo := teo.OriginInfo{}
 			if v, ok := dMap["origin_type"]; ok {
@@ -336,71 +350,34 @@ func resourceTencentCloudTeoAccelerationDomainUpdate(d *schema.ResourceData, met
 			}
 			request.OriginInfo = &originInfo
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomain(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo accelerationDomain failed, reason:%+v", logId, err)
-			return err
-		}
-
-		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "")
-		if err != nil {
-			return err
-		}
 	}
 
-	if d.HasChange("status") {
-		request := teo.NewModifyAccelerationDomainStatusesRequest()
-		request.ZoneId = &zoneId
-		request.DomainNames = []*string{&domainName}
-
-		if v, ok := d.GetOk("status"); ok {
-			request.Status = helper.String(v.(string))
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomain(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomainStatuses(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update teo accelerationDomain failed, reason:%+v", logId, err)
-			return err
-		}
-
-		service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-			instance, errRet := service.DescribeTeoAccelerationDomainById(ctx, zoneId, domainName)
-			if errRet != nil {
-				return retryError(errRet, InternalError)
-			}
-			if *instance.DomainStatus == "online" || *instance.DomainStatus == "offline" {
-				return nil
-			}
-			return resource.RetryableError(fmt.Errorf("AccelerationDomain status is %v, retry...", *instance.DomainStatus))
-		})
-		if err != nil {
-			return err
-		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update teo acceleration_domain failed, reason:%+v", logId, err)
+		return err
 	}
 
-	return resourceTencentCloudTeoAccelerationDomainRead(d, meta)
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"online"}, 1*readRetryTimeout, time.Second, service.TeoAcceleration_domainStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	return resourceTencentCloudTeoAcceleration_domainRead(d, meta)
 }
 
-func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTeoAcceleration_domainDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_teo_acceleration_domain.delete")()
 	defer inconsistentCheck(d, meta)()
 
@@ -415,31 +392,7 @@ func resourceTencentCloudTeoAccelerationDomainDelete(d *schema.ResourceData, met
 	zoneId := idSplit[0]
 	domainName := idSplit[1]
 
-	request := teo.NewModifyAccelerationDomainStatusesRequest()
-	request.ZoneId = &zoneId
-	request.DomainNames = []*string{&domainName}
-	request.Status = helper.String("offline")
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyAccelerationDomainStatuses(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update teo accelerationDomain failed, reason:%+v", logId, err)
-		return err
-	}
-
-	err = service.CheckAccelerationDomainStatus(ctx, zoneId, domainName, "delete")
-	if err != nil {
-		return err
-	}
-
-	if err = service.DeleteTeoAccelerationDomainById(ctx, zoneId, domainName); err != nil {
+	if err := service.DeleteTeoAcceleration_domainById(ctx, zoneId, domainName); err != nil {
 		return err
 	}
 

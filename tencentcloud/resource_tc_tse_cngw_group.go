@@ -4,60 +4,37 @@ Provides a resource to create a tse cngw_group
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_tse_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_tse_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
-  description                = "terraform test1"
-  enable_cls                 = true
-  engine_region              = "ap-guangzhou"
-  feature_version            = "STANDARD"
-  gateway_version            = "2.5.1"
-  ingress_class_name         = "tse-nginx-ingress"
-  internet_max_bandwidth_out = 0
-  name                       = "terraform-gateway1"
-  trade_type                 = 0
-  type                       = "kong"
-
-  node_config {
-    number        = 2
-    specification = "1c2g"
-  }
-
-  vpc_config {
-    subnet_id = tencentcloud_subnet.subnet.id
-    vpc_id    = tencentcloud_vpc.vpc.id
-  }
-
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
 resource "tencentcloud_tse_cngw_group" "cngw_group" {
-  description = "terraform desc"
-  gateway_id  = tencentcloud_tse_cngw_gateway.cngw_gateway.id
-  name        = "terraform-group"
-  subnet_id   = tencentcloud_subnet.subnet.id
-
+  gateway_id = ""
+  name = ""
   node_config {
-    number        = 2
-    specification = "1c2g"
+		specification = ""
+		number =
+
+  }
+  subnet_id = ""
+  description = ""
+  internet_max_bandwidth_out =
+  internet_config {
+		internet_address_version = ""
+		internet_pay_mode = ""
+		internet_max_bandwidth_out =
+		description = ""
+		sla_type = ""
+		multi_zone_flag =
+		master_zone_id = ""
+		slave_zone_id = ""
+
   }
 }
+```
+
+Import
+
+tse cngw_group can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tse_cngw_group.cngw_group cngw_group_id
 ```
 */
 package tencentcloud
@@ -65,13 +42,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudTseCngwGroup() *schema.Resource {
@@ -87,31 +64,31 @@ func resourceTencentCloudTseCngwGroup() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway IDonly postpaid gateway supported.",
+				Description: "Gateway IDonly postpaid gateway supported.",
 			},
 
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway group name.",
+				Description: "Gateway group name.",
 			},
 
 			"node_config": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "group node configration.",
+				Description: "Group node configration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"specification": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "group specification, 1c2g|2c4g|4c8g|8c16g.",
+							Description: "Group specification, 1c2g|2c4g|4c8g|8c16g.",
 						},
 						"number": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "group node number, 2-50.",
+							Description: "Group node number, 2-50.",
 						},
 					},
 				},
@@ -120,52 +97,52 @@ func resourceTencentCloudTseCngwGroup() *schema.Resource {
 			"subnet_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value:- subnet-ahde9me9.",
+				Description: "Subnet ID. Assign an IP address to the engine in the VPC subnet. Reference value:- subnet-ahde9me9.",
 			},
 
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "description information of group.",
+				Description: "Description information of group.",
 			},
 
 			"internet_max_bandwidth_out": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "public network outbound traffic bandwidth,[1,2048]Mbps.",
+				Description: "Public network outbound traffic bandwidth,[1,2048]Mbps.",
 			},
 
 			"internet_config": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "internet configration.",
+				Description: "Internet configration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"internet_address_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "internet type. Reference value:- IPV4 (default value)- IPV6.",
+							Description: "Internet type. Reference value:- IPV4 (default value)- IPV6.",
 						},
 						"internet_pay_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "trade type of internet. Reference value:- BANDWIDTH- TRAFFIC (default value).",
+							Description: "Trade type of internet. Reference value:- BANDWIDTH- TRAFFIC (default value).",
 						},
 						"internet_max_bandwidth_out": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "public network bandwidth.",
+							Description: "Public network bandwidth.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "description of clb.",
+							Description: "Description of clb.",
 						},
 						"sla_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "specification type of clb. Default shared type when this parameter is empty. Reference value:- SLA LCU-supported.",
+							Description: "Specification type of clb. Default shared type when this parameter is empty. Reference value:- SLA LCU-supported.",
 						},
 						"multi_zone_flag": {
 							Type:        schema.TypeBool,
@@ -175,12 +152,12 @@ func resourceTencentCloudTseCngwGroup() *schema.Resource {
 						"master_zone_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "primary availability zone.",
+							Description: "Primary availability zone.",
 						},
 						"slave_zone_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "alternate availability zone.",
+							Description: "Alternate availability zone.",
 						},
 					},
 				},
@@ -194,7 +171,6 @@ func resourceTencentCloudTseCngwGroupCreate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = tse.NewCreateNativeGatewayServerGroupRequest()
@@ -278,12 +254,15 @@ func resourceTencentCloudTseCngwGroupCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	groupId = *response.Response.Result.GroupId
-	d.SetId(gatewayId + FILED_SP + groupId)
+	gatewayId = *response.Response.GatewayId
+	d.SetId(strings.Join([]string{gatewayId, groupId}, FILED_SP))
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "create"); err != nil {
-		return err
+
+	conf := BuildStateChangeConf([]string{}, []string{"Running"}, 5*readRetryTimeout, time.Second, service.TseCngwGroupStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudTseCngwGroupRead(d, meta)
@@ -339,8 +318,8 @@ func resourceTencentCloudTseCngwGroupRead(d *schema.ResourceData, meta interface
 		_ = d.Set("node_config", []interface{}{nodeConfigMap})
 	}
 
-	if cngwGroup.SubnetIds != nil {
-		_ = d.Set("subnet_id", cngwGroup.SubnetIds)
+	if cngwGroup.SubnetId != nil {
+		_ = d.Set("subnet_id", cngwGroup.SubnetId)
 	}
 
 	if cngwGroup.Description != nil {
@@ -351,43 +330,43 @@ func resourceTencentCloudTseCngwGroupRead(d *schema.ResourceData, meta interface
 		_ = d.Set("internet_max_bandwidth_out", cngwGroup.InternetMaxBandwidthOut)
 	}
 
-	// if cngwGroup.InternetConfig != nil {
-	// 	internetConfigMap := map[string]interface{}{}
+	if cngwGroup.InternetConfig != nil {
+		internetConfigMap := map[string]interface{}{}
 
-	// 	if cngwGroup.InternetConfig.InternetAddressVersion != nil {
-	// 		internetConfigMap["internet_address_version"] = cngwGroup.InternetConfig.InternetAddressVersion
-	// 	}
+		if cngwGroup.InternetConfig.InternetAddressVersion != nil {
+			internetConfigMap["internet_address_version"] = cngwGroup.InternetConfig.InternetAddressVersion
+		}
 
-	// 	if cngwGroup.InternetConfig.InternetPayMode != nil {
-	// 		internetConfigMap["internet_pay_mode"] = cngwGroup.InternetConfig.InternetPayMode
-	// 	}
+		if cngwGroup.InternetConfig.InternetPayMode != nil {
+			internetConfigMap["internet_pay_mode"] = cngwGroup.InternetConfig.InternetPayMode
+		}
 
-	// 	if cngwGroup.InternetConfig.InternetMaxBandwidthOut != nil {
-	// 		internetConfigMap["internet_max_bandwidth_out"] = cngwGroup.InternetConfig.InternetMaxBandwidthOut
-	// 	}
+		if cngwGroup.InternetConfig.InternetMaxBandwidthOut != nil {
+			internetConfigMap["internet_max_bandwidth_out"] = cngwGroup.InternetConfig.InternetMaxBandwidthOut
+		}
 
-	// 	if cngwGroup.InternetConfig.Description != nil {
-	// 		internetConfigMap["description"] = cngwGroup.InternetConfig.Description
-	// 	}
+		if cngwGroup.InternetConfig.Description != nil {
+			internetConfigMap["description"] = cngwGroup.InternetConfig.Description
+		}
 
-	// 	if cngwGroup.InternetConfig.SlaType != nil {
-	// 		internetConfigMap["sla_type"] = cngwGroup.InternetConfig.SlaType
-	// 	}
+		if cngwGroup.InternetConfig.SlaType != nil {
+			internetConfigMap["sla_type"] = cngwGroup.InternetConfig.SlaType
+		}
 
-	// 	if cngwGroup.InternetConfig.MultiZoneFlag != nil {
-	// 		internetConfigMap["multi_zone_flag"] = cngwGroup.InternetConfig.MultiZoneFlag
-	// 	}
+		if cngwGroup.InternetConfig.MultiZoneFlag != nil {
+			internetConfigMap["multi_zone_flag"] = cngwGroup.InternetConfig.MultiZoneFlag
+		}
 
-	// 	if cngwGroup.InternetConfig.MasterZoneId != nil {
-	// 		internetConfigMap["master_zone_id"] = cngwGroup.InternetConfig.MasterZoneId
-	// 	}
+		if cngwGroup.InternetConfig.MasterZoneId != nil {
+			internetConfigMap["master_zone_id"] = cngwGroup.InternetConfig.MasterZoneId
+		}
 
-	// 	if cngwGroup.InternetConfig.SlaveZoneId != nil {
-	// 		internetConfigMap["slave_zone_id"] = cngwGroup.InternetConfig.SlaveZoneId
-	// 	}
+		if cngwGroup.InternetConfig.SlaveZoneId != nil {
+			internetConfigMap["slave_zone_id"] = cngwGroup.InternetConfig.SlaveZoneId
+		}
 
-	// 	_ = d.Set("internet_config", []interface{}{internetConfigMap})
-	// }
+		_ = d.Set("internet_config", []interface{}{internetConfigMap})
+	}
 
 	return nil
 }
@@ -397,7 +376,6 @@ func resourceTencentCloudTseCngwGroupUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tse.NewModifyNativeGatewayServerGroupRequest()
 
@@ -411,11 +389,17 @@ func resourceTencentCloudTseCngwGroupUpdate(d *schema.ResourceData, meta interfa
 	request.GatewayId = &gatewayId
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"gateway_id", "node_config", "subnet_id", "internet_max_bandwidth_out", "internet_config"}
+	immutableArgs := []string{"gateway_id", "name", "node_config", "subnet_id", "description", "internet_max_bandwidth_out", "internet_config"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("gateway_id") {
+		if v, ok := d.GetOk("gateway_id"); ok {
+			request.GatewayId = helper.String(v.(string))
 		}
 	}
 
@@ -445,11 +429,6 @@ func resourceTencentCloudTseCngwGroupUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "update"); err != nil {
-		return err
-	}
-
 	return resourceTencentCloudTseCngwGroupRead(d, meta)
 }
 
@@ -471,8 +450,13 @@ func resourceTencentCloudTseCngwGroupDelete(d *schema.ResourceData, meta interfa
 	if err := service.DeleteTseCngwGroupById(ctx, gatewayId, groupId); err != nil {
 		return err
 	}
-	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "delete"); err != nil {
-		return err
+
+	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"Deleted"}, 5*readRetryTimeout, time.Second, service.TseCngwGroupStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

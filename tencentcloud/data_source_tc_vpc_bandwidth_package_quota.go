@@ -12,7 +12,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -37,12 +36,12 @@ func dataSourceTencentCloudVpcBandwidthPackageQuota() *schema.Resource {
 						"quota_current": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "current amount.",
+							Description: "Current amount.",
 						},
 						"quota_limit": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "quota amount.",
+							Description: "Quota amount.",
 						},
 					},
 				},
@@ -65,12 +64,13 @@ func dataSourceTencentCloudVpcBandwidthPackageQuotaRead(d *schema.ResourceData, 
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var quotaSet []*vpc.Quota
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeVpcBandwidthPackageQuota(ctx)
+		result, e := service.DescribeVpcBandwidthPackageQuotaByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -100,7 +100,7 @@ func dataSourceTencentCloudVpcBandwidthPackageQuotaRead(d *schema.ResourceData, 
 				quotaMap["quota_limit"] = quota.QuotaLimit
 			}
 
-			ids = append(ids, *quota.QuotaId)
+			ids = append(ids, *quota.IdsHash)
 			tmpList = append(tmpList, quotaMap)
 		}
 

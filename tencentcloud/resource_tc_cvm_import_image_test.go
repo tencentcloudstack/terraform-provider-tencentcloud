@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixCvmImportImageResource_basic(t *testing.T) {
+func TestAccTencentCloudCvmImportImageResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -33,7 +32,7 @@ resource "tencentcloud_cvm_import_image" "import_image" {
   architecture = "x86_64"
   os_type = "CentOS"
   os_version = "7"
-  image_url = ""
+  image_url = "http://111-1251233127.cosd.myqcloud.com/Windows%20Server%202008%20R2%20x64a.vmdk"
   image_name = "sample"
   image_description = "sampleimage"
   dry_run = false

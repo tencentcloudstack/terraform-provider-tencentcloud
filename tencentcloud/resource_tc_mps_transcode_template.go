@@ -5,28 +5,84 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_transcode_template" "transcode_template" {
-  container    = "mp4"
-  name         = "tf_transcode_template"
-  remove_audio = 0
+  container = &lt;nil&gt;
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   remove_video = 0
-
-  audio_template {
-    audio_channel = 2
-    bitrate       = 27
-    codec         = "libfdk_aac"
-    sample_rate   = 32000
-  }
-
+  remove_audio = 0
   video_template {
-    bitrate             = 130
-    codec               = "libx264"
-    fill_type           = "black"
-    fps                 = 20
-    gop                 = 0
-    height              = 4096
-    resolution_adaptive = "close"
-    vcrf                = 0
-    width               = 128
+		codec = &lt;nil&gt;
+		fps = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		resolution_adaptive = "open"
+		width = 0
+		height = 0
+		gop = &lt;nil&gt;
+		fill_type = "black"
+		vcrf = &lt;nil&gt;
+
+  }
+  audio_template {
+		codec = &lt;nil&gt;
+		bitrate = &lt;nil&gt;
+		sample_rate = &lt;nil&gt;
+		audio_channel = 2
+
+  }
+  t_e_h_d_config {
+		type = &lt;nil&gt;
+		max_video_bitrate = &lt;nil&gt;
+
+  }
+  enhance_config {
+		video_enhance {
+			frame_rate {
+				switch = "ON"
+				fps = 0
+			}
+			super_resolution {
+				switch = "ON"
+				type = "lq"
+				size = 2
+			}
+			hdr {
+				switch = "ON"
+				type = "HDR10"
+			}
+			denoise {
+				switch = "ON"
+				type = "weak"
+			}
+			image_quality_enhance {
+				switch = "ON"
+				type = "weak"
+			}
+			color_enhance {
+				switch = "ON"
+				type = "weak"
+			}
+			sharp_enhance {
+				switch = "ON"
+				intensity =
+			}
+			face_enhance {
+				switch = "ON"
+				intensity =
+			}
+			low_light_enhance {
+				switch = "ON"
+				type = "normal"
+			}
+			scratch_repair {
+				switch = "ON"
+				intensity =
+			}
+			artifact_repair {
+				switch = "ON"
+				type = "weak"
+			}
+		}
+
   }
 }
 ```
@@ -43,12 +99,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
@@ -178,7 +234,7 @@ func resourceTencentCloudMpsTranscodeTemplate() *schema.Resource {
 				},
 			},
 
-			"tehd_config": {
+			"t_e_h_d_config": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -457,7 +513,7 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 	var (
 		request    = mps.NewCreateTranscodeTemplateRequest()
 		response   = mps.NewCreateTranscodeTemplateResponse()
-		definition int64
+		definition int
 	)
 	if v, ok := d.GetOk("container"); ok {
 		request.Container = helper.String(v.(string))
@@ -471,11 +527,11 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 		request.Comment = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("remove_video"); v != nil {
+	if v, ok := d.GetOkExists("remove_video"); ok {
 		request.RemoveVideo = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("remove_audio"); v != nil {
+	if v, ok := d.GetOkExists("remove_audio"); ok {
 		request.RemoveAudio = helper.IntInt64(v.(int))
 	}
 
@@ -485,10 +541,10 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 			videoTemplateInfo.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["fps"]; ok {
-			videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+			videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+			videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 		}
 		if v, ok := dMap["resolution_adaptive"]; ok {
 			videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -517,7 +573,7 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 			audioTemplateInfo.Codec = helper.String(v.(string))
 		}
 		if v, ok := dMap["bitrate"]; ok {
-			audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+			audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 		}
 		if v, ok := dMap["sample_rate"]; ok {
 			audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -528,13 +584,13 @@ func resourceTencentCloudMpsTranscodeTemplateCreate(d *schema.ResourceData, meta
 		request.AudioTemplate = &audioTemplateInfo
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "tehd_config"); ok {
+	if dMap, ok := helper.InterfacesHeadMap(d, "t_e_h_d_config"); ok {
 		tEHDConfig := mps.TEHDConfig{}
 		if v, ok := dMap["type"]; ok {
 			tEHDConfig.Type = helper.String(v.(string))
 		}
 		if v, ok := dMap["max_video_bitrate"]; ok {
-			tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
+			tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
 		}
 		request.TEHDConfig = &tEHDConfig
 	}
@@ -692,7 +748,7 @@ func resourceTencentCloudMpsTranscodeTemplateRead(d *schema.ResourceData, meta i
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	transcodeTemplateId := d.Id()
 
 	transcodeTemplate, err := service.DescribeMpsTranscodeTemplateById(ctx, definition)
 	if err != nil {
@@ -800,7 +856,7 @@ func resourceTencentCloudMpsTranscodeTemplateRead(d *schema.ResourceData, meta i
 			tEHDConfigMap["max_video_bitrate"] = transcodeTemplate.TEHDConfig.MaxVideoBitrate
 		}
 
-		_ = d.Set("tehd_config", []interface{}{tEHDConfigMap})
+		_ = d.Set("t_e_h_d_config", []interface{}{tEHDConfigMap})
 	}
 
 	if transcodeTemplate.EnhanceConfig != nil {
@@ -984,9 +1040,17 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 
 	request := mps.NewModifyTranscodeTemplateRequest()
 
-	definition := d.Id()
+	transcodeTemplateId := d.Id()
 
-	request.Definition = helper.StrToInt64Point(definition)
+	request.Definition = &definition
+
+	immutableArgs := []string{"container", "name", "comment", "remove_video", "remove_audio", "video_template", "audio_template", "t_e_h_d_config", "enhance_config"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("container") {
 		if v, ok := d.GetOk("container"); ok {
@@ -1007,28 +1071,28 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 	}
 
 	if d.HasChange("remove_video") {
-		if v, _ := d.GetOk("remove_video"); v != nil {
+		if v, ok := d.GetOkExists("remove_video"); ok {
 			request.RemoveVideo = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("remove_audio") {
-		if v, _ := d.GetOk("remove_audio"); v != nil {
+		if v, ok := d.GetOkExists("remove_audio"); ok {
 			request.RemoveAudio = helper.IntInt64(v.(int))
 		}
 	}
 
 	if d.HasChange("video_template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "video_template"); ok {
-			videoTemplateInfo := mps.VideoTemplateInfoForUpdate{}
+			videoTemplateInfo := mps.VideoTemplateInfo{}
 			if v, ok := dMap["codec"]; ok {
 				videoTemplateInfo.Codec = helper.String(v.(string))
 			}
 			if v, ok := dMap["fps"]; ok {
-				videoTemplateInfo.Fps = helper.IntInt64(v.(int))
+				videoTemplateInfo.Fps = helper.IntUint64(v.(int))
 			}
 			if v, ok := dMap["bitrate"]; ok {
-				videoTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+				videoTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 			}
 			if v, ok := dMap["resolution_adaptive"]; ok {
 				videoTemplateInfo.ResolutionAdaptive = helper.String(v.(string))
@@ -1054,12 +1118,12 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("audio_template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "audio_template"); ok {
-			audioTemplateInfo := mps.AudioTemplateInfoForUpdate{}
+			audioTemplateInfo := mps.AudioTemplateInfo{}
 			if v, ok := dMap["codec"]; ok {
 				audioTemplateInfo.Codec = helper.String(v.(string))
 			}
 			if v, ok := dMap["bitrate"]; ok {
-				audioTemplateInfo.Bitrate = helper.IntInt64(v.(int))
+				audioTemplateInfo.Bitrate = helper.IntUint64(v.(int))
 			}
 			if v, ok := dMap["sample_rate"]; ok {
 				audioTemplateInfo.SampleRate = helper.IntUint64(v.(int))
@@ -1071,14 +1135,14 @@ func resourceTencentCloudMpsTranscodeTemplateUpdate(d *schema.ResourceData, meta
 		}
 	}
 
-	if d.HasChange("tehd_config") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "tehd_config"); ok {
-			tEHDConfig := mps.TEHDConfigForUpdate{}
+	if d.HasChange("t_e_h_d_config") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "t_e_h_d_config"); ok {
+			tEHDConfig := mps.TEHDConfig{}
 			if v, ok := dMap["type"]; ok {
 				tEHDConfig.Type = helper.String(v.(string))
 			}
 			if v, ok := dMap["max_video_bitrate"]; ok {
-				tEHDConfig.MaxVideoBitrate = helper.IntInt64(v.(int))
+				tEHDConfig.MaxVideoBitrate = helper.IntUint64(v.(int))
 			}
 			request.TEHDConfig = &tEHDConfig
 		}
@@ -1233,7 +1297,7 @@ func resourceTencentCloudMpsTranscodeTemplateDelete(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	transcodeTemplateId := d.Id()
 
 	if err := service.DeleteMpsTranscodeTemplateById(ctx, definition); err != nil {
 		return err

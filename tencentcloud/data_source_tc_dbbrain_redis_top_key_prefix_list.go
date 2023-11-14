@@ -5,18 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_redis_top_key_prefix_list" "redis_top_key_prefix_list" {
-	instance_id = local.redis_id
-	date        = "%s"
-	product     = "redis"
-}
+  instance_id = ""
+  date = ""
+  product = ""
+    }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -30,7 +28,7 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixList() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"date": {
@@ -42,13 +40,13 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixList() *schema.Resource {
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include `redis` - cloud database Redis.",
+				Description: "Service product type, supported values include redis - cloud database Redis.",
 			},
 
 			"items": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "list of top key prefixes.",
+				Description: "List of top key prefixes.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ave_element_size": {
@@ -64,12 +62,12 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixList() *schema.Resource {
 						"key_pre_index": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "key prefix.",
+							Description: "Key prefix.",
 						},
 						"item_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of elements.",
+							Description: "Number of elements.",
 						},
 						"count": {
 							Type:        schema.TypeInt,
@@ -83,6 +81,12 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixList() *schema.Resource {
 						},
 					},
 				},
+			},
+
+			"timestamp": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Collection timestamp (seconds).",
 			},
 
 			"result_output_file": {
@@ -101,14 +105,10 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixListRead(d *schema.ResourceDa
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	var (
-		instanceId string
-	)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("date"); ok {
@@ -166,11 +166,15 @@ func dataSourceTencentCloudDbbrainRedisTopKeyPrefixListRead(d *schema.ResourceDa
 				redisPreKeySpaceDataMap["max_element_size"] = redisPreKeySpaceData.MaxElementSize
 			}
 
-			ids = append(ids, strings.Join([]string{instanceId, *redisPreKeySpaceData.KeyPreIndex}, FILED_SP))
+			ids = append(ids, *redisPreKeySpaceData.InstanceId)
 			tmpList = append(tmpList, redisPreKeySpaceDataMap)
 		}
 
 		_ = d.Set("items", tmpList)
+	}
+
+	if timestamp != nil {
+		_ = d.Set("timestamp", timestamp)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

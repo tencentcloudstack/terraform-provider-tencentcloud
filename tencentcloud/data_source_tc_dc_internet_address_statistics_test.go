@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDcInternetAddressStatisticsDataSource_basic(t *testing.T) {
@@ -24,6 +23,7 @@ func TestAccTencentCloudDcInternetAddressStatisticsDataSource_basic(t *testing.T
 
 const testAccDcInternetAddressStatisticsDataSource = `
 
-data "tencentcloud_dc_internet_address_statistics" "internet_address_statistics" {}
+data "tencentcloud_dc_internet_address_statistics" "internet_address_statistics" {
+  }
 
 `

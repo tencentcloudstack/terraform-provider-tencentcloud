@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_mount_point" "mount_point" {
-  file_system_id     = "f14mpfy5lh4e"
-  mount_point_name   = "terraform-test"
-  mount_point_status = 1
+  mount_point_name = &lt;nil&gt;
+  file_system_id = &lt;nil&gt;
+  mount_point_status = &lt;nil&gt;
 }
 ```
 
@@ -23,12 +23,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudChdfsMountPoint() *schema.Resource {
@@ -44,20 +44,19 @@ func resourceTencentCloudChdfsMountPoint() *schema.Resource {
 			"mount_point_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "mount point name.",
+				Description: "Mount point name.",
 			},
 
 			"file_system_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "file system id you want to mount.",
+				Description: "File system id you want to mount.",
 			},
 
 			"mount_point_status": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "mount status 1:open, 2:close.",
+				Description: "Mount status 1:open, 2:close.",
 			},
 		},
 	}
@@ -82,7 +81,7 @@ func resourceTencentCloudChdfsMountPointCreate(d *schema.ResourceData, meta inte
 		request.FileSystemId = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("mount_point_status"); v != nil {
+	if v, ok := d.GetOkExists("mount_point_status"); ok {
 		request.MountPointStatus = helper.IntUint64(v.(int))
 	}
 
@@ -101,7 +100,7 @@ func resourceTencentCloudChdfsMountPointCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	mountPointId = *response.Response.MountPoint.MountPointId
+	mountPointId = *response.Response.MountPointId
 	d.SetId(mountPointId)
 
 	return resourceTencentCloudChdfsMountPointRead(d, meta)
@@ -138,8 +137,8 @@ func resourceTencentCloudChdfsMountPointRead(d *schema.ResourceData, meta interf
 		_ = d.Set("file_system_id", mountPoint.FileSystemId)
 	}
 
-	if mountPoint.Status != nil {
-		_ = d.Set("mount_point_status", mountPoint.Status)
+	if mountPoint.MountPointStatus != nil {
+		_ = d.Set("mount_point_status", mountPoint.MountPointStatus)
 	}
 
 	return nil
@@ -157,6 +156,14 @@ func resourceTencentCloudChdfsMountPointUpdate(d *schema.ResourceData, meta inte
 
 	request.MountPointId = &mountPointId
 
+	immutableArgs := []string{"mount_point_name", "file_system_id", "mount_point_status"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("mount_point_name") {
 		if v, ok := d.GetOk("mount_point_name"); ok {
 			request.MountPointName = helper.String(v.(string))
@@ -164,7 +171,7 @@ func resourceTencentCloudChdfsMountPointUpdate(d *schema.ResourceData, meta inte
 	}
 
 	if d.HasChange("mount_point_status") {
-		if v, _ := d.GetOk("mount_point_status"); v != nil {
+		if v, ok := d.GetOkExists("mount_point_status"); ok {
 			request.MountPointStatus = helper.IntUint64(v.(int))
 		}
 	}

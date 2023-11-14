@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dc_access_points" "access_points" {
-  region_id = "ap-guangzhou"
-}
+  region_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+	dc "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/dc/v20180410"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

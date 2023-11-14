@@ -6,24 +6,31 @@ Example Usage
 ```hcl
 resource "tencentcloud_cynosdb_export_instance_slow_queries" "export_instance_slow_queries" {
   instance_id = "cynosdbmysql-ins-123"
-  start_time  = "2022-01-01 12:00:00"
-  end_time    = "2022-01-01 14:00:00"
-  username    = "root"
-  host        = "10.10.10.10"
-  database    = "db1"
-  file_type   = "csv"
+  start_time = "2022-01-01 12:00:00"
+  end_time = "2022-01-01 14:00:00"
+  username = "root"
+  host = "10.10.10.10"
+  database = "db1"
+  file_type = "csv"
 }
+```
+
+Import
+
+cynosdb export_instance_slow_queries can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_export_instance_slow_queries.export_instance_slow_queries export_instance_slow_queries_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbExportInstanceSlowQueries() *schema.Resource {
@@ -31,7 +38,9 @@ func resourceTencentCloudCynosdbExportInstanceSlowQueries() *schema.Resource {
 		Create: resourceTencentCloudCynosdbExportInstanceSlowQueriesCreate,
 		Read:   resourceTencentCloudCynosdbExportInstanceSlowQueriesRead,
 		Delete: resourceTencentCloudCynosdbExportInstanceSlowQueriesDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -58,7 +67,7 @@ func resourceTencentCloudCynosdbExportInstanceSlowQueries() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "user name.",
+				Description: "User name.",
 			},
 
 			"host": {
@@ -80,12 +89,6 @@ func resourceTencentCloudCynosdbExportInstanceSlowQueries() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "File type, optional values: csv, original.",
-			},
-
-			"file_content": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Slow query export content.",
 			},
 		},
 	}
@@ -146,11 +149,8 @@ func resourceTencentCloudCynosdbExportInstanceSlowQueriesCreate(d *schema.Resour
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
-
-	if response.Response.FileContent != nil {
-		_ = d.Set("file_content", response.Response.FileContent)
-	}
 
 	return resourceTencentCloudCynosdbExportInstanceSlowQueriesRead(d, meta)
 }

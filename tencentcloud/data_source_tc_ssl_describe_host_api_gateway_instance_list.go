@@ -5,8 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_api_gateway_instance_list" "describe_host_api_gateway_instance_list" {
-  certificate_id = "9Bpk7XOu"
-  resource_type = "apiGateway"
+  certificate_id = ""
+  resource_type = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  old_certificate_id = ""
   }
 ```
 */
@@ -14,7 +21,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -88,7 +94,7 @@ func dataSourceTencentCloudSslDescribeHostApiGatewayInstanceList() *schema.Resou
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "domain name.",
+							Description: "Domain name.",
 						},
 						"cert_id": {
 							Type:        schema.TypeString,
@@ -200,7 +206,7 @@ func dataSourceTencentCloudSslDescribeHostApiGatewayInstanceListRead(d *schema.R
 				apiGatewayInstanceDetailMap["protocol"] = apiGatewayInstanceDetail.Protocol
 			}
 
-			ids = append(ids, *apiGatewayInstanceDetail.CertId)
+			ids = append(ids, *apiGatewayInstanceDetail.CertificateId)
 			tmpList = append(tmpList, apiGatewayInstanceDetailMap)
 		}
 

@@ -340,3 +340,172 @@ func (me *CatService) DescribeCatMetricDataByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *CatService) DescribeCatMetricDataByFilter(ctx context.Context, param map[string]interface{}) (metricData []*cat.DescribeProbeMetricDataResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cat.NewDescribeProbeMetricDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AnalyzeTaskType" {
+			request.AnalyzeTaskType = v.(*string)
+		}
+		if k == "MetricType" {
+			request.MetricType = v.(*string)
+		}
+		if k == "Field" {
+			request.Field = v.(*string)
+		}
+		if k == "Filter" {
+			request.Filter = v.(*string)
+		}
+		if k == "GroupBy" {
+			request.GroupBy = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCatClient().DescribeProbeMetricData(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MetricSet) < 1 {
+			break
+		}
+		metricData = append(metricData, response.Response.MetricSet...)
+		if len(response.Response.MetricSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CatService) DescribeCatNodeByFilter(ctx context.Context, param map[string]interface{}) (node []*cat.NodeDefineExt, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cat.NewDescribeNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "NodeType" {
+			request.NodeType = v.(*int64)
+		}
+		if k == "Location" {
+			request.Location = v.(*int64)
+		}
+		if k == "IsIPv6" {
+			request.IsIPv6 = v.(*bool)
+		}
+		if k == "NodeName" {
+			request.NodeName = v.(*string)
+		}
+		if k == "PayMode" {
+			request.PayMode = v.(*int64)
+		}
+		if k == "TaskType" {
+			request.TaskType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCatClient().DescribeNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NodeSet) < 1 {
+			break
+		}
+		node = append(node, response.Response.NodeSet...)
+		if len(response.Response.NodeSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CatService) DescribeCatTaskOpsById(ctx context.Context, taskId string) (taskOps *cat.ProbeTask, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cat.NewDescribeProbeTasksRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCatClient().DescribeProbeTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ProbeTask) < 1 {
+		return
+	}
+
+	taskOps = response.Response.ProbeTask[0]
+	return
+}
+
+func (me *CatService) CatTaskOpsStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeProbeTasks(ctx, taskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}

@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tdmq_pro_instance_detail" "pro_instance_detail" {
-  cluster_id = "pulsar-9n95ax58b9vn"
-}
+  cluster_id = ""
+      }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -29,10 +28,11 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster Id.",
 			},
+
 			"cluster_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Cluster information.",
+				Description: "Cluster infomration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_id": {
@@ -63,7 +63,7 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 						"version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster version.",
+							Description: "Cluster version.",
 						},
 						"node_distribution": {
 							Type:        schema.TypeList,
@@ -102,6 +102,7 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 					},
 				},
 			},
+
 			"network_access_point_infos": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -121,12 +122,12 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 						"endpoint": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access address.",
+							Description: "Access address.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "instance id.",
+							Description: "Instance id.",
 						},
 						"route_type": {
 							Type:        schema.TypeInt,
@@ -136,6 +137,7 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 					},
 				},
 			},
+
 			"cluster_spec_info": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -150,12 +152,12 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 						"max_tps": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "peak tps.",
+							Description: "Peak tps.",
 						},
 						"max_band_width": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "peak bandwidth. Unit: mbps.",
+							Description: "Peak bandwidth. Unit: mbps.",
 						},
 						"max_namespaces": {
 							Type:        schema.TypeInt,
@@ -175,6 +177,7 @@ func dataSourceTencentCloudTdmqProInstanceDetail() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -188,65 +191,62 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 	defer logElapsed("data_source.tencentcloud_tdmq_pro_instance_detail.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
-		service     = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		clusterInfo *tdmq.DescribePulsarProInstanceDetailResponseParams
-		clusterId   string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
+
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var clusterInfo []*tdmq.PulsarProClusterInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqProInstanceDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		clusterInfo = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(clusterInfo))
 	if clusterInfo != nil {
 		pulsarProClusterInfoMap := map[string]interface{}{}
-		tmpList := []interface{}{}
 
-		if clusterInfo.ClusterInfo.ClusterId != nil {
-			pulsarProClusterInfoMap["cluster_id"] = clusterInfo.ClusterInfo.ClusterId
+		if clusterInfo.ClusterId != nil {
+			pulsarProClusterInfoMap["cluster_id"] = clusterInfo.ClusterId
 		}
 
-		if clusterInfo.ClusterInfo.ClusterName != nil {
-			pulsarProClusterInfoMap["cluster_name"] = clusterInfo.ClusterInfo.ClusterName
+		if clusterInfo.ClusterName != nil {
+			pulsarProClusterInfoMap["cluster_name"] = clusterInfo.ClusterName
 		}
 
-		if clusterInfo.ClusterInfo.Remark != nil {
-			pulsarProClusterInfoMap["remark"] = clusterInfo.ClusterInfo.Remark
+		if clusterInfo.Remark != nil {
+			pulsarProClusterInfoMap["remark"] = clusterInfo.Remark
 		}
 
-		if clusterInfo.ClusterInfo.CreateTime != nil {
-			pulsarProClusterInfoMap["create_time"] = clusterInfo.ClusterInfo.CreateTime
+		if clusterInfo.CreateTime != nil {
+			pulsarProClusterInfoMap["create_time"] = clusterInfo.CreateTime
 		}
 
-		if clusterInfo.ClusterInfo.Status != nil {
-			pulsarProClusterInfoMap["status"] = clusterInfo.ClusterInfo.Status
+		if clusterInfo.Status != nil {
+			pulsarProClusterInfoMap["status"] = clusterInfo.Status
 		}
 
-		if clusterInfo.ClusterInfo.Version != nil {
-			pulsarProClusterInfoMap["version"] = clusterInfo.ClusterInfo.Version
+		if clusterInfo.Version != nil {
+			pulsarProClusterInfoMap["version"] = clusterInfo.Version
 		}
 
-		if clusterInfo.ClusterInfo.NodeDistribution != nil {
+		if clusterInfo.NodeDistribution != nil {
 			nodeDistributionList := []interface{}{}
-			for _, nodeDistribution := range clusterInfo.ClusterInfo.NodeDistribution {
+			for _, nodeDistribution := range clusterInfo.NodeDistribution {
 				nodeDistributionMap := map[string]interface{}{}
 
 				if nodeDistribution.ZoneName != nil {
@@ -264,24 +264,23 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 				nodeDistributionList = append(nodeDistributionList, nodeDistributionMap)
 			}
 
-			pulsarProClusterInfoMap["node_distribution"] = nodeDistributionList
+			pulsarProClusterInfoMap["node_distribution"] = []interface{}{nodeDistributionList}
 		}
 
-		if clusterInfo.ClusterInfo.MaxStorage != nil {
-			pulsarProClusterInfoMap["max_storage"] = clusterInfo.ClusterInfo.MaxStorage
+		if clusterInfo.MaxStorage != nil {
+			pulsarProClusterInfoMap["max_storage"] = clusterInfo.MaxStorage
 		}
 
-		if clusterInfo.ClusterInfo.CanEditRoute != nil {
-			pulsarProClusterInfoMap["can_edit_route"] = clusterInfo.ClusterInfo.CanEditRoute
+		if clusterInfo.CanEditRoute != nil {
+			pulsarProClusterInfoMap["can_edit_route"] = clusterInfo.CanEditRoute
 		}
 
-		tmpList = append(tmpList, pulsarProClusterInfoMap)
-		_ = d.Set("cluster_info", tmpList)
+		ids = append(ids, *clusterInfo.ClusterId)
+		_ = d.Set("cluster_info", pulsarProClusterInfoMap)
 	}
 
-	if clusterInfo.NetworkAccessPointInfos != nil {
-		tmpList := []interface{}{}
-		for _, pulsarNetworkAccessPointInfo := range clusterInfo.NetworkAccessPointInfos {
+	if networkAccessPointInfos != nil {
+		for _, pulsarNetworkAccessPointInfo := range networkAccessPointInfos {
 			pulsarNetworkAccessPointInfoMap := map[string]interface{}{}
 
 			if pulsarNetworkAccessPointInfo.VpcId != nil {
@@ -304,51 +303,50 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 				pulsarNetworkAccessPointInfoMap["route_type"] = pulsarNetworkAccessPointInfo.RouteType
 			}
 
+			ids = append(ids, *pulsarNetworkAccessPointInfo.ClusterId)
 			tmpList = append(tmpList, pulsarNetworkAccessPointInfoMap)
 		}
 
 		_ = d.Set("network_access_point_infos", tmpList)
 	}
 
-	if clusterInfo.ClusterSpecInfo != nil {
+	if clusterSpecInfo != nil {
 		pulsarProClusterSpecInfoMap := map[string]interface{}{}
-		tmpList := []interface{}{}
 
-		if clusterInfo.ClusterSpecInfo.SpecName != nil {
-			pulsarProClusterSpecInfoMap["spec_name"] = clusterInfo.ClusterSpecInfo.SpecName
+		if clusterSpecInfo.SpecName != nil {
+			pulsarProClusterSpecInfoMap["spec_name"] = clusterSpecInfo.SpecName
 		}
 
-		if clusterInfo.ClusterSpecInfo.MaxTps != nil {
-			pulsarProClusterSpecInfoMap["max_tps"] = clusterInfo.ClusterSpecInfo.MaxTps
+		if clusterSpecInfo.MaxTps != nil {
+			pulsarProClusterSpecInfoMap["max_tps"] = clusterSpecInfo.MaxTps
 		}
 
-		if clusterInfo.ClusterSpecInfo.MaxBandWidth != nil {
-			pulsarProClusterSpecInfoMap["max_band_width"] = clusterInfo.ClusterSpecInfo.MaxBandWidth
+		if clusterSpecInfo.MaxBandWidth != nil {
+			pulsarProClusterSpecInfoMap["max_band_width"] = clusterSpecInfo.MaxBandWidth
 		}
 
-		if clusterInfo.ClusterSpecInfo.MaxNamespaces != nil {
-			pulsarProClusterSpecInfoMap["max_namespaces"] = clusterInfo.ClusterSpecInfo.MaxNamespaces
+		if clusterSpecInfo.MaxNamespaces != nil {
+			pulsarProClusterSpecInfoMap["max_namespaces"] = clusterSpecInfo.MaxNamespaces
 		}
 
-		if clusterInfo.ClusterSpecInfo.MaxTopics != nil {
-			pulsarProClusterSpecInfoMap["max_topics"] = clusterInfo.ClusterSpecInfo.MaxTopics
+		if clusterSpecInfo.MaxTopics != nil {
+			pulsarProClusterSpecInfoMap["max_topics"] = clusterSpecInfo.MaxTopics
 		}
 
-		if clusterInfo.ClusterSpecInfo.ScalableTps != nil {
-			pulsarProClusterSpecInfoMap["scalable_tps"] = clusterInfo.ClusterSpecInfo.ScalableTps
+		if clusterSpecInfo.ScalableTps != nil {
+			pulsarProClusterSpecInfoMap["scalable_tps"] = clusterSpecInfo.ScalableTps
 		}
 
-		tmpList = append(tmpList, pulsarProClusterSpecInfoMap)
-		_ = d.Set("cluster_spec_info", tmpList)
+		ids = append(ids, *clusterSpecInfo.ClusterId)
+		_ = d.Set("cluster_spec_info", pulsarProClusterSpecInfoMap)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string), pulsarProClusterInfoMap); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

@@ -1,98 +1,42 @@
 /*
-Provides a resource to create a eb eb_transform
+Provides a resource to create a eb event_transform
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
+resource "tencentcloud_eb_event_transform" "event_transform" {
+  event_bus_id = ""
+  rule_id = ""
+  transformations {
+		extraction {
+			extraction_input_path = ""
+			format = ""
+			text_params {
+				separator = ""
+				regex = ""
+			}
+		}
+		etl_filter {
+			filter = ""
+		}
+		transform {
+			output_structs {
+				key = ""
+				value = ""
+				value_type = ""
+			}
+		}
+
   }
-}
-
-resource "tencentcloud_eb_event_rule" "foo" {
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-  rule_name    = "tf-event_rule"
-  description  = "event rule desc"
-  enable       = true
-  event_pattern = jsonencode(
-    {
-      source = "apigw.cloud.tencent"
-      type = [
-        "connector:apigw",
-      ]
-    }
-  )
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_eb_event_transform" "foo" {
-    event_bus_id = tencentcloud_eb_event_bus.foo.id
-    rule_id      = tencentcloud_eb_event_rule.foo.rule_id
-
-    transformations {
-
-        extraction {
-            extraction_input_path = "$"
-            format                = "JSON"
-        }
-
-        transform {
-            output_structs {
-                key        = "type"
-                value      = "connector:ckafka"
-                value_type = "STRING"
-            }
-            output_structs {
-                key        = "source"
-                value      = "ckafka.cloud.tencent"
-                value_type = "STRING"
-            }
-            output_structs {
-                key        = "region"
-                value      = "ap-guangzhou"
-                value_type = "STRING"
-            }
-            output_structs {
-                key        = "datacontenttype"
-                value      = "application/json;charset=utf-8"
-                value_type = "STRING"
-            }
-            output_structs {
-                key        = "status"
-                value      = "-"
-                value_type = "STRING"
-            }
-            output_structs {
-                key        = "data"
-                value      = jsonencode(
-                    {
-                        Partition = 1
-                        msgBody   = "Hello from Ckafka again!"
-                        msgKey    = "test"
-                        offset    = 37
-                        topic     = "test-topic"
-                    }
-                )
-                value_type = "STRING"
-            }
-        }
-    }
 }
 ```
 
 Import
 
-eb eb_transform can be imported using the id, e.g.
+eb event_transform can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_eb_event_transform.eb_transform eb_transform_id
+terraform import tencentcloud_eb_event_transform.event_transform event_transform_id
 ```
 */
 package tencentcloud
@@ -100,13 +44,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudEbEventTransform() *schema.Resource {
@@ -122,13 +65,13 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 			"event_bus_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "event bus Id.",
+				Description: "Event bus Id.",
 			},
 
 			"rule_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "ruleId.",
+				Description: "RuleId.",
 			},
 
 			"transformations": {
@@ -141,7 +84,7 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "Describe how to extract data.",
+							Description: "Describe how to extract data. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"extraction_input_path": {
@@ -152,24 +95,24 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 									"format": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Value: `TEXT`, `JSON`.",
+										Description: "&amp;#39;Value: TEXT/JSON&amp;#39;.",
 									},
 									"text_params": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Only Text needs to be passed.",
+										Description: "Only Text needs to be passed. Note: this field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"separator": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "`Comma`, `|`, `tab`, `space`, `newline`, `%`, `#`, the limit length is 1.",
+													Description: "Comma, | , tab, space, newline, %, #, the limit length is 1. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"regex": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Fill in the regular expression: length 128.",
+													Description: "Fill in the regular expression: length 128, note: this field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
@@ -181,7 +124,7 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "Describe how to filter data.",
+							Description: "Describe how to filter data, note: this field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"filter": {
@@ -196,7 +139,7 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "Describe how to convert data.",
+							Description: "Describe how to convert data. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"output_structs": {
@@ -218,7 +161,7 @@ func resourceTencentCloudEbEventTransform() *schema.Resource {
 												"value_type": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "The data type of value, optional values: `STRING`, `NUMBER`, `BOOLEAN`, `NULL`, `SYS_VARIABLE`, `JSONPATH`.",
+													Description: "&amp;#39;value data type, optional values: STRING, NUMBER, BOOLEAN, NULL, SYS_VARIABLE, JSONPATH&amp;#39;.",
 												},
 											},
 										},
@@ -242,9 +185,8 @@ func resourceTencentCloudEbEventTransformCreate(d *schema.ResourceData, meta int
 	var (
 		request          = eb.NewCreateTransformationRequest()
 		response         = eb.NewCreateTransformationResponse()
-		eventBusId       string
-		ruleId           string
 		transformationId string
+		eventBusId       string
 	)
 	if v, ok := d.GetOk("event_bus_id"); ok {
 		eventBusId = v.(string)
@@ -252,7 +194,6 @@ func resourceTencentCloudEbEventTransformCreate(d *schema.ResourceData, meta int
 	}
 
 	if v, ok := d.GetOk("rule_id"); ok {
-		ruleId = v.(string)
 		request.RuleId = helper.String(v.(string))
 	}
 
@@ -322,12 +263,12 @@ func resourceTencentCloudEbEventTransformCreate(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create eb ebTransform failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create eb eventTransform failed, reason:%+v", logId, err)
 		return err
 	}
 
 	transformationId = *response.Response.TransformationId
-	d.SetId(eventBusId + FILED_SP + ruleId + FILED_SP + transformationId)
+	d.SetId(strings.Join([]string{transformationId, eventBusId}, FILED_SP))
 
 	return resourceTencentCloudEbEventTransformRead(d, meta)
 }
@@ -343,98 +284,107 @@ func resourceTencentCloudEbEventTransformRead(d *schema.ResourceData, meta inter
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	transformationId := idSplit[2]
+	transformationId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	ebTransform, err := service.DescribeEbEventTransformById(ctx, eventBusId, ruleId, transformationId)
+	eventTransform, err := service.DescribeEbEventTransformById(ctx, transformationId, eventBusId)
 	if err != nil {
 		return err
 	}
 
-	if ebTransform == nil {
+	if eventTransform == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `EbEventTransform` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	_ = d.Set("event_bus_id", eventBusId)
-	_ = d.Set("rule_id", ruleId)
+	if eventTransform.EventBusId != nil {
+		_ = d.Set("event_bus_id", eventTransform.EventBusId)
+	}
 
-	if ebTransform != nil {
-		transformationsMap := map[string]interface{}{}
+	if eventTransform.RuleId != nil {
+		_ = d.Set("rule_id", eventTransform.RuleId)
+	}
 
-		if ebTransform.Extraction != nil {
-			extractionMap := map[string]interface{}{}
+	if eventTransform.Transformations != nil {
+		transformationsList := []interface{}{}
+		for _, transformations := range eventTransform.Transformations {
+			transformationsMap := map[string]interface{}{}
 
-			if ebTransform.Extraction.ExtractionInputPath != nil {
-				extractionMap["extraction_input_path"] = ebTransform.Extraction.ExtractionInputPath
-			}
+			if eventTransform.Transformations.Extraction != nil {
+				extractionMap := map[string]interface{}{}
 
-			if ebTransform.Extraction.Format != nil {
-				extractionMap["format"] = ebTransform.Extraction.Format
-			}
-
-			if ebTransform.Extraction.TextParams != nil {
-				textParamsMap := map[string]interface{}{}
-
-				if ebTransform.Extraction.TextParams.Separator != nil {
-					textParamsMap["separator"] = ebTransform.Extraction.TextParams.Separator
+				if eventTransform.Transformations.Extraction.ExtractionInputPath != nil {
+					extractionMap["extraction_input_path"] = eventTransform.Transformations.Extraction.ExtractionInputPath
 				}
 
-				if ebTransform.Extraction.TextParams.Regex != nil {
-					textParamsMap["regex"] = ebTransform.Extraction.TextParams.Regex
+				if eventTransform.Transformations.Extraction.Format != nil {
+					extractionMap["format"] = eventTransform.Transformations.Extraction.Format
 				}
 
-				extractionMap["text_params"] = []interface{}{textParamsMap}
-			}
+				if eventTransform.Transformations.Extraction.TextParams != nil {
+					textParamsMap := map[string]interface{}{}
 
-			transformationsMap["extraction"] = []interface{}{extractionMap}
-		}
-
-		if ebTransform.EtlFilter != nil {
-			etlFilterMap := map[string]interface{}{}
-
-			if ebTransform.EtlFilter.Filter != nil {
-				etlFilterMap["filter"] = ebTransform.EtlFilter.Filter
-			}
-
-			transformationsMap["etl_filter"] = []interface{}{etlFilterMap}
-		}
-
-		if ebTransform.Transform != nil {
-			transformMap := map[string]interface{}{}
-
-			if ebTransform.Transform.OutputStructs != nil {
-				outputStructsList := []interface{}{}
-				for _, outputStructs := range ebTransform.Transform.OutputStructs {
-					outputStructsMap := map[string]interface{}{}
-
-					if outputStructs.Key != nil {
-						outputStructsMap["key"] = outputStructs.Key
+					if eventTransform.Transformations.Extraction.TextParams.Separator != nil {
+						textParamsMap["separator"] = eventTransform.Transformations.Extraction.TextParams.Separator
 					}
 
-					if outputStructs.Value != nil {
-						outputStructsMap["value"] = outputStructs.Value
+					if eventTransform.Transformations.Extraction.TextParams.Regex != nil {
+						textParamsMap["regex"] = eventTransform.Transformations.Extraction.TextParams.Regex
 					}
 
-					if outputStructs.ValueType != nil {
-						outputStructsMap["value_type"] = outputStructs.ValueType
-					}
-
-					outputStructsList = append(outputStructsList, outputStructsMap)
+					extractionMap["text_params"] = []interface{}{textParamsMap}
 				}
 
-				transformMap["output_structs"] = outputStructsList
+				transformationsMap["extraction"] = []interface{}{extractionMap}
 			}
 
-			transformationsMap["transform"] = []interface{}{transformMap}
+			if eventTransform.Transformations.EtlFilter != nil {
+				etlFilterMap := map[string]interface{}{}
+
+				if eventTransform.Transformations.EtlFilter.Filter != nil {
+					etlFilterMap["filter"] = eventTransform.Transformations.EtlFilter.Filter
+				}
+
+				transformationsMap["etl_filter"] = []interface{}{etlFilterMap}
+			}
+
+			if eventTransform.Transformations.Transform != nil {
+				transformMap := map[string]interface{}{}
+
+				if eventTransform.Transformations.Transform.OutputStructs != nil {
+					outputStructsList := []interface{}{}
+					for _, outputStructs := range eventTransform.Transformations.Transform.OutputStructs {
+						outputStructsMap := map[string]interface{}{}
+
+						if outputStructs.Key != nil {
+							outputStructsMap["key"] = outputStructs.Key
+						}
+
+						if outputStructs.Value != nil {
+							outputStructsMap["value"] = outputStructs.Value
+						}
+
+						if outputStructs.ValueType != nil {
+							outputStructsMap["value_type"] = outputStructs.ValueType
+						}
+
+						outputStructsList = append(outputStructsList, outputStructsMap)
+					}
+
+					transformMap["output_structs"] = []interface{}{outputStructsList}
+				}
+
+				transformationsMap["transform"] = []interface{}{transformMap}
+			}
+
+			transformationsList = append(transformationsList, transformationsMap)
 		}
 
-		_ = d.Set("transformations", []interface{}{transformationsMap})
+		_ = d.Set("transformations", transformationsList)
 
 	}
 
@@ -450,28 +400,38 @@ func resourceTencentCloudEbEventTransformUpdate(d *schema.ResourceData, meta int
 	request := eb.NewUpdateTransformationRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	transformationId := idSplit[2]
+	transformationId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	request.EventBusId = &eventBusId
-	request.RuleId = &ruleId
 	request.TransformationId = &transformationId
+	request.EventBusId = &eventBusId
 
-	immutableArgs := []string{"event_bus_id", "rule_id"}
+	immutableArgs := []string{"event_bus_id", "rule_id", "transformations"}
+
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
+	if d.HasChange("event_bus_id") {
+		if v, ok := d.GetOk("event_bus_id"); ok {
+			request.EventBusId = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("rule_id") {
+		if v, ok := d.GetOk("rule_id"); ok {
+			request.RuleId = helper.String(v.(string))
+		}
+	}
+
 	if d.HasChange("transformations") {
 		if v, ok := d.GetOk("transformations"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				transformation := eb.Transformation{}
 				if extractionMap, ok := helper.InterfaceToMap(dMap, "extraction"); ok {
 					extraction := eb.Extraction{}
@@ -535,7 +495,7 @@ func resourceTencentCloudEbEventTransformUpdate(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update eb ebTransform failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update eb eventTransform failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -551,14 +511,13 @@ func resourceTencentCloudEbEventTransformDelete(d *schema.ResourceData, meta int
 
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	eventBusId := idSplit[0]
-	ruleId := idSplit[1]
-	transformationId := idSplit[2]
+	transformationId := idSplit[0]
+	eventBusId := idSplit[1]
 
-	if err := service.DeleteEbEventTransformById(ctx, eventBusId, ruleId, transformationId); err != nil {
+	if err := service.DeleteEbEventTransformById(ctx, transformationId, eventBusId); err != nil {
 		return err
 	}
 

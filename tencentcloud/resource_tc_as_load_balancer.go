@@ -1,100 +1,22 @@
 /*
 Provides a resource to create a as load_balancer
 
-~> **NOTE:** `load_balancer_ids` A list of traditional load balancer IDs, with a maximum of 20 traditional load balancers bound to each scaling group. Only one LoadBalancerIds and ForwardLoadBalancers can be specified simultaneously.
-~> **NOTE:** `forward_load_balancers` List of application type load balancers, with a maximum of 100 bound application type load balancers for each scaling group. Only one LoadBalancerIds and ForwardLoadBalancers can be specified simultaneously.
-
 Example Usage
 
-If use `load_balancer_ids`
-
 ```hcl
-data "tencentcloud_availability_zones_by_product" "zones" {
-  product = "as"
-}
-
-data "tencentcloud_images" "image" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "TencentOS Server 3.2 (Final)"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  name              = "subnet-example"
-  cidr_block        = "10.0.0.0/16"
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
-}
-
-resource "tencentcloud_as_scaling_config" "example" {
-  configuration_name = "tf-example"
-  image_id           = data.tencentcloud_images.image.images.0.image_id
-  instance_types     = ["SA1.SMALL1", "SA2.SMALL1", "SA2.SMALL2", "SA2.SMALL4"]
-  instance_name_settings {
-    instance_name = "test-ins-name"
-  }
-}
-
-resource "tencentcloud_as_scaling_group" "example" {
-  scaling_group_name = "tf-example"
-  configuration_id   = tencentcloud_as_scaling_config.example.id
-  max_size           = 1
-  min_size           = 0
-  vpc_id             = tencentcloud_vpc.vpc.id
-  subnet_ids         = [tencentcloud_subnet.subnet.id]
-}
-
-resource "tencentcloud_clb_instance" "example" {
-  network_type = "INTERNAL"
-  clb_name     = "clb-example"
-  project_id   = 0
-  vpc_id       = tencentcloud_vpc.vpc.id
-  subnet_id    = tencentcloud_subnet.subnet.id
-
-  tags = {
-    test = "tf"
-  }
-}
-
-resource "tencentcloud_clb_listener" "example" {
-  clb_id        = tencentcloud_clb_instance.example.id
-  listener_name = "listener-example"
-  port          = 80
-  protocol      = "HTTP"
-}
-
-resource "tencentcloud_clb_listener_rule" "example" {
-  listener_id = tencentcloud_clb_listener.example.listener_id
-  clb_id      = tencentcloud_clb_instance.example.id
-  domain      = "foo.net"
-  url         = "/bar"
-}
-
-resource "tencentcloud_as_load_balancer" "example" {
-  auto_scaling_group_id = tencentcloud_as_scaling_group.example.id
-  load_balancer_ids     = [tencentcloud_clb_instance.example.id]
-}
-```
-
-If use `forward_load_balancers`
-
-```hcl
-resource "tencentcloud_as_load_balancer" "example" {
-  auto_scaling_group_id = tencentcloud_as_scaling_group.example.id
-
+resource "tencentcloud_as_load_balancer" "load_balancer" {
+  auto_scaling_group_id = "asg-12wjuh0s"
+  load_balancer_ids =
   forward_load_balancers {
-    load_balancer_id = tencentcloud_clb_instance.example.id
-    listener_id      = tencentcloud_clb_listener.example.listener_id
-    location_id      = tencentcloud_clb_listener_rule.example.rule_id
+		load_balancer_id = "lb-d8u76te5"
+		listener_id = "lbl-s8dh4y75"
+		target_attributes {
+			port = 8080
+			weight = 20
+		}
+		location_id = "loc-fsa87u6d"
+		region = "ap-guangzhou"
 
-    target_attributes {
-      port   = 8080
-      weight = 20
-    }
   }
 }
 ```
@@ -104,7 +26,7 @@ Import
 as load_balancer can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_as_load_balancer.load_balancer auto_scaling_group_id
+terraform import tencentcloud_as_load_balancer.load_balancer load_balancer_id
 ```
 */
 package tencentcloud
@@ -112,12 +34,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudAsLoadBalancer() *schema.Resource {
@@ -205,6 +127,7 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 
 	var (
 		request            = as.NewAttachLoadBalancersRequest()
+		response           = as.NewAttachLoadBalancersResponse()
 		autoScalingGroupId string
 	)
 	if v, ok := d.GetOk("auto_scaling_group_id"); ok {
@@ -260,6 +183,7 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -267,7 +191,16 @@ func resourceTencentCloudAsLoadBalancerCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	autoScalingGroupId = *response.Response.AutoScalingGroupId
 	d.SetId(autoScalingGroupId)
+
+	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESSFUL"}, 2*readRetryTimeout, time.Second, service.AsLoadBalancerStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
 
 	return resourceTencentCloudAsLoadBalancerRead(d, meta)
 }
@@ -282,7 +215,7 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 
 	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	autoScalingGroupId := d.Id()
+	loadBalancerId := d.Id()
 
 	loadBalancer, err := service.DescribeAsLoadBalancerById(ctx, autoScalingGroupId)
 	if err != nil {
@@ -299,26 +232,26 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("auto_scaling_group_id", loadBalancer.AutoScalingGroupId)
 	}
 
-	if loadBalancer.LoadBalancerIdSet != nil {
-		_ = d.Set("load_balancer_ids", loadBalancer.LoadBalancerIdSet)
+	if loadBalancer.LoadBalancerIds != nil {
+		_ = d.Set("load_balancer_ids", loadBalancer.LoadBalancerIds)
 	}
 
-	if loadBalancer.ForwardLoadBalancerSet != nil {
+	if loadBalancer.ForwardLoadBalancers != nil {
 		forwardLoadBalancersList := []interface{}{}
-		for _, forwardLoadBalancers := range loadBalancer.ForwardLoadBalancerSet {
+		for _, forwardLoadBalancers := range loadBalancer.ForwardLoadBalancers {
 			forwardLoadBalancersMap := map[string]interface{}{}
 
-			if forwardLoadBalancers.LoadBalancerId != nil {
-				forwardLoadBalancersMap["load_balancer_id"] = forwardLoadBalancers.LoadBalancerId
+			if loadBalancer.ForwardLoadBalancers.LoadBalancerId != nil {
+				forwardLoadBalancersMap["load_balancer_id"] = loadBalancer.ForwardLoadBalancers.LoadBalancerId
 			}
 
-			if forwardLoadBalancers.ListenerId != nil {
-				forwardLoadBalancersMap["listener_id"] = forwardLoadBalancers.ListenerId
+			if loadBalancer.ForwardLoadBalancers.ListenerId != nil {
+				forwardLoadBalancersMap["listener_id"] = loadBalancer.ForwardLoadBalancers.ListenerId
 			}
 
-			if forwardLoadBalancers.TargetAttributes != nil {
+			if loadBalancer.ForwardLoadBalancers.TargetAttributes != nil {
 				targetAttributesList := []interface{}{}
-				for _, targetAttributes := range forwardLoadBalancers.TargetAttributes {
+				for _, targetAttributes := range loadBalancer.ForwardLoadBalancers.TargetAttributes {
 					targetAttributesMap := map[string]interface{}{}
 
 					if targetAttributes.Port != nil {
@@ -335,12 +268,12 @@ func resourceTencentCloudAsLoadBalancerRead(d *schema.ResourceData, meta interfa
 				forwardLoadBalancersMap["target_attributes"] = []interface{}{targetAttributesList}
 			}
 
-			if forwardLoadBalancers.LocationId != nil {
-				forwardLoadBalancersMap["location_id"] = forwardLoadBalancers.LocationId
+			if loadBalancer.ForwardLoadBalancers.LocationId != nil {
+				forwardLoadBalancersMap["location_id"] = loadBalancer.ForwardLoadBalancers.LocationId
 			}
 
-			if forwardLoadBalancers.Region != nil {
-				forwardLoadBalancersMap["region"] = forwardLoadBalancers.Region
+			if loadBalancer.ForwardLoadBalancers.Region != nil {
+				forwardLoadBalancersMap["region"] = loadBalancer.ForwardLoadBalancers.Region
 			}
 
 			forwardLoadBalancersList = append(forwardLoadBalancersList, forwardLoadBalancersMap)
@@ -361,11 +294,11 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 
 	request := as.NewModifyLoadBalancerTargetAttributesRequest()
 
-	autoScalingGroupId := d.Id()
+	loadBalancerId := d.Id()
 
 	request.AutoScalingGroupId = &autoScalingGroupId
 
-	immutableArgs := []string{"load_balancer_ids"}
+	immutableArgs := []string{"auto_scaling_group_id", "load_balancer_ids", "forward_load_balancers"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -373,11 +306,16 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if d.HasChange("auto_scaling_group_id") {
+		if v, ok := d.GetOk("auto_scaling_group_id"); ok {
+			request.AutoScalingGroupId = helper.String(v.(string))
+		}
+	}
+
 	if d.HasChange("forward_load_balancers") {
 		if v, ok := d.GetOk("forward_load_balancers"); ok {
 			for _, item := range v.([]interface{}) {
 				forwardLoadBalancer := as.ForwardLoadBalancer{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["load_balancer_id"]; ok {
 					forwardLoadBalancer.LoadBalancerId = helper.String(v.(string))
 				}
@@ -422,6 +360,14 @@ func resourceTencentCloudAsLoadBalancerUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESSFUL"}, 2*readRetryTimeout, time.Second, service.AsLoadBalancerStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
 	return resourceTencentCloudAsLoadBalancerRead(d, meta)
 }
 
@@ -433,10 +379,18 @@ func resourceTencentCloudAsLoadBalancerDelete(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	autoScalingGroupId := d.Id()
+	loadBalancerId := d.Id()
 
 	if err := service.DeleteAsLoadBalancerById(ctx, autoScalingGroupId); err != nil {
 		return err
+	}
+
+	service := AsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESSFUL"}, 2*readRetryTimeout, time.Second, service.AsLoadBalancerStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

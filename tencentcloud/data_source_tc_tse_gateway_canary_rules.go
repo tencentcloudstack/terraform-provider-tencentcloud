@@ -7,14 +7,13 @@ Example Usage
 data "tencentcloud_tse_gateway_canary_rules" "gateway_canary_rules" {
   gateway_id = "gateway-xxxxxx"
   service_id = "451a9920-e67a-4519-af41-fccac0e72005"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -28,77 +27,77 @@ func dataSourceTencentCloudTseGatewayCanaryRules() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
 			"service_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "service ID.",
+				Description: "Service ID.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "canary rule configuration.",
+				Description: "Canary rule configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"canary_rule_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "canary rule list.",
+							Description: "Canary rule list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"priority": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "priority. The value ranges from 0 to 100; the larger the value, the higher the priority; the priority cannot be repeated between different rules.",
+										Description: "Priority. The value ranges from 0 to 100; the larger the value, the higher the priority; the priority cannot be repeated between different rules.",
 									},
 									"enabled": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "the status of canary rule.",
+										Description: "The status of canary rule.",
 									},
 									"condition_list": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "parameter matching condition list.",
+										Description: "Parameter matching condition list.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "type.Reference value:- path- method- query- header- cookie- body- system.",
+													Description: "Type.Reference value:- path- method- query- header- cookie- body- system.",
 												},
 												"key": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "parameter name.",
+													Description: "Parameter name.",
 												},
 												"operator": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "operator.Reference value:`le`, `eq`, `lt`, `ne`, `ge`, `gt`, `regex`, `exists`, `in`, `not in`,  `prefix`, `exact`, `regex`.",
+													Description: "Operator.Reference value:- le- eq- lt- ne- ge- gt- regex- exists- in- not in- prefix- exact- regex.",
 												},
 												"value": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "parameter value.",
+													Description: "Parameter value.",
 												},
 												"delimiter": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "delimiter. valid when operator is in or not in, reference value:`,`, `;`,`\\n`.",
+													Description: "Delimiter. valid when operator is in or not in, reference value:- ,- ;- n.",
 												},
 												"global_config_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "global configuration ID.",
+													Description: "Global configuration ID.",
 												},
 												"global_config_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "global configuration name.",
+													Description: "Global configuration name.",
 												},
 											},
 										},
@@ -106,28 +105,28 @@ func dataSourceTencentCloudTseGatewayCanaryRules() *schema.Resource {
 									"balanced_service_list": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "service weight configuration.",
+										Description: "Service weight configuration.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"service_id": {
+												"service_i_d": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "service ID.",
+													Description: "Service ID.",
 												},
 												"service_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "service name.",
+													Description: "Service name.",
 												},
 												"upstream_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "upstream name.",
+													Description: "Upstream name.",
 												},
 												"percent": {
 													Type:        schema.TypeFloat,
 													Computed:    true,
-													Description: "percent, 10 is 10%, valid values: 0 to 100.",
+													Description: "Percent, 10 is 10%，valid values:0 to 100.",
 												},
 											},
 										},
@@ -135,12 +134,12 @@ func dataSourceTencentCloudTseGatewayCanaryRules() *schema.Resource {
 									"service_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service ID.",
+										Description: "Service ID.",
 									},
 									"service_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service name.",
+										Description: "Service name.",
 									},
 								},
 							},
@@ -148,7 +147,7 @@ func dataSourceTencentCloudTseGatewayCanaryRules() *schema.Resource {
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "total count.",
+							Description: "Total count.",
 						},
 					},
 				},
@@ -168,12 +167,11 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var gatewayId string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("gateway_id"); ok {
-		gatewayId = v.(string)
 		paramMap["GatewayId"] = helper.String(v.(string))
 	}
 
@@ -183,22 +181,24 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tse.CloudAPIGatewayCanaryRuleList
+	var result []*tse.CloudAPIGatewayCanaryRuleList
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTseGatewayCanaryRulesByFilter(ctx, paramMap)
+		result, e := service.DescribeTseGatewayCanaryRulesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	cloudAPIGatewayCanaryRuleListMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		cloudAPIGatewayCanaryRuleListMap := map[string]interface{}{}
+
 		if result.CanaryRuleList != nil {
 			canaryRuleListList := []interface{}{}
 			for _, canaryRuleList := range result.CanaryRuleList {
@@ -248,7 +248,7 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 						conditionListList = append(conditionListList, conditionListMap)
 					}
 
-					canaryRuleListMap["condition_list"] = conditionListList
+					canaryRuleListMap["condition_list"] = []interface{}{conditionListList}
 				}
 
 				if canaryRuleList.BalancedServiceList != nil {
@@ -257,7 +257,7 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 						balancedServiceListMap := map[string]interface{}{}
 
 						if balancedServiceList.ServiceID != nil {
-							balancedServiceListMap["service_id"] = balancedServiceList.ServiceID
+							balancedServiceListMap["service_i_d"] = balancedServiceList.ServiceID
 						}
 
 						if balancedServiceList.ServiceName != nil {
@@ -275,7 +275,7 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 						balancedServiceListList = append(balancedServiceListList, balancedServiceListMap)
 					}
 
-					canaryRuleListMap["balanced_service_list"] = balancedServiceListList
+					canaryRuleListMap["balanced_service_list"] = []interface{}{balancedServiceListList}
 				}
 
 				if canaryRuleList.ServiceId != nil {
@@ -289,17 +289,18 @@ func dataSourceTencentCloudTseGatewayCanaryRulesRead(d *schema.ResourceData, met
 				canaryRuleListList = append(canaryRuleListList, canaryRuleListMap)
 			}
 
-			cloudAPIGatewayCanaryRuleListMap["canary_rule_list"] = canaryRuleListList
+			cloudAPIGatewayCanaryRuleListMap["canary_rule_list"] = []interface{}{canaryRuleListList}
 		}
 
 		if result.TotalCount != nil {
 			cloudAPIGatewayCanaryRuleListMap["total_count"] = result.TotalCount
 		}
 
-		_ = d.Set("result", []interface{}{cloudAPIGatewayCanaryRuleListMap})
+		ids = append(ids, *result.GatewayId)
+		_ = d.Set("result", cloudAPIGatewayCanaryRuleListMap)
 	}
 
-	d.SetId(gatewayId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), cloudAPIGatewayCanaryRuleListMap); e != nil {

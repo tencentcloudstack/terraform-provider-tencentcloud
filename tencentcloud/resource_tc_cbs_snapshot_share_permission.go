@@ -5,8 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cbs_snapshot_share_permission" "snapshot_share_permission" {
-  account_ids = ["1xxxxxx", "2xxxxxx"]
-  snapshot_id = "snap-xxxxxx"
+  account_ids =
+  permission = "SHARE"
+  snapshot_ids =
 }
 ```
 
@@ -15,16 +16,19 @@ Import
 cbs snapshot_share_permission can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cbs_snapshot_share_permission.snapshot_share_permission snap-xxxxxx
+terraform import tencentcloud_cbs_snapshot_share_permission.snapshot_share_permission snapshot_share_permission_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
+	"fmt"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCbsSnapshotSharePermission() *schema.Resource {
@@ -45,9 +49,19 @@ func resourceTencentCloudCbsSnapshotSharePermission() *schema.Resource {
 				},
 				Description: "List of account IDs with which a snapshot is shared. For the format of array-type parameters, see[API Introduction](https://cloud.tencent.com/document/api/213/568). You can find the account ID in[Account Information](https://console.cloud.tencent.com/developer).",
 			},
-			"snapshot_id": {
+
+			"permission": {
 				Required:    true,
 				Type:        schema.TypeString,
+				Description: "Operations. Valid values SHARE, sharing an image; CANCEL, cancelling the sharing of an image.",
+			},
+
+			"snapshot_ids": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "The ID of the snapshot to be queried. You can obtain this by using [DescribeSnapshots](https://cloud.tencent.com/document/api/362/15647).",
 			},
 		},
@@ -59,23 +73,48 @@ func resourceTencentCloudCbsSnapshotSharePermissionCreate(d *schema.ResourceData
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var snapshotId string
-	var accountIdsSet []interface{}
+	var (
+		request    = cbs.NewModifySnapshotsSharePermissionRequest()
+		response   = cbs.NewModifySnapshotsSharePermissionResponse()
+		snapshotId string
+	)
 	if v, ok := d.GetOk("account_ids"); ok {
-		accountIdsSet = v.(*schema.Set).List()
+		accountIdsSet := v.(*schema.Set).List()
+		for i := range accountIdsSet {
+			accountIds := accountIdsSet[i].(string)
+			request.AccountIds = append(request.AccountIds, &accountIds)
+		}
 	}
 
-	if v, ok := d.GetOk("snapshot_id"); ok {
-		snapshotId = v.(string)
+	if v, ok := d.GetOk("permission"); ok {
+		request.Permission = helper.String(v.(string))
 	}
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_SHARE, helper.InterfacesStrings(accountIdsSet))
+	if v, ok := d.GetOk("snapshot_ids"); ok {
+		snapshotIdsSet := v.(*schema.Set).List()
+		for i := range snapshotIdsSet {
+			snapshotIds := snapshotIdsSet[i].(string)
+			request.SnapshotIds = append(request.SnapshotIds, &snapshotIds)
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().ModifySnapshotsSharePermission(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s create cbs SnapshotSharePermission failed, reason:%+v", logId, err)
 		return err
 	}
+
+	snapshotId = *response.Response.SnapshotId
 	d.SetId(snapshotId)
 
 	return resourceTencentCloudCbsSnapshotSharePermissionRead(d, meta)
@@ -91,20 +130,31 @@ func resourceTencentCloudCbsSnapshotSharePermissionRead(d *schema.ResourceData, 
 
 	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	snapshotId := d.Id()
+	snapshotSharePermissionId := d.Id()
 
-	snapshotSharePermissions, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
+	SnapshotSharePermission, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
 	if err != nil {
 		return err
 	}
 
-	accountIds := make([]string, 0)
-	for _, snapshotSharePermission := range snapshotSharePermissions {
-		accountIds = append(accountIds, *snapshotSharePermission.AccountId)
+	if SnapshotSharePermission == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `CbsSnapshotSharePermission` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("account_ids", accountIds)
-	_ = d.Set("snapshot_id", snapshotId)
+	if SnapshotSharePermission.AccountIds != nil {
+		_ = d.Set("account_ids", SnapshotSharePermission.AccountIds)
+	}
+
+	if SnapshotSharePermission.Permission != nil {
+		_ = d.Set("permission", SnapshotSharePermission.Permission)
+	}
+
+	if SnapshotSharePermission.SnapshotIds != nil {
+		_ = d.Set("snapshot_ids", SnapshotSharePermission.SnapshotIds)
+	}
+
 	return nil
 }
 
@@ -112,28 +162,60 @@ func resourceTencentCloudCbsSnapshotSharePermissionUpdate(d *schema.ResourceData
 	defer logElapsed("resource.tencentcloud_cbs_snapshot_share_permission.update")()
 	defer inconsistentCheck(d, meta)()
 
-	snapshotId := d.Id()
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	request := cbs.NewModifySnapshotsSharePermissionRequest()
+
+	snapshotSharePermissionId := d.Id()
+
+	request.SnapshotId = &snapshotId
+
+	immutableArgs := []string{"account_ids", "permission", "snapshot_ids"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("account_ids") {
-		old, new := d.GetChange("account_ids")
-		oldSet := old.(*schema.Set)
-		newSet := new.(*schema.Set)
-		add := newSet.Difference(oldSet).List()
-		remove := oldSet.Difference(newSet).List()
-		if len(add) > 0 {
-			addError := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_SHARE, helper.InterfacesStrings(add))
-			if addError != nil {
-				return addError
+		if v, ok := d.GetOk("account_ids"); ok {
+			accountIdsSet := v.(*schema.Set).List()
+			for i := range accountIdsSet {
+				accountIds := accountIdsSet[i].(string)
+				request.AccountIds = append(request.AccountIds, &accountIds)
 			}
 		}
-		if len(remove) > 0 {
-			removeError := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_CANCEL, helper.InterfacesStrings(remove))
-			if removeError != nil {
-				return removeError
+	}
+
+	if d.HasChange("permission") {
+		if v, ok := d.GetOk("permission"); ok {
+			request.Permission = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("snapshot_ids") {
+		if v, ok := d.GetOk("snapshot_ids"); ok {
+			snapshotIdsSet := v.(*schema.Set).List()
+			for i := range snapshotIdsSet {
+				snapshotIds := snapshotIdsSet[i].(string)
+				request.SnapshotIds = append(request.SnapshotIds, &snapshotIds)
 			}
 		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().ModifySnapshotsSharePermission(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cbs SnapshotSharePermission failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudCbsSnapshotSharePermissionRead(d, meta)
@@ -147,17 +229,9 @@ func resourceTencentCloudCbsSnapshotSharePermissionDelete(d *schema.ResourceData
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	snapshotId := d.Id()
-	snapshotSharePermissions, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
-	if err != nil {
-		return err
-	}
+	snapshotSharePermissionId := d.Id()
 
-	accountIds := make([]string, 0)
-	for _, snapshotSharePermission := range snapshotSharePermissions {
-		accountIds = append(accountIds, *snapshotSharePermission.AccountId)
-	}
-	if err := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_CANCEL, accountIds); err != nil {
+	if err := service.DeleteCbsSnapshotSharePermissionById(ctx, snapshotId); err != nil {
 		return err
 	}
 

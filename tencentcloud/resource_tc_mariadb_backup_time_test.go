@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbBackupTimeResource_basic -v
 func TestAccTencentCloudMariadbBackupTimeResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -29,9 +27,11 @@ func TestAccTencentCloudMariadbBackupTimeResource_basic(t *testing.T) {
 }
 
 const testAccMariadbBackupTime = `
+
 resource "tencentcloud_mariadb_backup_time" "backup_time" {
-  instance_id       = "tdsql-9vqvls95"
-  start_backup_time = "01:00"
-  end_backup_time   = "04:00"
+  instance_id = ""
+  start_backup_time = ""
+  end_backup_time = ""
 }
+
 `

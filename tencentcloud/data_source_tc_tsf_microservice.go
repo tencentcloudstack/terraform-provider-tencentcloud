@@ -5,18 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_microservice" "microservice" {
-	namespace_id = var.namespace_id
-	# status =
-	microservice_id_list = ["ms-yq3jo6jd"]
-	microservice_name_list = ["provider-demo"]
-}
+  namespace_id = "ns-123456"
+  search_word = ""
+  order_by = ""
+  order_type = 0
+  status =
+  microservice_id_list =
+  microservice_name_list =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -30,7 +32,25 @@ func dataSourceTencentCloudTsfMicroservice() *schema.Resource {
 			"namespace_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "namespace id.",
+				Description: "Namespace id.",
+			},
+
+			"search_word": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Search word.",
+			},
+
+			"order_by": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Sorting field.",
+			},
+
+			"order_type": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Sorting type field. 0 or 1.",
 			},
 
 			"status": {
@@ -39,7 +59,7 @@ func dataSourceTencentCloudTsfMicroservice() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "status filter, online, offline, single_online.",
+				Description: "Status filter，online、offline、single_online.",
 			},
 
 			"microservice_id_list": {
@@ -48,7 +68,7 @@ func dataSourceTencentCloudTsfMicroservice() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "microservice id list.",
+				Description: "Microservice id list.",
 			},
 
 			"microservice_name_list": {
@@ -100,7 +120,7 @@ func dataSourceTencentCloudTsfMicroservice() *schema.Resource {
 									"update_time": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Last update time.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"namespace_id": {
 										Type:        schema.TypeString,
@@ -110,12 +130,12 @@ func dataSourceTencentCloudTsfMicroservice() *schema.Resource {
 									"run_instance_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "run instance count in namespace.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Run instance count in namespace.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"critical_instance_count": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "offline instance count.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Offline instance count.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
 							},
@@ -146,6 +166,18 @@ func dataSourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta inte
 		paramMap["NamespaceId"] = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("search_word"); ok {
+		paramMap["SearchWord"] = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("order_by"); ok {
+		paramMap["OrderBy"] = helper.String(v.(string))
+	}
+
+	if v, _ := d.GetOk("order_type"); v != nil {
+		paramMap["OrderType"] = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("status"); ok {
 		statusSet := v.(*schema.Set).List()
 		paramMap["Status"] = helper.InterfacesStringsPoint(statusSet)
@@ -163,29 +195,31 @@ func dataSourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta inte
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var microservice *tsf.TsfPageMicroservice
+	var result []*tsf.TsfPageMicroservice
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfMicroserviceByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		microservice = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(microservice.Content))
-	tsfPageMicroserviceMap := map[string]interface{}{}
-	if microservice != nil {
-		if microservice.TotalCount != nil {
-			tsfPageMicroserviceMap["total_count"] = microservice.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageMicroserviceMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			tsfPageMicroserviceMap["total_count"] = result.TotalCount
 		}
 
-		if microservice.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range microservice.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.MicroserviceId != nil {
@@ -221,16 +255,13 @@ func dataSourceTencentCloudTsfMicroserviceRead(d *schema.ResourceData, meta inte
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.NamespaceId)
 			}
 
-			tsfPageMicroserviceMap["content"] = contentList
+			tsfPageMicroserviceMap["content"] = []interface{}{contentList}
 		}
 
-		err = d.Set("result", []interface{}{tsfPageMicroserviceMap})
-		if err != nil {
-			return err
-		}
+		ids = append(ids, *result.NamespaceId)
+		_ = d.Set("result", tsfPageMicroserviceMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

@@ -5,11 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_organization_org_member_email" "org_member_email" {
-  member_uin = 100033704327
-  email = "iac-example@qq.com"
-  country_code = "86"
-  phone = "12345678901"
-  }
+  member_uin = &lt;nil&gt;
+  email = &lt;nil&gt;
+  country_code = &lt;nil&gt;
+  phone = &lt;nil&gt;
+  bind_id = &lt;nil&gt;
+}
 ```
 
 Import
@@ -25,13 +26,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
@@ -47,7 +46,7 @@ func resourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
 			"member_uin": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Member Uin.",
+				Description: "Member uin.",
 			},
 
 			"email": {
@@ -59,49 +58,19 @@ func resourceTencentCloudOrganizationOrgMemberEmail() *schema.Resource {
 			"country_code": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "International region.",
+				Description: "International dialing code.",
 			},
 
 			"phone": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Phone number.",
+				Description: "Mobile number.",
 			},
 
 			"bind_id": {
-				Computed:    true,
+				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Binding IDNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"apply_time": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Application timeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"bind_status": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Binding status is not binding: unbound, to be activated: value, successful binding: success, binding failure: failedNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"bind_time": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Binding timeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"description": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "FailedNote: This field may return NULL, indicating that the valid value cannot be obtained.",
-			},
-
-			"phone_bind": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "Safe mobile phone binding state is not bound: 0, has been binded: 1Note: This field may return NULL, indicating that the valid value cannot be obtained.",
+				Description: "Bind Id.",
 			},
 		},
 	}
@@ -111,50 +80,14 @@ func resourceTencentCloudOrganizationOrgMemberEmailCreate(d *schema.ResourceData
 	defer logElapsed("resource.tencentcloud_organization_org_member_email.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	var (
-		request   = organization.NewAddOrganizationMemberEmailRequest()
-		response  = organization.NewAddOrganizationMemberEmailResponse()
-		bindId    uint64
-		memberUin int64
-	)
-	if v, ok := d.GetOkExists("member_uin"); ok {
-		memberUin = int64(v.(int))
-		request.MemberUin = helper.IntInt64(v.(int))
+	var bindId uint64
+	if v, ok := d.GetOkExists("bind_id"); ok {
+		bindId = v.(uint64)
 	}
 
-	if v, ok := d.GetOk("email"); ok {
-		request.Email = helper.String(v.(string))
-	}
+	d.SetId(helper.Int64ToStr(int64(bindId)))
 
-	if v, ok := d.GetOk("country_code"); ok {
-		request.CountryCode = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("phone"); ok {
-		request.Phone = helper.String(v.(string))
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseOrganizationClient().AddOrganizationMemberEmail(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		response = result
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create organization orgMemberEmail failed, reason:%+v", logId, err)
-		return err
-	}
-
-	bindId = *response.Response.BindId
-	d.SetId(helper.Int64ToStr(memberUin) + FILED_SP + helper.UInt64ToStr(bindId))
-
-	return resourceTencentCloudOrganizationOrgMemberEmailRead(d, meta)
+	return resourceTencentCloudOrganizationOrgMemberEmailUpdate(d, meta)
 }
 
 func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, meta interface{}) error {
@@ -167,14 +100,9 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 
 	service := OrganizationService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	memberUin := idSplit[0]
-	bindId := idSplit[1]
+	orgMemberEmailId := d.Id()
 
-	orgMemberEmail, err := service.DescribeOrganizationOrgMemberEmailById(ctx, helper.StrToInt64(memberUin), helper.StrToUInt64(bindId))
+	orgMemberEmail, err := service.DescribeOrganizationOrgMemberEmailById(ctx, bindId)
 	if err != nil {
 		return err
 	}
@@ -185,7 +113,9 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 		return nil
 	}
 
-	_ = d.Set("member_uin", memberUin)
+	if orgMemberEmail.MemberUin != nil {
+		_ = d.Set("member_uin", orgMemberEmail.MemberUin)
+	}
 
 	if orgMemberEmail.Email != nil {
 		_ = d.Set("email", orgMemberEmail.Email)
@@ -203,26 +133,6 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 		_ = d.Set("bind_id", orgMemberEmail.BindId)
 	}
 
-	if orgMemberEmail.ApplyTime != nil {
-		_ = d.Set("apply_time", orgMemberEmail.ApplyTime)
-	}
-
-	if orgMemberEmail.BindStatus != nil {
-		_ = d.Set("bind_status", orgMemberEmail.BindStatus)
-	}
-
-	if orgMemberEmail.BindTime != nil {
-		_ = d.Set("bind_time", orgMemberEmail.BindTime)
-	}
-
-	if orgMemberEmail.Description != nil {
-		_ = d.Set("description", orgMemberEmail.Description)
-	}
-
-	if orgMemberEmail.PhoneBind != nil {
-		_ = d.Set("phone_bind", orgMemberEmail.PhoneBind)
-	}
-
 	return nil
 }
 
@@ -234,16 +144,11 @@ func resourceTencentCloudOrganizationOrgMemberEmailUpdate(d *schema.ResourceData
 
 	request := organization.NewUpdateOrganizationMemberEmailBindRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	memberUin := idSplit[0]
-	bindId := idSplit[1]
+	orgMemberEmailId := d.Id()
 
-	request.MemberUin = helper.StrToInt64Point(memberUin)
-	request.BindId = helper.StrToInt64Point(bindId)
-	immutableArgs := []string{"member_uin", "bind_id", "apply_time", "bind_status", "bind_time", "description", "phone_bind"}
+	request.BindId = &bindId
+
+	immutableArgs := []string{"member_uin", "email", "country_code", "phone", "bind_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixScfLayerVersionsDataSource_basic(t *testing.T) {
+func TestAccTencentCloudScfLayerVersionsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -25,7 +24,8 @@ func TestAccTencentCloudNeedFixScfLayerVersionsDataSource_basic(t *testing.T) {
 const testAccScfLayerVersionsDataSource = `
 
 data "tencentcloud_scf_layer_versions" "layer_versions" {
-  layer_name = "tf-test"
-}
+  layer_name = ""
+  compatible_runtime = 
+  }
 
 `

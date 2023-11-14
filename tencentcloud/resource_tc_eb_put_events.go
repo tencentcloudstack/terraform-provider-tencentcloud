@@ -4,46 +4,35 @@ Provides a resource to create a eb put_events
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
 resource "tencentcloud_eb_put_events" "put_events" {
   event_list {
-    source = "ckafka.cloud.tencent"
-    data = jsonencode(
-      {
-        "topic" : "test-topic",
-        "Partition" : 1,
-        "offset" : 37,
-        "msgKey" : "test",
-        "msgBody" : "Hello from Ckafka again!"
-      }
-    )
-    type    = "connector:ckafka"
-    subject = "qcs::ckafka:ap-guangzhou:uin/1250000000:ckafkaId/uin/1250000000/ckafka-123456"
-    time    = 1691572461939
+		source = ""
+		data = ""
+		type = ""
+		subject = ""
+		time =
 
   }
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
+  event_bus_id = ""
 }
+```
+
+Import
+
+eb put_events can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_eb_put_events.put_events put_events_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudEbPutEvents() *schema.Resource {
@@ -51,13 +40,15 @@ func resourceTencentCloudEbPutEvents() *schema.Resource {
 		Create: resourceTencentCloudEbPutEventsCreate,
 		Read:   resourceTencentCloudEbPutEventsRead,
 		Delete: resourceTencentCloudEbPutEventsDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"event_list": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
-				Description: "event list.",
+				Description: "Event list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source": {
@@ -73,7 +64,7 @@ func resourceTencentCloudEbPutEvents() *schema.Resource {
 						"type": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Event type, customizable, optional. The cloud service writes COS:Created:PostObject by default, use: to separate the type field.",
+							Description: "Event type, customizable, optional. The cloud service writes COS:Created:PostObject by default, use : to separate the type field.",
 						},
 						"subject": {
 							Type:        schema.TypeString,
@@ -93,7 +84,7 @@ func resourceTencentCloudEbPutEvents() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "event bus Id.",
+				Description: "Event bus Id.",
 			},
 		},
 	}
@@ -107,11 +98,11 @@ func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request    = eb.NewPutEventsRequest()
+		response   = eb.NewPutEventsResponse()
 		eventBusId string
 	)
 	if v, ok := d.GetOk("event_list"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
 			event := eb.Event{}
 			if v, ok := dMap["source"]; ok {
 				event.Source = helper.String(v.(string))
@@ -144,6 +135,7 @@ func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interfac
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -151,6 +143,7 @@ func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	eventBusId = *response.Response.EventBusId
 	d.SetId(eventBusId)
 
 	return resourceTencentCloudEbPutEventsRead(d, meta)

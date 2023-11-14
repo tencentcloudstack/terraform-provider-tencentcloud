@@ -5,26 +5,34 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_audit_logs" "audit_logs" {
-  instance_id = "cynosdbmysql-ins-afqx1hy0"
-  start_time  = "2023-06-18 10:00:00"
-  end_time    = "2023-06-18 10:00:02"
-  order       = "DESC"
-  order_by    = "timestamp"
+  instance_id = "cynosdbmysql-ins-xx"
+  start_time = "2017-07-12 10:29:20"
+  end_time = "2017-07-12 10:29:20"
+  order = "ASC"
+  order_by = "timestap"
   filter {
-    host        = ["30.50.207.176"]
-    user        = ["keep_dts"]
-    policy_name = ["default_audit"]
-    sql_type    = "SELECT"
-    sql         = "SELECT @@max_allowed_packet"
+		host =
+		user =
+		d_b_name =
+		table_name =
+		policy_name =
+		sql = ""
+		sql_type = ""
+		exec_time =
+		affect_rows =
+		sql_types =
+		sqls =
+		sent_rows =
+		thread_id =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -40,26 +48,31 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
+
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Start time, format: 2017-07-12 10:29:20.",
 			},
+
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "The end time is in the format of 2017-07-12 10:29:20.",
 			},
+
 			"order": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sort by. The supported values include: ASC - ascending order, DESC - descending order.",
 			},
+
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sort fields. The supported values include: timestamp - timestamp; &amp;#39;effectRows&amp;#39; - affects the number of rows; &amp;#39;execTime&amp;#39; - Execution time.",
+				Description: "Sort fields. The supported values include: timestamp - timestamp; &amp;amp;#39;effectRows&amp;amp;#39; - affects the number of rows; &amp;amp;#39;execTime&amp;amp;#39; - Execution time.",
 			},
+
 			"filter": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -68,32 +81,42 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"host": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "Client address.",
 						},
 						"user": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "User name.",
 						},
-						"db_name": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+						"d_b_name": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "Database name.",
 						},
 						"table_name": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "Table name.",
 						},
 						"policy_name": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "Audit policy name.",
 						},
@@ -118,14 +141,18 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 							Description: "Affects the number of rows. Indicates that filtering affects audit logs with rows greater than this value.",
 						},
 						"sql_types": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "SQL type. Supports simultaneous querying of multiple types. Currently supported: SELECT, Insert, UPDATE, DELETE, CREATE, DROP, ALT, SET, REPLACE, EXECUTE.",
 						},
 						"sqls": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "SQL statement. Supports passing multiple SQL statements.",
 						},
@@ -135,14 +162,17 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 							Description: "Returns the number of rows.",
 						},
 						"thread_id": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Optional:    true,
 							Description: "Thread ID.",
 						},
 					},
 				},
 			},
+
 			"items": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -179,7 +209,7 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 							Computed:    true,
 							Description: "Audit policy name.",
 						},
-						"db_name": {
+						"d_b_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Database name.",
@@ -222,6 +252,7 @@ func dataSourceTencentCloudCynosdbAuditLogs() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -235,18 +266,13 @@ func dataSourceTencentCloudCynosdbAuditLogsRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_cynosdb_audit_logs.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		items      []*cynosdb.AuditLog
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -275,7 +301,7 @@ func dataSourceTencentCloudCynosdbAuditLogsRead(d *schema.ResourceData, meta int
 			userSet := v.(*schema.Set).List()
 			auditLogFilter.User = helper.InterfacesStringsPoint(userSet)
 		}
-		if v, ok := dMap["db_name"]; ok {
+		if v, ok := dMap["d_b_name"]; ok {
 			dBNameSet := v.(*schema.Set).List()
 			auditLogFilter.DBName = helper.InterfacesStringsPoint(dBNameSet)
 		}
@@ -317,20 +343,23 @@ func dataSourceTencentCloudCynosdbAuditLogsRead(d *schema.ResourceData, meta int
 		paramMap["filter"] = &auditLogFilter
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var items []*cynosdb.AuditLog
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbAuditLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		items = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(items))
 	tmpList := make([]map[string]interface{}, 0, len(items))
 
 	if items != nil {
@@ -362,7 +391,7 @@ func dataSourceTencentCloudCynosdbAuditLogsRead(d *schema.ResourceData, meta int
 			}
 
 			if auditLog.DBName != nil {
-				auditLogMap["db_name"] = auditLog.DBName
+				auditLogMap["d_b_name"] = auditLog.DBName
 			}
 
 			if auditLog.Sql != nil {
@@ -393,19 +422,19 @@ func dataSourceTencentCloudCynosdbAuditLogsRead(d *schema.ResourceData, meta int
 				auditLogMap["thread_id"] = auditLog.ThreadId
 			}
 
+			ids = append(ids, *auditLog.InstanceId)
 			tmpList = append(tmpList, auditLogMap)
 		}
 
 		_ = d.Set("items", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_target_health" "target_health" {
-  load_balancer_ids = ["lb-5dnrkgry"]
-}
+  load_balancer_ids =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -102,7 +101,7 @@ func dataSourceTencentCloudClbTargetHealth() *schema.Resource {
 													Description: "Health status of the real server bound to this rule. Note: this field may return null, indicating that no valid values can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"ip": {
+															"i_p": {
 																Type:        schema.TypeString,
 																Computed:    true,
 																Description: "Private IP of the target.",
@@ -126,6 +125,11 @@ func dataSourceTencentCloudClbTargetHealth() *schema.Resource {
 																Type:        schema.TypeString,
 																Computed:    true,
 																Description: "Detailed information about the current health status. Alive: healthy; Dead: exceptional; Unknown: check not started/checking/unknown status.",
+															},
+															"health_status_detial": {
+																Type:        schema.TypeString,
+																Computed:    true,
+																Description: "Detailed information about the current health status. Alive: healthy; Dead: exceptional; Unknown: check not started/checking/unknown status. This parameter will be discarded soon. We recommend that you use the HealthStatusDetail parameter.",
 															},
 														},
 													},
@@ -238,7 +242,7 @@ func dataSourceTencentCloudClbTargetHealthRead(d *schema.ResourceData, meta inte
 									targetsMap := map[string]interface{}{}
 
 									if targets.IP != nil {
-										targetsMap["ip"] = targets.IP
+										targetsMap["i_p"] = targets.IP
 									}
 
 									if targets.Port != nil {
@@ -257,22 +261,26 @@ func dataSourceTencentCloudClbTargetHealthRead(d *schema.ResourceData, meta inte
 										targetsMap["health_status_detail"] = targets.HealthStatusDetail
 									}
 
+									if targets.HealthStatusDetial != nil {
+										targetsMap["health_status_detial"] = targets.HealthStatusDetial
+									}
+
 									targetsList = append(targetsList, targetsMap)
 								}
 
-								rulesMap["targets"] = targetsList
+								rulesMap["targets"] = []interface{}{targetsList}
 							}
 
 							rulesList = append(rulesList, rulesMap)
 						}
 
-						listenersMap["rules"] = rulesList
+						listenersMap["rules"] = []interface{}{rulesList}
 					}
 
 					listenersList = append(listenersList, listenersMap)
 				}
 
-				loadBalancerHealthMap["listeners"] = listenersList
+				loadBalancerHealthMap["listeners"] = []interface{}{listenersList}
 			}
 
 			ids = append(ids, *loadBalancerHealth.LoadBalancerId)

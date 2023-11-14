@@ -6,15 +6,13 @@ Example Usage
 ```hcl
 data "tencentcloud_vpc_bandwidth_package_bill_usage" "bandwidth_package_bill_usage" {
   bandwidth_package_id = "bwp-234rfgt5"
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -34,7 +32,7 @@ func dataSourceTencentCloudVpcBandwidthPackageBillUsage() *schema.Resource {
 			"bandwidth_package_bill_bandwidth_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "current billing amount.",
+				Description: "Current billing amount.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"bandwidth_usage": {
@@ -95,7 +93,7 @@ func dataSourceTencentCloudVpcBandwidthPackageBillUsageRead(d *schema.ResourceDa
 				bandwidthPackageBillBandwidthMap["bandwidth_usage"] = bandwidthPackageBillBandwidth.BandwidthUsage
 			}
 
-			ids = append(ids, fmt.Sprintf("%f", *bandwidthPackageBillBandwidth.BandwidthUsage))
+			ids = append(ids, *bandwidthPackageBillBandwidth.BandwidthPackageId)
 			tmpList = append(tmpList, bandwidthPackageBillBandwidthMap)
 		}
 

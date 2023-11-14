@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClbInstanceTrafficDataSource_basic(t *testing.T) {
@@ -25,6 +24,7 @@ func TestAccTencentCloudClbInstanceTrafficDataSource_basic(t *testing.T) {
 const testAccClbInstanceTrafficDataSource = `
 
 data "tencentcloud_clb_instance_traffic" "instance_traffic" {
-  load_balancer_region = "ap-guangzhou"
-}
+  load_balancer_region = ""
+  }
+
 `

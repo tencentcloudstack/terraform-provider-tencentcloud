@@ -1767,3 +1767,417 @@ func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, p
 	}
 	return
 }
+
+func (me *CvmService) DescribeCvmChcDeniedActionsByFilter(ctx context.Context, param map[string]interface{}) (chcDeniedActions []*cvm.ChcHostDeniedActions, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeChcDeniedActionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ChcIds" {
+			request.ChcIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeChcDeniedActions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ChcHostDeniedActionSet) < 1 {
+			break
+		}
+		chcDeniedActions = append(chcDeniedActions, response.Response.ChcHostDeniedActionSet...)
+		if len(response.Response.ChcHostDeniedActionSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmChcHostsByFilter(ctx context.Context, param map[string]interface{}) (chcHosts []*cvm.ChcHost, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeChcHostsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ChcIds" {
+			request.ChcIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*cvm.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeChcHosts(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ChcHostSet) < 1 {
+			break
+		}
+		chcHosts = append(chcHosts, response.Response.ChcHostSet...)
+		if len(response.Response.ChcHostSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmDisasterRecoverGroupQuotaByFilter(ctx context.Context, param map[string]interface{}) (disasterRecoverGroupQuota []*cvm.DescribeDisasterRecoverGroupQuotaResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeDisasterRecoverGroupQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeDisasterRecoverGroupQuota(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.GroupQuota) < 1 {
+			break
+		}
+		disasterRecoverGroupQuota = append(disasterRecoverGroupQuota, response.Response.GroupQuota...)
+		if len(response.Response.GroupQuota) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmImageQuotaByFilter(ctx context.Context, param map[string]interface{}) (imageQuota []*cvm.DescribeImageQuotaResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeImageQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeImageQuota(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ImageNumQuota) < 1 {
+			break
+		}
+		imageQuota = append(imageQuota, response.Response.ImageNumQuota...)
+		if len(response.Response.ImageNumQuota) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Context, param map[string]interface{}) (imageSharePermission []*cvm.SharePermission, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeImageSharePermissionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ImageId" {
+			request.ImageId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeImageSharePermission(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SharePermissionSet) < 1 {
+			break
+		}
+		imageSharePermission = append(imageSharePermission, response.Response.SharePermissionSet...)
+		if len(response.Response.SharePermissionSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmImportImageOsByFilter(ctx context.Context, param map[string]interface{}) (importImageOs []*cvm.ImageOsList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeImportImageOsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeImportImageOs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ImportImageOsListSupported) < 1 {
+			break
+		}
+		importImageOs = append(importImageOs, response.Response.ImportImageOsListSupported...)
+		if len(response.Response.ImportImageOsListSupported) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmInstanceVncUrlByFilter(ctx context.Context, param map[string]interface{}) (instanceVncUrl []*cvm.DescribeInstanceVncUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeInstanceVncUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeInstanceVncUrl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceVncUrl) < 1 {
+			break
+		}
+		instanceVncUrl = append(instanceVncUrl, response.Response.InstanceVncUrl...)
+		if len(response.Response.InstanceVncUrl) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CvmService) DescribeCvmLaunchTemplateDefaultVersionById(ctx context.Context, launchTemplateId string) (launchTemplateDefaultVersion *cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LaunchTemplateVersionInfo) < 1 {
+		return
+	}
+
+	launchTemplateDefaultVersion = response.Response.LaunchTemplateVersionInfo[0]
+	return
+}
+
+func (me *CvmService) DescribeCvmSecurityGroupAttachmentById(ctx context.Context, securityGroupIds string, instanceIds string) (securityGroupAttachment *cvm.Instance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeInstancesRequest()
+	request.SecurityGroupIds = &securityGroupIds
+	request.InstanceIds = &instanceIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Instance) < 1 {
+		return
+	}
+
+	securityGroupAttachment = response.Response.Instance[0]
+	return
+}
+
+func (me *CvmService) DeleteCvmSecurityGroupAttachmentById(ctx context.Context, securityGroupIds string, instanceIds string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDisassociateSecurityGroupsRequest()
+	request.SecurityGroupIds = &securityGroupIds
+	request.InstanceIds = &instanceIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

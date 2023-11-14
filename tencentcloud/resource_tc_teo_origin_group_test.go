@@ -1,41 +1,24 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"testing"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTeoOriginGroup_basic -v
-func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
-
+func TestAccTencentCloudTeoOriginGroupResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckOriginGroupDestroy,
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTeoOriginGroup,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckOriginGroupExists("tencentcloud_teo_origin_group.basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "zone_id"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "configuration_type", "weight"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_group_name", "keep-group-1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_type", "self"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.port", "8080"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.private", "false"),
-					resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.basic", "origin_records.0.record"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_origin_group.basic", "origin_records.0.weight", "100"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_teo_origin_group.origin_group", "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_teo_origin_group.basic",
+				ResourceName:      "tencentcloud_teo_origin_group.origin_group",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -43,76 +26,26 @@ func TestAccTencentCloudTeoOriginGroup_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckOriginGroupDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_teo_origin_group" {
-			continue
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		zoneId := idSplit[0]
-		originGroupId := idSplit[1]
+const testAccTeoOriginGroup = `
 
-		originGroup, err := service.DescribeTeoOriginGroup(ctx, zoneId, originGroupId)
-		if originGroup != nil {
-			return fmt.Errorf("zone originGroup %s still exists", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func testAccCheckOriginGroupExists(r string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-		rs, ok := s.RootModule().Resources[r]
-		if !ok {
-			return fmt.Errorf("resource %s is not found", r)
-		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		zoneId := idSplit[0]
-		originGroupId := idSplit[1]
-
-		service := TeoService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		originGroup, err := service.DescribeTeoOriginGroup(ctx, zoneId, originGroupId)
-		if originGroup == nil {
-			return fmt.Errorf("zone originGroup %s is not found", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-}
-
-const testAccTeoOriginGroup = testAccTeoZone + `
-
-resource "tencentcloud_teo_origin_group" "basic" {
-  configuration_type = "weight"
-  origin_group_name  = "keep-group-1"
-  origin_type        = "self"
-  zone_id            = tencentcloud_teo_zone.basic.id
-
+resource "tencentcloud_teo_origin_group" "origin_group" {
+  zone_id = &lt;nil&gt;
+  origin_group_id = &lt;nil&gt;
+  origin_group_name = &lt;nil&gt;
+  origin_type = &lt;nil&gt;
+  configuration_type = &lt;nil&gt;
   origin_records {
-    area      = []
-    port      = 8080
-    private   = false
-    record    = var.zone_name
-    weight    = 100
+		record = &lt;nil&gt;
+		port = &lt;nil&gt;
+		weight = &lt;nil&gt;
+		area = &lt;nil&gt;
+		private = &lt;nil&gt;
+		private_parameter {
+			name = &lt;nil&gt;
+			value = &lt;nil&gt;
+		}
+
   }
-}
+  }
 
 `

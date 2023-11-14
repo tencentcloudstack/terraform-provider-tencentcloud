@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_dcn_detail" "dcn_detail" {
-  instance_id = "tdsql-9vqvls95"
-}
+  instance_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -29,6 +28,7 @@ func dataSourceTencentCloudMariadbDcnDetail() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
+
 			"dcn_details": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -181,6 +181,7 @@ func dataSourceTencentCloudMariadbDcnDetail() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -194,28 +195,27 @@ func dataSourceTencentCloudMariadbDcnDetailRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_mariadb_dcn_detail.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		dcnDetails []*mariadb.DcnDetailItem
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var dcnDetails []*mariadb.DcnDetailItem
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMariadbDcnDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		dcnDetails = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -353,6 +353,5 @@ func dataSourceTencentCloudMariadbDcnDetailRead(d *schema.ResourceData, meta int
 			return e
 		}
 	}
-
 	return nil
 }

@@ -4,16 +4,15 @@ Use this data source to query detailed information of sqlserver instance_param_r
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_instance_param_records" "example" {
-  instance_id = "mssql-qelbzgwf"
-}
+data "tencentcloud_sqlserver_instance_param_records" "instance_param_records" {
+  instance_id = "mssql-j8kv137v"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -29,6 +28,7 @@ func dataSourceTencentCloudSqlserverInstanceParamRecords() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID in the format of mssql-dj5i29c5n. It is the same as the instance ID displayed in the TencentDB console and the response parameter InstanceId of the DescribeDBInstances API.",
 			},
+
 			"items": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -68,6 +68,7 @@ func dataSourceTencentCloudSqlserverInstanceParamRecords() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -81,18 +82,16 @@ func dataSourceTencentCloudSqlserverInstanceParamRecordsRead(d *schema.ResourceD
 	defer logElapsed("data_source.tencentcloud_sqlserver_instance_param_records.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
+
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var items []*sqlserver.ParamRecord
 
@@ -104,11 +103,11 @@ func dataSourceTencentCloudSqlserverInstanceParamRecordsRead(d *schema.ResourceD
 		items = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(items))
 	tmpList := make([]map[string]interface{}, 0, len(items))
 
 	if items != nil {
@@ -139,19 +138,19 @@ func dataSourceTencentCloudSqlserverInstanceParamRecordsRead(d *schema.ResourceD
 				paramRecordMap["modify_time"] = paramRecord.ModifyTime
 			}
 
+			ids = append(ids, *paramRecord.InstanceId)
 			tmpList = append(tmpList, paramRecordMap)
 		}
 
 		_ = d.Set("items", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

@@ -5,11 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_access_address" "access_address" {
-  instance_id = "ins-7eb7eea7"
-  # vpc_id = "vpc-xxxxxx"
-  # subnet_id = "subnet-xxxxxx"
-  # workload = "pushgateway"
+  instance_id = "ins-xxxxxx"
+  vpc_id = "vpc-xxxxxx"
+  subnet_id = "subnet-xxxxxx"
+  workload = "pushgateway"
   engine_region = "ap-guangzhou"
+                  tags = {
+    "createdBy" = "terraform"
+  }
 }
 ```
 */
@@ -17,10 +20,8 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -29,27 +30,27 @@ func dataSourceTencentCloudTseAccessAddress() *schema.Resource {
 		Read: dataSourceTencentCloudTseAccessAddressRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "engine instance Id.",
+				Description: "Engine instance Id.",
 			},
 
 			"vpc_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "VPC ID, Zookeeper does not need to pass vpcid and subnetid; nacos and Polaris need to pass vpcid and subnetid.",
+				Description: "VPC ID.",
 			},
 
 			"subnet_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Subnet ID, Zookeeper does not need to pass vpcid and subnetid; nacos and Polaris need to pass vpcid and subnetid.",
+				Description: "Subnet ID.",
 			},
 
 			"workload": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Name of other engine components(pushgateway, polaris-limiter).",
+				Description: "Name of other engine components（pushgateway、polaris-limiter）.",
 			},
 
 			"engine_region": {
@@ -79,7 +80,7 @@ func dataSourceTencentCloudTseAccessAddress() *schema.Resource {
 						"env_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "env name.",
+							Description: "Env name.",
 						},
 						"enable_config_internet": {
 							Type:        schema.TypeBool,
@@ -89,12 +90,12 @@ func dataSourceTencentCloudTseAccessAddress() *schema.Resource {
 						"config_internet_service_ip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "config public network ip.",
+							Description: "Config public network ip.",
 						},
 						"config_intranet_address": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "config Intranet access addressNote: This field may return null, indicating that a valid value is not available.",
+							Description: "Config Intranet access addressNote: This field may return null, indicating that a valid value is not available.",
 						},
 						"enable_config_intranet": {
 							Type:        schema.TypeBool,
@@ -149,6 +150,11 @@ func dataSourceTencentCloudTseAccessAddress() *schema.Resource {
 				},
 			},
 
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -188,32 +194,30 @@ func dataSourceTencentCloudTseAccessAddressRead(d *schema.ResourceData, meta int
 	}
 
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
-	var accessAddress *tse.DescribeSREInstanceAccessAddressResponseParams
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTseAccessAddressByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		accessAddress = result
+		intranetAddress = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := []string{""}
-	if accessAddress.IntranetAddress != nil {
-		ids = append(ids, *accessAddress.IntranetAddress)
-		_ = d.Set("intranet_address", accessAddress.IntranetAddress)
+	ids := make([]string, 0, len(intranetAddress))
+	if intranetAddress != nil {
+		_ = d.Set("intranet_address", intranetAddress)
 	}
 
-	if accessAddress.InternetAddress != nil {
-		_ = d.Set("internet_address", accessAddress.InternetAddress)
+	if internetAddress != nil {
+		_ = d.Set("internet_address", internetAddress)
 	}
 
-	if accessAddress.EnvAddressInfos != nil {
-		tmpList := make([]map[string]interface{}, 0, len(accessAddress.EnvAddressInfos))
-		for _, envAddressInfo := range accessAddress.EnvAddressInfos {
+	if envAddressInfos != nil {
+		for _, envAddressInfo := range envAddressInfos {
 			envAddressInfoMap := map[string]interface{}{}
 
 			if envAddressInfo.EnvName != nil {
@@ -240,37 +244,38 @@ func dataSourceTencentCloudTseAccessAddressRead(d *schema.ResourceData, meta int
 				envAddressInfoMap["internet_band_width"] = envAddressInfo.InternetBandWidth
 			}
 
+			ids = append(ids, *envAddressInfo.InstanceId)
 			tmpList = append(tmpList, envAddressInfoMap)
 		}
 
 		_ = d.Set("env_address_infos", tmpList)
 	}
 
-	if accessAddress.ConsoleInternetAddress != nil {
-		_ = d.Set("console_internet_address", accessAddress.ConsoleInternetAddress)
+	if consoleInternetAddress != nil {
+		_ = d.Set("console_internet_address", consoleInternetAddress)
 	}
 
-	if accessAddress.ConsoleIntranetAddress != nil {
-		_ = d.Set("console_intranet_address", accessAddress.ConsoleIntranetAddress)
+	if consoleIntranetAddress != nil {
+		_ = d.Set("console_intranet_address", consoleIntranetAddress)
 	}
 
-	if accessAddress.InternetBandWidth != nil {
-		_ = d.Set("internet_band_width", accessAddress.InternetBandWidth)
+	if internetBandWidth != nil {
+		_ = d.Set("internet_band_width", internetBandWidth)
 	}
 
-	if accessAddress.ConsoleInternetBandWidth != nil {
-		_ = d.Set("console_internet_band_width", accessAddress.ConsoleInternetBandWidth)
+	if consoleInternetBandWidth != nil {
+		_ = d.Set("console_internet_band_width", consoleInternetBandWidth)
 	}
 
-	if accessAddress.LimiterAddressInfos != nil {
-		tmpList := make([]map[string]interface{}, 0, len(accessAddress.LimiterAddressInfos))
-		for _, polarisLimiterAddress := range accessAddress.LimiterAddressInfos {
+	if limiterAddressInfos != nil {
+		for _, polarisLimiterAddress := range limiterAddressInfos {
 			polarisLimiterAddressMap := map[string]interface{}{}
 
 			if polarisLimiterAddress.IntranetAddress != nil {
 				polarisLimiterAddressMap["intranet_address"] = polarisLimiterAddress.IntranetAddress
 			}
 
+			ids = append(ids, *polarisLimiterAddress.InstanceId)
 			tmpList = append(tmpList, polarisLimiterAddressMap)
 		}
 
@@ -280,7 +285,7 @@ func dataSourceTencentCloudTseAccessAddressRead(d *schema.ResourceData, meta int
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCvmRebootInstanceResource_basic(t *testing.T) {
@@ -18,14 +17,21 @@ func TestAccTencentCloudCvmRebootInstanceResource_basic(t *testing.T) {
 				Config: testAccCvmRebootInstance,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_reboot_instance.reboot_instance", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_cvm_reboot_instance.reboot_instance",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
 
-const testAccCvmRebootInstance = defaultRebootCvmVariable + `
+const testAccCvmRebootInstance = `
 
 resource "tencentcloud_cvm_reboot_instance" "reboot_instance" {
-  instance_id = var.cvm_id
-  stop_type = "SOFT_FIRST"
+  instance_ids = 
+  force_reboot = false
+  stop_type = "SOFT"
 }
+
 `

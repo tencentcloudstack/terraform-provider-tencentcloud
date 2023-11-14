@@ -5,22 +5,33 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cvm_export_images" "export_images" {
-  bucket_name = "xxxxxx"
-  image_id = "img-xxxxxx"
-  file_name_prefix = "test-"
+  bucket_name = "test-bucket-AppId"
+  image_ids =
+  export_format = "RAW"
+  file_name_prefix_list =
+  only_export_root_disk = true
+  dry_run = false
+  role_name = "CVM_QcsRole"
 }
+```
+
+Import
+
+cvm export_images can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cvm_export_images.export_images export_images_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCvmExportImages() *schema.Resource {
@@ -28,6 +39,9 @@ func resourceTencentCloudCvmExportImages() *schema.Resource {
 		Create: resourceTencentCloudCvmExportImagesCreate,
 		Read:   resourceTencentCloudCvmExportImagesRead,
 		Delete: resourceTencentCloudCvmExportImagesDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"bucket_name": {
 				Required:    true,
@@ -36,18 +50,14 @@ func resourceTencentCloudCvmExportImages() *schema.Resource {
 				Description: "COS bucket name.",
 			},
 
-			"image_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Image ID.",
-			},
-
-			"file_name_prefix": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Prefix of exported file.",
+			"image_ids": {
+				Optional: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "List of image IDs.",
 			},
 
 			"export_format": {
@@ -55,6 +65,16 @@ func resourceTencentCloudCvmExportImages() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Format of the exported image file. Valid values: RAW, QCOW2, VHD and VMDK. Default value: RAW.",
+			},
+
+			"file_name_prefix_list": {
+				Optional: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Prefix list of the name of exported files.",
 			},
 
 			"only_export_root_disk": {
@@ -88,20 +108,34 @@ func resourceTencentCloudCvmExportImagesCreate(d *schema.ResourceData, meta inte
 	logId := getLogId(contextNil)
 
 	var (
-		request        = cvm.NewExportImagesRequest()
-		imageId        string
-		bucketName     string
-		fileNamePrefix string
+		request    = cvm.NewExportImagesRequest()
+		response   = cvm.NewExportImagesResponse()
+		imageId    string
+		bucketName string
 	)
-	imageId = d.Get("image_id").(string)
-	bucketName = d.Get("bucket_name").(string)
-	fileNamePrefix = d.Get("file_name_prefix").(string)
-	request.ImageIds = []*string{&imageId}
-	request.BucketName = helper.String(bucketName)
-	request.FileNamePrefixList = []*string{&fileNamePrefix}
+	if v, ok := d.GetOk("bucket_name"); ok {
+		bucketName = v.(string)
+		request.BucketName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("image_ids"); ok {
+		imageIdsSet := v.(*schema.Set).List()
+		for i := range imageIdsSet {
+			imageIds := imageIdsSet[i].(string)
+			request.ImageIds = append(request.ImageIds, &imageIds)
+		}
+	}
 
 	if v, ok := d.GetOk("export_format"); ok {
 		request.ExportFormat = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("file_name_prefix_list"); ok {
+		fileNamePrefixListSet := v.(*schema.Set).List()
+		for i := range fileNamePrefixListSet {
+			fileNamePrefixList := fileNamePrefixListSet[i].(string)
+			request.FileNamePrefixList = append(request.FileNamePrefixList, &fileNamePrefixList)
+		}
 	}
 
 	if v, _ := d.GetOk("only_export_root_disk"); v != nil {
@@ -123,6 +157,7 @@ func resourceTencentCloudCvmExportImagesCreate(d *schema.ResourceData, meta inte
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -130,15 +165,8 @@ func resourceTencentCloudCvmExportImagesCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	d.SetId(imageId)
-
-	service := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	conf := BuildStateChangeConf([]string{}, []string{"NORMAL"}, 20*readRetryTimeout, time.Second, service.CvmSyncImagesStateRefreshFunc(d.Id(), []string{}))
-
-	if _, e := conf.WaitForState(); e != nil {
-		return e
-	}
+	imageId = *response.Response.ImageId
+	d.SetId(strings.Join([]string{imageId, bucketName}, FILED_SP))
 
 	return resourceTencentCloudCvmExportImagesRead(d, meta)
 }

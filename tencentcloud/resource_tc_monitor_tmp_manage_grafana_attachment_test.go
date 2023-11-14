@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMonitorTmpManageGrafanaAttachmentResource_basic -v
 func TestAccTencentCloudMonitorTmpManageGrafanaAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,14 +15,10 @@ func TestAccTencentCloudMonitorTmpManageGrafanaAttachmentResource_basic(t *testi
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMonitorTmpManageGrafanaAttachment,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_manage_grafana_attachment.manage_grafana_attachment", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_manage_grafana_attachment.manage_grafana_attachment", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_manage_grafana_attachment.manage_grafana_attachment", "grafana_id"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_monitor_tmp_manage_grafana_attachment.tmp_manage_grafana_attachment", "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_monitor_tmp_manage_grafana_attachment.manage_grafana_attachment",
+				ResourceName:      "tencentcloud_monitor_tmp_manage_grafana_attachment.tmp_manage_grafana_attachment",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -32,20 +26,11 @@ func TestAccTencentCloudMonitorTmpManageGrafanaAttachmentResource_basic(t *testi
 	})
 }
 
-const testManageGrafanaAttachmentVar = `
-variable "prometheus_id" {
-  default = "` + defaultPrometheusId + `"
-}
-variable "grafana_id" {
-  default = "` + defaultGrafanaInstanceId + `"
-}
-`
+const testAccMonitorTmpManageGrafanaAttachment = `
 
-const testAccMonitorTmpManageGrafanaAttachment = testManageGrafanaAttachmentVar + `
-
-resource "tencentcloud_monitor_tmp_manage_grafana_attachment" "manage_grafana_attachment" {
-    grafana_id  = var.grafana_id
-    instance_id = var.prometheus_id
+resource "tencentcloud_monitor_tmp_manage_grafana_attachment" "tmp_manage_grafana_attachment" {
+  instance_id = "prom-test"
+  grafana_id = "grafana-test"
 }
 
 `

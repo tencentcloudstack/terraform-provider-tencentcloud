@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_scf_reserved_concurrency_config" "reserved_concurrency_config" {
-  function_name = "keep-1676351130"
+  function_name = "test_function"
   reserved_concurrency_mem = 128000
-  namespace     = "default"
+  namespace = "test_namespace"
 }
 ```
 
@@ -23,14 +23,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudScfReservedConcurrencyConfig() *schema.Resource {
@@ -53,13 +51,12 @@ func resourceTencentCloudScfReservedConcurrencyConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Reserved memory quota of the function. Note: the upper limit for the total reserved quota of the function is the user's total concurrency memory minus 12800.",
+				Description: "Reserved memory quota of the function. Note: the upper limit for the total reserved quota of the function is the user&amp;amp;#39;s total concurrency memory minus 12800.",
 			},
 
 			"namespace": {
 				Optional:    true,
 				ForceNew:    true,
-				Default:     "default",
 				Type:        schema.TypeString,
 				Description: "Function namespace. Default value: default.",
 			},
@@ -75,6 +72,7 @@ func resourceTencentCloudScfReservedConcurrencyConfigCreate(d *schema.ResourceDa
 
 	var (
 		request      = scf.NewPutReservedConcurrencyConfigRequest()
+		response     = scf.NewPutReservedConcurrencyConfigResponse()
 		namespace    string
 		functionName string
 	)
@@ -99,6 +97,7 @@ func resourceTencentCloudScfReservedConcurrencyConfigCreate(d *schema.ResourceDa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -106,7 +105,8 @@ func resourceTencentCloudScfReservedConcurrencyConfigCreate(d *schema.ResourceDa
 		return err
 	}
 
-	d.SetId(namespace + FILED_SP + functionName)
+	namespace = *response.Response.Namespace
+	d.SetId(strings.Join([]string{namespace, functionName}, FILED_SP))
 
 	return resourceTencentCloudScfReservedConcurrencyConfigRead(d, meta)
 }
@@ -128,22 +128,27 @@ func resourceTencentCloudScfReservedConcurrencyConfigRead(d *schema.ResourceData
 	namespace := idSplit[0]
 	functionName := idSplit[1]
 
-	reservedConcurrencyConfig, err := service.DescribeScfReservedConcurrencyConfigById(ctx, namespace, functionName)
+	ReservedConcurrencyConfig, err := service.DescribeScfReservedConcurrencyConfigById(ctx, namespace, functionName)
 	if err != nil {
 		return err
 	}
 
-	if reservedConcurrencyConfig == nil {
+	if ReservedConcurrencyConfig == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ScfReservedConcurrencyConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	_ = d.Set("namespace", namespace)
-	_ = d.Set("function_name", functionName)
+	if ReservedConcurrencyConfig.FunctionName != nil {
+		_ = d.Set("function_name", ReservedConcurrencyConfig.FunctionName)
+	}
 
-	if reservedConcurrencyConfig.Response.ReservedMem != nil {
-		_ = d.Set("reserved_concurrency_mem", reservedConcurrencyConfig.Response.ReservedMem)
+	if ReservedConcurrencyConfig.ReservedConcurrencyMem != nil {
+		_ = d.Set("reserved_concurrency_mem", ReservedConcurrencyConfig.ReservedConcurrencyMem)
+	}
+
+	if ReservedConcurrencyConfig.Namespace != nil {
+		_ = d.Set("namespace", ReservedConcurrencyConfig.Namespace)
 	}
 
 	return nil

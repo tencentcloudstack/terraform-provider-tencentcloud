@@ -5,24 +5,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_smart_cover_template" "media_smart_cover_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "smart_cover_template"
+  name = &lt;nil&gt;
   smart_cover {
-		format = "jpg"
-		width = "1280"
-		height = "960"
-		count = "10"
-		delete_duplicates = "true"
+		format = &lt;nil&gt;
+		width = &lt;nil&gt;
+		height = &lt;nil&gt;
+		count = &lt;nil&gt;
+		delete_duplicates = &lt;nil&gt;
+
   }
 }
 ```
 
 Import
 
-ci media_smart_cover_template can be imported using the bucket#templateId, e.g.
+ci media_smart_cover_template can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_media_smart_cover_template.media_smart_cover_template terraform-ci-xxxxxx#t1ede83acc305e423799d638044d859fb7
+terraform import tencentcloud_ci_media_smart_cover_template.media_smart_cover_template media_smart_cover_template_id
 ```
 */
 package tencentcloud
@@ -30,14 +30,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentyun/cos-go-sdk-v5"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiMediaSmartCoverTemplate() *schema.Resource {
@@ -50,12 +47,6 @@ func resourceTencentCloudCiMediaSmartCoverTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"bucket": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "bucket name.",
-			},
-
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -72,7 +63,7 @@ func resourceTencentCloudCiMediaSmartCoverTemplate() *schema.Resource {
 						"format": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Image Format, value jpg, png, webp.",
+							Description: "Image Format, value jpg、png 、webp.",
 						},
 						"width": {
 							Type:        schema.TypeString,
@@ -92,7 +83,7 @@ func resourceTencentCloudCiMediaSmartCoverTemplate() *schema.Resource {
 						"delete_duplicates": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "cover deduplication, true/false.",
+							Description: "Cover deduplication, true/false.",
 						},
 					},
 				},
@@ -106,53 +97,42 @@ func resourceTencentCloudCiMediaSmartCoverTemplateCreate(d *schema.ResourceData,
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = cos.CreateMediaSmartCoverTemplateOptions{
-			Tag: "SmartCover",
-		}
+		request    = ci.NewCreateMediaSmartCoverTemplateRequest()
+		response   = ci.NewCreateMediaSmartCoverTemplateResponse()
 		templateId string
-		bucket     string
 	)
-
-	if v, ok := d.GetOk("bucket"); ok {
-		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
-	}
-
 	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
+		request.Name = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "smart_cover"); ok {
-		smartCover := cos.NodeSmartCover{}
+		smartCover := ci.SmartCover{}
 		if v, ok := dMap["format"]; ok {
-			smartCover.Format = v.(string)
+			smartCover.Format = helper.String(v.(string))
 		}
 		if v, ok := dMap["width"]; ok {
-			smartCover.Width = v.(string)
+			smartCover.Width = helper.String(v.(string))
 		}
 		if v, ok := dMap["height"]; ok {
-			smartCover.Height = v.(string)
+			smartCover.Height = helper.String(v.(string))
 		}
 		if v, ok := dMap["count"]; ok {
-			smartCover.Count = v.(string)
+			smartCover.Count = helper.String(v.(string))
 		}
 		if v, ok := dMap["delete_duplicates"]; ok {
-			smartCover.DeleteDuplicates = v.(string)
+			smartCover.DeleteDuplicates = helper.String(v.(string))
 		}
 		request.SmartCover = &smartCover
 	}
 
-	var response *cos.CreateMediaTemplateResult
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.CreateMediaSmartCoverTemplate(ctx, &request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().CreateMediaSmartCoverTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaSmartCoverTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -162,8 +142,8 @@ func resourceTencentCloudCiMediaSmartCoverTemplateCreate(d *schema.ResourceData,
 		return err
 	}
 
-	templateId = response.Template.TemplateId
-	d.SetId(bucket + FILED_SP + templateId)
+	templateId = *response.Response.TemplateId
+	d.SetId(templateId)
 
 	return resourceTencentCloudCiMediaSmartCoverTemplateRead(d, meta)
 }
@@ -173,53 +153,48 @@ func resourceTencentCloudCiMediaSmartCoverTemplateRead(d *schema.ResourceData, m
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSmartCoverTemplateId := d.Id()
 
-	mediaSmartCoverTemplate, err := service.DescribeCiMediaTemplateById(ctx, bucket, templateId)
+	mediaSmartCoverTemplate, err := service.DescribeCiMediaSmartCoverTemplateById(ctx, templateId)
 	if err != nil {
 		return err
 	}
 
 	if mediaSmartCoverTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiMediaSmartCoverTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if mediaSmartCoverTemplate.Name != "" {
+	if mediaSmartCoverTemplate.Name != nil {
 		_ = d.Set("name", mediaSmartCoverTemplate.Name)
 	}
 
 	if mediaSmartCoverTemplate.SmartCover != nil {
 		smartCoverMap := map[string]interface{}{}
 
-		if mediaSmartCoverTemplate.SmartCover.Format != "" {
+		if mediaSmartCoverTemplate.SmartCover.Format != nil {
 			smartCoverMap["format"] = mediaSmartCoverTemplate.SmartCover.Format
 		}
 
-		if mediaSmartCoverTemplate.SmartCover.Width != "" {
+		if mediaSmartCoverTemplate.SmartCover.Width != nil {
 			smartCoverMap["width"] = mediaSmartCoverTemplate.SmartCover.Width
 		}
 
-		if mediaSmartCoverTemplate.SmartCover.Height != "" {
+		if mediaSmartCoverTemplate.SmartCover.Height != nil {
 			smartCoverMap["height"] = mediaSmartCoverTemplate.SmartCover.Height
 		}
 
-		if mediaSmartCoverTemplate.SmartCover.Count != "" {
+		if mediaSmartCoverTemplate.SmartCover.Count != nil {
 			smartCoverMap["count"] = mediaSmartCoverTemplate.SmartCover.Count
 		}
 
-		if mediaSmartCoverTemplate.SmartCover.DeleteDuplicates != "" {
+		if mediaSmartCoverTemplate.SmartCover.DeleteDuplicates != nil {
 			smartCoverMap["delete_duplicates"] = mediaSmartCoverTemplate.SmartCover.DeleteDuplicates
 		}
 
@@ -234,56 +209,32 @@ func resourceTencentCloudCiMediaSmartCoverTemplateUpdate(d *schema.ResourceData,
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cos.CreateMediaSmartCoverTemplateOptions{
-		Tag: "SmartCover",
-	}
+	request := ci.NewUpdateMediaSmartCoverTemplateRequest()
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = v.(string)
-	}
+	mediaSmartCoverTemplateId := d.Id()
 
-	if d.HasChange("smart_cover") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "smart_cover"); ok {
-			smartCover := cos.NodeSmartCover{}
-			if v, ok := dMap["format"]; ok {
-				smartCover.Format = v.(string)
-			}
-			if v, ok := dMap["width"]; ok {
-				smartCover.Width = v.(string)
-			}
-			if v, ok := dMap["height"]; ok {
-				smartCover.Height = v.(string)
-			}
-			if v, ok := dMap["count"]; ok {
-				smartCover.Count = v.(string)
-			}
-			if v, ok := dMap["delete_duplicates"]; ok {
-				smartCover.DeleteDuplicates = v.(string)
-			}
-			request.SmartCover = &smartCover
+	request.TemplateId = &templateId
+
+	immutableArgs := []string{"name", "smart_cover"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaSmartCoverTemplate(ctx, &request, templateId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().UpdateMediaSmartCoverTemplate(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "UpdateMediaSmartCoverTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci mediaSmartCoverTemplate failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci mediaSmartCoverTemplate failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -298,14 +249,9 @@ func resourceTencentCloudCiMediaSmartCoverTemplateDelete(d *schema.ResourceData,
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	bucket := idSplit[0]
-	templateId := idSplit[1]
+	mediaSmartCoverTemplateId := d.Id()
 
-	if err := service.DeleteCiMediaTemplateById(ctx, bucket, templateId); err != nil {
+	if err := service.DeleteCiMediaSmartCoverTemplateById(ctx, templateId); err != nil {
 		return err
 	}
 

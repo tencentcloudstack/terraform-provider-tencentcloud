@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_repository" "repository" {
-  search_word = "test"
-  repository_type = "default"
-}
+  search_word = ""
+  repository_type = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -51,13 +50,13 @@ func dataSourceTencentCloudTsfRepository() *schema.Resource {
 						"content": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Repository information list. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: " Repository information list. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"repository_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "repository Id.",
+										Description: "Repository Id.",
 									},
 									"repository_name": {
 										Type:        schema.TypeString,
@@ -134,29 +133,31 @@ func dataSourceTencentCloudTsfRepositoryRead(d *schema.ResourceData, meta interf
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var repository *tsf.RepositoryList
+	var result []*tsf.RepositoryList
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfRepositoryByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		repository = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(repository.Content))
-	repositoryListMap := map[string]interface{}{}
-	if repository != nil {
-		if repository.TotalCount != nil {
-			repositoryListMap["total_count"] = repository.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		repositoryListMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			repositoryListMap["total_count"] = result.TotalCount
 		}
 
-		if repository.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range repository.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.RepositoryId != nil {
@@ -196,13 +197,13 @@ func dataSourceTencentCloudTsfRepositoryRead(d *schema.ResourceData, meta interf
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.RepositoryId)
 			}
 
-			repositoryListMap["content"] = contentList
+			repositoryListMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{repositoryListMap})
+		ids = append(ids, *result.RepositoryId)
+		_ = d.Set("result", repositoryListMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

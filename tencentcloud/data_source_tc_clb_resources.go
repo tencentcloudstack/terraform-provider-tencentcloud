@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_resources" "resources" {
   filters {
-    name = "isp"
-    values = ["BGP"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -107,7 +107,7 @@ func dataSourceTencentCloudClbResources() *schema.Resource {
 							Computed:    true,
 							Description: "Secondary AZ, such as ap-guangzhou-2. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
-						"ip_version": {
+						"i_p_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "IP version. Values: IPv4, IPv6, and IPv6_Nat.",
@@ -171,7 +171,7 @@ func dataSourceTencentCloudClbResourcesRead(d *schema.ResourceData, meta interfa
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -230,13 +230,13 @@ func dataSourceTencentCloudClbResourcesRead(d *schema.ResourceData, meta interfa
 							availabilitySetList = append(availabilitySetList, availabilitySetMap)
 						}
 
-						resourceSetMap["availability_set"] = availabilitySetList
+						resourceSetMap["availability_set"] = []interface{}{availabilitySetList}
 					}
 
 					resourceSetList = append(resourceSetList, resourceSetMap)
 				}
 
-				zoneResourceMap["resource_set"] = resourceSetList
+				zoneResourceMap["resource_set"] = []interface{}{resourceSetList}
 			}
 
 			if zoneResource.SlaveZone != nil {
@@ -244,7 +244,7 @@ func dataSourceTencentCloudClbResourcesRead(d *schema.ResourceData, meta interfa
 			}
 
 			if zoneResource.IPVersion != nil {
-				zoneResourceMap["ip_version"] = zoneResource.IPVersion
+				zoneResourceMap["i_p_version"] = zoneResource.IPVersion
 			}
 
 			if zoneResource.ZoneRegion != nil {

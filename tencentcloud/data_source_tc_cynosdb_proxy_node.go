@@ -5,22 +5,23 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_proxy_node" "proxy_node" {
-  order_by      = "CREATETIME"
-  order_by_type = "DESC"
+  order_by = "&quot;CREATETIME&quot;"
+  order_by_type = "&quot;desc&quot;"
   filters {
-    names       = "ClusterId"
-    values      = "cynosdbmysql-cgd2gpwr"
-    exact_match = false
-    name        = "ClusterId"
+		names =
+		values =
+		exact_match =
+		name = ""
+		operator = ""
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -34,13 +35,15 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sort field, value range:CREATETIME: creation time; PRIODENDTIME: expiration time.",
+				Description: "Sort field, value range:&amp;amp;lt;li&amp;amp;gt;CREATETIME: creation time&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;PRIODENDTIME: expiration time&amp;amp;lt;/li&amp;amp;gt;.",
 			},
+
 			"order_by_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sort type, value range:ASC: ascending sort; DESC: descending sort.",
+				Description: "Sort type, value range:&amp;amp;lt;li&amp;amp;gt;ASC: ascending sort&amp;amp;lt;/li&amp;amp;gt;&amp;amp;lt;li&amp;amp;gt;DESC: descending sort&amp;amp;lt;/li&amp;amp;gt;.",
 			},
+
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -48,14 +51,18 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"names": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
-							Description: "Search String.",
+							Description: "Search field, currently supported: InstanceId, ProjectId, InstanceName, Vip.",
 						},
 						"values": {
-							Type:        schema.TypeSet,
-							Elem:        &schema.Schema{Type: schema.TypeString},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
 							Required:    true,
 							Description: "Search String.",
 						},
@@ -67,7 +74,7 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 						"name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Search Fields. Supported: Status, ProxyNodeId, ClusterId.",
+							Description: "Search Fields.",
 						},
 						"operator": {
 							Type:        schema.TypeString,
@@ -77,6 +84,7 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 					},
 				},
 			},
+
 			"proxy_node_infos": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -126,7 +134,7 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region.",
+							Description: "Region.",
 						},
 						"zone": {
 							Type:        schema.TypeString,
@@ -136,6 +144,7 @@ func dataSourceTencentCloudCynosdbProxyNode() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -149,12 +158,9 @@ func dataSourceTencentCloudCynosdbProxyNodeRead(d *schema.ResourceData, meta int
 	defer logElapsed("data_source.tencentcloud_cynosdb_proxy_node.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
-		service        = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		proxyNodeInfos []*cynosdb.ProxyNodeInfo
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("order_by"); ok {
@@ -195,16 +201,18 @@ func dataSourceTencentCloudCynosdbProxyNodeRead(d *schema.ResourceData, meta int
 		paramMap["filters"] = tmpSet
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var proxyNodeInfos []*cynosdb.ProxyNodeInfo
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbProxyNodeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		proxyNodeInfos = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -270,6 +278,5 @@ func dataSourceTencentCloudCynosdbProxyNodeRead(d *schema.ResourceData, meta int
 			return e
 		}
 	}
-
 	return nil
 }

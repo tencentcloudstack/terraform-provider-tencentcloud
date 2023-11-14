@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudVpcBandwidthPackageBillUsageDataSource_basic(t *testing.T) {
@@ -24,17 +23,8 @@ func TestAccTencentCloudVpcBandwidthPackageBillUsageDataSource_basic(t *testing.
 
 const testAccVpcBandwidthPackageBillUsageDataSource = `
 
-resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
-  network_type            = "BGP"
-  charge_type             = "TOP5_POSTPAID_BY_MONTH"
-  bandwidth_package_name  = "iac-test-data"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
 data "tencentcloud_vpc_bandwidth_package_bill_usage" "bandwidth_package_bill_usage" {
-  bandwidth_package_id =  tencentcloud_vpc_bandwidth_package.bandwidth_package.id
-}
+  bandwidth_package_id = "bwp-234rfgt5"
+  }
 
 `

@@ -3,54 +3,26 @@ Provides a resource to create a clb replace_cert_for_lbs
 
 Example Usage
 
-Replace Server Cert By Cert ID
 ```hcl
 resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
-  old_certificate_id = "zjUMifFK"
+  old_certificate_id = "xxxxxxxx"
   certificate {
-    cert_id = "6vcK02GC"
+		s_s_l_mode = "UNIDIRECTIONAL"
+		cert_id = "xxxxxxxx"
+		cert_ca_id = "xxxxxxxx"
+		cert_name = "test"
+		cert_key = "xxxxxxxxxxxxxxxx"
+		cert_content = ""
+		cert_ca_name = "test"
+		cert_ca_content = ""
+
   }
 }
 ```
 
-Replace Server Cert By Cert Content
-```hcl
-data "tencentcloud_ssl_certificates" "foo" {
-  name = "keep-ssl-ca"
-}
+Import
 
-resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
-  old_certificate_id = data.tencentcloud_ssl_certificates.foo.certificates.0.id
-  certificate {
-    cert_name    = "tf-test-cert"
-    cert_content = <<-EOT
------BEGIN CERTIFICATE-----
-xxxxxxxxxxxxxxxxxxxxxxxxxxx
------END CERTIFICATE-----
-EOT
-    cert_key     = <<-EOT
------BEGIN RSA PRIVATE KEY-----
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
------END RSA PRIVATE KEY-----
-EOT
-  }
-}
-```
-
-Replace Client Cert By Cert Content
-```hcl
-resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
-  old_certificate_id = "zjUMifFK"
-  certificate {
-    cert_ca_name = "tf-test-cert"
-    cert_ca_content = <<-EOT
------BEGIN CERTIFICATE-----
-xxxxxxxxContentxxxxxxxxxxxxxx
------END CERTIFICATE-----
-EOT
-  }
-}
-```
+clb replace_cert_for_lbs can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_clb_replace_cert_for_lbs.replace_cert_for_lbs replace_cert_for_lbs_id
@@ -59,12 +31,11 @@ terraform import tencentcloud_clb_replace_cert_for_lbs.replace_cert_for_lbs repl
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudClbReplaceCertForLbs() *schema.Resource {
@@ -72,6 +43,9 @@ func resourceTencentCloudClbReplaceCertForLbs() *schema.Resource {
 		Create: resourceTencentCloudClbReplaceCertForLbsCreate,
 		Read:   resourceTencentCloudClbReplaceCertForLbsRead,
 		Delete: resourceTencentCloudClbReplaceCertForLbsDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"old_certificate_id": {
 				Required:    true,
@@ -88,7 +62,7 @@ func resourceTencentCloudClbReplaceCertForLbs() *schema.Resource {
 				Description: "Information such as the content of the new certificate.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"ssl_mode": {
+						"s_s_l_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "Authentication type. Value range: UNIDIRECTIONAL (unidirectional authentication), MUTUAL (mutual authentication).",
@@ -143,6 +117,7 @@ func resourceTencentCloudClbReplaceCertForLbsCreate(d *schema.ResourceData, meta
 
 	var (
 		request          = clb.NewReplaceCertForLoadBalancersRequest()
+		response         = clb.NewReplaceCertForLoadBalancersResponse()
 		oldCertificateId string
 	)
 	if v, ok := d.GetOk("old_certificate_id"); ok {
@@ -152,7 +127,7 @@ func resourceTencentCloudClbReplaceCertForLbsCreate(d *schema.ResourceData, meta
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "certificate"); ok {
 		certificateInput := clb.CertificateInput{}
-		if v, ok := dMap["ssl_mode"]; ok {
+		if v, ok := dMap["s_s_l_mode"]; ok {
 			certificateInput.SSLMode = helper.String(v.(string))
 		}
 		if v, ok := dMap["cert_id"]; ok {
@@ -186,6 +161,7 @@ func resourceTencentCloudClbReplaceCertForLbsCreate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -193,6 +169,7 @@ func resourceTencentCloudClbReplaceCertForLbsCreate(d *schema.ResourceData, meta
 		return err
 	}
 
+	oldCertificateId = *response.Response.OldCertificateId
 	d.SetId(oldCertificateId)
 
 	return resourceTencentCloudClbReplaceCertForLbsRead(d, meta)

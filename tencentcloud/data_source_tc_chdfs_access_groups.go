@@ -5,15 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_chdfs_access_groups" "access_groups" {
-  vpc_id = "vpc-pewdpc0d"
-}
+  vpc_id = &lt;nil&gt;
+  owner_uin = &lt;nil&gt;
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
@@ -27,45 +27,45 @@ func dataSourceTencentCloudChdfsAccessGroups() *schema.Resource {
 			"vpc_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "get groups belongs to the vpc id, must set but only can use one of VpcId and OwnerUin to get the groups.",
+				Description: "Get groups belongs to the vpc id, only can use one of VpcId and OwnerUin to get the groups.",
 			},
 
 			"owner_uin": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "get groups belongs to the owner uin, must set but only can use one of VpcId and OwnerUin to get the groups.",
+				Description: "Get groups belongs to the owner uin, only can use one of VpcId and OwnerUin to get the groups.",
 			},
 
 			"access_groups": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "access group list.",
+				Description: "Access group list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"access_group_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access group id.",
+							Description: "Access group id.",
 						},
 						"access_group_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access group name.",
+							Description: "Access group name.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "access group description.",
+							Description: "Access group description.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 						"vpc_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "vpc network type(1:CVM, 2:BM 1.0).",
+							Description: "Vpc network type(1:CVM, 2:BM 1.0).",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
@@ -95,11 +95,11 @@ func dataSourceTencentCloudChdfsAccessGroupsRead(d *schema.ResourceData, meta in
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("vpc_id"); ok {
-		paramMap["vpc_id"] = helper.String(v.(string))
+		paramMap["VpcId"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("owner_uin"); ok {
-		paramMap["owner_uin"] = helper.IntUint64(v.(int))
+	if v, _ := d.GetOk("owner_uin"); v != nil {
+		paramMap["OwnerUin"] = helper.IntUint64(v.(int))
 	}
 
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}

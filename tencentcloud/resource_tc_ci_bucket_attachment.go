@@ -1,32 +1,33 @@
 /*
-Provides a resource to create a ci bucket
+Provides a resource to create a ci bucket_attachment
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_ci_bucket_attachment" "bucket_attachment" {
   bucket = "terraform-ci-xxxxxx"
+  ci_status = &lt;nil&gt;
 }
 ```
 
 Import
 
-ci bucket can be imported using the id, e.g.
+ci bucket_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_bucket_attachment.bucket_attachment terraform-ci-xxxxxx
+terraform import tencentcloud_ci_bucket_attachment.bucket_attachment bucket_attachment_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/pkg/errors"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCiBucketAttachment() *schema.Resource {
@@ -39,15 +40,15 @@ func resourceTencentCloudCiBucketAttachment() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"bucket": {
-				Required:     true,
-				ForceNew:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: validateCosBucketName,
-				Description:  "bucket name.",
-			},
-			"ci_status": {
+				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Computed:    true,
+				Description: "Bucket name.",
+			},
+
+			"ci_status": {
+				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Binding object storage state, `on`: bound, `off`: unbound, `unbinding`: unbinding.",
 			},
 		},
@@ -59,30 +60,37 @@ func resourceTencentCloudCiBucketAttachmentCreate(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var bucket string
+	var (
+		request  = ci.NewOpenCIServiceRequest()
+		response = ci.NewOpenCIServiceResponse()
+		bucket   string
+	)
 	if v, ok := d.GetOk("bucket"); ok {
 		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
+		request.bucket = helper.String(v.(string))
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
+	if v, ok := d.GetOk("ci_status"); ok {
+		request.ciStatus = helper.String(v.(string))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := ciClient.CI.OpenCIService(ctx)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().OpenCIService(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "OpenCIService", bucket, result.Status)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci bucket failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create ci bucketAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
+	bucket = *response.Response.Bucket
 	d.SetId(bucket)
 
 	return resourceTencentCloudCiBucketAttachmentRead(d, meta)
@@ -98,20 +106,26 @@ func resourceTencentCloudCiBucketAttachmentRead(d *schema.ResourceData, meta int
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	bucket := d.Id()
+	bucketAttachmentId := d.Id()
 
-	result, err := service.DescribeCiBucketById(ctx, bucket)
+	bucketAttachment, err := service.DescribeCiBucketAttachmentById(ctx, bucket)
 	if err != nil {
 		return err
 	}
 
-	if result == nil {
+	if bucketAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CiBucketAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-	_ = d.Set("ci_status", result.CIStatus)
+	if bucketAttachment.bucket != nil {
+		_ = d.Set("bucket", bucketAttachment.bucket)
+	}
+
+	if bucketAttachment.ciStatus != nil {
+		_ = d.Set("ci_status", bucketAttachment.ciStatus)
+	}
 
 	return nil
 }
@@ -124,27 +138,18 @@ func resourceTencentCloudCiBucketAttachmentDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	bucket := d.Id()
+	bucketAttachmentId := d.Id()
 
-	if err := service.DeleteCiBucketById(ctx, bucket); err != nil {
+	if err := service.DeleteCiBucketAttachmentById(ctx, bucket); err != nil {
 		return err
 	}
 
-	retryErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeCiBucketById(ctx, bucket)
-		if e != nil {
-			return retryError(e)
-		}
-		if result.CIStatus == "unbinding" {
-			return resource.RetryableError(fmt.Errorf("Binding bucket status is %s , retry...", result.CIStatus))
-		}
-		if result.CIStatus == "off" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("Binding bucket status is %s , retry...", result.CIStatus))
-	})
-	if retryErr != nil {
-		return retryErr
+	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"off"}, 0*readRetryTimeout, time.Second, service.CiBucketAttachmentStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

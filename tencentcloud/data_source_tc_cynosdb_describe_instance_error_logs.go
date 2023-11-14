@@ -5,21 +5,20 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_describe_instance_error_logs" "describe_instance_error_logs" {
-  instance_id   = "cynosdbmysql-ins-afqx1hy0"
-  start_time    = "2023-06-01 15:04:05"
-  end_time      = "2023-06-19 15:04:05"
-  order_by      = "Timestamp"
-  order_by_type = "DESC"
-  log_levels    = ["note", "warning"]
-  key_words     = ["Aborted"]
-}
+  instance_id = "cynosdbmysql-ins-4senc2fm"
+  start_time = "2022-01-02 15:04:05"
+  end_time = "2022-02-02 15:04:05"
+  order_by = "Timestamp"
+  order_by_type = "ASC"
+  log_levels =
+  key_words =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -35,38 +34,49 @@ func dataSourceTencentCloudCynosdbDescribeInstanceErrorLogs() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance Id.",
 			},
+
 			"start_time": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "start time.",
+				Description: "Start time.",
 			},
+
 			"end_time": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "End time.",
 			},
+
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sort fields with Timestamp enumeration values.",
 			},
+
 			"order_by_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Sort type, with ASC and DESC enumeration values.",
 			},
+
 			"log_levels": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Log levels, including error, warning, and note, support simultaneous search of multiple levels.",
 			},
+
 			"key_words": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "Keywords, supports fuzzy search.",
 			},
+
 			"error_logs": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -91,6 +101,7 @@ func dataSourceTencentCloudCynosdbDescribeInstanceErrorLogs() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -104,18 +115,13 @@ func dataSourceTencentCloudCynosdbDescribeInstanceErrorLogsRead(d *schema.Resour
 	defer logElapsed("data_source.tencentcloud_cynosdb_describe_instance_error_logs.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		errorLogs  []*cynosdb.CynosdbErrorLogItem
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -144,20 +150,23 @@ func dataSourceTencentCloudCynosdbDescribeInstanceErrorLogsRead(d *schema.Resour
 		paramMap["KeyWords"] = helper.InterfacesStringsPoint(keyWordsSet)
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var errorLogs []*cynosdb.CynosdbErrorLogItem
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbDescribeInstanceErrorLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		errorLogs = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(errorLogs))
 	tmpList := make([]map[string]interface{}, 0, len(errorLogs))
 
 	if errorLogs != nil {
@@ -176,19 +185,19 @@ func dataSourceTencentCloudCynosdbDescribeInstanceErrorLogsRead(d *schema.Resour
 				cynosdbErrorLogItemMap["content"] = cynosdbErrorLogItem.Content
 			}
 
+			ids = append(ids, *cynosdbErrorLogItem.Content)
 			tmpList = append(tmpList, cynosdbErrorLogItemMap)
 		}
 
 		_ = d.Set("error_logs", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

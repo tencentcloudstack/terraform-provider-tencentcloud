@@ -5,9 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_encrypt_attributes" "encrypt_attributes" {
-  instance_id = "tdsql-ow728lmc"
-  encrypt_enabled = 1
+  instance_id = "tdsql-e9tklsgz"
+  encrypt_enabled =
 }
+```
+
+Import
+
+mariadb encrypt_attributes can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_mariadb_encrypt_attributes.encrypt_attributes encrypt_attributes_id
 ```
 */
 package tencentcloud
@@ -15,12 +23,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMariadbEncryptAttributes() *schema.Resource {
@@ -36,13 +42,13 @@ func resourceTencentCloudMariadbEncryptAttributes() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"encrypt_enabled": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "whether to enable data encryption, it is not supported to turn it off after it is turned on. The optional values: 0-disable, 1-enable.",
+				Description: "Whether to enable data encryption, it is not supported to turn it off after it is turned on. The optional values: 0-disable, 1-enable.",
 			},
 		},
 	}
@@ -67,27 +73,30 @@ func resourceTencentCloudMariadbEncryptAttributesRead(d *schema.ResourceData, me
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
+	encryptAttributesId := d.Id()
 
-	encryptAttributes, err := service.DescribeDBEncryptAttributes(ctx, instanceId)
-
+	encryptAttributes, err := service.DescribeMariadbEncryptAttributesById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
 	if encryptAttributes == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `encryptAttributes` %s does not exist", instanceId)
+		log.Printf("[WARN]%s resource `MariadbEncryptAttributes` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
+	if encryptAttributes.InstanceId != nil {
+		_ = d.Set("instance_id", encryptAttributes.InstanceId)
+	}
 
-	if encryptAttributes.EncryptStatus != nil {
-		_ = d.Set("encrypt_enabled", encryptAttributes.EncryptStatus)
+	if encryptAttributes.EncryptEnabled != nil {
+		_ = d.Set("encrypt_enabled", encryptAttributes.EncryptEnabled)
 	}
 
 	return nil
@@ -101,12 +110,16 @@ func resourceTencentCloudMariadbEncryptAttributesUpdate(d *schema.ResourceData, 
 
 	request := mariadb.NewModifyDBEncryptAttributesRequest()
 
-	instanceId := d.Id()
+	encryptAttributesId := d.Id()
 
 	request.InstanceId = &instanceId
 
-	if v, _ := d.GetOk("encrypt_enabled"); v != nil {
-		request.EncryptEnabled = helper.IntInt64(v.(int))
+	immutableArgs := []string{"instance_id", "encrypt_enabled"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

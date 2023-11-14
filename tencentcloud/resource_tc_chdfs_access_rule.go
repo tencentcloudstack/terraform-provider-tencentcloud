@@ -5,13 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_access_rule" "access_rule" {
-  access_group_id = "ag-bvmzrbsm"
-
   access_rule {
-    access_mode    = 2
-    address        = "10.0.1.1"
-    priority       = 12
+		address = &lt;nil&gt;
+		access_mode = &lt;nil&gt;
+		priority = &lt;nil&gt;
+
   }
+  access_group_id = &lt;nil&gt;
 }
 ```
 
@@ -20,7 +20,7 @@ Import
 chdfs access_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_chdfs_access_rule.access_rule access_group_id#access_rule_id
+terraform import tencentcloud_chdfs_access_rule.access_rule access_rule_id
 ```
 */
 package tencentcloud
@@ -28,13 +28,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudChdfsAccessRule() *schema.Resource {
@@ -51,33 +50,33 @@ func resourceTencentCloudChdfsAccessRule() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "rule detail.",
+				Description: "Rule array, max 10 length.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"access_rule_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "single rule id.",
+							Description: "Single rule id.",
 						},
 						"address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "rule address, IP OR IP SEG.",
+							Description: "Rule address, IP OR IP SEG.",
 						},
 						"access_mode": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "rule access mode, 1: read only, 2: read &amp; wirte.",
+							Description: "Rule access mode, 1: read only, 2: read &amp;amp; wirte.",
 						},
 						"priority": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "rule priority, range 1 - 100, value less higher priority.",
+							Description: "Rule priority, range 1 - 100, value less higher priority.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "rule create time.",
+							Description: "Rule create time.",
 						},
 					},
 				},
@@ -85,9 +84,8 @@ func resourceTencentCloudChdfsAccessRule() *schema.Resource {
 
 			"access_group_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "access group id.",
+				Description: "Access group id.",
 			},
 		},
 	}
@@ -103,7 +101,7 @@ func resourceTencentCloudChdfsAccessRuleCreate(d *schema.ResourceData, meta inte
 		request       = chdfs.NewCreateAccessRulesRequest()
 		response      = chdfs.NewCreateAccessRulesResponse()
 		accessGroupId string
-		accessRuleId  uint64
+		accessRuleId  string
 	)
 	if dMap, ok := helper.InterfacesHeadMap(d, "access_rule"); ok {
 		accessRule := chdfs.AccessRule{}
@@ -116,7 +114,7 @@ func resourceTencentCloudChdfsAccessRuleCreate(d *schema.ResourceData, meta inte
 		if v, ok := dMap["priority"]; ok {
 			accessRule.Priority = helper.IntUint64(v.(int))
 		}
-		request.AccessRules = append(request.AccessRules, &accessRule)
+		request.AccessRule = &accessRule
 	}
 
 	if v, ok := d.GetOk("access_group_id"); ok {
@@ -139,12 +137,8 @@ func resourceTencentCloudChdfsAccessRuleCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	if len(response.Response.AccessRules) < 1 {
-		return fmt.Errorf("create chdfs accessRules failed")
-	}
-
-	accessRuleId = *response.Response.AccessRules[0].AccessRuleId
-	d.SetId(accessGroupId + FILED_SP + helper.UInt64ToStr(accessRuleId))
+	accessGroupId = *response.Response.AccessGroupId
+	d.SetId(strings.Join([]string{accessGroupId, accessRuleId}, FILED_SP))
 
 	return resourceTencentCloudChdfsAccessRuleRead(d, meta)
 }
@@ -166,7 +160,7 @@ func resourceTencentCloudChdfsAccessRuleRead(d *schema.ResourceData, meta interf
 	accessGroupId := idSplit[0]
 	accessRuleId := idSplit[1]
 
-	accessRule, err := service.DescribeChdfsAccessRulesById(ctx, accessGroupId, accessRuleId)
+	accessRule, err := service.DescribeChdfsAccessRuleById(ctx, accessGroupId, accessRuleId)
 	if err != nil {
 		return err
 	}
@@ -177,34 +171,36 @@ func resourceTencentCloudChdfsAccessRuleRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	if accessRule != nil {
+	if accessRule.AccessRule != nil {
 		accessRuleMap := map[string]interface{}{}
 
-		if accessRule.AccessRuleId != nil {
-			accessRuleMap["access_rule_id"] = accessRule.AccessRuleId
+		if accessRule.AccessRule.AccessRuleId != nil {
+			accessRuleMap["access_rule_id"] = accessRule.AccessRule.AccessRuleId
 		}
 
-		if accessRule.Address != nil {
-			accessRuleMap["address"] = accessRule.Address
+		if accessRule.AccessRule.Address != nil {
+			accessRuleMap["address"] = accessRule.AccessRule.Address
 		}
 
-		if accessRule.AccessMode != nil {
-			accessRuleMap["access_mode"] = accessRule.AccessMode
+		if accessRule.AccessRule.AccessMode != nil {
+			accessRuleMap["access_mode"] = accessRule.AccessRule.AccessMode
 		}
 
-		if accessRule.Priority != nil {
-			accessRuleMap["priority"] = accessRule.Priority
+		if accessRule.AccessRule.Priority != nil {
+			accessRuleMap["priority"] = accessRule.AccessRule.Priority
 		}
 
-		if accessRule.CreateTime != nil {
-			accessRuleMap["create_time"] = accessRule.CreateTime
+		if accessRule.AccessRule.CreateTime != nil {
+			accessRuleMap["create_time"] = accessRule.AccessRule.CreateTime
 		}
 
 		_ = d.Set("access_rule", []interface{}{accessRuleMap})
-
 	}
 
-	_ = d.Set("access_group_id", accessGroupId)
+	if accessRule.AccessGroupId != nil {
+		_ = d.Set("access_group_id", accessRule.AccessGroupId)
+	}
+
 	return nil
 }
 
@@ -220,15 +216,23 @@ func resourceTencentCloudChdfsAccessRuleUpdate(d *schema.ResourceData, meta inte
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-
+	accessGroupId := idSplit[0]
 	accessRuleId := idSplit[1]
+
+	request.AccessGroupId = &accessGroupId
+	request.AccessRuleId = &accessRuleId
+
+	immutableArgs := []string{"access_rule", "access_group_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("access_rule") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "access_rule"); ok {
 			accessRule := chdfs.AccessRule{}
-
-			accessRule.AccessRuleId = helper.StrToUint64Point(accessRuleId)
-
 			if v, ok := dMap["address"]; ok {
 				accessRule.Address = helper.String(v.(string))
 			}
@@ -238,7 +242,7 @@ func resourceTencentCloudChdfsAccessRuleUpdate(d *schema.ResourceData, meta inte
 			if v, ok := dMap["priority"]; ok {
 				accessRule.Priority = helper.IntUint64(v.(int))
 			}
-			request.AccessRules = append(request.AccessRules, &accessRule)
+			request.AccessRule = &accessRule
 		}
 	}
 
@@ -271,9 +275,10 @@ func resourceTencentCloudChdfsAccessRuleDelete(d *schema.ResourceData, meta inte
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	accessGroupId := idSplit[0]
 	accessRuleId := idSplit[1]
 
-	if err := service.DeleteChdfsAccessRulesById(ctx, accessRuleId); err != nil {
+	if err := service.DeleteChdfsAccessRuleById(ctx, accessGroupId, accessRuleId); err != nil {
 		return err
 	}
 

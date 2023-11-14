@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudMongodbInstanceBackupsDataSource_basic(t *testing.T) {
@@ -15,9 +14,8 @@ func TestAccTencentCloudMongodbInstanceBackupsDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccMongodbInstanceBackupsDataSource,
-				Check:     resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_backups.instance_backups")),
+				Config: testAccMongodbInstanceBackupsDataSource,
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_backups.instance_backups")),
 			},
 		},
 	})
@@ -26,8 +24,8 @@ func TestAccTencentCloudMongodbInstanceBackupsDataSource_basic(t *testing.T) {
 const testAccMongodbInstanceBackupsDataSource = `
 
 data "tencentcloud_mongodb_instance_backups" "instance_backups" {
-  instance_id = "cmgo-gwqk8669"
+  instance_id = "cmgo-9d0p6umb"
   backup_method = 0
-}
+  }
 
 `

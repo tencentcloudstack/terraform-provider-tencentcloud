@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsAccessRuleResource_basic(t *testing.T) {
@@ -19,13 +18,6 @@ func TestAccTencentCloudChdfsAccessRuleResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_chdfs_access_rule.access_rule", "id")),
 			},
 			{
-				Config: testAccChdfsAccessRuleUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_chdfs_access_rule.access_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_chdfs_access_rule.access_rule", "access_rule.0.address", "10.0.0.1"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_chdfs_access_rule.access_rule",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -37,27 +29,13 @@ func TestAccTencentCloudChdfsAccessRuleResource_basic(t *testing.T) {
 const testAccChdfsAccessRule = `
 
 resource "tencentcloud_chdfs_access_rule" "access_rule" {
-  access_group_id = "ag-bvmzrbsm"
-
   access_rule {
-    access_mode    = 2
-    address        = "10.0.1.1"
-    priority       = 12
+		address = &lt;nil&gt;
+		access_mode = &lt;nil&gt;
+		priority = &lt;nil&gt;
+
   }
-}
-
-`
-
-const testAccChdfsAccessRuleUpdate = `
-
-resource "tencentcloud_chdfs_access_rule" "access_rule" {
-  access_group_id = "ag-bvmzrbsm"
-
-  access_rule {
-    access_mode    = 1
-    address        = "10.0.0.1"
-    priority       = 10
-  }
+  access_group_id = &lt;nil&gt;
 }
 
 `

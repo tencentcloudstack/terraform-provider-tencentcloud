@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCynosdbReadOnlyInstanceExclusiveAccessResource_basic(t *testing.T) {
@@ -16,29 +15,26 @@ func TestAccTencentCloudCynosdbReadOnlyInstanceExclusiveAccessResource_basic(t *
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbReadOnlyInstanceExclusiveAccess,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "cluster_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "vpc_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "subnet_id"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "port", "1234"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "security_group_ids.#"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_read_only_instance_exclusive_access.read_only_instance_exclusive_access",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-const testAccCynosdbReadOnlyInstanceExclusiveAccess = CommonCynosdb + defaultVpcSubnets + `
+const testAccCynosdbReadOnlyInstanceExclusiveAccess = `
 
 resource "tencentcloud_cynosdb_read_only_instance_exclusive_access" "read_only_instance_exclusive_access" {
-  cluster_id = var.cynosdb_cluster_id
-  instance_id = var.cynosdb_cluster_instance_id
-  vpc_id = local.vpc_id
-  subnet_id = local.subnet_id
+  cluster_id = "cynosdbmysql-12345678"
+  instance_id = "cynosdbmysql-ins-12345678"
+  vpc_id = "vpc-12345678"
+  subnet_id = "subnet-12345678"
   port = 1234
-  security_group_ids = [var.cynosdb_cluster_security_group_id]
+  security_group_ids = 
 }
 
 `

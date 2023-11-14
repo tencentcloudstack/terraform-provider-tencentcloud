@@ -8066,3 +8066,662 @@ func (me *VpcService) DescribeVpnDefaultHealthCheckIp(ctx context.Context, param
 
 	return
 }
+
+func (me *VpcService) DescribeVpcCcn_bandwidthByFilter(ctx context.Context, param map[string]interface{}) (ccn_bandwidth []*vpc.CcnBandwidth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderCcnRegionBandwidthLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCcnRegionBandwidthLimits(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnBandwidthSet) < 1 {
+			break
+		}
+		ccn_bandwidth = append(ccn_bandwidth, response.Response.CcnBandwidthSet...)
+		if len(response.Response.CcnBandwidthSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcCrossBorderComplianceByFilter(ctx context.Context, param map[string]interface{}) (crossBorderCompliance []*vpc.CrossBorderCompliance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderComplianceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceProvider" {
+			request.ServiceProvider = v.(*string)
+		}
+		if k == "ComplianceId" {
+			request.ComplianceId = v.(*uint64)
+		}
+		if k == "Company" {
+			request.Company = v.(*string)
+		}
+		if k == "UniformSocialCreditCode" {
+			request.UniformSocialCreditCode = v.(*string)
+		}
+		if k == "LegalPerson" {
+			request.LegalPerson = v.(*string)
+		}
+		if k == "IssuingAuthority" {
+			request.IssuingAuthority = v.(*string)
+		}
+		if k == "BusinessAddress" {
+			request.BusinessAddress = v.(*string)
+		}
+		if k == "PostCode" {
+			request.PostCode = v.(*uint64)
+		}
+		if k == "Manager" {
+			request.Manager = v.(*string)
+		}
+		if k == "ManagerId" {
+			request.ManagerId = v.(*string)
+		}
+		if k == "ManagerAddress" {
+			request.ManagerAddress = v.(*string)
+		}
+		if k == "ManagerTelephone" {
+			request.ManagerTelephone = v.(*string)
+		}
+		if k == "Email" {
+			request.Email = v.(*string)
+		}
+		if k == "ServiceStartDate" {
+			request.ServiceStartDate = v.(*string)
+		}
+		if k == "ServiceEndDate" {
+			request.ServiceEndDate = v.(*string)
+		}
+		if k == "State" {
+			request.State = v.(*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCompliance(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossBorderComplianceSet) < 1 {
+			break
+		}
+		crossBorderCompliance = append(crossBorderCompliance, response.Response.CrossBorderComplianceSet...)
+		if len(response.Response.CrossBorderComplianceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcCrossBorderFlowMonitorByFilter(ctx context.Context, param map[string]interface{}) (crossBorderFlowMonitor []*vpc.CrossBorderFlowMonitorData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderFlowMonitorRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SourceRegion" {
+			request.SourceRegion = v.(*string)
+		}
+		if k == "DestinationRegion" {
+			request.DestinationRegion = v.(*string)
+		}
+		if k == "CcnId" {
+			request.CcnId = v.(*string)
+		}
+		if k == "CcnUin" {
+			request.CcnUin = v.(*string)
+		}
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderFlowMonitor(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossBorderFlowMonitorData) < 1 {
+			break
+		}
+		crossBorderFlowMonitor = append(crossBorderFlowMonitor, response.Response.CrossBorderFlowMonitorData...)
+		if len(response.Response.CrossBorderFlowMonitorData) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcTenantCcnByFilter(ctx context.Context, param map[string]interface{}) (tenantCcn []*vpc.CcnInstanceInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeTenantCcnsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+		if k == "Values" {
+			request.Values = v.([]*string)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*uint64)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeTenantCcns(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnSet) < 1 {
+			break
+		}
+		tenantCcn = append(tenantCcn, response.Response.CcnSet...)
+		if len(response.Response.CcnSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (dcGatewayAttachment *vpc.DirectConnectGateway, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeDirectConnectGatewaysRequest()
+	request.VpcId = &vpcId
+	request.DirectConnectGatewayId = &directConnectGatewayId
+	request.NatGatewayId = &natGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeDirectConnectGateways(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DirectConnectGateway) < 1 {
+		return
+	}
+
+	dcGatewayAttachment = response.Response.DirectConnectGateway[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDisassociateDirectConnectGatewayNatGatewayRequest()
+	request.VpcId = &vpcId
+	request.DirectConnectGatewayId = &directConnectGatewayId
+	request.NatGatewayId = &natGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DisassociateDirectConnectGatewayNatGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcBandwidthPackageBillUsageByFilter(ctx context.Context, param map[string]interface{}) (bandwidthPackageBillUsage []*vpc.BandwidthPackageBillBandwidth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeBandwidthPackageBillUsageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "BandwidthPackageId" {
+			request.BandwidthPackageId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeBandwidthPackageBillUsage(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BandwidthPackageBillBandwidthSet) < 1 {
+			break
+		}
+		bandwidthPackageBillUsage = append(bandwidthPackageBillUsage, response.Response.BandwidthPackageBillBandwidthSet...)
+		if len(response.Response.BandwidthPackageBillBandwidthSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcBandwidthPackageQuotaByFilter(ctx context.Context, param map[string]interface{}) (bandwidthPackageQuota []*vpc.Quota, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeBandwidthPackageQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeBandwidthPackageQuota(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.QuotaSet) < 1 {
+			break
+		}
+		bandwidthPackageQuota = append(bandwidthPackageQuota, response.Response.QuotaSet...)
+		if len(response.Response.QuotaSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcNetworkAccountTypeByFilter(ctx context.Context, param map[string]interface{}) (networkAccountType []*vpc.DescribeNetworkAccountTypeResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeNetworkAccountTypeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeNetworkAccountType(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NetworkAccountType) < 1 {
+			break
+		}
+		networkAccountType = append(networkAccountType, response.Response.NetworkAccountType...)
+		if len(response.Response.NetworkAccountType) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcAddressQuotaByFilter(ctx context.Context, param map[string]interface{}) (addressQuota []*vpc.Quota, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeAddressQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeAddressQuota(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.QuotaSet) < 1 {
+			break
+		}
+		addressQuota = append(addressQuota, response.Response.QuotaSet...)
+		if len(response.Response.QuotaSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcNatDcRouteByFilter(ctx context.Context, param map[string]interface{}) (natDcRoute []*vpc.NatDirectConnectGatewayRoute, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeNatGatewayDirectConnectGatewayRouteRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "NatGatewayId" {
+			request.NatGatewayId = v.(*string)
+		}
+		if k == "VpcId" {
+			request.VpcId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeNatGatewayDirectConnectGatewayRoute(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NatDirectConnectGatewayRouteSet) < 1 {
+			break
+		}
+		natDcRoute = append(natDcRoute, response.Response.NatDirectConnectGatewayRouteSet...)
+		if len(response.Response.NatDirectConnectGatewayRouteSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcVpnCustomerGatewayVendorsByFilter(ctx context.Context, param map[string]interface{}) (vpnCustomerGatewayVendors []*vpc.CustomerGatewayVendor, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCustomerGatewayVendorsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCustomerGatewayVendors(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CustomerGatewayVendorSet) < 1 {
+			break
+		}
+		vpnCustomerGatewayVendors = append(vpnCustomerGatewayVendors, response.Response.CustomerGatewayVendorSet...)
+		if len(response.Response.CustomerGatewayVendorSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcVpnGatewaySslClientCertById(ctx context.Context, sslVpnClientId string) (vpnGatewaySslClientCert *vpc.SslVpnClient, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpnGatewaySslClientsRequest()
+	request.SslVpnClientId = &sslVpnClientId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeVpnGatewaySslClients(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SslVpnClient) < 1 {
+		return
+	}
+
+	vpnGatewaySslClientCert = response.Response.SslVpnClient[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcVpnGatewaySslClientCertById(ctx context.Context, sslVpnClientId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDisableVpnGatewaySslClientCertRequest()
+	request.SslVpnClientId = &sslVpnClientId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DisableVpnGatewaySslClientCert(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

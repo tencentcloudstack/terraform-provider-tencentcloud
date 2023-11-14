@@ -5,17 +5,30 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_watermark_template" "watermark_template" {
+  type = &lt;nil&gt;
+  name = &lt;nil&gt;
+  comment = &lt;nil&gt;
   coordinate_origin = "TopLeft"
-  name              = "xZxasd"
-  type              = "image"
-  x_pos             = "12%"
-  y_pos             = "21%"
-
+  x_pos = "0px"
+  y_pos = "0px"
   image_template {
-    height        = "17px"
-    image_content = filebase64("./logo.png")
-    repeat_type   = "repeat"
-    width         = "12px"
+		image_content = &lt;nil&gt;
+		width = "10%"
+		height = "0px"
+		repeat_type = "repeat"
+
+  }
+  text_template {
+		font_type = &lt;nil&gt;
+		font_size = &lt;nil&gt;
+		font_color = "0xFFFFFF"
+		font_alpha =
+
+  }
+  svg_template {
+		width = "10W%"
+		height = "0px"
+
   }
 }
 ```
@@ -32,15 +45,12 @@ package tencentcloud
 
 import (
 	"context"
-	"encoding/base64"
-	"io/ioutil"
-	"log"
-	"net/http"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsWatermarkTemplate() *schema.Resource {
@@ -56,7 +66,6 @@ func resourceTencentCloudMpsWatermarkTemplate() *schema.Resource {
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Description: "Watermark type, optional value:image, text, svg.",
 			},
 
@@ -185,7 +194,7 @@ func resourceTencentCloudMpsWatermarkTemplateCreate(d *schema.ResourceData, meta
 	var (
 		request    = mps.NewCreateWatermarkTemplateRequest()
 		response   = mps.NewCreateWatermarkTemplateResponse()
-		definition int64
+		definition int
 	)
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
@@ -287,7 +296,7 @@ func resourceTencentCloudMpsWatermarkTemplateRead(d *schema.ResourceData, meta i
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	watermarkTemplateId := d.Id()
 
 	watermarkTemplate, err := service.DescribeMpsWatermarkTemplateById(ctx, definition)
 	if err != nil {
@@ -327,18 +336,8 @@ func resourceTencentCloudMpsWatermarkTemplateRead(d *schema.ResourceData, meta i
 	if watermarkTemplate.ImageTemplate != nil {
 		imageTemplateMap := map[string]interface{}{}
 
-		if watermarkTemplate.ImageTemplate.ImageUrl != nil {
-			url := watermarkTemplate.ImageTemplate.ImageUrl
-			res, err := http.Get(*url)
-			if err != nil {
-				return err
-			}
-			content, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				return err
-			}
-			base64Encode := base64.StdEncoding.EncodeToString(content)
-			imageTemplateMap["image_content"] = base64Encode
+		if watermarkTemplate.ImageTemplate.ImageContent != nil {
+			imageTemplateMap["image_content"] = watermarkTemplate.ImageTemplate.ImageContent
 		}
 
 		if watermarkTemplate.ImageTemplate.Width != nil {
@@ -403,9 +402,17 @@ func resourceTencentCloudMpsWatermarkTemplateUpdate(d *schema.ResourceData, meta
 
 	request := mps.NewModifyWatermarkTemplateRequest()
 
-	definition := d.Id()
+	watermarkTemplateId := d.Id()
 
-	request.Definition = helper.StrToInt64Point(definition)
+	request.Definition = &definition
+
+	immutableArgs := []string{"type", "name", "comment", "coordinate_origin", "x_pos", "y_pos", "image_template", "text_template", "svg_template"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
@@ -439,7 +446,7 @@ func resourceTencentCloudMpsWatermarkTemplateUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("image_template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "image_template"); ok {
-			imageWatermarkInput := mps.ImageWatermarkInputForUpdate{}
+			imageWatermarkInput := mps.ImageWatermarkInput{}
 			if v, ok := dMap["image_content"]; ok {
 				imageWatermarkInput.ImageContent = helper.String(v.(string))
 			}
@@ -458,7 +465,7 @@ func resourceTencentCloudMpsWatermarkTemplateUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("text_template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "text_template"); ok {
-			textWatermarkTemplateInput := mps.TextWatermarkTemplateInputForUpdate{}
+			textWatermarkTemplateInput := mps.TextWatermarkTemplateInput{}
 			if v, ok := dMap["font_type"]; ok {
 				textWatermarkTemplateInput.FontType = helper.String(v.(string))
 			}
@@ -477,7 +484,7 @@ func resourceTencentCloudMpsWatermarkTemplateUpdate(d *schema.ResourceData, meta
 
 	if d.HasChange("svg_template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "svg_template"); ok {
-			svgWatermarkInput := mps.SvgWatermarkInputForUpdate{}
+			svgWatermarkInput := mps.SvgWatermarkInput{}
 			if v, ok := dMap["width"]; ok {
 				svgWatermarkInput.Width = helper.String(v.(string))
 			}
@@ -513,7 +520,7 @@ func resourceTencentCloudMpsWatermarkTemplateDelete(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	watermarkTemplateId := d.Id()
 
 	if err := service.DeleteMpsWatermarkTemplateById(ctx, definition); err != nil {
 		return err

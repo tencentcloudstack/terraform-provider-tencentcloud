@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_clb_exclusive_clusters" "exclusive_clusters" {
   filters {
-    name = "zone"
-    values = ["ap-guangzhou-1"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -53,23 +53,23 @@ func dataSourceTencentCloudClbExclusiveClusters() *schema.Resource {
 			"cluster_set": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "cluster list.",
+				Description: "Cluster list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"cluster_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster ID.",
+							Description: "Cluster ID.",
 						},
 						"cluster_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster name.",
+							Description: "Cluster name.",
 						},
 						"cluster_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster type: TGW, STGW, VPCGW.",
+							Description: "Cluster type: TGW，STGW，VPCGW.",
 						},
 						"cluster_tag": {
 							Type:        schema.TypeString,
@@ -84,7 +84,7 @@ func dataSourceTencentCloudClbExclusiveClusters() *schema.Resource {
 						"network": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "cluster network type.",
+							Description: "Cluster network type.",
 						},
 						"max_conn": {
 							Type:        schema.TypeInt,
@@ -116,22 +116,22 @@ func dataSourceTencentCloudClbExclusiveClusters() *schema.Resource {
 							Computed:    true,
 							Description: "Maximum number of new connections.",
 						},
-						"http_max_new_conn": {
+						"h_t_t_p_max_new_conn": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Maximum number of new http connections.",
 						},
-						"https_max_new_conn": {
+						"h_t_t_p_s_max_new_conn": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Maximum number of new https connections.",
 						},
-						"http_qps": {
+						"h_t_t_p_qps": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Http Qps.",
 						},
-						"https_qps": {
+						"h_t_t_p_s_qps": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Https Qps.",
@@ -184,12 +184,12 @@ func dataSourceTencentCloudClbExclusiveClusters() *schema.Resource {
 						"clusters_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "clusters version.",
+							Description: "Clusters version.",
 						},
 						"disaster_recovery_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Cluster disaster recovery type:SINGLE-ZONE, DISASTER-RECOVERY, MUTUAL-DISASTER-RECOVERY.",
+							Description: "Cluster disaster recovery type:SINGLE-ZONE，DISASTER-RECOVERY，MUTUAL-DISASTER-RECOVERY.",
 						},
 					},
 				},
@@ -230,7 +230,7 @@ func dataSourceTencentCloudClbExclusiveClustersRead(d *schema.ResourceData, meta
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["Filters"] = tmpSet
+		paramMap["filters"] = tmpSet
 	}
 
 	service := ClbService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -305,19 +305,19 @@ func dataSourceTencentCloudClbExclusiveClustersRead(d *schema.ResourceData, meta
 			}
 
 			if cluster.HTTPMaxNewConn != nil {
-				clusterMap["http_max_new_conn"] = cluster.HTTPMaxNewConn
+				clusterMap["h_t_t_p_max_new_conn"] = cluster.HTTPMaxNewConn
 			}
 
 			if cluster.HTTPSMaxNewConn != nil {
-				clusterMap["https_max_new_conn"] = cluster.HTTPSMaxNewConn
+				clusterMap["h_t_t_p_s_max_new_conn"] = cluster.HTTPSMaxNewConn
 			}
 
 			if cluster.HTTPQps != nil {
-				clusterMap["http_qps"] = cluster.HTTPQps
+				clusterMap["h_t_t_p_qps"] = cluster.HTTPQps
 			}
 
 			if cluster.HTTPSQps != nil {
-				clusterMap["https_qps"] = cluster.HTTPSQps
+				clusterMap["h_t_t_p_s_qps"] = cluster.HTTPSQps
 			}
 
 			if cluster.ResourceCount != nil {

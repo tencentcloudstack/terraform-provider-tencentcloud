@@ -5,26 +5,27 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy" "application_proxy" {
-    accelerate_type      = 0
-    plat_type            = "domain"
-    proxy_name           = "test"
-    proxy_type           = "instance"
-    security_type        = 1
-    session_persist_time = 0
-    status               = "online"
-    zone_id              = "zone-2o0l8g7zisgt"
+  zone_id = &lt;nil&gt;
+    proxy_name = &lt;nil&gt;
+  proxy_type = &lt;nil&gt;
+  plat_type = &lt;nil&gt;
+    security_type = &lt;nil&gt;
+  accelerate_type = &lt;nil&gt;
+  session_persist_time = &lt;nil&gt;
+  status = &lt;nil&gt;
+        i_pv6 {
+		switch = &lt;nil&gt;
 
-    ipv6 {
-        switch = "off"
-    }
-}
-
+  }
+  }
 ```
+
 Import
 
-teo application_proxy can be imported using the zoneId#proxyId, e.g.
+teo application_proxy can be imported using the id, e.g.
+
 ```
-terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
+terraform import tencentcloud_teo_application_proxy.application_proxy application_proxy_id
 ```
 */
 package tencentcloud
@@ -32,19 +33,19 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTeoApplicationProxyRead,
 		Create: resourceTencentCloudTeoApplicationProxyCreate,
+		Read:   resourceTencentCloudTeoApplicationProxyRead,
 		Update: resourceTencentCloudTeoApplicationProxyUpdate,
 		Delete: resourceTencentCloudTeoApplicationProxyDelete,
 		Importer: &schema.ResourceImporter{
@@ -52,94 +53,93 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Site ID.",
 			},
 
 			"proxy_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Proxy ID.",
 			},
 
 			"proxy_name": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "When `ProxyType` is hostname, `ProxyName` is the domain or subdomain name.When `ProxyType` is instance, `ProxyName` is the name of proxy application.",
 			},
 
 			"proxy_type": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Layer 4 proxy mode. Valid values:- `hostname`: subdomain mode.- `instance`: instance mode.",
 			},
 
 			"plat_type": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Scheduling mode.- `ip`: Anycast IP.- `domain`: CNAME.",
 			},
 
 			"area": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Acceleration area. Valid values: `mainland`, `overseas`.",
 			},
 
 			"security_type": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "- `0`: Disable security protection.- `1`: Enable security protection.",
 			},
 
 			"accelerate_type": {
-				Type:        schema.TypeInt,
 				Required:    true,
+				Type:        schema.TypeInt,
 				Description: "- `0`: Disable acceleration.- `1`: Enable acceleration.",
 			},
 
 			"session_persist_time": {
-				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
+				Type:        schema.TypeInt,
 				Description: "Session persistence duration. Value range: 30-3600 (in seconds), default value is 600.",
 			},
 
 			"status": {
-				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Status of this application proxy. Valid values to set is `online` and `offline`.- `online`: Enable.- `offline`: Disable.- `progress`: Deploying.- `stopping`: Deactivating.- `fail`: Deploy or deactivate failed.",
 			},
 
 			"ban_status": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Application proxy block status. Valid values: `banned`, `banning`, `recover`, `recovering`.",
 			},
 
 			"schedule_value": {
-				Type: schema.TypeSet,
+				Computed: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Computed:    true,
 				Description: "Scheduling information.",
 			},
 
 			"host_id": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "When `ProxyType` is hostname, this field is the ID of the subdomain.",
 			},
 
-			"ipv6": {
+			"i_pv6": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
-				Computed:    true,
 				Description: "IPv6 access configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -153,8 +153,8 @@ func resourceTencentCloudTeoApplicationProxy() *schema.Resource {
 			},
 
 			"update_time": {
-				Type:        schema.TypeString,
 				Computed:    true,
+				Type:        schema.TypeString,
 				Description: "Last modification date.",
 			},
 		},
@@ -169,11 +169,10 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 
 	var (
 		request  = teo.NewCreateApplicationProxyRequest()
-		response *teo.CreateApplicationProxyResponse
+		response = teo.NewCreateApplicationProxyResponse()
 		zoneId   string
 		proxyId  string
 	)
-
 	if v, ok := d.GetOk("zone_id"); ok {
 		zoneId = v.(string)
 		request.ZoneId = helper.String(v.(string))
@@ -191,73 +190,56 @@ func resourceTencentCloudTeoApplicationProxyCreate(d *schema.ResourceData, meta 
 		request.PlatType = helper.String(v.(string))
 	}
 
-	if v := d.Get("security_type"); v != nil {
+	if v, ok := d.GetOkExists("security_type"); ok {
 		request.SecurityType = helper.IntInt64(v.(int))
 	}
 
-	if v := d.Get("accelerate_type"); v != nil {
+	if v, ok := d.GetOkExists("accelerate_type"); ok {
 		request.AccelerateType = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("session_persist_time"); ok {
-		request.SessionPersistTime = helper.IntUint64(v.(int))
+	if v, ok := d.GetOkExists("session_persist_time"); ok {
+		request.SessionPersistTime = helper.IntInt64(v.(int))
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
-		ipv6Access := teo.Ipv6{}
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "i_pv6"); ok {
+		ipv6Access := teo.Ipv6Access{}
 		if v, ok := dMap["switch"]; ok {
 			ipv6Access.Switch = helper.String(v.(string))
 		}
-		request.Ipv6 = &ipv6Access
+		request.IPv6 = &ipv6Access
 	}
 
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	err := service.CheckZoneComplete(ctx, zoneId)
-	if err != nil {
-		log.Printf("[CRITAL]%s create teo dnsRecord failed, reason:%+v", logId, err)
-		return err
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().CreateApplicationProxy(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create teo applicationProxy failed, reason:%+v", logId, err)
 		return err
 	}
 
-	proxyId = *response.Response.ProxyId
+	zoneId = *response.Response.ZoneId
+	d.SetId(strings.Join([]string{zoneId, proxyId}, FILED_SP))
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeTeoApplicationProxy(ctx, zoneId, proxyId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.Status == "online" {
-			return nil
-		}
-		if *instance.Status == "fail" {
-			return resource.NonRetryableError(fmt.Errorf("applicationProxy status is %v, operate failed.",
-				*instance.Status))
-		}
-		return resource.RetryableError(fmt.Errorf("applicationProxy status is %v, retry...", *instance.Status))
-	})
-	if err != nil {
-		return err
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"online"}, 60*readRetryTimeout, time.Second, service.TeoApplicationProxyStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
-	d.SetId(zoneId + FILED_SP + proxyId)
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
 }
 
@@ -266,6 +248,7 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -277,15 +260,15 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 
-	applicationProxy, err := service.DescribeTeoApplicationProxy(ctx, zoneId, proxyId)
-
+	applicationProxy, err := service.DescribeTeoApplicationProxyById(ctx, zoneId, proxyId)
 	if err != nil {
 		return err
 	}
 
 	if applicationProxy == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `applicationProxy` %s does not exist", proxyId)
+		log.Printf("[WARN]%s resource `TeoApplicationProxy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if applicationProxy.ZoneId != nil {
@@ -340,13 +323,14 @@ func resourceTencentCloudTeoApplicationProxyRead(d *schema.ResourceData, meta in
 		_ = d.Set("host_id", applicationProxy.HostId)
 	}
 
-	if applicationProxy.Ipv6 != nil {
+	if applicationProxy.IPv6 != nil {
 		iPv6Map := map[string]interface{}{}
-		if applicationProxy.Ipv6.Switch != nil {
-			iPv6Map["switch"] = applicationProxy.Ipv6.Switch
+
+		if applicationProxy.IPv6.Switch != nil {
+			iPv6Map["switch"] = applicationProxy.IPv6.Switch
 		}
 
-		_ = d.Set("ipv6", []interface{}{iPv6Map})
+		_ = d.Set("i_pv6", []interface{}{iPv6Map})
 	}
 
 	if applicationProxy.UpdateTime != nil {
@@ -361,7 +345,11 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	request := teo.NewModifyApplicationProxyRequest()
+
+	var (
+		modifyApplicationProxyRequest  = teo.NewModifyApplicationProxyRequest()
+		modifyApplicationProxyResponse = teo.NewModifyApplicationProxyResponse()
+	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -373,12 +361,18 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 	request.ZoneId = &zoneId
 	request.ProxyId = &proxyId
 
-	if d.HasChange("zone_id") {
-		return fmt.Errorf("`zone_id` do not support change now.")
+	immutableArgs := []string{"zone_id", "proxy_id", "proxy_name", "proxy_type", "plat_type", "area", "security_type", "accelerate_type", "session_persist_time", "status", "ban_status", "schedule_value", "host_id", "i_pv6", "update_time"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOk("proxy_name"); ok {
-		request.ProxyName = helper.String(v.(string))
+	if d.HasChange("proxy_name") {
+		if v, ok := d.GetOk("proxy_name"); ok {
+			request.ProxyName = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("proxy_type") {
@@ -387,32 +381,25 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	if d.HasChange("plat_type") {
-		return fmt.Errorf("`plat_type` do not support change now.")
-	}
-
-	if d.HasChange("security_type") {
-		return fmt.Errorf("`security_type` do not support change now.")
-	}
-
-	if d.HasChange("accelerate_type") {
-		return fmt.Errorf("`accelerate_type` do not support change now.")
-	}
-
 	if d.HasChange("session_persist_time") {
-		if v, ok := d.GetOk("session_persist_time"); ok {
-			request.SessionPersistTime = helper.IntUint64(v.(int))
+		if v, ok := d.GetOkExists("session_persist_time"); ok {
+			request.SessionPersistTime = helper.IntInt64(v.(int))
 		}
 	}
 
-	if d.HasChange("ipv6") {
-		if dMap, ok := helper.InterfacesHeadMap(d, "ipv6"); ok {
-			ipv6Access := teo.Ipv6{}
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			request.Status = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("i_pv6") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "i_pv6"); ok {
+			ipv6Access := teo.Ipv6Access{}
 			if v, ok := dMap["switch"]; ok {
 				ipv6Access.Switch = helper.String(v.(string))
 			}
-
-			request.Ipv6 = &ipv6Access
+			request.IPv6 = &ipv6Access
 		}
 	}
 
@@ -421,42 +408,13 @@ func resourceTencentCloudTeoApplicationProxyUpdate(d *schema.ResourceData, meta 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create teo applicationProxy failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update teo applicationProxy failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("status") {
-		if v, ok := d.GetOk("status"); ok {
-			statusRequest := teo.NewModifyApplicationProxyStatusRequest()
-
-			statusRequest.ZoneId = &zoneId
-			statusRequest.ProxyId = &proxyId
-			statusRequest.Status = helper.String(v.(string))
-
-			statusErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				statusResult, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-						logId, request.GetAction(), request.ToJsonString(), statusResult.ToJsonString())
-				}
-				return nil
-			})
-
-			if statusErr != nil {
-				log.Printf("[CRITAL]%s create teo applicationProxy failed, reason:%+v", logId, statusErr)
-				return statusErr
-			}
-			_ = d.Set("status", v.(string))
-		}
 	}
 
 	return resourceTencentCloudTeoApplicationProxyRead(d, meta)
@@ -468,8 +426,8 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	service := TeoService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
@@ -477,36 +435,7 @@ func resourceTencentCloudTeoApplicationProxyDelete(d *schema.ResourceData, meta 
 	zoneId := idSplit[0]
 	proxyId := idSplit[1]
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		e := resourceTencentCloudTeoApplicationProxyRead(d, meta)
-		if e != nil {
-			log.Printf("[CRITAL]%s get teo applicationProxy failed, reason:%+v", logId, e)
-			return resource.RetryableError(e)
-		}
-
-		status, _ := d.Get("status").(string)
-		if status == "offline" {
-			return nil
-		}
-		if status == "stopping" {
-			return resource.RetryableError(fmt.Errorf("applicationProxy stopping"))
-		}
-
-		statusRequest := teo.NewModifyApplicationProxyStatusRequest()
-		statusRequest.ZoneId = &zoneId
-		statusRequest.ProxyId = &proxyId
-		statusRequest.Status = helper.String("offline")
-		_, e = meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyApplicationProxyStatus(statusRequest)
-		if e != nil {
-			return resource.NonRetryableError(fmt.Errorf("setting applicationProxy `status` to offline failed, reason: %v", e))
-		}
-		return resource.RetryableError(fmt.Errorf("setting applicationProxy `status` to offline"))
-	})
-	if err != nil {
-		return err
-	}
-
-	if err = service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
+	if err := service.DeleteTeoApplicationProxyById(ctx, zoneId, proxyId); err != nil {
 		return err
 	}
 

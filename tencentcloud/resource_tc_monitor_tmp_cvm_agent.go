@@ -1,48 +1,21 @@
 /*
-Provides a resource to create a monitor tmpCvmAgent
+Provides a resource to create a monitor tmp_cvm_agent
 
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
+resource "tencentcloud_monitor_tmp_cvm_agent" "tmp_cvm_agent" {
+  instance_id = "prom-dko9d0nu"
+  name = "agent"
 }
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_monitor_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_monitor_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-
-resource "tencentcloud_monitor_tmp_instance" "foo" {
-  instance_name       = "tf-tmp-instance"
-  vpc_id              = tencentcloud_vpc.vpc.id
-  subnet_id           = tencentcloud_subnet.subnet.id
-  data_retention_time = 30
-  zone                = var.availability_zone
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_monitor_tmp_cvm_agent" "foo" {
-  instance_id = tencentcloud_monitor_tmp_instance.foo.id
-  name        = "tf-agent"
-}
-
 ```
+
 Import
 
-monitor tmpCvmAgent can be imported using the id, e.g.
+monitor tmp_cvm_agent can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_monitor_tmp_cvm_agent.tmpCvmAgent instance_id#agent_id
+terraform import tencentcloud_monitor_tmp_cvm_agent.tmp_cvm_agent tmp_cvm_agent_id
 ```
 */
 package tencentcloud
@@ -50,43 +23,33 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMonitorTmpCvmAgent() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorTmpCvmAgentRead,
 		Create: resourceTencentCloudMonitorTmpCvmAgentCreate,
-		//Update: resourceTencentCloudMonitorTmpCvmAgentUpdate,
+		Read:   resourceTencentCloudMonitorTmpCvmAgentRead,
+		Update: resourceTencentCloudMonitorTmpCvmAgentUpdate,
 		Delete: resourceTencentCloudMonitorTmpCvmAgentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Instance id.",
 			},
 
 			"name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Agent name.",
-			},
-
-			"agent_id": {
 				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Agent id.",
+				Description: "Agent name.",
 			},
 		},
 	}
@@ -100,14 +63,11 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 
 	var (
 		request  = monitor.NewCreatePrometheusAgentRequest()
-		response *monitor.CreatePrometheusAgentResponse
+		response = monitor.NewCreatePrometheusAgentResponse()
+		agentId  string
 	)
-
-	var instanceId string
-
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("name"); ok {
@@ -119,47 +79,43 @@ func resourceTencentCloudMonitorTmpCvmAgentCreate(d *schema.ResourceData, meta i
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpCvmAgent failed, reason:%+v", logId, err)
 		return err
 	}
 
-	tmpCvmAgentId := *response.Response.AgentId
+	agentId = *response.Response.AgentId
+	d.SetId(agentId)
 
-	d.SetId(strings.Join([]string{instanceId, tmpCvmAgentId}, FILED_SP))
 	return resourceTencentCloudMonitorTmpCvmAgentRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmpCvmAgent.read")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ids := strings.Split(d.Id(), FILED_SP)
-	if len(ids) != 2 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
+	tmpCvmAgentId := d.Id()
 
-	tmpCvmAgent, err := service.DescribeMonitorTmpCvmAgent(ctx, ids[0], ids[1])
-
+	tmpCvmAgent, err := service.DescribeMonitorTmpCvmAgentById(ctx, agentId)
 	if err != nil {
 		return err
 	}
 
 	if tmpCvmAgent == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpCvmAgent` %s does not exist", ids[1])
+		log.Printf("[WARN]%s resource `MonitorTmpCvmAgent` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if tmpCvmAgent.InstanceId != nil {
@@ -170,16 +126,59 @@ func resourceTencentCloudMonitorTmpCvmAgentRead(d *schema.ResourceData, meta int
 		_ = d.Set("name", tmpCvmAgent.Name)
 	}
 
-	if tmpCvmAgent.AgentId != nil {
-		_ = d.Set("agent_id", tmpCvmAgent.AgentId)
+	return nil
+}
+
+func resourceTencentCloudMonitorTmpCvmAgentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	request := monitor.NewRequest()
+
+	tmpCvmAgentId := d.Id()
+
+	request.AgentId = &agentId
+
+	immutableArgs := []string{"instance_id", "name"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	return nil
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update monitor tmpCvmAgent failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return resourceTencentCloudMonitorTmpCvmAgentRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpCvmAgentDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_monitor_tmp_cvm_agent.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tmpCvmAgentId := d.Id()
+
+	if err := service.DeleteMonitorTmpCvmAgentById(ctx, agentId); err != nil {
+		return err
+	}
 
 	return nil
 }

@@ -5,17 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_scf_request_status" "request_status" {
-  function_name       = "keep-1676351130"
-  function_request_id = "9de9405a-e33a-498d-bb59-e80b7bed1191"
-  namespace           = "default"
-}
+  function_name = ""
+  function_request_id = ""
+  namespace = ""
+  start_time = ""
+  end_time = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -47,7 +48,7 @@ func dataSourceTencentCloudScfRequestStatus() *schema.Resource {
 			"start_time": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Start time of the query, for example `2017-05-16 20:00:00`. If it's left empty, it defaults to 15 minutes before the current time.",
+				Description: "Start time of the query, for example `2017-05-16 20:00:00`. If it’s left empty, it defaults to 15 minutes before the current time.",
 			},
 
 			"end_time": {

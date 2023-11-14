@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudAsLoadBalancerResource_basic(t *testing.T) {
@@ -31,15 +30,17 @@ const testAccAsLoadBalancer = `
 
 resource "tencentcloud_as_load_balancer" "load_balancer" {
   auto_scaling_group_id = "asg-12wjuh0s"
+  load_balancer_ids = 
   forward_load_balancers {
-    load_balancer_id = "lb-d8u76te5"
-    listener_id      = "lbl-s8dh4y75"
-    target_attributes {
-      port   = 8080
-      weight = 20
-    }
-    location_id = "loc-fsa87u6d"
-    region      = "ap-guangzhou"
+		load_balancer_id = "lb-d8u76te5"
+		listener_id = "lbl-s8dh4y75"
+		target_attributes {
+			port = 8080
+			weight = 20
+		}
+		location_id = "loc-fsa87u6d"
+		region = "ap-guangzhou"
+
   }
 }
 

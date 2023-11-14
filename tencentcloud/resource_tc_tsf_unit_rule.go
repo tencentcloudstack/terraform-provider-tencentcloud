@@ -5,20 +5,25 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_unit_rule" "unit_rule" {
-  gateway_instance_id = "gw-ins-rug79a70"
-  name = "terraform-test"
-  description = "terraform-desc"
+  gateway_instance_id = ""
+  name = ""
+      description = ""
   unit_rule_item_list {
-		relationship = "AND"
-		dest_namespace_id = "namespace-y8p88eka"
-		dest_namespace_name = "garden-test_default"
-		name = "Rule1"
-		description = "rule1-desc"
+		relationship = ""
+		dest_namespace_id = ""
+		dest_namespace_name = ""
+		name = ""
+		id = ""
+		unit_rule_id = ""
+		priority =
+		description = ""
 		unit_rule_tag_list {
-			tag_type = "U"
-			tag_field = "aaa"
-			tag_operator = "IN"
-			tag_value = "1"
+			tag_type = ""
+			tag_field = ""
+			tag_operator = ""
+			tag_value = ""
+			unit_rule_item_id = ""
+			id = ""
 		}
 
   }
@@ -30,7 +35,7 @@ Import
 tsf unit_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_unit_rule.unit_rule unit-rl-zbywqeca
+terraform import tencentcloud_tsf_unit_rule.unit_rule unit_rule_id
 ```
 */
 package tencentcloud
@@ -38,12 +43,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfUnitRule() *schema.Resource {
@@ -59,86 +63,84 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 			"gateway_instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway entity ID.",
+				Description: "Gateway entity ID.",
 			},
 
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "rule name.",
+				Description: "Rule name.",
 			},
 
-			"rule_id": {
+			"id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "rule ID.",
+				Description: "Rule ID.",
 			},
 
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "usage status: enabled/disabled.",
+				Description: "Usage status: enabled/disabled.",
 			},
 
 			"description": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "rule description.",
+				Description: "Rule description.",
 			},
 
 			"unit_rule_item_list": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "list of rule items.",
+				Description: "List of rule items.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"relationship": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "logical relationship: AND/OR.",
+							Description: "Logical relationship: AND/OR.",
 						},
 						"dest_namespace_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "destination namespace ID.",
+							Description: "Destination namespace ID.",
 						},
 						"dest_namespace_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "destination namespace name.",
+							Description: "Destination namespace name.",
 						},
 						"name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "rule item name.",
+							Description: "Rule item name.",
 						},
-						"rule_id": {
+						"id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
-							Description: "rule item ID.",
+							Description: "Rule item ID.",
 						},
 						"unit_rule_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
 							Description: "Unitization rule ID.",
 						},
 						"priority": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "rule order, the smaller the higher the priority: the default is 0.",
+							Description: "Rule order, the smaller the higher the priority: the default is 0.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "rule description.",
+							Description: "Rule description.",
 						},
 						"unit_rule_tag_list": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "list of rule labels.",
+							Description: "List of rule labels.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"tag_type": {
@@ -149,7 +151,7 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 									"tag_field": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "label name.",
+										Description: "Label name.",
 									},
 									"tag_operator": {
 										Type:        schema.TypeString,
@@ -159,19 +161,17 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 									"tag_value": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "tag value.",
+										Description: "Tag value.",
 									},
 									"unit_rule_item_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "Unitization rule item ID.",
 									},
-									"rule_id": {
+									"id": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "rule ID.",
+										Description: "Rule ID.",
 									},
 								},
 							},
@@ -190,9 +190,9 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tsf.NewCreateUnitRuleWithDetailRespRequest()
-		response = tsf.NewCreateUnitRuleWithDetailRespResponse()
-		ruleId   string
+		request  = tsf.NewCreateUnitRuleRequest()
+		response = tsf.NewCreateUnitRuleResponse()
+		id       string
 	)
 	if v, ok := d.GetOk("gateway_instance_id"); ok {
 		request.GatewayInstanceId = helper.String(v.(string))
@@ -222,7 +222,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["name"]; ok {
 				unitRuleItem.Name = helper.String(v.(string))
 			}
-			if v, ok := dMap["rule_id"]; ok {
+			if v, ok := dMap["id"]; ok {
 				unitRuleItem.Id = helper.String(v.(string))
 			}
 			if v, ok := dMap["unit_rule_id"]; ok {
@@ -253,7 +253,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 					if v, ok := unitRuleTagListMap["unit_rule_item_id"]; ok {
 						unitRuleTag.UnitRuleItemId = helper.String(v.(string))
 					}
-					if v, ok := unitRuleTagListMap["rule_id"]; ok {
+					if v, ok := unitRuleTagListMap["id"]; ok {
 						unitRuleTag.Id = helper.String(v.(string))
 					}
 					unitRuleItem.UnitRuleTagList = append(unitRuleItem.UnitRuleTagList, &unitRuleTag)
@@ -264,7 +264,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRuleWithDetailResp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -278,8 +278,8 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	ruleId = *response.Response.Result.Id
-	d.SetId(ruleId)
+	id = *response.Response.Id
+	d.SetId(id)
 
 	return resourceTencentCloudTsfUnitRuleRead(d, meta)
 }
@@ -294,7 +294,7 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	id := d.Id()
+	unitRuleId := d.Id()
 
 	unitRule, err := service.DescribeTsfUnitRuleById(ctx, id)
 	if err != nil {
@@ -316,7 +316,7 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 	}
 
 	if unitRule.Id != nil {
-		_ = d.Set("rule_id", unitRule.Id)
+		_ = d.Set("id", unitRule.Id)
 	}
 
 	if unitRule.Status != nil {
@@ -332,41 +332,41 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 		for _, unitRuleItemList := range unitRule.UnitRuleItemList {
 			unitRuleItemListMap := map[string]interface{}{}
 
-			if unitRuleItemList.Relationship != nil {
-				unitRuleItemListMap["relationship"] = unitRuleItemList.Relationship
+			if unitRule.UnitRuleItemList.Relationship != nil {
+				unitRuleItemListMap["relationship"] = unitRule.UnitRuleItemList.Relationship
 			}
 
-			if unitRuleItemList.DestNamespaceId != nil {
-				unitRuleItemListMap["dest_namespace_id"] = unitRuleItemList.DestNamespaceId
+			if unitRule.UnitRuleItemList.DestNamespaceId != nil {
+				unitRuleItemListMap["dest_namespace_id"] = unitRule.UnitRuleItemList.DestNamespaceId
 			}
 
-			if unitRuleItemList.DestNamespaceName != nil {
-				unitRuleItemListMap["dest_namespace_name"] = unitRuleItemList.DestNamespaceName
+			if unitRule.UnitRuleItemList.DestNamespaceName != nil {
+				unitRuleItemListMap["dest_namespace_name"] = unitRule.UnitRuleItemList.DestNamespaceName
 			}
 
-			if unitRuleItemList.Name != nil {
-				unitRuleItemListMap["name"] = unitRuleItemList.Name
+			if unitRule.UnitRuleItemList.Name != nil {
+				unitRuleItemListMap["name"] = unitRule.UnitRuleItemList.Name
 			}
 
-			if unitRuleItemList.Id != nil {
-				unitRuleItemListMap["rule_id"] = unitRuleItemList.Id
+			if unitRule.UnitRuleItemList.Id != nil {
+				unitRuleItemListMap["id"] = unitRule.UnitRuleItemList.Id
 			}
 
-			if unitRuleItemList.UnitRuleId != nil {
-				unitRuleItemListMap["unit_rule_id"] = unitRuleItemList.UnitRuleId
+			if unitRule.UnitRuleItemList.UnitRuleId != nil {
+				unitRuleItemListMap["unit_rule_id"] = unitRule.UnitRuleItemList.UnitRuleId
 			}
 
-			if unitRuleItemList.Priority != nil {
-				unitRuleItemListMap["priority"] = unitRuleItemList.Priority
+			if unitRule.UnitRuleItemList.Priority != nil {
+				unitRuleItemListMap["priority"] = unitRule.UnitRuleItemList.Priority
 			}
 
-			if unitRuleItemList.Description != nil {
-				unitRuleItemListMap["description"] = unitRuleItemList.Description
+			if unitRule.UnitRuleItemList.Description != nil {
+				unitRuleItemListMap["description"] = unitRule.UnitRuleItemList.Description
 			}
 
-			if unitRuleItemList.UnitRuleTagList != nil {
+			if unitRule.UnitRuleItemList.UnitRuleTagList != nil {
 				unitRuleTagListList := []interface{}{}
-				for _, unitRuleTagList := range unitRuleItemList.UnitRuleTagList {
+				for _, unitRuleTagList := range unitRule.UnitRuleItemList.UnitRuleTagList {
 					unitRuleTagListMap := map[string]interface{}{}
 
 					if unitRuleTagList.TagType != nil {
@@ -390,22 +390,20 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 					}
 
 					if unitRuleTagList.Id != nil {
-						unitRuleTagListMap["rule_id"] = unitRuleTagList.Id
+						unitRuleTagListMap["id"] = unitRuleTagList.Id
 					}
 
 					unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
 				}
 
-				unitRuleItemListMap["unit_rule_tag_list"] = unitRuleTagListList
+				unitRuleItemListMap["unit_rule_tag_list"] = []interface{}{unitRuleTagListList}
 			}
 
 			unitRuleItemListList = append(unitRuleItemListList, unitRuleItemListMap)
 		}
 
-		err = d.Set("unit_rule_item_list", unitRuleItemListList)
-		if err != nil {
-			return err
-		}
+		_ = d.Set("unit_rule_item_list", unitRuleItemListList)
+
 	}
 
 	return nil
@@ -419,11 +417,11 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request := tsf.NewUpdateUnitRuleRequest()
 
-	id := d.Id()
+	unitRuleId := d.Id()
 
 	request.Id = &id
 
-	immutableArgs := []string{"gateway_instance_id", "rule_id", "status"}
+	immutableArgs := []string{"gateway_instance_id", "name", "id", "status", "description", "unit_rule_item_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -431,8 +429,10 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if v, ok := d.GetOk("name"); ok {
-		request.Name = helper.String(v.(string))
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
+		}
 	}
 
 	if d.HasChange("description") {
@@ -444,7 +444,6 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("unit_rule_item_list") {
 		if v, ok := d.GetOk("unit_rule_item_list"); ok {
 			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
 				unitRuleItem := tsf.UnitRuleItem{}
 				if v, ok := dMap["relationship"]; ok {
 					unitRuleItem.Relationship = helper.String(v.(string))
@@ -458,7 +457,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 				if v, ok := dMap["name"]; ok {
 					unitRuleItem.Name = helper.String(v.(string))
 				}
-				if v, ok := dMap["rule_id"]; ok {
+				if v, ok := dMap["id"]; ok {
 					unitRuleItem.Id = helper.String(v.(string))
 				}
 				if v, ok := dMap["unit_rule_id"]; ok {
@@ -489,7 +488,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 						if v, ok := unitRuleTagListMap["unit_rule_item_id"]; ok {
 							unitRuleTag.UnitRuleItemId = helper.String(v.(string))
 						}
-						if v, ok := unitRuleTagListMap["rule_id"]; ok {
+						if v, ok := unitRuleTagListMap["id"]; ok {
 							unitRuleTag.Id = helper.String(v.(string))
 						}
 						unitRuleItem.UnitRuleTagList = append(unitRuleItem.UnitRuleTagList, &unitRuleTag)
@@ -525,7 +524,7 @@ func resourceTencentCloudTsfUnitRuleDelete(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	id := d.Id()
+	unitRuleId := d.Id()
 
 	if err := service.DeleteTsfUnitRuleById(ctx, id); err != nil {
 		return err

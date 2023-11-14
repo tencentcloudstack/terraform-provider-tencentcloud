@@ -3,39 +3,16 @@ Provides a resource to create a cfs auto_snapshot_policy
 
 Example Usage
 
-use day of week
-
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  day_of_week = "1,2"
-  hour = "2,3"
+  hour = "&quot;2,3&quot;"
   policy_name = "policy_name"
+  day_of_week = "&quot;1,2&quot;"
   alive_days = 7
-}
-```
-
-use day of month
-
-```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  hour = "2,3"
-  policy_name = "policy_name"
-  alive_days = 7
-  day_of_month = "2,3,4"
-}
-```
-
-use interval days
-
-```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  hour = "2,3"
-  policy_name = "policy_name"
-  alive_days = 7
+  day_of_month = "2"
   interval_days = 1
 }
 ```
-
 
 Import
 
@@ -50,12 +27,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
@@ -118,16 +94,16 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 		response             = cfs.NewCreateAutoSnapshotPolicyResponse()
 		autoSnapshotPolicyId string
 	)
-	if v, ok := d.GetOk("day_of_week"); ok {
-		request.DayOfWeek = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("hour"); ok {
 		request.Hour = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("policy_name"); ok {
 		request.PolicyName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("day_of_week"); ok {
+		request.DayOfWeek = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOkExists("alive_days"); ok {
@@ -182,11 +158,8 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 
 	if autoSnapshotPolicy == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tencentcloud_cfs_auto_snapshot_policy` %s does not exist", d.Id())
-	}
-
-	if autoSnapshotPolicy.DayOfWeek != nil {
-		_ = d.Set("day_of_week", autoSnapshotPolicy.DayOfWeek)
+		log.Printf("[WARN]%s resource `CfsAutoSnapshotPolicy` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if autoSnapshotPolicy.Hour != nil {
@@ -195,6 +168,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 
 	if autoSnapshotPolicy.PolicyName != nil {
 		_ = d.Set("policy_name", autoSnapshotPolicy.PolicyName)
+	}
+
+	if autoSnapshotPolicy.DayOfWeek != nil {
+		_ = d.Set("day_of_week", autoSnapshotPolicy.DayOfWeek)
 	}
 
 	if autoSnapshotPolicy.AliveDays != nil {
@@ -223,9 +200,12 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 	autoSnapshotPolicyId := d.Id()
 
 	request.AutoSnapshotPolicyId = &autoSnapshotPolicyId
-	if d.HasChange("day_of_week") {
-		if v, ok := d.GetOk("day_of_week"); ok {
-			request.DayOfWeek = helper.String(v.(string))
+
+	immutableArgs := []string{"hour", "policy_name", "day_of_week", "alive_days", "day_of_month", "interval_days"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
@@ -238,6 +218,12 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 	if d.HasChange("policy_name") {
 		if v, ok := d.GetOk("policy_name"); ok {
 			request.PolicyName = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("day_of_week") {
+		if v, ok := d.GetOk("day_of_week"); ok {
+			request.DayOfWeek = helper.String(v.(string))
 		}
 	}
 
@@ -269,7 +255,7 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create cfs autoSnapshotPolicy failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update cfs autoSnapshotPolicy failed, reason:%+v", logId, err)
 		return err
 	}
 

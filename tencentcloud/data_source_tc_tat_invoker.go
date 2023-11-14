@@ -5,18 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tat_invoker" "invoker" {
-	# invoker_id = ""
-	# command_id = ""
-	# type = ""
-}
+  invoker_ids =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
@@ -27,28 +23,19 @@ func dataSourceTencentCloudTatInvoker() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTatInvokerRead,
 		Schema: map[string]*schema.Schema{
-			"invoker_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Invoker ID.",
+			"invoker_ids": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "List of invoker IDs. Up to 100 IDs are allowed.",
 			},
 
-			"command_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Command ID.",
-			},
-
-			"type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Invoker type.",
-			},
-
-			"invoker_set": {
-				Type:        schema.TypeList,
+			"invoker_record_set": {
 				Computed:    true,
-				Description: "Invoker information.",
+				Type:        schema.TypeList,
+				Description: "Execution history of an invoker.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"invoker_id": {
@@ -56,77 +43,25 @@ func dataSourceTencentCloudTatInvoker() *schema.Resource {
 							Computed:    true,
 							Description: "Invoker ID.",
 						},
-						"name": {
+						"invoke_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Invoker name.",
+							Description: "Execution time.",
 						},
-						"type": {
+						"reason": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Invoker type.",
+							Description: "Execution reason.",
 						},
-						"command_id": {
+						"invocation_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Command ID.",
+							Description: "Command execution ID.",
 						},
-						"username": {
+						"result": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Username.",
-						},
-						"parameters": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Custom parameters.",
-						},
-						"instance_ids": {
-							Type: schema.TypeSet,
-							Elem: &schema.Schema{
-								Type: schema.TypeString,
-							},
-							Computed:    true,
-							Description: "Instance ID list.",
-						},
-						"enable": {
-							Type:        schema.TypeBool,
-							Computed:    true,
-							Description: "Whether to enable the invoker.",
-						},
-						"schedule_settings": {
-							Type:        schema.TypeList,
-							Computed:    true,
-							Description: "Execution schedule of the invoker. This field is returned for recurring invokers.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"policy": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Execution policy: `ONCE`: Execute once; `RECURRENCE`: Execute repeatedly.",
-									},
-									"recurrence": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "Trigger the crontab expression. This field is required if `Policy` is `RECURRENCE`. The crontab expression is parsed in UTC+8.",
-									},
-									"invoke_time": {
-										Type:        schema.TypeString,
-										Computed:    true,
-										Description: "The next execution time of the invoker. This field is required if Policy is ONCE.",
-									},
-								},
-							},
-						},
-						"created_time": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Creation time.",
-						},
-						"updated_time": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Modification time.",
+							Description: "Trigger result.",
 						},
 					},
 				},
@@ -146,101 +81,71 @@ func dataSourceTencentCloudTatInvokerRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("invoker_id"); ok {
-		paramMap["invoker_id"] = helper.String(v.(string))
+	if v, ok := d.GetOk("invoker_ids"); ok {
+		invokerIdsSet := v.(*schema.Set).List()
+		paramMap["InvokerIds"] = helper.InterfacesStringsPoint(invokerIdsSet)
 	}
 
-	if v, ok := d.GetOk("command_id"); ok {
-		paramMap["command_id"] = helper.String(v.(string))
-	}
+	service := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if v, ok := d.GetOk("type"); ok {
-		paramMap["type"] = helper.String(v.(string))
-	}
+	var invokerRecordSet []*tat.InvokerRecord
 
-	tatService := TatService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	var invokerSet []*tat.Invoker
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		results, e := tatService.DescribeTatInvokerByFilter(ctx, paramMap)
+		result, e := service.DescribeTatInvokerByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		invokerSet = results
+		invokerRecordSet = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read Tat invokerSet failed, reason:%+v", logId, err)
 		return err
 	}
 
-	invokerSetList := []interface{}{}
-	ids := make([]string, 0, len(invokerSet))
-	if invokerSet != nil {
-		for _, invokerSet := range invokerSet {
-			invokerSetMap := map[string]interface{}{}
-			if invokerSet.InvokerId != nil {
-				invokerSetMap["invoker_id"] = invokerSet.InvokerId
-			}
-			if invokerSet.Name != nil {
-				invokerSetMap["name"] = invokerSet.Name
-			}
-			if invokerSet.Type != nil {
-				invokerSetMap["type"] = invokerSet.Type
-			}
-			if invokerSet.CommandId != nil {
-				invokerSetMap["command_id"] = invokerSet.CommandId
-			}
-			if invokerSet.Username != nil {
-				invokerSetMap["username"] = invokerSet.Username
-			}
-			if invokerSet.Parameters != nil {
-				invokerSetMap["parameters"] = invokerSet.Parameters
-			}
-			if invokerSet.InstanceIds != nil {
-				invokerSetMap["instance_ids"] = invokerSet.InstanceIds
-			}
-			if invokerSet.Enable != nil {
-				invokerSetMap["enable"] = invokerSet.Enable
-			}
-			if invokerSet.ScheduleSettings != nil {
-				scheduleSettingsMap := map[string]interface{}{}
-				if invokerSet.ScheduleSettings.Policy != nil {
-					scheduleSettingsMap["policy"] = invokerSet.ScheduleSettings.Policy
-				}
-				if invokerSet.ScheduleSettings.Recurrence != nil {
-					scheduleSettingsMap["recurrence"] = invokerSet.ScheduleSettings.Recurrence
-				}
-				if invokerSet.ScheduleSettings.InvokeTime != nil {
-					scheduleSettingsMap["invoke_time"] = invokerSet.ScheduleSettings.InvokeTime
-				}
+	ids := make([]string, 0, len(invokerRecordSet))
+	tmpList := make([]map[string]interface{}, 0, len(invokerRecordSet))
 
-				invokerSetMap["schedule_settings"] = []interface{}{scheduleSettingsMap}
-			}
-			if invokerSet.CreatedTime != nil {
-				invokerSetMap["created_time"] = invokerSet.CreatedTime
-			}
-			if invokerSet.UpdatedTime != nil {
-				invokerSetMap["updated_time"] = invokerSet.UpdatedTime
+	if invokerRecordSet != nil {
+		for _, invokerRecord := range invokerRecordSet {
+			invokerRecordMap := map[string]interface{}{}
+
+			if invokerRecord.InvokerId != nil {
+				invokerRecordMap["invoker_id"] = invokerRecord.InvokerId
 			}
 
-			invokerSetList = append(invokerSetList, invokerSetMap)
-			ids = append(ids, *invokerSet.InvokerId)
+			if invokerRecord.InvokeTime != nil {
+				invokerRecordMap["invoke_time"] = invokerRecord.InvokeTime
+			}
+
+			if invokerRecord.Reason != nil {
+				invokerRecordMap["reason"] = invokerRecord.Reason
+			}
+
+			if invokerRecord.InvocationId != nil {
+				invokerRecordMap["invocation_id"] = invokerRecord.InvocationId
+			}
+
+			if invokerRecord.Result != nil {
+				invokerRecordMap["result"] = invokerRecord.Result
+			}
+
+			ids = append(ids, *invokerRecord.InvokerId)
+			tmpList = append(tmpList, invokerRecordMap)
 		}
-		_ = d.Set("invoker_set", invokerSetList)
+
+		_ = d.Set("invoker_record_set", tmpList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), invokerSetList); e != nil {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

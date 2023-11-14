@@ -1,32 +1,44 @@
 /*
 Provides a resource to create a cls cos_recharge
 
-~> **NOTE:** This resource can not be deleted if you run `terraform destroy`.
-
 Example Usage
 
 ```hcl
 resource "tencentcloud_cls_cos_recharge" "cos_recharge" {
-  bucket        = "cos-lock-1308919341"
+  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
+  logset_id = "5cd3a17e-fb0b-418c-afd7-77b365397427"
+  name = "test"
+  bucket = "test-12345677"
   bucket_region = "ap-guangzhou"
-  log_type      = "minimalist_log"
-  logset_id     = "dd426d1a-95bc-4bca-b8c2-baa169261812"
-  name          = "cos_recharge_for_test"
-  prefix        = "test"
-  topic_id      = "7e34a3a7-635e-4da8-9005-88106c1fde69"
-
+  prefix = "/path"
+  log_type = "json_log"
+  compress = "gzip"
   extract_rule_info {
-    backtracking            = 0
-    is_gbk                  = 0
-    json_standard           = 0
-    keys                    = []
-    metadata_type           = 0
-    un_match_up_load_switch = false
+		time_key = "time"
+		time_format = "YYYY-MM-DD HH:MM:SS"
+		delimiter = ","
+		log_regex = "*"
+		begin_regex = "^*"
+		keys =
+		filter_key_regex {
+			key = "testKey"
+			regex = "testValue"
+		}
+		un_match_up_load_switch = false
+		un_match_log_key = "test"
+		backtracking = -1
+		is_g_b_k = 0
+		json_standard = 1
+		protocol = "tcp"
+		address = "127.0.0.1:9000"
+		parse_protocol = "rfc3164"
+		metadata_type = 0
+		path_regex = "null"
+		meta_tags {
+			key = "testKey"
+			value = "testValue"
+		}
 
-    filter_key_regex {
-      key   = "__CONTENT__"
-      regex = "dasd"
-    }
   }
 }
 ```
@@ -36,7 +48,7 @@ Import
 cls cos_recharge can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cls_cos_recharge.cos_recharge topic_id#cos_recharge_id
+terraform import tencentcloud_cls_cos_recharge.cos_recharge cos_recharge_id
 ```
 */
 package tencentcloud
@@ -44,13 +56,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudClsCosRecharge() *schema.Resource {
@@ -66,84 +77,82 @@ func resourceTencentCloudClsCosRecharge() *schema.Resource {
 			"topic_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Description: "topic id.",
+				Description: "Topic id.",
 			},
 
 			"logset_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "logset id.",
+				Description: "Logset id.",
 			},
 
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "recharge name.",
+				Description: "Recharge name.",
 			},
 
 			"bucket": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "cos bucket.",
+				Description: "Cos bucket.",
 			},
 
 			"bucket_region": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "cos bucket region.",
+				Description: "Cos bucket region.",
 			},
 
 			"prefix": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "cos file prefix.",
+				Description: "Cos file prefix.",
 			},
 
 			"log_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "log type.",
+				Description: "Log type.",
 			},
 
 			"compress": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "supported gzip, lzop, snappy.",
+				Description: "Supported gzip, lzop, snappy.",
 			},
 
 			"extract_rule_info": {
 				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Computed:    true,
-				Description: "extract rule info.",
+				Description: "Extract rule info.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"time_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "time key.",
+							Description: "Time key.",
 						},
 						"time_format": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "time format.",
+							Description: "Time format.",
 						},
 						"delimiter": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "log delimiter.",
+							Description: "Log delimiter.",
 						},
 						"log_regex": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "log regex.",
+							Description: "Log regex.",
 						},
 						"begin_regex": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "begin line regex.",
+							Description: "Begin line regex.",
 						},
 						"keys": {
 							Type: schema.TypeSet,
@@ -151,23 +160,23 @@ func resourceTencentCloudClsCosRecharge() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "key list.",
+							Description: "Key list.",
 						},
 						"filter_key_regex": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "rules that need to filter logs.",
+							Description: "Rules that need to filter logs.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "need filter log key.",
+										Description: "Need filter log key.",
 									},
 									"regex": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "need filter log regex.",
+										Description: "Need filter log regex.",
 									},
 								},
 							},
@@ -175,68 +184,68 @@ func resourceTencentCloudClsCosRecharge() *schema.Resource {
 						"un_match_up_load_switch": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "whether to upload the parsing failure log.",
+							Description: "Whether to upload the parsing failure log.",
 						},
 						"un_match_log_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "parsing failure log key.",
+							Description: "Parsing failure log key.",
 						},
 						"backtracking": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "backtracking data volume in incremental acquisition mode.",
+							Description: "Backtracking data volume in incremental acquisition mode.",
 						},
-						"is_gbk": {
+						"is_g_b_k": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "gbk encoding.",
+							Description: "Gbk encoding.",
 						},
 						"json_standard": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "is standard json.",
+							Description: "Is standard json.",
 						},
 						"protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "syslog protocol.",
+							Description: "Syslog protocol.",
 						},
 						"address": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "syslog address.",
+							Description: "Syslog address.",
 						},
 						"parse_protocol": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "parse protocol.",
+							Description: "Parse protocol.",
 						},
 						"metadata_type": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "metadata type.",
+							Description: "Metadata type.",
 						},
 						"path_regex": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "metadata path regex.",
+							Description: "Metadata path regex.",
 						},
 						"meta_tags": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "metadata tag list.",
+							Description: "Metadata tag list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "metadata key.",
+										Description: "Metadata key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "metadata value.",
+										Description: "Metadata value.",
 									},
 								},
 							},
@@ -255,10 +264,10 @@ func resourceTencentCloudClsCosRechargeCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request    = cls.NewCreateCosRechargeRequest()
-		response   = cls.NewCreateCosRechargeResponse()
-		topicId    string
-		reChargeId string
+		request  = cls.NewCreateCosRechargeRequest()
+		response = cls.NewCreateCosRechargeResponse()
+		topicId  string
+		id       string
 	)
 	if v, ok := d.GetOk("topic_id"); ok {
 		topicId = v.(string)
@@ -339,7 +348,7 @@ func resourceTencentCloudClsCosRechargeCreate(d *schema.ResourceData, meta inter
 		if v, ok := dMap["backtracking"]; ok {
 			extractRuleInfo.Backtracking = helper.IntInt64(v.(int))
 		}
-		if v, ok := dMap["is_gbk"]; ok {
+		if v, ok := dMap["is_g_b_k"]; ok {
 			extractRuleInfo.IsGBK = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["json_standard"]; ok {
@@ -391,9 +400,8 @@ func resourceTencentCloudClsCosRechargeCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	reChargeId = *response.Response.Id
-
-	d.SetId(topicId + FILED_SP + reChargeId)
+	topicId = *response.Response.TopicId
+	d.SetId(strings.Join([]string{topicId, id}, FILED_SP))
 
 	return resourceTencentCloudClsCosRechargeRead(d, meta)
 }
@@ -413,9 +421,9 @@ func resourceTencentCloudClsCosRechargeRead(d *schema.ResourceData, meta interfa
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	topicId := idSplit[0]
-	rechargeId := idSplit[1]
+	id := idSplit[1]
 
-	cosRecharge, err := service.DescribeClsCosRechargeById(ctx, topicId, rechargeId)
+	cosRecharge, err := service.DescribeClsCosRechargeById(ctx, topicId, id)
 	if err != nil {
 		return err
 	}
@@ -501,7 +509,7 @@ func resourceTencentCloudClsCosRechargeRead(d *schema.ResourceData, meta interfa
 				filterKeyRegexList = append(filterKeyRegexList, filterKeyRegexMap)
 			}
 
-			extractRuleInfoMap["filter_key_regex"] = filterKeyRegexList
+			extractRuleInfoMap["filter_key_regex"] = []interface{}{filterKeyRegexList}
 		}
 
 		if cosRecharge.ExtractRuleInfo.UnMatchUpLoadSwitch != nil {
@@ -517,7 +525,7 @@ func resourceTencentCloudClsCosRechargeRead(d *schema.ResourceData, meta interfa
 		}
 
 		if cosRecharge.ExtractRuleInfo.IsGBK != nil {
-			extractRuleInfoMap["is_gbk"] = cosRecharge.ExtractRuleInfo.IsGBK
+			extractRuleInfoMap["is_g_b_k"] = cosRecharge.ExtractRuleInfo.IsGBK
 		}
 
 		if cosRecharge.ExtractRuleInfo.JsonStandard != nil {
@@ -560,7 +568,7 @@ func resourceTencentCloudClsCosRechargeRead(d *schema.ResourceData, meta interfa
 				metaTagsList = append(metaTagsList, metaTagsMap)
 			}
 
-			extractRuleInfoMap["meta_tags"] = metaTagsList
+			extractRuleInfoMap["meta_tags"] = []interface{}{metaTagsList}
 		}
 
 		_ = d.Set("extract_rule_info", []interface{}{extractRuleInfoMap})
@@ -584,10 +592,10 @@ func resourceTencentCloudClsCosRechargeUpdate(d *schema.ResourceData, meta inter
 	topicId := idSplit[0]
 	id := idSplit[1]
 
-	immutableArgs := []string{
-		"logset_id", "bucket", "bucket_region", "prefix",
-		"log_type", "compress", "extract_rule_info",
-	}
+	request.TopicId = &topicId
+	request.Id = &id
+
+	immutableArgs := []string{"topic_id", "logset_id", "name", "bucket", "bucket_region", "prefix", "log_type", "compress", "extract_rule_info"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -595,8 +603,11 @@ func resourceTencentCloudClsCosRechargeUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	request.TopicId = &topicId
-	request.Id = &id
+	if d.HasChange("topic_id") {
+		if v, ok := d.GetOk("topic_id"); ok {
+			request.TopicId = helper.String(v.(string))
+		}
+	}
 
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
@@ -624,6 +635,21 @@ func resourceTencentCloudClsCosRechargeUpdate(d *schema.ResourceData, meta inter
 func resourceTencentCloudClsCosRechargeDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_cos_recharge.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	topicId := idSplit[0]
+	id := idSplit[1]
+
+	if err := service.DeleteClsCosRechargeById(ctx, topicId, id); err != nil {
+		return err
+	}
 
 	return nil
 }

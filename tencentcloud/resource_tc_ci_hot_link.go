@@ -5,31 +5,32 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_hot_link" "hot_link" {
-	bucket = "terraform-ci-xxxxxx"
-	url = ["10.0.0.1", "10.0.0.2"]
-	type = "white"
+  bucket = "terraform-ci-xxxxxx"
+  hot_link {
+		url = &lt;nil&gt;
+		type = &lt;nil&gt;
+
+  }
 }
 ```
 
 Import
 
-ci hot_link can be imported using the bucket, e.g.
+ci hot_link can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ci_hot_link.hot_link terraform-ci-xxxxxx
+terraform import tencentcloud_ci_hot_link.hot_link hot_link_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ci "github.com/tencentyun/cos-go-sdk-v5"
+	"log"
 )
 
 func resourceTencentCloudCiHotLink() *schema.Resource {
@@ -45,22 +46,26 @@ func resourceTencentCloudCiHotLink() *schema.Resource {
 			"bucket": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "bucket name.",
+				Description: ".",
 			},
 
-			"url": {
-				Required: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "domain address.",
-			},
-
-			"type": {
+			"hot_link": {
 				Required:    true,
-				Type:        schema.TypeString,
-				Description: "Anti-leech type, `white` is whitelist, `black` is blacklist.",
+				Description: "Bucket name.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"url": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Domain address.",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Anti-leech type, `white` is whitelist, `black` is blacklist, `off` is closed.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -73,8 +78,6 @@ func resourceTencentCloudCiHotLinkCreate(d *schema.ResourceData, meta interface{
 	var bucket string
 	if v, ok := d.GetOk("bucket"); ok {
 		bucket = v.(string)
-	} else {
-		return errors.New("get bucket failed!")
 	}
 
 	d.SetId(bucket)
@@ -87,11 +90,12 @@ func resourceTencentCloudCiHotLinkRead(d *schema.ResourceData, meta interface{})
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CiService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	bucket := d.Id()
+	hotLinkId := d.Id()
 
 	hotLink, err := service.DescribeCiHotLinkById(ctx, bucket)
 	if err != nil {
@@ -100,17 +104,15 @@ func resourceTencentCloudCiHotLinkRead(d *schema.ResourceData, meta interface{})
 
 	if hotLink == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `hotLink` %s does not exist", bucket)
+		log.Printf("[WARN]%s resource `CiHotLink` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("bucket", bucket)
-
-	if len(hotLink.Url) > 0 {
-		_ = d.Set("url", hotLink.Url)
+	if hotLink.bucket != nil {
+		_ = d.Set("bucket", hotLink.bucket)
 	}
 
-	if hotLink.Type != "" {
-		_ = d.Set("type", hotLink.Type)
+	if hotLink.hotLink != nil {
 	}
 
 	return nil
@@ -121,38 +123,32 @@ func resourceTencentCloudCiHotLinkUpdate(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	bucket := d.Id()
+	request := ci.NewSetHotLinkRequest()
 
-	var hotLinkType string
-	var url []string
-	if v, _ := d.GetOk("type"); v != nil {
-		hotLinkType = v.(string)
-	}
+	hotLinkId := d.Id()
 
-	if v, ok := d.GetOk("url"); ok {
-		urlList := v.(*schema.Set).List()
-		for _, v := range urlList {
-			url = append(url, v.(string))
+	request.Bucket = &bucket
+
+	immutableArgs := []string{"bucket", "hot_link"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := ciClient.CI.SetHotLink(ctx, &ci.HotLinkOptions{
-			Type: hotLinkType,
-			Url:  url,
-		})
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient().SetHotLink(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "SetHotLink", bucket, result.Status)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create ci hotLink failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ci hotLink failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -162,20 +158,6 @@ func resourceTencentCloudCiHotLinkUpdate(d *schema.ResourceData, meta interface{
 func resourceTencentCloudCiHotLinkDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ci_hot_link.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	bucket := d.Id()
-
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
-	_, err := ciClient.CI.SetHotLink(ctx, &ci.HotLinkOptions{
-		Type: "off",
-		Url:  []string{},
-	})
-	if err != nil {
-		return err
-	}
 
 	return nil
 }

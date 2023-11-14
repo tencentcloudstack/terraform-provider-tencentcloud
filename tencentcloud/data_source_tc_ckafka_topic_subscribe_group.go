@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_topic_subscribe_group" "topic_subscribe_group" {
-  instance_id = "ckafka-xxxxxx"
-  topic_name = "xxxxxx"
-}
+  instance_id = "InstanceId"
+  topic_name = "TopicName"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -37,82 +36,101 @@ func dataSourceTencentCloudCkafkaTopicSubscribeGroup() *schema.Resource {
 				Description: "TopicName.",
 			},
 
-			"groups_info": {
-				Type:        schema.TypeList,
+			"result": {
 				Computed:    true,
-				Description: "Consumer group information.",
+				Type:        schema.TypeList,
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"error_code": {
+						"total_count": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "TotalCount.",
+						},
+						"status_count_info": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Error code, normally 0.",
+							Description: "Consumption group state quantity information.",
 						},
-						"state": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Group state description (commonly Empty, Stable, and Dead states): Dead: The consumption group does not exist Empty: The consumption group does not currently have any consumer subscriptions PreparingRebalance: The consumption group is in the rebalance state CompletingRebalance: The consumption group is in the rebalance state Stable: Each consumer in the consumption group has joined and is in a stable state.",
-						},
-						"protocol_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The protocol type selected by the consumption group is normally the consumer, but some systems use their own protocol, such as kafka-connect, which uses connect. Only the standard consumer protocol, this interface knows the format of the specific allocation method, and can analyze the specific partition allocation.",
-						},
-						"protocol": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Common consumer partition allocation algorithms are as follows (the default option for Kafka consumer SDK is range) range|roundrobin| sticky.",
-						},
-						"members": {
+						"groups_info": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "This array contains information only if state is Stable and protocol_type is consumer.",
+							Description: "Consumer group information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"member_id": {
+									"error_code": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "ID that the coordinator generated for consumer.",
+										Description: "Error code, normally 0.",
 									},
-									"client_id": {
+									"state": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "The client.id information set by the client consumer SDK itself.",
+										Description: "Group state description (commonly Empty, Stable, and Dead states): Dead: The consumption group does not exist Empty: The consumption group does not currently have any consumer subscriptions PreparingRebalance: The consumption group is in the rebalance state CompletingRebalance: The consumption group is in the rebalance state Stable: Each consumer in the consumption group has joined and is in a stable state.",
 									},
-									"client_host": {
+									"protocol_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Generally store the customer&#39;s IP address.",
+										Description: "The protocol type selected by the consumption group is normally the consumer, but some systems use their own protocol, such as kafka-connect, which uses connect. Only the standard consumer protocol, this interface knows the format of the specific allocation method, and can analyze the specific partition allocation.",
 									},
-									"assignment": {
+									"protocol": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Common consumer partition allocation algorithms are as follows (the default option for Kafka consumer SDK is range) range|roundrobin| sticky.",
+									},
+									"members": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "Stores the partition information assigned to the consumer.",
+										Description: "This array contains information only if state is Stable and protocol_type is consumer.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
-												"version": {
-													Type:        schema.TypeInt,
+												"member_id": {
+													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "assignment version information.",
+													Description: "ID that the coordinator generated for consumer.",
 												},
-												"topics": {
+												"client_id": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "The client.id information set by the client consumer SDK itself.",
+												},
+												"client_host": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "Generally store the customer&amp;#39;s IP address.",
+												},
+												"assignment": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "topic list.",
+													Description: "Stores the partition information assigned to the consumer.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
-															"topic": {
-																Type:        schema.TypeString,
+															"version": {
+																Type:        schema.TypeInt,
 																Computed:    true,
-																Description: "topic name.",
+																Description: "Assignment version information.",
 															},
-															"partitions": {
-																Type: schema.TypeSet,
-																Elem: &schema.Schema{
-																	Type: schema.TypeInt,
-																},
+															"topics": {
+																Type:        schema.TypeList,
 																Computed:    true,
-																Description: "partition list.",
+																Description: "Topic list.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"topic": {
+																			Type:        schema.TypeString,
+																			Computed:    true,
+																			Description: "Topic name.",
+																		},
+																		"partitions": {
+																			Type: schema.TypeSet,
+																			Elem: &schema.Schema{
+																				Type: schema.TypeInt,
+																			},
+																			Computed:    true,
+																			Description: "Partition list.",
+																		},
+																	},
+																},
 															},
 														},
 													},
@@ -120,13 +138,18 @@ func dataSourceTencentCloudCkafkaTopicSubscribeGroup() *schema.Resource {
 											},
 										},
 									},
+									"group": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Kafka consumer group.",
+									},
 								},
 							},
 						},
-						"group": {
-							Type:        schema.TypeString,
+						"status": {
+							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Kafka consumer group.",
+							Description: "Whether this request is asynchronous or not. Instances with fewer groups will return the result directly, with a Status of 1. When there are many groups, the cache will be updated asynchronously. When the Status is 0, the group information will not be returned until the Status is 1 and the update is completed and the result is returned.",
 						},
 					},
 				},
@@ -160,14 +183,14 @@ func dataSourceTencentCloudCkafkaTopicSubscribeGroupRead(d *schema.ResourceData,
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result []*ckafka.GroupInfoResponse
+	var result []*ckafka.TopicSubscribeGroup
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		groupInfos, e := service.DescribeCkafkaTopicSubscribeGroupByFilter(ctx, paramMap)
+		result, e := service.DescribeCkafkaTopicSubscribeGroupByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = groupInfos
+		result = result
 		return nil
 	})
 	if err != nil {
@@ -175,94 +198,112 @@ func dataSourceTencentCloudCkafkaTopicSubscribeGroupRead(d *schema.ResourceData,
 	}
 
 	ids := make([]string, 0, len(result))
+	if result != nil {
+		topicSubscribeGroupMap := map[string]interface{}{}
 
-	groupsInfoList := []interface{}{}
-	for _, groupsInfo := range result {
-		groupsInfoMap := map[string]interface{}{}
-
-		if groupsInfo.ErrorCode != nil {
-			groupsInfoMap["error_code"] = groupsInfo.ErrorCode
+		if result.TotalCount != nil {
+			topicSubscribeGroupMap["total_count"] = result.TotalCount
 		}
 
-		if groupsInfo.State != nil {
-			groupsInfoMap["state"] = groupsInfo.State
+		if result.StatusCountInfo != nil {
+			topicSubscribeGroupMap["status_count_info"] = result.StatusCountInfo
 		}
 
-		if groupsInfo.ProtocolType != nil {
-			groupsInfoMap["protocol_type"] = groupsInfo.ProtocolType
-		}
+		if result.GroupsInfo != nil {
+			groupsInfoList := []interface{}{}
+			for _, groupsInfo := range result.GroupsInfo {
+				groupsInfoMap := map[string]interface{}{}
 
-		if groupsInfo.Protocol != nil {
-			groupsInfoMap["protocol"] = groupsInfo.Protocol
-		}
-
-		if groupsInfo.Members != nil {
-			membersList := []interface{}{}
-			for _, members := range groupsInfo.Members {
-				membersMap := map[string]interface{}{}
-
-				if members.MemberId != nil {
-					membersMap["member_id"] = members.MemberId
+				if groupsInfo.ErrorCode != nil {
+					groupsInfoMap["error_code"] = groupsInfo.ErrorCode
 				}
 
-				if members.ClientId != nil {
-					membersMap["client_id"] = members.ClientId
+				if groupsInfo.State != nil {
+					groupsInfoMap["state"] = groupsInfo.State
 				}
 
-				if members.ClientHost != nil {
-					membersMap["client_host"] = members.ClientHost
+				if groupsInfo.ProtocolType != nil {
+					groupsInfoMap["protocol_type"] = groupsInfo.ProtocolType
 				}
 
-				if members.Assignment != nil {
-					assignmentMap := map[string]interface{}{}
+				if groupsInfo.Protocol != nil {
+					groupsInfoMap["protocol"] = groupsInfo.Protocol
+				}
 
-					if members.Assignment.Version != nil {
-						assignmentMap["version"] = members.Assignment.Version
-					}
+				if groupsInfo.Members != nil {
+					membersList := []interface{}{}
+					for _, members := range groupsInfo.Members {
+						membersMap := map[string]interface{}{}
 
-					if members.Assignment.Topics != nil {
-						topicsList := []interface{}{}
-						for _, topics := range members.Assignment.Topics {
-							topicsMap := map[string]interface{}{}
-
-							if topics.Topic != nil {
-								topicsMap["topic"] = topics.Topic
-							}
-
-							if topics.Partitions != nil {
-								topicsMap["partitions"] = topics.Partitions
-							}
-
-							topicsList = append(topicsList, topicsMap)
+						if members.MemberId != nil {
+							membersMap["member_id"] = members.MemberId
 						}
 
-						assignmentMap["topics"] = []interface{}{topicsList}
+						if members.ClientId != nil {
+							membersMap["client_id"] = members.ClientId
+						}
+
+						if members.ClientHost != nil {
+							membersMap["client_host"] = members.ClientHost
+						}
+
+						if members.Assignment != nil {
+							assignmentMap := map[string]interface{}{}
+
+							if members.Assignment.Version != nil {
+								assignmentMap["version"] = members.Assignment.Version
+							}
+
+							if members.Assignment.Topics != nil {
+								topicsList := []interface{}{}
+								for _, topics := range members.Assignment.Topics {
+									topicsMap := map[string]interface{}{}
+
+									if topics.Topic != nil {
+										topicsMap["topic"] = topics.Topic
+									}
+
+									if topics.Partitions != nil {
+										topicsMap["partitions"] = topics.Partitions
+									}
+
+									topicsList = append(topicsList, topicsMap)
+								}
+
+								assignmentMap["topics"] = []interface{}{topicsList}
+							}
+
+							membersMap["assignment"] = []interface{}{assignmentMap}
+						}
+
+						membersList = append(membersList, membersMap)
 					}
 
-					membersMap["assignment"] = []interface{}{assignmentMap}
+					groupsInfoMap["members"] = []interface{}{membersList}
 				}
 
-				membersList = append(membersList, membersMap)
+				if groupsInfo.Group != nil {
+					groupsInfoMap["group"] = groupsInfo.Group
+				}
+
+				groupsInfoList = append(groupsInfoList, groupsInfoMap)
 			}
 
-			groupsInfoMap["members"] = membersList
+			topicSubscribeGroupMap["groups_info"] = []interface{}{groupsInfoList}
 		}
 
-		if groupsInfo.Group != nil {
-			ids = append(ids, *groupsInfo.Group)
-
-			groupsInfoMap["group"] = groupsInfo.Group
+		if result.Status != nil {
+			topicSubscribeGroupMap["status"] = result.Status
 		}
 
-		groupsInfoList = append(groupsInfoList, groupsInfoMap)
+		ids = append(ids, *result.InstanceId)
+		_ = d.Set("result", topicSubscribeGroupMap)
 	}
-
-	_ = d.Set("groups_info", groupsInfoList)
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), groupsInfoList); e != nil {
+		if e := writeToFile(output.(string), topicSubscribeGroupMap); e != nil {
 			return e
 		}
 	}

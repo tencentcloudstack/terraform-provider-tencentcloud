@@ -1365,3 +1365,774 @@ func (me *TseService) DeleteTseCngwCertificateById(ctx context.Context, gatewayI
 
 	return
 }
+
+func (me *TseService) DescribeTseGatewayCanaryRulesByFilter(ctx context.Context, param map[string]interface{}) (gatewayCanaryRules []*tse.CloudAPIGatewayCanaryRuleList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayCanaryRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCanaryRules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayCanaryRules = append(gatewayCanaryRules, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayCertificatesByFilter(ctx context.Context, param map[string]interface{}) (gatewayCertificates []*tse.KongCertificatesList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayCertificatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCertificates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayCertificates = append(gatewayCertificates, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayConfigByFilter(ctx context.Context, param map[string]interface{}) (gatewayConfig []*tse.DescribeCloudNativeAPIGatewayConfigResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayConfigRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayConfig(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayConfig = append(gatewayConfig, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayNodesByFilter(ctx context.Context, param map[string]interface{}) (gatewayNodes []*tse.DescribeCloudNativeAPIGatewayNodesResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayNodes = append(gatewayNodes, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayRoutesByFilter(ctx context.Context, param map[string]interface{}) (gatewayRoutes []*tse.KongServiceRouteList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayRoutesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "ServiceName" {
+			request.ServiceName = v.(*string)
+		}
+		if k == "RouteName" {
+			request.RouteName = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayRoutes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayRoutes = append(gatewayRoutes, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayServicesByFilter(ctx context.Context, param map[string]interface{}) (gatewayServices []*tse.KongServices, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayServicesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayServices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gatewayServices = append(gatewayServices, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewaysByFilter(ctx context.Context, param map[string]interface{}) (gateways []*tse.ListCloudNativeAPIGatewayResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewaysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*tse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGateways(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		gateways = append(gateways, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGroupListByFilter(ctx context.Context, param map[string]interface{}) (groupList []*tse.NativeGatewayServerGroups, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeNativeGatewayServerGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeNativeGatewayServerGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result) < 1 {
+			break
+		}
+		groupList = append(groupList, response.Response.Result...)
+		if len(response.Response.Result) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseAccessAddressByFilter(ctx context.Context, param map[string]interface{}) (accessAddress []*tse.DescribeSREInstanceAccessAddressResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeSREInstanceAccessAddressRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "VpcId" {
+			request.VpcId = v.(*string)
+		}
+		if k == "SubnetId" {
+			request.SubnetId = v.(*string)
+		}
+		if k == "Workload" {
+			request.Workload = v.(*string)
+		}
+		if k == "EngineRegion" {
+			request.EngineRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeSREInstanceAccessAddress(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.IntranetAddress) < 1 {
+			break
+		}
+		accessAddress = append(accessAddress, response.Response.IntranetAddress...)
+		if len(response.Response.IntranetAddress) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseNacosReplicasByFilter(ctx context.Context, param map[string]interface{}) (nacosReplicas []*tse.NacosReplica, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeNacosReplicasRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeNacosReplicas(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Replicas) < 1 {
+			break
+		}
+		nacosReplicas = append(nacosReplicas, response.Response.Replicas...)
+		if len(response.Response.Replicas) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseNacosServerInterfacesByFilter(ctx context.Context, param map[string]interface{}) (nacosServerInterfaces []*tse.NacosServerInterface, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeNacosServerInterfacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeNacosServerInterfaces(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Content) < 1 {
+			break
+		}
+		nacosServerInterfaces = append(nacosServerInterfaces, response.Response.Content...)
+		if len(response.Response.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseZookeeperReplicasByFilter(ctx context.Context, param map[string]interface{}) (zookeeperReplicas []*tse.ZookeeperReplica, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeZookeeperReplicasRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeZookeeperReplicas(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Replicas) < 1 {
+			break
+		}
+		zookeeperReplicas = append(zookeeperReplicas, response.Response.Replicas...)
+		if len(response.Response.Replicas) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseZookeeperServerInterfacesByFilter(ctx context.Context, param map[string]interface{}) (zookeeperServerInterfaces []*tse.ZookeeperServerInterface, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeZookeeperServerInterfacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeZookeeperServerInterfaces(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Content) < 1 {
+			break
+		}
+		zookeeperServerInterfaces = append(zookeeperServerInterfaces, response.Response.Content...)
+		if len(response.Response.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwRouteLimitById(ctx context.Context, gatewayId string) (cngwRouteLimit *tse.CloudNativeAPIGatewayRateLimitDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayRouteRateLimitRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayRouteRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.CloudNativeAPIGatewayRateLimitDetail) < 1 {
+		return
+	}
+
+	cngwRouteLimit = response.Response.CloudNativeAPIGatewayRateLimitDetail[0]
+	return
+}
+
+func (me *TseService) DeleteTseCngwRouteLimitById(ctx context.Context, gatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayRouteRateLimitRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayRouteRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwServiceLimitById(ctx context.Context, gatewayId string, name string) (cngwServiceLimit *tse.CloudNativeAPIGatewayRateLimitDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayServiceRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayServiceRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.CloudNativeAPIGatewayRateLimitDetail) < 1 {
+		return
+	}
+
+	cngwServiceLimit = response.Response.CloudNativeAPIGatewayRateLimitDetail[0]
+	return
+}
+
+func (me *TseService) DeleteTseCngwServiceLimitById(ctx context.Context, gatewayId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayServiceRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayServiceRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

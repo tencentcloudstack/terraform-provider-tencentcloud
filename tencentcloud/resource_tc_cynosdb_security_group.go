@@ -4,10 +4,10 @@ Provides a resource to create a cynosdb security_group
 Example Usage
 
 ```hcl
-resource "tencentcloud_cynosdb_security_group" "test" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  security_group_ids = ["sg-baxfiao5"]
-  instance_group_type = "RO"
+resource "tencentcloud_cynosdb_security_group" "security_group" {
+  instance_ids = &lt;nil&gt;
+  security_group_ids = &lt;nil&gt;
+  zone = &lt;nil&gt;
 }
 ```
 
@@ -16,52 +16,55 @@ Import
 cynosdb security_group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cynosdb_security_group.security_group ${cluster_id}#${instance_group_type}
+terraform import tencentcloud_cynosdb_security_group.security_group security_group_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCynosdbSecurityGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCynosdbSecurityGroupCreate,
-		Update: resourceTencentCloudCynosdbSecurityGroupUpdate,
 		Read:   resourceTencentCloudCynosdbSecurityGroupRead,
 		Delete: resourceTencentCloudCynosdbSecurityGroupDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"cluster_id": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Cluster id.",
+			"instance_ids": {
+				Required: true,
+				ForceNew: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "The id list of instances.",
 			},
-			"instance_group_type": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Instance group type. Available values: \n-`HA` - HA group; \n-`RO` - Read-only group;\n-`ALL` - HA and RO group.",
-			},
+
 			"security_group_ids": {
 				Required: true,
+				ForceNew: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 				Description: "A list of security group IDs to be modified, an array of one or more security group IDs.",
+			},
+
+			"zone": {
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Availability zone.",
 			},
 		},
 	}
@@ -72,66 +75,51 @@ func resourceTencentCloudCynosdbSecurityGroupCreate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := cynosdb.NewModifyDBInstanceSecurityGroupsRequest()
-	var clusterId string
-	var instanceGroupType string
-
-	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-		request.InstanceId = helper.String(clusterId)
+	var (
+		request         = cynosdb.NewAssociateSecurityGroupsRequest()
+		response        = cynosdb.NewAssociateSecurityGroupsResponse()
+		instanceId      string
+		securityGroupId string
+	)
+	if v, ok := d.GetOk("instance_ids"); ok {
+		instanceIdsSet := v.(*schema.Set).List()
+		for i := range instanceIdsSet {
+			instanceIds := instanceIdsSet[i].(string)
+			request.InstanceIds = append(request.InstanceIds, &instanceIds)
+		}
 	}
 
 	if v, ok := d.GetOk("security_group_ids"); ok {
 		securityGroupIdsSet := v.(*schema.Set).List()
 		for i := range securityGroupIdsSet {
-			securityGroupId := securityGroupIdsSet[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
+			securityGroupIds := securityGroupIdsSet[i].(string)
+			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupIds)
 		}
 	}
 
-	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
 
-	_, clusterIfo, has, err := service.DescribeClusterById(ctx, clusterId)
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().AssociateSecurityGroups(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s create cynosdb securityGroup failed, reason:%+v", logId, err)
 		return err
 	}
-	if has {
-		request.Zone = clusterIfo.Zone
-	}
 
-	if v, ok := d.GetOk("instance_group_type"); ok {
-		instanceGroupType = v.(string)
-	}
-	grpsResponse, err := service.DescribeClusterInstanceGrps(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-	instanceGrpInfoList := grpsResponse.Response.InstanceGrpInfoList
-	for _, instanceGrpInfo := range instanceGrpInfoList {
-		posType := instanceGrpInfo.Type
-		log.Printf("*posType: %v, %v", *posType, *posType != strings.ToLower(instanceGroupType))
-		if *posType != strings.ToLower(instanceGroupType) && instanceGroupType != "ALL" {
-			continue
-		}
-		request.InstanceId = instanceGrpInfo.InstanceGrpId
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyDBInstanceSecurityGroups(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s create cynosdb securityGroup failed, reason:%+v", logId, err)
-			return err
-		}
-	}
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, securityGroupId}, FILED_SP))
 
-	d.SetId(clusterId + FILED_SP + instanceGroupType)
 	return resourceTencentCloudCynosdbSecurityGroupRead(d, meta)
 }
 
@@ -149,104 +137,33 @@ func resourceTencentCloudCynosdbSecurityGroupRead(d *schema.ResourceData, meta i
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	clusterId := idSplit[0]
-	instanceGroupType := idSplit[1]
+	instanceId := idSplit[0]
+	securityGroupId := idSplit[1]
 
-	grpsResponse, err := service.DescribeClusterInstanceGrps(ctx, clusterId)
+	securityGroup, err := service.DescribeCynosdbSecurityGroupById(ctx, instanceId, securityGroupId)
 	if err != nil {
 		return err
 	}
-	instanceGrpInfoList := grpsResponse.Response.InstanceGrpInfoList
-	if len(instanceGrpInfoList) == 0 {
-		return fmt.Errorf("Not fount instanceGrpInfoList")
+
+	if securityGroup == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `CynosdbSecurityGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	var securityGroups []*cynosdb.SecurityGroup
-	securityGroupIds := make([]string, 0)
-
-	for _, instanceGrpInfo := range instanceGrpInfoList {
-		if *instanceGrpInfo.Type != strings.ToLower(instanceGroupType) {
-			continue
-		}
-		securityGroups, err = service.DescribeCynosdbSecurityGroups(ctx, *instanceGrpInfo.InstanceGrpId)
-		if err != nil {
-			return err
-		}
+	if securityGroup.InstanceIds != nil {
+		_ = d.Set("instance_ids", securityGroup.InstanceIds)
 	}
 
-	for _, securityGroup := range securityGroups {
-		securityGroupIds = append(securityGroupIds, *securityGroup.SecurityGroupId)
+	if securityGroup.SecurityGroupIds != nil {
+		_ = d.Set("security_group_ids", securityGroup.SecurityGroupIds)
 	}
-	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("instance_group_type", instanceGroupType)
-	_ = d.Set("security_group_ids", securityGroupIds)
+
+	if securityGroup.Zone != nil {
+		_ = d.Set("zone", securityGroup.Zone)
+	}
 
 	return nil
-}
-
-func resourceTencentCloudCynosdbSecurityGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cynosdb_security_group.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	clusterId := idSplit[0]
-	instanceGroupType := idSplit[1]
-
-	request := cynosdb.NewModifyDBInstanceSecurityGroupsRequest()
-	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	grpsResponse, err := service.DescribeClusterInstanceGrps(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	d.Partial(true)
-	if d.HasChange("security_group_ids") {
-		securityGroupIdsSet := d.Get("security_group_ids").(*schema.Set).List()
-		if len(securityGroupIdsSet) == 0 {
-			return fmt.Errorf("`security_group_ids` can not empty")
-		}
-		for i := range securityGroupIdsSet {
-			securityGroupId := securityGroupIdsSet[i].(string)
-			request.SecurityGroupIds = append(request.SecurityGroupIds, &securityGroupId)
-		}
-	}
-	_, clusterIfo, has, err := service.DescribeClusterById(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-	if has {
-		request.Zone = clusterIfo.Zone
-	}
-	instanceGrpInfoList := grpsResponse.Response.InstanceGrpInfoList
-	for _, instanceGrpInfo := range instanceGrpInfoList {
-		posType := instanceGrpInfo.Type
-		log.Printf("*posType: %v, %v", *posType, *posType != strings.ToLower(instanceGroupType))
-		if *posType != strings.ToLower(instanceGroupType) && instanceGroupType != "ALL" {
-			continue
-		}
-		request.InstanceId = instanceGrpInfo.InstanceGrpId
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyDBInstanceSecurityGroups(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s create cynosdb securityGroup failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
-	d.Partial(false)
-	return resourceTencentCloudCynosdbSecurityGroupRead(d, meta)
 }
 
 func resourceTencentCloudCynosdbSecurityGroupDelete(d *schema.ResourceData, meta interface{}) error {
@@ -255,58 +172,17 @@ func resourceTencentCloudCynosdbSecurityGroupDelete(d *schema.ResourceData, meta
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	clusterId := idSplit[0]
-	instanceGroupType := idSplit[1]
+	instanceId := idSplit[0]
+	securityGroupId := idSplit[1]
 
-	request := cynosdb.NewDisassociateSecurityGroupsRequest()
-	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, clusterInfo, has, err := service.DescribeClusterById(ctx, clusterId)
-	if err != nil {
+	if err := service.DeleteCynosdbSecurityGroupById(ctx, instanceId, securityGroupId); err != nil {
 		return err
-	}
-	if has {
-		request.Zone = clusterInfo.Zone
-	}
-	grpsResponse, err := service.DescribeClusterInstanceGrps(ctx, clusterId)
-	if err != nil {
-		return err
-	}
-
-	instanceGrpInfoList := grpsResponse.Response.InstanceGrpInfoList
-	for _, instanceGrpInfo := range instanceGrpInfoList {
-		posType := instanceGrpInfo.Type
-		if *posType != strings.ToLower(instanceGroupType) && instanceGroupType != "ALL" {
-			continue
-		}
-		securityGroupIds := make([]*string, 0)
-		securityGroups, err := service.DescribeCynosdbSecurityGroups(ctx, *instanceGrpInfo.InstanceGrpId)
-		if err != nil {
-			return err
-		}
-
-		for _, securityGroup := range securityGroups {
-			securityGroupIds = append(securityGroupIds, securityGroup.SecurityGroupId)
-		}
-
-		request.InstanceIds = []*string{instanceGrpInfo.InstanceGrpId}
-		request.SecurityGroupIds = securityGroupIds
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().DisassociateSecurityGroups(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s create cynosdb securityGroup failed, reason:%+v", logId, err)
-			return err
-		}
 	}
 
 	return nil

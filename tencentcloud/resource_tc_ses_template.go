@@ -1,77 +1,43 @@
 /*
-Provides a resource to create a ses template.
+Provides a resource to create a ses template
 
 Example Usage
 
-Create a ses text template
-
 ```hcl
-resource "tencentcloud_ses_template" "example" {
-  template_name = "tf_example_ses_temp""
+resource "tencentcloud_ses_template" "template" {
+  template_name = "smsTemplateName"
   template_content {
-    text = "example for the ses template"
+		html = &lt;nil&gt;
+		text = &lt;nil&gt;
+
   }
 }
-
-```
-
-Create a ses html template
-
-```hcl
-resource "tencentcloud_ses_template" "example" {
-  template_name = "tf_example_ses_temp"
-  template_content {
-    html = <<-EOT
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mail title</title>
-</head>
-<body>
-<div class="container">
-  <h1>Welcome to our service! </h1>
-  <p>Dear user,</p>
-  <p>Thank you for using Tencent Cloud:</p>
-  <p><a href="https://cloud.tencent.com/document/product/1653">https://cloud.tencent.com/document/product/1653</a></p>
-  <p>If you did not request this email, please ignore it. </p>
-  <p><strong>from the iac team</strong></p>
-</div>
-</body>
-</html>
-    EOT
-  }
-}
-
 ```
 
 Import
 
 ses template can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_ses_template.example template_id
+terraform import tencentcloud_ses_template.template template_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
-	"log"
-	"strconv"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudSesTemplate() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudSesTemplateRead,
 		Create: resourceTencentCloudSesTemplateCreate,
+		Read:   resourceTencentCloudSesTemplateRead,
 		Update: resourceTencentCloudSesTemplateUpdate,
 		Delete: resourceTencentCloudSesTemplateDelete,
 		Importer: &schema.ResourceImporter{
@@ -79,27 +45,27 @@ func resourceTencentCloudSesTemplate() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"template_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "smsTemplateName, which must be required.",
+				Type:        schema.TypeString,
+				Description: "SmsTemplateName, which must be required.",
 			},
 
 			"template_content": {
+				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Required:    true,
 				Description: "Sms Template Content.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"html": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Html code after base64.",
+							Description: "HTML code after base64 encoding.",
 						},
 						"text": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Text content after base64.",
+							Description: "Text content after base64 encoding.",
 						},
 					},
 				},
@@ -116,25 +82,22 @@ func resourceTencentCloudSesTemplateCreate(d *schema.ResourceData, meta interfac
 
 	var (
 		request    = ses.NewCreateEmailTemplateRequest()
-		response   *ses.CreateEmailTemplateResponse
-		templateId uint64
+		response   = ses.NewCreateEmailTemplateResponse()
+		templateID int
 	)
-
 	if v, ok := d.GetOk("template_name"); ok {
 		request.TemplateName = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "template_content"); ok {
-		prometheusTemp := ses.TemplateContent{}
+		templateContent := ses.TemplateContent{}
 		if v, ok := dMap["html"]; ok {
-			html := base64.StdEncoding.EncodeToString([]byte(v.(string)))
-			prometheusTemp.Html = helper.String(html)
+			templateContent.Html = helper.String(v.(string))
 		}
 		if v, ok := dMap["text"]; ok {
-			text := base64.StdEncoding.EncodeToString([]byte(v.(string)))
-			prometheusTemp.Text = helper.String(text)
+			templateContent.Text = helper.String(v.(string))
 		}
-		request.TemplateContent = &prometheusTemp
+		request.TemplateContent = &templateContent
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -142,21 +105,19 @@ func resourceTencentCloudSesTemplateCreate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create ses template failed, reason:%+v", logId, err)
 		return err
 	}
 
-	templateId = *response.Response.TemplateID
+	templateID = *response.Response.TemplateID
+	d.SetId(helper.Int64ToStr(int64(templateID)))
 
-	d.SetId(strconv.FormatUint(templateId, 10))
 	return resourceTencentCloudSesTemplateRead(d, meta)
 }
 
@@ -165,54 +126,41 @@ func resourceTencentCloudSesTemplateRead(d *schema.ResourceData, meta interface{
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	templateID := d.Id()
-	templateId, ee := strconv.Atoi(templateID)
-	if ee != nil {
-		return ee
-	}
+	templateId := d.Id()
 
-	templateResponse, err := service.DescribeSesTemplate(ctx, uint64(templateId))
+	template, err := service.DescribeSesTemplateById(ctx, templateID)
 	if err != nil {
 		return err
 	}
 
-	if templateResponse == nil {
+	if template == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `template` %v does not exist", templateId)
+		log.Printf("[WARN]%s resource `SesTemplate` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	template := templateResponse.TemplateContent
-	if template != nil {
-		var templateContents []map[string]interface{}
-		templateContent := map[string]interface{}{}
-		if template.Html != nil {
-			html, err := base64.StdEncoding.DecodeString(*template.Html)
-			if err != nil {
-				return err
-			}
-			contentHtml := string(html)
-			templateContent["html"] = &contentHtml
-		}
-		if template.Text != nil {
-			text, err := base64.StdEncoding.DecodeString(*template.Text)
-			if err != nil {
-				return err
-			}
-			contentText := string(text)
-			templateContent["text"] = &contentText
-		}
-		templateContents = append(templateContents, templateContent)
-		err = d.Set("template_content", templateContents)
-		if ee != nil {
-			return fmt.Errorf("set template_content err: %v", err)
-		}
+	if template.TemplateName != nil {
+		_ = d.Set("template_name", template.TemplateName)
 	}
 
-	_ = d.Set("template_name", templateResponse.TemplateName)
+	if template.TemplateContent != nil {
+		templateContentMap := map[string]interface{}{}
+
+		if template.TemplateContent.Html != nil {
+			templateContentMap["html"] = template.TemplateContent.Html
+		}
+
+		if template.TemplateContent.Text != nil {
+			templateContentMap["text"] = template.TemplateContent.Text
+		}
+
+		_ = d.Set("template_content", []interface{}{templateContentMap})
+	}
 
 	return nil
 }
@@ -225,28 +173,35 @@ func resourceTencentCloudSesTemplateUpdate(d *schema.ResourceData, meta interfac
 
 	request := ses.NewUpdateEmailTemplateRequest()
 
-	templateID, ee := strconv.Atoi(d.Id())
-	if ee != nil {
-		return ee
-	}
-	templateId := uint64(templateID)
-	request.TemplateID = &templateId
+	templateId := d.Id()
 
-	if v, ok := d.GetOk("template_name"); ok {
-		request.TemplateName = helper.String(v.(string))
+	request.TemplateID = &templateID
+
+	immutableArgs := []string{"template_name", "template_content"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if dMap, ok := helper.InterfacesHeadMap(d, "template_content"); ok {
-		prometheusTemp := ses.TemplateContent{}
-		if v, ok := dMap["html"]; ok {
-			html := base64.StdEncoding.EncodeToString([]byte(v.(string)))
-			prometheusTemp.Html = helper.String(html)
+	if d.HasChange("template_name") {
+		if v, ok := d.GetOk("template_name"); ok {
+			request.TemplateName = helper.String(v.(string))
 		}
-		if v, ok := dMap["text"]; ok {
-			text := base64.StdEncoding.EncodeToString([]byte(v.(string)))
-			prometheusTemp.Text = helper.String(text)
+	}
+
+	if d.HasChange("template_content") {
+		if dMap, ok := helper.InterfacesHeadMap(d, "template_content"); ok {
+			templateContent := ses.TemplateContent{}
+			if v, ok := dMap["html"]; ok {
+				templateContent.Html = helper.String(v.(string))
+			}
+			if v, ok := dMap["text"]; ok {
+				templateContent.Text = helper.String(v.(string))
+			}
+			request.TemplateContent = &templateContent
 		}
-		request.TemplateContent = &prometheusTemp
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -254,14 +209,12 @@ func resourceTencentCloudSesTemplateUpdate(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create ses template failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update ses template failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -276,14 +229,9 @@ func resourceTencentCloudSesTemplateDelete(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := SesService{client: meta.(*TencentCloudClient).apiV3Conn}
+	templateId := d.Id()
 
-	templateID, ee := strconv.Atoi(d.Id())
-	if ee != nil {
-		return ee
-	}
-	templateId := uint64(templateID)
-
-	if err := service.DeleteSesTemplateById(ctx, templateId); err != nil {
+	if err := service.DeleteSesTemplateById(ctx, templateID); err != nil {
 		return err
 	}
 

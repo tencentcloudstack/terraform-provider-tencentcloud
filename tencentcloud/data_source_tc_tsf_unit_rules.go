@@ -6,15 +6,15 @@ Example Usage
 ```hcl
 data "tencentcloud_tsf_unit_rules" "unit_rules" {
   gateway_instance_id = "gw-ins-lvdypq5k"
-  status = "disabled"
-}
+  search_word = "test"
+  status = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -28,138 +28,144 @@ func dataSourceTencentCloudTsfUnitRules() *schema.Resource {
 			"gateway_instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway instance id.",
+				Description: "Gateway instance id.",
+			},
+
+			"search_word": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Fuzzy search based on rule name or comment content.",
 			},
 
 			"status": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Enabled state, disabled: unpublished, enabled: published.",
+				Description: "Enabled status, disabled: unpublished, enabled: published.",
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "Pagination list information.",
+				Description: "Pagination list information.Note: This field may return null, indicating that no valid values can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "total number of records.",
+							Description: "Record count.",
 						},
 						"content": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "record entity list.",
+							Description: "Instance list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "rule name.",
+										Description: "Rule name.",
 									},
 									"id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "rule ID.",
+										Description: "Rule Id .Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"gateway_instance_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Gateway Entity ID.",
+										Description: "Gateway Instance Id.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"description": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Rule description.",
+										Description: "Description.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Use status: enabled/disabled.",
+										Description: "Enabled status .Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"unit_rule_item_list": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "list of rule items.",
+										Description: "Rule Id list .Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"relationship": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Logical relationship: AND/OR.",
+													Description: "Logic relationship between rule：AND/OR.",
 												},
 												"dest_namespace_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Destination Namespace ID.",
+													Description: "Destination namespaceId.",
 												},
 												"dest_namespace_name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "destination namespace name.",
+													Description: "Destination namespace name.",
 												},
 												"name": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "rule item name.",
+													Description: "Rule item name.",
 												},
 												"id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "rule item ID.",
+													Description: "Rule Id .Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"unit_rule_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Unitization rule ID.",
+													Description: "Unit rule Id list .Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"priority": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "Rule order, the smaller the higher the priority: the default is 0.",
+													Description: "Rule order, the smaller the priority, the higher the priority: default is 0.Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"description": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Rule description.",
+													Description: "Description.Note: This field may return null, indicating that no valid values can be obtained.",
 												},
 												"unit_rule_tag_list": {
 													Type:        schema.TypeList,
 													Computed:    true,
-													Description: "List of rule labels.",
+													Description: "Unit rule tag list.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"tag_type": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "Tag Type: U(User Tag).",
+																Description: "Tag type : U(user tag).",
 															},
 															"tag_field": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "tag name.",
+																Description: "Tag name.",
 															},
 															"tag_operator": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "Operator: IN/NOT_IN/EQUAL/NOT_EQUAL/REGEX.",
+																Description: "Operator for tag:IN/NOT_IN/EQUAL/NOT_EQUAL/REGEX.",
 															},
 															"tag_value": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "tag value.",
+																Description: "Tag value.",
 															},
 															"unit_rule_item_id": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "Unitization rule item ID.",
+																Description: "Unit rule id.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 															"id": {
 																Type:        schema.TypeString,
 																Computed:    true,
-																Description: "rule ID.",
+																Description: "Rule id.Note: This field may return null, indicating that no valid values can be obtained.",
 															},
 														},
 													},
@@ -170,12 +176,12 @@ func dataSourceTencentCloudTsfUnitRules() *schema.Resource {
 									"created_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "created time.",
+										Description: "CreatedTime.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"updated_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Updated time.",
+										Description: "UpdatedTime.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
 							},
@@ -206,36 +212,41 @@ func dataSourceTencentCloudTsfUnitRulesRead(d *schema.ResourceData, meta interfa
 		paramMap["GatewayInstanceId"] = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("search_word"); ok {
+		paramMap["SearchWord"] = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("status"); ok {
 		paramMap["Status"] = helper.String(v.(string))
 	}
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var unitRule *tsf.TsfPageUnitRuleV2
+	var result []*tsf.TsfPageUnitRuleV2
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfUnitRulesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		unitRule = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(unitRule.Content))
-	tmpList := make([]map[string]interface{}, 0, len(unitRule.Content))
-	if unitRule != nil {
+	ids := make([]string, 0, len(result))
+	if result != nil {
 		tsfPageUnitRuleMap := map[string]interface{}{}
-		if unitRule.TotalCount != nil {
-			tsfPageUnitRuleMap["total_count"] = unitRule.TotalCount
+
+		if result.TotalCount != nil {
+			tsfPageUnitRuleMap["total_count"] = result.TotalCount
 		}
 
-		if unitRule.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range unitRule.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.Name != nil {
@@ -327,13 +338,13 @@ func dataSourceTencentCloudTsfUnitRulesRead(d *schema.ResourceData, meta interfa
 								unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
 							}
 
-							unitRuleItemListMap["unit_rule_tag_list"] = unitRuleTagListList
+							unitRuleItemListMap["unit_rule_tag_list"] = []interface{}{unitRuleTagListList}
 						}
 
 						unitRuleItemListList = append(unitRuleItemListList, unitRuleItemListMap)
 					}
 
-					contentMap["unit_rule_item_list"] = unitRuleItemListList
+					contentMap["unit_rule_item_list"] = []interface{}{unitRuleItemListList}
 				}
 
 				if content.CreatedTime != nil {
@@ -345,19 +356,19 @@ func dataSourceTencentCloudTsfUnitRulesRead(d *schema.ResourceData, meta interfa
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.GatewayInstanceId)
 			}
 
-			tsfPageUnitRuleMap["content"] = contentList
+			tsfPageUnitRuleMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageUnitRuleMap})
+		ids = append(ids, *result.GatewayInstanceId)
+		_ = d.Set("result", tsfPageUnitRuleMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := writeToFile(output.(string), tsfPageUnitRuleV2Map); e != nil {
 			return e
 		}
 	}

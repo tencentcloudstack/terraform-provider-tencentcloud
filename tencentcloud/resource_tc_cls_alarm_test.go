@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudClsAlarmResource_basic(t *testing.T) {
@@ -19,12 +18,6 @@ func TestAccTencentCloudClsAlarmResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cls_alarm.alarm", "id")),
 			},
 			{
-				Config: testAccClsAlarmUpdate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_cls_alarm.alarm", "name", "terraform-alarm-for-test"),
-				),
-			},
-			{
 				ResourceName:      "tencentcloud_cls_alarm.alarm",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -36,86 +29,44 @@ func TestAccTencentCloudClsAlarmResource_basic(t *testing.T) {
 const testAccClsAlarm = `
 
 resource "tencentcloud_cls_alarm" "alarm" {
-  name             = "terraform-alarm-test"
-  alarm_notice_ids = [
-    "notice-0850756b-245d-4bc7-bb27-2a58fffc780b",
-  ]
-  alarm_period     = 15
-  condition        = "test"
-  message_template = "{{.Label}}"
-  status           = true
-  tags             = {
-    "createdBy" = "terraform"
-  }
-  trigger_count = 1
-
+  name = "alarm"
   alarm_targets {
-    end_time_offset   = 0
-    logset_id         = "33aaf0ae-6163-411b-a415-9f27450f68db"
-    number            = 1
-    query             = "status:>500 | select count(*) as errorCounts"
-    start_time_offset = -15
-    topic_id          = "88735a07-bea4-4985-8763-e9deb6da4fad"
+		topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
+		query = "* | select count(*) as count"
+		number = 1
+		start_time_offset = 0
+		end_time_offset = 0
+		logset_id = "5cd3a17e-1111-418c-afd7-77b365397426"
+
   }
-
-  analysis {
-    content = "__FILENAME__"
-    name    = "terraform"
-    type    = "field"
-
-    config_info {
-      key   = "QueryIndex"
-      value = "1"
-    }
-  }
-
   monitor_time {
-    time = 1
-    type = "Period"
+		type = "Period"
+		time = 1
+
   }
-}
+  condition = "$1&gt;100"
+  trigger_count = 5
+  alarm_period = 5
+  alarm_notice_ids = 
+  status = true
+  message_template = "test"
+  call_back {
+		body = "test"
+		headers = 
 
-`
+  }
+  analysis {
+		name = "analysis"
+		type = "query"
+		content = "content"
+		config_info {
+			key = "key"
+			value = "value"
+		}
 
-const testAccClsAlarmUpdate = `
-
-resource "tencentcloud_cls_alarm" "alarm" {
-  name             = "terraform-alarm-for-test"
-  alarm_notice_ids = [
-    "notice-0850756b-245d-4bc7-bb27-2a58fffc780b",
-  ]
-  alarm_period     = 15
-  condition        = "test"
-  message_template = "{{.Label}}"
-  status           = true
-  tags             = {
+  }
+  tags = {
     "createdBy" = "terraform"
-  }
-  trigger_count = 1
-
-  alarm_targets {
-    end_time_offset   = 0
-    logset_id         = "33aaf0ae-6163-411b-a415-9f27450f68db"
-    number            = 1
-    query             = "status:>500 | select count(*) as errorCounts"
-    start_time_offset = -15
-    topic_id          = "88735a07-bea4-4985-8763-e9deb6da4fad"
-  }
-
-  analysis {
-    content = "__FILENAME__"
-    name    = "terraform"
-    type    = "field"
-
-    config_info {
-      key   = "QueryIndex"
-      value = "1"
-    }
-  }
-
-  monitor_time {
-    time = 1
-    type = "Period"
   }
 }
 

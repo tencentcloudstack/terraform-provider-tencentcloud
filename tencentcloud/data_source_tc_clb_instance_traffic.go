@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_clb_instance_traffic" "instance_traffic" {
-  load_balancer_region = "ap-guangzhou"
-}
+  load_balancer_region = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -97,7 +96,7 @@ func dataSourceTencentCloudClbInstanceTrafficRead(d *schema.ResourceData, meta i
 	var loadBalancerTraffic []*clb.LoadBalancerTraffic
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeClbInstanceTraffic(ctx, paramMap)
+		result, e := service.DescribeClbInstanceTrafficByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

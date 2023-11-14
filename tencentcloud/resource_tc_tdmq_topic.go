@@ -1,44 +1,24 @@
 /*
-Provide a resource to create a TDMQ topic.
+Provides a resource to create a tdmq topic
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-  tags         = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tdmq_namespace" "example" {
-  environ_name = "tf_example"
-  msg_ttl      = 300
-  cluster_id   = tencentcloud_tdmq_instance.example.id
-  retention_policy {
-    time_in_minutes = 60
-    size_in_mb      = 10
-  }
-  remark = "remark."
-}
-
-resource "tencentcloud_tdmq_topic" "example" {
-  environ_id        = tencentcloud_tdmq_namespace.example.environ_name
-  cluster_id        = tencentcloud_tdmq_instance.example.id
-  topic_name        = "tf-example-topic"
-  partitions        = 6
-  pulsar_topic_type = 3
-  remark            = "remark."
+resource "tencentcloud_tdmq_topic" "topic" {
+  topic_name = "topic_name"
+  max_msg_size = 65536
+  filter_type = 1
+  msg_retention_seconds = 86400
+  trace = true
 }
 ```
 
 Import
 
-Tdmq Topic can be imported, e.g.
+tdmq topic can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tdmq_topic.test topic_id
+terraform import tencentcloud_tdmq_topic.topic topic_id
 ```
 */
 package tencentcloud
@@ -46,10 +26,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTdmqTopic() *schema.Resource {
@@ -61,55 +42,35 @@ func resourceTencentCloudTdmqTopic() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
-			"environ_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The name of tdmq namespace.",
-			},
 			"topic_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "The name of topic to be created.",
-			},
-			"partitions": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "The partitions of topic.",
-			},
-			"topic_type": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Deprecated:  "This input will be gradually discarded and can be switched to PulsarTopicType parameter 0: Normal message; 1: Global sequential messages; 2: Local sequential messages; 3: Retrying queue; 4: Dead letter queue.",
-				Description: "The type of topic.",
-			},
-			"cluster_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The Dedicated Cluster Id.",
-			},
-			"pulsar_topic_type": {
-				Type:          schema.TypeInt,
-				Optional:      true,
-				Computed:      true,
-				ConflictsWith: []string{"topic_type"},
-				Description:   "Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.",
-			},
-			"remark": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Description of the namespace.",
+				Description: "Topic name, which must be unique in the same topic under the same account in the same region. It can contain up to 64 letters, digits, and hyphens and must begin with a letter.",
 			},
 
-			//compute
-			"create_time": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Creation time of resource.",
+			"max_msg_size": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Maximum message length. Value range: 1024-65536 bytes (i.e., 1-64 KB). Default value: 65536.",
+			},
+
+			"filter_type": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Used to specify the message match policy for the topic. `1`: tag match policy (default value); `2`: routing match policy.",
+			},
+
+			"msg_retention_seconds": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Message retention period. Value range: 60-86400 seconds (i.e., 1 minute-1 day). Default value: 86400.",
+			},
+
+			"trace": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable message trace. true: yes; false: no. If this field is left empty, the feature will not be enabled.",
 			},
 		},
 	}
@@ -117,164 +78,177 @@ func resourceTencentCloudTdmqTopic() *schema.Resource {
 
 func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_topic.create")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		environId       string
-		topicName       string
-		partitions      uint64
-		topicType       int64
-		remark          string
-		clusterId       string
-		pulsarTopicType int64
+		request   = tdmq.NewCreateCmqTopicRequest()
+		response  = tdmq.NewCreateCmqTopicResponse()
+		topicName string
 	)
-	if temp, ok := d.GetOk("environ_id"); ok {
-		environId = temp.(string)
-		if len(environId) < 1 {
-			return fmt.Errorf("environ_id should be not empty string")
-		}
-	}
-	if temp, ok := d.GetOk("topic_name"); ok {
-		topicName = temp.(string)
-		if len(topicName) < 1 {
-			return fmt.Errorf("topic_name should be not empty string")
-		}
-	}
-	partitions = uint64(d.Get("partitions").(int))
-	if temp, ok := d.GetOk("remark"); ok {
-		remark = temp.(string)
-	}
-	if temp, ok := d.GetOk("cluster_id"); ok {
-		clusterId = temp.(string)
+	if v, ok := d.GetOk("topic_name"); ok {
+		topicName = v.(string)
+		request.TopicName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOkExists("pulsar_topic_type"); ok {
-		pulsarTopicType = int64(v.(int))
-	} else {
-		pulsarTopicType = NonePulsarTopicType
-		if v, ok := d.GetOkExists("topic_type"); ok {
-			topicType = int64(v.(int))
+	if v, ok := d.GetOkExists("max_msg_size"); ok {
+		request.MaxMsgSize = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("filter_type"); ok {
+		request.FilterType = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("msg_retention_seconds"); ok {
+		request.MsgRetentionSeconds = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("trace"); ok {
+		request.Trace = helper.Bool(v.(bool))
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateCmqTopic(request)
+		if e != nil {
+			return retryError(e)
 		} else {
-			topicType = NoneTopicType
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-	}
-
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
+		response = result
+		return nil
+	})
 	if err != nil {
+		log.Printf("[CRITAL]%s create tdmq topic failed, reason:%+v", logId, err)
 		return err
 	}
+
+	topicName = *response.Response.TopicName
 	d.SetId(topicName)
 
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
 
 func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmq_instance.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_topic.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	topicName := d.Id()
-	environId := d.Get("environ_id").(string)
-	clusterId := d.Get("cluster_id").(string)
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	topicId := d.Id()
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, e := tdmqService.DescribeTdmqTopicById(ctx, environId, topicName, clusterId)
-		if e != nil {
-			return retryError(e)
-		}
-		if !has {
-			d.SetId("")
-			return nil
-		}
-
-		_ = d.Set("partitions", info.Partitions)
-		_ = d.Set("topic_type", info.TopicType)
-		_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
-		_ = d.Set("remark", info.Remark)
-		_ = d.Set("create_time", info.CreateTime)
-		return nil
-	})
+	topic, err := service.DescribeTdmqTopicById(ctx, topicName)
 	if err != nil {
 		return err
 	}
+
+	if topic == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `TdmqTopic` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if topic.TopicName != nil {
+		_ = d.Set("topic_name", topic.TopicName)
+	}
+
+	if topic.MaxMsgSize != nil {
+		_ = d.Set("max_msg_size", topic.MaxMsgSize)
+	}
+
+	if topic.FilterType != nil {
+		_ = d.Set("filter_type", topic.FilterType)
+	}
+
+	if topic.MsgRetentionSeconds != nil {
+		_ = d.Set("msg_retention_seconds", topic.MsgRetentionSeconds)
+	}
+
+	if topic.Trace != nil {
+		_ = d.Set("trace", topic.Trace)
+	}
+
 	return nil
 }
 
 func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_topic.update")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	if d.HasChange("topic_type") {
-		return fmt.Errorf("`topic_type` do not support change now.")
+	request := tdmq.NewModifyCmqTopicAttributeRequest()
+
+	topicId := d.Id()
+
+	request.TopicName = &topicName
+
+	immutableArgs := []string{"topic_name", "max_msg_size", "filter_type", "msg_retention_seconds", "trace"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	topicName := d.Id()
-	environId := d.Get("environ_id").(string)
-	clusterId := d.Get("cluster_id").(string)
-
-	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	var (
-		partitions uint64
-		remark     string
-	)
-	old, now := d.GetChange("partitions")
-	if d.HasChange("partitions") {
-		partitions = uint64(now.(int))
-	} else {
-		partitions = uint64(old.(int))
+	if d.HasChange("topic_name") {
+		if v, ok := d.GetOk("topic_name"); ok {
+			request.TopicName = helper.String(v.(string))
+		}
 	}
 
-	old, now = d.GetChange("remark")
-	if d.HasChange("remark") {
-		remark = now.(string)
-	} else {
-		remark = old.(string)
+	if d.HasChange("max_msg_size") {
+		if v, ok := d.GetOkExists("max_msg_size"); ok {
+			request.MaxMsgSize = helper.IntUint64(v.(int))
+		}
 	}
 
-	d.Partial(true)
+	if d.HasChange("msg_retention_seconds") {
+		if v, ok := d.GetOkExists("msg_retention_seconds"); ok {
+			request.MsgRetentionSeconds = helper.IntUint64(v.(int))
+		}
+	}
 
-	if err := service.ModifyTdmqTopicAttribute(ctx, environId, topicName,
-		partitions, remark, clusterId); err != nil {
+	if d.HasChange("trace") {
+		if v, ok := d.GetOkExists("trace"); ok {
+			request.Trace = helper.Bool(v.(bool))
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyCmqTopicAttribute(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update tdmq topic failed, reason:%+v", logId, err)
 		return err
 	}
-	d.Partial(false)
+
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }
 
 func resourceTencentCloudTdmqTopicDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmq_instance.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_topic.delete")()
+	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	topicId := d.Id()
 
-	topicName := d.Id()
-	environId := d.Get("environ_id").(string)
-	clusterId := d.Get("cluster_id").(string)
+	if err := service.DeleteTdmqTopicById(ctx, topicName); err != nil {
+		return err
+	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err := service.DeleteTdmqTopic(ctx, environId, topicName, clusterId); err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == VPCNotFound {
-					return nil
-				}
-			}
-			return resource.RetryableError(err)
-		}
-		return nil
-	})
-
-	return err
+	return nil
 }

@@ -5,16 +5,17 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_group_offsets" "group_offsets" {
-  instance_id = "ckafka-xxxxxx"
-  group = "xxxxxx"
-}
+  instance_id = "InstanceId"
+  group = "groupName"
+  topics =
+  search_word = "topicName"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -49,55 +50,69 @@ func dataSourceTencentCloudCkafkaGroupOffsets() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "fuzzy match topicName.",
+				Description: "Fuzzy match topicName.",
 			},
 
-			"topic_list": {
-				Type:        schema.TypeList,
+			"result": {
 				Computed:    true,
-				Description: "The topic array, where each element is a json object.",
+				Type:        schema.TypeList,
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"topic": {
-							Type:        schema.TypeString,
+						"total_count": {
+							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "topicName.",
+							Description: "The total number of matching results.",
 						},
-						"partitions": {
+						"topic_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "he topic partition array, where each element is a json object.",
+							Description: "The topic array, where each element is a json object.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"partition": {
-										Type:        schema.TypeInt,
-										Computed:    true,
-										Description: "topic partitionId.",
-									},
-									"offset": {
-										Type:        schema.TypeInt,
-										Computed:    true,
-										Description: "The offset of the position.",
-									},
-									"metadata": {
+									"topic": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "When consumers submit messages, they can pass in metadata for other purposes. Currently, it is usually an empty string.",
+										Description: "TopicName.",
 									},
-									"error_code": {
-										Type:        schema.TypeInt,
+									"partitions": {
+										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "ErrorCode.",
-									},
-									"log_end_offset": {
-										Type:        schema.TypeInt,
-										Computed:    true,
-										Description: "The latest offset of the current partition.",
-									},
-									"lag": {
-										Type:        schema.TypeInt,
-										Computed:    true,
-										Description: "The number of unconsumed messages.",
+										Description: "He topic partition array, where each element is a json object.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"partition": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "Topic partitionId.",
+												},
+												"offset": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "The offset of the position.",
+												},
+												"metadata": {
+													Type:        schema.TypeString,
+													Computed:    true,
+													Description: "When consumers submit messages, they can pass in metadata for other purposes. Currently, it is usually an empty string.",
+												},
+												"error_code": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "ErrorCode.",
+												},
+												"log_end_offset": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "The latest offset of the current partition.",
+												},
+												"lag": {
+													Type:        schema.TypeInt,
+													Computed:    true,
+													Description: "The number of unconsumed messages.",
+												},
+											},
+										},
 									},
 								},
 							},
@@ -125,92 +140,101 @@ func dataSourceTencentCloudCkafkaGroupOffsetsRead(d *schema.ResourceData, meta i
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("group"); ok {
-		paramMap["group"] = helper.String(v.(string))
+		paramMap["Group"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("topics"); ok {
 		topicsSet := v.(*schema.Set).List()
-		paramMap["topics"] = helper.InterfacesStringsPoint(topicsSet)
+		paramMap["Topics"] = helper.InterfacesStringsPoint(topicsSet)
 	}
 
 	if v, ok := d.GetOk("search_word"); ok {
-		paramMap["search_word"] = helper.String(v.(string))
+		paramMap["SearchWord"] = helper.String(v.(string))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var groupOffsetTopics []*ckafka.GroupOffsetTopic
+	var result []*ckafka.GroupOffsetResponse
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCkafkaGroupOffsetsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		groupOffsetTopics = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(groupOffsetTopics))
-	groupOffsetResponseMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		groupOffsetResponseMap := map[string]interface{}{}
 
-	topicList := []interface{}{}
-	for _, topic := range groupOffsetTopics {
-		topicMap := map[string]interface{}{}
-
-		if topic.Topic != nil {
-			topicMap["topic"] = topic.Topic
-			ids = append(ids, *topic.Topic)
-
+		if result.TotalCount != nil {
+			groupOffsetResponseMap["total_count"] = result.TotalCount
 		}
 
-		if topic.Partitions != nil {
-			partitionsList := []interface{}{}
-			for _, partitions := range topic.Partitions {
-				partitionsMap := map[string]interface{}{}
+		if result.TopicList != nil {
+			topicListList := []interface{}{}
+			for _, topicList := range result.TopicList {
+				topicListMap := map[string]interface{}{}
 
-				if partitions.Partition != nil {
-					partitionsMap["partition"] = partitions.Partition
+				if topicList.Topic != nil {
+					topicListMap["topic"] = topicList.Topic
 				}
 
-				if partitions.Offset != nil {
-					partitionsMap["offset"] = partitions.Offset
+				if topicList.Partitions != nil {
+					partitionsList := []interface{}{}
+					for _, partitions := range topicList.Partitions {
+						partitionsMap := map[string]interface{}{}
+
+						if partitions.Partition != nil {
+							partitionsMap["partition"] = partitions.Partition
+						}
+
+						if partitions.Offset != nil {
+							partitionsMap["offset"] = partitions.Offset
+						}
+
+						if partitions.Metadata != nil {
+							partitionsMap["metadata"] = partitions.Metadata
+						}
+
+						if partitions.ErrorCode != nil {
+							partitionsMap["error_code"] = partitions.ErrorCode
+						}
+
+						if partitions.LogEndOffset != nil {
+							partitionsMap["log_end_offset"] = partitions.LogEndOffset
+						}
+
+						if partitions.Lag != nil {
+							partitionsMap["lag"] = partitions.Lag
+						}
+
+						partitionsList = append(partitionsList, partitionsMap)
+					}
+
+					topicListMap["partitions"] = []interface{}{partitionsList}
 				}
 
-				if partitions.Metadata != nil {
-					partitionsMap["metadata"] = partitions.Metadata
-				}
-
-				if partitions.ErrorCode != nil {
-					partitionsMap["error_code"] = partitions.ErrorCode
-				}
-
-				if partitions.LogEndOffset != nil {
-					partitionsMap["log_end_offset"] = partitions.LogEndOffset
-				}
-
-				if partitions.Lag != nil {
-					partitionsMap["lag"] = partitions.Lag
-				}
-
-				partitionsList = append(partitionsList, partitionsMap)
+				topicListList = append(topicListList, topicListMap)
 			}
 
-			topicMap["partitions"] = partitionsList
+			groupOffsetResponseMap["topic_list"] = []interface{}{topicListList}
 		}
 
-		topicList = append(topicList, topicMap)
+		ids = append(ids, *result.InstanceId)
+		_ = d.Set("result", groupOffsetResponseMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("topic_list", topicList)
-
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), groupOffsetResponseMap); e != nil {

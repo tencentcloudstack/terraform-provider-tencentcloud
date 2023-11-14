@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudWafInstanceQpsLimitDataSource_basic -v
 func TestAccTencentCloudWafInstanceQpsLimitDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,16 +15,17 @@ func TestAccTencentCloudWafInstanceQpsLimitDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccWafInstanceQpsLimitDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_waf_instance_qps_limit.example"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_waf_instance_qps_limit.instance_qps_limit")),
 			},
 		},
 	})
 }
 
 const testAccWafInstanceQpsLimitDataSource = `
-data "tencentcloud_waf_instance_qps_limit" "example" {
-  instance_id = "waf_2kxtlbky00b3b4qz"
-}
+
+data "tencentcloud_waf_instance_qps_limit" "instance_qps_limit" {
+  instance_id = ""
+  type = ""
+  }
+
 `

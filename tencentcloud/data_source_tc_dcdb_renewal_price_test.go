@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudDcdbRenewalPriceDataSource_basic(t *testing.T) {
@@ -22,12 +21,12 @@ func TestAccTencentCloudDcdbRenewalPriceDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccDcdbRenewalPriceDataSource = CommonPresetDcdb + `
+const testAccDcdbRenewalPriceDataSource = `
 
 data "tencentcloud_dcdb_renewal_price" "renewal_price" {
-	instance_id = local.dcdb_id
-	period      = 1
-	amount_unit = "pent"
-}
+  instance_id = ""
+  period = 
+  amount_unit = ""
+    }
 
 `

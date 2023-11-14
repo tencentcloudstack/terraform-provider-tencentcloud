@@ -4,35 +4,20 @@ Provides a resource to create a tdmqRocketmq environment_role
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_role" "example" {
-  role_name  = "tf_example_role"
-  remark     = "remark."
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-}
-
-resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
-  namespace_name = "tf_example_namespace"
-  remark         = "remark."
-}
-
-resource "tencentcloud_tdmq_rocketmq_environment_role" "example" {
-  environment_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
-  role_name        = tencentcloud_tdmq_rocketmq_role.example.role_name
-  permissions      = ["produce", "consume"]
-  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+resource "tencentcloud_tdmq_rocketmq_environment_role" "environment_role" {
+  environment_id = &lt;nil&gt;
+  role_name = &lt;nil&gt;
+  permissions = &lt;nil&gt;
+  cluster_id = &lt;nil&gt;
 }
 ```
+
 Import
 
 tdmqRocketmq environment_role can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tdmq_rocketmq_environment_role.environment_role environmentRole_id
+terraform import tencentcloud_tdmq_rocketmq_environment_role.environment_role environment_role_id
 ```
 */
 package tencentcloud
@@ -40,52 +25,48 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTdmqRocketmqEnvironmentRoleRead,
 		Create: resourceTencentCloudTdmqRocketmqEnvironmentRoleCreate,
+		Read:   resourceTencentCloudTdmqRocketmqEnvironmentRoleRead,
 		Update: resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqEnvironmentRoleDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"environment_name": {
-				Type:        schema.TypeString,
+			"environment_id": {
 				Required:    true,
-				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Environment (namespace) name.",
 			},
 
 			"role_name": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Role Name.",
 			},
 
 			"permissions": {
-				Type: schema.TypeSet,
+				Required: true,
+				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Required:    true,
 				Description: "Permissions, which is a non-empty string array of `produce` and `consume` at the most.",
 			},
 
 			"cluster_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Cluster ID (required).",
 			},
 		},
@@ -93,20 +74,20 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 }
 
 func resourceTencentCloudTdmqRocketmqEnvironmentRoleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_environment_role.create")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_environment_role.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request         = tdmqRocketmq.NewCreateEnvironmentRoleRequest()
-		clusterId       string
-		roleName        string
-		environmentName string
+		request       = tdmqRocketmq.NewCreateEnvironmentRoleRequest()
+		response      = tdmqRocketmq.NewCreateEnvironmentRoleResponse()
+		clusterId     string
+		roleName      string
+		environmentId string
 	)
-
-	if v, ok := d.GetOk("environment_name"); ok {
-		environmentName = v.(string)
+	if v, ok := d.GetOk("environment_id"); ok {
+		environmentId = v.(string)
 		request.EnvironmentId = helper.String(v.(string))
 	}
 
@@ -129,30 +110,32 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleCreate(d *schema.ResourceDat
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().CreateEnvironmentRole(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().CreateEnvironmentRole(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tdmqRocketmq environmentRole failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(clusterId + FILED_SP + roleName + FILED_SP + environmentName)
+	clusterId = *response.Response.ClusterId
+	d.SetId(strings.Join([]string{clusterId, roleName, environmentId}, FILED_SP))
+
 	return resourceTencentCloudTdmqRocketmqEnvironmentRoleRead(d, meta)
 }
 
 func resourceTencentCloudTdmqRocketmqEnvironmentRoleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_environment_role.read")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_environment_role.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -163,33 +146,40 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleRead(d *schema.ResourceData,
 	}
 	clusterId := idSplit[0]
 	roleName := idSplit[1]
-	environmentName := idSplit[2]
+	environmentId := idSplit[2]
 
-	environmentRoles, err := service.DescribeTdmqRocketmqEnvironmentRole(ctx, clusterId, roleName, environmentName)
-
+	environmentRole, err := service.DescribeTdmqRocketmqEnvironmentRoleById(ctx, clusterId, roleName, environmentId)
 	if err != nil {
 		return err
 	}
 
-	if len(environmentRoles) == 0 {
+	if environmentRole == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `environmentRole` %s does not exist", roleName)
+		log.Printf("[WARN]%s resource `TdmqRocketmqEnvironmentRole` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-	environmentRole := environmentRoles[0]
-	_ = d.Set("environment_name", environmentRole.EnvironmentId)
-	_ = d.Set("role_name", environmentRole.RoleName)
-	permissions := make([]string, 0)
-	for _, i := range environmentRole.Permissions {
-		permissions = append(permissions, *i)
+
+	if environmentRole.EnvironmentId != nil {
+		_ = d.Set("environment_id", environmentRole.EnvironmentId)
 	}
-	_ = d.Set("permissions", permissions)
-	_ = d.Set("cluster_id", clusterId)
+
+	if environmentRole.RoleName != nil {
+		_ = d.Set("role_name", environmentRole.RoleName)
+	}
+
+	if environmentRole.Permissions != nil {
+		_ = d.Set("permissions", environmentRole.Permissions)
+	}
+
+	if environmentRole.ClusterId != nil {
+		_ = d.Set("cluster_id", environmentRole.ClusterId)
+	}
 
 	return nil
 }
 
 func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_environment_role.update")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_environment_role.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -208,6 +198,14 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 	request.RoleName = &roleName
 	request.EnvironmentId = &environmentId
 
+	immutableArgs := []string{"environment_id", "role_name", "permissions", "cluster_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("permissions") {
 		if v, ok := d.GetOk("permissions"); ok {
 			permissionsSet := v.(*schema.Set).List()
@@ -219,18 +217,16 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyEnvironmentRole(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqRocketmqClient().ModifyEnvironmentRole(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmqRocketmq environmentRole failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tdmqRocketmq environmentRole failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -238,14 +234,13 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 }
 
 func resourceTencentCloudTdmqRocketmqEnvironmentRoleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmqRocketmq_environment_role.delete")()
+	defer logElapsed("resource.tencentcloud_tdmq_rocketmq_environment_role.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())

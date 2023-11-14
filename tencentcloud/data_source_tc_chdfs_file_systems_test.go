@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudChdfsFileSystemsDataSource_basic(t *testing.T) {
@@ -24,6 +23,7 @@ func TestAccTencentCloudChdfsFileSystemsDataSource_basic(t *testing.T) {
 
 const testAccChdfsFileSystemsDataSource = `
 
-data "tencentcloud_chdfs_file_systems" "file_systems" {}
+data "tencentcloud_chdfs_file_systems" "file_systems" {
+  }
 
 `

@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseRegionDataSource_basic(t *testing.T) {
@@ -25,5 +24,6 @@ func TestAccTencentCloudLighthouseRegionDataSource_basic(t *testing.T) {
 const testAccLighthouseRegionDataSource = `
 
 data "tencentcloud_lighthouse_region" "region" {
-}
+  }
+
 `

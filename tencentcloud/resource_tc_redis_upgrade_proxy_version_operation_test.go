@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixRedisUpgradeProxyVersionOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudRedisUpgradeProxyVersionOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -17,6 +16,11 @@ func TestAccTencentCloudNeedFixRedisUpgradeProxyVersionOperationResource_basic(t
 			{
 				Config: testAccRedisUpgradeProxyVersionOperation,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_redis_upgrade_proxy_version_operation.upgrade_proxy_version_operation", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_redis_upgrade_proxy_version_operation.upgrade_proxy_version_operation",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

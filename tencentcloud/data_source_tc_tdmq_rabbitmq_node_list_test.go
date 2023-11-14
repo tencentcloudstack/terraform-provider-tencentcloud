@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixTdmqRabbitmqNodeListDataSource_basic(t *testing.T) {
+func TestAccTencentCloudTdmqRabbitmqNodeListDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,23 +15,24 @@ func TestAccTencentCloudNeedFixTdmqRabbitmqNodeListDataSource_basic(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTdmqRabbitmqNodeListDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rabbitmq_node_list.rabbitmq_node_list"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rabbitmq_node_list.rabbitmq_node_list")),
 			},
 		},
 	})
 }
 
 const testAccTdmqRabbitmqNodeListDataSource = `
+
 data "tencentcloud_tdmq_rabbitmq_node_list" "rabbitmq_node_list" {
-  instance_id = "amqp-testtesttest"
-  node_name   = "keep-node"
+  instance_id = ""
+  node_name = ""
   filters {
-    name   = "nodeStatus"
-    values = ["running", "down"]
+		name = ""
+		values = 
+
   }
-  sort_element = "cpuUsage"
-  sort_order   = "descend"
-}
+  sort_element = ""
+  sort_order = ""
+  }
+
 `

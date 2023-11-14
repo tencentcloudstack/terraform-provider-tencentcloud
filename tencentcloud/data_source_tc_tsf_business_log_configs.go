@@ -5,17 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tsf_business_log_configs" "business_log_configs" {
-  search_word = "terraform"
-  disable_program_auth_check = true
-  config_id_list = ["apm-busi-log-cfg-qv3x3rdv"]
-}
+  search_word = ""
+  disable_program_auth_check =
+  config_id_list =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
@@ -29,13 +28,13 @@ func dataSourceTencentCloudTsfBusinessLogConfigs() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "wild search word.",
+				Description: "Wild search word.",
 			},
 
 			"disable_program_auth_check": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "Disable Program auth check or not.",
+				Description: "Disable Program auth check or not .",
 			},
 
 			"config_id_list": {
@@ -87,7 +86,7 @@ func dataSourceTencentCloudTsfBusinessLogConfigs() *schema.Resource {
 									"config_tags": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "configuration Tag.Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "Configuration Tag.Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"config_pipeline": {
 										Type:        schema.TypeString,
@@ -118,7 +117,7 @@ func dataSourceTencentCloudTsfBusinessLogConfigs() *schema.Resource {
 												"schema_content": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "content of schema.",
+													Description: "Content of schema.",
 												},
 												"schema_date_format": {
 													Type:        schema.TypeString,
@@ -146,7 +145,7 @@ func dataSourceTencentCloudTsfBusinessLogConfigs() *schema.Resource {
 									"config_associated_groups": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "the associate group of Config.Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "The associate group of Config.Note: This field may return null, indicating that no valid values can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"group_id": {
@@ -247,29 +246,31 @@ func dataSourceTencentCloudTsfBusinessLogConfigsRead(d *schema.ResourceData, met
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var logConfig *tsf.TsfPageBusinessLogConfig
+	var result []*tsf.TsfPageBusinessLogConfig
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfBusinessLogConfigsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		logConfig = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(logConfig.Content))
-	tsfPageBusinessLogConfigMap := map[string]interface{}{}
-	if logConfig != nil {
-		if logConfig.TotalCount != nil {
-			tsfPageBusinessLogConfigMap["total_count"] = logConfig.TotalCount
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		tsfPageBusinessLogConfigMap := map[string]interface{}{}
+
+		if result.TotalCount != nil {
+			tsfPageBusinessLogConfigMap["total_count"] = result.TotalCount
 		}
 
-		if logConfig.Content != nil {
+		if result.Content != nil {
 			contentList := []interface{}{}
-			for _, content := range logConfig.Content {
+			for _, content := range result.Content {
 				contentMap := map[string]interface{}{}
 
 				if content.ConfigId != nil {
@@ -386,17 +387,17 @@ func dataSourceTencentCloudTsfBusinessLogConfigsRead(d *schema.ResourceData, met
 						configAssociatedGroupsList = append(configAssociatedGroupsList, configAssociatedGroupsMap)
 					}
 
-					contentMap["config_associated_groups"] = configAssociatedGroupsList
+					contentMap["config_associated_groups"] = []interface{}{configAssociatedGroupsList}
 				}
 
 				contentList = append(contentList, contentMap)
-				ids = append(ids, *content.ConfigId)
 			}
 
-			tsfPageBusinessLogConfigMap["content"] = contentList
+			tsfPageBusinessLogConfigMap["content"] = []interface{}{contentList}
 		}
 
-		_ = d.Set("result", []interface{}{tsfPageBusinessLogConfigMap})
+		ids = append(ids, *result.ConfigIdList)
+		_ = d.Set("result", tsfPageBusinessLogConfigMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

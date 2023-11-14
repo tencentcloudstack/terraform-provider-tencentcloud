@@ -5,25 +5,48 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_audit_log_file" "audit_log_file" {
-  instance_id = "cynosdbmysql-ins-afqx1hy0"
-  start_time  = "2022-07-12 10:29:20"
-  end_time    = "2022-08-12 10:29:20"
+  instance_id = &lt;nil&gt;
+  start_time = "2022-07-12 10:29:20"
+  end_time = "2022-08-12 10:29:20"
+  order = "ASC"
+  order_by = ""
+  filter {
+		host = &lt;nil&gt;
+		user = &lt;nil&gt;
+		d_b_name = &lt;nil&gt;
+		table_name = &lt;nil&gt;
+		policy_name = &lt;nil&gt;
+		sql = &lt;nil&gt;
+		sql_type = &lt;nil&gt;
+		exec_time = &lt;nil&gt;
+		affect_rows = &lt;nil&gt;
+		sql_types = &lt;nil&gt;
+		sqls =
+		sent_rows = &lt;nil&gt;
+		thread_id = &lt;nil&gt;
+
+  }
 }
+```
+
+Import
+
+cynosdb audit_log_file can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_audit_log_file.audit_log_file audit_log_file_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
@@ -31,6 +54,9 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 		Create: resourceTencentCloudCynosdbAuditLogFileCreate,
 		Read:   resourceTencentCloudCynosdbAuditLogFileRead,
 		Delete: resourceTencentCloudCynosdbAuditLogFileDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -57,14 +83,14 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Sort by. Supported values are: `ASC` - ascending, `DESC` - descending.",
+				Description: "Sort by. Supported values are: ASC - ascending, DESC - descending.",
 			},
 
 			"order_by": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Sort field. supported values are:\n`timestamp` - timestamp\n`affectRows` - affected rows\n`execTime` - execution time.",
+				Description: "Sort field. supported values are:timestamp - timestampaffectRows - affected rowsexecTime - execution time.",
 			},
 
 			"filter": {
@@ -91,7 +117,7 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 							Optional:    true,
 							Description: "User name.",
 						},
-						"db_name": {
+						"d_b_name": {
 							Type: schema.TypeSet,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
@@ -141,7 +167,7 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "SQL type. Supports simultaneous query of multiple types. currently supported: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, SET, REPLACE, EXECUTE.",
+							Description: "SQL type. Supports simultaneous query of multiple types. currently supported:SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, SET, REPLACE, EXECUTE.",
 						},
 						"sqls": {
 							Type: schema.TypeSet,
@@ -167,32 +193,6 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 					},
 				},
 			},
-			// computed
-			"file_name": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Audit log file name.",
-			},
-			"create_time": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Audit log file creation time. The format is 2019-03-20 17:09:13.",
-			},
-			"file_size": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "File size, The unit is KB.",
-			},
-			"download_url": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "The download address of the audit logs.",
-			},
-			"err_msg": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Error message.",
-			},
 		},
 	}
 }
@@ -207,10 +207,11 @@ func resourceTencentCloudCynosdbAuditLogFileCreate(d *schema.ResourceData, meta 
 		request    = cynosdb.NewCreateAuditLogFileRequest()
 		response   = cynosdb.NewCreateAuditLogFileResponse()
 		instanceId string
+		fileName   string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -245,7 +246,7 @@ func resourceTencentCloudCynosdbAuditLogFileCreate(d *schema.ResourceData, meta 
 				auditLogFilter.User = append(auditLogFilter.User, &user)
 			}
 		}
-		if v, ok := dMap["db_name"]; ok {
+		if v, ok := dMap["d_b_name"]; ok {
 			dBNameSet := v.(*schema.Set).List()
 			for i := range dBNameSet {
 				dBName := dBNameSet[i].(string)
@@ -320,27 +321,8 @@ func resourceTencentCloudCynosdbAuditLogFileCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		request := cynosdb.NewDescribeAuditLogFilesRequest()
-		request.InstanceId = helper.String(instanceId)
-		request.FileName = response.Response.FileName
-		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().DescribeAuditLogFiles(request)
-		if e != nil {
-			return retryError(e)
-		}
-		if len(result.Response.Items) > 0 && *result.Response.Items[0].Status == "success" {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("%s not ready", *response.Response.FileName))
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb auditLogFile failed, reason:%+v", logId, err)
-		return err
-	}
-
-	auditLogFileId := strings.Join([]string{instanceId, *response.Response.FileName}, FILED_SP)
-	d.SetId(auditLogFileId)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, fileName}, FILED_SP))
 
 	return resourceTencentCloudCynosdbAuditLogFileRead(d, meta)
 }
@@ -369,14 +351,87 @@ func resourceTencentCloudCynosdbAuditLogFileRead(d *schema.ResourceData, meta in
 
 	if auditLogFile == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `CynosdbAuditLogFile` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `CynosdbAuditLogFile` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("file_name", *auditLogFile.FileName)
-	_ = d.Set("create_time", *auditLogFile.CreateTime)
-	_ = d.Set("file_size", *auditLogFile.FileSize)
-	_ = d.Set("download_url", *auditLogFile.DownloadUrl)
-	_ = d.Set("err_msg", *auditLogFile.ErrMsg)
+	if auditLogFile.InstanceId != nil {
+		_ = d.Set("instance_id", auditLogFile.InstanceId)
+	}
+
+	if auditLogFile.StartTime != nil {
+		_ = d.Set("start_time", auditLogFile.StartTime)
+	}
+
+	if auditLogFile.EndTime != nil {
+		_ = d.Set("end_time", auditLogFile.EndTime)
+	}
+
+	if auditLogFile.Order != nil {
+		_ = d.Set("order", auditLogFile.Order)
+	}
+
+	if auditLogFile.OrderBy != nil {
+		_ = d.Set("order_by", auditLogFile.OrderBy)
+	}
+
+	if auditLogFile.Filter != nil {
+		filterMap := map[string]interface{}{}
+
+		if auditLogFile.Filter.Host != nil {
+			filterMap["host"] = auditLogFile.Filter.Host
+		}
+
+		if auditLogFile.Filter.User != nil {
+			filterMap["user"] = auditLogFile.Filter.User
+		}
+
+		if auditLogFile.Filter.DBName != nil {
+			filterMap["d_b_name"] = auditLogFile.Filter.DBName
+		}
+
+		if auditLogFile.Filter.TableName != nil {
+			filterMap["table_name"] = auditLogFile.Filter.TableName
+		}
+
+		if auditLogFile.Filter.PolicyName != nil {
+			filterMap["policy_name"] = auditLogFile.Filter.PolicyName
+		}
+
+		if auditLogFile.Filter.Sql != nil {
+			filterMap["sql"] = auditLogFile.Filter.Sql
+		}
+
+		if auditLogFile.Filter.SqlType != nil {
+			filterMap["sql_type"] = auditLogFile.Filter.SqlType
+		}
+
+		if auditLogFile.Filter.ExecTime != nil {
+			filterMap["exec_time"] = auditLogFile.Filter.ExecTime
+		}
+
+		if auditLogFile.Filter.AffectRows != nil {
+			filterMap["affect_rows"] = auditLogFile.Filter.AffectRows
+		}
+
+		if auditLogFile.Filter.SqlTypes != nil {
+			filterMap["sql_types"] = auditLogFile.Filter.SqlTypes
+		}
+
+		if auditLogFile.Filter.Sqls != nil {
+			filterMap["sqls"] = auditLogFile.Filter.Sqls
+		}
+
+		if auditLogFile.Filter.SentRows != nil {
+			filterMap["sent_rows"] = auditLogFile.Filter.SentRows
+		}
+
+		if auditLogFile.Filter.ThreadId != nil {
+			filterMap["thread_id"] = auditLogFile.Filter.ThreadId
+		}
+
+		_ = d.Set("filter", []interface{}{filterMap})
+	}
 
 	return nil
 }

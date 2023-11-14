@@ -5,29 +5,33 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_orders" "orders" {
-  deal_name = "20230607164033835942781"
-}
+  deal_names =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudMariadbOrders() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMariadbOrdersRead,
 		Schema: map[string]*schema.Schema{
-			"deal_name": {
-				Required:    true,
-				Type:        schema.TypeString,
+			"deal_names": {
+				Required: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 				Description: "List of long order numbers to be queried, which are returned for the APIs for creating, renewing, or scaling instances.",
 			},
+
 			"deals": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -70,6 +74,7 @@ func dataSourceTencentCloudMariadbOrders() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -83,32 +88,33 @@ func dataSourceTencentCloudMariadbOrdersRead(d *schema.ResourceData, meta interf
 	defer logElapsed("data_source.tencentcloud_mariadb_orders.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		deals    []*mariadb.Deal
-		dealName string
-	)
+	logId := getLogId(contextNil)
 
-	if v, ok := d.GetOk("deal_name"); ok {
-		dealName = v.(string)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
+	if v, ok := d.GetOk("deal_names"); ok {
+		dealNamesSet := v.(*schema.Set).List()
+		paramMap["DealNames"] = helper.InterfacesStringsPoint(dealNamesSet)
 	}
 
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var deals []*mariadb.Deal
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeMariadbOrdersByFilter(ctx, dealName)
+		result, e := service.DescribeMariadbOrdersByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		deals = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(deals))
 	tmpList := make([]map[string]interface{}, 0, len(deals))
 
 	if deals != nil {
@@ -139,19 +145,19 @@ func dataSourceTencentCloudMariadbOrdersRead(d *schema.ResourceData, meta interf
 				dealMap["pay_mode"] = deal.PayMode
 			}
 
+			ids = append(ids, *deal.DealName)
 			tmpList = append(tmpList, dealMap)
 		}
 
 		_ = d.Set("deals", tmpList)
 	}
 
-	d.SetId(dealName)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

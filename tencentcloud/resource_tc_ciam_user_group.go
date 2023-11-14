@@ -1,19 +1,13 @@
 /*
-Provides a resource to create a ciam user group
+Provides a resource to create a ciam user_group
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_ciam_user_store" "user_store" {
-  user_pool_name = "tf_user_store"
-  user_pool_desc = "for terraform test"
-  user_pool_logo = "https://ciam-prd-1302490086.cos.ap-guangzhou.myqcloud.com/temporary/92630252a2c5422d9663db5feafd619b.png"
-}
-
 resource "tencentcloud_ciam_user_group" "user_group" {
-  display_name  = "tf_user_group"
-  user_store_id = tencentcloud_ciam_user_store.user_store.id
-  description   = "for terrafrom test"
+  display_name = ""
+  user_store_id = ""
+  description = ""
 }
 ```
 
@@ -22,7 +16,7 @@ Import
 ciam user_group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ciam_user_group.user_group userStoreId#userGroupId
+terraform import tencentcloud_ciam_user_group.user_group user_group_id
 ```
 */
 package tencentcloud
@@ -30,13 +24,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudCiamUserGroup() *schema.Resource {
@@ -49,16 +42,18 @@ func resourceTencentCloudCiamUserGroup() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"user_store_id": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "User Store ID.",
-			},
 			"display_name": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "User Group Name.",
 			},
+
+			"user_store_id": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "User Store ID.",
+			},
+
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -80,13 +75,13 @@ func resourceTencentCloudCiamUserGroupCreate(d *schema.ResourceData, meta interf
 		userStoreId string
 		userGroupId string
 	)
+	if v, ok := d.GetOk("display_name"); ok {
+		request.DisplayName = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOk("user_store_id"); ok {
 		userStoreId = v.(string)
 		request.UserStoreId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("display_name"); ok {
-		request.DisplayName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
@@ -108,9 +103,8 @@ func resourceTencentCloudCiamUserGroupCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	userGroupId = *response.Response.UserGroupId
-
-	d.SetId(userStoreId + FILED_SP + userGroupId)
+	userStoreId = *response.Response.UserStoreId
+	d.SetId(strings.Join([]string{userStoreId, userGroupId}, FILED_SP))
 
 	return resourceTencentCloudCiamUserGroupRead(d, meta)
 }
@@ -176,47 +170,46 @@ func resourceTencentCloudCiamUserGroupUpdate(d *schema.ResourceData, meta interf
 	request.UserStoreId = &userStoreId
 	request.UserGroupId = &userGroupId
 
-	needChange := false
-	mutableArgs := []string{
-		"display_name", "user_store_id", "description",
-	}
+	immutableArgs := []string{"display_name", "user_store_id", "description"}
 
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("display_name") {
 		if v, ok := d.GetOk("display_name"); ok {
 			request.DisplayName = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("user_store_id") {
 		if v, ok := d.GetOk("user_store_id"); ok {
 			request.UserStoreId = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiamClient().UpdateUserGroup(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update ciam userGroup failed, reason:%+v", logId, err)
-			return err
-		}
-
 	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiamClient().UpdateUserGroup(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update ciam userGroup failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return resourceTencentCloudCiamUserGroupRead(d, meta)
 }
 

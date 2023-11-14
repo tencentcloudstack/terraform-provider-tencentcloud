@@ -5,13 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_repository" "repository" {
-  repository_name = ""
+    repository_name = ""
   repository_type = ""
   bucket_name = ""
   bucket_region = ""
   directory = ""
   repository_desc = ""
-}
+    }
 ```
 
 Import
@@ -27,12 +27,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfRepository() *schema.Resource {
@@ -54,19 +53,19 @@ func resourceTencentCloudTsfRepository() *schema.Resource {
 			"repository_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "warehouse name.",
+				Description: "Warehouse name.",
 			},
 
 			"repository_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "warehouse type (default warehouse: default, private warehouse: private).",
+				Description: "Warehouse type (default warehouse: default, private warehouse: private).",
 			},
 
 			"bucket_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "the name of the bucket where the warehouse is located.",
+				Description: "The name of the bucket where the warehouse is located.",
 			},
 
 			"bucket_region": {
@@ -79,26 +78,26 @@ func resourceTencentCloudTsfRepository() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "directory.",
+				Description: "Directory.",
 			},
 
 			"repository_desc": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "warehouse description.",
+				Description: "Warehouse description.",
 			},
 
 			"is_used": {
 				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "whether the repository is in use.",
+				Description: "Whether the repository is in use.",
 			},
 
 			"create_time": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "warehouse creation time.",
+				Description: "Warehouse creation time.",
 			},
 		},
 	}
@@ -111,8 +110,8 @@ func resourceTencentCloudTsfRepositoryCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 
 	var (
-		request = tsf.NewCreateRepositoryRequest()
-		// response     = tsf.NewCreateRepositoryResponse()
+		request      = tsf.NewCreateRepositoryRequest()
+		response     = tsf.NewCreateRepositoryResponse()
 		repositoryId string
 	)
 	if v, ok := d.GetOk("repository_name"); ok {
@@ -146,7 +145,7 @@ func resourceTencentCloudTsfRepositoryCreate(d *schema.ResourceData, meta interf
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -154,7 +153,7 @@ func resourceTencentCloudTsfRepositoryCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	// repositoryId = *response.Response.RepositoryId
+	repositoryId = *response.Response.RepositoryId
 	d.SetId(repositoryId)
 
 	return resourceTencentCloudTsfRepositoryRead(d, meta)

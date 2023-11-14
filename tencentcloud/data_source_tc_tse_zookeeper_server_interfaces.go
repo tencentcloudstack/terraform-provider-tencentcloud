@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_zookeeper_server_interfaces" "zookeeper_server_interfaces" {
-  instance_id = "ins-7eb7eea7"
-}
+  instance_id = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -25,21 +24,21 @@ func dataSourceTencentCloudTseZookeeperServerInterfaces() *schema.Resource {
 		Read: dataSourceTencentCloudTseZookeeperServerInterfacesRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "engine instance ID.",
+				Description: "Engine instance ID.",
 			},
 
 			"content": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "interface list.",
+				Description: "Interface list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"interface": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "interface nameNote: This field may return null, indicating that a valid value is not available.",
+							Description: "Interface nameNote: This field may return null, indicating that a valid value is not available.",
 						},
 					},
 				},
@@ -61,11 +60,9 @@ func dataSourceTencentCloudTseZookeeperServerInterfacesRead(d *schema.ResourceDa
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	instanceId := ""
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
 		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
@@ -85,6 +82,7 @@ func dataSourceTencentCloudTseZookeeperServerInterfacesRead(d *schema.ResourceDa
 		return err
 	}
 
+	ids := make([]string, 0, len(content))
 	tmpList := make([]map[string]interface{}, 0, len(content))
 
 	if content != nil {
@@ -95,13 +93,14 @@ func dataSourceTencentCloudTseZookeeperServerInterfacesRead(d *schema.ResourceDa
 				zookeeperServerInterfaceMap["interface"] = zookeeperServerInterface.Interface
 			}
 
+			ids = append(ids, *zookeeperServerInterface.InstanceId)
 			tmpList = append(tmpList, zookeeperServerInterfaceMap)
 		}
 
 		_ = d.Set("content", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{instanceId}))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

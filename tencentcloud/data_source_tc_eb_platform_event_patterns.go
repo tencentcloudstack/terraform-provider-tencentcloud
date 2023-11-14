@@ -6,14 +6,13 @@ Example Usage
 ```hcl
 data "tencentcloud_eb_platform_event_patterns" "platform_event_patterns" {
   product_type = ""
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
@@ -67,10 +66,8 @@ func dataSourceTencentCloudEbPlatformEventPatternsRead(d *schema.ResourceData, m
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var productType string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("product_type"); ok {
-		productType = v.(string)
 		paramMap["ProductType"] = helper.String(v.(string))
 	}
 
@@ -103,15 +100,16 @@ func dataSourceTencentCloudEbPlatformEventPatternsRead(d *schema.ResourceData, m
 
 			if platformEventSummary.EventPattern != nil {
 				platformEventSummaryMap["event_pattern"] = platformEventSummary.EventPattern
-				ids = append(ids, *platformEventSummary.EventPattern)
 			}
+
+			ids = append(ids, *platformEventSummary.ProductType)
 			tmpList = append(tmpList, platformEventSummaryMap)
 		}
 
 		_ = d.Set("event_patterns", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash(append(ids, productType)))
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

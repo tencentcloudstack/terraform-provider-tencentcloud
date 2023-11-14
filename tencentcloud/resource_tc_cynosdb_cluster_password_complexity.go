@@ -4,20 +4,15 @@ Provides a resource to create a cynosdb cluster_password_complexity
 Example Usage
 
 ```hcl
-
 resource "tencentcloud_cynosdb_cluster_password_complexity" "cluster_password_complexity" {
-  cluster_id                           = "cynosdbmysql-cgd2gpwr"
-  validate_password_length             = 8
-  validate_password_mixed_case_count   = 1
+  cluster_id = "cynosdbpg-bzxxrmtq"
+  validate_password_length = 8
+  validate_password_mixed_case_count = 1
   validate_password_special_char_count = 1
-  validate_password_number_count       = 1
-  validate_password_policy             = "STRONG"
-  validate_password_dictionary = [
-    "cccc",
-    "xxxx",
-  ]
+  validate_password_number_count = 1
+  validate_password_policy = "MEDIUM"
+  validate_password_dictionary =
 }
-
 ```
 
 Import
@@ -33,15 +28,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudCynosdbClusterPasswordComplexity() *schema.Resource {
@@ -56,7 +48,6 @@ func resourceTencentCloudCynosdbClusterPasswordComplexity() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
@@ -108,15 +99,13 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityCreate(d *schema.Resour
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = cynosdb.NewOpenClusterPasswordComplexityRequest()
 		response  = cynosdb.NewOpenClusterPasswordComplexityResponse()
-		clusterId string
+		paramName string
 	)
 	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
 		request.ClusterId = helper.String(v.(string))
 	}
 
@@ -163,35 +152,15 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityCreate(d *schema.Resour
 		return err
 	}
 
-	d.SetId(clusterId)
+	paramName = *response.Response.ParamName
+	d.SetId(paramName)
 
-	flowId := *response.Response.FlowId
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("create cynosdb clusterPasswordComplexity is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb clusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
-	}
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbClusterPasswordComplexityStateRefreshFunc(d.Id(), []string{}))
 
-	err = service.CopyClusterPasswordComplexity(ctx, clusterId)
-	if err != nil {
-		log.Printf("[CRITAL]%s create cynosdb copyClusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudCynosdbClusterPasswordComplexityRead(d, meta)
@@ -202,13 +171,14 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityRead(d *schema.Resource
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	clusterId := d.Id()
+	clusterPasswordComplexityId := d.Id()
 
-	clusterPasswordComplexity, err := service.DescribeCynosdbClusterPasswordComplexityById(ctx, clusterId)
+	clusterPasswordComplexity, err := service.DescribeCynosdbClusterPasswordComplexityById(ctx, paramName)
 	if err != nil {
 		return err
 	}
@@ -219,49 +189,32 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityRead(d *schema.Resource
 		return nil
 	}
 
-	_ = d.Set("cluster_id", clusterId)
+	if clusterPasswordComplexity.ClusterId != nil {
+		_ = d.Set("cluster_id", clusterPasswordComplexity.ClusterId)
+	}
 
 	if clusterPasswordComplexity.ValidatePasswordLength != nil {
-		currentValue, err := strconv.ParseInt(*clusterPasswordComplexity.ValidatePasswordLength.CurrentValue, 10, 64)
-		if err != nil {
-			return err
-		}
-		_ = d.Set("validate_password_length", currentValue)
+		_ = d.Set("validate_password_length", clusterPasswordComplexity.ValidatePasswordLength)
 	}
 
 	if clusterPasswordComplexity.ValidatePasswordMixedCaseCount != nil {
-		currentValue, err := strconv.ParseInt(*clusterPasswordComplexity.ValidatePasswordMixedCaseCount.CurrentValue, 10, 64)
-		if err != nil {
-			return err
-		}
-		_ = d.Set("validate_password_mixed_case_count", currentValue)
+		_ = d.Set("validate_password_mixed_case_count", clusterPasswordComplexity.ValidatePasswordMixedCaseCount)
 	}
 
 	if clusterPasswordComplexity.ValidatePasswordSpecialCharCount != nil {
-		currentValue, err := strconv.ParseInt(*clusterPasswordComplexity.ValidatePasswordSpecialCharCount.CurrentValue, 10, 64)
-		if err != nil {
-			return err
-		}
-		_ = d.Set("validate_password_special_char_count", currentValue)
+		_ = d.Set("validate_password_special_char_count", clusterPasswordComplexity.ValidatePasswordSpecialCharCount)
 	}
 
 	if clusterPasswordComplexity.ValidatePasswordNumberCount != nil {
-		currentValue, err := strconv.ParseInt(*clusterPasswordComplexity.ValidatePasswordNumberCount.CurrentValue, 10, 64)
-		if err != nil {
-			return err
-		}
-		_ = d.Set("validate_password_number_count", currentValue)
+		_ = d.Set("validate_password_number_count", clusterPasswordComplexity.ValidatePasswordNumberCount)
 	}
 
 	if clusterPasswordComplexity.ValidatePasswordPolicy != nil {
-		_ = d.Set("validate_password_policy", clusterPasswordComplexity.ValidatePasswordPolicy.CurrentValue)
+		_ = d.Set("validate_password_policy", clusterPasswordComplexity.ValidatePasswordPolicy)
 	}
 
 	if clusterPasswordComplexity.ValidatePasswordDictionary != nil {
-		if clusterPasswordComplexity.ValidatePasswordDictionary.CurrentValue != nil {
-			dictionary := strings.Split(*clusterPasswordComplexity.ValidatePasswordDictionary.CurrentValue, ",")
-			_ = d.Set("validate_password_dictionary", dictionary)
-		}
+		_ = d.Set("validate_password_dictionary", clusterPasswordComplexity.ValidatePasswordDictionary)
 	}
 
 	return nil
@@ -272,41 +225,67 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityUpdate(d *schema.Resour
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request  = cynosdb.NewModifyClusterPasswordComplexityRequest()
-		response = cynosdb.NewModifyClusterPasswordComplexityResponse()
+		modifyClusterPasswordComplexityRequest  = cynosdb.NewModifyClusterPasswordComplexityRequest()
+		modifyClusterPasswordComplexityResponse = cynosdb.NewModifyClusterPasswordComplexityResponse()
 	)
 
-	clusterId := d.Id()
-	request.ClusterId = &clusterId
+	clusterPasswordComplexityId := d.Id()
 
-	if v, ok := d.GetOkExists("validate_password_length"); ok {
-		request.ValidatePasswordLength = helper.IntInt64(v.(int))
+	request.ParamName = &paramName
+
+	immutableArgs := []string{"cluster_id", "validate_password_length", "validate_password_mixed_case_count", "validate_password_special_char_count", "validate_password_number_count", "validate_password_policy", "validate_password_dictionary"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOkExists("validate_password_mixed_case_count"); ok {
-		request.ValidatePasswordMixedCaseCount = helper.IntInt64(v.(int))
+	if d.HasChange("cluster_id") {
+		if v, ok := d.GetOk("cluster_id"); ok {
+			request.ClusterId = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := d.GetOkExists("validate_password_special_char_count"); ok {
-		request.ValidatePasswordSpecialCharCount = helper.IntInt64(v.(int))
+	if d.HasChange("validate_password_length") {
+		if v, ok := d.GetOkExists("validate_password_length"); ok {
+			request.ValidatePasswordLength = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOkExists("validate_password_number_count"); ok {
-		request.ValidatePasswordNumberCount = helper.IntInt64(v.(int))
+	if d.HasChange("validate_password_mixed_case_count") {
+		if v, ok := d.GetOkExists("validate_password_mixed_case_count"); ok {
+			request.ValidatePasswordMixedCaseCount = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOk("validate_password_policy"); ok {
-		request.ValidatePasswordPolicy = helper.String(v.(string))
+	if d.HasChange("validate_password_special_char_count") {
+		if v, ok := d.GetOkExists("validate_password_special_char_count"); ok {
+			request.ValidatePasswordSpecialCharCount = helper.IntInt64(v.(int))
+		}
 	}
 
-	if v, ok := d.GetOk("validate_password_dictionary"); ok {
-		validatePasswordDictionarySet := v.(*schema.Set).List()
-		for i := range validatePasswordDictionarySet {
-			validatePasswordDictionary := validatePasswordDictionarySet[i].(string)
-			request.ValidatePasswordDictionary = append(request.ValidatePasswordDictionary, &validatePasswordDictionary)
+	if d.HasChange("validate_password_number_count") {
+		if v, ok := d.GetOkExists("validate_password_number_count"); ok {
+			request.ValidatePasswordNumberCount = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("validate_password_policy") {
+		if v, ok := d.GetOk("validate_password_policy"); ok {
+			request.ValidatePasswordPolicy = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("validate_password_dictionary") {
+		if v, ok := d.GetOk("validate_password_dictionary"); ok {
+			validatePasswordDictionarySet := v.(*schema.Set).List()
+			for i := range validatePasswordDictionarySet {
+				validatePasswordDictionary := validatePasswordDictionarySet[i].(string)
+				request.ValidatePasswordDictionary = append(request.ValidatePasswordDictionary, &validatePasswordDictionary)
+			}
 		}
 	}
 
@@ -317,7 +296,6 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityUpdate(d *schema.Resour
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -325,33 +303,20 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityUpdate(d *schema.Resour
 		return err
 	}
 
-	flowId := *response.Response.FlowId
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("update cynosdb clusterPasswordComplexity is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s update cynosdb clusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbClusterPasswordComplexityStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
-	err = service.CopyClusterPasswordComplexity(ctx, clusterId)
-	if err != nil {
-		log.Printf("[CRITAL]%s update cynosdb copyClusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbClusterPasswordComplexityStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudCynosdbClusterPasswordComplexityRead(d, meta)
@@ -365,32 +330,18 @@ func resourceTencentCloudCynosdbClusterPasswordComplexityDelete(d *schema.Resour
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	clusterId := d.Id()
+	clusterPasswordComplexityId := d.Id()
 
-	flowId, err := service.DeleteCynosdbClusterPasswordComplexityById(ctx, clusterId)
-	if err != nil {
+	if err := service.DeleteCynosdbClusterPasswordComplexityById(ctx, paramName); err != nil {
 		return err
 	}
 
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeFlow(ctx, flowId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("delete cynosdb clusterPasswordComplexity is processing"))
-		}
-	})
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	if err != nil {
-		log.Printf("[CRITAL]%s delete cynosdb clusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 30*readRetryTimeout, time.Second, service.CynosdbClusterPasswordComplexityStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

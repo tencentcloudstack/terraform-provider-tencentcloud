@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixClbInstanceMixIpTargetConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudClbInstanceMixIpTargetConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,8 +29,8 @@ func TestAccTencentCloudNeedFixClbInstanceMixIpTargetConfigResource_basic(t *tes
 const testAccClbInstanceMixIpTargetConfig = `
 
 resource "tencentcloud_clb_instance_mix_ip_target_config" "instance_mix_ip_target_config" {
-  load_balancer_id = "lb-5dnrkgry"
-  mix_ip_target = false
+  load_balancer_ids = 
+  mix_ip_target = 
 }
 
 `

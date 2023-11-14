@@ -1,36 +1,31 @@
 /*
-Provides a resource to create a dbbrain sql_filter.
+Provides a resource to create a dbbrain sql_filter
 
 Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-variable "region" {
-  default = "ap-guangzhou"
-}
-
-data "tencentcloud_mysql_instance" "mysql" {
-  instance_name = "instance_name"
-}
-
-locals {
-  mysql_id = data.tencentcloud_mysql_instance.mysql.instance_list.0.mysql_id
-}
-
 resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
-  instance_id = local.mysql_id
+  instance_id = &lt;nil&gt;
   session_token {
-    user = "test"
-	password = "===password==="
-  }
-  sql_type = "SELECT"
-  filter_key = "filter_key"
-  max_concurrency = 10
-  duration = 3600
-}
+		user = &lt;nil&gt;
+		password = &lt;nil&gt;
 
+  }
+  sql_type = &lt;nil&gt;
+  filter_key = &lt;nil&gt;
+  max_concurrency = &lt;nil&gt;
+  duration = &lt;nil&gt;
+  product = &lt;nil&gt;
+  status = &lt;nil&gt;
+}
+```
+
+Import
+
+dbbrain sql_filter can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dbbrain_sql_filter.sql_filter sql_filter_id
 ```
 */
 package tencentcloud
@@ -38,97 +33,89 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudDbbrainSqlFilter() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudDbbrainSqlFilterRead,
 		Create: resourceTencentCloudDbbrainSqlFilterCreate,
+		Read:   resourceTencentCloudDbbrainSqlFilterRead,
 		Update: resourceTencentCloudDbbrainSqlFilterUpdate,
 		Delete: resourceTencentCloudDbbrainSqlFilterDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "instance id.",
+				Type:        schema.TypeString,
+				Description: "Instance id.",
 			},
 
 			"session_token": {
-				Type:        schema.TypeList,
-				MaxItems:    1,
 				Required:    true,
-				Description: "session token.",
+				Type:        schema.TypeString,
+				Description: "Session token.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"user": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "user name.",
+							Description: "User name.",
 						},
 						"password": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "password.",
+							Description: "Password.",
 						},
 					},
 				},
 			},
 
 			"sql_type": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "sql type, optional value is SELECT, UPDATE, DELETE, INSERT, REPLACE.",
+				Type:        schema.TypeString,
+				Description: "Sql type, optional value is SELECT, UPDATE, DELETE, INSERT, REPLACE.",
 			},
 
 			"filter_key": {
-				Type:        schema.TypeString,
 				Required:    true,
-				Description: "filter key.",
+				Type:        schema.TypeString,
+				Description: "Filter key.",
 			},
 
 			"max_concurrency": {
-				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "maximum concurreny.",
+				Type:        schema.TypeInt,
+				Description: "Maxmum concurreny.",
 			},
 
 			"duration": {
-				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "filter duration.",
+				Type:        schema.TypeInt,
+				Description: "Filter duration.",
 			},
 
 			"product": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "product, optional value is &amp;#39;mysql&amp;#39;, &amp;#39;cynosdb&amp;#39;.",
+				Type:        schema.TypeString,
+				Description: "Product, optional value is &amp;amp;#39;mysql&amp;amp;#39;, &amp;amp;#39;cynosdb&amp;amp;#39;.",
 			},
 
 			"status": {
-				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
-				Description: "filter status.",
-			},
-
-			"filter_id": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "filter id.",
+				Type:        schema.TypeString,
+				Description: "Filter status.",
 			},
 		},
 	}
 }
+
 func resourceTencentCloudDbbrainSqlFilterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dbbrain_sql_filter.create")()
 	defer inconsistentCheck(d, meta)()
@@ -136,16 +123,18 @@ func resourceTencentCloudDbbrainSqlFilterCreate(d *schema.ResourceData, meta int
 	logId := getLogId(contextNil)
 
 	var (
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		request    = dbbrain.NewCreateSqlFilterRequest()
-		response   *dbbrain.CreateSqlFilterResponse
+		response   = dbbrain.NewCreateSqlFilterResponse()
 		instanceId string
-		filterId   string
+		filterId   int
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("session_token"); ok {
+		request.SessionToken = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("sql_type"); ok {
@@ -156,11 +145,11 @@ func resourceTencentCloudDbbrainSqlFilterCreate(d *schema.ResourceData, meta int
 		request.FilterKey = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("max_concurrency"); ok {
+	if v, ok := d.GetOkExists("max_concurrency"); ok {
 		request.MaxConcurrency = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("duration"); ok {
+	if v, ok := d.GetOkExists("duration"); ok {
 		request.Duration = helper.IntInt64(v.(int))
 	}
 
@@ -168,122 +157,88 @@ func resourceTencentCloudDbbrainSqlFilterCreate(d *schema.ResourceData, meta int
 		request.Product = helper.String(v.(string))
 	}
 
-	sessionToken, err := getSessionToken(d, meta, ctx)
-	if err != nil {
-		return err
-	}
-	if sessionToken != nil {
-		request.SessionToken = sessionToken
+	if v, ok := d.GetOk("status"); ok {
+		request.Status = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDbbrainClient().CreateSqlFilter(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create dbbrain sqlFilter failed, reason:%+v", logId, err)
 		return err
 	}
 
-	filterId = helper.Int64ToStr(*response.Response.FilterId)
+	instanceId = *response.Response.InstanceId
+	d.SetId(strings.Join([]string{instanceId, helper.Int64ToStr(filterId)}, FILED_SP))
 
-	d.SetId(instanceId + FILED_SP + filterId)
 	return resourceTencentCloudDbbrainSqlFilterRead(d, meta)
-}
-
-func getSessionToken(d *schema.ResourceData, meta interface{}, ctx context.Context) (sessionToken *string, errRet error) {
-	var (
-		logId      = getLogId(contextNil)
-		instanceId *string
-		product    *string
-	)
-
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("product"); ok {
-		product = helper.String(v.(string))
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "session_token"); ok {
-		var user *string
-		var pw *string
-		if v, ok := dMap["user"]; ok {
-			user = helper.String(v.(string))
-		}
-		if v, ok := dMap["password"]; ok {
-			pw = helper.String(v.(string))
-		}
-
-		service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-		sessionToken, errRet = service.getSessionToken(ctx, instanceId, user, pw, product)
-
-		if errRet != nil {
-			return
-		}
-
-		log.Printf("[DEBUG]%s verify user account success, sessionToken [%s]\n", logId, *sessionToken)
-	}
-	return
 }
 
 func resourceTencentCloudDbbrainSqlFilterRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dbbrain_sql_filter.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-		idSplit []string
-	)
+	logId := getLogId(contextNil)
 
-	idSplit = strings.Split(d.Id(), FILED_SP)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
 	filterId := idSplit[1]
 
-	sqlFilter, err := service.DescribeDbbrainSqlFilter(ctx, helper.String(instanceId), helper.String(filterId))
+	sqlFilter, err := service.DescribeDbbrainSqlFilterById(ctx, instanceId, filterId)
 	if err != nil {
 		return err
 	}
 
 	if sqlFilter == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `sqlFilter` %s does not exist", d.Id())
+		log.Printf("[WARN]%s resource `DbbrainSqlFilter` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	_ = d.Set("instance_id", instanceId)
+	if sqlFilter.InstanceId != nil {
+		_ = d.Set("instance_id", sqlFilter.InstanceId)
+	}
+
+	if sqlFilter.SessionToken != nil {
+	}
 
 	if sqlFilter.SqlType != nil {
 		_ = d.Set("sql_type", sqlFilter.SqlType)
 	}
 
-	if sqlFilter.OriginKeys != nil {
-		_ = d.Set("filter_key", sqlFilter.OriginKeys)
+	if sqlFilter.FilterKey != nil {
+		_ = d.Set("filter_key", sqlFilter.FilterKey)
 	}
 
 	if sqlFilter.MaxConcurrency != nil {
 		_ = d.Set("max_concurrency", sqlFilter.MaxConcurrency)
 	}
 
-	if sqlFilter.Status != nil {
-		_ = d.Set("status", sqlFilter.Status)
+	if sqlFilter.Duration != nil {
+		_ = d.Set("duration", sqlFilter.Duration)
 	}
 
-	if sqlFilter.Id != nil {
-		_ = d.Set("filter_id", sqlFilter.Id)
+	if sqlFilter.Product != nil {
+		_ = d.Set("product", sqlFilter.Product)
+	}
+
+	if sqlFilter.Status != nil {
+		_ = d.Set("status", sqlFilter.Status)
 	}
 
 	return nil
@@ -293,39 +248,26 @@ func resourceTencentCloudDbbrainSqlFilterUpdate(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dbbrain_sql_filter.update")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		request = dbbrain.NewModifySqlFiltersRequest()
-	)
+	logId := getLogId(contextNil)
+
+	request := dbbrain.NewModifySqlFiltersRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	instanceId := helper.String(idSplit[0])
+	instanceId := idSplit[0]
 	filterId := idSplit[1]
-	request.InstanceId = instanceId
-	request.FilterIds = []*int64{helper.StrToInt64Point(filterId)}
 
-	if d.HasChange("instance_id") {
-		return fmt.Errorf("`instance_id` do not support change now.")
-	}
+	request.InstanceId = &instanceId
+	request.FilterId = &filterId
 
-	if d.HasChange("sql_type") {
-		return fmt.Errorf("`sql_type` do not support change now.")
-	}
+	immutableArgs := []string{"instance_id", "session_token", "sql_type", "filter_key", "max_concurrency", "duration", "product", "status"}
 
-	if d.HasChange("filter_key") {
-		return fmt.Errorf("`filter_key` do not support change now.")
-	}
-
-	if d.HasChange("max_concurrency") {
-		return fmt.Errorf("`max_concurrency` do not support change now.")
-	}
-
-	if d.HasChange("duration") {
-		return fmt.Errorf("`duration` do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("status") {
@@ -334,34 +276,17 @@ func resourceTencentCloudDbbrainSqlFilterUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	if d.HasChange("product") {
-		if v, ok := d.GetOk("product"); ok {
-			request.Product = helper.String(v.(string))
-		}
-	}
-
-	sessionToken, err := getSessionToken(d, meta, ctx)
-	if err != nil {
-		return err
-	}
-	if sessionToken != nil {
-		request.SessionToken = sessionToken
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDbbrainClient().ModifySqlFilters(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-
 		return nil
 	})
-
 	if err != nil {
-		log.Printf("[CRITAL]%s modify dbbrain sqlFilter failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update dbbrain sqlFilter failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -372,25 +297,18 @@ func resourceTencentCloudDbbrainSqlFilterDelete(d *schema.ResourceData, meta int
 	defer logElapsed("resource.tencentcloud_dbbrain_sql_filter.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-	)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
+	instanceId := idSplit[0]
+	filterId := idSplit[1]
 
-	instanceId := helper.String(idSplit[0])
-	filterId := helper.String(idSplit[1])
-	sessionToken, err := getSessionToken(d, meta, ctx)
-	if err != nil {
-		return err
-	}
-
-	if err := service.DeleteDbbrainSqlFilterById(ctx, instanceId, filterId, sessionToken); err != nil {
+	if err := service.DeleteDbbrainSqlFilterById(ctx, instanceId, filterId); err != nil {
 		return err
 	}
 

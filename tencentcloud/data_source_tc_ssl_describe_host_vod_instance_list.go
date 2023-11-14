@@ -5,8 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ssl_describe_host_vod_instance_list" "describe_host_vod_instance_list" {
-  certificate_id = "8u8DII0l"
-  resource_type = "vod"
+  certificate_id = ""
+  resource_type = ""
+  is_cache =
+  filters {
+		filter_key = ""
+		filter_value = ""
+
+  }
+  old_certificate_id = ""
   }
 ```
 */
@@ -14,7 +21,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -78,7 +84,7 @@ func dataSourceTencentCloudSslDescribeHostVodInstanceList() *schema.Resource {
 						"domain": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "domain name.",
+							Description: "Domain name.",
 						},
 						"cert_id": {
 							Type:        schema.TypeString,
@@ -173,7 +179,7 @@ func dataSourceTencentCloudSslDescribeHostVodInstanceListRead(d *schema.Resource
 				vodInstanceDetailMap["cert_id"] = vodInstanceDetail.CertId
 			}
 
-			ids = append(ids, *vodInstanceDetail.CertId)
+			ids = append(ids, *vodInstanceDetail.CertificateId)
 			tmpList = append(tmpList, vodInstanceDetailMap)
 		}
 

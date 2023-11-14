@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_cluster_detail_databases" "cluster_detail_databases" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  db_name    = "users"
-}
+  cluster_id = "cynosdbmysql-xxxxxxx"
+  db_name = "test"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
@@ -30,11 +29,13 @@ func dataSourceTencentCloudCynosdbClusterDetailDatabases() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"db_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Database Name.",
 			},
+
 			"db_infos": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -123,6 +124,7 @@ func dataSourceTencentCloudCynosdbClusterDetailDatabases() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -136,38 +138,36 @@ func dataSourceTencentCloudCynosdbClusterDetailDatabasesRead(d *schema.ResourceD
 	defer logElapsed("data_source.tencentcloud_cynosdb_cluster_detail_databases.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		dbInfos   []*cynosdb.DbInfo
-		clusterId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
 
 	if v, ok := d.GetOk("db_name"); ok {
 		paramMap["DbName"] = helper.String(v.(string))
 	}
 
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var dbInfos []*cynosdb.DbInfo
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbClusterDetailDatabasesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
 		dbInfos = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(dbInfos))
 	tmpList := make([]map[string]interface{}, 0, len(dbInfos))
 
 	if dbInfos != nil {
@@ -214,7 +214,7 @@ func dataSourceTencentCloudCynosdbClusterDetailDatabasesRead(d *schema.ResourceD
 					userHostPrivilegesList = append(userHostPrivilegesList, userHostPrivilegesMap)
 				}
 
-				dbInfoMap["user_host_privileges"] = userHostPrivilegesList
+				dbInfoMap["user_host_privileges"] = []interface{}{userHostPrivilegesList}
 			}
 
 			if dbInfo.DbId != nil {
@@ -241,19 +241,19 @@ func dataSourceTencentCloudCynosdbClusterDetailDatabasesRead(d *schema.ResourceD
 				dbInfoMap["cluster_id"] = dbInfo.ClusterId
 			}
 
+			ids = append(ids, *dbInfo.DbName)
 			tmpList = append(tmpList, dbInfoMap)
 		}
 
 		_ = d.Set("db_infos", tmpList)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

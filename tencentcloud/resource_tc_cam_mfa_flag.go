@@ -4,22 +4,21 @@ Provides a resource to create a cam mfa_flag
 Example Usage
 
 ```hcl
-data "tencentcloud_user_info" "info"{}
-
 resource "tencentcloud_cam_mfa_flag" "mfa_flag" {
-  op_uin = data.tencentcloud_user_info.info.uin
+  op_uin = 20003xxxxxxx
   login_flag {
-	phone = 0
-	stoken = 1
-	wechat = 0
+		phone = 0
+		stoken = 1
+		wechat = 0
+
   }
   action_flag {
-	phone = 0
-	stoken = 1
-	wechat = 0
+		phone = 0
+		stoken = 1
+		wechat = 0
+
   }
 }
-
 ```
 
 Import
@@ -34,14 +33,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-	"strconv"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCamMfaFlag() *schema.Resource {
@@ -55,7 +52,7 @@ func resourceTencentCloudCamMfaFlag() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"op_uin": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Operate uin.",
 			},
@@ -118,12 +115,14 @@ func resourceTencentCloudCamMfaFlag() *schema.Resource {
 func resourceTencentCloudCamMfaFlagCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cam_mfa_flag.create")()
 	defer inconsistentCheck(d, meta)()
-	var opUin int
 
-	if v, ok := d.GetOk("op_uin"); ok {
-		opUin = v.(int)
+	var opUin uint64
+	if v, ok := d.GetOkExists("op_uin"); ok {
+		opUin = v.(uint64)
 	}
-	d.SetId(strconv.Itoa(opUin))
+
+	d.SetId(helper.Int64ToStr(int64(opUin)))
+
 	return resourceTencentCloudCamMfaFlagUpdate(d, meta)
 }
 
@@ -134,54 +133,57 @@ func resourceTencentCloudCamMfaFlagRead(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	opUin := d.Id()
-	uin, err := strconv.Atoi(opUin)
-	if err != nil {
-		return err
-	}
+
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	loginFlag, actionFlag, err := service.DescribeCamMfaFlagById(ctx, uint64(uin))
+	mfaFlagId := d.Id()
+
+	mfaFlag, err := service.DescribeCamMfaFlagById(ctx, opUin)
 	if err != nil {
 		return err
 	}
 
-	if loginFlag == nil && actionFlag == nil {
-		log.Printf("[WARN]%s resource `CamMfaFlag` not found, please check if it has been deleted.\n", logId)
+	if mfaFlag == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `CamMfaFlag` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if loginFlag != nil {
+	if mfaFlag.OpUin != nil {
+		_ = d.Set("op_uin", mfaFlag.OpUin)
+	}
+
+	if mfaFlag.LoginFlag != nil {
 		loginFlagMap := map[string]interface{}{}
 
-		if loginFlag.Phone != nil {
-			loginFlagMap["phone"] = loginFlag.Phone
+		if mfaFlag.LoginFlag.Phone != nil {
+			loginFlagMap["phone"] = mfaFlag.LoginFlag.Phone
 		}
 
-		if loginFlag.Stoken != nil {
-			loginFlagMap["stoken"] = loginFlag.Stoken
+		if mfaFlag.LoginFlag.Stoken != nil {
+			loginFlagMap["stoken"] = mfaFlag.LoginFlag.Stoken
 		}
 
-		if loginFlag.Wechat != nil {
-			loginFlagMap["wechat"] = loginFlag.Wechat
+		if mfaFlag.LoginFlag.Wechat != nil {
+			loginFlagMap["wechat"] = mfaFlag.LoginFlag.Wechat
 		}
 
 		_ = d.Set("login_flag", []interface{}{loginFlagMap})
 	}
 
-	if actionFlag != nil {
+	if mfaFlag.ActionFlag != nil {
 		actionFlagMap := map[string]interface{}{}
 
-		if actionFlag.Phone != nil {
-			actionFlagMap["phone"] = actionFlag.Phone
+		if mfaFlag.ActionFlag.Phone != nil {
+			actionFlagMap["phone"] = mfaFlag.ActionFlag.Phone
 		}
 
-		if actionFlag.Stoken != nil {
-			actionFlagMap["stoken"] = actionFlag.Stoken
+		if mfaFlag.ActionFlag.Stoken != nil {
+			actionFlagMap["stoken"] = mfaFlag.ActionFlag.Stoken
 		}
 
-		if actionFlag.Wechat != nil {
-			actionFlagMap["wechat"] = actionFlag.Wechat
+		if mfaFlag.ActionFlag.Wechat != nil {
+			actionFlagMap["wechat"] = mfaFlag.ActionFlag.Wechat
 		}
 
 		_ = d.Set("action_flag", []interface{}{actionFlagMap})
@@ -195,13 +197,20 @@ func resourceTencentCloudCamMfaFlagUpdate(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	opUin := d.Id()
+
 	request := cam.NewSetMfaFlagRequest()
-	uin, err := strconv.Atoi(opUin)
-	if err != nil {
-		return err
+
+	mfaFlagId := d.Id()
+
+	request.OpUin = &opUin
+
+	immutableArgs := []string{"op_uin", "login_flag", "action_flag"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
-	request.OpUin = common.Uint64Ptr(uint64(uin))
 
 	if d.HasChange("login_flag") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "login_flag"); ok {
@@ -235,7 +244,7 @@ func resourceTencentCloudCamMfaFlagUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().SetMfaFlag(request)
 		if e != nil {
 			return retryError(e)

@@ -12,9 +12,9 @@ data "tencentcloud_dts_migrate_db_instances" "migrate_db_instances" {
   limit = 10
   offset = 10
   account_mode = "self"
-  tmp_secret_id = "AKIDvBDyVmna9TadcS4YzfBZmkU5TbX12345"
-  tmp_secret_key = "ZswjGWWHm24qMeiX6QUJsELDpC12345"
-  tmp_token = "JOqqCPVuWdNZvlVDLxxx"
+  tmp_secret_id = ""
+  tmp_secret_key = ""
+  tmp_token = ""
       }
 ```
 */
@@ -22,7 +22,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
@@ -72,25 +71,31 @@ func dataSourceTencentCloudDtsMigrateDbInstances() *schema.Resource {
 			"account_mode": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The owning account of the resource is null or self(resources in the self account), other(resources in the other account).",
+				Description: "The owning account of the resource is null or self(resources in the self account)、other(resources in the other account).",
 			},
 
 			"tmp_secret_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary secret id, used across account.",
+				Description: "Temporary secret id，used across account.",
 			},
 
 			"tmp_secret_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary secret key, used across account.",
+				Description: "Temporary secret key，used across account.",
 			},
 
 			"tmp_token": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary token, used across account.",
+				Description: "Temporary token，used across account.",
+			},
+
+			"total_count": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Total count.",
 			},
 
 			"instances": {
@@ -127,7 +132,7 @@ func dataSourceTencentCloudDtsMigrateDbInstances() *schema.Resource {
 						"hint": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The reason of can&#39;t used in migration.",
+							Description: "The reason of can&amp;#39;t used in migration.",
 						},
 					},
 				},
@@ -173,6 +178,14 @@ func dataSourceTencentCloudDtsMigrateDbInstancesRead(d *schema.ResourceData, met
 		paramMap["InstanceName"] = helper.String(v.(string))
 	}
 
+	if v, _ := d.GetOk("limit"); v != nil {
+		paramMap["Limit"] = helper.IntInt64(v.(int))
+	}
+
+	if v, _ := d.GetOk("offset"); v != nil {
+		paramMap["Offset"] = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("account_mode"); ok {
 		paramMap["AccountMode"] = helper.String(v.(string))
 	}
@@ -208,6 +221,10 @@ func dataSourceTencentCloudDtsMigrateDbInstancesRead(d *schema.ResourceData, met
 	ids := make([]string, 0, len(instances))
 	tmpList := make([]map[string]interface{}, 0, len(instances))
 
+	if totalCount != nil {
+		_ = d.Set("total_count", totalCount)
+	}
+
 	if instances != nil {
 		for _, migrateDBItem := range instances {
 			migrateDBItemMap := map[string]interface{}{}
@@ -241,6 +258,10 @@ func dataSourceTencentCloudDtsMigrateDbInstancesRead(d *schema.ResourceData, met
 		}
 
 		_ = d.Set("instances", tmpList)
+	}
+
+	if requestId != nil {
+		_ = d.Set("request_id", requestId)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

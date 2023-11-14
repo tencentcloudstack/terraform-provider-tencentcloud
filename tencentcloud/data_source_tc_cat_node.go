@@ -4,19 +4,20 @@ Use this data source to query detailed information of cat node
 Example Usage
 
 ```hcl
-data "tencentcloud_cat_node" "node"{
-  node_type = 1
-  location = 2
-  is_ipv6 = false
-}
+data "tencentcloud_cat_node" "node" {
+  node_type =
+  location =
+  is_i_pv6 =
+  node_name = ""
+  pay_mode =
+  task_type =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
@@ -28,39 +29,45 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 		Read: dataSourceTencentCloudCatNodeRead,
 		Schema: map[string]*schema.Schema{
 			"node_type": {
-				Type:        schema.TypeInt,
 				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Node type 1:IDC,2:LastMile,3:Mobile.",
 			},
 
 			"location": {
-				Type:        schema.TypeInt,
 				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Node area:1=Chinese Mainland,2=Hong Kong, Macao and Taiwan,3=Overseas.",
 			},
 
-			"is_ipv6": {
-				Type:        schema.TypeBool,
+			"is_i_pv6": {
 				Optional:    true,
-				Description: "is IPv6.",
+				Type:        schema.TypeBool,
+				Description: "Is IPv6.",
 			},
 
 			"node_name": {
-				Type:        schema.TypeString,
 				Optional:    true,
+				Type:        schema.TypeString,
 				Description: "Node name.",
 			},
 
 			"pay_mode": {
-				Type:        schema.TypeInt,
 				Optional:    true,
+				Type:        schema.TypeInt,
 				Description: "Payment mode:1=Trial version,2=Paid version.",
 			},
 
-			"node_define": {
-				Type:        schema.TypeList,
+			"task_type": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Task type: 1=Page performance, 2=File upload, 3=File download, 4=Port performance, 5=Net quality, 6=Audiovisual experience.",
+			},
+
+			"node_set": {
 				Computed:    true,
-				Description: "Probe node list.",
+				Type:        schema.TypeList,
+				Description: "Node List. Note: This field may return null, indicating that no valid values can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -71,17 +78,17 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 						"code": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Node ID.",
+							Description: "Node code.",
 						},
 						"type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Node Type;1 = IDC,2 = LastMile,3 = Mobile.",
+							Description: "Node type 1:IDC,2:LastMile,3:Mobile.",
 						},
 						"net_service": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Network service provider.",
+							Description: "Internet service provider.",
 						},
 						"district": {
 							Type:        schema.TypeString,
@@ -93,31 +100,28 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 							Computed:    true,
 							Description: "City.",
 						},
-						"ip_type": {
+						"i_p_type": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "IP type:1 = IPv4,2 = IPv6.",
+							Description: "IP Type. 1=IPv4, 2=IPv6. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"location": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Node area:1=Chinese Mainland,2=Hong Kong, Macao and Taiwan,3=Overseas.",
+							Description: "Node area:1=Chinese Mainland,2=Hong Kong, Macao and Taiwan,3=Overseas. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 						"code_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "If the node type is base, it is an availability dial test point; if it is blank, it is an advanced dial test point.",
-						},
-						"node_define_status": {
-							Type:        schema.TypeInt,
-							Computed:    true,
-							Description: "Node status: 1=running, 2=offline.",
+							Description: "Node type. If it is &amp;#39;base&amp;#39;, it is an availability probe point; if it is empty, it is an advanced probe point. Note: This field may return null, indicating that no valid value was found.",
 						},
 						"task_types": {
-							Type:        schema.TypeList,
-							Elem:        &schema.Schema{Type: schema.TypeInt},
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeInt,
+							},
 							Computed:    true,
-							Description: "The task types supported by the node. `1`: page performance, `2`: file upload, `3`: file download, `4`: port performance, `5`: network quality, `6`: audio and video experience.",
+							Description: "Task type: 1=Page performance, 2=File upload, 3=File download, 4=Port performance, 5=Net quality, 6=Audiovisual experience. Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
@@ -137,120 +141,110 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("node_type"); v != nil {
-		paramMap["node_type"] = helper.IntInt64(v.(int))
+		paramMap["NodeType"] = helper.IntInt64(v.(int))
 	}
 
 	if v, _ := d.GetOk("location"); v != nil {
-		paramMap["location"] = helper.IntInt64(v.(int))
+		paramMap["Location"] = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("is_ipv6"); v != nil {
-		paramMap["is_ipv6"] = helper.Bool(v.(bool))
+	if v, _ := d.GetOk("is_i_pv6"); v != nil {
+		paramMap["IsIPv6"] = helper.Bool(v.(bool))
 	}
 
 	if v, ok := d.GetOk("node_name"); ok {
-		paramMap["node_name"] = helper.String(v.(string))
+		paramMap["NodeName"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("pay_mode"); ok {
-		paramMap["pay_mode"] = helper.IntInt64(v.(int))
+	if v, _ := d.GetOk("pay_mode"); v != nil {
+		paramMap["PayMode"] = helper.IntInt64(v.(int))
 	}
 
-	catService := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	if v, _ := d.GetOk("task_type"); v != nil {
+		paramMap["TaskType"] = helper.IntInt64(v.(int))
+	}
 
-	var nodeSets []*cat.NodeDefine
+	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var nodeSet []*cat.NodeDefineExt
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		results, e := catService.DescribeCatProbeNodeByFilter(ctx, paramMap)
+		result, e := service.DescribeCatNodeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		nodeSets = results
+		nodeSet = result
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s read Cat nodeSet failed, reason:%+v", logId, err)
 		return err
 	}
 
-	var nodeSetExt []*cat.NodeDefineExt
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		results, e := catService.DescribeCatNodeByFilter(ctx, paramMap)
-		if e != nil {
-			return retryError(e)
+	ids := make([]string, 0, len(nodeSet))
+	tmpList := make([]map[string]interface{}, 0, len(nodeSet))
+
+	if nodeSet != nil {
+		for _, nodeDefineExt := range nodeSet {
+			nodeDefineExtMap := map[string]interface{}{}
+
+			if nodeDefineExt.Name != nil {
+				nodeDefineExtMap["name"] = nodeDefineExt.Name
+			}
+
+			if nodeDefineExt.Code != nil {
+				nodeDefineExtMap["code"] = nodeDefineExt.Code
+			}
+
+			if nodeDefineExt.Type != nil {
+				nodeDefineExtMap["type"] = nodeDefineExt.Type
+			}
+
+			if nodeDefineExt.NetService != nil {
+				nodeDefineExtMap["net_service"] = nodeDefineExt.NetService
+			}
+
+			if nodeDefineExt.District != nil {
+				nodeDefineExtMap["district"] = nodeDefineExt.District
+			}
+
+			if nodeDefineExt.City != nil {
+				nodeDefineExtMap["city"] = nodeDefineExt.City
+			}
+
+			if nodeDefineExt.IPType != nil {
+				nodeDefineExtMap["i_p_type"] = nodeDefineExt.IPType
+			}
+
+			if nodeDefineExt.Location != nil {
+				nodeDefineExtMap["location"] = nodeDefineExt.Location
+			}
+
+			if nodeDefineExt.CodeType != nil {
+				nodeDefineExtMap["code_type"] = nodeDefineExt.CodeType
+			}
+
+			if nodeDefineExt.TaskTypes != nil {
+				nodeDefineExtMap["task_types"] = nodeDefineExt.TaskTypes
+			}
+
+			ids = append(ids, *nodeDefineExt.Code)
+			tmpList = append(tmpList, nodeDefineExtMap)
 		}
-		nodeSetExt = results
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read Cat nodeSet failed, reason:%+v", logId, err)
-		return err
+
+		_ = d.Set("node_set", tmpList)
 	}
 
-	ids := make([]string, 0, len(nodeSets))
-	nodeSetList := make([]map[string]interface{}, 0, len(nodeSets))
-	if nodeSets != nil {
-		for _, nodeSet := range nodeSets {
-			nodeSetMap := map[string]interface{}{}
-			if nodeSet.Name != nil {
-				nodeSetMap["name"] = nodeSet.Name
-			}
-			if nodeSet.Code != nil {
-				nodeSetMap["code"] = nodeSet.Code
-			}
-			if nodeSet.Type != nil {
-				nodeSetMap["type"] = nodeSet.Type
-			}
-			if nodeSet.NetService != nil {
-				nodeSetMap["net_service"] = nodeSet.NetService
-			}
-			if nodeSet.District != nil {
-				nodeSetMap["district"] = nodeSet.District
-			}
-			if nodeSet.City != nil {
-				nodeSetMap["city"] = nodeSet.City
-			}
-			if nodeSet.IPType != nil {
-				nodeSetMap["ip_type"] = nodeSet.IPType
-			}
-			if nodeSet.Location != nil {
-				nodeSetMap["location"] = nodeSet.Location
-			}
-			if nodeSet.CodeType != nil {
-				nodeSetMap["code_type"] = nodeSet.CodeType
-			}
-			if nodeSet.NodeDefineStatus != nil {
-				nodeSetMap["node_define_status"] = nodeSet.NodeDefineStatus
-			}
-
-			for _, node := range nodeSetExt {
-				if *node.Code == *nodeSet.Code {
-					if node.TaskTypes != nil {
-						nodeSetMap["task_types"] = node.TaskTypes
-					}
-					break
-				}
-			}
-
-			ids = append(ids, *nodeSet.Name)
-			nodeSetList = append(nodeSetList, nodeSetMap)
-		}
-		d.SetId(helper.DataResourceIdsHash(ids))
-		err = d.Set("node_define", nodeSetList)
-		if err != nil {
-			return err
-		}
-	}
-
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), nodeSetList); e != nil {
+		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

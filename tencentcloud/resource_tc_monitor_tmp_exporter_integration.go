@@ -1,54 +1,24 @@
 /*
-Provides a resource to create a monitor tmpExporterIntegration
-
-~> **NOTE:** If you only want to upgrade the exporter version with same config, you can set `version` under `instanceSpec` with any value to trigger the change.
-
+Provides a resource to create a monitor tmp_exporter_integration
 
 Example Usage
 
-Use blackbox-exporter
-
 ```hcl
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
+resource "tencentcloud_monitor_tmp_exporter_integration" "tmp_exporter_integration" {
   instance_id = "prom-dko9d0nu"
   kind = "blackbox-exporter"
-  content = "{\"name\":\"test\",\"kind\":\"blackbox-exporter\",\"spec\":{\"instanceSpec\":{\"module\":\"http_get\",\"urls\":[\"xx\"]}}}"
+  content = "blackbox-exporter"
   kube_type = 1
-  cluster_id = "cls-bmuaukfu"
+  cluster_id = "job_name: demo-config"
 }
 ```
 
-Use es-exporter
+Import
+
+monitor tmp_exporter_integration can be imported using the id, e.g.
 
 ```
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationEs" {
-  instance_id = tencentcloud_monitor_tmp_instance.tmpInstance.id
-  kind        = "es-exporter"
-  content = jsonencode({
-    "name": "ex-exporter-example",
-    "kind": "es-exporter",
-    "spec": {
-      "instanceSpec": {
-        "url": "http://127.0.0.1:9123",
-        "labels": {
-          "instance": "es-abcd"
-        },
-        "version": "1.70.1",
-        "user": "fugiat Duis minim",
-        "password": "exercitation cillum velit"
-      },
-      "exporterSpec": {
-        "all": true,
-        "indicesSettings": false,
-        "snapshots": false,
-        "indices": true,
-        "shards": false
-      }
-    }
-  })
-  cluster_id = ""
-  kube_type  = 3
-}
+terraform import tencentcloud_monitor_tmp_exporter_integration.tmp_exporter_integration tmp_exporter_integration_id
 ```
 */
 package tencentcloud
@@ -56,52 +26,50 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMonitorTmpExporterIntegration() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudMonitorTmpExporterIntegrationRead,
 		Create: resourceTencentCloudMonitorTmpExporterIntegrationCreate,
+		Read:   resourceTencentCloudMonitorTmpExporterIntegrationRead,
 		Update: resourceTencentCloudMonitorTmpExporterIntegrationUpdate,
 		Delete: resourceTencentCloudMonitorTmpExporterIntegrationDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Instance id.",
 			},
 
 			"kind": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Type.",
 			},
 
 			"content": {
-				Type:        schema.TypeString,
 				Required:    true,
+				Type:        schema.TypeString,
 				Description: "Integration config.",
 			},
 
 			"kube_type": {
+				Optional:    true,
 				Type:        schema.TypeInt,
-				Required:    true,
 				Description: "Integration config.",
 			},
 
 			"cluster_id": {
+				Optional:    true,
 				Type:        schema.TypeString,
-				Required:    true,
 				Description: "Cluster ID.",
 			},
 		},
@@ -115,24 +83,15 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 	logId := getLogId(contextNil)
 
 	var (
-		instanceId string
-		kubeType   int
-		clusterId  string
-		kind       string
-	)
-
-	var (
 		request  = monitor.NewCreateExporterIntegrationRequest()
-		response *monitor.CreateExporterIntegrationResponse
+		response = monitor.NewCreateExporterIntegrationResponse()
+		jobId    string
 	)
-
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("kind"); ok {
-		kind = v.(string)
 		request.Kind = helper.String(v.(string))
 	}
 
@@ -140,98 +99,60 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 		request.Content = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("kube_type"); ok {
-		kubeType = v.(int)
-		request.KubeType = helper.IntInt64(kubeType)
+	if v, ok := d.GetOkExists("kube_type"); ok {
+		request.KubeType = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("cluster_id"); ok {
-		clusterId = v.(string)
-		request.ClusterId = helper.String(clusterId)
+		request.ClusterId = helper.String(v.(string))
 	}
 
-	initStatus := tke.NewDescribePrometheusInstanceInitStatusRequest()
-	initStatus.InstanceId = request.InstanceId
-	err := resource.Retry(8*readRetryTimeout, func() *resource.RetryError {
-		results, errRet := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DescribePrometheusInstanceInitStatus(initStatus)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		status := results.Response.Status
-		if status == nil {
-			return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit status is nil, operate failed"))
-		}
-		if *status == "running" {
-			return nil
-		}
-		if *status == "uninitialized" {
-			iniRequest := tke.NewRunPrometheusInstanceRequest()
-			iniRequest.InstanceId = request.InstanceId
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().RunPrometheusInstance(iniRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-				return nil
-			})
-			if err != nil {
-				return resource.RetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
-			}
-			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
-		}
-		return resource.RetryableError(fmt.Errorf("prometheusInstanceInit status is %v, retry...", *status))
-	})
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateExporterIntegration(request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create monitor tmpExporterIntegration failed, reason:%+v", logId, err)
 		return err
 	}
 
-	tmpExporterIntegrationId := *response.Response.Names[0]
-
-	d.SetId(strings.Join([]string{tmpExporterIntegrationId, instanceId, strconv.Itoa(kubeType), clusterId, kind}, FILED_SP))
+	jobId = *response.Response.JobId
+	d.SetId(jobId)
 
 	return resourceTencentCloudMonitorTmpExporterIntegrationRead(d, meta)
 }
 
 func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmpExporterIntegration.read")()
+	defer logElapsed("resource.tencentcloud_monitor_tmp_exporter_integration.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	tmpExporterIntegrationId := d.Id()
 
-	tmpExporterIntegration, err := service.DescribeMonitorTmpExporterIntegration(ctx, tmpExporterIntegrationId)
-
+	tmpExporterIntegration, err := service.DescribeMonitorTmpExporterIntegrationById(ctx, jobId)
 	if err != nil {
 		return err
 	}
 
 	if tmpExporterIntegration == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpExporterIntegration` %s does not exist", tmpExporterIntegrationId)
+		log.Printf("[WARN]%s resource `MonitorTmpExporterIntegration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if tmpExporterIntegration.InstanceId != nil {
+		_ = d.Set("instance_id", tmpExporterIntegration.InstanceId)
 	}
 
 	if tmpExporterIntegration.Kind != nil {
@@ -240,6 +161,14 @@ func resourceTencentCloudMonitorTmpExporterIntegrationRead(d *schema.ResourceDat
 
 	if tmpExporterIntegration.Content != nil {
 		_ = d.Set("content", tmpExporterIntegration.Content)
+	}
+
+	if tmpExporterIntegration.KubeType != nil {
+		_ = d.Set("kube_type", tmpExporterIntegration.KubeType)
+	}
+
+	if tmpExporterIntegration.ClusterId != nil {
+		_ = d.Set("cluster_id", tmpExporterIntegration.ClusterId)
 	}
 
 	return nil
@@ -253,24 +182,22 @@ func resourceTencentCloudMonitorTmpExporterIntegrationUpdate(d *schema.ResourceD
 
 	request := monitor.NewUpdateExporterIntegrationRequest()
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		request.InstanceId = helper.String(v.(string))
+	tmpExporterIntegrationId := d.Id()
+
+	request.JobId = &jobId
+
+	immutableArgs := []string{"instance_id", "kind", "content", "kube_type", "cluster_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
-	if v, ok := d.GetOk("kind"); ok {
-		request.Kind = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("content"); ok {
-		request.Content = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("kube_type"); ok {
-		request.KubeType = helper.IntInt64(v.(int))
-	}
-
-	if v, ok := d.GetOk("cluster_id"); ok {
-		request.ClusterId = helper.String(v.(string))
+	if d.HasChange("content") {
+		if v, ok := d.GetOk("content"); ok {
+			request.Content = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -278,13 +205,12 @@ func resourceTencentCloudMonitorTmpExporterIntegrationUpdate(d *schema.ResourceD
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update monitor tmpExporterIntegration failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -301,21 +227,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationDelete(d *schema.ResourceD
 	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	tmpExporterIntegrationId := d.Id()
 
-	if err := service.DeleteMonitorTmpExporterIntegrationById(ctx, tmpExporterIntegrationId); err != nil {
-		return err
-	}
-
-	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-		tmpExporterIntegration, errRet := service.DescribeMonitorTmpExporterIntegration(ctx, tmpExporterIntegrationId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if tmpExporterIntegration == nil {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("exporter integration status is %v, retry...", *tmpExporterIntegration.Status))
-	})
-	if err != nil {
+	if err := service.DeleteMonitorTmpExporterIntegrationById(ctx, jobId); err != nil {
 		return err
 	}
 

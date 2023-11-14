@@ -8,18 +8,24 @@ resource "tencentcloud_tsf_release_api_group" "release_api_group" {
   group_id = "grp-qp0rj3zi"
 }
 ```
+
+Import
+
+tsf release_api_group can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_tsf_release_api_group.release_api_group release_api_group_id
+```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudTsfReleaseApiGroup() *schema.Resource {
@@ -27,13 +33,15 @@ func resourceTencentCloudTsfReleaseApiGroup() *schema.Resource {
 		Create: resourceTencentCloudTsfReleaseApiGroupCreate,
 		Read:   resourceTencentCloudTsfReleaseApiGroupRead,
 		Delete: resourceTencentCloudTsfReleaseApiGroupDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"group_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "api group Id.",
+				Description: "Api group Id .",
 			},
 		},
 	}
@@ -70,9 +78,7 @@ func resourceTencentCloudTsfReleaseApiGroupCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	if !*response.Response.Result {
-		return fmt.Errorf("[CRITAL]%s create tsf releaseApiGroup failed", logId)
-	}
+	groupId = *response.Response.GroupId
 	d.SetId(groupId)
 
 	return resourceTencentCloudTsfReleaseApiGroupRead(d, meta)
@@ -83,11 +89,13 @@ func resourceTencentCloudTsfReleaseApiGroupRead(d *schema.ResourceData, meta int
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	groupId := d.Id()
+	releaseApiGroupId := d.Id()
+
 	releaseApiGroup, err := service.DescribeTsfReleaseApiGroupById(ctx, groupId)
 	if err != nil {
 		return err
@@ -109,6 +117,16 @@ func resourceTencentCloudTsfReleaseApiGroupRead(d *schema.ResourceData, meta int
 func resourceTencentCloudTsfReleaseApiGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tsf_release_api_group.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
+	releaseApiGroupId := d.Id()
+
+	if err := service.DeleteTsfReleaseApiGroupById(ctx, groupId); err != nil {
+		return err
+	}
 
 	return nil
 }

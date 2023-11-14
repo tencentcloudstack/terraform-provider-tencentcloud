@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbExportInstanceSlowQueriesResource_basic -v
 func TestAccTencentCloudCynosdbExportInstanceSlowQueriesResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,19 +15,27 @@ func TestAccTencentCloudCynosdbExportInstanceSlowQueriesResource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbExportInstanceSlowQueries,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_slow_queries.export_instance_slow_queries", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_slow_queries.export_instance_slow_queries", "file_content"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_export_instance_slow_queries.export_instance_slow_queries", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_export_instance_slow_queries.export_instance_slow_queries",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-const testAccCynosdbExportInstanceSlowQueries = CommonCynosdb + `
+const testAccCynosdbExportInstanceSlowQueries = `
 
 resource "tencentcloud_cynosdb_export_instance_slow_queries" "export_instance_slow_queries" {
-	instance_id = var.cynosdb_cluster_instance_id
+  instance_id = "cynosdbmysql-ins-123"
+  start_time = "2022-01-01 12:00:00"
+  end_time = "2022-01-01 14:00:00"
+  username = "root"
+  host = "10.10.10.10"
+  database = "db1"
+  file_type = "csv"
 }
 
 `

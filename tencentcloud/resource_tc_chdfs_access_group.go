@@ -6,9 +6,9 @@ Example Usage
 ```hcl
 resource "tencentcloud_chdfs_access_group" "access_group" {
   access_group_name = "testAccessGroup"
-  vpc_type          = 1
-  vpc_id            = "vpc-4owdpnwr"
-  description       = "test access group"
+  vpc_type = 1
+  vpc_id = "test-vpd-id"
+  description = &lt;nil&gt;
 }
 ```
 
@@ -25,12 +25,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudChdfsAccessGroup() *schema.Resource {
@@ -52,7 +51,7 @@ func resourceTencentCloudChdfsAccessGroup() *schema.Resource {
 			"vpc_type": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "vpc network type(1:CVM, 2:BM 1.0).",
+				Description: "Vpc network type(1:CVM, 2:BM 1.0).",
 			},
 
 			"vpc_id": {
@@ -85,7 +84,7 @@ func resourceTencentCloudChdfsAccessGroupCreate(d *schema.ResourceData, meta int
 		request.AccessGroupName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("vpc_type"); v != nil {
+	if v, ok := d.GetOkExists("vpc_type"); ok {
 		request.VpcType = helper.IntUint64(v.(int))
 	}
 
@@ -112,7 +111,7 @@ func resourceTencentCloudChdfsAccessGroupCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	accessGroupId = *response.Response.AccessGroup.AccessGroupId
+	accessGroupId = *response.Response.AccessGroupId
 	d.SetId(accessGroupId)
 
 	return resourceTencentCloudChdfsAccessGroupRead(d, meta)
@@ -172,7 +171,7 @@ func resourceTencentCloudChdfsAccessGroupUpdate(d *schema.ResourceData, meta int
 
 	request.AccessGroupId = &accessGroupId
 
-	immutableArgs := []string{"vpc_type", "vpc_id"}
+	immutableArgs := []string{"access_group_name", "vpc_type", "vpc_id", "description"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

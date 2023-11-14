@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfInvokeFunctionResource_basic(t *testing.T) {
@@ -18,6 +17,11 @@ func TestAccTencentCloudScfInvokeFunctionResource_basic(t *testing.T) {
 				Config: testAccScfInvokeFunction,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_invoke_function.invoke_function", "id")),
 			},
+			{
+				ResourceName:      "tencentcloud_scf_invoke_function.invoke_function",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -25,9 +29,13 @@ func TestAccTencentCloudScfInvokeFunctionResource_basic(t *testing.T) {
 const testAccScfInvokeFunction = `
 
 resource "tencentcloud_scf_invoke_function" "invoke_function" {
-  function_name = "keep-1676351130"
-  qualifier     = "2"
-  namespace     = "default"
+  function_name = "test_function"
+  invocation_type = ""
+  qualifier = ""
+  client_context = ""
+  log_type = ""
+  namespace = "test_namespace"
+  routing_key = ""
 }
 
 `

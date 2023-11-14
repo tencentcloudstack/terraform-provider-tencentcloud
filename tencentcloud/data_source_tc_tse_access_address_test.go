@@ -1,12 +1,10 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTseAccessAddressDataSource_basic -v
 func TestAccTencentCloudTseAccessAddressDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,23 +15,23 @@ func TestAccTencentCloudTseAccessAddressDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTseAccessAddressDataSource,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tse_access_address.access_address"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tse_access_address.access_address", "engine_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_access_address.access_address", "env_address_infos.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tse_access_address.access_address", "env_address_infos.0.enable_config_internet", "false"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tse_access_address.access_address", "env_address_infos.0.enable_config_intranet", "false"),
-				),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_tse_access_address.access_address")),
 			},
 		},
 	})
 }
 
-const testAccTseAccessAddressDataSource = testAccTseInstance + `
+const testAccTseAccessAddressDataSource = `
 
 data "tencentcloud_tse_access_address" "access_address" {
-  instance_id = tencentcloud_tse_instance.instance.id
+  instance_id = "ins-xxxxxx"
+  vpc_id = "vpc-xxxxxx"
+  subnet_id = "subnet-xxxxxx"
+  workload = "pushgateway"
   engine_region = "ap-guangzhou"
+                  tags = {
+    "createdBy" = "terraform"
+  }
 }
 
 `

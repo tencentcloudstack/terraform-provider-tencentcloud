@@ -1,27 +1,20 @@
 /*
-Provides a resource to create a lighthouse firewall rule
-
-~> **NOTE:**  Use an empty template to clean up the default rules before using this resource manage firewall rules.
+Provides a resource to create a lighthouse firewall_rule
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_lighthouse_firewall_rule" "firewall_rule" {
-  instance_id = "lhins-xxxxxxx"
+  instance_id = "lhins-acb1234"
   firewall_rules {
-	protocol = "TCP"
-	port = "80"
-	cidr_block = "10.0.0.1"
-	action = "ACCEPT"
-	firewall_rule_description = "description 1"
+		protocol = "TCP"
+		port = "80"
+		cidr_block = "22"
+		action = "ACCEPT"
+		firewall_rule_description = "description"
+
   }
-  firewall_rules {
-	protocol = "TCP"
-	port = "80"
-	cidr_block = "10.0.0.2"
-	action = "ACCEPT"
-	firewall_rule_description = "description 2"
-  }
+  firewall_version = 1
 }
 ```
 
@@ -30,19 +23,19 @@ Import
 lighthouse firewall_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_lighthouse_firewall_rule.firewall_rule lighthouse_instance_id
+terraform import tencentcloud_lighthouse_firewall_rule.firewall_rule firewall_rule_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudLighthouseFirewallRule() *schema.Resource {
@@ -57,9 +50,8 @@ func resourceTencentCloudLighthouseFirewallRule() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Instance ID.",
+				Description: "Instance ID。.",
 			},
 
 			"firewall_rules": {
@@ -96,6 +88,12 @@ func resourceTencentCloudLighthouseFirewallRule() *schema.Resource {
 					},
 				},
 			},
+
+			"firewall_version": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Current firewall version number. Every time you update the firewall rule version, it will be automatically increased by 1 to prevent the rule from expiring. If it is left empty, conflicts will not be considered.",
+			},
 		},
 	}
 }
@@ -107,12 +105,12 @@ func resourceTencentCloudLighthouseFirewallRuleCreate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	var (
-		request    = lighthouse.NewCreateFirewallRulesRequest()
-		instanceId string
+		request  = lighthouse.NewCreateFirewallRulesRequest()
+		response = lighthouse.NewCreateFirewallRulesResponse()
+		protocol string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-		request.InstanceId = helper.String(instanceId)
+		request.InstanceId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("firewall_rules"); ok {
@@ -138,6 +136,10 @@ func resourceTencentCloudLighthouseFirewallRuleCreate(d *schema.ResourceData, me
 		}
 	}
 
+	if v, ok := d.GetOkExists("firewall_version"); ok {
+		request.FirewallVersion = helper.IntUint64(v.(int))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().CreateFirewallRules(request)
 		if e != nil {
@@ -145,6 +147,7 @@ func resourceTencentCloudLighthouseFirewallRuleCreate(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -152,7 +155,8 @@ func resourceTencentCloudLighthouseFirewallRuleCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(instanceId)
+	protocol = *response.Response.Protocol
+	d.SetId(protocol)
 
 	return resourceTencentCloudLighthouseFirewallRuleRead(d, meta)
 }
@@ -162,50 +166,63 @@ func resourceTencentCloudLighthouseFirewallRuleRead(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	firewallRules, err := service.DescribeLighthouseFirewallRuleById(ctx, d.Id())
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	firewallRuleId := d.Id()
+
+	firewallRule, err := service.DescribeLighthouseFirewallRuleById(ctx, protocol)
 	if err != nil {
 		return err
 	}
 
-	if len(firewallRules) == 0 {
+	if firewallRule == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `LighthouseFirewallRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	_ = d.Set("instance_id", d.Id())
-	firewallRulesList := []interface{}{}
-	for _, firewallRule := range firewallRules {
-
-		firewallRulesMap := map[string]interface{}{}
-
-		if firewallRule.Protocol != nil {
-			firewallRulesMap["protocol"] = firewallRule.Protocol
-		}
-
-		if firewallRule.Port != nil {
-			firewallRulesMap["port"] = firewallRule.Port
-		}
-
-		if firewallRule.CidrBlock != nil {
-			firewallRulesMap["cidr_block"] = firewallRule.CidrBlock
-		}
-
-		if firewallRule.Action != nil {
-			firewallRulesMap["action"] = firewallRule.Action
-		}
-
-		if firewallRule.FirewallRuleDescription != nil {
-			firewallRulesMap["firewall_rule_description"] = firewallRule.FirewallRuleDescription
-		}
-
-		firewallRulesList = append(firewallRulesList, firewallRulesMap)
+	if firewallRule.InstanceId != nil {
+		_ = d.Set("instance_id", firewallRule.InstanceId)
 	}
 
-	_ = d.Set("firewall_rules", firewallRulesList)
+	if firewallRule.FirewallRules != nil {
+		firewallRulesList := []interface{}{}
+		for _, firewallRules := range firewallRule.FirewallRules {
+			firewallRulesMap := map[string]interface{}{}
+
+			if firewallRule.FirewallRules.Protocol != nil {
+				firewallRulesMap["protocol"] = firewallRule.FirewallRules.Protocol
+			}
+
+			if firewallRule.FirewallRules.Port != nil {
+				firewallRulesMap["port"] = firewallRule.FirewallRules.Port
+			}
+
+			if firewallRule.FirewallRules.CidrBlock != nil {
+				firewallRulesMap["cidr_block"] = firewallRule.FirewallRules.CidrBlock
+			}
+
+			if firewallRule.FirewallRules.Action != nil {
+				firewallRulesMap["action"] = firewallRule.FirewallRules.Action
+			}
+
+			if firewallRule.FirewallRules.FirewallRuleDescription != nil {
+				firewallRulesMap["firewall_rule_description"] = firewallRule.FirewallRules.FirewallRuleDescription
+			}
+
+			firewallRulesList = append(firewallRulesList, firewallRulesMap)
+		}
+
+		_ = d.Set("firewall_rules", firewallRulesList)
+
+	}
+
+	if firewallRule.FirewallVersion != nil {
+		_ = d.Set("firewall_version", firewallRule.FirewallVersion)
+	}
 
 	return nil
 }
@@ -216,14 +233,33 @@ func resourceTencentCloudLighthouseFirewallRuleUpdate(d *schema.ResourceData, me
 
 	logId := getLogId(contextNil)
 
-	request := lighthouse.NewModifyFirewallRulesRequest()
-	hasChanged := false
+	var (
+		modifyFirewallRulesRequest  = lighthouse.NewModifyFirewallRulesRequest()
+		modifyFirewallRulesResponse = lighthouse.NewModifyFirewallRulesResponse()
+	)
+
+	firewallRuleId := d.Id()
+
+	request.Protocol = &protocol
+
+	immutableArgs := []string{"instance_id", "firewall_rules", "firewall_version"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("instance_id") {
+		if v, ok := d.GetOk("instance_id"); ok {
+			request.InstanceId = helper.String(v.(string))
+		}
+	}
 
 	if d.HasChange("firewall_rules") {
 		if v, ok := d.GetOk("firewall_rules"); ok {
 			for _, item := range v.([]interface{}) {
 				firewallRule := lighthouse.FirewallRule{}
-				dMap := item.(map[string]interface{})
 				if v, ok := dMap["protocol"]; ok {
 					firewallRule.Protocol = helper.String(v.(string))
 				}
@@ -242,23 +278,26 @@ func resourceTencentCloudLighthouseFirewallRuleUpdate(d *schema.ResourceData, me
 				request.FirewallRules = append(request.FirewallRules, &firewallRule)
 			}
 		}
-		hasChanged = true
 	}
-	if hasChanged {
-		request.InstanceId = helper.String(d.Id())
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ModifyFirewallRules(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update lighthouse firewallRule failed, reason:%+v", logId, err)
-			return err
+
+	if d.HasChange("firewall_version") {
+		if v, ok := d.GetOkExists("firewall_version"); ok {
+			request.FirewallVersion = helper.IntUint64(v.(int))
 		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ModifyFirewallRules(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update lighthouse firewallRule failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudLighthouseFirewallRuleRead(d, meta)
@@ -271,64 +310,10 @@ func resourceTencentCloudLighthouseFirewallRuleDelete(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	firewallRuleId := d.Id()
 
-	firewallRuleInfos, err := service.DescribeLighthouseFirewallRuleById(ctx, d.Id())
-	if err != nil {
-		return err
-	}
-
-	if len(firewallRuleInfos) == 0 {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `LighthouseFirewallRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	firewallRuleList := make([]*lighthouse.FirewallRule, 0)
-	for _, firewallRuleInfo := range firewallRuleInfos {
-
-		var firewallRule lighthouse.FirewallRule
-
-		if firewallRuleInfo.Protocol != nil {
-			firewallRule.Protocol = firewallRuleInfo.Protocol
-		}
-
-		if firewallRuleInfo.Port != nil {
-			firewallRule.Port = firewallRuleInfo.Port
-		}
-
-		if firewallRuleInfo.CidrBlock != nil {
-			firewallRule.CidrBlock = firewallRuleInfo.CidrBlock
-		}
-
-		if firewallRuleInfo.Action != nil {
-			firewallRule.Action = firewallRuleInfo.Action
-		}
-
-		if firewallRuleInfo.FirewallRuleDescription != nil {
-			firewallRule.FirewallRuleDescription = firewallRuleInfo.FirewallRuleDescription
-		}
-
-		firewallRuleList = append(firewallRuleList, &firewallRule)
-	}
-
-	var (
-		request = lighthouse.NewDeleteFirewallRulesRequest()
-	)
-	request.InstanceId = helper.String(d.Id())
-	request.FirewallRules = firewallRuleList
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().DeleteFirewallRules(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s deleted lighthouse firewallRule failed, reason:%+v", logId, err)
+	if err := service.DeleteLighthouseFirewallRuleById(ctx, protocol); err != nil {
 		return err
 	}
 

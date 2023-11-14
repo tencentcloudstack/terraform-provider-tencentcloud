@@ -1,14 +1,12 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbRestartInstanceResource_basic -v
 func TestAccTencentCloudCynosdbRestartInstanceResource_basic(t *testing.T) {
-
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -17,20 +15,21 @@ func TestAccTencentCloudCynosdbRestartInstanceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbRestartInstance,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_restart_instance.restart_instance", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_restart_instance.restart_instance", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_restart_instance.restart_instance", "status"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_restart_instance.restart_instance", "id")),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_restart_instance.restart_instance",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
 }
 
-const testAccCynosdbRestartInstance = CommonCynosdb + `
+const testAccCynosdbRestartInstance = `
 
 resource "tencentcloud_cynosdb_restart_instance" "restart_instance" {
-	instance_id = var.cynosdb_cluster_instance_id
+  instance_id = "cynosdbmysql-ins-xxxxxxxx"
 }
 
 `

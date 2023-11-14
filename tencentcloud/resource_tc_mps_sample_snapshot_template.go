@@ -5,14 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_sample_snapshot_template" "sample_snapshot_template" {
-  fill_type           = "stretch"
-  format              = "jpg"
-  height              = 128
-  name                = "terraform-test-for"
+  sample_type = &lt;nil&gt;
+  sample_interval = &lt;nil&gt;
+  name = &lt;nil&gt;
+  width = 0
+  height = 0
   resolution_adaptive = "open"
-  sample_interval     = 10
-  sample_type         = "Percent"
-  width               = 140
+  format = "jpg"
+  comment = &lt;nil&gt;
+  fill_type = "black"
 }
 ```
 
@@ -28,12 +29,12 @@ package tencentcloud
 
 import (
 	"context"
-	"log"
-
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudMpsSampleSnapshotTemplate() *schema.Resource {
@@ -112,7 +113,7 @@ func resourceTencentCloudMpsSampleSnapshotTemplateCreate(d *schema.ResourceData,
 	var (
 		request    = mps.NewCreateSampleSnapshotTemplateRequest()
 		response   = mps.NewCreateSampleSnapshotTemplateResponse()
-		definition uint64
+		definition int
 	)
 	if v, ok := d.GetOk("sample_type"); ok {
 		request.SampleType = helper.String(v.(string))
@@ -166,7 +167,7 @@ func resourceTencentCloudMpsSampleSnapshotTemplateCreate(d *schema.ResourceData,
 	}
 
 	definition = *response.Response.Definition
-	d.SetId(helper.UInt64ToStr(definition))
+	d.SetId(helper.Int64ToStr(definition))
 
 	return resourceTencentCloudMpsSampleSnapshotTemplateRead(d, meta)
 }
@@ -181,7 +182,7 @@ func resourceTencentCloudMpsSampleSnapshotTemplateRead(d *schema.ResourceData, m
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	definition := d.Id()
+	sampleSnapshotTemplateId := d.Id()
 
 	sampleSnapshotTemplate, err := service.DescribeMpsSampleSnapshotTemplateById(ctx, definition)
 	if err != nil {
@@ -241,72 +242,84 @@ func resourceTencentCloudMpsSampleSnapshotTemplateUpdate(d *schema.ResourceData,
 
 	request := mps.NewModifySampleSnapshotTemplateRequest()
 
-	definition := d.Id()
+	sampleSnapshotTemplateId := d.Id()
 
-	request.Definition = helper.StrToUint64Point(definition)
+	request.Definition = &definition
 
-	mutableArgs := []string{"sample_type", "sample_interval", "name", "width", "height", "resolution_adaptive", "format", "comment", "fill_type"}
+	immutableArgs := []string{"sample_type", "sample_interval", "name", "width", "height", "resolution_adaptive", "format", "comment", "fill_type"}
 
-	needChange := false
-
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
-
+	if d.HasChange("sample_type") {
 		if v, ok := d.GetOk("sample_type"); ok {
 			request.SampleType = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("sample_interval") {
 		if v, ok := d.GetOkExists("sample_interval"); ok {
 			request.SampleInterval = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("width") {
 		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("height") {
 		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntUint64(v.(int))
 		}
+	}
 
+	if d.HasChange("resolution_adaptive") {
 		if v, ok := d.GetOk("resolution_adaptive"); ok {
 			request.ResolutionAdaptive = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("format") {
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
+	}
 
+	if d.HasChange("fill_type") {
 		if v, ok := d.GetOk("fill_type"); ok {
 			request.FillType = helper.String(v.(string))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifySampleSnapshotTemplate(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update mps sampleSnapshotTemplate failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifySampleSnapshotTemplate(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update mps sampleSnapshotTemplate failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudMpsSampleSnapshotTemplateRead(d, meta)
@@ -320,7 +333,7 @@ func resourceTencentCloudMpsSampleSnapshotTemplateDelete(d *schema.ResourceData,
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MpsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	definition := d.Id()
+	sampleSnapshotTemplateId := d.Id()
 
 	if err := service.DeleteMpsSampleSnapshotTemplateById(ctx, definition); err != nil {
 		return err

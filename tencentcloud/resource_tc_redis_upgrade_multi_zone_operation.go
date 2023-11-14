@@ -6,23 +6,27 @@ Example Usage
 ```hcl
 resource "tencentcloud_redis_upgrade_multi_zone_operation" "upgrade_multi_zone_operation" {
   instance_id = "crs-c1nl9rpv"
-  upgrade_proxy_and_redis_server = true
+  upgrade_proxy_and_redis_server =
 }
 ```
 
+Import
+
+redis upgrade_multi_zone_operation can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_redis_upgrade_multi_zone_operation.upgrade_multi_zone_operation upgrade_multi_zone_operation_id
+```
 */
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudRedisUpgradeMultiZoneOperation() *schema.Resource {
@@ -56,7 +60,6 @@ func resourceTencentCloudRedisUpgradeMultiZoneOperationCreate(d *schema.Resource
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request    = redis.NewUpgradeVersionToMultiAvailabilityZonesRequest()
@@ -87,29 +90,15 @@ func resourceTencentCloudRedisUpgradeMultiZoneOperationCreate(d *schema.Resource
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-	taskId := *response.Response.FlowId
-	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
-		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
-		if err != nil {
-			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if ok {
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("upgrade multi zone is processing"))
-		}
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s redis upgrade multi zone fail, reason:%s\n", logId, err.Error())
-		return err
+	conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 30*readRetryTimeout, time.Second, service.RedisUpgradeMultiZoneOperationStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudRedisUpgradeMultiZoneOperationRead(d, meta)

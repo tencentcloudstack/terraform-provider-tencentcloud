@@ -4,14 +4,14 @@ Use this data source to query detailed information of chdfs file_systems
 Example Usage
 
 ```hcl
-data "tencentcloud_chdfs_file_systems" "file_systems" {}
+data "tencentcloud_chdfs_file_systems" "file_systems" {
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
@@ -25,53 +25,53 @@ func dataSourceTencentCloudChdfsFileSystems() *schema.Resource {
 			"file_systems": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "file system list.",
+				Description: "File system list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"app_id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "appid of the user.",
+							Description: "Appid of the user.",
 						},
 						"file_system_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "file system name.",
+							Description: "File system name.",
 						},
 						"description": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "desc of the file system.",
+							Description: "Desc of the file system.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "region of the file system.",
+							Description: "Region of the file system.",
 						},
 						"file_system_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "file system id.",
+							Description: "File system id.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "create time.",
+							Description: "Create time.",
 						},
 						"block_size": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "block size of the file system(byte).",
+							Description: "Block size of the file system(byte).",
 						},
 						"capacity_quota": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "capacity of the file system(byte).",
+							Description: "Capacity of the file system(byte).",
 						},
 						"status": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "status of the file system(1: creating create success 3: create failed).",
+							Description: "Status of the file system（1: creating create success 3: create failed).",
 						},
 						"super_users": {
 							Type: schema.TypeSet,
@@ -79,17 +79,17 @@ func dataSourceTencentCloudChdfsFileSystems() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "super users of the file system.",
+							Description: "Super users of the file system.",
 						},
 						"posix_acl": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "check POSIX ACL or not.",
+							Description: "Check POSIX ACL or not.",
 						},
 						"enable_ranger": {
 							Type:        schema.TypeBool,
 							Computed:    true,
-							Description: "check the ranger address or not.",
+							Description: "Check the ranger address or not.",
 						},
 						"ranger_service_addresses": {
 							Type: schema.TypeSet,
@@ -97,7 +97,7 @@ func dataSourceTencentCloudChdfsFileSystems() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Computed:    true,
-							Description: "ranger address list.",
+							Description: "Ranger adress list.",
 						},
 					},
 				},
@@ -120,12 +120,13 @@ func dataSourceTencentCloudChdfsFileSystemsRead(d *schema.ResourceData, meta int
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	paramMap := make(map[string]interface{})
 	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var fileSystems []*chdfs.FileSystem
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeChdfsFileSystems(ctx)
+		result, e := service.DescribeChdfsFileSystemsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

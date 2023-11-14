@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudLighthouseBundleDataSource_basic(t *testing.T) {
@@ -25,5 +24,15 @@ func TestAccTencentCloudLighthouseBundleDataSource_basic(t *testing.T) {
 const testAccLighthouseBundleDataSource = `
 
 data "tencentcloud_lighthouse_bundle" "bundle" {
-}
+  bundle_ids = 
+  offset = 0
+  limit = 20
+  zones = 
+  filters {
+		name = "bundle-id"
+		values = 
+
+  }
+  }
+
 `

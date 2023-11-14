@@ -5,26 +5,33 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_export_instance_error_logs" "export_instance_error_logs" {
-  instance_id   = "cynosdbmysql-ins-afqx1hy0"
-  start_time    = "2022-01-01 12:00:00"
-  end_time      = "2022-01-01 14:00:00"
-  log_levels    = ["note"]
-  key_words     = ["content"]
-  file_type     = "csv"
-  order_by      = "Timestamp"
+  instance_id = "cynosdbmysql-ins-123"
+  start_time = "2022-01-01 12:00:00"
+  end_time = "2022-01-01 14:00:00"
+  log_levels =
+  key_words =
+  file_type = "csv"
+  order_by = "Timestamp"
   order_by_type = "ASC"
 }
+```
+
+Import
+
+cynosdb export_instance_error_logs can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cynosdb_export_instance_error_logs.export_instance_error_logs export_instance_error_logs_id
 ```
 */
 package tencentcloud
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudCynosdbExportInstanceErrorLogs() *schema.Resource {
@@ -32,7 +39,9 @@ func resourceTencentCloudCynosdbExportInstanceErrorLogs() *schema.Resource {
 		Create: resourceTencentCloudCynosdbExportInstanceErrorLogsCreate,
 		Read:   resourceTencentCloudCynosdbExportInstanceErrorLogsRead,
 		Delete: resourceTencentCloudCynosdbExportInstanceErrorLogsDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -72,7 +81,7 @@ func resourceTencentCloudCynosdbExportInstanceErrorLogs() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "keyword.",
+				Description: "Keyword.",
 			},
 
 			"file_type": {
@@ -94,31 +103,6 @@ func resourceTencentCloudCynosdbExportInstanceErrorLogs() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "ASC or DESC.",
-			},
-
-			"error_log_item_export": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "List of instances in the read-write instance group.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"timestamp": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "time.",
-						},
-						"level": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Log level, optional values note, warning, error.",
-						},
-						"content": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "log content.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -191,27 +175,8 @@ func resourceTencentCloudCynosdbExportInstanceErrorLogsCreate(d *schema.Resource
 		return err
 	}
 
+	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
-
-	items := response.Response.ErrorLogItems
-	if items != nil {
-		logItemList := []interface{}{}
-		for _, logItem := range items {
-			logItemMap := map[string]interface{}{}
-			if logItem.Timestamp != nil {
-				logItemMap["timestamp"] = logItem.Timestamp
-			}
-			if logItem.Level != nil {
-				logItemMap["level"] = logItem.Level
-			}
-			if logItem.Content != nil {
-				logItemMap["content"] = logItem.Content
-			}
-
-			logItemList = append(logItemList, logItemMap)
-		}
-		_ = d.Set("error_log_item_export", logItemList)
-	}
 
 	return resourceTencentCloudCynosdbExportInstanceErrorLogsRead(d, meta)
 }

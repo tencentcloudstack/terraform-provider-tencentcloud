@@ -4,35 +4,17 @@ Use this data source to query detailed information of tdmq environment_attribute
 Example Usage
 
 ```hcl
-data "tencentcloud_tdmq_environment_attributes" "example" {
-  environment_id = tencentcloud_tdmq_namespace.example.environ_name
-  cluster_id     = tencentcloud_tdmq_instance.example.id
-}
-
-resource "tencentcloud_tdmq_instance" "example" {
-  cluster_name = "tf_example"
-  remark       = "remark."
-  tags         = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tdmq_namespace" "example" {
-  environ_name = "tf_example"
-  msg_ttl      = 300
-  cluster_id   = tencentcloud_tdmq_instance.example.id
-  remark       = "remark."
-}
+data "tencentcloud_tdmq_environment_attributes" "environment_attributes" {
+    cluster_id = ""
+              }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -41,51 +23,59 @@ func dataSourceTencentCloudTdmqEnvironmentAttributes() *schema.Resource {
 		Read: dataSourceTencentCloudTdmqEnvironmentAttributesRead,
 		Schema: map[string]*schema.Schema{
 			"environment_id": {
-				Required:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Environment (namespace) name.",
 			},
+
 			"cluster_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "ID of the Pulsar cluster.",
 			},
-			// computed
-			"msg_ttl": {
+
+			"msg_t_t_l": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Expiration time of unconsumed messages, unit second, maximum 1296000 (15 days).",
 			},
+
 			"rate_in_byte": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Consumption rate limit, unit byte/second, 0 unlimited rate.",
 			},
+
 			"rate_in_size": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Consumption rate limit, unit number/second, 0 is unlimited.",
 			},
+
 			"retention_hours": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Consumed message storage policy, unit hour, 0 will be deleted immediately after consumption.",
 			},
+
 			"retention_size": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Consumed message storage strategy, unit G, 0 Delete immediately after consumption.",
 			},
+
 			"replicas": {
 				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Duplicate number.",
 			},
+
 			"remark": {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Remark.",
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -99,82 +89,68 @@ func dataSourceTencentCloudTdmqEnvironmentAttributesRead(d *schema.ResourceData,
 	defer logElapsed("data_source.tencentcloud_tdmq_environment_attributes.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-		tdmqEnv       *tdmq.DescribeEnvironmentAttributesResponseParams
-		environmentId string
-		clusterId     string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("environment_id"); ok {
-		paramMap["EnvironmentId"] = helper.String(v.(string))
-		environmentId = v.(string)
-	}
-
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
+
+	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTdmqEnvironmentAttributesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
-		tdmqEnv = result
+		msgTTL = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0)
-	if tdmqEnv.EnvironmentId != nil {
-		_ = d.Set("environment_id", tdmqEnv.EnvironmentId)
+	ids := make([]string, 0, len(msgTTL))
+	if environmentId != nil {
+		_ = d.Set("environment_id", environmentId)
 	}
 
-	if tdmqEnv.MsgTTL != nil {
-		_ = d.Set("msg_ttl", tdmqEnv.MsgTTL)
+	if msgTTL != nil {
+		_ = d.Set("msg_t_t_l", msgTTL)
 	}
 
-	if tdmqEnv.RateInByte != nil {
-		_ = d.Set("rate_in_byte", tdmqEnv.RateInByte)
+	if rateInByte != nil {
+		_ = d.Set("rate_in_byte", rateInByte)
 	}
 
-	if tdmqEnv.RateInSize != nil {
-		_ = d.Set("rate_in_size", tdmqEnv.RateInSize)
+	if rateInSize != nil {
+		_ = d.Set("rate_in_size", rateInSize)
 	}
 
-	if tdmqEnv.RetentionHours != nil {
-		_ = d.Set("retention_hours", tdmqEnv.RetentionHours)
+	if retentionHours != nil {
+		_ = d.Set("retention_hours", retentionHours)
 	}
 
-	if tdmqEnv.RetentionSize != nil {
-		_ = d.Set("retention_size", tdmqEnv.RetentionSize)
+	if retentionSize != nil {
+		_ = d.Set("retention_size", retentionSize)
 	}
 
-	if tdmqEnv.Replicas != nil {
-		_ = d.Set("replicas", tdmqEnv.Replicas)
+	if replicas != nil {
+		_ = d.Set("replicas", replicas)
 	}
 
-	if tdmqEnv.Remark != nil {
-		_ = d.Set("remark", tdmqEnv.Remark)
+	if remark != nil {
+		_ = d.Set("remark", remark)
 	}
 
-	ids = append(ids, environmentId)
-	ids = append(ids, clusterId)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

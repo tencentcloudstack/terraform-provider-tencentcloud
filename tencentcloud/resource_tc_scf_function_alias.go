@@ -4,38 +4,25 @@ Provides a resource to create a scf function_alias
 Example Usage
 
 ```hcl
-// by weight
 resource "tencentcloud_scf_function_alias" "function_alias" {
-  description      = "weight test"
-  function_name    = "keep-1676351130"
+  name = "test_func_alais"
+  function_name = "test_function"
   function_version = "$LATEST"
-  name             = "weight"
-  namespace        = "default"
-
+  namespace = "test_namespace"
   routing_config {
-    additional_version_weights {
-      version = "2"
-      weight  = 0.4
-    }
-  }
-}
+		additional_version_weights {
+			version = "1"
+			weight =
+		}
+		addtion_version_matchs {
+			version = "1"
+			key = "invoke.headers.User"
+			method = "range"
+			expression = "[1,2]"
+		}
 
-// by route
-resource "tencentcloud_scf_function_alias" "function_alias" {
-  description      = "matchs for test 12312312"
-  function_name    = "keep-1676351130"
-  function_version = "3"
-  name             = "matchs"
-  namespace        = "default"
-
-  routing_config {
-    additional_version_matches {
-      expression = "testuser"
-      key        = "invoke.headers.User"
-      method     = "exact"
-      version    = "2"
-    }
   }
+  description = "test routing"
 }
 ```
 
@@ -44,7 +31,7 @@ Import
 scf function_alias can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_scf_function_alias.function_alias namespace#functionName#name
+terraform import tencentcloud_scf_function_alias.function_alias function_alias_id
 ```
 */
 package tencentcloud
@@ -52,13 +39,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudScfFunctionAlias() *schema.Resource {
@@ -121,7 +107,7 @@ func resourceTencentCloudScfFunctionAlias() *schema.Resource {
 								},
 							},
 						},
-						"additional_version_matches": {
+						"addtion_version_matchs": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Description: "Additional version with rule-based routing.",
@@ -171,6 +157,7 @@ func resourceTencentCloudScfFunctionAliasCreate(d *schema.ResourceData, meta int
 
 	var (
 		request      = scf.NewCreateAliasRequest()
+		response     = scf.NewCreateAliasResponse()
 		namespace    string
 		functionName string
 		name         string
@@ -209,7 +196,7 @@ func resourceTencentCloudScfFunctionAliasCreate(d *schema.ResourceData, meta int
 				routingConfig.AdditionalVersionWeights = append(routingConfig.AdditionalVersionWeights, &versionWeight)
 			}
 		}
-		if v, ok := dMap["additional_version_matches"]; ok {
+		if v, ok := dMap["addtion_version_matchs"]; ok {
 			for _, item := range v.([]interface{}) {
 				addtionVersionMatchsMap := item.(map[string]interface{})
 				versionMatch := scf.VersionMatch{}
@@ -242,6 +229,7 @@ func resourceTencentCloudScfFunctionAliasCreate(d *schema.ResourceData, meta int
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -249,7 +237,8 @@ func resourceTencentCloudScfFunctionAliasCreate(d *schema.ResourceData, meta int
 		return err
 	}
 
-	d.SetId(namespace + FILED_SP + functionName + FILED_SP + name)
+	namespace = *response.Response.Namespace
+	d.SetId(strings.Join([]string{namespace, functionName, name}, FILED_SP))
 
 	return resourceTencentCloudScfFunctionAliasRead(d, meta)
 }
@@ -272,33 +261,39 @@ func resourceTencentCloudScfFunctionAliasRead(d *schema.ResourceData, meta inter
 	functionName := idSplit[1]
 	name := idSplit[2]
 
-	functionAlias, err := service.DescribeScfFunctionAliasById(ctx, namespace, functionName, name)
+	FunctionAlias, err := service.DescribeScfFunctionAliasById(ctx, namespace, functionName, name)
 	if err != nil {
 		return err
 	}
 
-	if functionAlias == nil {
+	if FunctionAlias == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ScfFunctionAlias` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	_ = d.Set("name", name)
-	_ = d.Set("function_name", functionName)
-	_ = d.Set("namespace", namespace)
-
-	if functionAlias.Response.FunctionVersion != nil {
-		_ = d.Set("function_version", functionAlias.Response.FunctionVersion)
+	if FunctionAlias.Name != nil {
+		_ = d.Set("name", FunctionAlias.Name)
 	}
 
-	if functionAlias.Response.RoutingConfig != nil {
+	if FunctionAlias.FunctionName != nil {
+		_ = d.Set("function_name", FunctionAlias.FunctionName)
+	}
+
+	if FunctionAlias.FunctionVersion != nil {
+		_ = d.Set("function_version", FunctionAlias.FunctionVersion)
+	}
+
+	if FunctionAlias.Namespace != nil {
+		_ = d.Set("namespace", FunctionAlias.Namespace)
+	}
+
+	if FunctionAlias.RoutingConfig != nil {
 		routingConfigMap := map[string]interface{}{}
 
-		routingConfig := functionAlias.Response.RoutingConfig
-
-		if routingConfig.AdditionalVersionWeights != nil {
+		if FunctionAlias.RoutingConfig.AdditionalVersionWeights != nil {
 			additionalVersionWeightsList := []interface{}{}
-			for _, additionalVersionWeights := range routingConfig.AdditionalVersionWeights {
+			for _, additionalVersionWeights := range FunctionAlias.RoutingConfig.AdditionalVersionWeights {
 				additionalVersionWeightsMap := map[string]interface{}{}
 
 				if additionalVersionWeights.Version != nil {
@@ -312,12 +307,12 @@ func resourceTencentCloudScfFunctionAliasRead(d *schema.ResourceData, meta inter
 				additionalVersionWeightsList = append(additionalVersionWeightsList, additionalVersionWeightsMap)
 			}
 
-			routingConfigMap["additional_version_weights"] = additionalVersionWeightsList
+			routingConfigMap["additional_version_weights"] = []interface{}{additionalVersionWeightsList}
 		}
 
-		if routingConfig.AddtionVersionMatchs != nil {
+		if FunctionAlias.RoutingConfig.AddtionVersionMatchs != nil {
 			addtionVersionMatchsList := []interface{}{}
-			for _, addtionVersionMatchs := range routingConfig.AddtionVersionMatchs {
+			for _, addtionVersionMatchs := range FunctionAlias.RoutingConfig.AddtionVersionMatchs {
 				addtionVersionMatchsMap := map[string]interface{}{}
 
 				if addtionVersionMatchs.Version != nil {
@@ -339,14 +334,14 @@ func resourceTencentCloudScfFunctionAliasRead(d *schema.ResourceData, meta inter
 				addtionVersionMatchsList = append(addtionVersionMatchsList, addtionVersionMatchsMap)
 			}
 
-			routingConfigMap["additional_version_matches"] = addtionVersionMatchsList
+			routingConfigMap["addtion_version_matchs"] = []interface{}{addtionVersionMatchsList}
 		}
 
 		_ = d.Set("routing_config", []interface{}{routingConfigMap})
 	}
 
-	if functionAlias.Response.Description != nil {
-		_ = d.Set("description", functionAlias.Response.Description)
+	if FunctionAlias.Description != nil {
+		_ = d.Set("description", FunctionAlias.Description)
 	}
 
 	return nil
@@ -371,20 +366,40 @@ func resourceTencentCloudScfFunctionAliasUpdate(d *schema.ResourceData, meta int
 	request.Namespace = &namespace
 	request.FunctionName = &functionName
 	request.Name = &name
-	request.FunctionVersion = helper.String(d.Get("function_version").(string))
 
-	mutableArgs := []string{"routing_config", "description"}
+	immutableArgs := []string{"name", "function_name", "function_version", "namespace", "routing_config", "description"}
 
-	needChange := false
-	for _, v := range mutableArgs {
+	for _, v := range immutableArgs {
 		if d.HasChange(v) {
-			needChange = true
-			break
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	if needChange {
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			request.Name = helper.String(v.(string))
+		}
+	}
 
+	if d.HasChange("function_name") {
+		if v, ok := d.GetOk("function_name"); ok {
+			request.FunctionName = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("function_version") {
+		if v, ok := d.GetOk("function_version"); ok {
+			request.FunctionVersion = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("namespace") {
+		if v, ok := d.GetOk("namespace"); ok {
+			request.Namespace = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("routing_config") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "routing_config"); ok {
 			routingConfig := scf.RoutingConfig{}
 			if v, ok := dMap["additional_version_weights"]; ok {
@@ -400,7 +415,7 @@ func resourceTencentCloudScfFunctionAliasUpdate(d *schema.ResourceData, meta int
 					routingConfig.AdditionalVersionWeights = append(routingConfig.AdditionalVersionWeights, &versionWeight)
 				}
 			}
-			if v, ok := dMap["additional_version_matches"]; ok {
+			if v, ok := dMap["addtion_version_matchs"]; ok {
 				for _, item := range v.([]interface{}) {
 					addtionVersionMatchsMap := item.(map[string]interface{})
 					versionMatch := scf.VersionMatch{}
@@ -421,24 +436,26 @@ func resourceTencentCloudScfFunctionAliasUpdate(d *schema.ResourceData, meta int
 			}
 			request.RoutingConfig = &routingConfig
 		}
+	}
 
+	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
+	}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseScfClient().UpdateAlias(request)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update scf FunctionAlias failed, reason:%+v", logId, err)
-			return err
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseScfClient().UpdateAlias(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update scf FunctionAlias failed, reason:%+v", logId, err)
+		return err
 	}
 
 	return resourceTencentCloudScfFunctionAliasRead(d, meta)

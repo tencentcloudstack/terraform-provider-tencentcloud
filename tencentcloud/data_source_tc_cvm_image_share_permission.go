@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_image_share_permission" "image_share_permission" {
-  image_id = "img-xxxxxx"
-}
+  image_id = "img-6pb6lrmy"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -103,7 +102,7 @@ func dataSourceTencentCloudCvmImageSharePermissionRead(d *schema.ResourceData, m
 				sharePermissionMap["account_id"] = sharePermission.AccountId
 			}
 
-			ids = append(ids, *sharePermission.AccountId)
+			ids = append(ids, *sharePermission.ImageId)
 			tmpList = append(tmpList, sharePermissionMap)
 		}
 

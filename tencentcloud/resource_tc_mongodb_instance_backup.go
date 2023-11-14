@@ -11,18 +11,23 @@ resource "tencentcloud_mongodb_instance_backup" "instance_backup" {
 }
 ```
 
+Import
+
+mongodb instance_backup can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_mongodb_instance_backup.instance_backup instance_backup_id
+```
 */
 package tencentcloud
 
 import (
-	"context"
-	"log"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"time"
 )
 
 func resourceTencentCloudMongodbInstanceBackup() *schema.Resource {
@@ -30,8 +35,8 @@ func resourceTencentCloudMongodbInstanceBackup() *schema.Resource {
 		Create: resourceTencentCloudMongodbInstanceBackupCreate,
 		Read:   resourceTencentCloudMongodbInstanceBackupRead,
 		Delete: resourceTencentCloudMongodbInstanceBackupDelete,
-		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(3 * time.Minute),
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -52,22 +57,22 @@ func resourceTencentCloudMongodbInstanceBackup() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "backup notes.",
+				Description: "Backup notes.",
 			},
 		},
 	}
 }
 
 func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instance_backup.read")()
+	defer logElapsed("resource.tencentcloud_mongodb_instance_backup.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request  = mongodb.NewCreateBackupDBInstanceRequest()
-		response = mongodb.NewCreateBackupDBInstanceResponse()
-		taskId   string
+		request    = mongodb.NewCreateBackupDBInstanceRequest()
+		response   = mongodb.NewCreateBackupDBInstanceResponse()
+		instanceId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
@@ -93,21 +98,18 @@ func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, met
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s operate mongodb instanceBackup failed, reason:%+v", logId, err)
-		return nil
+		return err
 	}
 
-	taskId = *response.Response.AsyncRequestId
-	d.SetId(taskId)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	instanceId = *response.Response.InstanceId
+	d.SetId(instanceId)
 
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	timeout := d.Timeout(schema.TimeoutCreate)
-	if response != nil && response.Response != nil {
-		if err = service.DescribeAsyncRequestInfo(ctx, taskId, timeout); err != nil {
-			return err
-		}
+	conf := BuildStateChangeConf([]string{}, []string{"success"}, 100*readRetryTimeout, time.Second, service.MongodbInstanceBackupStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return resourceTencentCloudMongodbInstanceBackupRead(d, meta)

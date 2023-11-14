@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudScfAccountInfoDataSource_basic(t *testing.T) {
@@ -24,6 +23,7 @@ func TestAccTencentCloudScfAccountInfoDataSource_basic(t *testing.T) {
 
 const testAccScfAccountInfoDataSource = `
 
-data "tencentcloud_scf_account_info" "account_info" {}
+data "tencentcloud_scf_account_info" "account_info" {
+    }
 
 `

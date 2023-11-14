@@ -5,18 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_rollback_time_range" "rollback_time_range" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-}
+  cluster_id = "cynosdbmysql-oib3wx0i"
+      }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -29,16 +27,19 @@ func dataSourceTencentCloudCynosdbRollbackTimeRange() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
+
 			"time_range_start": {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Effective regression time range start time point (obsolete) Note: This field may return null, indicating that a valid value cannot be obtained.",
 			},
+
 			"time_range_end": {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Effective regression time range end time point (obsolete) Note: This field may return null, indicating that a valid value cannot be obtained.",
 			},
+
 			"rollback_time_ranges": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -48,7 +49,7 @@ func dataSourceTencentCloudCynosdbRollbackTimeRange() *schema.Resource {
 						"time_range_start": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "start time.",
+							Description: "Start time.",
 						},
 						"time_range_end": {
 							Type:        schema.TypeString,
@@ -58,6 +59,7 @@ func dataSourceTencentCloudCynosdbRollbackTimeRange() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -71,68 +73,63 @@ func dataSourceTencentCloudCynosdbRollbackTimeRangeRead(d *schema.ResourceData, 
 	defer logElapsed("data_source.tencentcloud_cynosdb_rollback_time_range.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId             = getLogId(contextNil)
-		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
-		service           = CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		rollbackTimeRange *cynosdb.DescribeRollbackTimeRangeResponseParams
-		clusterId         string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("cluster_id"); ok {
 		paramMap["ClusterId"] = helper.String(v.(string))
-		clusterId = v.(string)
 	}
+
+	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCynosdbRollbackTimeRangeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-
-		rollbackTimeRange = result
+		timeRangeStart = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
-	if rollbackTimeRange.TimeRangeStart != nil {
-		_ = d.Set("time_range_start", rollbackTimeRange.TimeRangeStart)
+	ids := make([]string, 0, len(timeRangeStart))
+	if timeRangeStart != nil {
+		_ = d.Set("time_range_start", timeRangeStart)
 	}
 
-	if rollbackTimeRange.TimeRangeEnd != nil {
-		_ = d.Set("time_range_end", rollbackTimeRange.TimeRangeEnd)
+	if timeRangeEnd != nil {
+		_ = d.Set("time_range_end", timeRangeEnd)
 	}
 
-	if rollbackTimeRange.RollbackTimeRanges != nil {
-		tmpList := []interface{}{}
-		for _, timeRange := range rollbackTimeRange.RollbackTimeRanges {
+	if rollbackTimeRanges != nil {
+		for _, rollbackTimeRange := range rollbackTimeRanges {
 			rollbackTimeRangeMap := map[string]interface{}{}
 
-			if timeRange.TimeRangeStart != nil {
-				rollbackTimeRangeMap["time_range_start"] = timeRange.TimeRangeStart
+			if rollbackTimeRange.TimeRangeStart != nil {
+				rollbackTimeRangeMap["time_range_start"] = rollbackTimeRange.TimeRangeStart
 			}
 
-			if timeRange.TimeRangeEnd != nil {
-				rollbackTimeRangeMap["time_range_end"] = timeRange.TimeRangeEnd
+			if rollbackTimeRange.TimeRangeEnd != nil {
+				rollbackTimeRangeMap["time_range_end"] = rollbackTimeRange.TimeRangeEnd
 			}
 
+			ids = append(ids, *rollbackTimeRange.ClusterId)
 			tmpList = append(tmpList, rollbackTimeRangeMap)
 		}
 
 		_ = d.Set("rollback_time_ranges", tmpList)
 	}
 
-	d.SetId(clusterId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

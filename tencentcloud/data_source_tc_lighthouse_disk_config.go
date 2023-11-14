@@ -6,17 +6,17 @@ Example Usage
 ```hcl
 data "tencentcloud_lighthouse_disk_config" "disk_config" {
   filters {
-	name = "zone"
-	values = ["ap-guangzhou-3"]
+		name = ""
+		values =
+
   }
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -128,7 +128,7 @@ func dataSourceTencentCloudLighthouseDiskConfigRead(d *schema.ResourceData, meta
 		paramMap["filters"] = tmpSet
 	}
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var diskConfigSet []*lighthouse.DiskConfig
 
@@ -144,6 +144,7 @@ func dataSourceTencentCloudLighthouseDiskConfigRead(d *schema.ResourceData, meta
 		return err
 	}
 
+	ids := make([]string, 0, len(diskConfigSet))
 	tmpList := make([]map[string]interface{}, 0, len(diskConfigSet))
 
 	if diskConfigSet != nil {
@@ -174,12 +175,14 @@ func dataSourceTencentCloudLighthouseDiskConfigRead(d *schema.ResourceData, meta
 				diskConfigMap["disk_step_size"] = diskConfig.DiskStepSize
 			}
 
+			ids = append(ids, *diskConfig.DiskId)
 			tmpList = append(tmpList, diskConfigMap)
 		}
 
 		_ = d.Set("disk_config_set", tmpList)
 	}
-	d.SetId(helper.BuildToken())
+
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

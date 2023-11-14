@@ -4,18 +4,17 @@ Use this data source to query detailed information of sqlserver slowlogs
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_slowlogs" "example" {
-  instance_id = "mssql-qelbzgwf"
-  start_time  = "2023-08-01 00:00:00"
-  end_time    = "2023-08-07 00:00:00"
-}
+data "tencentcloud_sqlserver_slowlogs" "slowlogs" {
+  instance_id = "mssql-j8kv137v"
+  start_time = ""
+  end_time = ""
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -31,16 +30,19 @@ func dataSourceTencentCloudSqlserverSlowlogs() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
+
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Query start time.",
 			},
+
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Query end time.",
 			},
+
 			"slowlogs": {
 				Computed:    true,
 				Type:        schema.TypeList,
@@ -90,6 +92,7 @@ func dataSourceTencentCloudSqlserverSlowlogs() *schema.Resource {
 					},
 				},
 			},
+
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -103,17 +106,13 @@ func dataSourceTencentCloudSqlserverSlowlogsRead(d *schema.ResourceData, meta in
 	defer logElapsed("data_source.tencentcloud_sqlserver_slowlogs.read")()
 	defer inconsistentCheck(d, meta)()
 
-	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		instanceId string
-	)
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["InstanceId"] = helper.String(v.(string))
-		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -124,6 +123,8 @@ func dataSourceTencentCloudSqlserverSlowlogsRead(d *schema.ResourceData, meta in
 		paramMap["EndTime"] = helper.String(v.(string))
 	}
 
+	service := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+
 	var slowlogs []*sqlserver.SlowlogInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -131,15 +132,14 @@ func dataSourceTencentCloudSqlserverSlowlogsRead(d *schema.ResourceData, meta in
 		if e != nil {
 			return retryError(e)
 		}
-
 		slowlogs = result
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
+	ids := make([]string, 0, len(slowlogs))
 	tmpList := make([]map[string]interface{}, 0, len(slowlogs))
 
 	if slowlogs != nil {
@@ -178,19 +178,19 @@ func dataSourceTencentCloudSqlserverSlowlogsRead(d *schema.ResourceData, meta in
 				slowlogInfoMap["status"] = slowlogInfo.Status
 			}
 
+			ids = append(ids, *slowlogInfo.InstanceId)
 			tmpList = append(tmpList, slowlogInfoMap)
 		}
 
 		_ = d.Set("slowlogs", tmpList)
 	}
 
-	d.SetId(instanceId)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
-
 	return nil
 }

@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_group" "group" {
-  instance_id = "ckafka-xxxxxxx"
-  search_word = "xxxxxx"
-}
+  instance_id = "InstanceId"
+  search_word = "SearchWord"
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -34,24 +33,43 @@ func dataSourceTencentCloudCkafkaGroup() *schema.Resource {
 			"search_word": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "search for the keyword.",
+				Description: "Search for the keyword.",
 			},
 
-			"group_list": {
-				Type:        schema.TypeList,
+			"result": {
 				Computed:    true,
-				Description: "GroupList.",
+				Type:        schema.TypeList,
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"group": {
-							Type:        schema.TypeString,
+						"total_count": {
+							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "groupId.",
+							Description: "Total Count of the Result.",
 						},
-						"protocol": {
-							Type:        schema.TypeString,
+						"group_list": {
+							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "The protocol used by this group.",
+							Description: "GroupList.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"group": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "GroupId.",
+									},
+									"protocol": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The protocol used by this group.",
+									},
+								},
+							},
+						},
+						"group_count_quota": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "GroupCountQuota.",
 						},
 					},
 				},
@@ -76,52 +94,68 @@ func dataSourceTencentCloudCkafkaGroupRead(d *schema.ResourceData, meta interfac
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["instance_id"] = helper.String(v.(string))
+		paramMap["InstanceId"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("search_word"); ok {
-		paramMap["search_word"] = helper.String(v.(string))
+		paramMap["SearchWord"] = helper.String(v.(string))
 	}
 
 	service := CkafkaService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var groups []*ckafka.DescribeGroup
+	var result []*ckafka.GroupResponse
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCkafkaGroupByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		groups = result
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(groups))
-	groupMapList := []interface{}{}
-	for _, group := range groups {
-		groupMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
+	if result != nil {
+		groupResponseMap := map[string]interface{}{}
 
-		if group.Group != nil {
-			groupMap["group"] = group.Group
-			ids = append(ids, *group.Group)
+		if result.TotalCount != nil {
+			groupResponseMap["total_count"] = result.TotalCount
 		}
 
-		if group.Protocol != nil {
-			groupMap["protocol"] = group.Protocol
+		if result.GroupList != nil {
+			groupListList := []interface{}{}
+			for _, groupList := range result.GroupList {
+				groupListMap := map[string]interface{}{}
+
+				if groupList.Group != nil {
+					groupListMap["group"] = groupList.Group
+				}
+
+				if groupList.Protocol != nil {
+					groupListMap["protocol"] = groupList.Protocol
+				}
+
+				groupListList = append(groupListList, groupListMap)
+			}
+
+			groupResponseMap["group_list"] = []interface{}{groupListList}
 		}
 
-		groupMapList = append(groupMapList, groupMap)
+		if result.GroupCountQuota != nil {
+			groupResponseMap["group_count_quota"] = result.GroupCountQuota
+		}
+
+		ids = append(ids, *result.InstanceId)
+		_ = d.Set("result", groupResponseMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("group_list", groupMapList)
-
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), groupMapList); e != nil {
+		if e := writeToFile(output.(string), groupResponseMap); e != nil {
 			return e
 		}
 	}

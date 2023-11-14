@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixClbInstanceSlaConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudClbInstanceSlaConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -29,10 +28,12 @@ func TestAccTencentCloudNeedFixClbInstanceSlaConfigResource_basic(t *testing.T) 
 
 const testAccClbInstanceSlaConfig = `
 
-
 resource "tencentcloud_clb_instance_sla_config" "instance_sla_config" {
-  load_balancer_id = "lb-5dnrkgry"
-  sla_type         = "SLA"
+  load_balancer_sla {
+		load_balancer_id = "lb-xxxxxxxx"
+		sla_type = ""
+
+  }
 }
 
 `

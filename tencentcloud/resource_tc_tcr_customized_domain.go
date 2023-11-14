@@ -1,23 +1,13 @@
 /*
-Provides a resource to create a tcr customized domain
+Provides a resource to create a tcr customized_domain
 
 Example Usage
 
-Create a tcr customized domain
-
 ```hcl
-resource "tencentcloud_tcr_instance" "example" {
-  name          = "tf-example-tcr"
-  instance_type = "premium"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_tcr_customized_domain" "example" {
-  registry_id    = tencentcloud_tcr_instance.example.id
-  domain_name    = "www.test.com"
-  certificate_id = "your_cert_id"
+resource "tencentcloud_tcr_customized_domain" "customized_domain" {
+  registry_id = "tcr-xxx"
+  domain_name = "xxx.test.com"
+  certificate_id = "kWGTVuU3"
   tags = {
     "createdBy" = "terraform"
   }
@@ -37,14 +27,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
+	"time"
 )
 
 func resourceTencentCloudTcrCustomizedDomain() *schema.Resource {
@@ -59,28 +48,25 @@ func resourceTencentCloudTcrCustomizedDomain() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"registry_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"domain_name": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "custom domain name.",
+				Description: "Custom domain name.",
 			},
 
 			"certificate_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "certificate id.",
+				Description: "Certificate id.",
 			},
 
 			"tags": {
-				Optional:    true,
 				Type:        schema.TypeMap,
+				Optional:    true,
 				Description: "Tag description list.",
 			},
 		},
@@ -95,6 +81,7 @@ func resourceTencentCloudTcrCustomizedDomainCreate(d *schema.ResourceData, meta 
 
 	var (
 		request    = tcr.NewCreateInstanceCustomizedDomainRequest()
+		response   = tcr.NewCreateInstanceCustomizedDomainResponse()
 		registryId string
 		domainName string
 	)
@@ -113,12 +100,13 @@ func resourceTencentCloudTcrCustomizedDomainCreate(d *schema.ResourceData, meta 
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateInstanceCustomizedDomain(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTcrClient().CreateInstanceCustomizedDomain(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -126,11 +114,12 @@ func resourceTencentCloudTcrCustomizedDomainCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
+	registryId = *response.Response.RegistryId
 	d.SetId(strings.Join([]string{registryId, domainName}, FILED_SP))
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 2*readRetryTimeout, time.Second, service.TcrCustomizedDomainStateRefreshFunc(registryId, domainName, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 2*readRetryTimeout, time.Second, service.TcrCustomizedDomainStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -157,7 +146,7 @@ func resourceTencentCloudTcrCustomizedDomainRead(d *schema.ResourceData, meta in
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -166,18 +155,16 @@ func resourceTencentCloudTcrCustomizedDomainRead(d *schema.ResourceData, meta in
 	registryId := idSplit[0]
 	domainName := idSplit[1]
 
-	domains, err := service.DescribeTcrCustomizedDomainById(ctx, registryId, &domainName)
+	CustomizedDomain, err := service.DescribeTcrCustomizedDomainById(ctx, registryId, domainName)
 	if err != nil {
 		return err
 	}
 
-	if len(domains) == 0 {
+	if CustomizedDomain == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `TcrCustomizedDomain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
-	CustomizedDomain := domains[0]
 
 	if CustomizedDomain.RegistryId != nil {
 		_ = d.Set("registry_id", CustomizedDomain.RegistryId)
@@ -187,8 +174,8 @@ func resourceTencentCloudTcrCustomizedDomainRead(d *schema.ResourceData, meta in
 		_ = d.Set("domain_name", CustomizedDomain.DomainName)
 	}
 
-	if CustomizedDomain.CertId != nil {
-		_ = d.Set("certificate_id", CustomizedDomain.CertId)
+	if CustomizedDomain.CertificateId != nil {
+		_ = d.Set("certificate_id", CustomizedDomain.CertificateId)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -237,7 +224,7 @@ func resourceTencentCloudTcrCustomizedDomainDelete(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TcrService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())

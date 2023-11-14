@@ -5,19 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mariadb_database_objects" "database_objects" {
-	instance_id = "tdsql-n2fw7pn3"
-	db_name = "mysql"
-}
+            }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudMariadbDatabaseObjects() *schema.Resource {
@@ -25,27 +22,27 @@ func dataSourceTencentCloudMariadbDatabaseObjects() *schema.Resource {
 		Read: dataSourceTencentCloudMariadbDatabaseObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Required:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "instance id.",
+				Description: "Instance id.",
 			},
 
 			"db_name": {
-				Required:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "database name.",
+				Description: "Database name.",
 			},
 
 			"tables": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "table list.",
+				Description: "Table list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"table": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "table name.",
+							Description: "Table name.",
 						},
 					},
 				},
@@ -54,13 +51,13 @@ func dataSourceTencentCloudMariadbDatabaseObjects() *schema.Resource {
 			"views": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "view list.",
+				Description: "View list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"view": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "view name.",
+							Description: "View name.",
 						},
 					},
 				},
@@ -69,13 +66,13 @@ func dataSourceTencentCloudMariadbDatabaseObjects() *schema.Resource {
 			"procs": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "proc list.",
+				Description: "Proc list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"proc": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "proc name.",
+							Description: "Proc name.",
 						},
 					},
 				},
@@ -84,13 +81,13 @@ func dataSourceTencentCloudMariadbDatabaseObjects() *schema.Resource {
 			"funcs": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "func list.",
+				Description: "Func list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"func": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "func name.",
+							Description: "Func name.",
 						},
 					},
 				},
@@ -112,97 +109,95 @@ func dataSourceTencentCloudMariadbDatabaseObjectsRead(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	paramMap := make(map[string]interface{})
 	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := ""
-	dbName := ""
 
-	if v, ok := d.GetOk("instance_id"); ok {
-		instanceId = v.(string)
-	}
-
-	if v, ok := d.GetOk("db_name"); ok {
-		dbName = v.(string)
-	}
-
-	var databaseObjects *mariadb.DescribeDatabaseObjectsResponseParams
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeMariadbDatabaseObjectsByFilter(ctx, instanceId, dbName)
+		result, e := service.DescribeMariadbDatabaseObjectsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		databaseObjects = result
+		instanceId = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("db_name", dbName)
+	ids := make([]string, 0, len(instanceId))
+	if instanceId != nil {
+		_ = d.Set("instance_id", instanceId)
+	}
 
-	if databaseObjects.Tables != nil {
-		tmpList := make([]map[string]interface{}, 0, len(databaseObjects.Tables))
-		for _, databaseTable := range databaseObjects.Tables {
+	if dbName != nil {
+		_ = d.Set("db_name", dbName)
+	}
+
+	if tables != nil {
+		for _, databaseTable := range tables {
 			databaseTableMap := map[string]interface{}{}
 
 			if databaseTable.Table != nil {
 				databaseTableMap["table"] = databaseTable.Table
 			}
+
+			ids = append(ids, *databaseTable.InstanceId)
 			tmpList = append(tmpList, databaseTableMap)
 		}
 
 		_ = d.Set("tables", tmpList)
 	}
 
-	if databaseObjects.Views != nil {
-		tmpList := make([]map[string]interface{}, 0, len(databaseObjects.Views))
-		for _, databaseView := range databaseObjects.Views {
+	if views != nil {
+		for _, databaseView := range views {
 			databaseViewMap := map[string]interface{}{}
 
 			if databaseView.View != nil {
 				databaseViewMap["view"] = databaseView.View
 			}
 
+			ids = append(ids, *databaseView.InstanceId)
 			tmpList = append(tmpList, databaseViewMap)
 		}
 
 		_ = d.Set("views", tmpList)
 	}
 
-	if databaseObjects.Procs != nil {
-		tmpList := make([]map[string]interface{}, 0, len(databaseObjects.Procs))
-		for _, databaseProcedure := range databaseObjects.Procs {
+	if procs != nil {
+		for _, databaseProcedure := range procs {
 			databaseProcedureMap := map[string]interface{}{}
 
 			if databaseProcedure.Proc != nil {
 				databaseProcedureMap["proc"] = databaseProcedure.Proc
 			}
 
+			ids = append(ids, *databaseProcedure.InstanceId)
 			tmpList = append(tmpList, databaseProcedureMap)
 		}
 
 		_ = d.Set("procs", tmpList)
 	}
 
-	if databaseObjects.Funcs != nil {
-		tmpList := make([]map[string]interface{}, 0, len(databaseObjects.Funcs))
-		for _, databaseFunction := range databaseObjects.Funcs {
+	if funcs != nil {
+		for _, databaseFunction := range funcs {
 			databaseFunctionMap := map[string]interface{}{}
 
 			if databaseFunction.Func != nil {
 				databaseFunctionMap["func"] = databaseFunction.Func
 			}
 
+			ids = append(ids, *databaseFunction.InstanceId)
 			tmpList = append(tmpList, databaseFunctionMap)
 		}
 
 		_ = d.Set("funcs", tmpList)
 	}
 
-	d.SetId(instanceId + FILED_SP + dbName)
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := writeToFile(output.(string)); e != nil {
 			return e
 		}
 	}

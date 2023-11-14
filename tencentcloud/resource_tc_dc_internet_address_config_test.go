@@ -1,12 +1,11 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-func TestAccTencentCloudNeedFixDcInternetAddressConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudDcInternetAddressConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -29,15 +28,9 @@ func TestAccTencentCloudNeedFixDcInternetAddressConfigResource_basic(t *testing.
 
 const testAccDcInternetAddressConfig = `
 
-resource "tencentcloud_dc_internet_address" "internet_address" {
-  mask_len = 30
-  addr_type = 2
-  addr_proto = 0
-}
-
 resource "tencentcloud_dc_internet_address_config" "internet_address_config" {
-  instance_id = tencentcloud_dc_internet_address.internet_address.id
-  enable = false
+  instance_id = "ipv4-ljm17pbl"
+  enable = true
 }
 
 `

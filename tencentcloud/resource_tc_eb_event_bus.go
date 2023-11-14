@@ -4,11 +4,11 @@ Provides a resource to create a eb event_bus
 Example Usage
 
 ```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
+resource "tencentcloud_eb_event_bus" "event_bus" {
+  event_bus_name = ""
+  description = ""
+  save_days =
+  enable_store =
   tags = {
     "createdBy" = "terraform"
   }
@@ -28,12 +28,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
 )
 
 func resourceTencentCloudEbEventBus() *schema.Resource {
@@ -128,7 +127,7 @@ func resourceTencentCloudEbEventBusCreate(d *schema.ResourceData, meta interface
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:eventbusid/%s", region, d.Id())
+		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:eventBus/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -178,7 +177,7 @@ func resourceTencentCloudEbEventBusRead(d *schema.ResourceData, meta interface{}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "eb", "eventbusid", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "eb", "eventBus", tcClient.Region, d.Id())
 	if err != nil {
 		return err
 	}
@@ -192,35 +191,19 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := eb.NewUpdateEventBusRequest()
 
 	eventBusId := d.Id()
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	eventBus, err := service.DescribeEbEventBusById(ctx, eventBusId)
-	if err != nil {
-		return err
-	}
-
-	if eventBus == nil {
-		return fmt.Errorf("[ERROR] resource `EbEventBus` [%s] not found, please check if it has been deleted.\n", d.Id())
-	}
-
 	request.EventBusId = &eventBusId
-	request.LogTopicId = eventBus.LogTopicId
 
-	if v, ok := d.GetOkExists("enable_store"); ok {
-		request.EnableStore = helper.Bool(v.(bool))
-	} else {
-		return fmt.Errorf("[ERROR] When EbEventBus is modified, `enable_store` must be entered.\n")
-	}
+	immutableArgs := []string{"event_bus_name", "description", "save_days", "enable_store"}
 
-	if v, ok := d.GetOkExists("save_days"); ok {
-		request.SaveDays = helper.IntInt64(v.(int))
-	} else {
-		return fmt.Errorf("[ERROR] When EbEventBus is modified, `save_days` must be entered.\n")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("event_bus_name") {
@@ -235,7 +218,19 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if d.HasChange("save_days") {
+		if v, ok := d.GetOkExists("save_days"); ok {
+			request.SaveDays = helper.IntInt64(v.(int))
+		}
+	}
+
+	if d.HasChange("enable_store") {
+		if v, ok := d.GetOkExists("enable_store"); ok {
+			request.EnableStore = helper.Bool(v.(bool))
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().UpdateEventBus(request)
 		if e != nil {
 			return retryError(e)
@@ -250,11 +245,12 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("eb", "eventbusid", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("eb", "eventBus", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

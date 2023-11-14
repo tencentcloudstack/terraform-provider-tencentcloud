@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 data "tencentcloud_lighthouse_region" "region" {
-}
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -71,7 +70,7 @@ func dataSourceTencentCloudLighthouseRegionRead(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var regionSet []*lighthouse.RegionInfo
 

@@ -5,17 +5,21 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_gateway_routes" "gateway_routes" {
-  gateway_id   = "gateway-ddbb709b"
-  service_name = "test"
-  route_name   = "keep-routes"
-}
+  gateway_id = "gateway-xxxxxx"
+  service_name = "serviceA"
+  route_name = "123"
+  filters {
+		key = "name"
+		value = "123"
+
+  }
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -29,42 +33,62 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 			"gateway_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway ID.",
+				Description: "Gateway ID.",
 			},
 
 			"service_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "service name.",
+				Description: "Service name.",
 			},
 
 			"route_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "route name.",
+				Description: "Route name.",
+			},
+
+			"filters": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Filter conditions, valid value:name, path, host, method, service, protocol.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Filter name.",
+						},
+						"value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Filter value.",
+						},
+					},
+				},
 			},
 
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "result.",
+				Description: "Result.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"route_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "route list.",
+							Description: "Route list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"id": {
+									"i_d": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service ID.",
+										Description: "Service ID.",
 									},
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service name.",
+										Description: "Service name.",
 									},
 									"methods": {
 										Type: schema.TypeSet,
@@ -72,7 +96,7 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "method list.",
+										Description: "Method list.",
 									},
 									"paths": {
 										Type: schema.TypeSet,
@@ -80,7 +104,7 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "path list.",
+										Description: "Path list.",
 									},
 									"hosts": {
 										Type: schema.TypeSet,
@@ -88,7 +112,7 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "host list.",
+										Description: "Host list.",
 									},
 									"protocols": {
 										Type: schema.TypeSet,
@@ -96,42 +120,42 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "protocol list.",
+										Description: "Protocol list.",
 									},
 									"preserve_host": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether to keep the host when forwarding to the backend.",
+										Description: "Whether to keep the host when forwarding to the backend.",
 									},
 									"https_redirect_status_code": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "https redirection status code.",
+										Description: "Https redirection status code.",
 									},
 									"strip_path": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether to strip path when forwarding to the backend.",
+										Description: "Whether to strip path when forwarding to the backend.",
 									},
 									"created_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "created time.",
+										Description: "Created time.",
 									},
 									"force_https": {
 										Type:        schema.TypeBool,
 										Computed:    true,
-										Description: "whether to enable forced HTTPS, no longer use.",
+										Description: "Whether to enable forced HTTPS, no longer use.",
 									},
 									"service_name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service name.",
+										Description: "Service name.",
 									},
-									"service_id": {
+									"service_i_d": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "service ID.",
+										Description: "Service ID.",
 									},
 									"destination_ports": {
 										Type: schema.TypeSet,
@@ -139,23 +163,23 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 											Type: schema.TypeInt,
 										},
 										Computed:    true,
-										Description: "destination port for Layer 4 matching.",
+										Description: "Destination port for Layer 4 matching.",
 									},
 									"headers": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "the headers of route.",
+										Description: "The headers of route.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"key": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "key of header.",
+													Description: "Key of header.",
 												},
 												"value": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "value of header.",
+													Description: "Value of header.",
 												},
 											},
 										},
@@ -166,7 +190,7 @@ func dataSourceTencentCloudTseGatewayRoutes() *schema.Resource {
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "total count.",
+							Description: "Total count.",
 						},
 					},
 				},
@@ -202,24 +226,44 @@ func dataSourceTencentCloudTseGatewayRoutesRead(d *schema.ResourceData, meta int
 		paramMap["RouteName"] = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("filters"); ok {
+		filtersSet := v.([]interface{})
+		tmpSet := make([]*tse.ListFilter, 0, len(filtersSet))
+
+		for _, item := range filtersSet {
+			listFilter := tse.ListFilter{}
+			listFilterMap := item.(map[string]interface{})
+
+			if v, ok := listFilterMap["key"]; ok {
+				listFilter.Key = helper.String(v.(string))
+			}
+			if v, ok := listFilterMap["value"]; ok {
+				listFilter.Value = helper.String(v.(string))
+			}
+			tmpSet = append(tmpSet, &listFilter)
+		}
+		paramMap["filters"] = tmpSet
+	}
+
 	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var result *tse.KongServiceRouteList
+	var result []*tse.KongServiceRouteList
+
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeTseGatewayRoutesByFilter(ctx, paramMap)
+		result, e := service.DescribeTseGatewayRoutesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = response
+		result = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(result.RouteList))
-	kongServiceRouteListMap := map[string]interface{}{}
+	ids := make([]string, 0, len(result))
 	if result != nil {
+		kongServiceRouteListMap := map[string]interface{}{}
 
 		if result.RouteList != nil {
 			routeListList := []interface{}{}
@@ -227,7 +271,7 @@ func dataSourceTencentCloudTseGatewayRoutesRead(d *schema.ResourceData, meta int
 				routeListMap := map[string]interface{}{}
 
 				if routeList.ID != nil {
-					routeListMap["id"] = routeList.ID
+					routeListMap["i_d"] = routeList.ID
 				}
 
 				if routeList.Name != nil {
@@ -275,7 +319,7 @@ func dataSourceTencentCloudTseGatewayRoutesRead(d *schema.ResourceData, meta int
 				}
 
 				if routeList.ServiceID != nil {
-					routeListMap["service_id"] = routeList.ServiceID
+					routeListMap["service_i_d"] = routeList.ServiceID
 				}
 
 				if routeList.DestinationPorts != nil {
@@ -298,21 +342,21 @@ func dataSourceTencentCloudTseGatewayRoutesRead(d *schema.ResourceData, meta int
 						headersList = append(headersList, headersMap)
 					}
 
-					routeListMap["headers"] = headersList
+					routeListMap["headers"] = []interface{}{headersList}
 				}
 
 				routeListList = append(routeListList, routeListMap)
-				ids = append(ids, *routeList.ID)
 			}
 
-			kongServiceRouteListMap["route_list"] = routeListList
+			kongServiceRouteListMap["route_list"] = []interface{}{routeListList}
 		}
 
 		if result.TotalCount != nil {
 			kongServiceRouteListMap["total_count"] = result.TotalCount
 		}
 
-		_ = d.Set("result", []interface{}{kongServiceRouteListMap})
+		ids = append(ids, *result.GatewayId)
+		_ = d.Set("result", kongServiceRouteListMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

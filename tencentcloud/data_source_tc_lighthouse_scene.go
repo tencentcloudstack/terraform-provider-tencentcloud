@@ -1,10 +1,11 @@
 /*
-Use this data source to query detailed information of lighthouse scene with region
+Use this data source to query detailed information of lighthouse scene
 
 Example Usage
 
 ```hcl
 data "tencentcloud_lighthouse_scene" "scene" {
+  scene_ids =
   offset = 0
   limit = 20
 }
@@ -14,7 +15,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
@@ -36,41 +36,14 @@ func dataSourceTencentCloudLighthouseScene() *schema.Resource {
 
 			"offset": {
 				Optional:    true,
-				Default:     0,
 				Type:        schema.TypeInt,
 				Description: "Offset. Default value is 0.",
 			},
 
 			"limit": {
 				Optional:    true,
-				Default:     20,
 				Type:        schema.TypeInt,
 				Description: "Number of returned results. Default value is 20. Maximum value is 100.",
-			},
-
-			"scene_set": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "List of scene info.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"scene_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Use scene Id.",
-						},
-						"display_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Use the scene presentation name.",
-						},
-						"description": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Use scene description.",
-						},
-					},
-				},
 			},
 
 			"result_output_file": {
@@ -93,22 +66,18 @@ func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta inte
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("scene_ids"); ok {
 		sceneIdsSet := v.(*schema.Set).List()
-		sceneIds := make([]string, 0)
-		for _, sceneId := range sceneIdsSet {
-			sceneIds = append(sceneIds, sceneId.(string))
-		}
-		paramMap["scene_ids"] = sceneIds
+		paramMap["SceneIds"] = helper.InterfacesStringsPoint(sceneIdsSet)
 	}
 
 	if v, _ := d.GetOk("offset"); v != nil {
-		paramMap["offset"] = v.(int)
+		paramMap["Offset"] = helper.IntInt64(v.(int))
 	}
 
 	if v, _ := d.GetOk("limit"); v != nil {
-		paramMap["limit"] = v.(int)
+		paramMap["Limit"] = helper.IntInt64(v.(int))
 	}
 
-	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := LighthouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var sceneSet []*lighthouse.Scene
 
@@ -126,17 +95,8 @@ func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta inte
 
 	ids := make([]string, 0, len(sceneSet))
 	tmpList := make([]map[string]interface{}, 0, len(sceneSet))
-	for _, scene := range sceneSet {
-		ids = append(ids, *scene.SceneId)
-		tmpList = append(tmpList, map[string]interface{}{
-			"scene_id":     *scene.SceneId,
-			"display_name": *scene.DisplayName,
-			"description":  *scene.Description,
-		})
-	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	_ = d.Set("scene_set", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

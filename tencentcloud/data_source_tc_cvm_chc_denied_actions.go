@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cvm_chc_denied_actions" "chc_denied_actions" {
-  chc_ids = ["chc-xxxxx"]
-}
+  chc_ids =
+  }
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
@@ -81,7 +80,7 @@ func dataSourceTencentCloudCvmChcDeniedActionsRead(d *schema.ResourceData, meta 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("chc_ids"); ok {
 		chcIdsSet := v.(*schema.Set).List()
-		paramMap["chc_ids"] = helper.InterfacesStrings(chcIdsSet)
+		paramMap["ChcIds"] = helper.InterfacesStringsPoint(chcIdsSet)
 	}
 
 	service := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -103,7 +102,7 @@ func dataSourceTencentCloudCvmChcDeniedActionsRead(d *schema.ResourceData, meta 
 	ids := make([]string, 0, len(chcHostDeniedActionSet))
 	tmpList := make([]map[string]interface{}, 0, len(chcHostDeniedActionSet))
 
-	if len(chcHostDeniedActionSet) > 0 {
+	if chcHostDeniedActionSet != nil {
 		for _, chcHostDeniedActions := range chcHostDeniedActionSet {
 			chcHostDeniedActionsMap := map[string]interface{}{}
 

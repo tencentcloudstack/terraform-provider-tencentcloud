@@ -6,46 +6,42 @@ Example Usage
 ```hcl
 resource "tencentcloud_tem_gateway" "gateway" {
   ingress {
-    ingress_name = "demo"
-    environment_id = "en-853mggjm"
-    address_ip_version = "IPV4"
-    rewrite_type = "NONE"
-    mixed = false
-    rules {
-      host = "test.com"
-      protocol = "http"
-      http {
-        paths {
-          path = "/"
-          backend {
-            service_name = "demo"
-            service_port = 80
-          }
-        }
-      }
-    }
-    rules {
-      host = "hello.com"
-      protocol = "http"
-      http {
-        paths {
-          path = "/"
-          backend {
-            service_name = "hello"
-            service_port = 36000
-          }
-        }
-      }
-    }
+		ingress_name = "en-xxx"
+		environment_id = "en-xxx"
+		cluster_namespace = "default"
+		address_ip_version = "IPV4"
+		rewrite_type = "AUTO"
+		mixed = false
+		tls {
+			hosts =
+			secret_name = &lt;nil&gt;
+			certificate_id = &lt;nil&gt;
+		}
+		rules {
+			host = &lt;nil&gt;
+			protocol = "http"
+			http {
+				paths {
+					path = &lt;nil&gt;
+					backend {
+						service_name = &lt;nil&gt;
+						service_port = &lt;nil&gt;
+					}
+				}
+			}
+		}
+		clb_id = "xxx"
+
   }
 }
-
 ```
+
 Import
 
 tem gateway can be imported using the id, e.g.
+
 ```
-$ terraform import tencentcloud_tem_gateway.gateway environmentId#gatewayName
+terraform import tencentcloud_tem_gateway.gateway gateway_id
 ```
 */
 package tencentcloud
@@ -53,19 +49,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strings"
 )
 
 func resourceTencentCloudTemGateway() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudTemGatewayRead,
 		Create: resourceTencentCloudTemGatewayCreate,
+		Read:   resourceTencentCloudTemGatewayRead,
 		Update: resourceTencentCloudTemGatewayUpdate,
 		Delete: resourceTencentCloudTemGatewayDelete,
 		Importer: &schema.ResourceImporter{
@@ -73,43 +68,46 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"ingress": {
+				Optional:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Optional:    true,
-				Description: "gateway properties.",
+				Description: "Gateway properties.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"ingress_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
-							Description: "gateway name.",
+							Description: "Gateway name.",
 						},
 						"environment_id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
-							Description: "environment ID.",
+							Description: "Environment ID.",
+						},
+						"cluster_namespace": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Inner namespace, default only.",
 						},
 						"address_ip_version": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "ip version, support IPV4.",
+							Description: "Ip version, support IPV4.",
 						},
 						"rewrite_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "redirect mode, support AUTO and NONE.",
+							Description: "Redirect mode, support AUTO and NONE.",
 						},
 						"mixed": {
 							Type:        schema.TypeBool,
 							Required:    true,
-							Description: "mixing HTTP and HTTPS.",
+							Description: "Mixing HTTP and HTTPS.",
 						},
 						"tls": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "ingress TLS configurations.",
+							Description: "Ingress TLS configurations.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"hosts": {
@@ -118,18 +116,17 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Required:    true,
-										Description: "host names.",
+										Description: "Host names.",
 									},
 									"secret_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
-										Description: "secret name, if you use a certificate, you don't need to fill in this field.",
+										Description: "Secret name.",
 									},
 									"certificate_id": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "certificate ID.",
+										Description: "Certificate ID.",
 									},
 								},
 							},
@@ -137,53 +134,53 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 						"rules": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: "proxy rules.",
+							Description: "Proxy rules.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"host": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "host name.",
+										Description: "Host name.",
 									},
 									"protocol": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "protocol.",
+										Description: "Protocol.",
 									},
 									"http": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Required:    true,
-										Description: "rule payload.",
+										Description: "Rule payload.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"paths": {
 													Type:        schema.TypeList,
 													Required:    true,
-													Description: "path payload.",
+													Description: "Path payload.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"path": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "path.",
+																Description: "Path.",
 															},
 															"backend": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Required:    true,
-																Description: "backend payload.",
+																Description: "Backend payload.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"service_name": {
 																			Type:        schema.TypeString,
 																			Required:    true,
-																			Description: "backend name.",
+																			Description: "Backend name.",
 																		},
 																		"service_port": {
 																			Type:        schema.TypeInt,
 																			Required:    true,
-																			Description: "backend port.",
+																			Description: "Backend port.",
 																		},
 																	},
 																},
@@ -200,18 +197,17 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 						"vip": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "gateway vip.",
+							Description: "Gateway vip.",
 						},
 						"clb_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Computed:    true,
-							Description: "related CLB ID, support binding existing clb, does not support modification.",
+							Description: "Related CLB ID.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "creation time.",
+							Description: "Creation time.",
 						},
 					},
 				},
@@ -228,25 +224,23 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 
 	var (
 		request       = tem.NewModifyIngressRequest()
+		response      = tem.NewModifyIngressResponse()
 		environmentId string
 		ingressName   string
 	)
-
 	if dMap, ok := helper.InterfacesHeadMap(d, "ingress"); ok {
 		ingressInfo := tem.IngressInfo{}
 		if v, ok := dMap["ingress_name"]; ok {
-			ingressName = v.(string)
 			ingressInfo.IngressName = helper.String(v.(string))
 		}
 		if v, ok := dMap["environment_id"]; ok {
-			environmentId = v.(string)
 			ingressInfo.EnvironmentId = helper.String(v.(string))
 		}
-
-		ingressInfo.ClusterNamespace = helper.String("default")
-
+		if v, ok := dMap["cluster_namespace"]; ok {
+			ingressInfo.ClusterNamespace = helper.String(v.(string))
+		}
 		if v, ok := dMap["address_ip_version"]; ok {
-			ingressInfo.AddressIPVersion = helper.String(v.(string))
+			ingressInfo.AddressIpVersion = helper.String(v.(string))
 		}
 		if v, ok := dMap["rewrite_type"]; ok {
 			ingressInfo.RewriteType = helper.String(v.(string))
@@ -256,19 +250,19 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		}
 		if v, ok := dMap["tls"]; ok {
 			for _, item := range v.([]interface{}) {
-				TlsMap := item.(map[string]interface{})
+				tlsMap := item.(map[string]interface{})
 				ingressTls := tem.IngressTls{}
-				if v, ok := TlsMap["hosts"]; ok {
+				if v, ok := tlsMap["hosts"]; ok {
 					hostsSet := v.(*schema.Set).List()
 					for i := range hostsSet {
 						hosts := hostsSet[i].(string)
 						ingressTls.Hosts = append(ingressTls.Hosts, &hosts)
 					}
 				}
-				if v, ok := TlsMap["secret_name"]; ok {
+				if v, ok := tlsMap["secret_name"]; ok {
 					ingressTls.SecretName = helper.String(v.(string))
 				}
-				if v, ok := TlsMap["certificate_id"]; ok {
+				if v, ok := tlsMap["certificate_id"]; ok {
 					ingressTls.CertificateId = helper.String(v.(string))
 				}
 				ingressInfo.Tls = append(ingressInfo.Tls, &ingressTls)
@@ -276,29 +270,29 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		}
 		if v, ok := dMap["rules"]; ok {
 			for _, item := range v.([]interface{}) {
-				RulesMap := item.(map[string]interface{})
+				rulesMap := item.(map[string]interface{})
 				ingressRule := tem.IngressRule{}
-				if v, ok := RulesMap["host"]; ok {
+				if v, ok := rulesMap["host"]; ok {
 					ingressRule.Host = helper.String(v.(string))
 				}
-				if v, ok := RulesMap["protocol"]; ok {
+				if v, ok := rulesMap["protocol"]; ok {
 					ingressRule.Protocol = helper.String(v.(string))
 				}
-				if HttpMap, ok := helper.InterfaceToMap(RulesMap, "http"); ok {
+				if httpMap, ok := helper.InterfaceToMap(rulesMap, "http"); ok {
 					ingressRuleValue := tem.IngressRuleValue{}
-					if v, ok := HttpMap["paths"]; ok {
+					if v, ok := httpMap["paths"]; ok {
 						for _, item := range v.([]interface{}) {
-							PathsMap := item.(map[string]interface{})
+							pathsMap := item.(map[string]interface{})
 							ingressRulePath := tem.IngressRulePath{}
-							if v, ok := PathsMap["path"]; ok {
+							if v, ok := pathsMap["path"]; ok {
 								ingressRulePath.Path = helper.String(v.(string))
 							}
-							if BackendMap, ok := helper.InterfaceToMap(PathsMap, "backend"); ok {
+							if backendMap, ok := helper.InterfaceToMap(pathsMap, "backend"); ok {
 								ingressRuleBackend := tem.IngressRuleBackend{}
-								if v, ok := BackendMap["service_name"]; ok {
+								if v, ok := backendMap["service_name"]; ok {
 									ingressRuleBackend.ServiceName = helper.String(v.(string))
 								}
-								if v, ok := BackendMap["service_port"]; ok {
+								if v, ok := backendMap["service_port"]; ok {
 									ingressRuleBackend.ServicePort = helper.IntInt64(v.(int))
 								}
 								ingressRulePath.Backend = &ingressRuleBackend
@@ -322,18 +316,18 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem gateway failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + ingressName)
+	environmentId = *response.Response.EnvironmentId
+	d.SetId(strings.Join([]string{environmentId, ingressName}, FILED_SP))
 
 	return resourceTencentCloudTemGatewayRead(d, meta)
 }
@@ -343,6 +337,7 @@ func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -354,105 +349,135 @@ func resourceTencentCloudTemGatewayRead(d *schema.ResourceData, meta interface{}
 	environmentId := idSplit[0]
 	ingressName := idSplit[1]
 
-	gateway, err := service.DescribeTemGateway(ctx, environmentId, ingressName)
-
+	gateway, err := service.DescribeTemGatewayById(ctx, environmentId, ingressName)
 	if err != nil {
 		return err
 	}
 
 	if gateway == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `gateway` %s does not exist", ingressName)
+		log.Printf("[WARN]%s resource `TemGateway` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
-	ingressMap := map[string]interface{}{}
-	if gateway.IngressName != nil {
-		ingressMap["ingress_name"] = gateway.IngressName
-	}
-	if gateway.EnvironmentId != nil {
-		ingressMap["environment_id"] = gateway.EnvironmentId
-	}
-	if gateway.AddressIPVersion != nil {
-		ingressMap["address_ip_version"] = gateway.AddressIPVersion
-	}
-	if gateway.RewriteType != nil {
-		ingressMap["rewrite_type"] = gateway.RewriteType
-	}
-	if gateway.Mixed != nil {
-		ingressMap["mixed"] = gateway.Mixed
-	}
-	if gateway.Tls != nil {
-		tlsList := []interface{}{}
-		for _, tls := range gateway.Tls {
-			tlsMap := map[string]interface{}{}
-			if tls.Hosts != nil {
-				tlsMap["hosts"] = tls.Hosts
-			}
-			if tls.SecretName != nil {
-				tlsMap["secret_name"] = tls.SecretName
-			}
-			if tls.CertificateId != nil {
-				tlsMap["certificate_id"] = tls.CertificateId
-			}
+	if gateway.Ingress != nil {
+		ingressMap := map[string]interface{}{}
 
-			tlsList = append(tlsList, tlsMap)
+		if gateway.Ingress.IngressName != nil {
+			ingressMap["ingress_name"] = gateway.Ingress.IngressName
 		}
-		ingressMap["tls"] = tlsList
-	}
-	if gateway.Rules != nil {
-		rulesList := []interface{}{}
-		for _, rules := range gateway.Rules {
-			rulesMap := map[string]interface{}{}
-			if rules.Host != nil {
-				rulesMap["host"] = rules.Host
-			}
-			if rules.Protocol != nil {
-				rulesMap["protocol"] = rules.Protocol
-			}
-			if rules.Http != nil {
-				httpMap := map[string]interface{}{}
-				if rules.Http.Paths != nil {
-					pathsList := []interface{}{}
-					for _, paths := range rules.Http.Paths {
-						pathsMap := map[string]interface{}{}
-						if paths.Path != nil {
-							pathsMap["path"] = paths.Path
-						}
-						if paths.Backend != nil {
-							backendMap := map[string]interface{}{}
-							if paths.Backend.ServiceName != nil {
-								backendMap["service_name"] = paths.Backend.ServiceName
-							}
-							if paths.Backend.ServicePort != nil {
-								backendMap["service_port"] = paths.Backend.ServicePort
-							}
 
-							pathsMap["backend"] = []interface{}{backendMap}
-						}
+		if gateway.Ingress.EnvironmentId != nil {
+			ingressMap["environment_id"] = gateway.Ingress.EnvironmentId
+		}
 
-						pathsList = append(pathsList, pathsMap)
-					}
-					httpMap["paths"] = pathsList
+		if gateway.Ingress.ClusterNamespace != nil {
+			ingressMap["cluster_namespace"] = gateway.Ingress.ClusterNamespace
+		}
+
+		if gateway.Ingress.AddressIpVersion != nil {
+			ingressMap["address_ip_version"] = gateway.Ingress.AddressIpVersion
+		}
+
+		if gateway.Ingress.RewriteType != nil {
+			ingressMap["rewrite_type"] = gateway.Ingress.RewriteType
+		}
+
+		if gateway.Ingress.Mixed != nil {
+			ingressMap["mixed"] = gateway.Ingress.Mixed
+		}
+
+		if gateway.Ingress.Tls != nil {
+			tlsList := []interface{}{}
+			for _, tls := range gateway.Ingress.Tls {
+				tlsMap := map[string]interface{}{}
+
+				if tls.Hosts != nil {
+					tlsMap["hosts"] = tls.Hosts
 				}
 
-				rulesMap["http"] = []interface{}{httpMap}
+				if tls.SecretName != nil {
+					tlsMap["secret_name"] = tls.SecretName
+				}
+
+				if tls.CertificateId != nil {
+					tlsMap["certificate_id"] = tls.CertificateId
+				}
+
+				tlsList = append(tlsList, tlsMap)
 			}
 
-			rulesList = append(rulesList, rulesMap)
+			ingressMap["tls"] = []interface{}{tlsList}
 		}
-		ingressMap["rules"] = rulesList
-	}
-	if gateway.Vip != nil {
-		ingressMap["vip"] = gateway.Vip
-	}
-	if gateway.ClbId != nil {
-		ingressMap["clb_id"] = gateway.ClbId
-	}
-	if gateway.CreateTime != nil {
-		ingressMap["create_time"] = gateway.CreateTime
-	}
 
-	_ = d.Set("ingress", []interface{}{ingressMap})
+		if gateway.Ingress.Rules != nil {
+			rulesList := []interface{}{}
+			for _, rules := range gateway.Ingress.Rules {
+				rulesMap := map[string]interface{}{}
+
+				if rules.Host != nil {
+					rulesMap["host"] = rules.Host
+				}
+
+				if rules.Protocol != nil {
+					rulesMap["protocol"] = rules.Protocol
+				}
+
+				if rules.Http != nil {
+					httpMap := map[string]interface{}{}
+
+					if rules.Http.Paths != nil {
+						pathsList := []interface{}{}
+						for _, paths := range rules.Http.Paths {
+							pathsMap := map[string]interface{}{}
+
+							if paths.Path != nil {
+								pathsMap["path"] = paths.Path
+							}
+
+							if paths.Backend != nil {
+								backendMap := map[string]interface{}{}
+
+								if paths.Backend.ServiceName != nil {
+									backendMap["service_name"] = paths.Backend.ServiceName
+								}
+
+								if paths.Backend.ServicePort != nil {
+									backendMap["service_port"] = paths.Backend.ServicePort
+								}
+
+								pathsMap["backend"] = []interface{}{backendMap}
+							}
+
+							pathsList = append(pathsList, pathsMap)
+						}
+
+						httpMap["paths"] = []interface{}{pathsList}
+					}
+
+					rulesMap["http"] = []interface{}{httpMap}
+				}
+
+				rulesList = append(rulesList, rulesMap)
+			}
+
+			ingressMap["rules"] = []interface{}{rulesList}
+		}
+
+		if gateway.Ingress.Vip != nil {
+			ingressMap["vip"] = gateway.Ingress.Vip
+		}
+
+		if gateway.Ingress.ClbId != nil {
+			ingressMap["clb_id"] = gateway.Ingress.ClbId
+		}
+
+		if gateway.Ingress.CreateTime != nil {
+			ingressMap["create_time"] = gateway.Ingress.CreateTime
+		}
+
+		_ = d.Set("ingress", []interface{}{ingressMap})
+	}
 
 	return nil
 }
@@ -465,22 +490,38 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 
 	request := tem.NewModifyIngressRequest()
 
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	environmentId := idSplit[0]
+	ingressName := idSplit[1]
+
+	request.EnvironmentId = &environmentId
+	request.IngressName = &ingressName
+
+	immutableArgs := []string{"ingress"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	if d.HasChange("ingress") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "ingress"); ok {
 			ingressInfo := tem.IngressInfo{}
-
-			idSplit := strings.Split(d.Id(), FILED_SP)
-			if len(idSplit) != 2 {
-				return fmt.Errorf("id is broken,%s", d.Id())
+			if v, ok := dMap["ingress_name"]; ok {
+				ingressInfo.IngressName = helper.String(v.(string))
 			}
-			environmentId := idSplit[0]
-			ingressName := idSplit[1]
-			ingressInfo.IngressName = helper.String(ingressName)
-			ingressInfo.EnvironmentId = helper.String(environmentId)
-			ingressInfo.ClusterNamespace = helper.String("default")
-
+			if v, ok := dMap["environment_id"]; ok {
+				ingressInfo.EnvironmentId = helper.String(v.(string))
+			}
+			if v, ok := dMap["cluster_namespace"]; ok {
+				ingressInfo.ClusterNamespace = helper.String(v.(string))
+			}
 			if v, ok := dMap["address_ip_version"]; ok {
-				ingressInfo.AddressIPVersion = helper.String(v.(string))
+				ingressInfo.AddressIpVersion = helper.String(v.(string))
 			}
 			if v, ok := dMap["rewrite_type"]; ok {
 				ingressInfo.RewriteType = helper.String(v.(string))
@@ -490,19 +531,19 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 			}
 			if v, ok := dMap["tls"]; ok {
 				for _, item := range v.([]interface{}) {
-					TlsMap := item.(map[string]interface{})
+					tlsMap := item.(map[string]interface{})
 					ingressTls := tem.IngressTls{}
-					if v, ok := TlsMap["hosts"]; ok {
+					if v, ok := tlsMap["hosts"]; ok {
 						hostsSet := v.(*schema.Set).List()
 						for i := range hostsSet {
 							hosts := hostsSet[i].(string)
 							ingressTls.Hosts = append(ingressTls.Hosts, &hosts)
 						}
 					}
-					if v, ok := TlsMap["secret_name"]; ok {
+					if v, ok := tlsMap["secret_name"]; ok {
 						ingressTls.SecretName = helper.String(v.(string))
 					}
-					if v, ok := TlsMap["certificate_id"]; ok {
+					if v, ok := tlsMap["certificate_id"]; ok {
 						ingressTls.CertificateId = helper.String(v.(string))
 					}
 					ingressInfo.Tls = append(ingressInfo.Tls, &ingressTls)
@@ -510,29 +551,29 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 			}
 			if v, ok := dMap["rules"]; ok {
 				for _, item := range v.([]interface{}) {
-					RulesMap := item.(map[string]interface{})
+					rulesMap := item.(map[string]interface{})
 					ingressRule := tem.IngressRule{}
-					if v, ok := RulesMap["host"]; ok {
+					if v, ok := rulesMap["host"]; ok {
 						ingressRule.Host = helper.String(v.(string))
 					}
-					if v, ok := RulesMap["protocol"]; ok {
+					if v, ok := rulesMap["protocol"]; ok {
 						ingressRule.Protocol = helper.String(v.(string))
 					}
-					if HttpMap, ok := helper.InterfaceToMap(RulesMap, "http"); ok {
+					if httpMap, ok := helper.InterfaceToMap(rulesMap, "http"); ok {
 						ingressRuleValue := tem.IngressRuleValue{}
-						if v, ok := HttpMap["paths"]; ok {
+						if v, ok := httpMap["paths"]; ok {
 							for _, item := range v.([]interface{}) {
-								PathsMap := item.(map[string]interface{})
+								pathsMap := item.(map[string]interface{})
 								ingressRulePath := tem.IngressRulePath{}
-								if v, ok := PathsMap["path"]; ok {
+								if v, ok := pathsMap["path"]; ok {
 									ingressRulePath.Path = helper.String(v.(string))
 								}
-								if BackendMap, ok := helper.InterfaceToMap(PathsMap, "backend"); ok {
+								if backendMap, ok := helper.InterfaceToMap(pathsMap, "backend"); ok {
 									ingressRuleBackend := tem.IngressRuleBackend{}
-									if v, ok := BackendMap["service_name"]; ok {
+									if v, ok := backendMap["service_name"]; ok {
 										ingressRuleBackend.ServiceName = helper.String(v.(string))
 									}
-									if v, ok := BackendMap["service_port"]; ok {
+									if v, ok := backendMap["service_port"]; ok {
 										ingressRuleBackend.ServicePort = helper.IntInt64(v.(int))
 									}
 									ingressRulePath.Backend = &ingressRuleBackend
@@ -545,6 +586,9 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 					ingressInfo.Rules = append(ingressInfo.Rules, &ingressRule)
 				}
 			}
+			if v, ok := dMap["clb_id"]; ok {
+				ingressInfo.ClbId = helper.String(v.(string))
+			}
 			request.Ingress = &ingressInfo
 		}
 	}
@@ -554,13 +598,12 @@ func resourceTencentCloudTemGatewayUpdate(d *schema.ResourceData, meta interface
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
-
 	if err != nil {
+		log.Printf("[CRITAL]%s update tem gateway failed, reason:%+v", logId, err)
 		return err
 	}
 

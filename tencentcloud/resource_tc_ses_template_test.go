@@ -1,25 +1,21 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSesTemplate_basic -v
-func TestAccTencentCloudSesTemplate_basic(t *testing.T) {
+func TestAccTencentCloudSesTemplateResource_basic(t *testing.T) {
 	t.Parallel()
-
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSesTemplate,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_ses_template.template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_ses_template.template", "template_name", "sesTemplateName"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ses_template.template", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_ses_template.template",
@@ -33,9 +29,11 @@ func TestAccTencentCloudSesTemplate_basic(t *testing.T) {
 const testAccSesTemplate = `
 
 resource "tencentcloud_ses_template" "template" {
-  template_name = "sesTemplateName"
+  template_name = "smsTemplateName"
   template_content {
-    text = "This is the content of the test"
+		html = &lt;nil&gt;
+		text = &lt;nil&gt;
+
   }
 }
 

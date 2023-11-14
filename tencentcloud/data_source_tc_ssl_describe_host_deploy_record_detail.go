@@ -13,7 +13,6 @@ package tencentcloud
 
 import (
 	"context"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -127,14 +126,14 @@ func dataSourceTencentCloudSslDescribeHostDeployRecordDetail() *schema.Resource 
 						"port": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "portNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+							Description: "PortNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
 						"env_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "TCB environment IDNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 						},
-						"tcb_type": {
+						"t_c_b_type": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Deployed TCB typeNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -191,15 +190,13 @@ func dataSourceTencentCloudSslDescribeHostDeployRecordDetailRead(d *schema.Resou
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var deployRecordDetailList []*ssl.DeployRecordDetail
-	var successTotalCount, failedTotalCount, runningTotalCount *int64
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, successTotal, failedTotal, runningTotal, e := service.DescribeSslDescribeHostDeployRecordDetailByFilter(ctx, paramMap)
+		result, e := service.DescribeSslDescribeHostDeployRecordDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
 		deployRecordDetailList = result
-		successTotalCount, failedTotalCount, runningTotalCount = successTotal, failedTotal, runningTotal
 		return nil
 	})
 	if err != nil {
@@ -290,14 +287,14 @@ func dataSourceTencentCloudSslDescribeHostDeployRecordDetailRead(d *schema.Resou
 			}
 
 			if deployRecordDetail.TCBType != nil {
-				deployRecordDetailMap["tcb_type"] = deployRecordDetail.TCBType
+				deployRecordDetailMap["t_c_b_type"] = deployRecordDetail.TCBType
 			}
 
 			if deployRecordDetail.Region != nil {
 				deployRecordDetailMap["region"] = deployRecordDetail.Region
 			}
 
-			ids = append(ids, *deployRecordDetail.InstanceId)
+			ids = append(ids, *deployRecordDetail.DeployRecordId)
 			tmpList = append(tmpList, deployRecordDetailMap)
 		}
 
