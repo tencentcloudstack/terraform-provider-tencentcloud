@@ -3747,14 +3747,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
-<<<<<<< HEAD
-			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
-=======
 			"tencentcloud_waf_auto_deny_rules":                                 resourceTencentCloudWafAutoDenyRules(),
 			"tencentcloud_waf_module_status":                                   resourceTencentCloudWafModuleStatus(),
 			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
 			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
->>>>>>> 66f96f265499d3f0fd6254807a0a5d4e66adca36
+			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
 			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
