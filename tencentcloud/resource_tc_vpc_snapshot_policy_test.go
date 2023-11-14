@@ -38,7 +38,7 @@ const testAccVpcSnapshotPolicy = `
 resource "tencentcloud_vpc_snapshot_policy" "snapshot_policy" {
   snapshot_policy_name = "terraform-test"
   backup_type          = "time"
-  cos_bucket           = "cos-lock-1308919341"
+  cos_bucket           = "cos-lock-1300249388"
   cos_region           = "ap-guangzhou"
   create_new_cos       = false
   keep_time            = 2
