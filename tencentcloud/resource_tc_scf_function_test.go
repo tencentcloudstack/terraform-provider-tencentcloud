@@ -103,6 +103,7 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "host", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
 				),
 			},
@@ -124,6 +125,7 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckNoResourceAttr("tencentcloud_scf_function.foo", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.abc", "abc"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 				),
 			},
 			{
@@ -539,6 +541,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler   = "first.do_it_first"
   runtime   = "Python3.6"
   enable_public_net = true
+  async_run_enable = "FALSE"
 
   zip_file = "%s"
 
@@ -554,6 +557,7 @@ resource "tencentcloud_scf_function" "foo" {
   handler   = "second.do_it_second"
   runtime   = "Python3.6"
   enable_public_net = true
+  async_run_enable = "FALSE"
 
   description = "test"
   mem_size    = 1536
