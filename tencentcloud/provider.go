@@ -1966,8 +1966,11 @@ Web Application Firewall(WAF)
 Wedata
   Data Source
 	tencentcloud_wedata_rule_templates
+	tencentcloud_wedata_data_source_list
+	tencentcloud_wedata_data_source_without_info
 
   Resource
+    tencentcloud_wedata_datasource
     tencentcloud_wedata_function
     tencentcloud_wedata_resource
     tencentcloud_wedata_script
@@ -2815,6 +2818,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_platform_products":                         dataSourceTencentCloudEbPlatformProducts(),
 			"tencentcloud_eb_plateform_event_template":                  dataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                        dataSourceTencentCloudWedataRuleTemplates(),
+			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
+			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_private_dns_records":                          dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                                  dataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                             dataSourceTencentCloudWafTlsVersions(),
@@ -3730,6 +3735,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
 			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),

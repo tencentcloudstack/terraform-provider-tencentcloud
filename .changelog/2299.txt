@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_wedata_data_source_list
+```
+
+```release-note:new-data-source
+tencentcloud_wedata_data_source_without_info
+```
+
+```release-note:new-resource
+tencentcloud_wedata_datasource
+```
