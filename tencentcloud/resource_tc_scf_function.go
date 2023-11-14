@@ -235,6 +235,14 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the SCF function.",
 			},
+			"async_run_enable": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{SCF_FUNCTION_OPEN, SCF_FUNCTION_CLOSE}),
+				Description:  "Whether SCF function asynchronous attribute is enabled. `TRUE` is open, `FALSE` is close.",
+			},
 			"enable_public_net": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -732,6 +740,11 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		functionInfo.tags = tags
 	}
 
+	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {
+		enableStr := v.(string)
+		functionInfo.asyncRunEnable = helper.String(enableStr)
+	}
+
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
 		log.Printf("[CRITAL]%s create function failed: %+v", logId, err)
 		return err
@@ -850,6 +863,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 		tags[*tag.Key] = *tag.Value
 	}
 	_ = d.Set("tags", tags)
+	_ = d.Set("async_run_enable", resp.AsyncRunEnable)
 
 	_ = d.Set("modify_time", resp.ModTime)
 	_ = d.Set("code_size", resp.CodeSize)

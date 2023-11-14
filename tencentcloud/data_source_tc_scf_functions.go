@@ -153,6 +153,11 @@ func dataSourceTencentCloudScfFunctions() *schema.Resource {
 							Computed:    true,
 							Description: "Tags of the SCF function.",
 						},
+						"async_run_enable": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Whether asynchronous attribute is enabled.",
+						},
 						"create_time": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -395,6 +400,7 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 			fnTags[*tag.Key] = *tag.Value
 		}
 		m["tags"] = fnTags
+		m["async_run_enable"] = resp.AsyncRunEnable
 
 		functions = append(functions, m)
 	}

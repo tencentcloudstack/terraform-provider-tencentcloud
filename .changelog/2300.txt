@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_scf_function: add async_run_enable
+```
+
+```release-note:enhancement
+resource/tencentcloud_scf_function: add async_run_enable
+```
