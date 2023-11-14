@@ -15,15 +15,14 @@ Provides a resource to create a wedata integration_offline_task
 
 ```hcl
 resource "tencentcloud_wedata_integration_offline_task" "example" {
-  project_id  = "1455251608631480391"
+  project_id  = "1612982498218618880"
   cycle_step  = 1
   delay_time  = 0
   end_time    = "2099-12-31 00:00:00"
   notes       = "terraform example demo."
   start_time  = "2023-12-31 00:00:00"
   task_name   = "tf_example"
-  type_id     = 27
-  task_action = "0,3,4"
+  task_action = "2"
   task_mode   = "1"
 
   task_info {
@@ -48,7 +47,7 @@ resource "tencentcloud_wedata_integration_offline_task" "example" {
       name  = "TaskAlarmRegularList"
       value = "73"
     }
-    incharge = "demo_user"
+    incharge = "demo"
     offline_task_add_entity {
       cycle_type         = 3
       crontab_expression = "0 0 1 * * ?"
@@ -75,7 +74,6 @@ The following arguments are supported:
 * `task_info` - (Required, List) Task Information.
 * `task_mode` - (Required, String) Task display mode, 0: canvas mode, 1: form mode.
 * `task_name` - (Required, String) Task name.
-* `type_id` - (Required, Int) Task type ID, for intgration task the value is 27.
 
 The `config` object supports the following:
 
@@ -104,18 +102,12 @@ The `offline_task_add_entity` object supports the following:
 
 * `crontab_expression` - (Optional, String) Crontab expression.
 * `cycle_type` - (Optional, Int) Scheduling type, 0: crontab type, 1: minutes, 2: hours, 3: days, 4: weeks, 5: months, 6: one-time, 7: user-driven, 10: elastic period (week), 11: elastic period (month), 12: year, 13: instant trigger.
-* `dependency_workflow` - (Optional, String) Whether to support workflow dependencies: yes / no, default value: no.
 * `execution_end_time` - (Optional, String) Scheduling execution end time.
 * `execution_start_time` - (Optional, String) Scheduling execution start time.
-* `instance_init_strategy` - (Optional, String) Instance initialization strategy.
-* `product_name` - (Optional, String) Product name: DATA_INTEGRATION.
 * `retriable` - (Optional, Int) Whether to retry.
 * `retry_wait` - (Optional, Int) Retry waiting time, unit is minutes.
-* `run_priority` - (Optional, Int) Task running priority.
 * `self_depend` - (Optional, Int) Self-dependent rules, 1: Ordered serial one at a time, queued execution, 2: Unordered serial one at a time, not queued execution, 3: Parallel, multiple at once.
-* `task_auto_submit` - (Optional, Bool) Whether to automatically submit.
 * `try_limit` - (Optional, Int) Number of retries.
-* `workflow_name` - (Optional, String) The name of the workflow to which the task belongs.
 
 The `properties` object supports the following:
 

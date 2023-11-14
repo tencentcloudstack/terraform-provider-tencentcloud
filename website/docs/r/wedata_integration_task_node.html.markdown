@@ -16,16 +16,12 @@ Provides a resource to create a wedata integration_task_node
 ```hcl
 resource "tencentcloud_wedata_integration_task_node" "example" {
   project_id       = "1612982498218618880"
-  task_id          = "20231103152214665"
-  name             = "tf_example"
+  task_id          = "20231022181114990"
+  name             = "tf_example1"
   node_type        = "INPUT"
   data_source_type = "MYSQL"
   task_type        = 202
   task_mode        = 2
-  config {
-    name  = "Type"
-    value = "MYSQL"
-  }
   node_info {
     datasource_id = "5085"
     config {
@@ -84,7 +80,6 @@ resource "tencentcloud_wedata_integration_task_node" "example" {
 
 The following arguments are supported:
 
-* `config` - (Required, List) Node configuration information.
 * `data_source_type` - (Required, String) Data source type: MYSQL, POSTGRE, ORACLE, SQLSERVER, FTP, HIVE, HDFS, ICEBERG, KAFKA, HBASE, SPARK, TBASE, DB2, DM, GAUSSDB, GBASE, IMPALA, ES, S3_DATAINSIGHT, GREENPLUM, PHOENIX, SAP_HANA, SFTP, OCEANBASE, CLICKHOUSE, KUDU, VERTICA, REDIS, COS, DLC, DORIS, CKAFKA, DTS_KAFKA, S3, CDW, TDSQLC, TDSQL, MONGODB, SYBASE, REST_API, StarRocks, TCHOUSE_X.
 * `name` - (Required, String) Node Name.
 * `node_info` - (Required, List) Node information.
