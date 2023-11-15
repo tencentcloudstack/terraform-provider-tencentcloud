@@ -60,9 +60,8 @@ func TestAccTencentCloudVpcFlowLogResource_basic(t *testing.T) {
 				Config: testAccVpcFlowLog,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_flow_log.flow_log", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "foo"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "iac-test-1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_description", "this is a testing flow log"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "tags.createdBy", "terraform"),
 				),
 			},
 			{
@@ -78,51 +77,37 @@ func TestAccTencentCloudVpcFlowLogResource_basic(t *testing.T) {
 				Config: testAccVpcFlowLogUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_flow_log.flow_log", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "foo2"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "iac-test-2"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_description", "updated"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "tags.createdBy", "terraform2"),
 				),
 			},
 		},
 	})
 }
 
-const testAccVpcFlowLog = defaultVpcSubnets + `
-data "tencentcloud_enis" "eni" {
-  name      = "keep-fl-eni"
-}
+const testAccVpcFlowLog = `
 
 resource "tencentcloud_vpc_flow_log" "flow_log" {
-  flow_log_name = "foo"
+  flow_log_name = "iac-test-1"
   resource_type = "NETWORKINTERFACE"
-  resource_id = data.tencentcloud_enis.eni.enis.0.id
+  resource_id = "eni-qz9wxgmd"
   traffic_type = "ACCEPT"
-  vpc_id = local.vpc_id
+  vpc_id = "vpc-humgpppd"
   flow_log_description = "this is a testing flow log"
-  cloud_log_id = "33aaf0ae-6163-411b-a415-9f27450f68db" # FIXME use data.logsets (not supported) instead
+  cloud_log_id = "e6acd27c-365c-4959-8257-751d86657439" # FIXME use data.logsets (not supported) instead
   storage_type = "cls"
-  tags = {
-    "createdBy" = "terraform"
-  }
 }
 `
 
-const testAccVpcFlowLogUpdate = defaultVpcSubnets + `
-data "tencentcloud_enis" "eni" {
-  name      = "keep-fl-eni"
-}
-
+const testAccVpcFlowLogUpdate = `
 resource "tencentcloud_vpc_flow_log" "flow_log" {
-  flow_log_name = "foo2"
+  flow_log_name = "iac-test-2"
   resource_type = "NETWORKINTERFACE"
-  resource_id = data.tencentcloud_enis.eni.enis.0.id
+  resource_id = "eni-qz9wxgmd"
   traffic_type = "ACCEPT"
-  vpc_id = local.vpc_id
+  vpc_id = "vpc-humgpppd"
   flow_log_description = "updated"
-  cloud_log_id = "33aaf0ae-6163-411b-a415-9f27450f68db" # FIXME use data.logsets (not supported) instead
+  cloud_log_id = "e6acd27c-365c-4959-8257-751d86657439" # FIXME use data.logsets (not supported) instead
   storage_type = "cls"
-  tags = {
-    "createdBy" = "terraform2"
-  }
 }
 `

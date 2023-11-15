@@ -316,7 +316,7 @@ data "tencentcloud_instance_types" "default" {
 `
 const defaultAzVariable = `
 variable "default_az" {
-  default = "ap-guangzhou-3"
+  default = "ap-guangzhou-2"
 }
 
 variable "default_az7" {
@@ -339,7 +339,6 @@ const defaultVpcSubnets = defaultAzVariable + `
 
 data "tencentcloud_vpc_subnets" "gz3" {
   availability_zone = var.default_az
-  is_default = true
 }
 
 locals {
