@@ -1,3 +1,39 @@
+## 1.81.46 (November 15, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_waf_user_clb_regions` ([#2301](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2301))
+* **New Data Source:** `tencentcloud_wedata_data_source_list` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+* **New Data Source:** `tencentcloud_wedata_data_source_without_info` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+* **New Resource:** `tencentcloud_css_pull_stream_task_restart` ([#2291](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2291))
+* **New Resource:** `tencentcloud_css_start_stream_monitor` ([#2291](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2291))
+* **New Resource:** `tencentcloud_dnspod_snapshot_config` ([#2306](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2306))
+* **New Resource:** `tencentcloud_waf_auto_deny_rules` ([#2298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2298))
+* **New Resource:** `tencentcloud_waf_cc` ([#2301](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2301))
+* **New Resource:** `tencentcloud_waf_module_status` ([#2298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2298))
+* **New Resource:** `tencentcloud_waf_protection_mode` ([#2298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2298))
+* **New Resource:** `tencentcloud_waf_web_shell` ([#2298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2298))
+* **New Resource:** `tencentcloud_wedata_datasource` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+* **New Resource:** `tencentcloud_wedata_integration_offline_task` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+* **New Resource:** `tencentcloud_wedata_integration_realtime_task` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+* **New Resource:** `tencentcloud_wedata_integration_task_node` ([#2299](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2299))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_scf_function: add async_run_enable ([#2300](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2300))
+* resource/tencentcloud_clb_instance: Support set `sla_type` field. ([#2304](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2304))
+* resource/tencentcloud_redis_instance: Fields `redis_shard_num`, `redis_replicas_num`, `mem_size` add enumeration values and value checks ([#2305](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2305))
+* resource/tencentcloud_scf_function: add async_run_enable ([#2300](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2300))
+* tencentcloud_ckafka_datahub_task: Optimize `input_value_type` and `input_value` empty string processing ([#2296](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2296))
+* tencentcloud_kubernetes_node_pool: modify the `security_group_ids` in the example plug-in tke nodepool to `orderly_security_group_ids` ([#2297](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2297))
+* tencentcloud_waf_clb_domain: Support set cls status ([#2301](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2301))
+* tencentcloud_waf_saas_domain: Support set cls status ([#2301](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2301))
+* tencentcloud_waf_saas_domain: Support set waf status ([#2298](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2298))
+
+BUG FIXES:
+
+* tencentcloud_mysql_readonly_instance: Fix the problem of error reporting when modifying configuration ([#2303](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2303))
+
 ## 1.81.45 (November 10, 2023)
 
 FEATURES:
