@@ -759,3 +759,32 @@ func (me *DnspodService) DeleteDnspodCustomLineById(ctx context.Context, domain 
 
 	return
 }
+
+func (me *DnspodService) DescribeDnspodSnapshotConfigById(ctx context.Context, domain string) (snapshotConfig *dnspod.SnapshotConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dnspod.NewDescribeSnapshotConfigRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDnsPodClient().DescribeSnapshotConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.SnapshotConfig == nil {
+		return
+	}
+
+	snapshotConfig = response.Response.SnapshotConfig
+	return
+}
