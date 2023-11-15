@@ -19,6 +19,23 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 }
 ```
 
+LCU-supported CLB
+
+```hcl
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type = "INTERNAL"
+  clb_name     = "myclb"
+  project_id   = 0
+  sla_type     = "clb.c3.medium"
+  vpc_id       = "vpc-2hfyray3"
+  subnet_id    = "subnet-o3a5nt20"
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
 OPEN CLB
 
 ```hcl
@@ -320,6 +337,21 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Description: "The available tags within this CLB.",
 			},
+			"sla_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "This parameter is required to create LCU-supported instances. Values:" +
+					"`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; " +
+					"`clb.c2.medium`: Standard; " +
+					"`clb.c3.small`: Advanced 1; " +
+					"`clb.c3.medium`: Advanced 1; " +
+					"`clb.c4.small`: Super Large 1; " +
+					"`clb.c4.medium`: Super Large 2; " +
+					"`clb.c4.large`: Super Large 3; " +
+					"`clb.c4.xlarge`: Super Large 4. " +
+					"For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).",
+			},
 			"vip_isp": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -428,6 +460,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return fmt.Errorf("[CHECK][CLB instance][Create] check: INTERNAL network_type do not support vip ISP setting")
 		}
 		request.VipIsp = helper.String(v.(string))
+	}
+
+	//SlaType
+	if v, ok := d.GetOk("sla_type"); ok {
+		request.SlaType = helper.String(v.(string))
 	}
 
 	//ip version
@@ -718,6 +755,9 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
 	_ = d.Set("domain", instance.LoadBalancerDomain)
 
+	if instance.SlaType != nil {
+		_ = d.Set("sla_type", instance.SlaType)
+	}
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
 	}
@@ -859,6 +899,36 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("sla_type") {
+		slaRequest := clb.NewModifyLoadBalancerSlaRequest()
+		param := clb.SlaUpdateParam{}
+		param.LoadBalancerId = &clbId
+		param.SlaType = helper.String(d.Get("sla_type").(string))
+
+		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+
+		var taskId string
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerSla(slaRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			taskId = *result.Response.RequestId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update clb instanceSlaConfig failed, reason:%+v", logId, err)
+			return err
+		}
+
+		retryErr := waitForTaskFinish(taskId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+		if retryErr != nil {
+			return retryErr
 		}
 	}
 
