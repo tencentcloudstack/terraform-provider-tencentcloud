@@ -19,9 +19,10 @@ func TestAccTencentCloudNeedFixWedataIntegrationRealtimeTaskResource_basic(t *te
 				Config: testAccWedataIntegrationRealtimeTask,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "project_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "task_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "description"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "project_id", "1612982498218618880"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "task_name", "tf_example"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "task_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "description", "description."),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "sync_type"),
 				),
 			},
@@ -34,9 +35,10 @@ func TestAccTencentCloudNeedFixWedataIntegrationRealtimeTaskResource_basic(t *te
 				Config: testAccWedataIntegrationRealtimeTaskUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "project_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "task_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "description"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "project_id", "1612982498218618880"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "task_name", "tf_example_update"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "task_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_wedata_integration_realtime_task.example", "description", "description update."),
 					resource.TestCheckResourceAttrSet("tencentcloud_wedata_integration_realtime_task.example", "sync_type"),
 				),
 			},
@@ -99,7 +101,7 @@ resource "tencentcloud_wedata_integration_realtime_task" "example" {
   project_id  = "1612982498218618880"
   task_name   = "tf_example_update"
   task_mode   = "1"
-  description = "description."
+  description = "description update."
   sync_type   = 1
   task_info {
     incharge    = "100028439226"
