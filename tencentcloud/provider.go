@@ -2066,6 +2066,7 @@ const (
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_PROFILE                      = "TENCENTCLOUD_PROFILE"
 )
 
 type TencentCloudClient struct {
@@ -2153,6 +2154,12 @@ func Provider() *schema.Provider {
 						},
 					},
 				},
+			},
+			"profile": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
+				Description: "The profile for API operations.",
 			},
 		},
 
