@@ -467,7 +467,7 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 
 		}
 	}
-	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
+	err := mysqlAllInstanceRoleUpdate(ctx, d, meta, true)
 	if err != nil {
 		return err
 	}
