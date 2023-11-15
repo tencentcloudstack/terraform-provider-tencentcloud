@@ -22,13 +22,12 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
-
-	// "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudDnspodSnapshotConfig() *schema.Resource {
@@ -113,6 +112,10 @@ func resourceTencentCloudDnspodSnapshotConfigUpdate(d *schema.ResourceData, meta
 
 	domain := d.Id()
 	request.Domain = &domain
+
+	if v, ok := d.GetOk("period"); ok {
+		request.Period = helper.String(v.(string))
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifySnapshotConfig(request)
