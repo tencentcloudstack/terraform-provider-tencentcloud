@@ -290,13 +290,15 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "The number of instance shard, default is 1. This is not required for standalone and master slave versions.",
+				ValidateFunc: validateAllowedIntValue([]int{1, 3, 5, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128}),
+				Description: "The number of instance shards; this parameter does not need to be configured for standard version instances; for cluster version instances, the number of shards ranges from: [`1`, `3`, `5`, `8`, `12`, `16`, `24 `, `32`, `40`, `48`, `64`, `80`, `96`, `128`].",
 			},
 			"redis_replicas_num": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`.",
+				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 5}),
+				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`; Redis memory version 4.0, 5.0, 6.2 standard architecture and cluster architecture support the number of copies in the range [1, 2, 3, 4, 5]; Redis 2.8 standard version and CKV standard version only support 1 copy.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
@@ -343,6 +345,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"mem_size": {
 				Type:        schema.TypeInt,
 				Required:    true,
+				ValidateFunc: validateAllowedIntValue([]int{1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
 				Description: "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
 			},
 			"vpc_id": {
