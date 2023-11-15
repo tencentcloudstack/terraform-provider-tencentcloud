@@ -1955,6 +1955,7 @@ Web Application Firewall(WAF)
     tencentcloud_waf_attack_total_count
     tencentcloud_waf_peak_points
     tencentcloud_waf_instance_qps_limit
+    tencentcloud_waf_user_clb_regions
 
   Resource
     tencentcloud_waf_custom_rule
@@ -1969,6 +1970,7 @@ Web Application Firewall(WAF)
     tencentcloud_waf_module_status
     tencentcloud_waf_protection_mode
     tencentcloud_waf_web_shell
+    tencentcloud_waf_cc
 
 Wedata
   Data Source
@@ -2844,6 +2846,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_total_count":                       dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_waf_user_clb_regions":                         dataSourceTencentCloudWafUserClbRegions(),
 			"tencentcloud_cfw_nat_fw_switches":                          dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         dataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -3738,7 +3741,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
 			"tencentcloud_dlc_update_row_filter_operation":                     resourceTencentCloudDlcUpdateRowFilterOperation(),
 			"tencentcloud_dlc_user_data_engine_config":                         resourceTencentCloudDlcUserDataEngineConfig(),
-			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
@@ -3751,6 +3753,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_module_status":                                   resourceTencentCloudWafModuleStatus(),
 			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
 			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
+			"tencentcloud_waf_cc":                                              resourceTencentCloudWafCc(),
+			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),

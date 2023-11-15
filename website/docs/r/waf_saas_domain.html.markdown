@@ -190,6 +190,7 @@ The following arguments are supported:
 * `cert` - (Optional, String) Certificate content, When CertType=1, this parameter needs to be filled.
 * `cipher_template` - (Optional, Int) Encryption Suite Template, 0:default  1:Universal template 2:Security template 3:Custom template.
 * `ciphers` - (Optional, List: [`Int`]) Encryption Suite Information.
+* `cls_status` - (Optional, Int) Whether to enable access logs, 1 enable, 0 disable.
 * `https_rewrite` - (Optional, Int) Whether redirect to https, 1 will redirect and 0 will not.
 * `https_upstream_port` - (Optional, String) Upstream port for https, When listen ports has https port and UpstreamScheme is HTTP, the current field needs to be filled.
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.
