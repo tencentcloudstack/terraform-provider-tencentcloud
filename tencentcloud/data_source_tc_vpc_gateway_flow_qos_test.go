@@ -25,7 +25,7 @@ func TestAccTencentCloudVpcGatewayFlowQosDataSource_basic(t *testing.T) {
 const testAccVpcGatewayFlowQosDataSource = `
 
 data "tencentcloud_vpc_gateway_flow_qos" "gateway_flow_qos" {
-  gateway_id = "vpngw-gt8bianl"
+  gateway_id = "vpngw-bqybbpyr"
 }
 
 `
