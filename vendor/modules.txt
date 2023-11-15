@@ -1304,7 +1304,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.794
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.782
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.792
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199

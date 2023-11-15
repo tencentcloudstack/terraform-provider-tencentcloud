@@ -18,20 +18,23 @@ resource "tencentcloud_wedata_datasource" "example" {
   name                = "tf_example"
   category            = "DB"
   type                = "MYSQL"
-  owner_project_id    = "110111121"
-  owner_project_name  = "ownerprojectname"
-  owner_project_ident = "OwnerProjectIdent"
-  biz_params          = "{}"
-  params              = "{}"
-  description         = "descr"
-  display             = "Display"
-  database_name       = "db"
-  instance            = "instance"
+  owner_project_id    = "1612982498218618880"
+  owner_project_name  = "project_demo"
+  owner_project_ident = "体验项目"
+  description         = "description."
+  display             = "tf_example_demo"
   status              = 1
-  cluster_id          = "cid"
-  collect             = "false"
-  cos_bucket          = "aaaa"
-  cos_region          = "ap-guangzhou"
+  cos_bucket          = "wedata-agent-sh-1257305158"
+  cos_region          = "ap-shanghai"
+  params = jsonencode({
+    "connectType" : "public",
+    "authorityType" : "true",
+    "deployType" : "CONNSTR_PUBLICDB",
+    "url" : "jdbc:mysql://1.1.1.1:8080/database",
+    "username" : "root",
+    "password" : "password",
+    "type" : "MYSQL"
+  })
 }
 ```
 
@@ -44,6 +47,7 @@ The following arguments are supported:
 * `owner_project_id` - (Required, String) Owner projectId.
 * `owner_project_ident` - (Required, String) Owner Project Ident.
 * `owner_project_name` - (Required, String) Owner project name.
+* `params` - (Required, String) Params.
 * `type` - (Required, String) DataSource Type.
 * `biz_params` - (Optional, String) BizParams.
 * `cluster_id` - (Optional, String) ClusterId.
@@ -54,7 +58,6 @@ The following arguments are supported:
 * `description` - (Optional, String) Description.
 * `display` - (Optional, String) Display.
 * `instance` - (Optional, String) Instance.
-* `params` - (Optional, String) Params.
 * `status` - (Optional, Int) Status.
 
 ## Attributes Reference
@@ -62,6 +65,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `params_out` - Params Out.
 
 
