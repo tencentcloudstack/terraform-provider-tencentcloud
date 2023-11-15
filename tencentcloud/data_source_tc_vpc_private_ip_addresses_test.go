@@ -25,7 +25,7 @@ func TestAccTencentCloudVpcPrivateIpAddressesDataSource_basic(t *testing.T) {
 const testAccVpcPrivateIpAddressesDataSource = `
 
 data "tencentcloud_vpc_private_ip_addresses" "private_ip_addresses" {
-  vpc_id = "vpc-l0dw94uh"
+  vpc_id = "vpc-ojcug58j"
   private_ip_addresses = ["10.0.0.1"]
 }
 

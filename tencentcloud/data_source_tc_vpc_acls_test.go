@@ -25,7 +25,6 @@ func TestAccDataSourceTencentCloudVpcACL_Basic(t *testing.T) {
 
 const TestAccDataSourceTencentCloudVpcACLInstances = `
 data "tencentcloud_vpc_instances" "test" {
-	is_default = true
 }
 
 resource "tencentcloud_vpc_acl" "foo" {  
