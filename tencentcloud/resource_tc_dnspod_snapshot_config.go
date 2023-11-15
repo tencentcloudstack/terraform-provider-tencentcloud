@@ -7,7 +7,6 @@ Example Usage
 resource "tencentcloud_dnspod_snapshot_config" "snapshot_config" {
   domain = "dnspod.cn"
   period = "hourly"
-  domain_id = 123
 }
 ```
 
@@ -16,14 +15,13 @@ Import
 dnspod snapshot_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dnspod_snapshot_config.snapshot_config snapshot_config_id
+terraform import tencentcloud_dnspod_snapshot_config.snapshot_config domain
 ```
 */
 package tencentcloud
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -115,14 +113,6 @@ func resourceTencentCloudDnspodSnapshotConfigUpdate(d *schema.ResourceData, meta
 
 	domain := d.Id()
 	request.Domain = &domain
-
-	immutableArgs := []string{"domain"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDnsPodClient().ModifySnapshotConfig(request)

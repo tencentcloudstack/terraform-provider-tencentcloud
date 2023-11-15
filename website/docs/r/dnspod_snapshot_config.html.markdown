@@ -15,9 +15,8 @@ Provides a resource to create a dnspod snapshot_config
 
 ```hcl
 resource "tencentcloud_dnspod_snapshot_config" "snapshot_config" {
-  domain    = "dnspod.cn"
-  period    = "hourly"
-  domain_id = 123
+  domain = "dnspod.cn"
+  period = "hourly"
 }
 ```
 
@@ -41,6 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 dnspod snapshot_config can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dnspod_snapshot_config.snapshot_config snapshot_config_id
+terraform import tencentcloud_dnspod_snapshot_config.snapshot_config domain
 ```
 
