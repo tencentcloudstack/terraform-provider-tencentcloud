@@ -421,6 +421,13 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(API_SAFE_STATUS),
 				Description:  "Whether to enable api safe, 1 enable, 0 disable.",
 			},
+			"cls_status": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      CLS_STATUS_0,
+				ValidateFunc: validateAllowedIntValue(CLS_STATUS),
+				Description:  "Whether to enable access logs, 1 enable, 0 disable.",
+			},
 			//"ipv6_status": {
 			//	Type:         schema.TypeInt,
 			//	Optional:     true,
@@ -460,6 +467,7 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		loadBalance      string
 		botStatus        uint64
 		apiSafeStatus    uint64
+		clsStatus        uint64
 		protectionStatus uint64
 		isCdn            int
 		//ipv6Status    int64
@@ -839,6 +847,40 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// set cls
+	if v, ok := d.GetOkExists("cls_status"); ok {
+		tmpClsStatus := v.(int)
+
+		if tmpClsStatus != CLS_STATUS_0 {
+			clsStatus = uint64(tmpClsStatus)
+			modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
+			modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
+				{
+					Domain:     common.StringPtr(domain),
+					Edition:    common.StringPtr("sparta-waf"),
+					InstanceID: common.StringPtr(instanceID),
+				},
+			}
+			modifyDomainsCLSStatusRequest.Status = &clsStatus
+
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
 	// set ipv6
 	//if v, ok := d.GetOkExists("ipv6_status"); ok {
 	//	tmpIpv6Status := v.(int)
@@ -1101,6 +1143,10 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
 	}
 
+	if domainInfo.ClsStatus != nil {
+		_ = d.Set("cls_status", domainInfo.ClsStatus)
+	}
+
 	if domainInfo.Status != nil {
 		_ = d.Set("status", domainInfo.Status)
 	}
@@ -1123,6 +1169,7 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		request       = waf.NewModifySpartaProtectionRequest()
 		botStatus     uint64
 		apiSafeStatus uint64
+		clsStatus     uint64
 		//ipv6Status    int64
 		loadBalance string
 		isCdn       int
@@ -1544,6 +1591,36 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 				log.Printf("[CRITAL]%s modify waf saasDomain api_safe_status failed, reason:%+v", logId, err)
 				return err
 			}
+		}
+	}
+
+	// set cls
+	if v, ok := d.GetOkExists("cls_status"); ok {
+		clsStatus = uint64(v.(int))
+		modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
+		modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
+			{
+				Domain:     common.StringPtr(domain),
+				Edition:    common.StringPtr("sparta-waf"),
+				InstanceID: common.StringPtr(instanceID),
+			},
+		}
+		modifyDomainsCLSStatusRequest.Status = &clsStatus
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
+			return err
 		}
 	}
 
