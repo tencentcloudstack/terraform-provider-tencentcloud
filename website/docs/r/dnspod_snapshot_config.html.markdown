@@ -24,7 +24,7 @@ resource "tencentcloud_dnspod_snapshot_config" "snapshot_config" {
 
 The following arguments are supported:
 
-* `domain` - (Required, String) Domain name.
+* `domain` - (Required, String, ForceNew) Domain name.
 * `period` - (Required, String) Backup interval: empty string - no backup, half_hour - every half hour, hourly - every hour, daily - every day, monthly - every month.
 
 ## Attributes Reference
