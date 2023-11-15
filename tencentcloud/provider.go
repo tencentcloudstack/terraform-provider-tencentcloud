@@ -2044,8 +2044,13 @@ CDWPG
 package tencentcloud
 
 import (
+	"encoding/json"
+	"fmt"
+	"github.com/mitchellh/go-homedir"
+	"io/ioutil"
 	"net/url"
 	"os"
+	"runtime"
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -2077,17 +2082,19 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"secret_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
-				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
+				Type:          schema.TypeString,
+				Required:      true,
+				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
+				ConflictsWith: []string{"profile"},
+				Description:   "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
-				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
-				Sensitive:   true,
+				Type:          schema.TypeString,
+				Required:      true,
+				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
+				ConflictsWith: []string{"profile"},
+				Description:   "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
+				Sensitive:     true,
 			},
 			"security_token": {
 				Type:        schema.TypeString,
@@ -2155,11 +2162,18 @@ func Provider() *schema.Provider {
 					},
 				},
 			},
-			"profile": {
+			"credential_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
-				Description: "The profile for API operations.",
+				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli/default.credential.",
+			},
+			"profile": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
+				ConflictsWith: []string{"secret_id", "secret_key"},
+				Description:   "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
 			},
 		},
 
@@ -3812,6 +3826,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	region := d.Get("region").(string)
 	protocol := d.Get("protocol").(string)
 	domain := d.Get("domain").(string)
+	//credentialFile := d.Get("credential_file").(string)
+	//profile := d.Get("profile").(string)
 
 	// standard client
 	var tcClient TencentCloudClient
@@ -3881,4 +3897,50 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 		*response.Response.Credentials.Token,
 	)
 	return nil
+}
+
+var providerConfig map[string]interface{}
+
+func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{}, error) {
+	if providerConfig == nil {
+		if v, ok := d.GetOk("profile"); !ok && v.(string) == "" {
+			return nil, nil
+		}
+
+		current := d.Get("profile").(string)
+		profilePath, err := homedir.Expand(d.Get("credential_file").(string))
+		if err != nil {
+			return nil, err
+		}
+
+		if profilePath == "" {
+			profilePath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("HOME"))
+			if runtime.GOOS == "windows" {
+				profilePath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("USERPROFILE"))
+			}
+		}
+
+		providerConfig = make(map[string]interface{})
+		_, err = os.Stat(profilePath)
+		if !os.IsNotExist(err) {
+			data, err := ioutil.ReadFile(profilePath)
+			if err != nil {
+				return nil, err
+			}
+
+			config := map[string]interface{}{}
+			err = json.Unmarshal(data, &config)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, v := range config["profiles"].([]interface{}) {
+				if current == v.(map[string]interface{})["name"] {
+					providerConfig = v.(map[string]interface{})
+				}
+			}
+		}
+	}
+
+	return providerConfig[ProfileKey], nil
 }
