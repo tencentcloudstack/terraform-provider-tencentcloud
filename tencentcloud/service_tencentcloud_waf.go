@@ -1180,3 +1180,101 @@ func (me *WafService) DescribeWafWebShellById(ctx context.Context, domain string
 	webShell = response.Response
 	return
 }
+
+func (me *WafService) DescribeWafUserClbRegionsByFilter(ctx context.Context) (userClbRegions *waf.DescribeUserClbWafRegionsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeUserClbWafRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeUserClbWafRegions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	userClbRegions = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafCcById(ctx context.Context, domain, ruleId string) (cc *waf.CCRuleItems, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeCCRuleListRequest()
+	request.Domain = &domain
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("RuleID"),
+			Values:     common.StringPtrs([]string{ruleId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+	request.Offset = common.Uint64Ptr(0)
+	request.Limit = common.Uint64Ptr(10)
+	request.By = common.StringPtr("ts_version")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeCCRuleList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Data.Res) != 1 {
+		return
+	}
+
+	cc = response.Response.Data.Res[0]
+	return
+}
+
+func (me *WafService) DeleteWafCcById(ctx context.Context, domain, ruleId, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteCCRuleRequest()
+	request.Domain = common.StringPtr(domain)
+	request.Name = common.StringPtr(name)
+	ruleIdInt, _ := strconv.ParseInt(ruleId, 10, 64)
+	request.RuleId = common.Int64Ptr(ruleIdInt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteCCRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
