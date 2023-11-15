@@ -46,9 +46,18 @@ func resourceTencentCloudClbInstanceSlaConfig() *schema.Resource {
 				Description: "ID of the CLB instance.",
 			},
 			"sla_type": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "To upgrade to LCU-supported CLB instances. It must be SLA.",
+				Type:     schema.TypeString,
+				Required: true,
+				Description: "This parameter is required to create LCU-supported instances. Values:" +
+					"`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; " +
+					"`clb.c2.medium`: Standard; " +
+					"`clb.c3.small`: Advanced 1; " +
+					"`clb.c3.medium`: Advanced 1; " +
+					"`clb.c4.small`: Super Large 1; " +
+					"`clb.c4.medium`: Super Large 2; " +
+					"`clb.c4.large`: Super Large 3; " +
+					"`clb.c4.xlarge`: Super Large 4. " +
+					"For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).",
 			},
 		},
 	}

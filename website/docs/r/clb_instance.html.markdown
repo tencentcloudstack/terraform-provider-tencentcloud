@@ -29,6 +29,23 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 }
 ```
 
+### LCU-supported CLB
+
+```hcl
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type = "INTERNAL"
+  clb_name     = "myclb"
+  project_id   = 0
+  sla_type     = "clb.c3.medium"
+  vpc_id       = "vpc-2hfyray3"
+  subnet_id    = "subnet-o3a5nt20"
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
 ### OPEN CLB
 
 ```hcl
@@ -197,6 +214,7 @@ The following arguments are supported:
 * `master_zone_id` - (Optional, String) Setting master zone id of cross available zone disaster recovery, only applicable to open CLB.
 * `project_id` - (Optional, Int, ForceNew) ID of the project within the CLB instance, `0` - Default Project.
 * `security_groups` - (Optional, List: [`String`]) Security groups of the CLB instance. Supports both `OPEN` and `INTERNAL` CLBs.
+* `sla_type` - (Optional, String) This parameter is required to create LCU-supported instances. Values:`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; `clb.c2.medium`: Standard; `clb.c3.small`: Advanced 1; `clb.c3.medium`: Advanced 1; `clb.c4.small`: Super Large 1; `clb.c4.medium`: Super Large 2; `clb.c4.large`: Super Large 3; `clb.c4.xlarge`: Super Large 4. For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).
 * `slave_zone_id` - (Optional, String) Setting slave zone id of cross available zone disaster recovery, only applicable to open CLB. this zone will undertake traffic when the master is down.
 * `snat_ips` - (Optional, List) Snat Ip List, required with `snat_pro=true`. NOTE: This argument cannot be read and modified here because dynamic ip is untraceable, please import resource `tencentcloud_clb_snat_ip` to handle fixed ips.
 * `snat_pro` - (Optional, Bool) Indicates whether Binding IPs of other VPCs feature switch.
