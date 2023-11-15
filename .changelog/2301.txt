@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_waf_user_clb_regions
+```
+
+```release-note:new-resource
+tencentcloud_waf_cc
+```
+
+```release-note:enhancement
+tencentcloud_waf_clb_domain: Support set cls status
+```
+
+```release-note:enhancement
+tencentcloud_waf_saas_domain: Support set cls status
+```
