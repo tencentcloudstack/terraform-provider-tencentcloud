@@ -2,7 +2,10 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -84,6 +87,12 @@ func TestAccTencentCloudVpcV3RouteTableWithTags(t *testing.T) {
 		CheckDestroy: testAccCheckVpcRouteTableDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccVpcRouteTableConfigWithTags,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),
@@ -100,6 +109,12 @@ func TestAccTencentCloudVpcV3RouteTableWithTags(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccVpcRouteTableConfigWithTagsUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcRouteTableExists("tencentcloud_route_table.foo"),

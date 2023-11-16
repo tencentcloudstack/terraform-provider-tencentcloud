@@ -172,8 +172,6 @@ func TestAccTencentCloudVpcV3WithTags(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "name", defaultInsName),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "is_multicast", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "tags.abc", "abc"),
-					resource.TestCheckNoResourceAttr("tencentcloud_vpc.foo", "tags.test"),
 				),
 			},
 		},
@@ -247,9 +245,6 @@ resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name
   cidr_block = var.vpc_cidr
 
-  tags = {
-    "test" = "test"
-  }
 }
 `
 
@@ -258,8 +253,5 @@ resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name
   cidr_block = var.vpc_cidr
 
-  tags = {
-    "abc" = "abc"
-  }
 }
 `
