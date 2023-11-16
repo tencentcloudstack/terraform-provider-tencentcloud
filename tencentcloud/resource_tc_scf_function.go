@@ -323,6 +323,19 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 							Optional:    true,
 							Description: "the parameters of command.",
 						},
+						"container_image_accelerate": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Image accelerate switch.",
+						},
+						"image_port": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      9000,
+							ValidateFunc: validateIntegerInRange(-1, 65535),
+							Description:  "Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.",
+						},
 					},
 				},
 			},
@@ -677,14 +690,18 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			entryPoint := value["entry_point"].(string)
 			command := value["command"].(string)
 			args := value["args"].(string)
+			containerImageAccelerate := value["container_image_accelerate"].(bool)
+			imagePort := int64(value["image_port"].(int))
 
 			config := &scf.ImageConfig{
-				ImageType:  &imageType,
-				ImageUri:   &imageUri,
-				RegistryId: &registryId,
-				EntryPoint: &entryPoint,
-				Command:    &command,
-				Args:       &args,
+				ImageType:                &imageType,
+				ImageUri:                 &imageUri,
+				RegistryId:               &registryId,
+				EntryPoint:               &entryPoint,
+				Command:                  &command,
+				Args:                     &args,
+				ContainerImageAccelerate: &containerImageAccelerate,
+				ImagePort:                &imagePort,
 			}
 			imageConfigs = append(imageConfigs, config)
 		}
@@ -738,6 +755,17 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	// Pass tag as creation param instead of modify and time.Sleep
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		functionInfo.tags = tags
+
+		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+		region := m.(*TencentCloudClient).apiV3Conn.Region
+		functionId := fmt.Sprintf("%s/function/%s", *functionInfo.namespace, functionInfo.name)
+		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s create function tags failed: %+v", logId, err)
+			return err
+		}
+		// wait for tags add successfully
+		time.Sleep(time.Second)
 	}
 
 	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {
@@ -1038,14 +1066,18 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				entryPoint := value["entry_point"].(string)
 				command := value["command"].(string)
 				args := value["args"].(string)
+				containerImageAccelerate := value["container_image_accelerate"].(bool)
+				imagePort := int64(value["image_port"].(int))
 
 				config := &scf.ImageConfig{
-					ImageType:  &imageType,
-					ImageUri:   &imageUri,
-					RegistryId: &registryId,
-					EntryPoint: &entryPoint,
-					Command:    &command,
-					Args:       &args,
+					ImageType:                &imageType,
+					ImageUri:                 &imageUri,
+					RegistryId:               &registryId,
+					EntryPoint:               &entryPoint,
+					Command:                  &command,
+					Args:                     &args,
+					ContainerImageAccelerate: &containerImageAccelerate,
+					ImagePort:                &imagePort,
 				}
 				imageConfigs = append(imageConfigs, config)
 			}
@@ -1277,11 +1309,13 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 			return err
 		}
-		functionId := *resp.Response.FunctionId
+		fnName := *resp.Response.FunctionName
+		fnNamespace := *resp.Response.Namespace
+		functionId := fmt.Sprintf("%s/function/%s", fnNamespace, fnName)
 
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE, region, functionId)
+		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			log.Printf("[CRITAL]%s update function tags failed: %+v", logId, err)

@@ -91,7 +91,9 @@ The `image_config` object supports the following:
 * `image_uri` - (Required, String) The uri of image.
 * `args` - (Optional, String) the parameters of command.
 * `command` - (Optional, String) The command of entrypoint.
+* `container_image_accelerate` - (Optional, Bool) Image accelerate switch.
 * `entry_point` - (Optional, String) The entrypoint of app.
+* `image_port` - (Optional, Int) Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.
 * `registry_id` - (Optional, String) The registry id of TCR. When image type is enterprise, it must be set.
 
 The `layers` object supports the following:

@@ -103,6 +103,7 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "host", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.example", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
 				),
@@ -547,6 +548,7 @@ resource "tencentcloud_scf_function" "foo" {
 
   tags = {
     "test" = "test"
+    "example" = "test"
   }
 }
 `

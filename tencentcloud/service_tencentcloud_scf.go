@@ -107,9 +107,11 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 
 	if len(info.tags) > 0 {
 		for k, v := range info.tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &scf.Tag{
-				Key:   &k,
-				Value: &v,
+				Key:   &key,
+				Value: &value,
 			})
 		}
 	}
