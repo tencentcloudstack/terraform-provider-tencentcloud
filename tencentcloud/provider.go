@@ -2054,12 +2054,14 @@ package tencentcloud
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mitchellh/go-homedir"
 	"io/ioutil"
 	"net/url"
 	"os"
 	"runtime"
 	"strconv"
+	"strings"
+
+	"github.com/mitchellh/go-homedir"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -2080,6 +2082,12 @@ const (
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
 	PROVIDER_PROFILE                      = "TENCENTCLOUD_PROFILE"
+	PROVIDER_SHARED_CREDENTIALS_FILE      = "TENCENTCLOUD_SHARED_CREDENTIALS_FILE"
+	PROVIDER_SHARED_CONFIG_FILE           = "TENCENTCLOUD_SHARED_CONFIG_FILE"
+)
+
+const (
+	DEFAULT_REGION = "ap-guangzhou"
 )
 
 type TencentCloudClient struct {
@@ -2090,19 +2098,17 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"secret_id": {
-				Type:          schema.TypeString,
-				Required:      true,
-				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
-				ConflictsWith: []string{"profile"},
-				Description:   "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
+				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
-				Type:          schema.TypeString,
-				Required:      true,
-				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
-				ConflictsWith: []string{"profile"},
-				Description:   "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
-				Sensitive:     true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
+				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
+				Sensitive:   true,
 			},
 			"security_token": {
 				Type:        schema.TypeString,
@@ -2112,11 +2118,11 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 			},
 			"region": {
-				Type:         schema.TypeString,
-				Required:     true,
-				DefaultFunc:  schema.EnvDefaultFunc(PROVIDER_REGION, nil),
-				Description:  "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
-				InputDefault: "ap-guangzhou",
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_REGION, nil),
+				Description: "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
+				//InputDefault: "ap-guangzhou",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -2141,13 +2147,13 @@ func Provider() *schema.Provider {
 						"role_arn": {
 							Type:        schema.TypeString,
 							Required:    true,
-							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, ""),
 							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
 						},
 						"session_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, ""),
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": {
@@ -2170,18 +2176,23 @@ func Provider() *schema.Provider {
 					},
 				},
 			},
-			"credential_file": {
+			"shared_config_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CONFIG_FILE, ""),
+				Description: "The path to the shared configures file. If not set this defaults to ~/.tccli/default.configure.",
+			},
+			"shared_credentials_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_FILE, ""),
 				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli/default.credential.",
 			},
 			"profile": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				DefaultFunc:   schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
-				ConflictsWith: []string{"secret_id", "secret_key"},
-				Description:   "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, "default"),
+				Description: "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
 			},
 		},
 
@@ -3836,14 +3847,27 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	secretId := d.Get("secret_id").(string)
-	secretKey := d.Get("secret_key").(string)
+	var getProviderConfig = func(str string, key string) string {
+		if str == "" {
+			value, err := getConfigFromProfile(d, key)
+			if err == nil && value != nil {
+				str = value.(string)
+			}
+		}
+
+		return str
+	}
+
+	secretId := getProviderConfig(d.Get("secret_id").(string), "secretId")
+	secretKey := getProviderConfig(d.Get("secret_key").(string), "secretKey")
 	securityToken := d.Get("security_token").(string)
-	region := d.Get("region").(string)
+	region := getProviderConfig(d.Get("region").(string), "region")
+	if region == "" {
+		region = DEFAULT_REGION
+	}
+
 	protocol := d.Get("protocol").(string)
 	domain := d.Get("domain").(string)
-	//credentialFile := d.Get("credential_file").(string)
-	//profile := d.Get("profile").(string)
 
 	// standard client
 	var tcClient TencentCloudClient
@@ -3858,37 +3882,24 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Domain:   domain,
 	}
 
-	envRoleArn := os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
-	envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
-
-	// get assume role from env
-	if envRoleArn != "" && envSessionName != "" {
-		var assumeRoleSessionDuration int
-		if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
-			var err error
-			assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
-			if err != nil {
-				return nil, err
-			}
+	// get assume role
+	assumeRoleArn := providerConfig["role-arn"].(string)
+	assumeRoleSessionName := providerConfig["role-session-name"].(string)
+	assumeRoleSessionDuration := 7200
+	assumeRolePolicy := ""
+	if assumeRoleArn != "" && assumeRoleSessionName != "" {
+		assumeRoleList := d.Get("assume_role").(*schema.Set).List()
+		if len(assumeRoleList) == 1 {
+			assumeRole := assumeRoleList[0].(map[string]interface{})
+			assumeRoleArn = getProviderConfig(assumeRole["role_arn"].(string), "role-arn")
+			assumeRoleSessionName = getProviderConfig(assumeRole["session_name"].(string), "role-session-name")
+			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
+			assumeRolePolicy = assumeRole["policy"].(string)
 		}
-		if assumeRoleSessionDuration == 0 {
-			assumeRoleSessionDuration = 7200
-		}
-
-		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
-	}
-
-	// get assume role from tf config
-	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
-	if len(assumeRoleList) == 1 {
-		assumeRole := assumeRoleList[0].(map[string]interface{})
-		assumeRoleArn := assumeRole["role_arn"].(string)
-		assumeRoleSessionName := assumeRole["session_name"].(string)
-		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
-		assumeRolePolicy := assumeRole["policy"].(string)
 
 		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 	}
+
 	return &tcClient, nil
 }
 
@@ -3901,17 +3912,20 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 	if assumeRolePolicy != "" {
 		request.Policy = helper.String(url.QueryEscape(assumeRolePolicy))
 	}
+
 	ratelimit.Check(request.GetAction())
 	response, err := tcClient.apiV3Conn.UseStsClient().AssumeRole(request)
 	if err != nil {
 		return err
 	}
+
 	// using STS credentials
 	tcClient.apiV3Conn.Credential = common.NewTokenCredential(
 		*response.Response.Credentials.TmpSecretId,
 		*response.Response.Credentials.TmpSecretKey,
 		*response.Response.Credentials.Token,
 	)
+
 	return nil
 }
 
@@ -3923,23 +3937,52 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 			return nil, nil
 		}
 
-		current := d.Get("profile").(string)
-		profilePath, err := homedir.Expand(d.Get("credential_file").(string))
+		profile := d.Get("profile").(string)
+		sharedCredentialsFile, err := homedir.Expand(d.Get("shared_credentials_file").(string))
 		if err != nil {
 			return nil, err
 		}
 
-		if profilePath == "" {
-			profilePath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("HOME"))
-			if runtime.GOOS == "windows" {
-				profilePath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("USERPROFILE"))
+		sharedConfigFile, err := homedir.Expand(d.Get("shared_config_file").(string))
+		if err != nil {
+			return nil, err
+		}
+
+		var credentialPath string
+		var configurePath string
+
+		if sharedCredentialsFile == "" {
+			if profile == "" {
+				credentialPath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("HOME"))
+				if runtime.GOOS == "windows" {
+					credentialPath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("USERPROFILE"))
+				}
+			} else {
+				credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("HOME"), profile)
+				if runtime.GOOS == "windows" {
+					credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("USERPROFILE"), profile)
+				}
+			}
+		}
+
+		if sharedConfigFile == "" {
+			if profile == "" {
+				configurePath = fmt.Sprintf("%s/.tccli/default.configure", os.Getenv("HOME"))
+				if runtime.GOOS == "windows" {
+					configurePath = fmt.Sprintf("%s/.tccli/default.configure", os.Getenv("USERPROFILE"))
+				}
+			} else {
+				configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("HOME"), profile)
+				if runtime.GOOS == "windows" {
+					configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
+				}
 			}
 		}
 
 		providerConfig = make(map[string]interface{})
-		_, err = os.Stat(profilePath)
+		_, err = os.Stat(credentialPath)
 		if !os.IsNotExist(err) {
-			data, err := ioutil.ReadFile(profilePath)
+			data, err := ioutil.ReadFile(credentialPath)
 			if err != nil {
 				return nil, err
 			}
@@ -3950,9 +3993,34 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 				return nil, err
 			}
 
-			for _, v := range config["profiles"].([]interface{}) {
-				if current == v.(map[string]interface{})["name"] {
-					providerConfig = v.(map[string]interface{})
+			for k, v := range config {
+				providerConfig[k] = strings.TrimSpace(v.(string))
+			}
+		}
+
+		_, err = os.Stat(configurePath)
+		if !os.IsNotExist(err) {
+			data, err := ioutil.ReadFile(configurePath)
+			if err != nil {
+				return nil, err
+			}
+
+			config := map[string]interface{}{}
+			err = json.Unmarshal(data, &config)
+			if err != nil {
+				return nil, err
+			}
+
+		outerLoop:
+			for k, v := range config {
+				if k == "_sys_param" {
+					tmpMap := v.(map[string]interface{})
+					for tmpK, tmpV := range tmpMap {
+						if tmpK == "region" {
+							providerConfig[tmpK] = strings.TrimSpace(tmpV.(string))
+							break outerLoop
+						}
+					}
 				}
 			}
 		}
