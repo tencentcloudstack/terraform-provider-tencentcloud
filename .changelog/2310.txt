@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_private_dns_zone_vpc_attachment: Update Field Properties
+```
+
+```release-note:enhancement
+resource/tencentcloud_private_dns_zone: Update Field Properties
+```
