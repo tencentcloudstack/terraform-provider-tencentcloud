@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDnspodDomainLockResource_basic(t *testing.T) {
@@ -13,7 +14,7 @@ func TestAccTencentCloudDnspodDomainLockResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDnspodDomainLock,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dnspod_domain_lock.domain_lock", "id"),
 				),
 			},

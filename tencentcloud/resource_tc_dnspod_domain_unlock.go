@@ -15,11 +15,12 @@ resource "tencentcloud_dnspod_domain_unlock" "domain_unlock" {
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDnspodDomainUnlock() *schema.Resource {
@@ -62,8 +63,8 @@ func resourceTencentCloudDnspodDomainUnlockCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dnspod.NewModifyDomainUnlockRequest()
-		domain   string
+		request = dnspod.NewModifyDomainUnlockRequest()
+		domain  string
 	)
 	if v, ok := d.GetOk("domain"); ok {
 		domain = v.(string)
