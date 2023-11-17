@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_dlc_describe_updatable_data_engines
+```
+
+```release-note:new-resource
+tencentcloud_dlc_update_data_engine_config_operation
+```
