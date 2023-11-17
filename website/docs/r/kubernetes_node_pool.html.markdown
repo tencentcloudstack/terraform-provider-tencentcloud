@@ -205,7 +205,7 @@ The `auto_scaling_config` object supports the following:
 * `orderly_security_group_ids` - (Optional, List) Ordered security groups to which a CVM instance belongs.
 * `password` - (Optional, String, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, Set) Security groups to which a CVM instance belongs.
+* `security_group_ids` - (Optional, Set) (**Deprecated**) The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead. Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
