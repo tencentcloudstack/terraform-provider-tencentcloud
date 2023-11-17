@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_kubernetes_node_pool: add Deprecated to the security_group_ids parameter description
+```
