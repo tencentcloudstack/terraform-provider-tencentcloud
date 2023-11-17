@@ -45,7 +45,6 @@ func resourceTencentCloudDnspodDomainLock() *schema.Resource {
 			},
 
 			"lock_code": {
-				ForceNew:    true,
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Domain unlock code, can be obtained through the ModifyDomainLock interface.",
