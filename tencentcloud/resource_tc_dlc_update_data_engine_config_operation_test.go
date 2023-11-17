@@ -27,7 +27,7 @@ func TestAccTencentCloudDlcUpdateDataEngineConfigOperationResource_basic(t *test
 const testAccDlcUpdateDataEngineConfigOperation = `
 
 resource "tencentcloud_dlc_update_data_engine_config_operation" "update_data_engine_config_operation" {
-  data_engine_id = "DataEngine-8m6m0roa"
+  data_engine_id = "DataEngine-nvi294sy"
   data_engine_config_command = "UpdateSparkSQLLakefsPath"
 }
 
