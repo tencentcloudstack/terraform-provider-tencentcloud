@@ -3883,10 +3883,19 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	}
 
 	// get assume role
-	assumeRoleArn := providerConfig["role-arn"].(string)
-	assumeRoleSessionName := providerConfig["role-session-name"].(string)
-	assumeRoleSessionDuration := 7200
-	assumeRolePolicy := ""
+	var assumeRoleArn string
+	var assumeRoleSessionName string
+	var assumeRoleSessionDuration int
+	var assumeRolePolicy string
+	if providerConfig["role-arn"] != nil {
+		assumeRoleArn = providerConfig["role-arn"].(string)
+	}
+
+	if providerConfig["role-session-name"] != nil {
+		assumeRoleSessionName = providerConfig["role-session-name"].(string)
+	}
+	assumeRoleSessionDuration = 7200
+	assumeRolePolicy = ""
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
 		assumeRoleList := d.Get("assume_role").(*schema.Set).List()
 		if len(assumeRoleList) == 1 {
