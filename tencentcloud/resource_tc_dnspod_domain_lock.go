@@ -94,8 +94,8 @@ func resourceTencentCloudDnspodDomainLockCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(strings.Join([]string{domain, lockCode}, FILED_SP))
-	_ = d.Set("lock_code", lock_code)
-	
+	_ = d.Set("lock_code", lockCode)
+
 	return resourceTencentCloudDnspodDomainLockRead(d, meta)
 }
 
