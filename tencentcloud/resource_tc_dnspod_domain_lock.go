@@ -94,7 +94,10 @@ func resourceTencentCloudDnspodDomainLockCreate(d *schema.ResourceData, meta int
 	}
 
 	d.SetId(strings.Join([]string{domain, lockCode}, FILED_SP))
-	d.Set("lock_code", lockCode)
+	if err = d.Set("lock_code", lockCode); err != nil {
+		log.Printf("[CRITAL]%s provider set lock_code fail, reason:%s", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudDnspodDomainLockRead(d, meta)
 }
