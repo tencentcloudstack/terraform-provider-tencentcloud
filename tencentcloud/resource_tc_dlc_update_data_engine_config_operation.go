@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dlc_update_data_engine_config_operation" "update_data_engine_config_operation" {
-  data_engine_ids =
+  data_engine_id = "DataEngine-o3lzpqpo"
   data_engine_config_command = "UpdateSparkSQLLakefsPath"
 }
 ```
@@ -14,10 +14,7 @@ resource "tencentcloud_dlc_update_data_engine_config_operation" "update_data_eng
 package tencentcloud
 
 import (
-	"fmt"
 	"log"
-	"strings"
-	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -35,13 +32,10 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperation() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"data_engine_ids": {
-				Required: true,
-				ForceNew: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+			"data_engine_id": {
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Engine unique id.",
 			},
 
@@ -61,27 +55,20 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 
 	logId := getLogId(contextNil)
 
-	describeRequest := dlc.NewDescribeUpdatableDataEnginesRequest()
-	result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().DescribeUpdatableDataEngines(describeRequest)
-
 	var (
-		request       = dlc.NewUpdateDataEngineConfigRequest()
-		dataEngineIds []string
+		request      = dlc.NewUpdateDataEngineConfigRequest()
+		dataEngineId string
 	)
-	if v, ok := d.GetOk("data_engine_ids"); ok {
-		dataEngineIdsSet := v.(*schema.Set).List()
-		for i := range dataEngineIdsSet {
-			id := dataEngineIdsSet[i].(string)
-			request.DataEngineIds = append(request.DataEngineIds, &id)
-			dataEngineIds = append(dataEngineIds, id)
-		}
+	if v, ok := d.GetOk("data_engine_id"); ok {
+		dataEngineId = v.(string)
+		request.DataEngineIds = []*string{&dataEngineId}
 	}
 
 	if v, ok := d.GetOk("data_engine_config_command"); ok {
 		request.DataEngineConfigCommand = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().UpdateDataEngineConfig(request)
 		if e != nil {
 			return retryError(e)
@@ -95,45 +82,14 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 		return err
 	}
 
-	d.SetId(strings.Join(dataEngineIds, FILED_SP))
+	d.SetId(dataEngineId)
 
 	service := DlcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	readyMap := make(map[string]bool, len(dataEngineIds))
-	acceptCh := make(chan string, len(dataEngineIds))
 
-	var wg sync.WaitGroup
-	wg.Add(len(dataEngineIds))
+	conf := BuildStateChangeConf([]string{}, []string{"2"}, 5*readRetryTimeout, time.Second, service.DlcRestartDataEngineStateRefreshFunc(d.Id(), []string{}))
 
-	for _, v := range dataEngineIds {
-		readyMap[v] = false
-		go func(id string) {
-			defer wg.Done()
-
-			conf := BuildStateChangeConf([]string{}, []string{"2"}, 5*readRetryTimeout, time.Second, service.DlcRestartDataEngineStateRefreshFunc(id, []string{}))
-
-			if _, e := conf.WaitForState(); e != nil {
-				log.Printf("restart fail, the id is %s\n", id)
-				return
-			}
-			acceptCh <- id
-		}(v)
-	}
-
-	wg.Wait()
-	defer close(acceptCh)
-
-	for id := range acceptCh {
-		readyMap[id] = true
-	}
-	var nonReady []string
-	for key, value := range readyMap {
-		if !value {
-			nonReady = append(nonReady, key)
-			break
-		}
-	}
-	if len(nonReady) > 0 {
-		return fmt.Errorf("there are still instances that are not ready, ids :[%v]", nonReady)
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 	return resourceTencentCloudDlcUpdateDataEngineConfigOperationRead(d, meta)
 }

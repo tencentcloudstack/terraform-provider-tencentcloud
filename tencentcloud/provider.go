@@ -1922,6 +1922,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_check_data_engine_image_can_be_rollback
     tencentcloud_dlc_check_data_engine_image_can_be_upgrade
     tencentcloud_dlc_check_data_engine_config_pairs_validity
+    tencentcloud_dlc_describe_updatable_data_engines
 
   Resource
     tencentcloud_dlc_work_group
@@ -1936,6 +1937,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_renew_data_engine_operation
     tencentcloud_dlc_restart_data_engine_operation
     tencentcloud_dlc_switch_data_engine_image_operation
+    tencentcloud_dlc_update_data_engine_config_operation
     tencentcloud_dlc_upgrade_data_engine_image_operation
     tencentcloud_dlc_user_data_engine_config
     tencentcloud_dlc_update_row_filter_operation
@@ -2869,6 +2871,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_engine_usage_info":               dataSourceTencentCloudDlcDescribeEngineUsageInfo(),
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
+			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 		},
