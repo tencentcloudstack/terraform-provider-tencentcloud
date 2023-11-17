@@ -10,13 +10,6 @@ resource "tencentcloud_dlc_update_data_engine_config_operation" "update_data_eng
 }
 ```
 
-Import
-
-dlc update_data_engine_config_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dlc_update_data_engine_config_operation.update_data_engine_config_operation update_data_engine_config_operation_id
-```
 */
 package tencentcloud
 
@@ -68,6 +61,9 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 
 	logId := getLogId(contextNil)
 
+	describeRequest := dlc.NewDescribeUpdatableDataEnginesRequest()
+	result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().DescribeUpdatableDataEngines(describeRequest)
+
 	var (
 		request       = dlc.NewUpdateDataEngineConfigRequest()
 		dataEngineIds []string
@@ -85,7 +81,7 @@ func resourceTencentCloudDlcUpdateDataEngineConfigOperationCreate(d *schema.Reso
 		request.DataEngineConfigCommand = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDlcClient().UpdateDataEngineConfig(request)
 		if e != nil {
 			return retryError(e)
