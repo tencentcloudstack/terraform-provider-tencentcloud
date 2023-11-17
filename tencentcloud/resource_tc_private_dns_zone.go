@@ -126,6 +126,7 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 			"vpc_set": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "Associates the private domain to a VPC when it is created.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
