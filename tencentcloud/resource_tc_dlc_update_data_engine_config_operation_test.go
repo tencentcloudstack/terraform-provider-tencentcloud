@@ -16,12 +16,9 @@ func TestAccTencentCloudDlcUpdateDataEngineConfigOperationResource_basic(t *test
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDlcUpdateDataEngineConfigOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_update_data_engine_config_operation.update_data_engine_config_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_dlc_update_data_engine_config_operation.update_data_engine_config_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dlc_update_data_engine_config_operation.update_data_engine_config_operation", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dlc_update_data_engine_config_operation.update_data_engine_config_operation", "data_engine_id", "DataEngine-8m6m0roa"),
+				),
 			},
 		},
 	})
@@ -30,7 +27,7 @@ func TestAccTencentCloudDlcUpdateDataEngineConfigOperationResource_basic(t *test
 const testAccDlcUpdateDataEngineConfigOperation = `
 
 resource "tencentcloud_dlc_update_data_engine_config_operation" "update_data_engine_config_operation" {
-  data_engine_id = "DataEngine-o3lzpqpo"
+  data_engine_id = "DataEngine-8m6m0roa"
   data_engine_config_command = "UpdateSparkSQLLakefsPath"
 }
 
