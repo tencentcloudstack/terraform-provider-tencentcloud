@@ -1,3 +1,18 @@
+## 1.81.47 (November 17, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dlc_describe_updatable_data_engines` ([#2314](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2314))
+* **New Data Source:** `tencentcloud_emr_cvm_quota` ([#2311](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2311))
+* **New Resource:** `tencentcloud_dlc_update_data_engine_config_operation` ([#2314](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2314))
+* **New Resource:** `tencentcloud_dnspod_domain_lock` ([#2312](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2312))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_private_dns_zone: Update Field Properties ([#2310](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2310))
+* resource/tencentcloud_private_dns_zone_vpc_attachment: Update Field Properties ([#2310](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2310))
+* tencentcloud_kubernetes_node_pool: add Deprecated to the security_group_ids parameter description ([#2309](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2309))
+
 ## 1.81.46 (November 15, 2023)
 
 FEATURES:
