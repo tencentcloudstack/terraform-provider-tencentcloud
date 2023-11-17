@@ -302,6 +302,9 @@ const (
 	// 指定Excutor动态数量必须为当前最大值
 	INVALIDPARAMETER_INVALIDDYNAMICALLOCATIONMAXEXECUTORS = "InvalidParameter.InvalidDynamicAllocationMaxExecutors"
 
+	// 引擎执行类型不合法
+	INVALIDPARAMETER_INVALIDENGINEEXECTYPE = "InvalidParameter.InvalidEngineExecType"
+
 	// 引擎类型不合法
 	INVALIDPARAMETER_INVALIDENGINETYPE = "InvalidParameter.InvalidEngineType"
 
@@ -643,6 +646,9 @@ const (
 
 	// 子用户不是管理员，无权修改工作组信息。
 	UNAUTHORIZEDOPERATION_MODIFYWORKGROUPINFO = "UnauthorizedOperation.ModifyWorkgroupInfo"
+
+	// 子用户无权查看引擎监控。
+	UNAUTHORIZEDOPERATION_MONITORCOMPUTINGENGINE = "UnauthorizedOperation.MonitorComputingEngine"
 
 	// 没有支付权限。
 	UNAUTHORIZEDOPERATION_NOPAYMENTAUTHORITY = "UnauthorizedOperation.NoPaymentAuthority"
