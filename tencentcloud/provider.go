@@ -1250,7 +1250,6 @@ DNSPOD
     tencentcloud_dnspod_custom_line
     tencentcloud_dnspod_snapshot_config
     tencentcloud_dnspod_domain_lock
-    tencentcloud_dnspod_domain_unlock
 
   Data Source
     tencentcloud_dnspod_records
@@ -3396,7 +3395,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_custom_line":                                  resourceTencentCloudDnspodCustomLine(),
 			"tencentcloud_dnspod_snapshot_config":                              resourceTencentCloudDnspodSnapshotConfig(),
 			"tencentcloud_dnspod_domain_lock":                                  resourceTencentCloudDnspodDomainLock(),
-			"tencentcloud_dnspod_domain_unlock":                                resourceTencentCloudDnspodDomainUnlock(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
