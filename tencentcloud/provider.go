@@ -3972,6 +3972,8 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 					credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("USERPROFILE"), profile)
 				}
 			}
+		} else {
+			credentialPath = sharedCredentialsFile
 		}
 
 		if sharedConfigFile == "" {
@@ -3986,6 +3988,8 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 					configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
 				}
 			}
+		} else {
+			configurePath = sharedConfigFile
 		}
 
 		providerConfig = make(map[string]interface{})
