@@ -169,6 +169,21 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				ConflictsWith: []string{"request_body"},
 				Elem:          &schema.Schema{Type: schema.TypeString},
 			},
+			"raw_values": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Description:   "Raw Values. Conflict with `request_body`.",
+				ConflictsWith: []string{"request_body"},
+			},
+			"raw_values_type": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Description:   "The type of raw Values. Conflict with `request_body`.",
+				ConflictsWith: []string{"request_body"},
+				AtLeastOneOf:  []string{"raw_values"},
+			},
 			"request_body": {
 				Type:          schema.TypeString,
 				Optional:      true,
@@ -229,7 +244,7 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	if reqBody == "" {
 		var reqErr error
 		v := helper.InterfacesStringsPoint(values)
-		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v)
+		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v, nil, nil)
 		if reqErr != nil {
 			return reqErr
 		}
@@ -317,6 +332,15 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 			filteredValues := getFilteredValues(d, spec.Values.Values)
 			_ = d.Set("values", filteredValues)
 		}
+
+		if spec.Values != nil && spec.Values.RawValues != nil {
+			rawValues := spec.Values.RawValues
+			rawValuesType := spec.Values.RawValuesType
+
+			_ = d.Set("raw_values", rawValues)
+			_ = d.Set("raw_values_type", rawValuesType)
+		}
+
 	}
 
 	if statuses != nil || len(statuses) == 0 {

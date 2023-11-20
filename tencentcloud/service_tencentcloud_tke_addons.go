@@ -19,6 +19,7 @@ type AddonSpecChart struct {
 
 type AddonSpecValues struct {
 	RawValuesType *string   `json:"rawValuesType,omitempty"`
+	RawValues     *string   `json:"rawValues,omitempty"`
 	Values        []*string `json:"values,omitempty"`
 }
 
@@ -154,7 +155,7 @@ func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, a
 	return
 }
 
-func (me *TkeService) GetAddonReqBody(addon, version string, values []*string) (string, error) {
+func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, rawValuesType, rawValues *string) (string, error) {
 	var reqBody = &AddonRequestBody{}
 	//reqBody.Kind = helper.String("App") // Optional
 	//reqBody.ApiVersion = helper.String("application.tkestack.io/v1") // Optional
@@ -165,12 +166,18 @@ func (me *TkeService) GetAddonReqBody(addon, version string, values []*string) (
 		},
 	}
 
+	addonValues := &AddonSpecValues{}
 	if len(values) > 0 {
-		reqBody.Spec.Values = &AddonSpecValues{
-			RawValuesType: helper.String("yaml"),
-			Values:        values,
-		}
+		addonValues.RawValuesType = helper.String("yaml")
+		addonValues.Values = values
 	}
+
+	if rawValuesType != nil && rawValues != nil {
+		addonValues.RawValuesType = rawValuesType
+		addonValues.RawValues = rawValues
+	}
+
+	reqBody.Spec.Values = addonValues
 
 	result, err := json.Marshal(reqBody)
 	if err != nil {
