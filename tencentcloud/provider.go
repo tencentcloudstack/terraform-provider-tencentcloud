@@ -3873,13 +3873,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
 	} else {
-		secretId = getProviderConfig("", "secretId")
+		secretId = getProviderConfig(secretId, "secretId")
 	}
 
 	if v, ok := d.GetOk("secret_key"); ok {
 		secretKey = v.(string)
 	} else {
-		secretKey = getProviderConfig("", "secretKey")
+		secretKey = getProviderConfig(secretKey, "secretKey")
 	}
 
 	if v, ok := d.GetOk("security_token"); ok {
@@ -3889,7 +3889,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if v, ok := d.GetOk("region"); ok {
 		region = v.(string)
 	} else {
-		region = getProviderConfig("", "region")
+		region = getProviderConfig(region, "region")
 		if region == "" {
 			region = DEFAULT_REGION
 		}
