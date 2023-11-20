@@ -403,3 +403,37 @@ func (me *EMRService) DeleteEmrUserManagerById(ctx context.Context, instanceId s
 
 	return
 }
+
+func (me *EMRService) DescribeEmrCvmQuotaByFilter(ctx context.Context, param map[string]interface{}) (cvmQuota *emr.DescribeCvmQuotaResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = emr.NewDescribeCvmQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "ZoneId" {
+			request.ZoneId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeCvmQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	cvmQuota = response.Response
+	return
+}

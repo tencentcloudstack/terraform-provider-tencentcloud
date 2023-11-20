@@ -1,0 +1,3 @@
+```release-note:new-data-source
+tencentcloud_emr_cvm_quota
+```

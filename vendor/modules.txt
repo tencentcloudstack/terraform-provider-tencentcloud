@@ -1137,7 +1137,11 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
+<<<<<<< HEAD
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.788
+=======
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.797
+>>>>>>> c259de557161f1517d6e9eff87c30e4d3a355a74
 ## explicit; go 1.11
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1169,7 +1173,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.673
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.777
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc v1.0.797
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.781
@@ -1301,10 +1305,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.779
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.771
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.794
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.782
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.792
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199

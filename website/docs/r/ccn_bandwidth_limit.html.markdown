@@ -65,7 +65,7 @@ The following arguments are supported:
 
 * `ccn_id` - (Required, String, ForceNew) ID of the CCN.
 * `region` - (Required, String, ForceNew) Limitation of region.
-* `bandwidth_limit` - (Optional, Int) Limitation of bandwidth.
+* `bandwidth_limit` - (Optional, Int) Limitation of bandwidth. Default is `0`.
 * `dst_region` - (Optional, String, ForceNew) Destination area restriction. If the `CCN` rate limit type is `OUTER_REGION_LIMIT`, this value does not need to be set.
 
 ## Attributes Reference

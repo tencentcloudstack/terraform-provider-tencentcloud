@@ -49,6 +49,7 @@ resource "tencentcloud_scf_function" "foo" {
 The following arguments are supported:
 
 * `name` - (Required, String, ForceNew) Name of the SCF function. Name supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
+* `async_run_enable` - (Optional, String, ForceNew) Whether SCF function asynchronous attribute is enabled. `TRUE` is open, `FALSE` is close.
 * `cfs_config` - (Optional, List) List of CFS configurations.
 * `cls_logset_id` - (Optional, String) cls logset id of the SCF function.
 * `cls_topic_id` - (Optional, String) cls topic id of the SCF function.

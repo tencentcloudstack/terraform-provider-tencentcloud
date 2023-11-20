@@ -84,7 +84,7 @@ func resourceTencentCloudCcnBandwidthLimit() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Limitation of bandwidth.",
+				Description: "Limitation of bandwidth. Default is `0`.",
 			},
 			"dst_region": {
 				Type:     schema.TypeString,
@@ -128,7 +128,7 @@ func resourceTencentCloudCcnBandwidthLimitCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("bandwidth_limit"); ok {
 		limit = int64(v.(int))
 	}
-	if err := service.SetCcnRegionBandwidthLimits(ctx, ccnId, region, dstRegion, limit); err != nil {
+	if err := service.SetCcnRegionBandwidthLimits(ctx, ccnId, region, dstRegion, limit, false); err != nil {
 		return err
 	}
 	d.SetId(id)
@@ -161,7 +161,7 @@ func resourceTencentCloudCcnBandwidthLimitUpdate(d *schema.ResourceData, meta in
 			limitTemp = int64(v.(int))
 		}
 		_, dstRegion := d.GetChange("dst_region")
-		if err := service.SetCcnRegionBandwidthLimits(ctx, ccnId, region, dstRegion.(string), limitTemp); err != nil {
+		if err := service.SetCcnRegionBandwidthLimits(ctx, ccnId, region, dstRegion.(string), limitTemp, false); err != nil {
 			return err
 		}
 	}
@@ -222,7 +222,26 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 func resourceTencentCloudCcnBandwidthLimitDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.delete")()
 
-	_, _ = d, meta
+	var (
+		ccnId     = d.Get("ccn_id").(string)
+		region    = d.Get("region").(string)
+		dstRegion string
+		limit     int64
+	)
 
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if v, ok := d.GetOk("dst_region"); ok {
+		dstRegion = v.(string)
+	}
+	if v, ok := d.GetOk("bandwidth_limit"); ok {
+		limit = int64(v.(int))
+	}
+	if err := service.SetCcnRegionBandwidthLimits(ctx, ccnId, region, dstRegion, limit, true); err != nil {
+		return err
+	}
 	return nil
 }

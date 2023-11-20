@@ -137,7 +137,7 @@ func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Contex
 	ratelimit.Check(request.GetAction())
 
 	var (
-		pageNum  uint64 = 0
+		pageNum  uint64 = 1
 		pageSize uint64 = 20
 	)
 	for {
@@ -203,7 +203,7 @@ func (me *WedataService) DescribeWedataDataSourceInfoListByFilter(ctx context.Co
 	ratelimit.Check(request.GetAction())
 
 	var (
-		pageNum  uint64 = 0
+		pageNum  uint64 = 1
 		pageSize uint64 = 20
 	)
 	for {
@@ -272,12 +272,22 @@ func (me *WedataService) DescribeWedataDataSourceWithoutInfoByFilter(ctx context
 	return
 }
 
-func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, datasourceId string) (datasource *wedata.DataSourceInfo, errRet error) {
+func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, ownerProjectId, datasourceId string) (datasource *wedata.DataSourceInfo, errRet error) {
 	logId := getLogId(ctx)
 
-	request := wedata.NewDescribeDatasourceRequest()
-	Id, _ := strconv.ParseUint(datasourceId, 10, 64)
-	request.Id = &Id
+	request := wedata.NewDescribeDataSourceListRequest()
+	request.PageNumber = common.Uint64Ptr(1)
+	request.PageSize = common.Uint64Ptr(1)
+	request.Filters = []*wedata.Filter{
+		{
+			Name:   common.StringPtr("ownerProjectId"),
+			Values: common.StringPtrs([]string{ownerProjectId}),
+		},
+		{
+			Name:   common.StringPtr("ID"),
+			Values: common.StringPtrs([]string{datasourceId}),
+		},
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -287,7 +297,7 @@ func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, datas
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseWedataClient().DescribeDatasource(request)
+	response, err := me.client.UseWedataClient().DescribeDataSourceList(request)
 	if err != nil {
 		errRet = err
 		return
@@ -295,20 +305,21 @@ func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, datas
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
+	if response == nil || len(response.Response.Data.Rows) != 1 {
 		return
 	}
 
-	datasource = response.Response.Data
+	datasource = response.Response.Data.Rows[0]
 	return
 }
 
-func (me *WedataService) DeleteWedataDatasourceById(ctx context.Context, datasourceId string) (errRet error) {
+func (me *WedataService) DeleteWedataDatasourceById(ctx context.Context, ownerProjectId, datasourceId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := wedata.NewDeleteDataSourcesRequest()
 	Id, _ := strconv.ParseUint(datasourceId, 10, 64)
 	request.Ids = common.Uint64Ptrs([]uint64{Id})
+	request.ProjectId = &ownerProjectId
 
 	defer func() {
 		if errRet != nil {

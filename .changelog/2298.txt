@@ -1,0 +1,19 @@
+```release-note:new-resource
+tencentcloud_waf_auto_deny_rules
+```
+
+```release-note:new-resource
+tencentcloud_waf_module_status
+```
+
+```release-note:new-resource
+tencentcloud_waf_protection_mode
+```
+
+```release-note:new-resource
+tencentcloud_waf_web_shell
+```
+
+```release-note:enhancement
+tencentcloud_waf_saas_domain: Support set waf status
+```

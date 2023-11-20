@@ -6530,10 +6530,10 @@ func resourceTencentCloudCkafkaDatahubTaskCreate(d *schema.ResourceData, meta in
 					if v, ok := analyseMap["regex"]; ok {
 						analyseParam.Regex = helper.String(v.(string))
 					}
-					if v, ok := analyseMap["input_value_type"]; ok {
+					if v, ok := analyseMap["input_value_type"]; ok && v != "" {
 						analyseParam.InputValueType = helper.String(v.(string))
 					}
-					if v, ok := analyseMap["input_value"]; ok {
+					if v, ok := analyseMap["input_value"]; ok && v != "" {
 						analyseParam.InputValue = helper.String(v.(string))
 					}
 					fieldParam.Analyse = &analyseParam

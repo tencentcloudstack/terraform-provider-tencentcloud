@@ -190,6 +190,7 @@ The following arguments are supported:
 * `cert` - (Optional, String) Certificate content, When CertType=1, this parameter needs to be filled.
 * `cipher_template` - (Optional, Int) Encryption Suite Template, 0:default  1:Universal template 2:Security template 3:Custom template.
 * `ciphers` - (Optional, List: [`Int`]) Encryption Suite Information.
+* `cls_status` - (Optional, Int) Whether to enable access logs, 1 enable, 0 disable.
 * `https_rewrite` - (Optional, Int) Whether redirect to https, 1 will redirect and 0 will not.
 * `https_upstream_port` - (Optional, String) Upstream port for https, When listen ports has https port and UpstreamScheme is HTTP, the current field needs to be filled.
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.
@@ -205,6 +206,7 @@ The following arguments are supported:
 * `sni_type` - (Optional, Int) Sni type fo upstream, 0:disable SNI; 1:enable SNI and SNI equal original request host; 2:and SNI equal upstream host 3:enable SNI and equal customize host.
 * `src_list` - (Optional, List: [`String`]) Upstream IP List, When UpstreamType=0, this parameter needs to be filled.
 * `ssl_id` - (Optional, String) Certificate ID, When CertType=2, this parameter needs to be filled.
+* `status` - (Optional, Int) Binding status between waf and LB, 0:not bind, 1:binding.
 * `tls_version` - (Optional, Int) Version of TLS Protocol.
 * `upstream_domain` - (Optional, String) Upstream domain, When UpstreamType=1, this parameter needs to be filled.
 * `upstream_scheme` - (Optional, String) Upstream scheme for https, http or https.

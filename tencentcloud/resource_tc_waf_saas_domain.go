@@ -421,6 +421,13 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(API_SAFE_STATUS),
 				Description:  "Whether to enable api safe, 1 enable, 0 disable.",
 			},
+			"cls_status": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      CLS_STATUS_0,
+				ValidateFunc: validateAllowedIntValue(CLS_STATUS),
+				Description:  "Whether to enable access logs, 1 enable, 0 disable.",
+			},
 			//"ipv6_status": {
 			//	Type:         schema.TypeInt,
 			//	Optional:     true,
@@ -428,13 +435,13 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 			//	ValidateFunc: validateAllowedIntValue(IPV6_STATUS),
 			//	Description:  "Whether to enable ipv6, 1 enable, 0 disable.",
 			//},
-			//"status": {
-			//	Type:         schema.TypeInt,
-			//	Optional:     true,
-			//	Default:      SAAS_DOMAIN_STATUS_1,
-			//	ValidateFunc: validateAllowedIntValue(SAAS_DOMAIN_STATUS),
-			//	Description:  "Binding status between waf and LB, 0:not bind, 1:binding.",
-			//},
+			"status": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      PROTECTION_STATUS_1,
+				ValidateFunc: validateAllowedIntValue(PROTECTION_STATUS),
+				Description:  "Binding status between waf and LB, 0:not bind, 1:binding.",
+			},
 			"domain_id": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -449,19 +456,22 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
-		verifyRequest = waf.NewDescribeDomainVerifyResultRequest()
-		request       = waf.NewAddSpartaProtectionRequest()
-		instanceID    string
-		domain        string
-		domainId      string
-		loadBalance   string
-		botStatus     uint64
-		apiSafeStatus uint64
+		logId            = getLogId(contextNil)
+		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
+		service          = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
+		verifyRequest    = waf.NewDescribeDomainVerifyResultRequest()
+		request          = waf.NewAddSpartaProtectionRequest()
+		instanceID       string
+		domain           string
+		domainId         string
+		loadBalance      string
+		botStatus        uint64
+		apiSafeStatus    uint64
+		clsStatus        uint64
+		protectionStatus uint64
+		isCdn            int
 		//ipv6Status    int64
-		isCdn int
+
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -837,6 +847,40 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// set cls
+	if v, ok := d.GetOkExists("cls_status"); ok {
+		tmpClsStatus := v.(int)
+
+		if tmpClsStatus != CLS_STATUS_0 {
+			clsStatus = uint64(tmpClsStatus)
+			modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
+			modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
+				{
+					Domain:     common.StringPtr(domain),
+					Edition:    common.StringPtr("sparta-waf"),
+					InstanceID: common.StringPtr(instanceID),
+				},
+			}
+			modifyDomainsCLSStatusRequest.Status = &clsStatus
+
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
+
 	// set ipv6
 	//if v, ok := d.GetOkExists("ipv6_status"); ok {
 	//	tmpIpv6Status := v.(int)
@@ -867,39 +911,33 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	//	}
 	//}
 
-	//// set waf status
-	//if v, ok := d.GetOkExists("status"); ok {
-	//	tmpWafStatus := v.(int)
-	//
-	//	if tmpWafStatus != SAAS_DOMAIN_STATUS_1 {
-	//		wafStatus = uint64(tmpWafStatus)
-	//		modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//		modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//			{
-	//				Domain:     common.StringPtr(domain),
-	//				DomainId:   common.StringPtr(domainId),
-	//				Status:     common.Uint64Ptr(wafStatus),
-	//				InstanceID: common.StringPtr(instanceID),
-	//			},
-	//		}
-	//
-	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//			if e != nil {
-	//				return retryError(e)
-	//			} else {
-	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//			}
-	//
-	//			return nil
-	//		})
-	//
-	//		if err != nil {
-	//			log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//			return err
-	//		}
-	//	}
-	//}
+	// set status
+	if v, ok := d.GetOkExists("status"); ok {
+		tmpProtectionStatus := v.(int)
+
+		if tmpProtectionStatus != PROTECTION_STATUS_1 {
+			protectionStatus = uint64(tmpProtectionStatus)
+			modifyProtectionStatusRequest := waf.NewModifyProtectionStatusRequest()
+			modifyProtectionStatusRequest.Domain = &domain
+			modifyProtectionStatusRequest.Status = &protectionStatus
+
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyProtectionStatus(modifyProtectionStatusRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyProtectionStatusRequest.GetAction(), modifyProtectionStatusRequest.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
 
 	return resourceTencentCloudWafSaasDomainRead(d, meta)
 }
@@ -1105,6 +1143,14 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
 	}
 
+	if domainInfo.ClsStatus != nil {
+		_ = d.Set("cls_status", domainInfo.ClsStatus)
+	}
+
+	if domainInfo.Status != nil {
+		_ = d.Set("status", domainInfo.Status)
+	}
+
 	//if domainInfo.Ipv6Status != nil {
 	//	_ = d.Set("ipv6_status", domainInfo.Ipv6Status)
 	//}
@@ -1123,6 +1169,7 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		request       = waf.NewModifySpartaProtectionRequest()
 		botStatus     uint64
 		apiSafeStatus uint64
+		clsStatus     uint64
 		//ipv6Status    int64
 		loadBalance string
 		isCdn       int
@@ -1145,41 +1192,35 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 	domain := idSplit[1]
 	domainId := idSplit[2]
 
-	//// set waf status
-	//if d.HasChange("status") {
-	//	if v, ok := d.GetOkExists("status"); ok {
-	//		tmpWafStatus := v.(int)
-	//		// open first
-	//		if tmpWafStatus == CLB_DOMAIN_STATUS_1 {
-	//			wafStatus = uint64(v.(int))
-	//			modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//			modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//				{
-	//					Domain:     common.StringPtr(domain),
-	//					DomainId:   common.StringPtr(domainId),
-	//					Status:     common.Uint64Ptr(wafStatus),
-	//					InstanceID: common.StringPtr(instanceID),
-	//				},
-	//			}
-	//
-	//			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//				if e != nil {
-	//					return retryError(e)
-	//				} else {
-	//					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//				}
-	//
-	//				return nil
-	//			})
-	//
-	//			if err != nil {
-	//				log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//				return err
-	//			}
-	//		}
-	//	}
-	//}
+	// set waf status
+	if d.HasChange("status") {
+		if v, ok := d.GetOkExists("status"); ok {
+			tmpProtectionStatus := v.(int)
+			// open first
+			if tmpProtectionStatus == PROTECTION_STATUS_1 {
+				protectionStatus := uint64(tmpProtectionStatus)
+				modifyProtectionStatusRequest := waf.NewModifyProtectionStatusRequest()
+				modifyProtectionStatusRequest.Domain = &domain
+				modifyProtectionStatusRequest.Status = &protectionStatus
+
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyProtectionStatus(modifyProtectionStatusRequest)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyProtectionStatusRequest.GetAction(), modifyProtectionStatusRequest.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		}
+	}
 
 	// get ports by api
 	saasDomain, err := service.DescribeWafSaasDomainById(ctx, instanceID, domain, domainId)
@@ -1553,6 +1594,36 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// set cls
+	if v, ok := d.GetOkExists("cls_status"); ok {
+		clsStatus = uint64(v.(int))
+		modifyDomainsCLSStatusRequest := waf.NewModifyDomainsCLSStatusRequest()
+		modifyDomainsCLSStatusRequest.Domains = []*waf.DomainURI{
+			{
+				Domain:     common.StringPtr(domain),
+				Edition:    common.StringPtr("sparta-waf"),
+				InstanceID: common.StringPtr(instanceID),
+			},
+		}
+		modifyDomainsCLSStatusRequest.Status = &clsStatus
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainsCLSStatus(modifyDomainsCLSStatusRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainsCLSStatusRequest.GetAction(), modifyDomainsCLSStatusRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify waf clbDomain cls_status failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	// set ipv6
 	//if d.HasChange("ipv6_status") {
 	//	if v, ok := d.GetOkExists("ipv6_status"); ok {
@@ -1586,41 +1657,35 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 	//	}
 	//}
 
-	//// set waf status
-	//if d.HasChange("status") {
-	//	if v, ok := d.GetOkExists("status"); ok {
-	//		tmpWafStatus := v.(int)
-	//		// close end
-	//		if tmpWafStatus == CLB_DOMAIN_STATUS_0 {
-	//			wafStatus = uint64(v.(int))
-	//			modifyHostStatusRequest := waf.NewModifyHostStatusRequest()
-	//			modifyHostStatusRequest.HostsStatus = []*waf.HostStatus{
-	//				{
-	//					Domain:     common.StringPtr(domain),
-	//					DomainId:   common.StringPtr(domainId),
-	//					Status:     common.Uint64Ptr(wafStatus),
-	//					InstanceID: common.StringPtr(instanceID),
-	//				},
-	//			}
-	//
-	//			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	//				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyHostStatus(modifyHostStatusRequest)
-	//				if e != nil {
-	//					return retryError(e)
-	//				} else {
-	//					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyHostStatusRequest.GetAction(), modifyHostStatusRequest.ToJsonString(), result.ToJsonString())
-	//				}
-	//
-	//				return nil
-	//			})
-	//
-	//			if err != nil {
-	//				log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
-	//				return err
-	//			}
-	//		}
-	//	}
-	//}
+	// set waf status
+	if d.HasChange("status") {
+		if v, ok := d.GetOkExists("status"); ok {
+			tmpProtectionStatus := v.(int)
+			// close end
+			if tmpProtectionStatus == PROTECTION_STATUS_0 {
+				protectionStatus := uint64(tmpProtectionStatus)
+				modifyProtectionStatusRequest := waf.NewModifyProtectionStatusRequest()
+				modifyProtectionStatusRequest.Domain = &domain
+				modifyProtectionStatusRequest.Status = &protectionStatus
+
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyProtectionStatus(modifyProtectionStatusRequest)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyProtectionStatusRequest.GetAction(), modifyProtectionStatusRequest.ToJsonString(), result.ToJsonString())
+					}
+
+					return nil
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s modify waf saasDomain status failed, reason:%+v", logId, err)
+					return err
+				}
+			}
+		}
+	}
 
 	return resourceTencentCloudWafSaasDomainRead(d, meta)
 }

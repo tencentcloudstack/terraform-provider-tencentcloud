@@ -24,7 +24,7 @@ data "tencentcloud_wedata_data_source_list" "example" {}
 ```hcl
 data "tencentcloud_wedata_data_source_list" "example" {
   order_fields {
-    name      = "CreateTime"
+    name      = "create_time"
     direction = "DESC"
   }
 

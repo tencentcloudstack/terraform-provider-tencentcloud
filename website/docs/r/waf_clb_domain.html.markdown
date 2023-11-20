@@ -120,6 +120,7 @@ The following arguments are supported:
 * `alb_type` - (Optional, String) Load balancer type: clb, apisix or tsegw, default clb.
 * `api_safe_status` - (Optional, Int) Whether to enable api safe, 1 enable, 0 disable.
 * `bot_status` - (Optional, Int) Whether to enable bot, 1 enable, 0 disable.
+* `cls_status` - (Optional, Int) Whether to enable access logs, 1 enable, 0 disable.
 * `engine` - (Optional, Int) Protection Status: 10: Rule Observation&&AI Off Mode, 11: Rule Observation&&AI Observation Mode, 12: Rule Observation&&AI Interception Mode, 20: Rule Interception&&AI Off Mode, 21: Rule Interception&&AI Observation Mode, 22: Rule Interception&&AI Interception Mode, Default 20.
 * `flow_mode` - (Optional, Int) WAF traffic mode, 1 cleaning mode, 0 mirroring mode.
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.

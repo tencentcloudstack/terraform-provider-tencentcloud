@@ -121,6 +121,16 @@ var API_SAFE_STATUS = []int{
 }
 
 const (
+	PROTECTION_STATUS_0 = 0
+	PROTECTION_STATUS_1 = 1
+)
+
+var PROTECTION_STATUS = []int{
+	PROTECTION_STATUS_0,
+	PROTECTION_STATUS_1,
+}
+
+const (
 	IPV6_ON  = 1
 	IPV6_OFF = 2
 )

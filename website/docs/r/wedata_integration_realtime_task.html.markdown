@@ -15,13 +15,14 @@ Provides a resource to create a wedata integration_realtime_task
 
 ```hcl
 resource "tencentcloud_wedata_integration_realtime_task" "example" {
-  project_id  = "1455251608631480391"
+  project_id  = "1612982498218618880"
   task_name   = "tf_example"
+  task_mode   = "1"
   description = "description."
   sync_type   = 1
   task_info {
     incharge    = "100028439226"
-    executor_id = "20230704142425553913"
+    executor_id = "20230313175748567418"
     config {
       name  = "concurrency"
       value = "1"
@@ -56,62 +57,7 @@ resource "tencentcloud_wedata_integration_realtime_task" "example" {
     }
     config {
       name  = "TaskAlarmRegularList"
-      value = ""
-    }
-    mappings {
-      source_id = "2"
-      sink_id   = "1"
-    }
-    nodes {
-      id               = "1"
-      name             = "gf_poc"
-      node_type        = "INPUT"
-      data_source_type = "MYSQL"
-      datasource_id    = "5737"
-      config {
-        name  = "StartupMode"
-        value = "INIT"
-      }
-      config {
-        name  = "Encode"
-        value = "utf-8"
-      }
-      config {
-        name  = "Database"
-        value = "UNKNOW"
-      }
-      config {
-        name  = "SourceRule"
-        value = "all"
-      }
-      config {
-        name  = "FilterOper"
-        value = "update"
-      }
-      config {
-        name  = "ServerTimeZone"
-        value = "Asia/Shanghai"
-      }
-      config {
-        name  = "GhostChange"
-        value = "false"
-      }
-      config {
-        name  = "TableNames"
-        value = "gf_db.*,hx_db.*,information_schema.*,mysql.*,performance_schema.*,run_time.*,sys.*,test01.*"
-      }
-      config {
-        name  = "FirstDataSource"
-        value = "5737"
-      }
-      config {
-        name  = "MultipleDataSources"
-        value = "5737"
-      }
-      config {
-        name  = "SiblingNodes"
-        value = "[]"
-      }
+      value = "35"
     }
   }
 }
@@ -124,6 +70,7 @@ The following arguments are supported:
 * `project_id` - (Required, String) Project ID.
 * `sync_type` - (Required, Int) Synchronization type: 1. Whole database synchronization, 2. Single table synchronization.
 * `task_info` - (Required, List) Task Information.
+* `task_mode` - (Required, String) Task display mode, 0: canvas mode, 1: form mode.
 * `task_name` - (Required, String) Task name.
 * `description` - (Optional, String) Description information.
 
@@ -248,7 +195,6 @@ The `task_info` object supports the following:
 * `switch_resource` - (Optional, Int) Resource tiering status, 0: in progress, 1: successful, 2: failed.
 * `task_alarm_regular_list` - (Optional, Set) Task alarm regular.
 * `task_group_id` - (Optional, String) Inlong Task Group ID.
-* `task_mode` - (Optional, String) Task display mode, 0: canvas mode, 1: form mode.
 * `update_time` - (Optional, String) Update time.
 * `workflow_id` - (Optional, String) The workflow id to which the task belongs.
 

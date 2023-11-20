@@ -44,6 +44,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `functions` - An information list of functions. Each element contains the following attributes:
+  * `async_run_enable` - Whether asynchronous attribute is enabled.
   * `cls_logset_id` - CLS logset ID of the SCF function.
   * `cls_topic_id` - CLS topic ID of the SCF function.
   * `code_error` - Code error of the SCF function.

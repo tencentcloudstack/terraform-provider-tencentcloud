@@ -34,6 +34,7 @@ func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.eips.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.async_run_enable"),
 				),
 			},
 		},

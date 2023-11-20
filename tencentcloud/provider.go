@@ -228,6 +228,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_account_summary
     tencentcloud_cam_policy_granting_service_access
     tencentcloud_cam_oidc_config
+    tencentcloud_cam_group_user_account
 
   Resource
     tencentcloud_cam_role
@@ -1232,6 +1233,7 @@ MapReduce(EMR)
   Data Source
     tencentcloud_emr
     tencentcloud_emr_nodes
+	tencentcloud_emr_cvm_quota
 
   Resource
     tencentcloud_emr_cluster
@@ -1247,6 +1249,8 @@ DNSPOD
     tencentcloud_dnspod_modify_domain_owner_operation
     tencentcloud_dnspod_download_snapshot_operation
     tencentcloud_dnspod_custom_line
+    tencentcloud_dnspod_snapshot_config
+    tencentcloud_dnspod_domain_lock
 
   Data Source
     tencentcloud_dnspod_records
@@ -1534,6 +1538,9 @@ Cloud Streaming Services(CSS)
     tencentcloud_css_timeshift_template
     tencentcloud_css_timeshift_rule_attachment
     tencentcloud_css_stream_monitor
+    tencentcloud_css_start_stream_monitor
+    tencentcloud_css_pull_stream_task_restart
+
   Data Source
     tencentcloud_css_domains
     tencentcloud_css_backup_stream
@@ -1918,6 +1925,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_check_data_engine_image_can_be_rollback
     tencentcloud_dlc_check_data_engine_image_can_be_upgrade
     tencentcloud_dlc_check_data_engine_config_pairs_validity
+    tencentcloud_dlc_describe_updatable_data_engines
 
   Resource
     tencentcloud_dlc_work_group
@@ -1932,6 +1940,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_renew_data_engine_operation
     tencentcloud_dlc_restart_data_engine_operation
     tencentcloud_dlc_switch_data_engine_image_operation
+    tencentcloud_dlc_update_data_engine_config_operation
     tencentcloud_dlc_upgrade_data_engine_image_operation
     tencentcloud_dlc_user_data_engine_config
     tencentcloud_dlc_update_row_filter_operation
@@ -1951,6 +1960,7 @@ Web Application Firewall(WAF)
     tencentcloud_waf_attack_total_count
     tencentcloud_waf_peak_points
     tencentcloud_waf_instance_qps_limit
+    tencentcloud_waf_user_clb_regions
 
   Resource
     tencentcloud_waf_custom_rule
@@ -1961,18 +1971,29 @@ Web Application Firewall(WAF)
     tencentcloud_waf_saas_instance
     tencentcloud_waf_anti_fake
     tencentcloud_waf_anti_info_leak
+    tencentcloud_waf_auto_deny_rules
+    tencentcloud_waf_module_status
+    tencentcloud_waf_protection_mode
+    tencentcloud_waf_web_shell
+    tencentcloud_waf_cc
 
 Wedata
   Data Source
 	tencentcloud_wedata_rule_templates
+	tencentcloud_wedata_data_source_list
+	tencentcloud_wedata_data_source_without_info
 
   Resource
+    tencentcloud_wedata_datasource
     tencentcloud_wedata_function
     tencentcloud_wedata_resource
     tencentcloud_wedata_script
     tencentcloud_wedata_dq_rule
     tencentcloud_wedata_rule_template
     tencentcloud_wedata_baseline
+    tencentcloud_wedata_integration_offline_task
+    tencentcloud_wedata_integration_realtime_task
+    tencentcloud_wedata_integration_task_node
 
 Cloud Firewall(CFW)
   Data Source
@@ -2152,6 +2173,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_availability_regions":                         dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
+			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
 			"tencentcloud_availability_zones":                           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
@@ -2814,6 +2836,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_platform_products":                         dataSourceTencentCloudEbPlatformProducts(),
 			"tencentcloud_eb_plateform_event_template":                  dataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                        dataSourceTencentCloudWedataRuleTemplates(),
+			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
+			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_private_dns_records":                          dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                                  dataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                             dataSourceTencentCloudWafTlsVersions(),
@@ -2828,6 +2852,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_attack_total_count":                       dataSourceTencentCloudWafAttackTotalCount(),
 			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_waf_user_clb_regions":                         dataSourceTencentCloudWafUserClbRegions(),
 			"tencentcloud_cfw_nat_fw_switches":                          dataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          dataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         dataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -2846,6 +2871,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    dataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":           dataSourceTencentCloudCamPolicyGrantingServiceAccess(),
+			"tencentcloud_cam_group_user_account":                       dataSourceTencentCloudCamGroupUserAccount(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_rollback":  dataSourceTencentCloudDlcCheckDataEngineImageCanBeRollback(),
 			"tencentcloud_dlc_check_data_engine_image_can_be_upgrade":   dataSourceTencentCloudDlcCheckDataEngineImageCanBeUpgrade(),
 			"tencentcloud_dlc_describe_user_type":                       dataSourceTencentCloudDlcDescribeUserType(),
@@ -2857,6 +2883,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_engine_usage_info":               dataSourceTencentCloudDlcDescribeEngineUsageInfo(),
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
+			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 		},
@@ -3371,6 +3398,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_modify_record_group_operation":                resourceTencentCloudDnspodModifyRecordGroupOperation(),
 			"tencentcloud_dnspod_download_snapshot_operation":                  resourceTencentCloudDnspodDownloadSnapshotOperation(),
 			"tencentcloud_dnspod_custom_line":                                  resourceTencentCloudDnspodCustomLine(),
+			"tencentcloud_dnspod_snapshot_config":                              resourceTencentCloudDnspodSnapshotConfig(),
+			"tencentcloud_dnspod_domain_lock":                                  resourceTencentCloudDnspodDomainLock(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
@@ -3480,6 +3509,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_timeshift_template":                              resourceTencentCloudCssTimeshiftTemplate(),
 			"tencentcloud_css_timeshift_rule_attachment":                       resourceTencentCloudCssTimeshiftRuleAttachment(),
 			"tencentcloud_css_stream_monitor":                                  resourceTencentCloudCssStreamMonitor(),
+			"tencentcloud_css_start_stream_monitor":                            resourceTencentCloudCssStartStreamMonitor(),
+			"tencentcloud_css_pull_stream_task_restart":                        resourceTencentCloudCssPullStreamTaskRestart(),
 			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),
@@ -3715,11 +3746,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_attach_work_group_policy_operation":              resourceTencentCloudDlcAttachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_detach_work_group_policy_operation":              resourceTencentCloudDlcDetachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
+			"tencentcloud_dlc_update_data_engine_config_operation":             resourceTencentCloudDlcUpdateDataEngineConfigOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
 			"tencentcloud_dlc_update_row_filter_operation":                     resourceTencentCloudDlcUpdateRowFilterOperation(),
 			"tencentcloud_dlc_user_data_engine_config":                         resourceTencentCloudDlcUserDataEngineConfig(),
-			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
@@ -3728,11 +3759,21 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
 			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_waf_auto_deny_rules":                                 resourceTencentCloudWafAutoDenyRules(),
+			"tencentcloud_waf_module_status":                                   resourceTencentCloudWafModuleStatus(),
+			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
+			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
+			"tencentcloud_waf_cc":                                              resourceTencentCloudWafCc(),
+			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
+			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
 			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
 			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
 			"tencentcloud_wedata_dq_rule":                                      resourceTencentCloudWedataDqRule(),
 			"tencentcloud_wedata_baseline":                                     resourceTencentCloudWedataBaseline(),
+			"tencentcloud_wedata_integration_offline_task":                     resourceTencentCloudWedataIntegrationOfflineTask(),
+			"tencentcloud_wedata_integration_realtime_task":                    resourceTencentCloudWedataIntegrationRealtimeTask(),
+			"tencentcloud_wedata_integration_task_node":                        resourceTencentCloudWedataIntegrationTaskNode(),
 			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
