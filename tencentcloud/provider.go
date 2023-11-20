@@ -2091,7 +2091,8 @@ const (
 )
 
 const (
-	DEFAULT_REGION = "ap-guangzhou"
+	DEFAULT_REGION  = "ap-guangzhou"
+	DEFAULT_PROFILE = "default"
 )
 
 type TencentCloudClient struct {
@@ -2104,27 +2105,27 @@ func Provider() *schema.Provider {
 			"secret_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
 				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
 				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
 				Sensitive:   true,
 			},
 			"security_token": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECURITY_TOKEN, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECURITY_TOKEN, nil),
 				Description: "TencentCloud Security Token of temporary access credentials. It can be sourced from the `TENCENTCLOUD_SECURITY_TOKEN` environment variable. Notice: for supported products, please refer to: [temporary key supported products](https://intl.cloud.tencent.com/document/product/598/10588).",
 				Sensitive:   true,
 			},
 			"region": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_REGION, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_REGION, nil),
 				Description: "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
 			},
 			"protocol": {
@@ -2150,13 +2151,13 @@ func Provider() *schema.Provider {
 						"role_arn": {
 							Type:        schema.TypeString,
 							Required:    true,
-							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, ""),
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_ARN, nil),
 							Description: "The ARN of the role to assume. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`.",
 						},
 						"session_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, ""),
+							DefaultFunc: schema.EnvDefaultFunc(PROVIDER_ASSUME_ROLE_SESSION_NAME, nil),
 							Description: "The session name to use when making the AssumeRole call. It can be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`.",
 						},
 						"session_duration": {
@@ -2182,13 +2183,13 @@ func Provider() *schema.Provider {
 			"shared_credentials_dir": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_DIR, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_DIR, nil),
 				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli.",
 			},
 			"profile": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, ""),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
 				Description: "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
 			},
 		},
@@ -3860,16 +3861,47 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		return str
 	}
 
-	secretId := getProviderConfig(d.Get("secret_id").(string), "secretId")
-	secretKey := getProviderConfig(d.Get("secret_key").(string), "secretKey")
-	securityToken := d.Get("security_token").(string)
-	region := getProviderConfig(d.Get("region").(string), "region")
-	if region == "" {
-		region = DEFAULT_REGION
+	var (
+		secretId      string
+		secretKey     string
+		securityToken string
+		region        string
+		protocol      string
+		domain        string
+	)
+
+	if v, ok := d.GetOk("secret_id"); ok {
+		secretId = v.(string)
+	} else {
+		secretId = getProviderConfig("", "secretId")
 	}
 
-	protocol := d.Get("protocol").(string)
-	domain := d.Get("domain").(string)
+	if v, ok := d.GetOk("secret_key"); ok {
+		secretKey = v.(string)
+	} else {
+		secretKey = getProviderConfig("", "secretKey")
+	}
+
+	if v, ok := d.GetOk("security_token"); ok {
+		securityToken = v.(string)
+	}
+
+	if v, ok := d.GetOk("region"); ok {
+		region = v.(string)
+	} else {
+		region = getProviderConfig("", "region")
+		if region == "" {
+			region = DEFAULT_REGION
+		}
+	}
+
+	if v, ok := d.GetOk("protocol"); ok {
+		protocol = v.(string)
+	}
+
+	if v, ok := d.GetOk("domain"); ok {
+		domain = v.(string)
+	}
 
 	// standard client
 	var tcClient TencentCloudClient
@@ -3884,11 +3916,14 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		Domain:   domain,
 	}
 
-	// get assume role
-	var assumeRoleArn string
-	var assumeRoleSessionName string
-	var assumeRoleSessionDuration int
-	var assumeRolePolicy string
+	var (
+		assumeRoleArn             string
+		assumeRoleSessionName     string
+		assumeRoleSessionDuration int
+		assumeRolePolicy          string
+	)
+
+	// get assume role from credential
 	if providerConfig["role-arn"] != nil {
 		assumeRoleArn = providerConfig["role-arn"].(string)
 	}
@@ -3896,19 +3931,49 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if providerConfig["role-session-name"] != nil {
 		assumeRoleSessionName = providerConfig["role-session-name"].(string)
 	}
-	assumeRoleSessionDuration = 7200
-	assumeRolePolicy = ""
+
 	if assumeRoleArn != "" && assumeRoleSessionName != "" {
-		assumeRoleList := d.Get("assume_role").(*schema.Set).List()
-		if len(assumeRoleList) == 1 {
-			assumeRole := assumeRoleList[0].(map[string]interface{})
-			assumeRoleArn = getProviderConfig(assumeRole["role_arn"].(string), "role-arn")
-			assumeRoleSessionName = getProviderConfig(assumeRole["session_name"].(string), "role-session-name")
-			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
-			assumeRolePolicy = assumeRole["policy"].(string)
-		}
+		assumeRoleSessionDuration = 7200
+		assumeRolePolicy = ""
 
 		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+	}
+
+	// get assume role from env
+	envRoleArn := os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
+	envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
+	if envRoleArn != "" && envSessionName != "" {
+		if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
+			var err error
+			assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		if assumeRoleSessionDuration == 0 {
+			assumeRoleSessionDuration = 7200
+		}
+
+		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+	}
+
+	// get assume role from tf
+	if v, ok := d.GetOk("assume_role"); ok {
+		assumeRoleList := v.(*schema.Set).List()
+		if len(assumeRoleList) == 1 {
+			assumeRole := assumeRoleList[0].(map[string]interface{})
+			assumeRoleArn = assumeRole["role_arn"].(string)
+			assumeRoleSessionName = assumeRole["session_name"].(string)
+			assumeRoleSessionDuration = assumeRole["session_duration"].(int)
+			assumeRolePolicy = assumeRole["policy"].(string)
+
+			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
+		}
+	}
+
+	if secretId == "" || secretKey == "" {
+		return nil, fmt.Errorf("Please set your `secret_id` and `secret_key`.")
 	}
 
 	return &tcClient, nil
@@ -3944,20 +4009,29 @@ var providerConfig map[string]interface{}
 
 func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{}, error) {
 	if providerConfig == nil {
-		if v, ok := d.GetOk("profile"); !ok && v.(string) == "" {
-			return nil, nil
+		var (
+			profile              string
+			sharedCredentialsDir string
+			credentialPath       string
+			configurePath        string
+		)
+
+		if v, ok := d.GetOk("profile"); ok {
+			profile = v.(string)
+		} else {
+			profile = DEFAULT_PROFILE
 		}
 
-		profile := d.Get("profile").(string)
-		sharedCredentialsDir, err := homedir.Expand(d.Get("shared_credentials_dir").(string))
+		if v, ok := d.GetOk("shared_credentials_dir"); ok {
+			sharedCredentialsDir = v.(string)
+		}
+
+		tmpSharedCredentialsDir, err := homedir.Expand(sharedCredentialsDir)
 		if err != nil {
 			return nil, err
 		}
 
-		var credentialPath string
-		var configurePath string
-
-		if sharedCredentialsDir == "" {
+		if tmpSharedCredentialsDir == "" {
 			credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("HOME"), profile)
 			configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("HOME"), profile)
 			if runtime.GOOS == "windows" {
