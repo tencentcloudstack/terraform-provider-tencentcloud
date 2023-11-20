@@ -1574,6 +1574,20 @@ func resourceTencentCLoudPostgresqlInstanceDelete(d *schema.ResourceData, meta i
 		return outErr
 	}
 
+	// Wait for status to isolated
+	_ = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_ISOLATED {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("waiting for instance isolating"))
+	})
+
 	outErr = postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
 	if outErr != nil {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
