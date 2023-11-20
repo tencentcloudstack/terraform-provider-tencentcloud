@@ -1,3 +1,10 @@
+## 1.81.48 (November 20, 2023)
+
+ENHANCEMENTS:
+
+* provider: Update some interface input permissions; Add profile authentication ([#2302](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2302))
+* resource/tencentcloud_cam_role: Support set `session_duration`. ([#2320](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2320))
+
 ## 1.81.47 (November 17, 2023)
 
 FEATURES:
