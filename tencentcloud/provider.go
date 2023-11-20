@@ -2081,9 +2081,8 @@ const (
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
+	PROVIDER_SHARED_CREDENTIALS_DIR       = "TENCENTCLOUD_SHARED_CREDENTIALS_DIR"
 	PROVIDER_PROFILE                      = "TENCENTCLOUD_PROFILE"
-	PROVIDER_SHARED_CREDENTIALS_FILE      = "TENCENTCLOUD_SHARED_CREDENTIALS_FILE"
-	PROVIDER_SHARED_CONFIG_FILE           = "TENCENTCLOUD_SHARED_CONFIG_FILE"
 )
 
 const (
@@ -2122,7 +2121,6 @@ func Provider() *schema.Provider {
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_REGION, ""),
 				Description: "This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is ap-guangzhou.",
-				//InputDefault: "ap-guangzhou",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -2176,22 +2174,16 @@ func Provider() *schema.Provider {
 					},
 				},
 			},
-			"shared_config_file": {
+			"shared_credentials_dir": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CONFIG_FILE, ""),
-				Description: "The path to the shared configures file. If not set this defaults to ~/.tccli/default.configure.",
-			},
-			"shared_credentials_file": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_FILE, ""),
-				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli/default.credential.",
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_DIR, ""),
+				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli.",
 			},
 			"profile": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, "default"),
+				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, ""),
 				Description: "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
 			},
 		},
@@ -3947,12 +3939,7 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 		}
 
 		profile := d.Get("profile").(string)
-		sharedCredentialsFile, err := homedir.Expand(d.Get("shared_credentials_file").(string))
-		if err != nil {
-			return nil, err
-		}
-
-		sharedConfigFile, err := homedir.Expand(d.Get("shared_config_file").(string))
+		sharedCredentialsDir, err := homedir.Expand(d.Get("shared_credentials_dir").(string))
 		if err != nil {
 			return nil, err
 		}
@@ -3960,36 +3947,16 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 		var credentialPath string
 		var configurePath string
 
-		if sharedCredentialsFile == "" {
-			if profile == "" {
-				credentialPath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("HOME"))
-				if runtime.GOOS == "windows" {
-					credentialPath = fmt.Sprintf("%s/.tccli/default.credential", os.Getenv("USERPROFILE"))
-				}
-			} else {
-				credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("HOME"), profile)
-				if runtime.GOOS == "windows" {
-					credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("USERPROFILE"), profile)
-				}
+		if sharedCredentialsDir == "" {
+			credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("HOME"), profile)
+			configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("HOME"), profile)
+			if runtime.GOOS == "windows" {
+				credentialPath = fmt.Sprintf("%s/.tccli/%s.credential", os.Getenv("USERPROFILE"), profile)
+				configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
 			}
 		} else {
-			credentialPath = sharedCredentialsFile
-		}
-
-		if sharedConfigFile == "" {
-			if profile == "" {
-				configurePath = fmt.Sprintf("%s/.tccli/default.configure", os.Getenv("HOME"))
-				if runtime.GOOS == "windows" {
-					configurePath = fmt.Sprintf("%s/.tccli/default.configure", os.Getenv("USERPROFILE"))
-				}
-			} else {
-				configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("HOME"), profile)
-				if runtime.GOOS == "windows" {
-					configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
-				}
-			}
-		} else {
-			configurePath = sharedConfigFile
+			credentialPath = fmt.Sprintf("%s/%s.credential", sharedCredentialsDir, profile)
+			configurePath = fmt.Sprintf("%s/%s.configure", sharedCredentialsDir, profile)
 		}
 
 		providerConfig = make(map[string]interface{})

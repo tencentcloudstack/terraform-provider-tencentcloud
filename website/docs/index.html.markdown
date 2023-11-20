@@ -8,7 +8,8 @@ description: |-
 
 # TencentCloud Provider
 
-The TencentCloud provider is used to interact with many resources supported by [TencentCloud](https://intl.cloud.tencent.com).
+The TencentCloud provider is used to interact with many resources supported
+by [TencentCloud](https://intl.cloud.tencent.com).
 The provider needs to be configured with the proper credentials before it can be used.
 
 Use the navigation on the left to read about the available resources.
@@ -97,6 +98,7 @@ The following methods are supported, in this order, and explained below:
 
 - Static credentials
 - Environment variables
+- Shared credentials dir
 - Assume role
 
 ### Static credentials
@@ -105,7 +107,8 @@ The following methods are supported, in this order, and explained below:
 recommended, and risks secret leakage should this file ever be committed to a
 public version control system.
 
-Static credentials can be provided by adding an `secret_id` `secret_key` and `region` in-line in the tencentcloud provider block:
+Static credentials can be provided by adding an `secret_id` `secret_key` and `region` in-line in the tencentcloud
+provider block:
 
 Usage:
 
@@ -136,9 +139,35 @@ $ export TENCENTCLOUD_REGION="ap-guangzhou"
 $ terraform plan
 ```
 
+### Shared credentials dir
+
+You can use [Tencent Cloud credentials dir](https://cloud.tencent.com/document/product/440) to specify your credentials. The default location is `$HOME/.tccli` on Linux and macOS, And `"%USERPROFILE%\.tccli"` on Windows. You can optionally specify a different location in the Terraform configuration by providing the `shared_credentials_dir` argument or using the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. This method also supports a profile configuration and matching `TENCENTCLOUD_PROFILE` environment variable:
+
+Usage:
+
+On Linux/MacOS
+
+```hcl
+provider "tencentcloud" {
+  shared_credentials_dir = "/Users/tf_user/.tccli"
+  profile                = "default"
+}
+```
+
+On Windows
+
+```hcl
+provider "tencentcloud" {
+  shared_credentials_dir = "C:\\Users\\tf_user\\.tccli"
+  profile                = "default"
+}
+```
+
 ### Assume role
 
-If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role can be provided by adding an `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` and `assume_role_policy`(optional) in-line in the tencentcloud provider block:
+If provided with an assume role, Terraform will attempt to assume this role using the supplied credentials. Assume role
+can be provided by adding an `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration`
+and `assume_role_policy`(optional) in-line in the tencentcloud provider block:
 
 Usage:
 
@@ -157,7 +186,9 @@ provider "tencentcloud" {
 }
 ```
 
-The `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` can also provided via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
+The `assume_role_arn`, `assume_role_session_name`, `assume_role_session_duration` can also provided
+via `TENCENTCLOUD_ASSUME_ROLE_ARN`, `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME`
+and `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variables.
 
 Usage:
 
@@ -173,17 +204,32 @@ $ terraform plan
 
 ## Argument Reference
 
-In addition to generic provider arguments (e.g. alias and version), the following arguments are supported in the TencentCloud provider block:
+In addition to generic provider arguments (e.g. alias and version), the following arguments are supported in the
+TencentCloud provider block:
 
-* `secret_id` - (Required) This is the TencentCloud secret id. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.
-* `secret_key` - (Required) This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.
-* `security_token` - (Optional) TencentCloud security token of temporary access credentials. It can also be sourced from the `TENCENTCLOUD_SECURITY_TOKEN` environment variable. Notice: for supported products, please refer to: [temporary key supported products](https://intl.cloud.tencent.com/document/product/598/10588).
-* `region` - (Required) This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is `ap-guangzhou`.
-* `assume_role` - (Optional, Available in 1.33.1+) An `assume_role` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role` block may be in the configuration.
-* `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
+* `secret_id` - (Required) This is the TencentCloud secret id. It must be provided, but it can also be sourced from
+  the `TENCENTCLOUD_SECRET_ID` environment variable.
+* `secret_key` - (Required) This is the TencentCloud secret key. It must be provided, but it can also be sourced from
+  the `TENCENTCLOUD_SECRET_KEY` environment variable.
+* `security_token` - (Optional) TencentCloud security token of temporary access credentials. It can also be sourced from
+  the `TENCENTCLOUD_SECURITY_TOKEN` environment variable. Notice: for supported products, please refer
+  to: [temporary key supported products](https://intl.cloud.tencent.com/document/product/598/10588).
+* `region` - (Required) This is the TencentCloud region. It must be provided, but it can also be sourced from
+  the `TENCENTCLOUD_REGION` environment variables. The default input value is `ap-guangzhou`.
+* `assume_role` - (Optional, Available in 1.33.1+) An `assume_role` block (documented below). If provided, terraform
+  will attempt to assume this role using the supplied credentials. Only one `assume_role` block may be in the
+  configuration.
+* `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`.
+  Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`.
-The nested `assume_role` block supports the following:
-* `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN` environment variable.
-* `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
-* `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0 to 43200(seconds), and default is 7200 seconds. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
-* `policy` - (Optional) A more restrictive policy to apply to the temporary credentials. This gives you a way to further restrict the permissions for the resulting temporary security credentials. You cannot use the passed policy to grant permissions that are in excess of those allowed by the access policy of the role that is being assumed.
+  The nested `assume_role` block supports the following:
+* `role_arn` - (Required) The ARN of the role to assume. It can also be sourced from the `TENCENTCLOUD_ASSUME_ROLE_ARN`
+  environment variable.
+* `session_name` - (Required) The session name to use when making the AssumeRole call. It can also be sourced from
+  the `TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME` environment variable.
+* `session_duration` - (Required) The duration of the session when making the AssumeRole call. Its value ranges from 0
+  to 43200(seconds), and default is 7200 seconds. It can also be sourced from
+  the `TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION` environment variable.
+* `policy` - (Optional) A more restrictive policy to apply to the temporary credentials. This gives you a way to further
+  restrict the permissions for the resulting temporary security credentials. You cannot use the passed policy to grant
+  permissions that are in excess of those allowed by the access policy of the role that is being assumed.
