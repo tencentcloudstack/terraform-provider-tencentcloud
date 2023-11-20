@@ -177,12 +177,11 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				ConflictsWith: []string{"request_body"},
 			},
 			"raw_values_type": {
-				Type:          schema.TypeString,
-				Optional:      true,
-				Computed:      true,
-				Description:   "The type of raw Values. Conflict with `request_body`.",
-				ConflictsWith: []string{"request_body"},
-				AtLeastOneOf:  []string{"raw_values"},
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "The type of raw Values. Required with `request_body`.",
+				RequiredWith: []string{"raw_values"},
 			},
 			"request_body": {
 				Type:          schema.TypeString,
@@ -219,11 +218,13 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		clusterId = d.Get("cluster_id").(string)
-		addonName = d.Get("name").(string)
-		version   = d.Get("version").(string)
-		values    = d.Get("values").([]interface{})
-		reqBody   = d.Get("request_body").(string)
+		clusterId     = d.Get("cluster_id").(string)
+		addonName     = d.Get("name").(string)
+		version       = d.Get("version").(string)
+		values        = d.Get("values").([]interface{})
+		rawValues     *string
+		rawValuesType *string
+		reqBody       = d.Get("request_body").(string)
 	)
 
 	if version == "" {
@@ -242,9 +243,16 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	}
 
 	if reqBody == "" {
+		if v, ok := d.GetOk("raw_values"); ok {
+			rawValues = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("raw_values_type"); ok {
+			rawValuesType = helper.String(v.(string))
+		}
+
 		var reqErr error
 		v := helper.InterfacesStringsPoint(values)
-		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v, nil, nil)
+		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v, rawValues, rawValuesType)
 		if reqErr != nil {
 			return reqErr
 		}
@@ -363,18 +371,26 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id        = d.Id()
-		split     = strings.Split(id, FILED_SP)
-		clusterId = split[0]
-		addonName = split[1]
-		version   = d.Get("version").(string)
-		values    = d.Get("values").([]interface{})
-		reqBody   = d.Get("request_body").(string)
-		err       error
+		id            = d.Id()
+		split         = strings.Split(id, FILED_SP)
+		clusterId     = split[0]
+		addonName     = split[1]
+		version       = d.Get("version").(string)
+		values        = d.Get("values").([]interface{})
+		reqBody       = d.Get("request_body").(string)
+		err           error
+		rawValues     *string
+		rawValuesType *string
 	)
 
-	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") {
-		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values))
+	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") || d.HasChange("raw_values") || d.HasChange("raw_values_type") {
+		if v, ok := d.GetOk("raw_values"); ok {
+			rawValues = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("raw_values_type"); ok {
+			rawValuesType = helper.String(v.(string))
+		}
+		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values), rawValues, rawValuesType)
 	}
 
 	if err != nil {
