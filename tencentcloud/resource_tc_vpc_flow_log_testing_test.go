@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestAccTencentCloudMoveLeftVpcFlowLogResource_basic(t *testing.T) {
+func TestAccTencentCloudTestingVpcFlowLogResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -14,7 +14,7 @@ func TestAccTencentCloudMoveLeftVpcFlowLogResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMoveLeftVpcFlowLog,
+				Config: testAccTestingVpcFlowLog,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_flow_log.flow_log", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "iac-test-1"),
@@ -31,7 +31,7 @@ func TestAccTencentCloudMoveLeftVpcFlowLogResource_basic(t *testing.T) {
 				},
 			},
 			{
-				Config: testAccMoveLeftVpcFlowLogUpdate,
+				Config: testAccTestingVpcFlowLogUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc_flow_log.flow_log", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_flow_log.flow_log", "flow_log_name", "iac-test-2"),
@@ -42,7 +42,7 @@ func TestAccTencentCloudMoveLeftVpcFlowLogResource_basic(t *testing.T) {
 	})
 }
 
-const testAccMoveLeftVpcFlowLog = `
+const testAccTestingVpcFlowLog = `
 
 resource "tencentcloud_vpc_flow_log" "flow_log" {
   flow_log_name = "iac-test-1"
@@ -56,7 +56,7 @@ resource "tencentcloud_vpc_flow_log" "flow_log" {
 }
 `
 
-const testAccMoveLeftVpcFlowLogUpdate = `
+const testAccTestingVpcFlowLogUpdate = `
 resource "tencentcloud_vpc_flow_log" "flow_log" {
   flow_log_name = "iac-test-2"
   resource_type = "NETWORKINTERFACE"

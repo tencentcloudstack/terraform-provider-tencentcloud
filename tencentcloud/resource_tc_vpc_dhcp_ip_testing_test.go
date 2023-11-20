@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudMoveLeftVpcDhcpIpResource_basic(t *testing.T) {
+func TestAccTencentCloudTestingVpcDhcpIpResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -15,7 +15,7 @@ func TestAccTencentCloudMoveLeftVpcDhcpIpResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMoveLeftVpcDhcpIp,
+				Config: testAccTestingVpcDhcpIp,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_vpc_dhcp_ip.example", "id")),
 			},
 			{
@@ -27,7 +27,7 @@ func TestAccTencentCloudMoveLeftVpcDhcpIpResource_basic(t *testing.T) {
 	})
 }
 
-const testAccMoveLeftVpcDhcpIp = `
+const testAccTestingVpcDhcpIp = `
 
 resource "tencentcloud_vpc" "vpc" {
   name       = "vpc-example"

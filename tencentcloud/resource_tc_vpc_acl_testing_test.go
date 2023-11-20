@@ -6,14 +6,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudMoveLeftVpcAclRulesResource_Update(t *testing.T) {
+func TestAccTencentCloudTestingVpcAclRulesResource_Update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMoveLeftVpcACLConfig,
+				Config: testAccTestingVpcACLConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.0", "ACCEPT#192.168.1.0/24#80#TCP"),
@@ -23,7 +23,7 @@ func TestAccTencentCloudMoveLeftVpcAclRulesResource_Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMoveLeftVpcACLConfigUpdate,
+				Config: testAccTestingVpcACLConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.0", "ACCEPT#192.168.1.0/24#800#TCP"),
@@ -36,7 +36,7 @@ func TestAccTencentCloudMoveLeftVpcAclRulesResource_Update(t *testing.T) {
 	})
 }
 
-const testAccMoveLeftVpcACLConfig = defaultVpcVariable + `
+const testAccTestingVpcACLConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name
   cidr_block = var.vpc_cidr
@@ -55,7 +55,7 @@ resource "tencentcloud_vpc_acl" "foo" {
 }
 `
 
-const testAccMoveLeftVpcACLConfigUpdate = defaultVpcVariable + `
+const testAccTestingVpcACLConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name
   cidr_block = var.vpc_cidr

@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudMoveLeftVpcNetDetectResource_basic(t *testing.T) {
+func TestAccTencentCloudTestingVpcNetDetectResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -15,11 +15,11 @@ func TestAccTencentCloudMoveLeftVpcNetDetectResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMoveLeftVpcNetDetect,
+				Config: testAccTestingVpcNetDetect,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_vpc_net_detect.net_detect", "id")),
 			},
 			{
-				Config: testAccMoveLeftVpcNetDetectUpdate,
+				Config: testAccTestingVpcNetDetectUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_vpc_net_detect.net_detect", "net_detect_name", "terraform-for-test"),
 				),
@@ -33,7 +33,7 @@ func TestAccTencentCloudMoveLeftVpcNetDetectResource_basic(t *testing.T) {
 	})
 }
 
-const testAccMoveLeftVpcNetDetect = `
+const testAccTestingVpcNetDetect = `
 
 resource "tencentcloud_vpc_net_detect" "net_detect" {
   net_detect_name       = "terraform-test"
@@ -48,7 +48,7 @@ resource "tencentcloud_vpc_net_detect" "net_detect" {
 
 `
 
-const testAccMoveLeftVpcNetDetectUpdate = `
+const testAccTestingVpcNetDetectUpdate = `
 
 resource "tencentcloud_vpc_net_detect" "net_detect" {
   net_detect_name       = "terraform-for-test"

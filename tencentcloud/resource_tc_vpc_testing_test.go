@@ -5,14 +5,14 @@ import (
 	"testing"
 )
 
-func TestAccTencentCloudMoveLeftVpcV3Update(t *testing.T) {
+func TestAccTencentCloudTestingVpcV3Update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMoveLeftVpcConfig,
+				Config: testAccTestingVpcConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidr),
@@ -25,7 +25,7 @@ func TestAccTencentCloudMoveLeftVpcV3Update(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMoveLeftVpcConfigUpdate,
+				Config: testAccTestingVpcConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckVpcExists("tencentcloud_vpc.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", "cidr_block", defaultVpcCidrLess),
@@ -41,14 +41,14 @@ func TestAccTencentCloudMoveLeftVpcV3Update(t *testing.T) {
 	})
 }
 
-const testAccMoveLeftVpcConfig = defaultVpcVariable + `
+const testAccTestingVpcConfig = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name
   cidr_block = var.vpc_cidr
 }
 `
 
-const testAccMoveLeftVpcConfigUpdate = defaultVpcVariable + `
+const testAccTestingVpcConfigUpdate = defaultVpcVariable + `
 resource "tencentcloud_vpc" "foo" {
   name       = var.instance_name_update
   cidr_block = var.vpc_cidr_less
