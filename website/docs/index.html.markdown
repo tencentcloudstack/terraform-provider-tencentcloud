@@ -204,8 +204,8 @@ In addition to generic provider arguments (e.g. alias and version), the followin
 * `secret_key` - (Optional) This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.
 * `security_token` - (Optional) TencentCloud security token of temporary access credentials. It can also be sourced from the `TENCENTCLOUD_SECURITY_TOKEN` environment variable. Notice: for supported products, please refer to: [temporary key supported products](https://intl.cloud.tencent.com/document/product/598/10588).
 * `region` - (Optional) This is the TencentCloud region. It must be provided, but it can also be sourced from the `TENCENTCLOUD_REGION` environment variables. The default input value is `ap-guangzhou`.
-* `shared_credentials_dir` - (Optional) The path to the shared credentials file. If not set this defaults to ~/.tccli.
-* `profile` - (Optional) This is the Tencent profile name as set in the shared credentials file. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.
+* `shared_credentials_dir` - (Optional) The path to the shared credentials file. It can also be sourced from the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. If not set this defaults to ~/.tccli.
+* `profile` - (Optional) The profile name as set in the shared credentials. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.
 * `assume_role` - (Optional, Available in 1.33.1+) An `assume_role` block (documented below). If provided, terraform will attempt to assume this role using the supplied credentials. Only one `assume_role` block may be in the configuration.
 * `protocol` - (Optional, Available in 1.37.0+) The protocol of the API request. Valid values: `HTTP` and `HTTPS`. Default is `HTTPS`.
 * `domain` - (Optional, Available in 1.37.0+) The root domain of the API request, Default is `tencentcloudapi.com`. The nested `assume_role` block supports the following:

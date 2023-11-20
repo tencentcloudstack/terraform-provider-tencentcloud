@@ -2184,13 +2184,13 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SHARED_CREDENTIALS_DIR, nil),
-				Description: "The path to the shared credentials file. If not set this defaults to ~/.tccli.",
+				Description: "The path to the shared credentials file. It can also be sourced from the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. If not set this defaults to ~/.tccli.",
 			},
 			"profile": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_PROFILE, nil),
-				Description: "The profile for API operations. If not set, the default profile created with `tccli configure` will be used.",
+				Description: "The profile name as set in the shared credentials. It can also be sourced from the `TENCENTCLOUD_PROFILE` environment variable. If not set, the default profile created with `tccli configure` will be used.",
 			},
 		},
 
