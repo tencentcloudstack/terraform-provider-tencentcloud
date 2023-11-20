@@ -3850,12 +3850,22 @@ func Provider() *schema.Provider {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	var getProviderConfig = func(str string, key string) string {
-		if str == "" {
-			value, err := getConfigFromProfile(d, key)
-			if err == nil && value != nil {
-				str = value.(string)
-			}
+	//var getProviderConfig = func(str string, key string) string {
+	//	if str == "" {
+	//		value, err := getConfigFromProfile(d, key)
+	//		if err == nil && value != nil {
+	//			str = value.(string)
+	//		}
+	//	}
+	//
+	//	return str
+	//}
+
+	var getProviderConfig = func(key string) string {
+		var str string
+		value, err := getConfigFromProfile(d, key)
+		if err == nil && value != nil {
+			str = value.(string)
 		}
 
 		return str
@@ -3873,13 +3883,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if v, ok := d.GetOk("secret_id"); ok {
 		secretId = v.(string)
 	} else {
-		secretId = getProviderConfig(secretId, "secretId")
+		secretId = getProviderConfig("secretId")
 	}
 
 	if v, ok := d.GetOk("secret_key"); ok {
 		secretKey = v.(string)
 	} else {
-		secretKey = getProviderConfig(secretKey, "secretKey")
+		secretKey = getProviderConfig("secretKey")
 	}
 
 	if v, ok := d.GetOk("security_token"); ok {
@@ -3889,7 +3899,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	if v, ok := d.GetOk("region"); ok {
 		region = v.(string)
 	} else {
-		region = getProviderConfig(region, "region")
+		region = getProviderConfig("region")
 		if region == "" {
 			region = DEFAULT_REGION
 		}
