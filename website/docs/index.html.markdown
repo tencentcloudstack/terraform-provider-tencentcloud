@@ -98,7 +98,7 @@ The following methods are supported, in this order, and explained below:
 - Static credentials
 - Environment variables
 - Assume role
-- Shared credentials directory
+- Shared credentials
 
 ### Static credentials
 
@@ -172,7 +172,7 @@ $ export TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION=3600
 $ terraform plan
 ```
 
-### Shared credentials directory
+### Shared credentials
 
 You can use [Tencent Cloud credentials](https://www.tencentcloud.com/document/product/1013/33464) to specify your credentials. The default location is `$HOME/.tccli` on Linux and macOS, And `"%USERPROFILE%\.tccli"` on Windows. You can optionally specify a different location in the Terraform configuration by providing the `shared_credentials_dir` argument or using the `TENCENTCLOUD_SHARED_CREDENTIALS_DIR` environment variable. This method also supports a `profile` configuration and matching `TENCENTCLOUD_PROFILE` environment variable:
 
