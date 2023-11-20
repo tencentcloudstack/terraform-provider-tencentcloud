@@ -1600,7 +1600,7 @@ type CreateDataEngineRequestParams struct {
 	// 计费类型，后付费：0，预付费：1。当前只支持后付费，不填默认为后付费。
 	PayMode *int64 `json:"PayMode,omitnil" name:"PayMode"`
 
-	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认3600
+	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
 	TimeSpan *int64 `json:"TimeSpan,omitnil" name:"TimeSpan"`
 
 	// 资源使用时长的单位，后付费：s，预付费：m。默认为s
@@ -1656,6 +1656,12 @@ type CreateDataEngineRequestParams struct {
 
 	// 自动授权
 	AutoAuthorization *bool `json:"AutoAuthorization,omitnil" name:"AutoAuthorization"`
+
+	// 引擎网络ID
+	EngineNetworkId *string `json:"EngineNetworkId,omitnil" name:"EngineNetworkId"`
+
+	// 引擎世代，SuperSQL：代表supersql引擎，Native：代表标准引擎。默认值为SuperSQL
+	EngineGeneration *string `json:"EngineGeneration,omitnil" name:"EngineGeneration"`
 }
 
 type CreateDataEngineRequest struct {
@@ -1697,7 +1703,7 @@ type CreateDataEngineRequest struct {
 	// 计费类型，后付费：0，预付费：1。当前只支持后付费，不填默认为后付费。
 	PayMode *int64 `json:"PayMode,omitnil" name:"PayMode"`
 
-	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认3600
+	// 资源使用时长，后付费：固定填3600，预付费：最少填1，代表购买资源一个月，最长不超过120。默认1
 	TimeSpan *int64 `json:"TimeSpan,omitnil" name:"TimeSpan"`
 
 	// 资源使用时长的单位，后付费：s，预付费：m。默认为s
@@ -1753,6 +1759,12 @@ type CreateDataEngineRequest struct {
 
 	// 自动授权
 	AutoAuthorization *bool `json:"AutoAuthorization,omitnil" name:"AutoAuthorization"`
+
+	// 引擎网络ID
+	EngineNetworkId *string `json:"EngineNetworkId,omitnil" name:"EngineNetworkId"`
+
+	// 引擎世代，SuperSQL：代表supersql引擎，Native：代表标准引擎。默认值为SuperSQL
+	EngineGeneration *string `json:"EngineGeneration,omitnil" name:"EngineGeneration"`
 }
 
 func (r *CreateDataEngineRequest) ToJsonString() string {
@@ -1798,6 +1810,8 @@ func (r *CreateDataEngineRequest) FromJsonString(s string) error {
 	delete(f, "ElasticLimit")
 	delete(f, "SessionResourceTemplate")
 	delete(f, "AutoAuthorization")
+	delete(f, "EngineNetworkId")
+	delete(f, "EngineGeneration")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDataEngineRequest has unknown keys!", "")
 	}
@@ -3798,6 +3812,39 @@ type DMSTableInfo struct {
 	Asset *Asset `json:"Asset,omitnil" name:"Asset"`
 }
 
+type DataEngineBasicInfo struct {
+	// DataEngine名称
+	DataEngineName *string `json:"DataEngineName,omitnil" name:"DataEngineName"`
+
+	// 数据引擎状态  -2已删除 -1失败 0初始化中 1挂起 2运行中 3准备删除 4删除中
+	State *int64 `json:"State,omitnil" name:"State"`
+
+	// 创建时间
+	CreateTime *int64 `json:"CreateTime,omitnil" name:"CreateTime"`
+
+	// 更新时间
+	UpdateTime *int64 `json:"UpdateTime,omitnil" name:"UpdateTime"`
+
+	// 返回信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Message *string `json:"Message,omitnil" name:"Message"`
+
+	// 引擎id
+	DataEngineId *string `json:"DataEngineId,omitnil" name:"DataEngineId"`
+
+	// 引擎类型，有效值：PrestoSQL/SparkSQL/SparkBatch
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataEngineType *string `json:"DataEngineType,omitnil" name:"DataEngineType"`
+
+	// 用户ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AppId *int64 `json:"AppId,omitnil" name:"AppId"`
+
+	// 账号ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UserUin *string `json:"UserUin,omitnil" name:"UserUin"`
+}
+
 type DataEngineConfigInstanceInfo struct {
 	// 引擎ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -4021,6 +4068,14 @@ type DataEngineInfo struct {
 	// 自动授权开关
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AutoAuthorization *bool `json:"AutoAuthorization,omitnil" name:"AutoAuthorization"`
+
+	// 引擎版本，支持Native/SuperSQL
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineGeneration *string `json:"EngineGeneration,omitnil" name:"EngineGeneration"`
+
+	// 引擎详细类型，支持：SparkSQL/SparkBatch/PrestoSQL/Kyuubi
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineTypeDetail *string `json:"EngineTypeDetail,omitnil" name:"EngineTypeDetail"`
 }
 
 type DataFormat struct {
@@ -5239,6 +5294,94 @@ func (r *DescribeDMSTablesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeDataEngineEventsRequestParams struct {
+	// 虚拟集群名称
+	DataEngineName *string `json:"DataEngineName,omitnil" name:"DataEngineName"`
+
+	// 返回数量，默认为10，最大为100
+	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 偏移量，默认为0
+	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+}
+
+type DescribeDataEngineEventsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 虚拟集群名称
+	DataEngineName *string `json:"DataEngineName,omitnil" name:"DataEngineName"`
+
+	// 返回数量，默认为10，最大为100
+	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 偏移量，默认为0
+	Offset *int64 `json:"Offset,omitnil" name:"Offset"`
+}
+
+func (r *DescribeDataEngineEventsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataEngineEventsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataEngineName")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataEngineEventsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDataEngineEventsResponseParams struct {
+	// 事件详细信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Events []*HouseEventsInfo `json:"Events,omitnil" name:"Events"`
+
+	// 分页号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Page *int64 `json:"Page,omitnil" name:"Page"`
+
+	// 分页大小
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Size *int64 `json:"Size,omitnil" name:"Size"`
+
+	// 总页数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalPages *int64 `json:"TotalPages,omitnil" name:"TotalPages"`
+
+	// 总条数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeDataEngineEventsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDataEngineEventsResponseParams `json:"Response"`
+}
+
+func (r *DescribeDataEngineEventsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDataEngineEventsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeDataEngineImageVersionsRequestParams struct {
 	// 引擎类型：SQL、SparkBatch
 	EngineType *string `json:"EngineType,omitnil" name:"EngineType"`
@@ -5446,6 +5589,12 @@ type DescribeDataEnginesRequestParams struct {
 
 	// 网络配置列表，若传入该参数，则返回网络配置关联的计算引擎
 	DatasourceConnectionNameSet []*string `json:"DatasourceConnectionNameSet,omitnil" name:"DatasourceConnectionNameSet"`
+
+	// 引擎版本，有效值：Native/SuperSQL，为空时默认获取SuperSQL引擎
+	EngineGeneration *string `json:"EngineGeneration,omitnil" name:"EngineGeneration"`
+
+	// 引擎类型，支持：SparkSQL、SparkBatch、PrestoSQL、Kyuubi
+	EngineTypeDetail *string `json:"EngineTypeDetail,omitnil" name:"EngineTypeDetail"`
 }
 
 type DescribeDataEnginesRequest struct {
@@ -5483,6 +5632,12 @@ type DescribeDataEnginesRequest struct {
 
 	// 网络配置列表，若传入该参数，则返回网络配置关联的计算引擎
 	DatasourceConnectionNameSet []*string `json:"DatasourceConnectionNameSet,omitnil" name:"DatasourceConnectionNameSet"`
+
+	// 引擎版本，有效值：Native/SuperSQL，为空时默认获取SuperSQL引擎
+	EngineGeneration *string `json:"EngineGeneration,omitnil" name:"EngineGeneration"`
+
+	// 引擎类型，支持：SparkSQL、SparkBatch、PrestoSQL、Kyuubi
+	EngineTypeDetail *string `json:"EngineTypeDetail,omitnil" name:"EngineTypeDetail"`
 }
 
 func (r *DescribeDataEnginesRequest) ToJsonString() string {
@@ -5508,6 +5663,8 @@ func (r *DescribeDataEnginesRequest) FromJsonString(s string) error {
 	delete(f, "EngineExecType")
 	delete(f, "EngineType")
 	delete(f, "DatasourceConnectionNameSet")
+	delete(f, "EngineGeneration")
+	delete(f, "EngineTypeDetail")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDataEnginesRequest has unknown keys!", "")
 	}
@@ -7201,6 +7358,140 @@ func (r *DescribeTableResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeTablesNameRequestParams struct {
+	// 列出该数据库下所属数据表。
+	DatabaseName *string `json:"DatabaseName,omitnil" name:"DatabaseName"`
+
+	// 返回数量，默认为10，最大值为100。
+	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 数据偏移量，从0开始，默认为0。
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 过滤条件，如下支持的过滤类型，传参Name应为其一
+	// table-name - String - （过滤条件）数据表名称,形如：table-001。
+	// table-id - String - （过滤条件）table id形如：12342。
+	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+
+	// 指定查询的数据源名称，默认为DataLakeCatalog
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil" name:"DatasourceConnectionName"`
+
+	// 起始时间：用于对更新时间的筛选，格式为yyyy-mm-dd HH:MM:SS
+	StartTime *string `json:"StartTime,omitnil" name:"StartTime"`
+
+	// 终止时间：用于对更新时间的筛选，格式为yyyy-mm-dd HH:MM:SS
+	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
+
+	// 排序字段，支持：CreateTime（创建时间）、UpdateTime（更新时间）、StorageSize（存储空间）、RecordCount（行数）、Name（表名称）（不传则默认按name升序）
+	Sort *string `json:"Sort,omitnil" name:"Sort"`
+
+	// 排序字段，false：降序（默认）；true：升序
+	Asc *bool `json:"Asc,omitnil" name:"Asc"`
+
+	// table type，表类型查询,可用值:EXTERNAL_TABLE,INDEX_TABLE,MANAGED_TABLE,MATERIALIZED_VIEW,TABLE,VIEW,VIRTUAL_VIEW
+	TableType *string `json:"TableType,omitnil" name:"TableType"`
+
+	// 筛选字段-表格式：不传（默认）为查全部；LAKEFS：托管表；ICEBERG：非托管iceberg表；HIVE：非托管hive表；OTHER：非托管其它；
+	TableFormat *string `json:"TableFormat,omitnil" name:"TableFormat"`
+}
+
+type DescribeTablesNameRequest struct {
+	*tchttp.BaseRequest
+	
+	// 列出该数据库下所属数据表。
+	DatabaseName *string `json:"DatabaseName,omitnil" name:"DatabaseName"`
+
+	// 返回数量，默认为10，最大值为100。
+	Limit *int64 `json:"Limit,omitnil" name:"Limit"`
+
+	// 数据偏移量，从0开始，默认为0。
+	Offset *uint64 `json:"Offset,omitnil" name:"Offset"`
+
+	// 过滤条件，如下支持的过滤类型，传参Name应为其一
+	// table-name - String - （过滤条件）数据表名称,形如：table-001。
+	// table-id - String - （过滤条件）table id形如：12342。
+	Filters []*Filter `json:"Filters,omitnil" name:"Filters"`
+
+	// 指定查询的数据源名称，默认为DataLakeCatalog
+	DatasourceConnectionName *string `json:"DatasourceConnectionName,omitnil" name:"DatasourceConnectionName"`
+
+	// 起始时间：用于对更新时间的筛选，格式为yyyy-mm-dd HH:MM:SS
+	StartTime *string `json:"StartTime,omitnil" name:"StartTime"`
+
+	// 终止时间：用于对更新时间的筛选，格式为yyyy-mm-dd HH:MM:SS
+	EndTime *string `json:"EndTime,omitnil" name:"EndTime"`
+
+	// 排序字段，支持：CreateTime（创建时间）、UpdateTime（更新时间）、StorageSize（存储空间）、RecordCount（行数）、Name（表名称）（不传则默认按name升序）
+	Sort *string `json:"Sort,omitnil" name:"Sort"`
+
+	// 排序字段，false：降序（默认）；true：升序
+	Asc *bool `json:"Asc,omitnil" name:"Asc"`
+
+	// table type，表类型查询,可用值:EXTERNAL_TABLE,INDEX_TABLE,MANAGED_TABLE,MATERIALIZED_VIEW,TABLE,VIEW,VIRTUAL_VIEW
+	TableType *string `json:"TableType,omitnil" name:"TableType"`
+
+	// 筛选字段-表格式：不传（默认）为查全部；LAKEFS：托管表；ICEBERG：非托管iceberg表；HIVE：非托管hive表；OTHER：非托管其它；
+	TableFormat *string `json:"TableFormat,omitnil" name:"TableFormat"`
+}
+
+func (r *DescribeTablesNameRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTablesNameRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DatabaseName")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	delete(f, "DatasourceConnectionName")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Sort")
+	delete(f, "Asc")
+	delete(f, "TableType")
+	delete(f, "TableFormat")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTablesNameRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTablesNameResponseParams struct {
+	// 数据表名称对象列表。
+	TableNameList []*string `json:"TableNameList,omitnil" name:"TableNameList"`
+
+	// 实例总数。
+	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeTablesNameResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTablesNameResponseParams `json:"Response"`
+}
+
+func (r *DescribeTablesNameResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTablesNameResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTablesRequestParams struct {
 	// 列出该数据库下所属数据表。
 	DatabaseName *string `json:"DatabaseName,omitnil" name:"DatabaseName"`
@@ -7526,6 +7817,66 @@ func (r *DescribeTasksResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTasksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUpdatableDataEnginesRequestParams struct {
+	// 引擎配置操作命令，UpdateSparkSQLLakefsPath 更新托管表路径，UpdateSparkSQLResultPath 更新结果桶路径
+	DataEngineConfigCommand *string `json:"DataEngineConfigCommand,omitnil" name:"DataEngineConfigCommand"`
+}
+
+type DescribeUpdatableDataEnginesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 引擎配置操作命令，UpdateSparkSQLLakefsPath 更新托管表路径，UpdateSparkSQLResultPath 更新结果桶路径
+	DataEngineConfigCommand *string `json:"DataEngineConfigCommand,omitnil" name:"DataEngineConfigCommand"`
+}
+
+func (r *DescribeUpdatableDataEnginesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUpdatableDataEnginesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DataEngineConfigCommand")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUpdatableDataEnginesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUpdatableDataEnginesResponseParams struct {
+	// 集群基础信息
+	DataEngineBasicInfos []*DataEngineBasicInfo `json:"DataEngineBasicInfos,omitnil" name:"DataEngineBasicInfos"`
+
+	// 集群个数
+	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeUpdatableDataEnginesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeUpdatableDataEnginesResponseParams `json:"Response"`
+}
+
+func (r *DescribeUpdatableDataEnginesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUpdatableDataEnginesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8979,6 +9330,20 @@ type HiveInfo struct {
 	// 是否开启Kerberos
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KerberosEnable *bool `json:"KerberosEnable,omitnil" name:"KerberosEnable"`
+}
+
+type HouseEventsInfo struct {
+	// 事件时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Time []*string `json:"Time,omitnil" name:"Time"`
+
+	// 事件类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EventsAction []*string `json:"EventsAction,omitnil" name:"EventsAction"`
+
+	// 集群信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterInfo []*string `json:"ClusterInfo,omitnil" name:"ClusterInfo"`
 }
 
 type IpPortPair struct {

@@ -1233,6 +1233,7 @@ MapReduce(EMR)
   Data Source
     tencentcloud_emr
     tencentcloud_emr_nodes
+	tencentcloud_emr_cvm_quota
 
   Resource
     tencentcloud_emr_cluster
@@ -1248,6 +1249,8 @@ DNSPOD
     tencentcloud_dnspod_modify_domain_owner_operation
     tencentcloud_dnspod_download_snapshot_operation
     tencentcloud_dnspod_custom_line
+    tencentcloud_dnspod_snapshot_config
+    tencentcloud_dnspod_domain_lock
 
   Data Source
     tencentcloud_dnspod_records
@@ -1922,6 +1925,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_check_data_engine_image_can_be_rollback
     tencentcloud_dlc_check_data_engine_image_can_be_upgrade
     tencentcloud_dlc_check_data_engine_config_pairs_validity
+    tencentcloud_dlc_describe_updatable_data_engines
 
   Resource
     tencentcloud_dlc_work_group
@@ -1936,6 +1940,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_renew_data_engine_operation
     tencentcloud_dlc_restart_data_engine_operation
     tencentcloud_dlc_switch_data_engine_image_operation
+    tencentcloud_dlc_update_data_engine_config_operation
     tencentcloud_dlc_upgrade_data_engine_image_operation
     tencentcloud_dlc_user_data_engine_config
     tencentcloud_dlc_update_row_filter_operation
@@ -2192,6 +2197,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_availability_regions":                         dataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
+			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
 			"tencentcloud_availability_zones":                           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
@@ -2901,6 +2907,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_engine_usage_info":               dataSourceTencentCloudDlcDescribeEngineUsageInfo(),
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
+			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 		},
@@ -3415,6 +3422,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_modify_record_group_operation":                resourceTencentCloudDnspodModifyRecordGroupOperation(),
 			"tencentcloud_dnspod_download_snapshot_operation":                  resourceTencentCloudDnspodDownloadSnapshotOperation(),
 			"tencentcloud_dnspod_custom_line":                                  resourceTencentCloudDnspodCustomLine(),
+			"tencentcloud_dnspod_snapshot_config":                              resourceTencentCloudDnspodSnapshotConfig(),
+			"tencentcloud_dnspod_domain_lock":                                  resourceTencentCloudDnspodDomainLock(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
 			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
@@ -3761,6 +3770,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_attach_work_group_policy_operation":              resourceTencentCloudDlcAttachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_detach_work_group_policy_operation":              resourceTencentCloudDlcDetachWorkGroupPolicyOperation(),
 			"tencentcloud_dlc_switch_data_engine_image_operation":              resourceTencentCloudDlcSwitchDataEngineImageOperation(),
+			"tencentcloud_dlc_update_data_engine_config_operation":             resourceTencentCloudDlcUpdateDataEngineConfigOperation(),
 			"tencentcloud_dlc_upgrade_data_engine_image_operation":             resourceTencentCloudDlcUpgradeDataEngineImageOperation(),
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             resourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
 			"tencentcloud_dlc_update_row_filter_operation":                     resourceTencentCloudDlcUpdateRowFilterOperation(),

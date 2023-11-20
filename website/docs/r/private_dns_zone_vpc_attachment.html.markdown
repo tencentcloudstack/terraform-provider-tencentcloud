@@ -69,14 +69,14 @@ The following arguments are supported:
 
 The `account_vpc_set` object supports the following:
 
-* `region` - (Required, String) Vpc region.
-* `uin` - (Required, String) Vpc owner uin. To grant role authorization to this account.
-* `uniq_vpc_id` - (Required, String) Uniq Vpc Id.
+* `region` - (Required, String, ForceNew) Vpc region.
+* `uin` - (Required, String, ForceNew) Vpc owner uin. To grant role authorization to this account.
+* `uniq_vpc_id` - (Required, String, ForceNew) Uniq Vpc Id.
 
 The `vpc_set` object supports the following:
 
-* `region` - (Required, String) Vpc region.
-* `uniq_vpc_id` - (Required, String) Uniq Vpc Id.
+* `region` - (Required, String, ForceNew) Vpc region.
+* `uniq_vpc_id` - (Required, String, ForceNew) Uniq Vpc Id.
 
 ## Attributes Reference
 

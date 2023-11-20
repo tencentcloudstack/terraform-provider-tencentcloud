@@ -1224,10 +1224,18 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 	request.Volume = &volumeSize
 	request.WaitSwitch = &waitSwitch
 	request.FastUpgrade = &fastUpgrade
-	request.DeployMode = &slaveDeployMode
-	request.SlaveZone = &firstSlaveZone
-	request.BackupZone = &secondSlaveZone
-	request.ProtectMode = &slaveSyncMode
+	if slaveDeployMode != -1 {
+		request.DeployMode = &slaveDeployMode
+	}
+	if firstSlaveZone != "" {
+		request.SlaveZone = &firstSlaveZone
+	}
+	if secondSlaveZone != "" {
+		request.BackupZone = &secondSlaveZone
+	}
+	if slaveSyncMode != -1 {
+		request.ProtectMode = &slaveSyncMode
+	}
 	if deviceType != "" {
 		request.DeviceType = &deviceType
 	}

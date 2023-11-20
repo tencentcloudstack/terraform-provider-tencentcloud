@@ -98,11 +98,13 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachment() *schema.Resource {
 						"uniq_vpc_id": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Uniq Vpc Id.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Vpc region.",
 						},
 					},
@@ -120,16 +122,19 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachment() *schema.Resource {
 						"uniq_vpc_id": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Uniq Vpc Id.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Vpc region.",
 						},
 						"uin": {
 							Type:        schema.TypeString,
 							Required:    true,
+							ForceNew:    true,
 							Description: "Vpc owner uin. To grant role authorization to this account.",
 						},
 					},

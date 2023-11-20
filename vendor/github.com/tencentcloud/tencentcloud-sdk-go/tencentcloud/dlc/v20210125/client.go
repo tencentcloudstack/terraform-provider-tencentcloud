@@ -291,6 +291,7 @@ func NewAlterDMSTableResponse() (response *AlterDMSTableResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -303,6 +304,7 @@ func (c *Client) AlterDMSTable(request *AlterDMSTableRequest) (response *AlterDM
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
@@ -2812,6 +2814,7 @@ func NewDeleteDataEngineResponse() (response *DeleteDataEngineResponse) {
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_DATAENGINENOTFOUND = "ResourceNotFound.DataEngineNotFound"
+//  RESOURCENOTFOUND_DATAENGINENOTUNIQUE = "ResourceNotFound.DataEngineNotUnique"
 //  UNAUTHORIZEDOPERATION_DELETECOMPUTINGENGINE = "UnauthorizedOperation.DeleteComputingEngine"
 //  UNAUTHORIZEDOPERATION_NOPAYMENTAUTHORITY = "UnauthorizedOperation.NoPaymentAuthority"
 func (c *Client) DeleteDataEngine(request *DeleteDataEngineRequest) (response *DeleteDataEngineResponse, err error) {
@@ -2844,6 +2847,7 @@ func (c *Client) DeleteDataEngine(request *DeleteDataEngineRequest) (response *D
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_DATAENGINENOTFOUND = "ResourceNotFound.DataEngineNotFound"
+//  RESOURCENOTFOUND_DATAENGINENOTUNIQUE = "ResourceNotFound.DataEngineNotUnique"
 //  UNAUTHORIZEDOPERATION_DELETECOMPUTINGENGINE = "UnauthorizedOperation.DeleteComputingEngine"
 //  UNAUTHORIZEDOPERATION_NOPAYMENTAUTHORITY = "UnauthorizedOperation.NoPaymentAuthority"
 func (c *Client) DeleteDataEngineWithContext(ctx context.Context, request *DeleteDataEngineRequest) (response *DeleteDataEngineResponse, err error) {
@@ -3544,6 +3548,55 @@ func (c *Client) DescribeDataEngineWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeDataEngineEventsRequest() (request *DescribeDataEngineEventsRequest) {
+    request = &DescribeDataEngineEventsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dlc", APIVersion, "DescribeDataEngineEvents")
+    
+    
+    return
+}
+
+func NewDescribeDataEngineEventsResponse() (response *DescribeDataEngineEventsResponse) {
+    response = &DescribeDataEngineEventsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDataEngineEvents
+// 查询数据引擎事件
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_MONITORCOMPUTINGENGINE = "UnauthorizedOperation.MonitorComputingEngine"
+func (c *Client) DescribeDataEngineEvents(request *DescribeDataEngineEventsRequest) (response *DescribeDataEngineEventsResponse, err error) {
+    return c.DescribeDataEngineEventsWithContext(context.Background(), request)
+}
+
+// DescribeDataEngineEvents
+// 查询数据引擎事件
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_MONITORCOMPUTINGENGINE = "UnauthorizedOperation.MonitorComputingEngine"
+func (c *Client) DescribeDataEngineEventsWithContext(ctx context.Context, request *DescribeDataEngineEventsRequest) (response *DescribeDataEngineEventsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDataEngineEventsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDataEngineEvents require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDataEngineEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDataEngineImageVersionsRequest() (request *DescribeDataEngineImageVersionsRequest) {
     request = &DescribeDataEngineImageVersionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3702,6 +3755,7 @@ func NewDescribeDataEnginesResponse() (response *DescribeDataEnginesResponse) {
 //  FAILEDOPERATION_GETUSERINFOFAILED = "FailedOperation.GetUserInfoFailed"
 //  FAILEDOPERATION_HTTPCLIENTDOREQUESTFAILED = "FailedOperation.HttpClientDoRequestFailed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DESCRIBEDATAENGINESSORTBYTYPENOTMATCH = "InvalidParameter.DescribeDataEnginesSortByTypeNotMatch"
 //  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
@@ -3717,6 +3771,7 @@ func (c *Client) DescribeDataEngines(request *DescribeDataEnginesRequest) (respo
 //  FAILEDOPERATION_GETUSERINFOFAILED = "FailedOperation.GetUserInfoFailed"
 //  FAILEDOPERATION_HTTPCLIENTDOREQUESTFAILED = "FailedOperation.HttpClientDoRequestFailed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_DESCRIBEDATAENGINESSORTBYTYPENOTMATCH = "InvalidParameter.DescribeDataEnginesSortByTypeNotMatch"
 //  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
@@ -5148,6 +5203,61 @@ func (c *Client) DescribeTablesWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeTablesNameRequest() (request *DescribeTablesNameRequest) {
+    request = &DescribeTablesNameRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dlc", APIVersion, "DescribeTablesName")
+    
+    
+    return
+}
+
+func NewDescribeTablesNameResponse() (response *DescribeTablesNameResponse) {
+    response = &DescribeTablesNameResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeTablesName
+// 本接口（DescribeTables）用于查询数据表名称列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_DATASOURCENOTFOUND = "ResourceNotFound.DatasourceNotFound"
+func (c *Client) DescribeTablesName(request *DescribeTablesNameRequest) (response *DescribeTablesNameResponse, err error) {
+    return c.DescribeTablesNameWithContext(context.Background(), request)
+}
+
+// DescribeTablesName
+// 本接口（DescribeTables）用于查询数据表名称列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND_DATASOURCENOTFOUND = "ResourceNotFound.DatasourceNotFound"
+func (c *Client) DescribeTablesNameWithContext(ctx context.Context, request *DescribeTablesNameRequest) (response *DescribeTablesNameResponse, err error) {
+    if request == nil {
+        request = NewDescribeTablesNameRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeTablesName require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeTablesNameResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTaskResultRequest() (request *DescribeTaskResultRequest) {
     request = &DescribeTaskResultRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5282,6 +5392,65 @@ func (c *Client) DescribeTasksWithContext(ctx context.Context, request *Describe
     request.SetContext(ctx)
     
     response = NewDescribeTasksResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeUpdatableDataEnginesRequest() (request *DescribeUpdatableDataEnginesRequest) {
+    request = &DescribeUpdatableDataEnginesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dlc", APIVersion, "DescribeUpdatableDataEngines")
+    
+    
+    return
+}
+
+func NewDescribeUpdatableDataEnginesResponse() (response *DescribeUpdatableDataEnginesResponse) {
+    response = &DescribeUpdatableDataEnginesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeUpdatableDataEngines
+// 查询可更新配置的引擎列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDDATAENGINEDESCRIPTION = "InvalidParameter.InvalidDataEngineDescription"
+//  INVALIDPARAMETER_INVALIDENGINEEXECTYPE = "InvalidParameter.InvalidEngineExecType"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeUpdatableDataEngines(request *DescribeUpdatableDataEnginesRequest) (response *DescribeUpdatableDataEnginesResponse, err error) {
+    return c.DescribeUpdatableDataEnginesWithContext(context.Background(), request)
+}
+
+// DescribeUpdatableDataEngines
+// 查询可更新配置的引擎列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDDATAENGINEDESCRIPTION = "InvalidParameter.InvalidDataEngineDescription"
+//  INVALIDPARAMETER_INVALIDENGINEEXECTYPE = "InvalidParameter.InvalidEngineExecType"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeUpdatableDataEnginesWithContext(ctx context.Context, request *DescribeUpdatableDataEnginesRequest) (response *DescribeUpdatableDataEnginesResponse, err error) {
+    if request == nil {
+        request = NewDescribeUpdatableDataEnginesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeUpdatableDataEngines require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeUpdatableDataEnginesResponse()
     err = c.Send(request, response)
     return
 }
@@ -5543,6 +5712,7 @@ func NewDescribeUsersResponse() (response *DescribeUsersResponse) {
 //  FAILEDOPERATION_GETUSERINFOFAILED = "FailedOperation.GetUserInfoFailed"
 //  FAILEDOPERATION_GETWORKGROUPINFOFAILED = "FailedOperation.GetWorkGroupInfoFailed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER_INVALIDACCESSPOLICY = "InvalidParameter.InvalidAccessPolicy"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
@@ -5558,6 +5728,7 @@ func (c *Client) DescribeUsers(request *DescribeUsersRequest) (response *Describ
 //  FAILEDOPERATION_GETUSERINFOFAILED = "FailedOperation.GetUserInfoFailed"
 //  FAILEDOPERATION_GETWORKGROUPINFOFAILED = "FailedOperation.GetWorkGroupInfoFailed"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
 //  INVALIDPARAMETER_INVALIDACCESSPOLICY = "InvalidParameter.InvalidAccessPolicy"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"

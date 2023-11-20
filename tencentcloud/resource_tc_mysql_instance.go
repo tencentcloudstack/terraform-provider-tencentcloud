@@ -1051,7 +1051,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 /*
    [master] and [dr] and [ro] all need update
 */
-func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}, isReadonly bool) error {
 
 	logId := getLogId(ctx)
 
@@ -1088,64 +1088,115 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
+	if isReadonly {
+		if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
 
-		memSize := int64(d.Get("mem_size").(int))
-		cpu := int64(d.Get("cpu").(int))
-		volumeSize := int64(d.Get("volume_size").(int))
-		slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
-		slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
-		deviceType := ""
-		firstSlaveZone := ""
-		secondSlaveZone := ""
+			memSize := int64(d.Get("mem_size").(int))
+			cpu := int64(d.Get("cpu").(int))
+			volumeSize := int64(d.Get("volume_size").(int))
+			deviceType := ""
 
-		fastUpgrade := int64(0)
-		if v, ok := d.GetOk("fast_upgrade"); ok {
-			fastUpgrade = int64(v.(int))
-		}
-		if v, ok := d.GetOk("device_type"); ok {
-			deviceType = v.(string)
-		}
+			fastUpgrade := int64(0)
+			if v, ok := d.GetOk("fast_upgrade"); ok {
+				fastUpgrade = int64(v.(int))
+			}
+			if v, ok := d.GetOk("device_type"); ok {
+				deviceType = v.(string)
+			}
 
-		if v, ok := d.GetOk("first_slave_zone"); ok {
-			firstSlaveZone = v.(string)
-		}
-
-		if v, ok := d.GetOk("second_slave_zone"); ok {
-			secondSlaveZone = v.(string)
-		}
-
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
-
-		if err != nil {
-			return err
-		}
-
-		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, -1, -1, "", "")
 
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
+				return err
+			}
+
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
 				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
+				}
+				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
+					",", message)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
+		}
+	} else {
+		if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
+
+			memSize := int64(d.Get("mem_size").(int))
+			cpu := int64(d.Get("cpu").(int))
+			volumeSize := int64(d.Get("volume_size").(int))
+			slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+			slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
+			deviceType := ""
+			firstSlaveZone := ""
+			secondSlaveZone := ""
+
+			fastUpgrade := int64(0)
+			if v, ok := d.GetOk("fast_upgrade"); ok {
+				fastUpgrade = int64(v.(int))
+			}
+			if v, ok := d.GetOk("device_type"); ok {
+				deviceType = v.(string)
 			}
 
-			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-				return nil
+			if v, ok := d.GetOk("first_slave_zone"); ok {
+				firstSlaveZone = v.(string)
 			}
-			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
-			}
-			err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
-				",", message)
-			return resource.NonRetryableError(err)
-		})
 
-		if err != nil {
-			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
-			return err
+			if v, ok := d.GetOk("second_slave_zone"); ok {
+				secondSlaveZone = v.(string)
+			}
+
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
+
+			if err != nil {
+				return err
+			}
+
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
+				}
+				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
+					",", message)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
 		}
 	}
 
@@ -1437,7 +1488,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 }
 
 func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta, false); err != nil {
 		return err
 	}
 	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
@@ -1460,7 +1511,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 }
 
 func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta, false); err != nil {
 		return err
 	}
 	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {

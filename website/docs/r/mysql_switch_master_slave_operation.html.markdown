@@ -88,11 +88,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-mysql switch_master_slave_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_switch_master_slave_operation.switch_master_slave_operation switch_master_slave_operation_id
-```
-
