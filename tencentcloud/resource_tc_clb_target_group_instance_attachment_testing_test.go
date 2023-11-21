@@ -17,9 +17,9 @@ func TestAccTencentCloudTestingClbTGAttachmentInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbTGAttachmentInstanceExists("tencentcloud_clb_target_group_instance_attachment.test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "target_group_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "bind_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "port"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "weight"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "bind_ip", "172.16.0.17"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "port", "99"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "weight", "3"),
 				),
 			},
 			{
@@ -27,9 +27,9 @@ func TestAccTencentCloudTestingClbTGAttachmentInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClbTGAttachmentInstanceExists("tencentcloud_clb_target_group_instance_attachment.test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "target_group_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "bind_ip"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "port"),
-					resource.TestCheckResourceAttrSet("tencentcloud_clb_target_group_instance_attachment.test", "weight"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "bind_ip", "172.16.0.17"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "port", "99"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_target_group_instance_attachment.test", "weight", "5"),
 				),
 			},
 		},
