@@ -20,7 +20,17 @@ func TestAccTencentCloudTestingCbsStorageResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_name", "tf-storage-basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-3"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-2"),
+				),
+			},
+			{
+				Config: testAccTestingCbsStorageUp_basic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_name", "tf-storage-basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_size", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-2"),
 				),
 			},
 			{
@@ -38,6 +48,14 @@ resource "tencentcloud_cbs_storage" "storage_basic" {
 	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-storage-basic"
 	storage_size      = 50
-	availability_zone = "ap-guangzhou-3"
+	availability_zone = "ap-guangzhou-2"
+}
+`
+const testAccTestingCbsStorageUp_basic = `
+resource "tencentcloud_cbs_storage" "storage_basic" {
+	storage_type      = "CLOUD_PREMIUM"
+	storage_name      = "tf-storage-basic"
+	storage_size      = 100
+	availability_zone = "ap-guangzhou-2"
 }
 `
