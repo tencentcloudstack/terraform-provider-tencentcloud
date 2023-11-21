@@ -9,3 +9,7 @@ tencentcloud_dasb_reset_user
 ```release-note:new-resource
 tencentcloud_dasb_bind_device_account_private_key
 ```
+
+```release-note:new-resource
+tencentcloud_dasb_bind_device_account_password
+```

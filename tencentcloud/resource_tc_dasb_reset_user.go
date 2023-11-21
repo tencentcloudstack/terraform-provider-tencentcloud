@@ -12,12 +12,13 @@ resource "tencentcloud_dasb_reset_user" "example" {
 package tencentcloud
 
 import (
+	"log"
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strconv"
 )
 
 func resourceTencentCloudDasbResetUser() *schema.Resource {

@@ -608,3 +608,29 @@ func (me *DasbService) DeleteDasbBindDeviceAccountPrivateKeyById(ctx context.Con
 
 	return
 }
+
+func (me *DasbService) DeleteDasbBindDeviceAccountPasswordById(ctx context.Context, deviceAccountId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewResetDeviceAccountPasswordRequest()
+	deviceAccountIdInt, _ := strconv.ParseUint(deviceAccountId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{deviceAccountIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().ResetDeviceAccountPassword(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

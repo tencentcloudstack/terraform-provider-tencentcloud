@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dasb_bind_device_account_private_key" "example" {
-  id                   = 16
+  device_account_id    = 16
   private_key          = "MIICXAIBAAKBgQCqGKukO1De7zhZj6+H0qtjTkVxwTCpvKe4eCZ0FPqri0cb2JZfXJ/DgYSF6vUpwmJG8wVQZKjeGcjDOL5UlsuusFncCzWBQ7RKNUSesmQRMSGkVb1/3j+skZ6UtW+5u09lHNsj6tQ51s1SPrCBkedbNf0Tp0GbMJDyR4e9T04ZZwIDAQABAoGAFijko56+qGyN8M0RVyaRAXz++xTqHBLh"
   private_key_password = "TerraformPassword"
 }
@@ -15,12 +15,13 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
+	"strconv"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strconv"
 )
 
 func resourceTencentCloudDasbBindDeviceAccountPrivateKey() *schema.Resource {
@@ -30,7 +31,7 @@ func resourceTencentCloudDasbBindDeviceAccountPrivateKey() *schema.Resource {
 		Delete: resourceTencentCloudDasbBindDeviceAccountPrivateKeyDelete,
 
 		Schema: map[string]*schema.Schema{
-			"id": {
+			"device_account_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
@@ -62,7 +63,7 @@ func resourceTencentCloudDasbBindDeviceAccountPrivateKeyCreate(d *schema.Resourc
 		deviceAccountId string
 	)
 
-	if v, ok := d.GetOkExists("id"); ok {
+	if v, ok := d.GetOkExists("device_account_id"); ok {
 		request.Id = helper.IntUint64(v.(int))
 		deviceAccountId = strconv.Itoa(v.(int))
 	}
@@ -100,8 +101,8 @@ func resourceTencentCloudDasbBindDeviceAccountPrivateKeyRead(d *schema.ResourceD
 	defer logElapsed("resource.tencentcloud_dasb_bind_device_account_private_key.read")()
 	defer inconsistentCheck(d, meta)()
 
-	if v, ok := d.GetOkExists("id"); ok {
-		_ = d.Set("id", v.(int))
+	if v, ok := d.GetOkExists("device_account_id"); ok {
+		_ = d.Set("device_account_id", v.(int))
 	}
 
 	if v, ok := d.GetOk("private_key"); ok {
