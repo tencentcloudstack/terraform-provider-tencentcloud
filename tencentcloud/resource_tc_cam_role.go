@@ -6,36 +6,39 @@ Example Usage
 Create normally
 
 ```hcl
-locals {
-  uin = data.tencentcloud_user_info.info.uin
-}
-
 data "tencentcloud_user_info" "info" {}
 
-resource "tencentcloud_cam_role" "foo" {
-  name          = "cam-role-test"
-  document      = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
-      "effect": "allow",
-      "principal": {
-        "qcs": [
-          "qcs::cam::uin/${local.uin}:uin/${local.uin}"
-        ]
-      }
-    }
-  ]
+locals {
+  uin = data.tencentcloud_user_info.info.owner_uin
 }
-EOF
-  description   = "test"
-  console_login = true
-  tags = {
-    test  = "tf-cam-role",
+
+output "uin" {
+  value = local.uin
+}
+
+resource "tencentcloud_cam_role" "foo" {
+  name     = "cam-role-test"
+  document = jsonencode(
+    {
+      statement = [
+        {
+          action    = "name/sts:AssumeRole"
+          effect    = "allow"
+          principal = {
+            qcs = [
+              "qcs::cam::uin/${local.uin}:root",
+            ]
+          }
+        },
+      ]
+      version = "2.0"
+    }
+  )
+  console_login    = true
+  description      = "test"
+  session_duration = 7200
+  tags             = {
+    test  = "tf-cam-role"
   }
 }
 ```
@@ -151,6 +154,11 @@ func resourceTencentCloudCamRole() *schema.Resource {
 				Optional:    true,
 				Description: "Indicates whether the CAM role can login or not.",
 			},
+			"session_duration": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The maximum validity period of the temporary key for creating a role.",
+			},
 			"create_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -198,6 +206,9 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 			loginInt = uint64(0)
 		}
 		request.ConsoleLogin = &loginInt
+	}
+	if v, ok := d.GetOkExists("session_duration"); ok {
+		request.SessionDuration = helper.IntUint64(v.(int))
 	}
 
 	var response *cam.CreateRoleResponse
@@ -257,7 +268,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 	}
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 
@@ -293,6 +304,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 
 	_ = d.Set("name", instance.RoleName)
 	_ = d.Set("document", instance.PolicyDocument)
+	_ = d.Set("session_duration", instance.SessionDuration)
 	_ = d.Set("create_time", instance.AddTime)
 	_ = d.Set("update_time", instance.UpdateTime)
 	if instance.Description != nil {
@@ -440,6 +452,10 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s update CAM role console login failed, reason:%s\n", logId, err.Error())
 			return err
 		}
+	}
+
+	if d.HasChange("session_duration") {
+		return fmt.Errorf("`session_duration` do not support change now.")
 	}
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
