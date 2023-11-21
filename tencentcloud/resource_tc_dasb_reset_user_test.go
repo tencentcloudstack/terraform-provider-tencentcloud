@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudDasbResetUserResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixDasbResetUserResource_basic -v
+func TestAccTencentCloudNeedFixDasbResetUserResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
