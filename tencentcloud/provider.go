@@ -2916,10 +2916,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
-			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
-			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
-			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
-			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
