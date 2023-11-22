@@ -1,0 +1,15 @@
+```release-note:new-datasource
+tencentcloud_antiddos_basic_device_status
+```
+
+```release-note:new-datasource
+tencentcloud_antiddos_bgp_biz_trend
+```
+
+```release-note:new-datasource
+tencentcloud_antiddos_list_listener
+```
+
+```release-note:new-datasource
+tencentcloud_antiddos_overview_attack_trend
+```
