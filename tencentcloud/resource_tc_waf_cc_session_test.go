@@ -39,7 +39,7 @@ func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_waf_cc_session.example", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "domain", "keep.qcloudwaf.com"),
-					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "source", "get"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "source", "post"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "category", "match"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "key_or_start_mat", "key_a=456"),
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_mat", "&"),
