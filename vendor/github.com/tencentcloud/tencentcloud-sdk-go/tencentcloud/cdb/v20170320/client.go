@@ -59,8 +59,9 @@ func NewAddTimeWindowRequest() (request *AddTimeWindowRequest) {
 func NewAddTimeWindowResponse() (response *AddTimeWindowResponse) {
     response = &AddTimeWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddTimeWindow
@@ -113,8 +114,9 @@ func NewAdjustCdbProxyRequest() (request *AdjustCdbProxyRequest) {
 func NewAdjustCdbProxyResponse() (response *AdjustCdbProxyResponse) {
     response = &AdjustCdbProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AdjustCdbProxy
@@ -167,8 +169,9 @@ func NewAdjustCdbProxyAddressRequest() (request *AdjustCdbProxyAddressRequest) {
 func NewAdjustCdbProxyAddressResponse() (response *AdjustCdbProxyAddressResponse) {
     response = &AdjustCdbProxyAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AdjustCdbProxyAddress
@@ -227,8 +230,9 @@ func NewAnalyzeAuditLogsRequest() (request *AnalyzeAuditLogsRequest) {
 func NewAnalyzeAuditLogsResponse() (response *AnalyzeAuditLogsResponse) {
     response = &AnalyzeAuditLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AnalyzeAuditLogs
@@ -238,6 +242,7 @@ func NewAnalyzeAuditLogsResponse() (response *AnalyzeAuditLogsResponse) {
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AnalyzeAuditLogs(request *AnalyzeAuditLogsRequest) (response *AnalyzeAuditLogsResponse, err error) {
     return c.AnalyzeAuditLogsWithContext(context.Background(), request)
 }
@@ -249,6 +254,7 @@ func (c *Client) AnalyzeAuditLogs(request *AnalyzeAuditLogsRequest) (response *A
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AnalyzeAuditLogsWithContext(ctx context.Context, request *AnalyzeAuditLogsRequest) (response *AnalyzeAuditLogsResponse, err error) {
     if request == nil {
         request = NewAnalyzeAuditLogsRequest()
@@ -279,8 +285,9 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
 func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResponse) {
     response = &AssociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateSecurityGroups
@@ -293,6 +300,7 @@ func NewAssociateSecurityGroupsResponse() (response *AssociateSecurityGroupsResp
 //  INTERNALERROR_RESOURCENOTMATCH = "InternalError.ResourceNotMatch"
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
     return c.AssociateSecurityGroupsWithContext(context.Background(), request)
@@ -308,6 +316,7 @@ func (c *Client) AssociateSecurityGroups(request *AssociateSecurityGroupsRequest
 //  INTERNALERROR_RESOURCENOTMATCH = "InternalError.ResourceNotMatch"
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request *AssociateSecurityGroupsRequest) (response *AssociateSecurityGroupsResponse, err error) {
     if request == nil {
@@ -339,8 +348,9 @@ func NewBalanceRoGroupLoadRequest() (request *BalanceRoGroupLoadRequest) {
 func NewBalanceRoGroupLoadResponse() (response *BalanceRoGroupLoadResponse) {
     response = &BalanceRoGroupLoadResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BalanceRoGroupLoad
@@ -385,6 +395,59 @@ func (c *Client) BalanceRoGroupLoadWithContext(ctx context.Context, request *Bal
     return
 }
 
+func NewCloseAuditServiceRequest() (request *CloseAuditServiceRequest) {
+    request = &CloseAuditServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "CloseAuditService")
+    
+    
+    return
+}
+
+func NewCloseAuditServiceResponse() (response *CloseAuditServiceResponse) {
+    response = &CloseAuditServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CloseAuditService
+// 实例关闭审计服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+func (c *Client) CloseAuditService(request *CloseAuditServiceRequest) (response *CloseAuditServiceResponse, err error) {
+    return c.CloseAuditServiceWithContext(context.Background(), request)
+}
+
+// CloseAuditService
+// 实例关闭审计服务
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+func (c *Client) CloseAuditServiceWithContext(ctx context.Context, request *CloseAuditServiceRequest) (response *CloseAuditServiceResponse, err error) {
+    if request == nil {
+        request = NewCloseAuditServiceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseAuditService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseAuditServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCloseCDBProxyRequest() (request *CloseCDBProxyRequest) {
     request = &CloseCDBProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -399,8 +462,9 @@ func NewCloseCDBProxyRequest() (request *CloseCDBProxyRequest) {
 func NewCloseCDBProxyResponse() (response *CloseCDBProxyResponse) {
     response = &CloseCDBProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseCDBProxy
@@ -453,14 +517,16 @@ func NewCloseCdbProxyAddressRequest() (request *CloseCdbProxyAddressRequest) {
 func NewCloseCdbProxyAddressResponse() (response *CloseCdbProxyAddressResponse) {
     response = &CloseCdbProxyAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseCdbProxyAddress
 // 请求关闭数据库代理地址
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_PROXYADDRESSLIMITERROR = "OperationDenied.ProxyAddressLimitError"
 //  OPERATIONDENIED_PROXYADDRESSNOTFUND = "OperationDenied.ProxyAddressNotFund"
@@ -473,6 +539,7 @@ func (c *Client) CloseCdbProxyAddress(request *CloseCdbProxyAddressRequest) (res
 // 请求关闭数据库代理地址
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  OPERATIONDENIED_PROXYADDRESSLIMITERROR = "OperationDenied.ProxyAddressLimitError"
 //  OPERATIONDENIED_PROXYADDRESSNOTFUND = "OperationDenied.ProxyAddressNotFund"
@@ -507,8 +574,9 @@ func NewCloseWanServiceRequest() (request *CloseWanServiceRequest) {
 func NewCloseWanServiceResponse() (response *CloseWanServiceResponse) {
     response = &CloseWanServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CloseWanService
@@ -565,8 +633,9 @@ func NewCreateAccountsRequest() (request *CreateAccountsRequest) {
 func NewCreateAccountsResponse() (response *CreateAccountsResponse) {
     response = &CreateAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAccounts
@@ -677,8 +746,9 @@ func NewCreateAuditLogFileRequest() (request *CreateAuditLogFileRequest) {
 func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
     response = &CreateAuditLogFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAuditLogFile
@@ -691,7 +761,10 @@ func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SERVERERROR = "InternalError.ServerError"
+//  INTERNALERROR_TRANSACTIONBEGINERROR = "InternalError.TransactionBeginError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -715,7 +788,10 @@ func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (respons
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SERVERERROR = "InternalError.ServerError"
+//  INTERNALERROR_TRANSACTIONBEGINERROR = "InternalError.TransactionBeginError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -755,8 +831,9 @@ func NewCreateAuditPolicyRequest() (request *CreateAuditPolicyRequest) {
 func NewCreateAuditPolicyResponse() (response *CreateAuditPolicyResponse) {
     response = &CreateAuditPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAuditPolicy
@@ -869,8 +946,9 @@ func NewCreateAuditRuleRequest() (request *CreateAuditRuleRequest) {
 func NewCreateAuditRuleResponse() (response *CreateAuditRuleResponse) {
     response = &CreateAuditRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAuditRule
@@ -925,6 +1003,57 @@ func (c *Client) CreateAuditRuleWithContext(ctx context.Context, request *Create
     return
 }
 
+func NewCreateAuditRuleTemplateRequest() (request *CreateAuditRuleTemplateRequest) {
+    request = &CreateAuditRuleTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "CreateAuditRuleTemplate")
+    
+    
+    return
+}
+
+func NewCreateAuditRuleTemplateResponse() (response *CreateAuditRuleTemplateResponse) {
+    response = &CreateAuditRuleTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateAuditRuleTemplate
+// 创建审计规则模板
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) CreateAuditRuleTemplate(request *CreateAuditRuleTemplateRequest) (response *CreateAuditRuleTemplateResponse, err error) {
+    return c.CreateAuditRuleTemplateWithContext(context.Background(), request)
+}
+
+// CreateAuditRuleTemplate
+// 创建审计规则模板
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) CreateAuditRuleTemplateWithContext(ctx context.Context, request *CreateAuditRuleTemplateRequest) (response *CreateAuditRuleTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditRuleTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAuditRuleTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAuditRuleTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateBackupRequest() (request *CreateBackupRequest) {
     request = &CreateBackupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -939,8 +1068,9 @@ func NewCreateBackupRequest() (request *CreateBackupRequest) {
 func NewCreateBackupResponse() (response *CreateBackupResponse) {
     response = &CreateBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBackup
@@ -960,6 +1090,7 @@ func NewCreateBackupResponse() (response *CreateBackupResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -985,6 +1116,7 @@ func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBac
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_ACTIONINPROCESS = "OperationDenied.ActionInProcess"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -1019,8 +1151,9 @@ func NewCreateCdbProxyRequest() (request *CreateCdbProxyRequest) {
 func NewCreateCdbProxyResponse() (response *CreateCdbProxyResponse) {
     response = &CreateCdbProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCdbProxy
@@ -1073,15 +1206,18 @@ func NewCreateCdbProxyAddressRequest() (request *CreateCdbProxyAddressRequest) {
 func NewCreateCdbProxyAddressResponse() (response *CreateCdbProxyAddressResponse) {
     response = &CreateCdbProxyAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCdbProxyAddress
 // 数据库代理增加代理地址
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  FAILEDOPERATION_VPCIPINUSEERROR = "FailedOperation.VpcIpInUseError"
+//  FAILEDOPERATION_VPCIPINVALIDERROR = "FailedOperation.VpcIpInvalidError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_PROXYADDRESSLIMITERROR = "OperationDenied.ProxyAddressLimitError"
@@ -1094,7 +1230,9 @@ func (c *Client) CreateCdbProxyAddress(request *CreateCdbProxyAddressRequest) (r
 // 数据库代理增加代理地址
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  FAILEDOPERATION_VPCIPINUSEERROR = "FailedOperation.VpcIpInUseError"
+//  FAILEDOPERATION_VPCIPINVALIDERROR = "FailedOperation.VpcIpInvalidError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_PROXYADDRESSLIMITERROR = "OperationDenied.ProxyAddressLimitError"
@@ -1129,8 +1267,9 @@ func NewCreateCloneInstanceRequest() (request *CreateCloneInstanceRequest) {
 func NewCreateCloneInstanceResponse() (response *CreateCloneInstanceResponse) {
     response = &CreateCloneInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCloneInstance
@@ -1140,6 +1279,7 @@ func NewCreateCloneInstanceResponse() (response *CreateCloneInstanceResponse) {
 //  CDBERROR = "CdbError"
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
@@ -1160,6 +1300,7 @@ func (c *Client) CreateCloneInstance(request *CreateCloneInstanceRequest) (respo
 //  CDBERROR = "CdbError"
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
@@ -1199,8 +1340,9 @@ func NewCreateDBImportJobRequest() (request *CreateDBImportJobRequest) {
 func NewCreateDBImportJobResponse() (response *CreateDBImportJobResponse) {
     response = &CreateDBImportJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBImportJob
@@ -1283,8 +1425,9 @@ func NewCreateDBInstanceRequest() (request *CreateDBInstanceRequest) {
 func NewCreateDBInstanceResponse() (response *CreateDBInstanceResponse) {
     response = &CreateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBInstance
@@ -1399,8 +1542,9 @@ func NewCreateDBInstanceHourRequest() (request *CreateDBInstanceHourRequest) {
 func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) {
     response = &CreateDBInstanceHourResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDBInstanceHour
@@ -1507,8 +1651,9 @@ func NewCreateDatabaseRequest() (request *CreateDatabaseRequest) {
 func NewCreateDatabaseResponse() (response *CreateDatabaseResponse) {
     response = &CreateDatabaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDatabase
@@ -1529,6 +1674,7 @@ func NewCreateDatabaseResponse() (response *CreateDatabaseResponse) {
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 func (c *Client) CreateDatabase(request *CreateDatabaseRequest) (response *CreateDatabaseResponse, err error) {
     return c.CreateDatabaseWithContext(context.Background(), request)
 }
@@ -1551,6 +1697,7 @@ func (c *Client) CreateDatabase(request *CreateDatabaseRequest) (response *Creat
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 func (c *Client) CreateDatabaseWithContext(ctx context.Context, request *CreateDatabaseRequest) (response *CreateDatabaseResponse, err error) {
     if request == nil {
         request = NewCreateDatabaseRequest()
@@ -1581,8 +1728,9 @@ func NewCreateDeployGroupRequest() (request *CreateDeployGroupRequest) {
 func NewCreateDeployGroupResponse() (response *CreateDeployGroupResponse) {
     response = &CreateDeployGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDeployGroup
@@ -1641,8 +1789,9 @@ func NewCreateParamTemplateRequest() (request *CreateParamTemplateRequest) {
 func NewCreateParamTemplateResponse() (response *CreateParamTemplateResponse) {
     response = &CreateParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateParamTemplate
@@ -1705,8 +1854,9 @@ func NewCreateRoInstanceIpRequest() (request *CreateRoInstanceIpRequest) {
 func NewCreateRoInstanceIpResponse() (response *CreateRoInstanceIpResponse) {
     response = &CreateRoInstanceIpResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRoInstanceIp
@@ -1716,6 +1866,7 @@ func NewCreateRoInstanceIpResponse() (response *CreateRoInstanceIpResponse) {
 //  CDBERROR = "CdbError"
 //  FAILEDOPERATION_CREATEROVIPERROR = "FailedOperation.CreateRoVipError"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DESERROR = "InternalError.DesError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
@@ -1740,6 +1891,7 @@ func (c *Client) CreateRoInstanceIp(request *CreateRoInstanceIpRequest) (respons
 //  CDBERROR = "CdbError"
 //  FAILEDOPERATION_CREATEROVIPERROR = "FailedOperation.CreateRoVipError"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DESERROR = "InternalError.DesError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
@@ -1783,8 +1935,9 @@ func NewDeleteAccountsRequest() (request *DeleteAccountsRequest) {
 func NewDeleteAccountsResponse() (response *DeleteAccountsResponse) {
     response = &DeleteAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAccounts
@@ -1889,8 +2042,9 @@ func NewDeleteAuditLogFileRequest() (request *DeleteAuditLogFileRequest) {
 func NewDeleteAuditLogFileResponse() (response *DeleteAuditLogFileResponse) {
     response = &DeleteAuditLogFileResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAuditLogFile
@@ -1943,8 +2097,9 @@ func NewDeleteAuditPolicyRequest() (request *DeleteAuditPolicyRequest) {
 func NewDeleteAuditPolicyResponse() (response *DeleteAuditPolicyResponse) {
     response = &DeleteAuditPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAuditPolicy
@@ -2019,8 +2174,9 @@ func NewDeleteAuditRuleRequest() (request *DeleteAuditRuleRequest) {
 func NewDeleteAuditRuleResponse() (response *DeleteAuditRuleResponse) {
     response = &DeleteAuditRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAuditRule
@@ -2073,6 +2229,55 @@ func (c *Client) DeleteAuditRuleWithContext(ctx context.Context, request *Delete
     return
 }
 
+func NewDeleteAuditRuleTemplatesRequest() (request *DeleteAuditRuleTemplatesRequest) {
+    request = &DeleteAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewDeleteAuditRuleTemplatesResponse() (response *DeleteAuditRuleTemplatesResponse) {
+    response = &DeleteAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAuditRuleTemplates
+// 删除审计规则模版
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+func (c *Client) DeleteAuditRuleTemplates(request *DeleteAuditRuleTemplatesRequest) (response *DeleteAuditRuleTemplatesResponse, err error) {
+    return c.DeleteAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// DeleteAuditRuleTemplates
+// 删除审计规则模版
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+func (c *Client) DeleteAuditRuleTemplatesWithContext(ctx context.Context, request *DeleteAuditRuleTemplatesRequest) (response *DeleteAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteBackupRequest() (request *DeleteBackupRequest) {
     request = &DeleteBackupRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2087,8 +2292,9 @@ func NewDeleteBackupRequest() (request *DeleteBackupRequest) {
 func NewDeleteBackupResponse() (response *DeleteBackupResponse) {
     response = &DeleteBackupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBackup
@@ -2131,6 +2337,83 @@ func (c *Client) DeleteBackupWithContext(ctx context.Context, request *DeleteBac
     return
 }
 
+func NewDeleteDatabaseRequest() (request *DeleteDatabaseRequest) {
+    request = &DeleteDatabaseRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DeleteDatabase")
+    
+    
+    return
+}
+
+func NewDeleteDatabaseResponse() (response *DeleteDatabaseResponse) {
+    response = &DeleteDatabaseResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteDatabase
+// 本接口(DeleteDatabase)用于在云数据库实例中删除数据库。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
+//  INTERNALERROR_INTERNALSERVICEERRORERR = "InternalError.InternalServiceErrorErr"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
+func (c *Client) DeleteDatabase(request *DeleteDatabaseRequest) (response *DeleteDatabaseResponse, err error) {
+    return c.DeleteDatabaseWithContext(context.Background(), request)
+}
+
+// DeleteDatabase
+// 本接口(DeleteDatabase)用于在云数据库实例中删除数据库。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
+//  INTERNALERROR_INTERNALSERVICEERRORERR = "InternalError.InternalServiceErrorErr"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
+func (c *Client) DeleteDatabaseWithContext(ctx context.Context, request *DeleteDatabaseRequest) (response *DeleteDatabaseResponse, err error) {
+    if request == nil {
+        request = NewDeleteDatabaseRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDatabase require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteDatabaseResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteDeployGroupsRequest() (request *DeleteDeployGroupsRequest) {
     request = &DeleteDeployGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2145,8 +2428,9 @@ func NewDeleteDeployGroupsRequest() (request *DeleteDeployGroupsRequest) {
 func NewDeleteDeployGroupsResponse() (response *DeleteDeployGroupsResponse) {
     response = &DeleteDeployGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDeployGroups
@@ -2205,8 +2489,9 @@ func NewDeleteParamTemplateRequest() (request *DeleteParamTemplateRequest) {
 func NewDeleteParamTemplateResponse() (response *DeleteParamTemplateResponse) {
     response = &DeleteParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteParamTemplate
@@ -2259,8 +2544,9 @@ func NewDeleteTimeWindowRequest() (request *DeleteTimeWindowRequest) {
 func NewDeleteTimeWindowResponse() (response *DeleteTimeWindowResponse) {
     response = &DeleteTimeWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTimeWindow
@@ -2311,8 +2597,9 @@ func NewDescribeAccountPrivilegesRequest() (request *DescribeAccountPrivilegesRe
 func NewDescribeAccountPrivilegesResponse() (response *DescribeAccountPrivilegesResponse) {
     response = &DescribeAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccountPrivileges
@@ -2425,8 +2712,9 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
 func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
     response = &DescribeAccountsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccounts
@@ -2441,6 +2729,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  FAILEDOPERATION_RESPONSEVALUEERROR = "FailedOperation.ResponseValueError"
 //  FAILEDOPERATION_STARTFLOWERROR = "FailedOperation.StartFlowError"
 //  FAILEDOPERATION_SUBMITASYNCTASKERROR = "FailedOperation.SubmitAsyncTaskError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_INTERNALASSERTERROR = "InternalError.InternalAssertError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
@@ -2449,6 +2738,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_ACCOUNTDESCRIPTIONCHARACTERERROR = "InvalidParameterValue.AccountDescriptionCharacterError"
 //  INVALIDPARAMETERVALUE_ACCOUNTDESCRIPTIONLENGTHERROR = "InvalidParameterValue.AccountDescriptionLengthError"
@@ -2487,6 +2777,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 //  FAILEDOPERATION_RESPONSEVALUEERROR = "FailedOperation.ResponseValueError"
 //  FAILEDOPERATION_STARTFLOWERROR = "FailedOperation.StartFlowError"
 //  FAILEDOPERATION_SUBMITASYNCTASKERROR = "FailedOperation.SubmitAsyncTaskError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_INTERNALASSERTERROR = "InternalError.InternalAssertError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
@@ -2495,6 +2786,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_ACCOUNTDESCRIPTIONCHARACTERERROR = "InvalidParameterValue.AccountDescriptionCharacterError"
 //  INVALIDPARAMETERVALUE_ACCOUNTDESCRIPTIONLENGTHERROR = "InvalidParameterValue.AccountDescriptionLengthError"
@@ -2547,8 +2839,9 @@ func NewDescribeAsyncRequestInfoRequest() (request *DescribeAsyncRequestInfoRequ
 func NewDescribeAsyncRequestInfoResponse() (response *DescribeAsyncRequestInfoResponse) {
     response = &DescribeAsyncRequestInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAsyncRequestInfo
@@ -2607,8 +2900,9 @@ func NewDescribeAuditConfigRequest() (request *DescribeAuditConfigRequest) {
 func NewDescribeAuditConfigResponse() (response *DescribeAuditConfigResponse) {
     response = &DescribeAuditConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditConfig
@@ -2651,6 +2945,65 @@ func (c *Client) DescribeAuditConfigWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeAuditInstanceListRequest() (request *DescribeAuditInstanceListRequest) {
+    request = &DescribeAuditInstanceListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditInstanceList")
+    
+    
+    return
+}
+
+func NewDescribeAuditInstanceListResponse() (response *DescribeAuditInstanceListResponse) {
+    response = &DescribeAuditInstanceListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditInstanceList
+// 获取审计实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) DescribeAuditInstanceList(request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
+    return c.DescribeAuditInstanceListWithContext(context.Background(), request)
+}
+
+// DescribeAuditInstanceList
+// 获取审计实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) DescribeAuditInstanceListWithContext(ctx context.Context, request *DescribeAuditInstanceListRequest) (response *DescribeAuditInstanceListResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditInstanceListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditInstanceList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditInstanceListResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
     request = &DescribeAuditLogFilesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2665,8 +3018,9 @@ func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
 func NewDescribeAuditLogFilesResponse() (response *DescribeAuditLogFilesResponse) {
     response = &DescribeAuditLogFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditLogFiles
@@ -2707,6 +3061,87 @@ func (c *Client) DescribeAuditLogFilesWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeAuditLogsRequest() (request *DescribeAuditLogsRequest) {
+    request = &DescribeAuditLogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditLogs")
+    
+    
+    return
+}
+
+func NewDescribeAuditLogsResponse() (response *DescribeAuditLogsResponse) {
+    response = &DescribeAuditLogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditLogs
+// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
+//  INTERNALERROR_AUDITDESCRIBELOGERROR = "InternalError.AuditDescribeLogError"
+//  INTERNALERROR_AUDITERROR = "InternalError.AuditError"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_SERVERERROR = "InternalError.ServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_QUERYAUDITLOGSERROR = "OperationDenied.QueryAuditLogsError"
+//  OPERATIONDENIED_RESOURCENOTFOUNDERROR = "OperationDenied.ResourceNotFoundError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
+    return c.DescribeAuditLogsWithContext(context.Background(), request)
+}
+
+// DescribeAuditLogs
+// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_QUERYAUDITTASKFAILERROR = "FailedOperation.QueryAuditTaskFailError"
+//  INTERNALERROR_AUDITDESCRIBELOGERROR = "InternalError.AuditDescribeLogError"
+//  INTERNALERROR_AUDITERROR = "InternalError.AuditError"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_SERVERERROR = "InternalError.ServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_QUERYAUDITLOGSERROR = "OperationDenied.QueryAuditLogsError"
+//  OPERATIONDENIED_RESOURCENOTFOUNDERROR = "OperationDenied.ResourceNotFoundError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAuditLogsWithContext(ctx context.Context, request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditLogsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditLogs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditLogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAuditPoliciesRequest() (request *DescribeAuditPoliciesRequest) {
     request = &DescribeAuditPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2721,8 +3156,9 @@ func NewDescribeAuditPoliciesRequest() (request *DescribeAuditPoliciesRequest) {
 func NewDescribeAuditPoliciesResponse() (response *DescribeAuditPoliciesResponse) {
     response = &DescribeAuditPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditPolicies
@@ -2771,6 +3207,106 @@ func (c *Client) DescribeAuditPoliciesWithContext(ctx context.Context, request *
     return
 }
 
+func NewDescribeAuditRuleTemplateModifyHistoryRequest() (request *DescribeAuditRuleTemplateModifyHistoryRequest) {
+    request = &DescribeAuditRuleTemplateModifyHistoryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditRuleTemplateModifyHistory")
+    
+    
+    return
+}
+
+func NewDescribeAuditRuleTemplateModifyHistoryResponse() (response *DescribeAuditRuleTemplateModifyHistoryResponse) {
+    response = &DescribeAuditRuleTemplateModifyHistoryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditRuleTemplateModifyHistory
+// 查询规则模板变更记录
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+func (c *Client) DescribeAuditRuleTemplateModifyHistory(request *DescribeAuditRuleTemplateModifyHistoryRequest) (response *DescribeAuditRuleTemplateModifyHistoryResponse, err error) {
+    return c.DescribeAuditRuleTemplateModifyHistoryWithContext(context.Background(), request)
+}
+
+// DescribeAuditRuleTemplateModifyHistory
+// 查询规则模板变更记录
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+func (c *Client) DescribeAuditRuleTemplateModifyHistoryWithContext(ctx context.Context, request *DescribeAuditRuleTemplateModifyHistoryRequest) (response *DescribeAuditRuleTemplateModifyHistoryResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditRuleTemplateModifyHistoryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditRuleTemplateModifyHistory require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditRuleTemplateModifyHistoryResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditRuleTemplatesRequest() (request *DescribeAuditRuleTemplatesRequest) {
+    request = &DescribeAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewDescribeAuditRuleTemplatesResponse() (response *DescribeAuditRuleTemplatesResponse) {
+    response = &DescribeAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAuditRuleTemplates
+// 查询审计规则模板信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+func (c *Client) DescribeAuditRuleTemplates(request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
+    return c.DescribeAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeAuditRuleTemplates
+// 查询审计规则模板信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBOPERATIONACTIONERROR = "FailedOperation.DBOperationActionError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+func (c *Client) DescribeAuditRuleTemplatesWithContext(ctx context.Context, request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAuditRulesRequest() (request *DescribeAuditRulesRequest) {
     request = &DescribeAuditRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2785,8 +3321,9 @@ func NewDescribeAuditRulesRequest() (request *DescribeAuditRulesRequest) {
 func NewDescribeAuditRulesResponse() (response *DescribeAuditRulesResponse) {
     response = &DescribeAuditRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAuditRules
@@ -2843,8 +3380,9 @@ func NewDescribeBackupConfigRequest() (request *DescribeBackupConfigRequest) {
 func NewDescribeBackupConfigResponse() (response *DescribeBackupConfigResponse) {
     response = &DescribeBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupConfig
@@ -2856,6 +3394,7 @@ func NewDescribeBackupConfigResponse() (response *DescribeBackupConfigResponse) 
 //  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -2872,6 +3411,7 @@ func (c *Client) DescribeBackupConfig(request *DescribeBackupConfigRequest) (res
 //  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -2891,82 +3431,6 @@ func (c *Client) DescribeBackupConfigWithContext(ctx context.Context, request *D
     return
 }
 
-func NewDescribeBackupDatabasesRequest() (request *DescribeBackupDatabasesRequest) {
-    request = &DescribeBackupDatabasesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "DescribeBackupDatabases")
-    
-    
-    return
-}
-
-func NewDescribeBackupDatabasesResponse() (response *DescribeBackupDatabasesResponse) {
-    response = &DescribeBackupDatabasesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeBackupDatabases
-// 接口已废弃，需要下线
-//
-// 
-//
-// 本接口(DescribeBackupDatabases)用于查询备份文件包含的库 (已废弃)。
-//
-// 旧版本支持全量备份后，用户如果分库表下载逻辑备份文件，需要用到此接口。
-//
-// 新版本支持(CreateBackup)创建逻辑备份的时候，直接发起指定库表备份，用户直接下载该备份文件即可。
-//
-// 可能返回的错误码:
-//  CDBERROR = "CdbError"
-//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
-//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
-//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
-//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
-func (c *Client) DescribeBackupDatabases(request *DescribeBackupDatabasesRequest) (response *DescribeBackupDatabasesResponse, err error) {
-    return c.DescribeBackupDatabasesWithContext(context.Background(), request)
-}
-
-// DescribeBackupDatabases
-// 接口已废弃，需要下线
-//
-// 
-//
-// 本接口(DescribeBackupDatabases)用于查询备份文件包含的库 (已废弃)。
-//
-// 旧版本支持全量备份后，用户如果分库表下载逻辑备份文件，需要用到此接口。
-//
-// 新版本支持(CreateBackup)创建逻辑备份的时候，直接发起指定库表备份，用户直接下载该备份文件即可。
-//
-// 可能返回的错误码:
-//  CDBERROR = "CdbError"
-//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
-//  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
-//  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
-//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
-func (c *Client) DescribeBackupDatabasesWithContext(ctx context.Context, request *DescribeBackupDatabasesRequest) (response *DescribeBackupDatabasesResponse, err error) {
-    if request == nil {
-        request = NewDescribeBackupDatabasesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeBackupDatabases require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeBackupDatabasesResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeBackupDecryptionKeyRequest() (request *DescribeBackupDecryptionKeyRequest) {
     request = &DescribeBackupDecryptionKeyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2981,8 +3445,9 @@ func NewDescribeBackupDecryptionKeyRequest() (request *DescribeBackupDecryptionK
 func NewDescribeBackupDecryptionKeyResponse() (response *DescribeBackupDecryptionKeyResponse) {
     response = &DescribeBackupDecryptionKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupDecryptionKey
@@ -2991,6 +3456,7 @@ func NewDescribeBackupDecryptionKeyResponse() (response *DescribeBackupDecryptio
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_NOTSUPPORTBASIC = "OperationDenied.NotSupportBasic"
 func (c *Client) DescribeBackupDecryptionKey(request *DescribeBackupDecryptionKeyRequest) (response *DescribeBackupDecryptionKeyResponse, err error) {
     return c.DescribeBackupDecryptionKeyWithContext(context.Background(), request)
 }
@@ -3001,6 +3467,7 @@ func (c *Client) DescribeBackupDecryptionKey(request *DescribeBackupDecryptionKe
 // 可能返回的错误码:
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_NOTSUPPORTBASIC = "OperationDenied.NotSupportBasic"
 func (c *Client) DescribeBackupDecryptionKeyWithContext(ctx context.Context, request *DescribeBackupDecryptionKeyRequest) (response *DescribeBackupDecryptionKeyResponse, err error) {
     if request == nil {
         request = NewDescribeBackupDecryptionKeyRequest()
@@ -3031,8 +3498,9 @@ func NewDescribeBackupDownloadRestrictionRequest() (request *DescribeBackupDownl
 func NewDescribeBackupDownloadRestrictionResponse() (response *DescribeBackupDownloadRestrictionResponse) {
     response = &DescribeBackupDownloadRestrictionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupDownloadRestriction
@@ -3083,8 +3551,9 @@ func NewDescribeBackupEncryptionStatusRequest() (request *DescribeBackupEncrypti
 func NewDescribeBackupEncryptionStatusResponse() (response *DescribeBackupEncryptionStatusResponse) {
     response = &DescribeBackupEncryptionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupEncryptionStatus
@@ -3133,8 +3602,9 @@ func NewDescribeBackupOverviewRequest() (request *DescribeBackupOverviewRequest)
 func NewDescribeBackupOverviewResponse() (response *DescribeBackupOverviewResponse) {
     response = &DescribeBackupOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupOverview
@@ -3191,8 +3661,9 @@ func NewDescribeBackupSummariesRequest() (request *DescribeBackupSummariesReques
 func NewDescribeBackupSummariesResponse() (response *DescribeBackupSummariesResponse) {
     response = &DescribeBackupSummariesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupSummaries
@@ -3253,8 +3724,9 @@ func NewDescribeBackupsRequest() (request *DescribeBackupsRequest) {
 func NewDescribeBackupsResponse() (response *DescribeBackupsResponse) {
     response = &DescribeBackupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackups
@@ -3273,6 +3745,7 @@ func NewDescribeBackupsResponse() (response *DescribeBackupsResponse) {
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -3298,6 +3771,7 @@ func (c *Client) DescribeBackups(request *DescribeBackupsRequest) (response *Des
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
@@ -3333,8 +3807,9 @@ func NewDescribeBinlogBackupOverviewRequest() (request *DescribeBinlogBackupOver
 func NewDescribeBinlogBackupOverviewResponse() (response *DescribeBinlogBackupOverviewResponse) {
     response = &DescribeBinlogBackupOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBinlogBackupOverview
@@ -3389,8 +3864,9 @@ func NewDescribeBinlogsRequest() (request *DescribeBinlogsRequest) {
 func NewDescribeBinlogsResponse() (response *DescribeBinlogsResponse) {
     response = &DescribeBinlogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBinlogs
@@ -3443,68 +3919,6 @@ func (c *Client) DescribeBinlogsWithContext(ctx context.Context, request *Descri
     return
 }
 
-func NewDescribeCDBProxyRequest() (request *DescribeCDBProxyRequest) {
-    request = &DescribeCDBProxyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "DescribeCDBProxy")
-    
-    
-    return
-}
-
-func NewDescribeCDBProxyResponse() (response *DescribeCDBProxyResponse) {
-    response = &DescribeCDBProxyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeCDBProxy
-// 接口已经废弃，请使用+DescribeCdbProxyInfo+进行替换。
-//
-// 
-//
-// 查询数据库代理（待下线，替换接口QueryCDBProxy）
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) DescribeCDBProxy(request *DescribeCDBProxyRequest) (response *DescribeCDBProxyResponse, err error) {
-    return c.DescribeCDBProxyWithContext(context.Background(), request)
-}
-
-// DescribeCDBProxy
-// 接口已经废弃，请使用+DescribeCdbProxyInfo+进行替换。
-//
-// 
-//
-// 查询数据库代理（待下线，替换接口QueryCDBProxy）
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) DescribeCDBProxyWithContext(ctx context.Context, request *DescribeCDBProxyRequest) (response *DescribeCDBProxyResponse, err error) {
-    if request == nil {
-        request = NewDescribeCDBProxyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeCDBProxy require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeCDBProxyResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeCdbProxyInfoRequest() (request *DescribeCdbProxyInfoRequest) {
     request = &DescribeCdbProxyInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3519,8 +3933,9 @@ func NewDescribeCdbProxyInfoRequest() (request *DescribeCdbProxyInfoRequest) {
 func NewDescribeCdbProxyInfoResponse() (response *DescribeCdbProxyInfoResponse) {
     response = &DescribeCdbProxyInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdbProxyInfo
@@ -3575,8 +3990,9 @@ func NewDescribeCdbZoneConfigRequest() (request *DescribeCdbZoneConfigRequest) {
 func NewDescribeCdbZoneConfigResponse() (response *DescribeCdbZoneConfigResponse) {
     response = &DescribeCdbZoneConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCdbZoneConfig
@@ -3625,8 +4041,9 @@ func NewDescribeCloneListRequest() (request *DescribeCloneListRequest) {
 func NewDescribeCloneListResponse() (response *DescribeCloneListResponse) {
     response = &DescribeCloneListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCloneList
@@ -3663,6 +4080,63 @@ func (c *Client) DescribeCloneListWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeCpuExpandStrategyRequest() (request *DescribeCpuExpandStrategyRequest) {
+    request = &DescribeCpuExpandStrategyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeCpuExpandStrategy")
+    
+    
+    return
+}
+
+func NewDescribeCpuExpandStrategyResponse() (response *DescribeCpuExpandStrategyResponse) {
+    response = &DescribeCpuExpandStrategyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeCpuExpandStrategy
+// 通过该 API 可以查询实例的 CPU 弹性扩容策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+func (c *Client) DescribeCpuExpandStrategy(request *DescribeCpuExpandStrategyRequest) (response *DescribeCpuExpandStrategyResponse, err error) {
+    return c.DescribeCpuExpandStrategyWithContext(context.Background(), request)
+}
+
+// DescribeCpuExpandStrategy
+// 通过该 API 可以查询实例的 CPU 弹性扩容策略
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_REMOTECALLUNMARSHALERROR = "FailedOperation.RemoteCallUnmarshalError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+func (c *Client) DescribeCpuExpandStrategyWithContext(ctx context.Context, request *DescribeCpuExpandStrategyRequest) (response *DescribeCpuExpandStrategyResponse, err error) {
+    if request == nil {
+        request = NewDescribeCpuExpandStrategyRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCpuExpandStrategy require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCpuExpandStrategyResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBFeaturesRequest() (request *DescribeDBFeaturesRequest) {
     request = &DescribeDBFeaturesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3677,8 +4151,9 @@ func NewDescribeDBFeaturesRequest() (request *DescribeDBFeaturesRequest) {
 func NewDescribeDBFeaturesResponse() (response *DescribeDBFeaturesResponse) {
     response = &DescribeDBFeaturesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBFeatures
@@ -3686,7 +4161,10 @@ func NewDescribeDBFeaturesResponse() (response *DescribeDBFeaturesResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -3700,7 +4178,10 @@ func (c *Client) DescribeDBFeatures(request *DescribeDBFeaturesRequest) (respons
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -3735,8 +4216,9 @@ func NewDescribeDBImportRecordsRequest() (request *DescribeDBImportRecordsReques
 func NewDescribeDBImportRecordsResponse() (response *DescribeDBImportRecordsResponse) {
     response = &DescribeDBImportRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBImportRecords
@@ -3789,8 +4271,9 @@ func NewDescribeDBInstanceCharsetRequest() (request *DescribeDBInstanceCharsetRe
 func NewDescribeDBInstanceCharsetResponse() (response *DescribeDBInstanceCharsetResponse) {
     response = &DescribeDBInstanceCharsetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceCharset
@@ -3805,6 +4288,7 @@ func NewDescribeDBInstanceCharsetResponse() (response *DescribeDBInstanceCharset
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) DescribeDBInstanceCharset(request *DescribeDBInstanceCharsetRequest) (response *DescribeDBInstanceCharsetResponse, err error) {
@@ -3823,6 +4307,7 @@ func (c *Client) DescribeDBInstanceCharset(request *DescribeDBInstanceCharsetReq
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) DescribeDBInstanceCharsetWithContext(ctx context.Context, request *DescribeDBInstanceCharsetRequest) (response *DescribeDBInstanceCharsetResponse, err error) {
@@ -3855,8 +4340,9 @@ func NewDescribeDBInstanceConfigRequest() (request *DescribeDBInstanceConfigRequ
 func NewDescribeDBInstanceConfigResponse() (response *DescribeDBInstanceConfigResponse) {
     response = &DescribeDBInstanceConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceConfig
@@ -3866,11 +4352,13 @@ func NewDescribeDBInstanceConfigResponse() (response *DescribeDBInstanceConfigRe
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_JSONERROR = "InternalError.JSONError"
 //  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3885,11 +4373,13 @@ func (c *Client) DescribeDBInstanceConfig(request *DescribeDBInstanceConfigReque
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
 //  INTERNALERROR_CDBERROR = "InternalError.CdbError"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_JSONERROR = "InternalError.JSONError"
 //  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3923,8 +4413,9 @@ func NewDescribeDBInstanceGTIDRequest() (request *DescribeDBInstanceGTIDRequest)
 func NewDescribeDBInstanceGTIDResponse() (response *DescribeDBInstanceGTIDResponse) {
     response = &DescribeDBInstanceGTIDResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceGTID
@@ -3934,6 +4425,7 @@ func NewDescribeDBInstanceGTIDResponse() (response *DescribeDBInstanceGTIDRespon
 //  INTERNALERROR_OSSERROR = "InternalError.OssError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3948,6 +4440,7 @@ func (c *Client) DescribeDBInstanceGTID(request *DescribeDBInstanceGTIDRequest) 
 //  INTERNALERROR_OSSERROR = "InternalError.OssError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3981,8 +4474,9 @@ func NewDescribeDBInstanceInfoRequest() (request *DescribeDBInstanceInfoRequest)
 func NewDescribeDBInstanceInfoResponse() (response *DescribeDBInstanceInfoResponse) {
     response = &DescribeDBInstanceInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceInfo
@@ -3990,8 +4484,12 @@ func NewDescribeDBInstanceInfoResponse() (response *DescribeDBInstanceInfoRespon
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_RESOURCENOTEXISTS = "InvalidParameter.ResourceNotExists"
 func (c *Client) DescribeDBInstanceInfo(request *DescribeDBInstanceInfoRequest) (response *DescribeDBInstanceInfoResponse, err error) {
     return c.DescribeDBInstanceInfoWithContext(context.Background(), request)
@@ -4002,8 +4500,12 @@ func (c *Client) DescribeDBInstanceInfo(request *DescribeDBInstanceInfoRequest) 
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_RESOURCENOTEXISTS = "InvalidParameter.ResourceNotExists"
 func (c *Client) DescribeDBInstanceInfoWithContext(ctx context.Context, request *DescribeDBInstanceInfoRequest) (response *DescribeDBInstanceInfoResponse, err error) {
     if request == nil {
@@ -4017,6 +4519,69 @@ func (c *Client) DescribeDBInstanceInfoWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeDBInstanceInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBInstanceLogToCLSRequest() (request *DescribeDBInstanceLogToCLSRequest) {
+    request = &DescribeDBInstanceLogToCLSRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "DescribeDBInstanceLogToCLS")
+    
+    
+    return
+}
+
+func NewDescribeDBInstanceLogToCLSResponse() (response *DescribeDBInstanceLogToCLSResponse) {
+    response = &DescribeDBInstanceLogToCLSResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeDBInstanceLogToCLS
+// 本接口(DescribeDBInstanceLogToCLS)用于查询实例慢日志、错误日志投递CLS的配置，通过appId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
+//  INTERNALERROR_CAUTHERROR = "InternalError.CauthError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+func (c *Client) DescribeDBInstanceLogToCLS(request *DescribeDBInstanceLogToCLSRequest) (response *DescribeDBInstanceLogToCLSResponse, err error) {
+    return c.DescribeDBInstanceLogToCLSWithContext(context.Background(), request)
+}
+
+// DescribeDBInstanceLogToCLS
+// 本接口(DescribeDBInstanceLogToCLS)用于查询实例慢日志、错误日志投递CLS的配置，通过appId、Region以及实例ID过滤出当前实例日志投递CLS的配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
+//  INTERNALERROR_CAUTHERROR = "InternalError.CauthError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  OPERATIONDENIED_RESOURCENOTFUNDERROR = "OperationDenied.ResourceNotFundError"
+func (c *Client) DescribeDBInstanceLogToCLSWithContext(ctx context.Context, request *DescribeDBInstanceLogToCLSRequest) (response *DescribeDBInstanceLogToCLSResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceLogToCLSRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstanceLogToCLS require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBInstanceLogToCLSResponse()
     err = c.Send(request, response)
     return
 }
@@ -4035,8 +4600,9 @@ func NewDescribeDBInstanceRebootTimeRequest() (request *DescribeDBInstanceReboot
 func NewDescribeDBInstanceRebootTimeResponse() (response *DescribeDBInstanceRebootTimeResponse) {
     response = &DescribeDBInstanceRebootTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstanceRebootTime
@@ -4087,8 +4653,9 @@ func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
 func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
     response = &DescribeDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBInstances
@@ -4169,8 +4736,9 @@ func NewDescribeDBPriceRequest() (request *DescribeDBPriceRequest) {
 func NewDescribeDBPriceResponse() (response *DescribeDBPriceResponse) {
     response = &DescribeDBPriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBPrice
@@ -4235,8 +4803,9 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
 func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsResponse) {
     response = &DescribeDBSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSecurityGroups
@@ -4245,6 +4814,7 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
@@ -4255,6 +4825,7 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -4267,6 +4838,7 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR = "CdbError"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
@@ -4277,6 +4849,7 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBSecurityGroupsWithContext(ctx context.Context, request *DescribeDBSecurityGroupsRequest) (response *DescribeDBSecurityGroupsResponse, err error) {
@@ -4309,8 +4882,9 @@ func NewDescribeDBSwitchRecordsRequest() (request *DescribeDBSwitchRecordsReques
 func NewDescribeDBSwitchRecordsResponse() (response *DescribeDBSwitchRecordsResponse) {
     response = &DescribeDBSwitchRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDBSwitchRecords
@@ -4323,6 +4897,7 @@ func NewDescribeDBSwitchRecordsResponse() (response *DescribeDBSwitchRecordsResp
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeDBSwitchRecords(request *DescribeDBSwitchRecordsRequest) (response *DescribeDBSwitchRecordsResponse, err error) {
     return c.DescribeDBSwitchRecordsWithContext(context.Background(), request)
 }
@@ -4337,6 +4912,7 @@ func (c *Client) DescribeDBSwitchRecords(request *DescribeDBSwitchRecordsRequest
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) DescribeDBSwitchRecordsWithContext(ctx context.Context, request *DescribeDBSwitchRecordsRequest) (response *DescribeDBSwitchRecordsResponse, err error) {
     if request == nil {
         request = NewDescribeDBSwitchRecordsRequest()
@@ -4367,8 +4943,9 @@ func NewDescribeDataBackupOverviewRequest() (request *DescribeDataBackupOverview
 func NewDescribeDataBackupOverviewResponse() (response *DescribeDataBackupOverviewResponse) {
     response = &DescribeDataBackupOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDataBackupOverview
@@ -4421,8 +4998,9 @@ func NewDescribeDatabasesRequest() (request *DescribeDatabasesRequest) {
 func NewDescribeDatabasesResponse() (response *DescribeDatabasesResponse) {
     response = &DescribeDatabasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDatabases
@@ -4439,6 +5017,7 @@ func NewDescribeDatabasesResponse() (response *DescribeDatabasesResponse) {
 //  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4460,6 +5039,7 @@ func (c *Client) DescribeDatabases(request *DescribeDatabasesRequest) (response 
 //  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4493,8 +5073,9 @@ func NewDescribeDefaultParamsRequest() (request *DescribeDefaultParamsRequest) {
 func NewDescribeDefaultParamsResponse() (response *DescribeDefaultParamsResponse) {
     response = &DescribeDefaultParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDefaultParams
@@ -4553,8 +5134,9 @@ func NewDescribeDeployGroupListRequest() (request *DescribeDeployGroupListReques
 func NewDescribeDeployGroupListResponse() (response *DescribeDeployGroupListResponse) {
     response = &DescribeDeployGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDeployGroupList
@@ -4613,8 +5195,9 @@ func NewDescribeDeviceMonitorInfoRequest() (request *DescribeDeviceMonitorInfoRe
 func NewDescribeDeviceMonitorInfoResponse() (response *DescribeDeviceMonitorInfoResponse) {
     response = &DescribeDeviceMonitorInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDeviceMonitorInfo
@@ -4683,8 +5266,9 @@ func NewDescribeErrorLogDataRequest() (request *DescribeErrorLogDataRequest) {
 func NewDescribeErrorLogDataResponse() (response *DescribeErrorLogDataResponse) {
     response = &DescribeErrorLogDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeErrorLogData
@@ -4703,6 +5287,7 @@ func NewDescribeErrorLogDataResponse() (response *DescribeErrorLogDataResponse) 
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESULTOVERLIMIT = "OperationDenied.ResultOverLimit"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
@@ -4726,6 +5311,7 @@ func (c *Client) DescribeErrorLogData(request *DescribeErrorLogDataRequest) (res
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_RESULTOVERLIMIT = "OperationDenied.ResultOverLimit"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
@@ -4759,8 +5345,9 @@ func NewDescribeInstanceParamRecordsRequest() (request *DescribeInstanceParamRec
 func NewDescribeInstanceParamRecordsResponse() (response *DescribeInstanceParamRecordsResponse) {
     response = &DescribeInstanceParamRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParamRecords
@@ -4770,6 +5357,7 @@ func NewDescribeInstanceParamRecordsResponse() (response *DescribeInstanceParamR
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENAMENOTFOUND = "InvalidParameter.InstanceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4784,6 +5372,7 @@ func (c *Client) DescribeInstanceParamRecords(request *DescribeInstanceParamReco
 //  AUTHFAILURE = "AuthFailure"
 //  CDBERROR_DATABASEERROR = "CdbError.DatabaseError"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENAMENOTFOUND = "InvalidParameter.InstanceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4817,8 +5406,9 @@ func NewDescribeInstanceParamsRequest() (request *DescribeInstanceParamsRequest)
 func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsResponse) {
     response = &DescribeInstanceParamsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceParams
@@ -4833,6 +5423,7 @@ func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsRespon
 //  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) (response *DescribeInstanceParamsResponse, err error) {
@@ -4851,6 +5442,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 //  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED = "OperationDenied"
 func (c *Client) DescribeInstanceParamsWithContext(ctx context.Context, request *DescribeInstanceParamsRequest) (response *DescribeInstanceParamsResponse, err error) {
@@ -4883,8 +5475,9 @@ func NewDescribeLocalBinlogConfigRequest() (request *DescribeLocalBinlogConfigRe
 func NewDescribeLocalBinlogConfigResponse() (response *DescribeLocalBinlogConfigResponse) {
     response = &DescribeLocalBinlogConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeLocalBinlogConfig
@@ -4935,8 +5528,9 @@ func NewDescribeParamTemplateInfoRequest() (request *DescribeParamTemplateInfoRe
 func NewDescribeParamTemplateInfoResponse() (response *DescribeParamTemplateInfoResponse) {
     response = &DescribeParamTemplateInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplateInfo
@@ -4991,8 +5585,9 @@ func NewDescribeParamTemplatesRequest() (request *DescribeParamTemplatesRequest)
 func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesResponse) {
     response = &DescribeParamTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeParamTemplates
@@ -5004,6 +5599,7 @@ func NewDescribeParamTemplatesResponse() (response *DescribeParamTemplatesRespon
 //  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) (response *DescribeParamTemplatesResponse, err error) {
     return c.DescribeParamTemplatesWithContext(context.Background(), request)
 }
@@ -5017,6 +5613,7 @@ func (c *Client) DescribeParamTemplates(request *DescribeParamTemplatesRequest) 
 //  INTERNALERROR_PARAMERROR = "InternalError.ParamError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 func (c *Client) DescribeParamTemplatesWithContext(ctx context.Context, request *DescribeParamTemplatesRequest) (response *DescribeParamTemplatesResponse, err error) {
     if request == nil {
         request = NewDescribeParamTemplatesRequest()
@@ -5047,8 +5644,9 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
 func NewDescribeProjectSecurityGroupsResponse() (response *DescribeProjectSecurityGroupsResponse) {
     response = &DescribeProjectSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProjectSecurityGroups
@@ -5093,64 +5691,6 @@ func (c *Client) DescribeProjectSecurityGroupsWithContext(ctx context.Context, r
     return
 }
 
-func NewDescribeProxyConnectionPoolConfRequest() (request *DescribeProxyConnectionPoolConfRequest) {
-    request = &DescribeProxyConnectionPoolConfRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "DescribeProxyConnectionPoolConf")
-    
-    
-    return
-}
-
-func NewDescribeProxyConnectionPoolConfResponse() (response *DescribeProxyConnectionPoolConfResponse) {
-    response = &DescribeProxyConnectionPoolConfResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeProxyConnectionPoolConf
-// 当前接口已经废弃，请使用+DescribeCdbProxyInfo+替代。
-//
-// 
-//
-// 获取数据库代理连接池相关规格配置
-//
-// 可能返回的错误码:
-//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) DescribeProxyConnectionPoolConf(request *DescribeProxyConnectionPoolConfRequest) (response *DescribeProxyConnectionPoolConfResponse, err error) {
-    return c.DescribeProxyConnectionPoolConfWithContext(context.Background(), request)
-}
-
-// DescribeProxyConnectionPoolConf
-// 当前接口已经废弃，请使用+DescribeCdbProxyInfo+替代。
-//
-// 
-//
-// 获取数据库代理连接池相关规格配置
-//
-// 可能返回的错误码:
-//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) DescribeProxyConnectionPoolConfWithContext(ctx context.Context, request *DescribeProxyConnectionPoolConfRequest) (response *DescribeProxyConnectionPoolConfResponse, err error) {
-    if request == nil {
-        request = NewDescribeProxyConnectionPoolConfRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeProxyConnectionPoolConf require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeProxyConnectionPoolConfResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDescribeProxyCustomConfRequest() (request *DescribeProxyCustomConfRequest) {
     request = &DescribeProxyCustomConfRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5165,8 +5705,9 @@ func NewDescribeProxyCustomConfRequest() (request *DescribeProxyCustomConfReques
 func NewDescribeProxyCustomConfResponse() (response *DescribeProxyCustomConfResponse) {
     response = &DescribeProxyCustomConfResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxyCustomConf
@@ -5215,8 +5756,9 @@ func NewDescribeProxySupportParamRequest() (request *DescribeProxySupportParamRe
 func NewDescribeProxySupportParamResponse() (response *DescribeProxySupportParamResponse) {
     response = &DescribeProxySupportParamResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProxySupportParam
@@ -5227,6 +5769,7 @@ func NewDescribeProxySupportParamResponse() (response *DescribeProxySupportParam
 //  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeProxySupportParam(request *DescribeProxySupportParamRequest) (response *DescribeProxySupportParamResponse, err error) {
     return c.DescribeProxySupportParamWithContext(context.Background(), request)
@@ -5240,6 +5783,7 @@ func (c *Client) DescribeProxySupportParam(request *DescribeProxySupportParamReq
 //  INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeProxySupportParamWithContext(ctx context.Context, request *DescribeProxySupportParamRequest) (response *DescribeProxySupportParamResponse, err error) {
     if request == nil {
@@ -5271,8 +5815,9 @@ func NewDescribeRemoteBackupConfigRequest() (request *DescribeRemoteBackupConfig
 func NewDescribeRemoteBackupConfigResponse() (response *DescribeRemoteBackupConfigResponse) {
     response = &DescribeRemoteBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRemoteBackupConfig
@@ -5321,8 +5866,9 @@ func NewDescribeRoGroupsRequest() (request *DescribeRoGroupsRequest) {
 func NewDescribeRoGroupsResponse() (response *DescribeRoGroupsResponse) {
     response = &DescribeRoGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRoGroups
@@ -5333,8 +5879,10 @@ func NewDescribeRoGroupsResponse() (response *DescribeRoGroupsResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 func (c *Client) DescribeRoGroups(request *DescribeRoGroupsRequest) (response *DescribeRoGroupsResponse, err error) {
@@ -5349,8 +5897,10 @@ func (c *Client) DescribeRoGroups(request *DescribeRoGroupsRequest) (response *D
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED_ACTIONNOTSUPPORT = "OperationDenied.ActionNotSupport"
 func (c *Client) DescribeRoGroupsWithContext(ctx context.Context, request *DescribeRoGroupsRequest) (response *DescribeRoGroupsResponse, err error) {
@@ -5383,8 +5933,9 @@ func NewDescribeRoMinScaleRequest() (request *DescribeRoMinScaleRequest) {
 func NewDescribeRoMinScaleResponse() (response *DescribeRoMinScaleResponse) {
     response = &DescribeRoMinScaleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRoMinScale
@@ -5441,8 +5992,9 @@ func NewDescribeRollbackRangeTimeRequest() (request *DescribeRollbackRangeTimeRe
 func NewDescribeRollbackRangeTimeResponse() (response *DescribeRollbackRangeTimeResponse) {
     response = &DescribeRollbackRangeTimeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRollbackRangeTime
@@ -5499,8 +6051,9 @@ func NewDescribeRollbackTaskDetailRequest() (request *DescribeRollbackTaskDetail
 func NewDescribeRollbackTaskDetailResponse() (response *DescribeRollbackTaskDetailResponse) {
     response = &DescribeRollbackTaskDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRollbackTaskDetail
@@ -5553,8 +6106,9 @@ func NewDescribeSlowLogDataRequest() (request *DescribeSlowLogDataRequest) {
 func NewDescribeSlowLogDataResponse() (response *DescribeSlowLogDataResponse) {
     response = &DescribeSlowLogDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSlowLogData
@@ -5564,6 +6118,7 @@ func NewDescribeSlowLogDataResponse() (response *DescribeSlowLogDataResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
+//  FAILEDOPERATION_RESULTSETOVERLIMIT = "FailedOperation.ResultSetOverLimit"
 //  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
@@ -5588,6 +6143,7 @@ func (c *Client) DescribeSlowLogData(request *DescribeSlowLogDataRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
+//  FAILEDOPERATION_RESULTSETOVERLIMIT = "FailedOperation.ResultSetOverLimit"
 //  FAILEDOPERATION_TIMEOUTERROR = "FailedOperation.TimeoutError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DBOPERATIONERROR = "InternalError.DBOperationError"
@@ -5631,12 +6187,13 @@ func NewDescribeSlowLogsRequest() (request *DescribeSlowLogsRequest) {
 func NewDescribeSlowLogsResponse() (response *DescribeSlowLogsResponse) {
     response = &DescribeSlowLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSlowLogs
-// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。
+// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5655,7 +6212,7 @@ func (c *Client) DescribeSlowLogs(request *DescribeSlowLogsRequest) (response *D
 }
 
 // DescribeSlowLogs
-// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。
+// 本接口(DescribeSlowLogs)用于获取云数据库实例的慢查询日志。说明：若单次查询数据量过大，则有可能响应超时，建议缩短单次查询时间范围，如一小时，避免导致超时。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -5699,8 +6256,9 @@ func NewDescribeSupportedPrivilegesRequest() (request *DescribeSupportedPrivileg
 func NewDescribeSupportedPrivilegesResponse() (response *DescribeSupportedPrivilegesResponse) {
     response = &DescribeSupportedPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSupportedPrivileges
@@ -5799,8 +6357,9 @@ func NewDescribeTablesRequest() (request *DescribeTablesRequest) {
 func NewDescribeTablesResponse() (response *DescribeTablesResponse) {
     response = &DescribeTablesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTables
@@ -5809,6 +6368,8 @@ func NewDescribeTablesResponse() (response *DescribeTablesResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -5824,6 +6385,8 @@ func (c *Client) DescribeTables(request *DescribeTablesRequest) (response *Descr
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -5859,8 +6422,9 @@ func NewDescribeTagsOfInstanceIdsRequest() (request *DescribeTagsOfInstanceIdsRe
 func NewDescribeTagsOfInstanceIdsResponse() (response *DescribeTagsOfInstanceIdsResponse) {
     response = &DescribeTagsOfInstanceIdsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTagsOfInstanceIds
@@ -5927,8 +6491,9 @@ func NewDescribeTasksRequest() (request *DescribeTasksRequest) {
 func NewDescribeTasksResponse() (response *DescribeTasksResponse) {
     response = &DescribeTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTasks
@@ -5943,6 +6508,7 @@ func NewDescribeTasksResponse() (response *DescribeTasksResponse) {
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
 //  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
@@ -5962,6 +6528,7 @@ func (c *Client) DescribeTasks(request *DescribeTasksRequest) (response *Describ
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
 //  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
@@ -5995,8 +6562,9 @@ func NewDescribeTimeWindowRequest() (request *DescribeTimeWindowRequest) {
 func NewDescribeTimeWindowResponse() (response *DescribeTimeWindowResponse) {
     response = &DescribeTimeWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTimeWindow
@@ -6006,6 +6574,7 @@ func NewDescribeTimeWindowResponse() (response *DescribeTimeWindowResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 func (c *Client) DescribeTimeWindow(request *DescribeTimeWindowRequest) (response *DescribeTimeWindowResponse, err error) {
     return c.DescribeTimeWindowWithContext(context.Background(), request)
@@ -6018,6 +6587,7 @@ func (c *Client) DescribeTimeWindow(request *DescribeTimeWindowRequest) (respons
 //  AUTHFAILURE = "AuthFailure"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 func (c *Client) DescribeTimeWindowWithContext(ctx context.Context, request *DescribeTimeWindowRequest) (response *DescribeTimeWindowResponse, err error) {
     if request == nil {
@@ -6049,8 +6619,9 @@ func NewDescribeUploadedFilesRequest() (request *DescribeUploadedFilesRequest) {
 func NewDescribeUploadedFilesResponse() (response *DescribeUploadedFilesResponse) {
     response = &DescribeUploadedFilesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUploadedFiles
@@ -6103,8 +6674,9 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
 func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGroupsResponse) {
     response = &DisassociateSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateSecurityGroups
@@ -6119,6 +6691,7 @@ func NewDisassociateSecurityGroupsResponse() (response *DisassociateSecurityGrou
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
     return c.DisassociateSecurityGroupsWithContext(context.Background(), request)
 }
@@ -6135,6 +6708,7 @@ func (c *Client) DisassociateSecurityGroups(request *DisassociateSecurityGroupsR
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 func (c *Client) DisassociateSecurityGroupsWithContext(ctx context.Context, request *DisassociateSecurityGroupsRequest) (response *DisassociateSecurityGroupsResponse, err error) {
     if request == nil {
         request = NewDisassociateSecurityGroupsRequest()
@@ -6165,8 +6739,9 @@ func NewInitDBInstancesRequest() (request *InitDBInstancesRequest) {
 func NewInitDBInstancesResponse() (response *InitDBInstancesResponse) {
     response = &InitDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InitDBInstances
@@ -6231,8 +6806,9 @@ func NewInquiryPriceUpgradeInstancesRequest() (request *InquiryPriceUpgradeInsta
 func NewInquiryPriceUpgradeInstancesResponse() (response *InquiryPriceUpgradeInstancesResponse) {
     response = &InquiryPriceUpgradeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceUpgradeInstances
@@ -6289,8 +6865,9 @@ func NewIsolateDBInstanceRequest() (request *IsolateDBInstanceRequest) {
 func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
     response = &IsolateDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // IsolateDBInstance
@@ -6304,6 +6881,8 @@ func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
 //  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -6311,6 +6890,7 @@ func NewIsolateDBInstanceResponse() (response *IsolateDBInstanceResponse) {
 //  OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 //  OPERATIONDENIED_UNSUPPORTREFUNDERROR = "OperationDenied.UnSupportRefundError"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
 //  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
 func (c *Client) IsolateDBInstance(request *IsolateDBInstanceRequest) (response *IsolateDBInstanceResponse, err error) {
@@ -6328,6 +6908,8 @@ func (c *Client) IsolateDBInstance(request *IsolateDBInstanceRequest) (response 
 //  INTERNALERROR_TRADEERROR = "InternalError.TradeError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
 //  OPERATIONDENIED = "OperationDenied"
@@ -6335,6 +6917,7 @@ func (c *Client) IsolateDBInstance(request *IsolateDBInstanceRequest) (response 
 //  OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
 //  OPERATIONDENIED_INSTANCESTATUSERROR = "OperationDenied.InstanceStatusError"
 //  OPERATIONDENIED_UNSUPPORTREFUNDERROR = "OperationDenied.UnSupportRefundError"
+//  OPERATIONDENIED_USERHASNOSTRATEGY = "OperationDenied.UserHasNoStrategy"
 //  OPERATIONDENIED_WRONGSTATUS = "OperationDenied.WrongStatus"
 //  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
 func (c *Client) IsolateDBInstanceWithContext(ctx context.Context, request *IsolateDBInstanceRequest) (response *IsolateDBInstanceResponse, err error) {
@@ -6367,8 +6950,9 @@ func NewModifyAccountDescriptionRequest() (request *ModifyAccountDescriptionRequ
 func NewModifyAccountDescriptionResponse() (response *ModifyAccountDescriptionResponse) {
     response = &ModifyAccountDescriptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountDescription
@@ -6471,8 +7055,9 @@ func NewModifyAccountHostRequest() (request *ModifyAccountHostRequest) {
 func NewModifyAccountHostResponse() (response *ModifyAccountHostResponse) {
     response = &ModifyAccountHostResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountHost
@@ -6563,8 +7148,9 @@ func NewModifyAccountMaxUserConnectionsRequest() (request *ModifyAccountMaxUserC
 func NewModifyAccountMaxUserConnectionsResponse() (response *ModifyAccountMaxUserConnectionsResponse) {
     response = &ModifyAccountMaxUserConnectionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountMaxUserConnections
@@ -6621,8 +7207,9 @@ func NewModifyAccountPasswordRequest() (request *ModifyAccountPasswordRequest) {
 func NewModifyAccountPasswordResponse() (response *ModifyAccountPasswordResponse) {
     response = &ModifyAccountPasswordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountPassword
@@ -6731,8 +7318,9 @@ func NewModifyAccountPrivilegesRequest() (request *ModifyAccountPrivilegesReques
 func NewModifyAccountPrivilegesResponse() (response *ModifyAccountPrivilegesResponse) {
     response = &ModifyAccountPrivilegesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAccountPrivileges
@@ -6851,8 +7439,9 @@ func NewModifyAuditConfigRequest() (request *ModifyAuditConfigRequest) {
 func NewModifyAuditConfigResponse() (response *ModifyAuditConfigResponse) {
     response = &ModifyAuditConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAuditConfig
@@ -6921,8 +7510,9 @@ func NewModifyAuditRuleRequest() (request *ModifyAuditRuleRequest) {
 func NewModifyAuditRuleResponse() (response *ModifyAuditRuleResponse) {
     response = &ModifyAuditRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAuditRule
@@ -6977,6 +7567,122 @@ func (c *Client) ModifyAuditRuleWithContext(ctx context.Context, request *Modify
     return
 }
 
+func NewModifyAuditRuleTemplatesRequest() (request *ModifyAuditRuleTemplatesRequest) {
+    request = &ModifyAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewModifyAuditRuleTemplatesResponse() (response *ModifyAuditRuleTemplatesResponse) {
+    response = &ModifyAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAuditRuleTemplates
+// 修改审计规则模板
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) ModifyAuditRuleTemplates(request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
+    return c.ModifyAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// ModifyAuditRuleTemplates
+// 修改审计规则模板
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+func (c *Client) ModifyAuditRuleTemplatesWithContext(ctx context.Context, request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAuditServiceRequest() (request *ModifyAuditServiceRequest) {
+    request = &ModifyAuditServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyAuditService")
+    
+    
+    return
+}
+
+func NewModifyAuditServiceResponse() (response *ModifyAuditServiceResponse) {
+    response = &ModifyAuditServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyAuditService
+// 本接口(ModifyAuditService)用于修改云数据库审计日志保存时长、审计规则等服务配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
+//  OPERATIONDENIED_AUDITSTATUSERROR = "OperationDenied.AuditStatusError"
+//  OPERATIONDENIED_AUDITTASKCONFLICTERROR = "OperationDenied.AuditTaskConflictError"
+//  OPERATIONDENIED_MODIFYAUDITSTATUSERROR = "OperationDenied.ModifyAuditStatusError"
+func (c *Client) ModifyAuditService(request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
+    return c.ModifyAuditServiceWithContext(context.Background(), request)
+}
+
+// ModifyAuditService
+// 本接口(ModifyAuditService)用于修改云数据库审计日志保存时长、审计规则等服务配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_AUDITCONFIGNOTEXIST = "FailedOperation.AuditConfigNotExist"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+//  OPERATIONDENIED_AUDITPOLICYNOTEXISTERROR = "OperationDenied.AuditPolicyNotExistError"
+//  OPERATIONDENIED_AUDITSTATUSERROR = "OperationDenied.AuditStatusError"
+//  OPERATIONDENIED_AUDITTASKCONFLICTERROR = "OperationDenied.AuditTaskConflictError"
+//  OPERATIONDENIED_MODIFYAUDITSTATUSERROR = "OperationDenied.ModifyAuditStatusError"
+func (c *Client) ModifyAuditServiceWithContext(ctx context.Context, request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditServiceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAuditService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAuditServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyAutoRenewFlagRequest() (request *ModifyAutoRenewFlagRequest) {
     request = &ModifyAutoRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6991,8 +7697,9 @@ func NewModifyAutoRenewFlagRequest() (request *ModifyAutoRenewFlagRequest) {
 func NewModifyAutoRenewFlagResponse() (response *ModifyAutoRenewFlagResponse) {
     response = &ModifyAutoRenewFlagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAutoRenewFlag
@@ -7003,6 +7710,7 @@ func NewModifyAutoRenewFlagResponse() (response *ModifyAutoRenewFlagResponse) {
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -7019,6 +7727,7 @@ func (c *Client) ModifyAutoRenewFlag(request *ModifyAutoRenewFlagRequest) (respo
 //  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -7053,8 +7762,9 @@ func NewModifyBackupConfigRequest() (request *ModifyBackupConfigRequest) {
 func NewModifyBackupConfigResponse() (response *ModifyBackupConfigResponse) {
     response = &ModifyBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupConfig
@@ -7115,8 +7825,9 @@ func NewModifyBackupDownloadRestrictionRequest() (request *ModifyBackupDownloadR
 func NewModifyBackupDownloadRestrictionResponse() (response *ModifyBackupDownloadRestrictionResponse) {
     response = &ModifyBackupDownloadRestrictionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupDownloadRestriction
@@ -7125,6 +7836,7 @@ func NewModifyBackupDownloadRestrictionResponse() (response *ModifyBackupDownloa
 // 可能返回的错误码:
 //  INTERNALERROR_AUTHERROR = "InternalError.AuthError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
@@ -7139,6 +7851,7 @@ func (c *Client) ModifyBackupDownloadRestriction(request *ModifyBackupDownloadRe
 // 可能返回的错误码:
 //  INTERNALERROR_AUTHERROR = "InternalError.AuthError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
@@ -7173,8 +7886,9 @@ func NewModifyBackupEncryptionStatusRequest() (request *ModifyBackupEncryptionSt
 func NewModifyBackupEncryptionStatusResponse() (response *ModifyBackupEncryptionStatusResponse) {
     response = &ModifyBackupEncryptionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyBackupEncryptionStatus
@@ -7229,180 +7943,6 @@ func (c *Client) ModifyBackupEncryptionStatusWithContext(ctx context.Context, re
     return
 }
 
-func NewModifyCDBProxyConnectionPoolRequest() (request *ModifyCDBProxyConnectionPoolRequest) {
-    request = &ModifyCDBProxyConnectionPoolRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "ModifyCDBProxyConnectionPool")
-    
-    
-    return
-}
-
-func NewModifyCDBProxyConnectionPoolResponse() (response *ModifyCDBProxyConnectionPoolResponse) {
-    response = &ModifyCDBProxyConnectionPoolResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyCDBProxyConnectionPool
-// 当前接口已经废弃，请使用+AdjustCdbProxyAddress+进行替代。
-//
-// 
-//
-// 请求该接口配置数据库连接池；支持的连接池配置请求DescribeProxyConnectionPoolConf接口获取。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) ModifyCDBProxyConnectionPool(request *ModifyCDBProxyConnectionPoolRequest) (response *ModifyCDBProxyConnectionPoolResponse, err error) {
-    return c.ModifyCDBProxyConnectionPoolWithContext(context.Background(), request)
-}
-
-// ModifyCDBProxyConnectionPool
-// 当前接口已经废弃，请使用+AdjustCdbProxyAddress+进行替代。
-//
-// 
-//
-// 请求该接口配置数据库连接池；支持的连接池配置请求DescribeProxyConnectionPoolConf接口获取。
-//
-// 可能返回的错误码:
-//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) ModifyCDBProxyConnectionPoolWithContext(ctx context.Context, request *ModifyCDBProxyConnectionPoolRequest) (response *ModifyCDBProxyConnectionPoolResponse, err error) {
-    if request == nil {
-        request = NewModifyCDBProxyConnectionPoolRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCDBProxyConnectionPool require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyCDBProxyConnectionPoolResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyCDBProxyDescRequest() (request *ModifyCDBProxyDescRequest) {
-    request = &ModifyCDBProxyDescRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "ModifyCDBProxyDesc")
-    
-    
-    return
-}
-
-func NewModifyCDBProxyDescResponse() (response *ModifyCDBProxyDescResponse) {
-    response = &ModifyCDBProxyDescResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyCDBProxyDesc
-// 当前接口已经废弃，请使用+ModifyCdbProxyAddressDesc+进行替代。
-//
-// 
-//
-// 修改数据库代理描述
-//
-// 可能返回的错误码:
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) ModifyCDBProxyDesc(request *ModifyCDBProxyDescRequest) (response *ModifyCDBProxyDescResponse, err error) {
-    return c.ModifyCDBProxyDescWithContext(context.Background(), request)
-}
-
-// ModifyCDBProxyDesc
-// 当前接口已经废弃，请使用+ModifyCdbProxyAddressDesc+进行替代。
-//
-// 
-//
-// 修改数据库代理描述
-//
-// 可能返回的错误码:
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-func (c *Client) ModifyCDBProxyDescWithContext(ctx context.Context, request *ModifyCDBProxyDescRequest) (response *ModifyCDBProxyDescResponse, err error) {
-    if request == nil {
-        request = NewModifyCDBProxyDescRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCDBProxyDesc require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyCDBProxyDescResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyCDBProxyVipVPortRequest() (request *ModifyCDBProxyVipVPortRequest) {
-    request = &ModifyCDBProxyVipVPortRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "ModifyCDBProxyVipVPort")
-    
-    
-    return
-}
-
-func NewModifyCDBProxyVipVPortResponse() (response *ModifyCDBProxyVipVPortResponse) {
-    response = &ModifyCDBProxyVipVPortResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyCDBProxyVipVPort
-// 当前接口已经废弃，请使用+ModifyCdbProxyAddressVipAndVPort+进行替代。
-//
-// 
-//
-// 修改数据库代理VIP或端口
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-func (c *Client) ModifyCDBProxyVipVPort(request *ModifyCDBProxyVipVPortRequest) (response *ModifyCDBProxyVipVPortResponse, err error) {
-    return c.ModifyCDBProxyVipVPortWithContext(context.Background(), request)
-}
-
-// ModifyCDBProxyVipVPort
-// 当前接口已经废弃，请使用+ModifyCdbProxyAddressVipAndVPort+进行替代。
-//
-// 
-//
-// 修改数据库代理VIP或端口
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-func (c *Client) ModifyCDBProxyVipVPortWithContext(ctx context.Context, request *ModifyCDBProxyVipVPortRequest) (response *ModifyCDBProxyVipVPortResponse, err error) {
-    if request == nil {
-        request = NewModifyCDBProxyVipVPortRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyCDBProxyVipVPort require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewModifyCDBProxyVipVPortResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewModifyCdbProxyAddressDescRequest() (request *ModifyCdbProxyAddressDescRequest) {
     request = &ModifyCdbProxyAddressDescRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7417,8 +7957,9 @@ func NewModifyCdbProxyAddressDescRequest() (request *ModifyCdbProxyAddressDescRe
 func NewModifyCdbProxyAddressDescResponse() (response *ModifyCdbProxyAddressDescResponse) {
     response = &ModifyCdbProxyAddressDescResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCdbProxyAddressDesc
@@ -7465,8 +8006,9 @@ func NewModifyCdbProxyAddressVipAndVPortRequest() (request *ModifyCdbProxyAddres
 func NewModifyCdbProxyAddressVipAndVPortResponse() (response *ModifyCdbProxyAddressVipAndVPortResponse) {
     response = &ModifyCdbProxyAddressVipAndVPortResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCdbProxyAddressVipAndVPort
@@ -7523,8 +8065,9 @@ func NewModifyCdbProxyParamRequest() (request *ModifyCdbProxyParamRequest) {
 func NewModifyCdbProxyParamResponse() (response *ModifyCdbProxyParamResponse) {
     response = &ModifyCdbProxyParamResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCdbProxyParam
@@ -7533,6 +8076,7 @@ func NewModifyCdbProxyParamResponse() (response *ModifyCdbProxyParamResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ModifyCdbProxyParam(request *ModifyCdbProxyParamRequest) (response *ModifyCdbProxyParamResponse, err error) {
     return c.ModifyCdbProxyParamWithContext(context.Background(), request)
 }
@@ -7543,6 +8087,7 @@ func (c *Client) ModifyCdbProxyParam(request *ModifyCdbProxyParamRequest) (respo
 // 可能返回的错误码:
 //  FAILEDOPERATION_DESCRIBEPROXYGROUPERROR = "FailedOperation.DescribeProxyGroupError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ModifyCdbProxyParamWithContext(ctx context.Context, request *ModifyCdbProxyParamRequest) (response *ModifyCdbProxyParamResponse, err error) {
     if request == nil {
         request = NewModifyCdbProxyParamRequest()
@@ -7555,6 +8100,63 @@ func (c *Client) ModifyCdbProxyParamWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyCdbProxyParamResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDBInstanceLogToCLSRequest() (request *ModifyDBInstanceLogToCLSRequest) {
+    request = &ModifyDBInstanceLogToCLSRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "ModifyDBInstanceLogToCLS")
+    
+    
+    return
+}
+
+func NewModifyDBInstanceLogToCLSResponse() (response *ModifyDBInstanceLogToCLSResponse) {
+    response = &ModifyDBInstanceLogToCLSResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyDBInstanceLogToCLS
+// 开启/关闭CDB慢日志、错误日志投递CLS
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+//  MISSINGPARAMETER_MISSINGPARAMERROR = "MissingParameter.MissingParamError"
+func (c *Client) ModifyDBInstanceLogToCLS(request *ModifyDBInstanceLogToCLSRequest) (response *ModifyDBInstanceLogToCLSResponse, err error) {
+    return c.ModifyDBInstanceLogToCLSWithContext(context.Background(), request)
+}
+
+// ModifyDBInstanceLogToCLS
+// 开启/关闭CDB慢日志、错误日志投递CLS
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  INVALIDPARAMETER_JSONUNMARSHALERROR = "InvalidParameter.JsonUnmarshalError"
+//  MISSINGPARAMETER_MISSINGPARAMERROR = "MissingParameter.MissingParamError"
+func (c *Client) ModifyDBInstanceLogToCLSWithContext(ctx context.Context, request *ModifyDBInstanceLogToCLSRequest) (response *ModifyDBInstanceLogToCLSResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceLogToCLSRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceLogToCLS require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBInstanceLogToCLSResponse()
     err = c.Send(request, response)
     return
 }
@@ -7573,8 +8175,9 @@ func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
 func NewModifyDBInstanceNameResponse() (response *ModifyDBInstanceNameResponse) {
     response = &ModifyDBInstanceNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceName
@@ -7629,8 +8232,9 @@ func NewModifyDBInstanceProjectRequest() (request *ModifyDBInstanceProjectReques
 func NewModifyDBInstanceProjectResponse() (response *ModifyDBInstanceProjectResponse) {
     response = &ModifyDBInstanceProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceProject
@@ -7641,6 +8245,7 @@ func NewModifyDBInstanceProjectResponse() (response *ModifyDBInstanceProjectResp
 //  INTERNALERROR_TAGERROR = "InternalError.TagError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ModifyDBInstanceProject(request *ModifyDBInstanceProjectRequest) (response *ModifyDBInstanceProjectResponse, err error) {
@@ -7655,6 +8260,7 @@ func (c *Client) ModifyDBInstanceProject(request *ModifyDBInstanceProjectRequest
 //  INTERNALERROR_TAGERROR = "InternalError.TagError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ModifyDBInstanceProjectWithContext(ctx context.Context, request *ModifyDBInstanceProjectRequest) (response *ModifyDBInstanceProjectResponse, err error) {
@@ -7687,8 +8293,9 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
 func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecurityGroupsResponse) {
     response = &ModifyDBInstanceSecurityGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceSecurityGroups
@@ -7700,6 +8307,7 @@ func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecu
 //  INTERNALERROR_RESOURCENOTUNIQUE = "InternalError.ResourceNotUnique"
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
     return c.ModifyDBInstanceSecurityGroupsWithContext(context.Background(), request)
@@ -7714,6 +8322,7 @@ func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurit
 //  INTERNALERROR_RESOURCENOTUNIQUE = "InternalError.ResourceNotUnique"
 //  INTERNALERROR_SECURITYGROUPERROR = "InternalError.SecurityGroupError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
     if request == nil {
@@ -7745,8 +8354,9 @@ func NewModifyDBInstanceVipVportRequest() (request *ModifyDBInstanceVipVportRequ
 func NewModifyDBInstanceVipVportResponse() (response *ModifyDBInstanceVipVportResponse) {
     response = &ModifyDBInstanceVipVportResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDBInstanceVipVport
@@ -7755,6 +8365,8 @@ func NewModifyDBInstanceVipVportResponse() (response *ModifyDBInstanceVipVportRe
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
@@ -7770,6 +8382,8 @@ func (c *Client) ModifyDBInstanceVipVport(request *ModifyDBInstanceVipVportReque
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION_STATUSCONFLICT = "FailedOperation.StatusConflict"
+//  INTERNALERROR_JSONERROR = "InternalError.JSONError"
+//  INTERNALERROR_NETWORKERROR = "InternalError.NetworkError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
@@ -7805,8 +8419,9 @@ func NewModifyInstanceParamRequest() (request *ModifyInstanceParamRequest) {
 func NewModifyInstanceParamResponse() (response *ModifyInstanceParamResponse) {
     response = &ModifyInstanceParamResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceParam
@@ -7885,8 +8500,9 @@ func NewModifyInstancePasswordComplexityRequest() (request *ModifyInstancePasswo
 func NewModifyInstancePasswordComplexityResponse() (response *ModifyInstancePasswordComplexityResponse) {
     response = &ModifyInstancePasswordComplexityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstancePasswordComplexity
@@ -7907,6 +8523,7 @@ func NewModifyInstancePasswordComplexityResponse() (response *ModifyInstancePass
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
 //  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstancePasswordComplexity(request *ModifyInstancePasswordComplexityRequest) (response *ModifyInstancePasswordComplexityResponse, err error) {
@@ -7931,6 +8548,7 @@ func (c *Client) ModifyInstancePasswordComplexity(request *ModifyInstancePasswor
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED = "OperationDenied"
+//  RESOURCENOTFOUND_CDBINSTANCENOTFOUNDERROR = "ResourceNotFound.CdbInstanceNotFoundError"
 //  RESOURCENOTFOUND_INSTANCENOTFUNDERROR = "ResourceNotFound.InstanceNotFundError"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstancePasswordComplexityWithContext(ctx context.Context, request *ModifyInstancePasswordComplexityRequest) (response *ModifyInstancePasswordComplexityResponse, err error) {
@@ -7963,8 +8581,9 @@ func NewModifyInstanceTagRequest() (request *ModifyInstanceTagRequest) {
 func NewModifyInstanceTagResponse() (response *ModifyInstanceTagResponse) {
     response = &ModifyInstanceTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyInstanceTag
@@ -8039,8 +8658,9 @@ func NewModifyLocalBinlogConfigRequest() (request *ModifyLocalBinlogConfigReques
 func NewModifyLocalBinlogConfigResponse() (response *ModifyLocalBinlogConfigResponse) {
     response = &ModifyLocalBinlogConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyLocalBinlogConfig
@@ -8095,8 +8715,9 @@ func NewModifyNameOrDescByDpIdRequest() (request *ModifyNameOrDescByDpIdRequest)
 func NewModifyNameOrDescByDpIdResponse() (response *ModifyNameOrDescByDpIdResponse) {
     response = &ModifyNameOrDescByDpIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNameOrDescByDpId
@@ -8153,8 +8774,9 @@ func NewModifyParamTemplateRequest() (request *ModifyParamTemplateRequest) {
 func NewModifyParamTemplateResponse() (response *ModifyParamTemplateResponse) {
     response = &ModifyParamTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyParamTemplate
@@ -8213,8 +8835,9 @@ func NewModifyRemoteBackupConfigRequest() (request *ModifyRemoteBackupConfigRequ
 func NewModifyRemoteBackupConfigResponse() (response *ModifyRemoteBackupConfigResponse) {
     response = &ModifyRemoteBackupConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRemoteBackupConfig
@@ -8269,8 +8892,9 @@ func NewModifyRoGroupInfoRequest() (request *ModifyRoGroupInfoRequest) {
 func NewModifyRoGroupInfoResponse() (response *ModifyRoGroupInfoResponse) {
     response = &ModifyRoGroupInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyRoGroupInfo
@@ -8347,8 +8971,9 @@ func NewModifyTimeWindowRequest() (request *ModifyTimeWindowRequest) {
 func NewModifyTimeWindowResponse() (response *ModifyTimeWindowResponse) {
     response = &ModifyTimeWindowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyTimeWindow
@@ -8409,8 +9034,9 @@ func NewOfflineIsolatedInstancesRequest() (request *OfflineIsolatedInstancesRequ
 func NewOfflineIsolatedInstancesResponse() (response *OfflineIsolatedInstancesResponse) {
     response = &OfflineIsolatedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OfflineIsolatedInstances
@@ -8425,6 +9051,7 @@ func NewOfflineIsolatedInstancesResponse() (response *OfflineIsolatedInstancesRe
 // 注意，实例下线后，相关资源和数据将无法找回，请谨慎操作。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -8445,6 +9072,7 @@ func (c *Client) OfflineIsolatedInstances(request *OfflineIsolatedInstancesReque
 // 注意，实例下线后，相关资源和数据将无法找回，请谨慎操作。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_FTPERROR = "InternalError.FtpError"
 //  INTERNALERROR_UNDEFINEDERROR = "InternalError.UndefinedError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -8479,8 +9107,9 @@ func NewOpenAuditServiceRequest() (request *OpenAuditServiceRequest) {
 func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
     response = &OpenAuditServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenAuditService
@@ -8551,8 +9180,9 @@ func NewOpenDBInstanceEncryptionRequest() (request *OpenDBInstanceEncryptionRequ
 func NewOpenDBInstanceEncryptionResponse() (response *OpenDBInstanceEncryptionResponse) {
     response = &OpenDBInstanceEncryptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenDBInstanceEncryption
@@ -8580,6 +9210,7 @@ func NewOpenDBInstanceEncryptionResponse() (response *OpenDBInstanceEncryptionRe
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
+//  INTERNALERROR_HTTPREQUESTERROR = "InternalError.HttpRequestError"
 //  INTERNALERROR_KMSERROR = "InternalError.KmsError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -8614,6 +9245,7 @@ func (c *Client) OpenDBInstanceEncryption(request *OpenDBInstanceEncryptionReque
 //
 // 可能返回的错误码:
 //  CDBERROR = "CdbError"
+//  INTERNALERROR_HTTPREQUESTERROR = "InternalError.HttpRequestError"
 //  INTERNALERROR_KMSERROR = "InternalError.KmsError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -8649,8 +9281,9 @@ func NewOpenDBInstanceGTIDRequest() (request *OpenDBInstanceGTIDRequest) {
 func NewOpenDBInstanceGTIDResponse() (response *OpenDBInstanceGTIDResponse) {
     response = &OpenDBInstanceGTIDResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenDBInstanceGTID
@@ -8703,8 +9336,9 @@ func NewOpenWanServiceRequest() (request *OpenWanServiceRequest) {
 func NewOpenWanServiceResponse() (response *OpenWanServiceResponse) {
     response = &OpenWanServiceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // OpenWanService
@@ -8757,68 +9391,6 @@ func (c *Client) OpenWanServiceWithContext(ctx context.Context, request *OpenWan
     return
 }
 
-func NewQueryCDBProxyRequest() (request *QueryCDBProxyRequest) {
-    request = &QueryCDBProxyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("cdb", APIVersion, "QueryCDBProxy")
-    
-    
-    return
-}
-
-func NewQueryCDBProxyResponse() (response *QueryCDBProxyResponse) {
-    response = &QueryCDBProxyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// QueryCDBProxy
-// 当前接口已经废弃，请使用+DescribeCdbProxyInfo+进行替代。
-//
-// 
-//
-// 查询代理详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
-func (c *Client) QueryCDBProxy(request *QueryCDBProxyRequest) (response *QueryCDBProxyResponse, err error) {
-    return c.QueryCDBProxyWithContext(context.Background(), request)
-}
-
-// QueryCDBProxy
-// 当前接口已经废弃，请使用+DescribeCdbProxyInfo+进行替代。
-//
-// 
-//
-// 查询代理详情
-//
-// 可能返回的错误码:
-//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
-//  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
-//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
-//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
-func (c *Client) QueryCDBProxyWithContext(ctx context.Context, request *QueryCDBProxyRequest) (response *QueryCDBProxyResponse, err error) {
-    if request == nil {
-        request = NewQueryCDBProxyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("QueryCDBProxy require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewQueryCDBProxyResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewReleaseIsolatedDBInstancesRequest() (request *ReleaseIsolatedDBInstancesRequest) {
     request = &ReleaseIsolatedDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8833,8 +9405,9 @@ func NewReleaseIsolatedDBInstancesRequest() (request *ReleaseIsolatedDBInstances
 func NewReleaseIsolatedDBInstancesResponse() (response *ReleaseIsolatedDBInstancesResponse) {
     response = &ReleaseIsolatedDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReleaseIsolatedDBInstances
@@ -8844,7 +9417,9 @@ func NewReleaseIsolatedDBInstancesResponse() (response *ReleaseIsolatedDBInstanc
 //  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_INSTANCEUNSUPPORTEDOPERATEERROR = "OperationDenied.InstanceUnsupportedOperateError"
@@ -8862,7 +9437,9 @@ func (c *Client) ReleaseIsolatedDBInstances(request *ReleaseIsolatedDBInstancesR
 //  FAILEDOPERATION_OPERATIONINCONFLICTERR = "FailedOperation.OperationInConflictErr"
 //  INTERNALERROR_DATABASEACCESSERROR = "InternalError.DatabaseAccessError"
 //  INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_INSTANCEUNSUPPORTEDOPERATEERROR = "OperationDenied.InstanceUnsupportedOperateError"
@@ -8899,8 +9476,9 @@ func NewReloadBalanceProxyNodeRequest() (request *ReloadBalanceProxyNodeRequest)
 func NewReloadBalanceProxyNodeResponse() (response *ReloadBalanceProxyNodeResponse) {
     response = &ReloadBalanceProxyNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReloadBalanceProxyNode
@@ -8951,8 +9529,9 @@ func NewRenewDBInstanceRequest() (request *RenewDBInstanceRequest) {
 func NewRenewDBInstanceResponse() (response *RenewDBInstanceResponse) {
     response = &RenewDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewDBInstance
@@ -9011,8 +9590,9 @@ func NewResetRootAccountRequest() (request *ResetRootAccountRequest) {
 func NewResetRootAccountResponse() (response *ResetRootAccountResponse) {
     response = &ResetRootAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResetRootAccount
@@ -9065,8 +9645,9 @@ func NewRestartDBInstancesRequest() (request *RestartDBInstancesRequest) {
 func NewRestartDBInstancesResponse() (response *RestartDBInstancesResponse) {
     response = &RestartDBInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartDBInstances
@@ -9145,8 +9726,9 @@ func NewStartBatchRollbackRequest() (request *StartBatchRollbackRequest) {
 func NewStartBatchRollbackResponse() (response *StartBatchRollbackResponse) {
     response = &StartBatchRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartBatchRollback
@@ -9197,6 +9779,63 @@ func (c *Client) StartBatchRollbackWithContext(ctx context.Context, request *Sta
     return
 }
 
+func NewStartCpuExpandRequest() (request *StartCpuExpandRequest) {
+    request = &StartCpuExpandRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "StartCpuExpand")
+    
+    
+    return
+}
+
+func NewStartCpuExpandResponse() (response *StartCpuExpandResponse) {
+    response = &StartCpuExpandResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StartCpuExpand
+// 通过该API，可以开启CPU弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
+//  FAILEDOPERATION_NOTCHANGESTRATEGY = "FailedOperation.NotChangeStrategy"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTNORMALINSTANCE = "UnsupportedOperation.NotSupportNormalInstance"
+func (c *Client) StartCpuExpand(request *StartCpuExpandRequest) (response *StartCpuExpandResponse, err error) {
+    return c.StartCpuExpandWithContext(context.Background(), request)
+}
+
+// StartCpuExpand
+// 通过该API，可以开启CPU弹性扩容，包括一次性的手动扩容以及自动弹性扩容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
+//  FAILEDOPERATION_NOTCHANGESTRATEGY = "FailedOperation.NotChangeStrategy"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  UNSUPPORTEDOPERATION_NOTSUPPORTNORMALINSTANCE = "UnsupportedOperation.NotSupportNormalInstance"
+func (c *Client) StartCpuExpandWithContext(ctx context.Context, request *StartCpuExpandRequest) (response *StartCpuExpandResponse, err error) {
+    if request == nil {
+        request = NewStartCpuExpandRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartCpuExpand require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartCpuExpandResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewStartReplicationRequest() (request *StartReplicationRequest) {
     request = &StartReplicationRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9211,8 +9850,9 @@ func NewStartReplicationRequest() (request *StartReplicationRequest) {
 func NewStartReplicationResponse() (response *StartReplicationResponse) {
     response = &StartReplicationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartReplication
@@ -9255,6 +9895,63 @@ func (c *Client) StartReplicationWithContext(ctx context.Context, request *Start
     return
 }
 
+func NewStopCpuExpandRequest() (request *StopCpuExpandRequest) {
+    request = &StopCpuExpandRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdb", APIVersion, "StopCpuExpand")
+    
+    
+    return
+}
+
+func NewStopCpuExpandResponse() (response *StopCpuExpandResponse) {
+    response = &StopCpuExpandResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// StopCpuExpand
+// 通过该API，可以关闭 CPU 弹性扩容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) StopCpuExpand(request *StopCpuExpandRequest) (response *StopCpuExpandResponse, err error) {
+    return c.StopCpuExpandWithContext(context.Background(), request)
+}
+
+// StopCpuExpand
+// 通过该API，可以关闭 CPU 弹性扩容。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_INSTANCETASKCONFLICTERROR = "FailedOperation.InstanceTaskConflictError"
+//  INTERNALERROR_DBRECORDNOTEXISTERROR = "InternalError.DBRecordNotExistError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_CONTROLLERNOTFOUNDERROR = "InvalidParameter.ControllerNotFoundError"
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) StopCpuExpandWithContext(ctx context.Context, request *StopCpuExpandRequest) (response *StopCpuExpandResponse, err error) {
+    if request == nil {
+        request = NewStopCpuExpandRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopCpuExpand require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopCpuExpandResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewStopDBImportJobRequest() (request *StopDBImportJobRequest) {
     request = &StopDBImportJobRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9269,8 +9966,9 @@ func NewStopDBImportJobRequest() (request *StopDBImportJobRequest) {
 func NewStopDBImportJobResponse() (response *StopDBImportJobResponse) {
     response = &StopDBImportJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopDBImportJob
@@ -9327,8 +10025,9 @@ func NewStopReplicationRequest() (request *StopReplicationRequest) {
 func NewStopReplicationResponse() (response *StopReplicationResponse) {
     response = &StopReplicationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopReplication
@@ -9387,8 +10086,9 @@ func NewStopRollbackRequest() (request *StopRollbackRequest) {
 func NewStopRollbackResponse() (response *StopRollbackResponse) {
     response = &StopRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StopRollback
@@ -9449,8 +10149,9 @@ func NewSwitchCDBProxyRequest() (request *SwitchCDBProxyRequest) {
 func NewSwitchCDBProxyResponse() (response *SwitchCDBProxyResponse) {
     response = &SwitchCDBProxyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchCDBProxy
@@ -9503,8 +10204,9 @@ func NewSwitchDBInstanceMasterSlaveRequest() (request *SwitchDBInstanceMasterSla
 func NewSwitchDBInstanceMasterSlaveResponse() (response *SwitchDBInstanceMasterSlaveResponse) {
     response = &SwitchDBInstanceMasterSlaveResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchDBInstanceMasterSlave
@@ -9567,8 +10269,9 @@ func NewSwitchDrInstanceToMasterRequest() (request *SwitchDrInstanceToMasterRequ
 func NewSwitchDrInstanceToMasterResponse() (response *SwitchDrInstanceToMasterResponse) {
     response = &SwitchDrInstanceToMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchDrInstanceToMaster
@@ -9623,8 +10326,9 @@ func NewSwitchForUpgradeRequest() (request *SwitchForUpgradeRequest) {
 func NewSwitchForUpgradeResponse() (response *SwitchForUpgradeResponse) {
     response = &SwitchForUpgradeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchForUpgrade
@@ -9679,8 +10383,9 @@ func NewUpgradeCDBProxyVersionRequest() (request *UpgradeCDBProxyVersionRequest)
 func NewUpgradeCDBProxyVersionResponse() (response *UpgradeCDBProxyVersionResponse) {
     response = &UpgradeCDBProxyVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeCDBProxyVersion
@@ -9731,8 +10436,9 @@ func NewUpgradeDBInstanceRequest() (request *UpgradeDBInstanceRequest) {
 func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
     response = &UpgradeDBInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeDBInstance
@@ -9801,8 +10507,9 @@ func NewUpgradeDBInstanceEngineVersionRequest() (request *UpgradeDBInstanceEngin
 func NewUpgradeDBInstanceEngineVersionResponse() (response *UpgradeDBInstanceEngineVersionResponse) {
     response = &UpgradeDBInstanceEngineVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeDBInstanceEngineVersion
@@ -9867,8 +10574,9 @@ func NewVerifyRootAccountRequest() (request *VerifyRootAccountRequest) {
 func NewVerifyRootAccountResponse() (response *VerifyRootAccountResponse) {
     response = &VerifyRootAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // VerifyRootAccount

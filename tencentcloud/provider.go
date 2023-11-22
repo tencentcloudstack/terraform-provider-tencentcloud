@@ -705,6 +705,7 @@ TencentDB for MySQL(cdb)
 
   Resource
     tencentcloud_mysql_instance
+	tencentcloud_mysql_database
     tencentcloud_mysql_readonly_instance
     tencentcloud_mysql_account
     tencentcloud_mysql_privilege
@@ -3053,6 +3054,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_account_privilege":                             resourceTencentCloudMysqlAccountPrivilege(),
 			"tencentcloud_mysql_privilege":                                     resourceTencentCloudMysqlPrivilege(),
 			"tencentcloud_mysql_instance":                                      resourceTencentCloudMysqlInstance(),
+			"tencentcloud_mysql_database":                                      resourceTencentCloudMysqlDatabase(),
 			"tencentcloud_mysql_readonly_instance":                             resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_mysql_time_window":                                   resourceTencentCloudMysqlTimeWindow(),
 			"tencentcloud_mysql_param_template":                                resourceTencentCloudMysqlParamTemplate(),
