@@ -52,6 +52,13 @@ Project
   Resource
     tencentcloud_project
 
+Anti-DDoS
+  Data Source
+    tencentcloud_antiddos_basic_device_status
+    tencentcloud_antiddos_bgp_biz_trend
+    tencentcloud_antiddos_list_listener
+    tencentcloud_antiddos_overview_attack_trend
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
@@ -1983,6 +1990,9 @@ Web Application Firewall(WAF)
     tencentcloud_waf_protection_mode
     tencentcloud_waf_web_shell
     tencentcloud_waf_cc
+    tencentcloud_waf_cc_auto_status
+    tencentcloud_waf_cc_session
+    tencentcloud_waf_ip_access_control
 
 Wedata
   Data Source
@@ -2927,6 +2937,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
+			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
+			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
+			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
+			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -3807,6 +3821,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
 			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
 			"tencentcloud_waf_cc":                                              resourceTencentCloudWafCc(),
+			"tencentcloud_waf_cc_auto_status":                                  resourceTencentCloudWafCcAutoStatus(),
+			"tencentcloud_waf_cc_session":                                      resourceTencentCloudWafCcSession(),
+			"tencentcloud_waf_ip_access_control":                               resourceTencentCloudWafIpAccessControl(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
@@ -4071,8 +4088,8 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 				configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
 			}
 		} else {
-			credentialPath = fmt.Sprintf("%s/%s.credential", sharedCredentialsDir, profile)
-			configurePath = fmt.Sprintf("%s/%s.configure", sharedCredentialsDir, profile)
+			credentialPath = fmt.Sprintf("%s/%s.credential", tmpSharedCredentialsDir, profile)
+			configurePath = fmt.Sprintf("%s/%s.configure", tmpSharedCredentialsDir, profile)
 		}
 
 		providerConfig = make(map[string]interface{})

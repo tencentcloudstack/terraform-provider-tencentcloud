@@ -5,6 +5,8 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1269,6 +1271,224 @@ func (me *WafService) DeleteWafCcById(ctx context.Context, domain, ruleId, name 
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseWafClient().DeleteCCRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DescribeWafCcAutoStatusById(ctx context.Context, domain string) (CcAutoStatus *waf.DescribeCCAutoStatusResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeCCAutoStatusRequest()
+	request.Domain = &domain
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeCCAutoStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	CcAutoStatus = response.Response
+	return
+}
+
+func (me *WafService) DeleteWafCcAutoStatusById(ctx context.Context, domain, edition string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewUpsertCCAutoStatusRequest()
+	request.Domain = &domain
+	request.Edition = &edition
+	request.Value = helper.IntInt64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().UpsertCCAutoStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DescribeWafCcSessionById(ctx context.Context, domain, edition, sessionID string) (ccSession *waf.SessionItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeSessionRequest()
+	request.Domain = &domain
+	request.Edition = &edition
+	sessionIDInt, _ := strconv.ParseInt(sessionID, 10, 64)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeSession(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Data.Res) < 1 {
+		return
+	}
+
+	for _, item := range response.Response.Data.Res {
+		if *item.SessionId == sessionIDInt {
+			ccSession = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *WafService) DeleteWafCcSessionById(ctx context.Context, domain, edition, sessionID string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteSessionRequest()
+	request.Domain = &domain
+	request.Edition = &edition
+	sessionIDInt, _ := strconv.ParseInt(sessionID, 10, 64)
+	request.SessionID = &sessionIDInt
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteSession(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DescribeWafIpAccessControlById(ctx context.Context, domain string) (ipAccessControlList []*waf.IpAccessControlItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeIpAccessControlRequest()
+	request.Domain = &domain
+	request.Count = common.Uint64Ptr(1)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.OffSet = &offset
+		request.Limit = &limit
+		response, err := me.client.UseWafClient().DescribeIpAccessControl(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data.Res) < 1 {
+			break
+		}
+
+		ipAccessControlList = append(ipAccessControlList, response.Response.Data.Res...)
+		if len(response.Response.Data.Res) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *WafService) DeleteWafIpAccessControlByDiff(ctx context.Context, domain string, ids []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteIpAccessControlRequest()
+	request.Domain = &domain
+	request.IsId = common.BoolPtr(true)
+	request.Items = common.StringPtrs(ids)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteIpAccessControl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *WafService) DeleteWafIpAccessControlById(ctx context.Context, domain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteIpAccessControlRequest()
+	request.Domain = &domain
+	request.Items = common.StringPtrs([]string{""})
+	request.DeleteAll = common.BoolPtr(true)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteIpAccessControl(request)
 	if err != nil {
 		errRet = err
 		return

@@ -38,7 +38,7 @@ The following arguments are supported:
 * `action_type` - (Required, String) Rule Action, 20 log, 21 captcha, 22 deny, 23 accurate deny.
 * `advance` - (Required, String) Session match mode, 0 use session, 1 use ip.
 * `domain` - (Required, String) Domain.
-* `edition` - (Required, String) WAF edition.
+* `edition` - (Required, String) WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.
 * `interval` - (Required, String) Interval.
 * `limit` - (Required, String) CC detection threshold.
 * `match_func` - (Required, Int) Match method, 0 equal, 1 contains, 2 prefix.
@@ -46,7 +46,7 @@ The following arguments are supported:
 * `priority` - (Required, Int) Rule Priority.
 * `status` - (Required, Int) Rule Status, 0 rule close, 1 rule open.
 * `url` - (Required, String) Check URL.
-* `valid_time` - (Required, Int) Action ValidTime, minute unit.
+* `valid_time` - (Required, Int) Action ValidTime, minute unit. Min: 60, Max: 604800.
 * `event_id` - (Optional, String) Event ID.
 * `session_applied` - (Optional, Set: [`Int`]) Advance mode use session id.
 * `type` - (Optional, Int) Operate Type.
