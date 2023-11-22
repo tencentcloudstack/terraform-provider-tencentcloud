@@ -1,3 +1,27 @@
+## 1.81.49 (November 22, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_antiddos_overview_cc_trend` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Data Source:** `tencentcloud_antiddos_overview_ddos_event_list` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Data Source:** `tencentcloud_antiddos_overview_ddos_trend` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Data Source:** `tencentcloud_antiddos_overview_index` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Data Source:** `tencentcloud_antiddos_pending_risk_info` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Resource:** `tencentcloud_antiddos_ddos_black_white_ip` ([#2330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2330))
+* **New Resource:** `tencentcloud_dasb_bind_device_account_password` ([#2319](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2319))
+* **New Resource:** `tencentcloud_dasb_bind_device_account_private_key` ([#2319](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2319))
+* **New Resource:** `tencentcloud_dasb_reset_user` ([#2319](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2319))
+* **New Resource:** `tencentcloud_dasb_user_group` ([#2319](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2319))
+* **New Resource:** `tencentcloud_mysql_database` ([#2332](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2332))
+* **New Resource:** `tencentcloud_waf_cc_auto_status` ([#2331](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2331))
+* **New Resource:** `tencentcloud_waf_cc_session` ([#2331](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2331))
+* **New Resource:** `tencentcloud_waf_ip_access_control` ([#2331](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2331))
+
+ENHANCEMENTS:
+
+* provider: `shared_credentials_dir` Support set Home path, `~/path`. ([#2333](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2333))
+* resource/tencentcloud_postgresql_instance: Optimize isolation operations ([#2316](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2316))
+
 ## 1.81.48 (November 20, 2023)
 
 ENHANCEMENTS:
