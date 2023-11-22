@@ -16,30 +16,67 @@ func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccWafCcSession,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_waf_cc_session.cc_session", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_waf_cc_session.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "domain", "keep.qcloudwaf.com"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "source", "get"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "category", "match"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "key_or_start_mat", "key_a=123"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_mat", "&"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "start_offset", "-1"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_offset", "-1"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "edition", "sparta-waf"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "session_name", "terraformDemo"),
+				),
 			},
 			{
-				ResourceName:      "tencentcloud_waf_cc_session.cc_session",
+				ResourceName:      "tencentcloud_waf_cc_session.example",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccWafCcSessionUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_waf_cc_session.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "domain", "keep.qcloudwaf.com"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "source", "get"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "category", "match"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "key_or_start_mat", "key_a=456"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_mat", "&"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "start_offset", "-1"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "end_offset", "-1"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "edition", "sparta-waf"),
+					resource.TestCheckResourceAttr("tencentcloud_waf_cc_session.example", "session_name", "terraformDemo"),
+				),
 			},
 		},
 	})
 }
 
-const testAccWafCcSession = `
-
-resource "tencentcloud_waf_cc_session" "cc_session" {
-  domain = "www.testwaf.com"
-  source = "get"
-  category = "match"
-  key_or_start_mat = "key_a="
-  end_mat = "&amp;"
-  start_offset = "1"
-  end_offset = "12"
-  edition = "clb-waf"
-  session_name = "name1"
-  session_i_d = 122211
+const testAccWafCcSessionUpdate = `
+resource "tencentcloud_waf_cc_session" "example" {
+  domain           = "keep.qcloudwaf.com"
+  source           = "get"
+  category         = "match"
+  key_or_start_mat = "key_a=123"
+  end_mat          = "&"
+  start_offset     = "-1"
+  end_offset       = "-1"
+  edition          = "sparta-waf"
+  session_name     = "terraformDemo"
 }
+`
 
+const testAccWafCcSession = `
+resource "tencentcloud_waf_cc_session" "example" {
+  domain           = "keep.qcloudwaf.com"
+  source           = "post"
+  category         = "match"
+  key_or_start_mat = "key_a=456"
+  end_mat          = "&"
+  start_offset     = "-1"
+  end_offset       = "-1"
+  edition          = "sparta-waf"
+  session_name     = "terraformDemo"
+}
 `
