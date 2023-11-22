@@ -1,0 +1,3 @@
+```release-note:enhancement
+provider: Adapt to older versions of tccli configure.
+```
