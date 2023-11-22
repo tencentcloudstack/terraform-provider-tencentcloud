@@ -61,6 +61,7 @@ Anti-DDoS(DayuV2)
 	tencentcloud_antiddos_overview_index
 	tencentcloud_antiddos_overview_ddos_trend
 	tencentcloud_antiddos_overview_ddos_event_list
+	tencentcloud_antiddos_overview_cc_trend
 
   Resource
     tencentcloud_dayu_eip
