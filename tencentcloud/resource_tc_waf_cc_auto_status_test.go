@@ -23,6 +23,11 @@ func TestAccTencentCloudWafCcAutoStatusResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_waf_cc_auto_status.example", "edition", "sparta-waf"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_waf_cc_auto_status.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
