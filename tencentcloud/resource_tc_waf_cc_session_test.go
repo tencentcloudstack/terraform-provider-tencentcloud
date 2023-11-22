@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudWafCcSessionResource_basic -v
 func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
