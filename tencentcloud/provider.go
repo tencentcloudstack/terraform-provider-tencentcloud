@@ -4095,6 +4095,12 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 							break outerLoop
 						}
 					}
+				} else {
+					// Adapt to older versions of tccli configure
+					if k == "region" {
+						providerConfig[k] = strings.TrimSpace(v.(string))
+						break outerLoop
+					}
 				}
 			}
 		}
