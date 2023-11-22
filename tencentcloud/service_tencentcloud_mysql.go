@@ -3258,3 +3258,58 @@ func (me *MysqlService) DescribeMysqlDatabasesByFilter(ctx context.Context, para
 
 	return
 }
+
+func (me *MysqlService) DescribeMysqlDatabaseById(ctx context.Context, instanceId string, dBName string) (database *cdb.DatabasesWithCharacterLists, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeDatabasesRequest()
+	request.InstanceId = &instanceId
+	request.DatabaseRegexp = &dBName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeDatabases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, db := range response.Response.DatabaseList {
+		if *db.DatabaseName == dBName {
+			database = db
+		}
+	}
+	return
+}
+
+func (me *MysqlService) DeleteMysqlDatabaseById(ctx context.Context, instanceId string, dBName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDeleteDatabaseRequest()
+	request.InstanceId = &instanceId
+	request.DBName = &dBName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DeleteDatabase(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

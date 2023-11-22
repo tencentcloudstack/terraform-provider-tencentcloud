@@ -8,24 +8,24 @@ resource "tencentcloud_waf_ip_access_control" "example" {
   instance_id = "waf_2kxtlbky00b3b4qz"
   domain      = "www.demo.com"
   edition     = "sparta-waf"
-  item {
-    ip   = "1.1.1.1"
-    note = "desc info."
-    action = 40
+  items {
+    ip       = "1.1.1.1"
+    note     = "desc info."
+    action   = 40
     valid_ts = "2019571199"
   }
 
-  item {
-    ip   = "2.2.2.2"
-    note = "desc info."
-    action = 42
+  items {
+    ip       = "2.2.2.2"
+    note     = "desc info."
+    action   = 42
     valid_ts = "2019571199"
   }
 
-  item {
-    ip   = "3.3.3.3"
-    note = "desc info."
-    action = 40
+  items {
+    ip       = "3.3.3.3"
+    note     = "desc info."
+    action   = 40
     valid_ts = "1680570420"
   }
 }
@@ -136,7 +136,6 @@ func resourceTencentCloudWafIpAccessControlCreate(d *schema.ResourceData, meta i
 	var (
 		logId      = getLogId(contextNil)
 		request    = waf.NewUpsertIpAccessControlRequest()
-		response   = waf.NewUpsertIpAccessControlResponse()
 		instanceId string
 		domain     string
 		edition    string
@@ -198,7 +197,6 @@ func resourceTencentCloudWafIpAccessControlCreate(d *schema.ResourceData, meta i
 			return resource.NonRetryableError(e)
 		}
 
-		response = result
 		return nil
 	})
 
@@ -293,6 +291,8 @@ func resourceTencentCloudWafIpAccessControlUpdate(d *schema.ResourceData, meta i
 
 	var (
 		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = WafService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request = waf.NewUpsertIpAccessControlRequest()
 	)
 
@@ -311,6 +311,24 @@ func resourceTencentCloudWafIpAccessControlUpdate(d *schema.ResourceData, meta i
 	instanceId := idSplit[0]
 	domain := idSplit[1]
 	edition := idSplit[2]
+
+	oldInterface, newInterface := d.GetChange("items")
+	oldInstances := oldInterface.(*schema.Set)
+	newInstances := newInterface.(*schema.Set)
+	remove := oldInstances.Difference(newInstances).List()
+	if remove != nil {
+		ids := make([]string, 0, len(remove))
+		for _, item := range remove {
+			dMap := item.(map[string]interface{})
+			if v, ok := dMap["id"]; ok {
+				ids = append(ids, v.(string))
+			}
+		}
+
+		if err := service.DeleteWafIpAccessControlByDiff(ctx, domain, ids); err != nil {
+			return err
+		}
+	}
 
 	if v, ok := d.GetOk("items"); ok {
 		for _, item := range v.(*schema.Set).List() {

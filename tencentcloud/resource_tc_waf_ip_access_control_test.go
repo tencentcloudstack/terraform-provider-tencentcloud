@@ -76,7 +76,7 @@ resource "tencentcloud_waf_ip_access_control" "example" {
   domain      = "keep.qcloudwaf.com"
   edition     = "sparta-waf"
   items {
-    ip   = "1.1.1.5"
+    ip   = "1.1.1.1"
     note = "desc info."
     action = 42
     valid_ts = "2019571199"
@@ -84,9 +84,16 @@ resource "tencentcloud_waf_ip_access_control" "example" {
 
   items {
     ip   = "3.3.3.3"
-    note = "desc info."
+    note = "desc info update."
     action = 42
-    valid_ts = "1680570420"
+    valid_ts = "2019571199"
+  }
+
+  items {
+    ip   = "4.4.4.4"
+    note = "desc info."
+    action = 40
+    valid_ts = "2019571199"
   }
 }
 `

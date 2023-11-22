@@ -1445,11 +1445,39 @@ func (me *WafService) DescribeWafIpAccessControlById(ctx context.Context, domain
 	return
 }
 
+func (me *WafService) DeleteWafIpAccessControlByDiff(ctx context.Context, domain string, ids []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteIpAccessControlRequest()
+	request.Domain = &domain
+	request.IsId = common.BoolPtr(true)
+	request.Items = common.StringPtrs(ids)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteIpAccessControl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *WafService) DeleteWafIpAccessControlById(ctx context.Context, domain string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := waf.NewDeleteIpAccessControlRequest()
 	request.Domain = &domain
+	request.Items = common.StringPtrs([]string{""})
 	request.DeleteAll = common.BoolPtr(true)
 
 	defer func() {

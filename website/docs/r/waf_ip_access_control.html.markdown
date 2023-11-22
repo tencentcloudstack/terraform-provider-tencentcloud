@@ -18,21 +18,21 @@ resource "tencentcloud_waf_ip_access_control" "example" {
   instance_id = "waf_2kxtlbky00b3b4qz"
   domain      = "www.demo.com"
   edition     = "sparta-waf"
-  item {
+  items {
     ip       = "1.1.1.1"
     note     = "desc info."
     action   = 40
     valid_ts = "2019571199"
   }
 
-  item {
+  items {
     ip       = "2.2.2.2"
     note     = "desc info."
     action   = 42
     valid_ts = "2019571199"
   }
 
-  item {
+  items {
     ip       = "3.3.3.3"
     note     = "desc info."
     action   = 40
