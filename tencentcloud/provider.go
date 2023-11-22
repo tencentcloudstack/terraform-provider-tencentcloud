@@ -57,6 +57,10 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_eip
     tencentcloud_dayu_l4_rules_v2
     tencentcloud_dayu_l7_rules_v2
+	tencentcloud_antiddos_pending_risk_info
+	tencentcloud_antiddos_overview_index
+	tencentcloud_antiddos_overview_ddos_trend
+	tencentcloud_antiddos_overview_ddos_event_list
 
   Resource
     tencentcloud_dayu_eip
@@ -65,6 +69,7 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_ddos_policy_v2
     tencentcloud_dayu_cc_policy_v2
     tencentcloud_dayu_ddos_ip_attachment_v2
+	tencentcloud_antiddos_ddos_black_white_ip
 
 Anti-DDoS(Dayu)
   Data Source
@@ -2395,6 +2400,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dayu_l4_rules_v2":                             dataSourceTencentCloudDayuL4RulesV2(),
 			"tencentcloud_dayu_l7_rules":                                dataSourceTencentCloudDayuL7Rules(),
 			"tencentcloud_dayu_l7_rules_v2":                             dataSourceTencentCloudDayuL7RulesV2(),
+			"tencentcloud_antiddos_pending_risk_info":                   dataSourceTencentCloudAntiddosPendingRiskInfo(),
+			"tencentcloud_antiddos_overview_index":                      dataSourceTencentCloudAntiddosOverviewIndex(),
+			"tencentcloud_antiddos_overview_ddos_trend":                 dataSourceTencentCloudAntiddosOverviewDdosTrend(),
+			"tencentcloud_antiddos_overview_ddos_event_list":            dataSourceTencentCloudAntiddosOverviewDdosEventList(),
+			"tencentcloud_antiddos_overview_cc_trend":                   dataSourceTencentCloudAntiddosOverviewCcTrend(),
 			"tencentcloud_gaap_proxies":                                 dataSourceTencentCloudGaapProxies(),
 			"tencentcloud_gaap_realservers":                             dataSourceTencentCloudGaapRealservers(),
 			"tencentcloud_gaap_layer4_listeners":                        dataSourceTencentCloudGaapLayer4Listeners(),
@@ -3637,6 +3647,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_audit_log_file":                              resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                              resourceTencentCloudCynosdbSecurityGroup(),
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                          resourceTencentCloudDayuDDosIpAttachmentV2(),
+			"tencentcloud_antiddos_ddos_black_white_ip":                        resourceTencentCloudAntiddosDdosBlackWhiteIp(),
 			"tencentcloud_tsf_microservice":                                    resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                              resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                                 resourceTencentCloudCvmLaunchTemplate(),
