@@ -525,3 +525,112 @@ func (me *DasbService) DeleteDasbDeviceById(ctx context.Context, deviceId string
 
 	return
 }
+
+func (me *DasbService) DescribeDasbUserGroupById(ctx context.Context, userGroupId string) (UserGroup *dasb.Group, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewDescribeUserGroupsRequest()
+	userGroupIdInt, _ := strconv.ParseUint(userGroupId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{userGroupIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().DescribeUserGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.GroupSet) != 1 {
+		return
+	}
+
+	UserGroup = response.Response.GroupSet[0]
+	return
+}
+
+func (me *DasbService) DeleteDasbUserGroupById(ctx context.Context, userGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewDeleteUserGroupsRequest()
+	userGroupIdInt, _ := strconv.ParseUint(userGroupId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{userGroupIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().DeleteUserGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DasbService) DeleteDasbBindDeviceAccountPrivateKeyById(ctx context.Context, deviceAccountId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewResetDeviceAccountPrivateKeyRequest()
+	deviceAccountIdInt, _ := strconv.ParseUint(deviceAccountId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{deviceAccountIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().ResetDeviceAccountPrivateKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DasbService) DeleteDasbBindDeviceAccountPasswordById(ctx context.Context, deviceAccountId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dasb.NewResetDeviceAccountPasswordRequest()
+	deviceAccountIdInt, _ := strconv.ParseUint(deviceAccountId, 10, 64)
+	request.IdSet = common.Uint64Ptrs([]uint64{deviceAccountIdInt})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDasbClient().ResetDeviceAccountPassword(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
