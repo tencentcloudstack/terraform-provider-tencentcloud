@@ -130,6 +130,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"strings"
 
@@ -175,6 +176,7 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Computed:      true,
 				Description:   "Raw Values. Conflict with `request_body`.",
 				ConflictsWith: []string{"request_body"},
+				RequiredWith:  []string{"raw_values_type"},
 			},
 			"raw_values_type": {
 				Type:         schema.TypeString,
@@ -345,10 +347,12 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 			rawValues := spec.Values.RawValues
 			rawValuesType := spec.Values.RawValuesType
 
-			_ = d.Set("raw_values", rawValues)
+			base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
+			jsonValues :=strings.Replace(string(base64DecodeValues), "\\\"", "\"", -1)
+
+			_ = d.Set("raw_values", jsonValues)
 			_ = d.Set("raw_values_type", rawValuesType)
 		}
-
 	}
 
 	if statuses != nil || len(statuses) == 0 {

@@ -2,9 +2,11 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -173,8 +175,11 @@ func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, r
 	}
 
 	if rawValuesType != nil && rawValues != nil {
+		base64EncodeValues :=base64.StdEncoding.EncodeToString([]byte(*rawValues))
+		jsonValues := strings.Replace(base64EncodeValues, "\"", "\\\"", -1)
+
 		addonValues.RawValuesType = rawValuesType
-		addonValues.RawValues = rawValues
+		addonValues.RawValues = &jsonValues
 	}
 
 	reqBody.Spec.Values = addonValues
