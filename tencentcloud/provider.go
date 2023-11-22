@@ -52,6 +52,13 @@ Project
   Resource
     tencentcloud_project
 
+Anti-DDoS
+  Data Source
+    tencentcloud_antiddos_basic_device_status
+    tencentcloud_antiddos_bgp_biz_trend
+    tencentcloud_antiddos_list_listener
+    tencentcloud_antiddos_overview_attack_trend
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
@@ -2916,6 +2923,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
+			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
+			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
+			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
+			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
