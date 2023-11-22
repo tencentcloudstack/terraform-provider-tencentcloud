@@ -18,7 +18,8 @@ func TestAccTencentCloudAntiddosBasicDeviceStatusDataSource_basic(t *testing.T) 
 				Config: testAccAntiddosBasicDeviceStatusDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_antiddos_basic_device_status.basic_device_status"),
-					resource.TestCheckResourceAttr("data.tencentcloud_antiddos_basic_device_status.basic_device_status", "data.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_antiddos_basic_device_status.basic_device_status", "data.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_antiddos_basic_device_status.basic_device_status", "clb_data.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_antiddos_basic_device_status.basic_device_status", "data.0.key", "127.0.0.1"),
 				),
 			},

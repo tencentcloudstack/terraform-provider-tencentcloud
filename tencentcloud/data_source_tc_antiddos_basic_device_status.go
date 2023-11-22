@@ -73,7 +73,7 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatus() *schema.Resource {
 				},
 			},
 
-			"c_l_b_data": {
+			"clb_data": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Note: This field may return null, indicating that a valid value cannot be obtained.",
@@ -167,7 +167,7 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 			}
 			tmpList = append(tmpList, keyValueMap)
 		}
-		_ = d.Set("c_l_b_data", tmpList)
+		_ = d.Set("clb_data", tmpList)
 	}
 
 	d.SetId(helper.BuildToken())
