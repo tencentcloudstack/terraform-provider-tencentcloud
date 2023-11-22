@@ -93,7 +93,7 @@ func resourceTencentCloudAntiddosDdosBlackWhiteIpCreate(d *schema.ResourceData, 
 		ip = v.(string)
 		ipSegment.Ip = helper.String(ip)
 	}
-	if v, ok := d.GetOk("mask"); ok {
+	if v, ok := d.GetOkExists("mask"); ok {
 		ipMask = v.(int)
 		ipSegment.Mask = helper.IntUint64(ipMask)
 	}

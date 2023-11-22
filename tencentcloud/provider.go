@@ -57,11 +57,11 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_eip
     tencentcloud_dayu_l4_rules_v2
     tencentcloud_dayu_l7_rules_v2
-	tencentcloud_antiddos_pending_risk_info
-	tencentcloud_antiddos_overview_index
-	tencentcloud_antiddos_overview_ddos_trend
-	tencentcloud_antiddos_overview_ddos_event_list
-	tencentcloud_antiddos_overview_cc_trend
+    tencentcloud_antiddos_pending_risk_info
+    tencentcloud_antiddos_overview_index
+    tencentcloud_antiddos_overview_ddos_trend
+    tencentcloud_antiddos_overview_ddos_event_list
+    tencentcloud_antiddos_overview_cc_trend
 
   Resource
     tencentcloud_dayu_eip
@@ -70,7 +70,7 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_ddos_policy_v2
     tencentcloud_dayu_cc_policy_v2
     tencentcloud_dayu_ddos_ip_attachment_v2
-	tencentcloud_antiddos_ddos_black_white_ip
+    tencentcloud_antiddos_ddos_black_white_ip
 
 Anti-DDoS(Dayu)
   Data Source
@@ -711,7 +711,7 @@ TencentDB for MySQL(cdb)
 
   Resource
     tencentcloud_mysql_instance
-	tencentcloud_mysql_database
+    tencentcloud_mysql_database
     tencentcloud_mysql_readonly_instance
     tencentcloud_mysql_account
     tencentcloud_mysql_privilege
@@ -1240,7 +1240,7 @@ MapReduce(EMR)
   Data Source
     tencentcloud_emr
     tencentcloud_emr_nodes
-	tencentcloud_emr_cvm_quota
+    tencentcloud_emr_cvm_quota
 
   Resource
     tencentcloud_emr_cluster
@@ -1266,7 +1266,7 @@ DNSPOD
     tencentcloud_dnspod_domain_log_list
     tencentcloud_dnspod_record_analytics
     tencentcloud_dnspod_record_line_list
-	tencentcloud_dnspod_record_list
+    tencentcloud_dnspod_record_list
     tencentcloud_dnspod_record_type
 
 PrivateDNS
@@ -1986,9 +1986,9 @@ Web Application Firewall(WAF)
 
 Wedata
   Data Source
-	tencentcloud_wedata_rule_templates
-	tencentcloud_wedata_data_source_list
-	tencentcloud_wedata_data_source_without_info
+    tencentcloud_wedata_rule_templates
+    tencentcloud_wedata_data_source_list
+    tencentcloud_wedata_data_source_without_info
 
   Resource
     tencentcloud_wedata_datasource
