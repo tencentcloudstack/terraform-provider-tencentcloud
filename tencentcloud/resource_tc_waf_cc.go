@@ -97,7 +97,7 @@ func resourceTencentCloudWafCc() *schema.Resource {
 			"valid_time": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "Action ValidTime, minute unit.",
+				Description: "Action ValidTime, minute unit. Min: 60, Max: 604800.",
 			},
 			//"options_arr": {
 			//	Optional:    true,
@@ -108,7 +108,7 @@ func resourceTencentCloudWafCc() *schema.Resource {
 				Required:     true,
 				Type:         schema.TypeString,
 				ValidateFunc: validateAllowedStringValue(EDITION_TYPE),
-				Description:  "WAF edition.",
+				Description:  "WAF edition. clb-waf means clb-waf, sparta-waf means saas-waf.",
 			},
 			"type": {
 				Optional:    true,
