@@ -1984,6 +1984,9 @@ Web Application Firewall(WAF)
     tencentcloud_waf_protection_mode
     tencentcloud_waf_web_shell
     tencentcloud_waf_cc
+    tencentcloud_waf_cc_auto_status
+    tencentcloud_waf_cc_session
+    tencentcloud_waf_ip_access_control
 
 Wedata
   Data Source
@@ -3806,6 +3809,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
 			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
 			"tencentcloud_waf_cc":                                              resourceTencentCloudWafCc(),
+			"tencentcloud_waf_cc_auto_status":                                  resourceTencentCloudWafCcAutoStatus(),
+			"tencentcloud_waf_cc_session":                                      resourceTencentCloudWafCcSession(),
+			"tencentcloud_waf_ip_access_control":                               resourceTencentCloudWafIpAccessControl(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),

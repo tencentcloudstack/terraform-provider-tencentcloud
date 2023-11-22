@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_waf_cc_auto_status
+```
+
+```release-note:new-resource
+tencentcloud_waf_cc_session
+```
+
+```release-note:new-resource
+tencentcloud_waf_ip_access_control
+```
