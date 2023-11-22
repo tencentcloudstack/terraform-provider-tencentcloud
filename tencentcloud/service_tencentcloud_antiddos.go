@@ -1422,6 +1422,282 @@ func (me *AntiddosService) DescribeAntiddosBoundipById(ctx context.Context, id s
 	return
 }
 
+func (me *AntiddosService) DescribeAntiddosPendingRiskInfoByFilter(ctx context.Context) (pendingRiskInfoResponseParams *antiddos.DescribePendingRiskInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = antiddos.NewDescribePendingRiskInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribePendingRiskInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil {
+		pendingRiskInfoResponseParams = response.Response
+	}
+
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosOverviewIndexByFilter(ctx context.Context, param map[string]interface{}) (describeOverviewIndexResponseParams *antiddos.DescribeOverviewIndexResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = antiddos.NewDescribeOverviewIndexRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribeOverviewIndex(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	describeOverviewIndexResponseParams = response.Response
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosOverviewDdosTrendByFilter(ctx context.Context, param map[string]interface{}) (describeOverviewDDoSTrendResponseParams *antiddos.DescribeOverviewDDoSTrendResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = antiddos.NewDescribeOverviewDDoSTrendRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "MetricName" {
+			request.MetricName = v.(*string)
+		}
+		if k == "Business" {
+			request.Business = v.(*string)
+		}
+		if k == "IpList" {
+			request.IpList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribeOverviewDDoSTrend(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil {
+		describeOverviewDDoSTrendResponseParams = response.Response
+	}
+
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosOverviewDdosEventListByFilter(ctx context.Context, param map[string]interface{}) (overviewDdosEventList []*antiddos.OverviewDDoSEvent, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = antiddos.NewDescribeOverviewDDoSEventListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "AttackStatus" {
+			request.AttackStatus = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAntiddosClient().DescribeOverviewDDoSEventList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventList) < 1 {
+			break
+		}
+		overviewDdosEventList = append(overviewDdosEventList, response.Response.EventList...)
+		if len(response.Response.EventList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosOverviewCcTrendByFilter(ctx context.Context, param map[string]interface{}) (overviewCCTrendResponseParams *antiddos.DescribeOverviewCCTrendResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = antiddos.NewDescribeOverviewCCTrendRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "MetricName" {
+			request.MetricName = v.(*string)
+		}
+		if k == "Business" {
+			request.Business = v.(*string)
+		}
+		if k == "IpList" {
+			request.IpList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribeOverviewCCTrend(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil {
+		overviewCCTrendResponseParams = response.Response
+	}
+
+	return
+}
+
+func (me *AntiddosService) DescribeAntiddosDdosBlackWhiteIpListById(ctx context.Context, instanceId string) (ddosBlackWhiteIpListResponseParams *antiddos.DescribeDDoSBlackWhiteIpListResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := antiddos.NewDescribeDDoSBlackWhiteIpListRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribeDDoSBlackWhiteIpList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ddosBlackWhiteIpListResponseParams = response.Response
+
+	return
+}
+
+func (me *AntiddosService) DeleteAntiddosDdosBlackWhiteIpListById(ctx context.Context, params map[string]interface{}) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := antiddos.NewDeleteDDoSBlackWhiteIpListRequest()
+	if v, ok := params["instanceId"]; ok {
+		request.InstanceId = helper.String(v.(string))
+	}
+	if v, ok := params["ipType"]; ok {
+		request.Type = helper.String(v.(string))
+	}
+	ipSegment := antiddos.IpSegment{}
+	if v, ok := params["ip"]; ok {
+		ipSegment.Ip = helper.String(v.(string))
+	}
+	if v, ok := params["ipMask"]; ok {
+		ipSegment.Mask = helper.IntUint64(v.(int))
+	}
+	request.IpList = []*antiddos.IpSegment{&ipSegment}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DeleteDDoSBlackWhiteIpList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *AntiddosService) DescribeAntiddosBasicDeviceStatusByFilter(ctx context.Context, param map[string]interface{}) (basicDeviceStatus *antiddos.DescribeBasicDeviceStatusResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
