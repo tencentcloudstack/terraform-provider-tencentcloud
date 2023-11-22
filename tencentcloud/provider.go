@@ -52,6 +52,13 @@ Project
   Resource
     tencentcloud_project
 
+Anti-DDoS
+  Data Source
+    tencentcloud_antiddos_basic_device_status
+    tencentcloud_antiddos_bgp_biz_trend
+    tencentcloud_antiddos_list_listener
+    tencentcloud_antiddos_overview_attack_trend
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
