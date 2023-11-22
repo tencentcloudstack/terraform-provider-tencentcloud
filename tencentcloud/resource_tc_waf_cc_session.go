@@ -307,6 +307,10 @@ func resourceTencentCloudWafCcSessionUpdate(d *schema.ResourceData, meta interfa
 		request.EndOffset = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("session_name"); ok {
+		request.SessionName = helper.String(v.(string))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().UpsertSession(request)
 		if e != nil {

@@ -54,7 +54,7 @@ func TestAccTencentCloudWafCcSessionResource_basic(t *testing.T) {
 	})
 }
 
-const testAccWafCcSessionUpdate = `
+const testAccWafCcSession = `
 resource "tencentcloud_waf_cc_session" "example" {
   domain           = "keep.qcloudwaf.com"
   source           = "get"
@@ -68,7 +68,7 @@ resource "tencentcloud_waf_cc_session" "example" {
 }
 `
 
-const testAccWafCcSession = `
+const testAccWafCcSessionUpdate = `
 resource "tencentcloud_waf_cc_session" "example" {
   domain           = "keep.qcloudwaf.com"
   source           = "post"
