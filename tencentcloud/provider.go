@@ -4059,8 +4059,8 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 				configurePath = fmt.Sprintf("%s/.tccli/%s.configure", os.Getenv("USERPROFILE"), profile)
 			}
 		} else {
-			credentialPath = fmt.Sprintf("%s/%s.credential", sharedCredentialsDir, profile)
-			configurePath = fmt.Sprintf("%s/%s.configure", sharedCredentialsDir, profile)
+			credentialPath = fmt.Sprintf("%s/%s.credential", tmpSharedCredentialsDir, profile)
+			configurePath = fmt.Sprintf("%s/%s.configure", tmpSharedCredentialsDir, profile)
 		}
 
 		providerConfig = make(map[string]interface{})
@@ -4104,12 +4104,6 @@ func getConfigFromProfile(d *schema.ResourceData, ProfileKey string) (interface{
 							providerConfig[tmpK] = strings.TrimSpace(tmpV.(string))
 							break outerLoop
 						}
-					}
-				} else {
-					// Adapt to older versions of tccli configure
-					if k == "region" {
-						providerConfig[k] = strings.TrimSpace(v.(string))
-						break outerLoop
 					}
 				}
 			}
