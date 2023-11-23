@@ -415,6 +415,40 @@ var LABEL_TYPES_CLB = map[string]string{
 	WAF_ULTIMATE_CLB:   "sv_wsm_waf_package_ultimate_clb",
 }
 
+var BOT_MANAGEMENT_LABEL_TYPES_CLB = map[int]string{
+	REGION_ID_MAINLAND:     "sv_wsm_waf_scene_bot_protection_clb",
+	REGION_ID_NON_MAINLAND: "sv_wsm_waf_scene_bot_protection_clb_intl",
+}
+
+var BOT_MANAGEMENT_LABEL_TYPES_SAAS = map[int]string{
+	REGION_ID_MAINLAND:     "sv_wsm_waf_scene_bot_protection",
+	REGION_ID_NON_MAINLAND: "sv_wsm_waf_scene_bot_protection_intl",
+}
+
+var API_SECURITY_LABEL_TYPES_CLB_REGION1 = map[string]string{
+	WAF_PREMIUM_CLB:    "sv_wsm_waf_scene_cpre",
+	WAF_ENTERPRISE_CLB: "sv_wsm_waf_scene_cent",
+	WAF_ULTIMATE_CLB:   "sv_wsm_waf_scene_cult",
+}
+
+var API_SECURITY_LABEL_TYPES_CLB_REGION9 = map[string]string{
+	WAF_PREMIUM_CLB:    "sv_wsm_waf_scene_cipre",
+	WAF_ENTERPRISE_CLB: "sv_wsm_waf_scene_cient",
+	WAF_ULTIMATE_CLB:   "sv_wsm_waf_scene_ciult",
+}
+
+var API_SECURITY_LABEL_TYPES_SAAS_REGION1 = map[string]string{
+	WAF_PREMIUM_SAAS:    "sv_wsm_waf_scene_pre",
+	WAF_ENTERPRISE_SAAS: "sv_wsm_waf_scene_ent",
+	WAF_ULTIMATE_SAAS:   "sv_wsm_waf_scene_ult",
+}
+
+var API_SECURITY_LABEL_TYPES_SAAS_REGION9 = map[string]string{
+	WAF_PREMIUM_SAAS:    "sv_wsm_waf_scene_ipre",
+	WAF_ENTERPRISE_SAAS: "sv_wsm_waf_scene_ient",
+	WAF_ULTIMATE_SAAS:   "sv_wsm_waf_scene_iult",
+}
+
 var WAF_CATEGORY_ID_CLB = map[string]int{
 	WAF_PREMIUM_CLB:    101198,
 	WAF_ENTERPRISE_CLB: 101204,
@@ -478,10 +512,22 @@ const (
 )
 
 const (
-	DOMIAN_CATEGORY_ID_CLB      = 101207
-	DOMAIN_SUB_PRODUCT_CODE_CLB = "sp_wsm_waf_domain_clb"
-	DOMAIN_PID_CLB              = 1001156
-	DOMAIN_LABEL_TYPE_CLB       = "sv_wsm_waf_domain_clb"
+	DOMIAN_CATEGORY_ID_CLB               = 101207
+	DOMAIN_SUB_PRODUCT_CODE_CLB          = "sp_wsm_waf_domain_clb"
+	DOMAIN_PID_CLB                       = 1001156
+	DOMAIN_LABEL_TYPE_CLB                = "sv_wsm_waf_domain_clb"
+	BOT_MANAGEMENT_CATEGORY_ID_CLB       = 1025567
+	BOT_MANAGEMENT_SUB_PRODUCT_CODE_CLB  = "sp_wsm_waf_bot_protection_clb"
+	BOT_MANAGEMENT_PID_CLB               = 1017001
+	API_SECURITY_CATEGORY_ID_CLB         = 1027183
+	API_SECURITY_SUB_PRODUCT_CODE_CLB    = "sp_wsm_waf_apiclb"
+	API_SECURITY_PID_CLB                 = 1028166
+	BOT_MANAGEMENT_CATEGORY_ID_SAAS      = 1025564
+	BOT_MANAGEMENT_SUB_PRODUCT_CODE_SAAS = "sp_wsm_waf_bot_protection"
+	BOT_MANAGEMENT_PID_SAAS              = 1016997
+	API_SECURITY_CATEGORY_ID_SAAS        = 1027180
+	API_SECURITY_SUB_PRODUCT_CODE_SAAS   = "sp_wsm_waf_api"
+	API_SECURITY_PID_SAAS                = 1028161
 )
 
 const (
@@ -657,4 +703,24 @@ const (
 var ANTI_INFO_LEAK_RULE_STATUS = []int{
 	ANTI_INFO_LEAK_RULE_STATUS_0,
 	ANTI_INFO_LEAK_RULE_STATUS_1,
+}
+
+const (
+	BOT_MANAGEMENT_STATUS_0 = 0
+	BOT_MANAGEMENT_STATUS_1 = 1
+)
+
+var BOT_MANAGEMENT_STATUS = []int{
+	BOT_MANAGEMENT_STATUS_0,
+	BOT_MANAGEMENT_STATUS_1,
+}
+
+const (
+	API_SECURITY_STATUS_0 = 0
+	API_SECURITY_STATUS_1 = 1
+)
+
+var API_SECURITY_STATUS = []int{
+	API_SECURITY_STATUS_0,
+	API_SECURITY_STATUS_1,
 }

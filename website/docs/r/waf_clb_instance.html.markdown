@@ -34,6 +34,8 @@ resource "tencentcloud_waf_clb_instance" "example" {
   time_unit       = "m"
   auto_renew_flag = 1
   elastic_mode    = 1
+  bot_management  = 1
+  api_security    = 1
 }
 ```
 
@@ -48,6 +50,8 @@ resource "tencentcloud_waf_clb_instance" "example" {
   auto_renew_flag = 1
   elastic_mode    = 1
   qps_limit       = 200000
+  bot_management  = 1
+  api_security    = 1
 }
 ```
 
@@ -56,7 +60,9 @@ resource "tencentcloud_waf_clb_instance" "example" {
 The following arguments are supported:
 
 * `goods_category` - (Required, String) Billing order parameters. support: premium_clb, enterprise_clb, ultimate_clb.
+* `api_security` - (Optional, Int) Whether to purchase API Security, 1: yes, 0: no. Default is 0.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
+* `bot_management` - (Optional, Int) Whether to purchase Bot management, 1: yes, 0: no. Default is 0.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
 * `qps_limit` - (Optional, Int) QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.
@@ -68,7 +74,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `api_security` - waf instance api security status.
 * `begin_time` - waf instance start time.
 * `edition` - waf instance edition, clb or saas.
 * `instance_id` - waf instance id.

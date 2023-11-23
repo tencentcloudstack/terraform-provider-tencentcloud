@@ -24,6 +24,8 @@ resource "tencentcloud_waf_clb_instance" "example" {
   time_unit       = "m"
   auto_renew_flag = 1
   elastic_mode    = 1
+  bot_management  = 1
+  api_security    = 1
 }
 ```
 
@@ -38,6 +40,8 @@ resource "tencentcloud_waf_clb_instance" "example" {
   auto_renew_flag = 1
   elastic_mode    = 1
   qps_limit       = 200000
+  bot_management  = 1
+  api_security    = 1
 }
 ```
 */
@@ -109,6 +113,20 @@ func resourceTencentCloudWafClbInstance() *schema.Resource {
 				ValidateFunc: validateIntegerMin(10000),
 				Description:  "QPS Limit, Minimum setting 10000. Only `elastic_mode` is 1, can be set.",
 			},
+			"bot_management": {
+				Optional:     true,
+				Type:         schema.TypeInt,
+				Default:      BOT_MANAGEMENT_STATUS_0,
+				ValidateFunc: validateAllowedIntValue(BOT_MANAGEMENT_STATUS),
+				Description:  "Whether to purchase Bot management, 1: yes, 0: no. Default is 0.",
+			},
+			"api_security": {
+				Optional:     true,
+				Type:         schema.TypeInt,
+				Default:      API_SECURITY_STATUS_0,
+				ValidateFunc: validateAllowedIntValue(API_SECURITY_STATUS),
+				Description:  "Whether to purchase API Security, 1: yes, 0: no. Default is 0.",
+			},
 			//"domain_pkg_count": {
 			//	Optional:     true,
 			//	Type:         schema.TypeInt,
@@ -142,11 +160,6 @@ func resourceTencentCloudWafClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "waf instance valid time.",
 			},
-			"api_security": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "waf instance api security status.",
-			},
 			"status": {
 				Computed:    true,
 				Type:        schema.TypeInt,
@@ -161,12 +174,13 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId        = getLogId(contextNil)
-		request      = waf.NewGenerateDealsAndPayNewRequest()
-		response     = waf.NewGenerateDealsAndPayNewResponse()
-		client       = meta.(*TencentCloudClient).apiV3Conn
-		instanceId   string
-		mainlandMode int
+		logId         = getLogId(contextNil)
+		request       = waf.NewGenerateDealsAndPayNewRequest()
+		response      = waf.NewGenerateDealsAndPayNewResponse()
+		client        = meta.(*TencentCloudClient).apiV3Conn
+		instanceId    string
+		mainlandMode  int
+		goodsCategory string
 	)
 
 	region := client.Region
@@ -187,7 +201,7 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	instanceGoodDetail := new(waf.GoodsDetailNew)
 	instanceGood.GoodsNum = helper.IntInt64(1)
 	if v, ok := d.GetOk("goods_category"); ok {
-		goodsCategory := v.(string)
+		goodsCategory = v.(string)
 		goodsCategoryId := int64(WAF_CATEGORY_ID_CLB[goodsCategory])
 		subProductCode := SUB_PRODUCT_CODE_CLB[goodsCategory]
 		labelTypes := LABEL_TYPES_CLB[goodsCategory]
@@ -221,7 +235,63 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	instanceGood.GoodsDetail = instanceGoodDetail
 	goods = append(goods, instanceGood)
 
-	//// make domain pkg
+	// bot management
+	if v, ok := d.GetOkExists("bot_management"); ok {
+		if v.(int) == 1 {
+			botManagementGood := new(waf.GoodNews)
+			botManagementDetail := new(waf.GoodsDetailNew)
+			botManagementGood.GoodsCategoryId = helper.IntInt64(BOT_MANAGEMENT_CATEGORY_ID_CLB)
+			botManagementGood.GoodsNum = helper.IntInt64(1)
+			botManagementDetail.SubProductCode = helper.String(BOT_MANAGEMENT_SUB_PRODUCT_CODE_CLB)
+			botManagementDetail.Pid = helper.IntInt64(BOT_MANAGEMENT_PID_CLB)
+			botManagementDetail.LabelTypes = helper.Strings([]string{BOT_MANAGEMENT_LABEL_TYPES_CLB[mainlandMode]})
+			botManagementDetail.LabelCounts = []*int64{helper.IntInt64(1)}
+
+			if v, ok := d.GetOkExists("time_span"); ok {
+				botManagementDetail.TimeSpan = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := d.GetOk("time_unit"); ok {
+				botManagementDetail.TimeUnit = helper.String(v.(string))
+			}
+
+			botManagementGood.RegionId = helper.IntInt64(mainlandMode)
+			botManagementGood.GoodsDetail = botManagementDetail
+			goods = append(goods, botManagementGood)
+		}
+	}
+
+	// api security
+	if v, ok := d.GetOkExists("api_security"); ok {
+		if v.(int) == 1 {
+			apiSecurityGood := new(waf.GoodNews)
+			apiSecurityDetail := new(waf.GoodsDetailNew)
+			apiSecurityGood.GoodsCategoryId = helper.IntInt64(API_SECURITY_CATEGORY_ID_CLB)
+			apiSecurityGood.GoodsNum = helper.IntInt64(1)
+			apiSecurityDetail.SubProductCode = helper.String(API_SECURITY_SUB_PRODUCT_CODE_CLB)
+			apiSecurityDetail.Pid = helper.IntInt64(API_SECURITY_PID_CLB)
+			if mainlandMode == REGION_ID_1 {
+				apiSecurityDetail.LabelTypes = helper.Strings([]string{API_SECURITY_LABEL_TYPES_CLB_REGION1[goodsCategory]})
+			} else {
+				apiSecurityDetail.LabelTypes = helper.Strings([]string{API_SECURITY_LABEL_TYPES_CLB_REGION9[goodsCategory]})
+			}
+			apiSecurityDetail.LabelCounts = []*int64{helper.IntInt64(1)}
+
+			if v, ok := d.GetOkExists("time_span"); ok {
+				apiSecurityDetail.TimeSpan = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := d.GetOk("time_unit"); ok {
+				apiSecurityDetail.TimeUnit = helper.String(v.(string))
+			}
+
+			apiSecurityGood.RegionId = helper.IntInt64(mainlandMode)
+			apiSecurityGood.GoodsDetail = apiSecurityDetail
+			goods = append(goods, apiSecurityGood)
+		}
+	}
+
+	// make domain pkg
 	//if v, ok := d.GetOkExists("domain_pkg_count"); ok {
 	//	domainPkgGood := new(waf.GoodNews)
 	//	domainPkgGoodDetail := new(waf.GoodsDetailNew)
@@ -248,8 +318,8 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	//	domainPkgGood.GoodsDetail = domainPkgGoodDetail
 	//	goods = append(goods, domainPkgGood)
 	//}
-	//
-	//// make qps pkg
+
+	// make qps pkg
 	//if v, ok := d.GetOkExists("qps_pkg_count"); ok {
 	//	qpsPkgGood := new(waf.GoodNews)
 	//	qpsPkgGoodDetail := new(waf.GoodsDetailNew)
@@ -400,6 +470,18 @@ func resourceTencentCloudWafClbInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("qps_limit", instanceInfo.ElasticBilling)
 	}
 
+	if instanceInfo.BotPkg != nil {
+		_ = d.Set("bot_management", instanceInfo.BotPkg.Status)
+	} else {
+		_ = d.Set("bot_management", 0)
+	}
+
+	if instanceInfo.ApiPkg != nil {
+		_ = d.Set("api_security", instanceInfo.ApiPkg.Status)
+	} else {
+		_ = d.Set("api_security", 0)
+	}
+
 	//if instanceInfo.DomainPkg != nil {
 	//	_ = d.Set("domain_pkg_count", instanceInfo.DomainPkg.Count)
 	//}
@@ -419,10 +501,6 @@ func resourceTencentCloudWafClbInstanceRead(d *schema.ResourceData, meta interfa
 
 	if instanceInfo.ValidTime != nil {
 		_ = d.Set("valid_time", instanceInfo.ValidTime)
-	}
-
-	if instanceInfo.APISecurity != nil {
-		_ = d.Set("api_security", instanceInfo.APISecurity)
 	}
 
 	if instanceInfo.Status != nil {
@@ -445,7 +523,7 @@ func resourceTencentCloudWafClbInstanceUpdate(d *schema.ResourceData, meta inter
 		elasticMode                    int
 	)
 
-	immutableArgs := []string{"goods_category", "time_span", "time_unit", "domain_pkg_count", "qps_pkg_count"}
+	immutableArgs := []string{"goods_category", "time_span", "time_unit", "domain_pkg_count", "qps_pkg_count", "bot_management", "api_security"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
