@@ -134,6 +134,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String, ForceNew) ID of cluster.
 * `name` - (Required, String, ForceNew) Name of addon.
+* `raw_values_type` - (Optional, String) The type of raw Values. Required with `raw_values`.
+* `raw_values` - (Optional, String) Raw Values. Conflict with `request_body`. Required with `raw_values_type`.
 * `request_body` - (Optional, String) Serialized json string as request body of addon spec. If set, will ignore `version` and `values`.
 * `values` - (Optional, List: [`String`]) Values the addon passthroughs. Conflict with `request_body`.
 * `version` - (Optional, String) Addon version, default latest version. Conflict with `request_body`.

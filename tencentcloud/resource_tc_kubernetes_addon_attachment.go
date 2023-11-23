@@ -174,7 +174,7 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Type:          schema.TypeString,
 				Optional:      true,
 				Computed:      true,
-				Description:   "Raw Values. Conflict with `request_body`.",
+				Description:   "Raw Values. Conflict with `request_body`. Required with `raw_values_type`.",
 				ConflictsWith: []string{"request_body"},
 				RequiredWith:  []string{"raw_values_type"},
 			},
@@ -182,7 +182,7 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				Description:  "The type of raw Values. Required with `request_body`.",
+				Description:  "The type of raw Values. Required with `raw_values`.",
 				RequiredWith: []string{"raw_values"},
 			},
 			"request_body": {
