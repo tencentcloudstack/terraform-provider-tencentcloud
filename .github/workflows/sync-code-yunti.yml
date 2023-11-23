@@ -1,0 +1,28 @@
+# This is a sync code to tgit workflow
+
+name: sync-code
+
+on:
+  push:
+    branches:
+      - 'feat/support-yunti-solution'
+    tags: v*
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: clone
+        run: |
+          if [ -d terraform-provider-tencentcloud ]; then
+            rm -rf terraform-provider-tencentcloud
+          fi
+          git clone https://github.com/tencentcloudstack/terraform-provider-tencentcloud.git
+      - name: sync
+        run: |
+          cd terraform-provider-tencentcloud
+          git fetch --all
+          git remote add tgit_yunti_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/tencentcloudstack/terraform-provider-yunti.git
+          git checkout feat/support-yunti-solution
+          git push tgit_yunti_origin feat/support-yunti-solution:master
