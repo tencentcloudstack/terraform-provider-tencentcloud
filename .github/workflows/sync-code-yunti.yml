@@ -1,6 +1,6 @@
 # This is a sync code to tgit workflow
 
-name: sync-code
+name: sync-code-yunti
 
 on:
   push:
