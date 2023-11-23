@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -157,7 +156,7 @@ func (me *TkeService) DescribeExtensionAddon(ctx context.Context, clusterName, a
 	return
 }
 
-func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, rawValuesType, rawValues *string) (string, error) {
+func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, rawValues, rawValuesType *string) (string, error) {
 	var reqBody = &AddonRequestBody{}
 	//reqBody.Kind = helper.String("App") // Optional
 	//reqBody.ApiVersion = helper.String("application.tkestack.io/v1") // Optional
@@ -175,11 +174,9 @@ func (me *TkeService) GetAddonReqBody(addon, version string, values []*string, r
 	}
 
 	if rawValuesType != nil && rawValues != nil {
-		base64EncodeValues :=base64.StdEncoding.EncodeToString([]byte(*rawValues))
-		jsonValues := strings.Replace(base64EncodeValues, "\"", "\\\"", -1)
-
+		base64EncodeValues := base64.StdEncoding.EncodeToString([]byte(*rawValues))
 		addonValues.RawValuesType = rawValuesType
-		addonValues.RawValues = &jsonValues
+		addonValues.RawValues = &base64EncodeValues
 	}
 
 	reqBody.Spec.Values = addonValues

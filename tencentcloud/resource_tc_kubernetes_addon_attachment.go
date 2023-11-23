@@ -348,7 +348,7 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 			rawValuesType := spec.Values.RawValuesType
 
 			base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
-			jsonValues :=strings.Replace(string(base64DecodeValues), "\\\"", "\"", -1)
+			jsonValues := string(base64DecodeValues)
 
 			_ = d.Set("raw_values", jsonValues)
 			_ = d.Set("raw_values_type", rawValuesType)
