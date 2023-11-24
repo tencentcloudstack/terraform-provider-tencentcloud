@@ -79,10 +79,10 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_ddos_ip_attachment_v2
     tencentcloud_antiddos_ddos_black_white_ip
     tencentcloud_antiddos_ddos_geo_ip_block_config
-	tencentcloud_antiddos_ddos_speed_limit_config
-	tencentcloud_antiddos_default_alarm_threshold
-	tencentcloud_antiddos_scheduling_domain_user_name
-	tencentcloud_antiddos_ip_alarm_threshold_config
+    tencentcloud_antiddos_ddos_speed_limit_config
+    tencentcloud_antiddos_default_alarm_threshold
+    tencentcloud_antiddos_scheduling_domain_user_name
+    tencentcloud_antiddos_ip_alarm_threshold_config
 
 Anti-DDoS(Dayu)
   Data Source
