@@ -1415,6 +1415,15 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
 				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.",
 		},
+		"vpc_cni_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Default:      "tke-route-eni",
+			ValidateFunc: validateAllowedStringValue([]string{"tke-route-eni", "tke-direct-eni"}),
+			Description: "Distinguish between shared network card multi-IP mode and independent network card mode. " +
+				"Fill in 'tke-route-eni' for shared network card multi-IP mode and 'tke-direct-eni' for independent network card mode. " +
+				"The default is shared network card mode.",
+		},
 		"vpc_id": {
 			Type:         schema.TypeString,
 			ForceNew:     true,
@@ -2357,6 +2366,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	advanced.DeletionProtection = d.Get("deletion_protection").(bool)
 	advanced.KubeProxyMode = d.Get("kube_proxy_mode").(string)
 	advanced.EnableCustomizedPodCIDR = d.Get("enable_customized_pod_cidr").(bool)
+	advanced.VpcCniType = d.Get("vpc_cni_type").(string)
 	if v, ok := d.GetOk("base_pod_num"); ok {
 		advanced.BasePodNumber = int64(v.(int))
 	}
@@ -2819,6 +2829,8 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("tags", info.Tags)
 	_ = d.Set("deletion_protection", info.DeletionProtection)
 	_ = d.Set("cluster_level", info.ClusterLevel)
+	_ = d.Set("vpc_cni_type", info.VpcCniType)
+	_ = d.Set("eni_subnet_ids", info.EniSubnetIds)
 
 	var data map[string]interface{}
 	err = json.Unmarshal([]byte(info.Property), &data)
@@ -3356,6 +3368,90 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	//update VPC-CNI container network capability
+	if d.HasChange("vpc_cni_type") || d.HasChange("is_non_static_ip_mode") || d.HasChange("eni_subnet_ids") || d.HasChange("claim_expired_seconds") {
+		eniSubnetIdList := d.Get("eni_subnet_ids").([]interface{})
+		if len(eniSubnetIdList) == 0 {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				inErr := tkeService.DisableVpcCniNetworkType(ctx, id)
+				if inErr != nil {
+					return resource.NonRetryableError(inErr)
+				}
+				return nil
+			})
+			if err != nil {
+				return err
+			}
+		} else {
+			info, _, err := tkeService.DescribeCluster(ctx, id)
+			if err != nil {
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					info, _, err = tkeService.DescribeCluster(ctx, id)
+					if err != nil {
+						return retryError(err)
+					}
+					return nil
+				})
+			}
+			if err != nil {
+				return err
+			}
+			oldSubnets := info.EniSubnetIds
+			var subnets []string
+			for index := range eniSubnetIdList {
+				subnetId := eniSubnetIdList[index].(string)
+				subnets = append(subnets, subnetId)
+			}
+			if len(oldSubnets) > 0 {
+				exist, addSubnets := helper.CheckElementsExist(oldSubnets, subnets)
+				if !exist {
+					err = fmt.Errorf("the `eni_subnet_ids` parameter does not allow modification of existing subnet ID data %v. "+
+						"if you want to modify the existing subnet ID, please first set eni_subnet_ids to empty to turn off the VPC-CNI network capability, "+
+						"and then fill in the latest subnet ID", oldSubnets)
+					return err
+				}
+				vpcId := d.Get("vpc_id").(string)
+				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					inErr := tkeService.AddVpcCniSubnets(ctx, id, addSubnets, vpcId)
+					if inErr != nil {
+						return resource.NonRetryableError(inErr)
+					}
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+			} else {
+				vpcCniType := d.Get("vpc_cni_type").(string)
+				enableStaticIp := !d.Get("is_non_static_ip_mode").(bool)
+				expiredSeconds := uint64(d.Get("claim_expired_seconds").(int))
+
+				err = tkeService.EnableVpcCniNetworkType(ctx, id, vpcCniType, enableStaticIp, subnets, expiredSeconds)
+				if err != nil {
+					return err
+				}
+				time.Sleep(5 * time.Second)
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					status, message, inErr := tkeService.DescribeEnableVpcCniProgress(ctx, id)
+					if inErr != nil {
+						return resource.NonRetryableError(inErr)
+					}
+					if status == TKE_CLUSTER_VPC_CNI_STATUS_SUCCEED {
+						return nil
+					}
+					if status == TKE_CLUSTER_VPC_CNI_STATUS_RUNNING {
+						return resource.RetryableError(fmt.Errorf("%s enable vpc cni network type task status is %s", id, status))
+					}
+					err = fmt.Errorf("%s enable vpc cni network type task status is %s,we won't wait for it finish ,it show message:%s", id, status, message)
+					return resource.RetryableError(err)
+				})
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
 	//upgrade k8s cluster version
 	if d.HasChange("cluster_version") {
 		newVersion := d.Get("cluster_version").(string)
@@ -3430,17 +3526,17 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("auth_options") {
 		request := tkeGetAuthOptions(d)
-		err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
-			inErr := tkeService.ModifyClusterAuthenticationOptions(ctx, request)
-			if inErr != nil {
-				return retryError(inErr)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := tkeService.ModifyClusterAuthenticationOptions(ctx, request)
+			if err != nil {
+				return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
 			}
 			return nil
 		})
+		_, _, err = tkeService.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
 		if err != nil {
 			return err
 		}
-
 	}
 
 	if d.HasChange("deletion_protection") {

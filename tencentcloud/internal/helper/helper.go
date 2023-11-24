@@ -265,3 +265,32 @@ func JsonToMap(str string) (map[string]interface{}, error) {
 
 	return temp, nil
 }
+
+func CheckElementsExist(slice1 []string, slice2 []string) (bool, []string) {
+	exist := true
+	diff := make([]string, 0)
+
+	slice1Map := make(map[string]bool)
+	slice2Map := make(map[string]bool)
+	for _, element := range slice1 {
+		slice1Map[element] = true
+	}
+	for _, element := range slice2 {
+		slice2Map[element] = true
+	}
+
+	for _, element := range slice1 {
+		if _, ok := slice2Map[element]; !ok {
+			exist = false
+			break
+		}
+	}
+	if exist {
+		for _, element := range slice2 {
+			if _, ok := slice1Map[element]; !ok {
+				diff = append(diff, element)
+			}
+		}
+	}
+	return exist, diff
+}
