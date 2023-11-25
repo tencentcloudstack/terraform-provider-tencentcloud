@@ -78,6 +78,11 @@ Anti-DDoS(DayuV2)
     tencentcloud_dayu_cc_policy_v2
     tencentcloud_dayu_ddos_ip_attachment_v2
     tencentcloud_antiddos_ddos_black_white_ip
+    tencentcloud_antiddos_ddos_geo_ip_block_config
+    tencentcloud_antiddos_ddos_speed_limit_config
+    tencentcloud_antiddos_default_alarm_threshold
+    tencentcloud_antiddos_scheduling_domain_user_name
+    tencentcloud_antiddos_ip_alarm_threshold_config
 
 Anti-DDoS(Dayu)
   Data Source
@@ -3664,6 +3669,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_security_group":                              resourceTencentCloudCynosdbSecurityGroup(),
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                          resourceTencentCloudDayuDDosIpAttachmentV2(),
 			"tencentcloud_antiddos_ddos_black_white_ip":                        resourceTencentCloudAntiddosDdosBlackWhiteIp(),
+			"tencentcloud_antiddos_ddos_geo_ip_block_config":                   resourceTencentCloudAntiddosDdosGeoIpBlockConfig(),
+			"tencentcloud_antiddos_ddos_speed_limit_config":                    resourceTencentCloudAntiddosDdosSpeedLimitConfig(),
+			"tencentcloud_antiddos_default_alarm_threshold":                    resourceTencentCloudAntiddosDefaultAlarmThreshold(),
+			"tencentcloud_antiddos_scheduling_domain_user_name":                resourceTencentCloudAntiddosSchedulingDomainUserName(),
+			"tencentcloud_antiddos_ip_alarm_threshold_config":                  resourceTencentCloudAntiddosIpAlarmThresholdConfig(),
 			"tencentcloud_tsf_microservice":                                    resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                              resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                                 resourceTencentCloudCvmLaunchTemplate(),
