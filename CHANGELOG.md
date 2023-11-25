@@ -1,3 +1,20 @@
+## 1.81.50 (November 25, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_antiddos_ddos_geo_ip_block_config` ([#2342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2342))
+* **New Resource:** `tencentcloud_antiddos_ddos_speed_limit_config` ([#2342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2342))
+* **New Resource:** `tencentcloud_antiddos_default_alarm_threshold` ([#2342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2342))
+* **New Resource:** `tencentcloud_antiddos_ip_alarm_threshold_config` ([#2342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2342))
+* **New Resource:** `tencentcloud_antiddos_scheduling_domain_user_name` ([#2342](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2342))
+* **New Resource:** `tencentcloud_waf_modify_access_period` ([#2340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2340))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_addon_attachment: Support `raw_values` and `raw_values_type`. ([#2327](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2327))
+* tencentcloud_waf_clb_instance: Support set `bot_management` and `api_security`. ([#2340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2340))
+* tencentcloud_waf_saas_instance: Support set `bot_management` and `api_security`. ([#2340](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2340))
+
 ## 1.81.49 (November 22, 2023)
 
 FEATURES:
