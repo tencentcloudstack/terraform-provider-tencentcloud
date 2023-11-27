@@ -16,7 +16,17 @@ func TestAccTencentCloudRouteTableAssociationResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccRouteTableAssociation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_route_table_association.route_table_association", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table_association.route_table_association", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_association.route_table_association", "route_table_id", "rtb-5toos5sy"),
+				),
+			},
+			{
+				Config: testAccRouteTableAssociationUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_route_table_association.route_table_association", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_route_table_association.route_table_association", "route_table_id", "rtb-pp764dr4"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_route_table_association.route_table_association",
@@ -31,6 +41,15 @@ const testAccRouteTableAssociation = `
 
 resource "tencentcloud_route_table_association" "route_table_association" {
   route_table_id = "rtb-5toos5sy"
+  subnet_id      = "subnet-2y2omd4k"
+}
+
+`
+
+const testAccRouteTableAssociationUpdate = `
+
+resource "tencentcloud_route_table_association" "route_table_association" {
+  route_table_id = "rtb-pp764dr4"
   subnet_id      = "subnet-2y2omd4k"
 }
 
