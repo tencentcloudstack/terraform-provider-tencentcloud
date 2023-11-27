@@ -813,7 +813,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   
   vpc_cni_type								 = "tke-route-eni"
   is_non_static_ip_mode                      = false
-  eni_subnet_ids							 = ["subnet-ljyn7h30", "subnet-cby4l3kq"]
+  eni_subnet_ids							 = ["subnet-ljyn7h30", "subnet-domfffi4"]
   claim_expired_seconds                      = 300
   
   worker_config {
@@ -885,8 +885,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_intranet_subnet_id                 = local.subnet_id
   cluster_internet_security_group               = local.sg_id
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  
-  vpc_cni_type								 = "tke-route-eni"
+
   is_non_static_ip_mode                      = false
   claim_expired_seconds                      = 300
   

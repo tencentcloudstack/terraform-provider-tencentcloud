@@ -1028,8 +1028,15 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578 h1:vBpQhUr
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578/go.mod h1:UlojGQh/9wb7/uXPNi7PvMral1CNAskVDNgqJEV83l0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.758 h1:PRxMkSm3MX0vuWQSRO7pY0bwT8M2PEZW2BnKpZdjzK0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.758/go.mod h1:GKX+ZVvPOgussCe/4hAreiglWRa5w9PTDKoxedZ3Wc4=
+<<<<<<< HEAD
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.807 h1:/ziV4FFD7xGFvS4TEFEMRvVtfhl2cQ4vkejOwDwWTqc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.807/go.mod h1:uRsVm3rUbE/YH4+G8o1Ppyl4ENtbLWliUxPk1yDr95k=
+=======
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759 h1:frH1xtZwfswnLG84y3FjJLgJBgGewG/A3OYVUN5vYus=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.759/go.mod h1:+YUTVPhy9Lk8SutYIj4pKpO33HpdFMLs0Y3Cg1a+6qQ=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.804 h1:plq6x9Zl5jrdG/3jSCR8p7X6BkD2z06q3nIY2LNBYO0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.804/go.mod h1:ttWXn+w/GUlsItCWtSdhDAIoMHn1Bp3k4egfrRP3RXU=
+>>>>>>> 4b5cb837c (add datasource tencentcloud_kubernetes_cluster_node_pools)
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756 h1:89M6uA8Y/FC1b88TFxvRManGW+i62Isqg1lW8HjHDvU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket v1.0.756/go.mod h1:AJAItBOTaarpDpUF7pNp0tuz2Y6H2oFuMcyKouPs1IE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.804 h1:lYkKswjbdCICDATYfUtT1SrHhSBUcVFxnh0j0tSqhEA=

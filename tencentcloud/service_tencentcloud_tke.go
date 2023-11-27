@@ -2703,3 +2703,41 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 	clusterInstances = response.Response.InstanceSet
 	return
 }
+
+func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (clusterNodePools []*tke.NodePool, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribeClusterNodePoolsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tke.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterNodePools(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NodePoolSet) < 1 {
+		return
+	}
+
+	clusterNodePools = response.Response.NodePoolSet
+	return
+}
