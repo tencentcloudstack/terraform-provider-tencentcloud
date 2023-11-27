@@ -1,0 +1,7 @@
+```release-note:enhancement
+tencentcloud_kubernetes_cluster: Support `eni_subnet_ids` updates.
+```
+
+```release-note:new-datasource
+tencentcloud_kubernetes_cluster_node_pools
+```
