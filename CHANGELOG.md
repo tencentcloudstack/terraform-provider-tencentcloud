@@ -1,3 +1,13 @@
+## 1.81.51 (November 27, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_route_table_association` ([#2345](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2345))
+
+ENHANCEMENTS:
+
+* tencentcloud_clb_instance: Support set `vip_isp`. ([#2344](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2344))
+
 ## 1.81.50 (November 25, 2023)
 
 FEATURES:
