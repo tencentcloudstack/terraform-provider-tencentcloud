@@ -3403,15 +3403,16 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			info, _, err := tkeService.DescribeCluster(ctx, id)
 			if err != nil {
 				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					info, _, err = tkeService.DescribeCluster(ctx, id)
-					if err != nil {
-						return retryError(err)
+					newInfo, _, inErr := tkeService.DescribeCluster(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
 					}
+					info = newInfo
 					return nil
 				})
-			}
-			if err != nil {
-				return err
+				if err != nil {
+					return err
+				}
 			}
 			oldSubnets := info.EniSubnetIds
 			var subnets []string
