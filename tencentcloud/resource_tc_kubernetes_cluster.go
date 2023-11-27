@@ -3391,7 +3391,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 				if inErr != nil {
 					return resource.NonRetryableError(inErr)
 				}
-				if enableIPAMD == false || (disableVpcCniMode == true && phase != "upgrading") {
+				if !enableIPAMD || (disableVpcCniMode && phase != "upgrading") {
 					return nil
 				}
 				err = fmt.Errorf("%s close vpc cni network type task is in progress and waiting to be completed", id)
@@ -3456,10 +3456,10 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 					if inErr != nil {
 						return resource.NonRetryableError(inErr)
 					}
-					if disableVpcCniMode == false && phase == "running" {
+					if !disableVpcCniMode && phase == "running" {
 						return nil
 					}
-					if disableVpcCniMode == false && phase == "initializing" {
+					if !disableVpcCniMode && phase == "initializing" {
 						return resource.RetryableError(fmt.Errorf("%s enable vpc cni network type task is in progress and waiting to be completed", id))
 					}
 					err = fmt.Errorf("%s enable vpc cni network type task disableVpcCniMode is %v and phase is %s,we won't wait for it finish", id, disableVpcCniMode, phase)
