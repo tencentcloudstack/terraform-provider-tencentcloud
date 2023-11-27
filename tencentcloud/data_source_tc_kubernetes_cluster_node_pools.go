@@ -476,11 +476,11 @@ func dataSourceTencentCloudKubernetesClusterNodePoolsRead(d *schema.ResourceData
 			filter := tke.Filter{}
 			filterMap := item.(map[string]interface{})
 
-			if v, ok := filterMap["name"]; ok {
-				filter.Name = helper.String(v.(string))
+			if v1, ok1 := filterMap["name"]; ok1 {
+				filter.Name = helper.String(v1.(string))
 			}
-			if v, ok := filterMap["values"]; ok {
-				valuesSet := v.(*schema.Set).List()
+			if v1, ok1 := filterMap["values"]; ok1 {
+				valuesSet := v1.(*schema.Set).List()
 				filter.Values = helper.InterfacesStringsPoint(valuesSet)
 			}
 			tmpSet = append(tmpSet, &filter)
