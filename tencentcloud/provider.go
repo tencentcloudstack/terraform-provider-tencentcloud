@@ -1203,6 +1203,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_protocol_template
     tencentcloud_protocol_template_group
     tencentcloud_route_table
+	tencentcloud_route_table_association
     tencentcloud_route_entry
     tencentcloud_route_table_entry
     tencentcloud_dnat
@@ -2991,6 +2992,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_route_entry":                                         resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                                   resourceTencentCloudVpcRouteEntry(),
 			"tencentcloud_route_table":                                         resourceTencentCloudVpcRouteTable(),
+			"tencentcloud_route_table_association":                             resourceTencentCloudRouteTableAssociation(),
 			"tencentcloud_dnat":                                                resourceTencentCloudDnat(),
 			"tencentcloud_nat_gateway":                                         resourceTencentCloudNatGateway(),
 			"tencentcloud_nat_gateway_snat":                                    resourceTencentCloudNatGatewaySnat(),
