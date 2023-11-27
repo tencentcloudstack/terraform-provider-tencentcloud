@@ -54,6 +54,36 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+OPNE CLB with VipIsp
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "example" {
+  network_type           = "SINGLEISP_CMCC"
+  charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
+  bandwidth_package_name = "tf-example"
+  internet_max_bandwidth = 300
+  egress                 = "center_egress1"
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type         = "OPEN"
+  clb_name             = "my-open-clb"
+  project_id           = 0
+  vpc_id               = "vpc-4owdpnwr"
+  vip_isp              = "CMCC"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id = tencentcloud_vpc_bandwidth_package.example.id
+
+  tags = {
+    test = "open"
+  }
+}
+```
+
 Dynamic Vip Instance
 
 ```hcl
@@ -354,6 +384,8 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			},
 			"vip_isp": {
 				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
 			},
@@ -512,12 +544,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
 		}
 		if pok {
-			if pok && chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+			if chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
 				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
 			}
 			request.BandwidthPackageId = helper.String(pv.(string))
-		} else if chargeType == INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: the `bandwidth_package_id` must be specified if internet_charge_type was `BANDWIDTH_PACKAGE`")
 		}
 	}
 

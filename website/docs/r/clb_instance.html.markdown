@@ -64,6 +64,36 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+### OPNE CLB with VipIsp
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "example" {
+  network_type           = "SINGLEISP_CMCC"
+  charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
+  bandwidth_package_name = "tf-example"
+  internet_max_bandwidth = 300
+  egress                 = "center_egress1"
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type         = "OPEN"
+  clb_name             = "my-open-clb"
+  project_id           = 0
+  vpc_id               = "vpc-4owdpnwr"
+  vip_isp              = "CMCC"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id = tencentcloud_vpc_bandwidth_package.example.id
+
+  tags = {
+    test = "open"
+  }
+}
+```
+
 ### Dynamic Vip Instance
 
 ```hcl
@@ -222,6 +252,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) The available tags within this CLB.
 * `target_region_info_region` - (Optional, String) Region information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
 * `target_region_info_vpc_id` - (Optional, String) Vpc information of backend services are attached the CLB instance. Only supports `OPEN` CLBs.
+* `vip_isp` - (Optional, String, ForceNew) Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
 * `vpc_id` - (Optional, String, ForceNew) VPC ID of the CLB.
 * `zone_id` - (Optional, String) Available zone id, only applicable to open CLB.
 
@@ -237,7 +268,6 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `clb_vips` - The virtual service address table of the CLB.
 * `domain` - Domain name of the CLB instance.
-* `vip_isp` - Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
 
 
 ## Import
