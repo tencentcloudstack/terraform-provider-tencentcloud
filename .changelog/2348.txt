@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_tse_waf_protection
+```
+
+```release-note:new-resource
+tencentcloud_tse_waf_domains
+```

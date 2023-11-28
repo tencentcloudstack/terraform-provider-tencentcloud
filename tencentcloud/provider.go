@@ -1893,6 +1893,8 @@ Tencent Cloud Service Engine(TSE)
     tencentcloud_tse_cngw_route
     tencentcloud_tse_cngw_route_rate_limit
     tencentcloud_tse_cngw_certificate
+    tencentcloud_tse_waf_protection
+    tencentcloud_tse_waf_domains
 
 ClickHouse(CDWCH)
   Data Source
@@ -3790,6 +3792,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route_rate_limit":                           resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                                resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_tse_cngw_certificate":                                resourceTencentCloudTseCngwCertificate(),
+			"tencentcloud_tse_waf_protection":                                  resourceTencentCloudTseWafProtection(),
+			"tencentcloud_tse_waf_domains":                                     resourceTencentCloudTseWafDomains(),
 			"tencentcloud_clickhouse_instance":                                 resourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  resourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   resourceTencentCloudClsScheduledSql(),
