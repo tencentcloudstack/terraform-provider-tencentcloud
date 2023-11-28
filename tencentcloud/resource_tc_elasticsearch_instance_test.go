@@ -173,7 +173,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	subnet_id           = var.subnet_id
 	password            = "Test1234"
 	license_type        = "basic"
-	basic_security_type = 1
+	basic_security_type = 2
 
     web_node_type_info {
       node_num = 1
