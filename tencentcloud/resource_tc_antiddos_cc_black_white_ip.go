@@ -180,6 +180,9 @@ func resourceTencentCloudAntiddosCcBlackWhiteIpCreate(d *schema.ResourceData, me
 
 	service := AntiddosService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ccBlackWhiteIps, err := service.DescribeAntiddosCcBlackWhiteIpById(ctx, "bgpip", instanceId, ip, domain, protocol)
+	if err != nil {
+		return err
+	}
 	var ccBlackWhiteIpPolicy *antiddos.CcBlackWhiteIpPolicy
 	for _, ccBlackWhiteIp := range ccBlackWhiteIps {
 		if *ccBlackWhiteIp.Domain != domain {
