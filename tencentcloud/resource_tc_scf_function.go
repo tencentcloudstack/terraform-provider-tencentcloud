@@ -965,6 +965,36 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	}
 	_ = d.Set("trigger_info", triggers)
 
+	if resp.ImageConfig != nil {
+		imageConfigResp := resp.ImageConfig
+		imageConfig := map[string]interface{}{
+			"image_type": imageConfigResp.ImageType,
+			"image_uri":  imageConfigResp.ImageUri,
+		}
+		if imageConfigResp.RegistryId != nil {
+			imageConfig["registry_id"] = imageConfigResp.RegistryId
+		}
+		if imageConfigResp.EntryPoint != nil {
+			imageConfig["entry_point"] = imageConfigResp.EntryPoint
+		}
+		if imageConfigResp.Command != nil {
+			imageConfig["command"] = imageConfigResp.Command
+		}
+		if imageConfigResp.Args != nil {
+			imageConfig["args"] = imageConfigResp.Args
+		}
+		if imageConfigResp.ContainerImageAccelerate != nil {
+			imageConfig["container_image_accelerate"] = imageConfigResp.ContainerImageAccelerate
+		}
+		if imageConfigResp.ImagePort != nil {
+			imageConfig["image_port"] = imageConfigResp.ImagePort
+		}
+
+		if err = d.Set("image_config", imageConfig); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
