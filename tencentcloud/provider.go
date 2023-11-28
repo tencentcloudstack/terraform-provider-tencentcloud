@@ -778,7 +778,6 @@ Cloud Monitor(Monitor)
     tencentcloud_monitor_alarm_monitor_type
 
   Resource
-    tencentcloud_monitor_policy_group
     tencentcloud_monitor_binding_object
     tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
