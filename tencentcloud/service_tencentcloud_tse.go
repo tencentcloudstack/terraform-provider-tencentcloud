@@ -1365,3 +1365,86 @@ func (me *TseService) DeleteTseCngwCertificateById(ctx context.Context, gatewayI
 
 	return
 }
+
+func (me *TseService) DescribeTseWafProtectionById(ctx context.Context, gatewayId string) (wafProtection *tse.DescribeWafProtectionResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeWafProtectionRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeWafProtection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	wafProtection = response.Response.Result
+	return
+}
+
+func (me *TseService) DescribeTseWafDomainsById(ctx context.Context, gatewayId string) (wafDomains *tse.DescribeWafDomainsResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeWafDomainsRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeWafDomains(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	wafDomains = response.Response.Result
+	return
+}
+
+func (me *TseService) DeleteTseWafDomainsById(ctx context.Context, gatewayId string, domain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteWafDomainsRequest()
+	request.GatewayId = &gatewayId
+	request.Domains = []*string{&domain}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteWafDomains(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
