@@ -85,8 +85,8 @@ Anti-DDoS(DayuV2)
     tencentcloud_antiddos_ip_alarm_threshold_config
     tencentcloud_antiddos_packet_filter_config
     tencentcloud_antiddos_port_acl_config
-	tencentcloud_antiddos_cc_black_white_ip
-	tencentcloud_antiddos_cc_precision_policy
+    tencentcloud_antiddos_cc_black_white_ip
+    tencentcloud_antiddos_cc_precision_policy
 
 Anti-DDoS(Dayu)
   Data Source
