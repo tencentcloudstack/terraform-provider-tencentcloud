@@ -83,6 +83,10 @@ Anti-DDoS(DayuV2)
     tencentcloud_antiddos_default_alarm_threshold
     tencentcloud_antiddos_scheduling_domain_user_name
     tencentcloud_antiddos_ip_alarm_threshold_config
+    tencentcloud_antiddos_packet_filter_config
+    tencentcloud_antiddos_port_acl_config
+    tencentcloud_antiddos_cc_black_white_ip
+    tencentcloud_antiddos_cc_precision_policy
 
 Anti-DDoS(Dayu)
   Data Source
@@ -3679,6 +3683,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_default_alarm_threshold":                    resourceTencentCloudAntiddosDefaultAlarmThreshold(),
 			"tencentcloud_antiddos_scheduling_domain_user_name":                resourceTencentCloudAntiddosSchedulingDomainUserName(),
 			"tencentcloud_antiddos_ip_alarm_threshold_config":                  resourceTencentCloudAntiddosIpAlarmThresholdConfig(),
+			"tencentcloud_antiddos_packet_filter_config":                       resourceTencentCloudAntiddosPacketFilterConfig(),
+			"tencentcloud_antiddos_port_acl_config":                            resourceTencentCloudAntiddosPortAclConfig(),
+			"tencentcloud_antiddos_cc_black_white_ip":                          resourceTencentCloudAntiddosCcBlackWhiteIp(),
+			"tencentcloud_antiddos_cc_precision_policy":                        resourceTencentCloudAntiddosCcPrecisionPolicy(),
 			"tencentcloud_tsf_microservice":                                    resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                              resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                                 resourceTencentCloudCvmLaunchTemplate(),
