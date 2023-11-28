@@ -1,0 +1,3 @@
+```release-note:new-datasource
+tencentcloud_kubernetes_cluster_instances
+```

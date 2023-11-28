@@ -646,6 +646,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_common_names
     tencentcloud_kubernetes_available_cluster_versions
     tencentcloud_kubernetes_cluster_authentication_options
+    tencentcloud_kubernetes_cluster_instances
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -2949,6 +2950,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
 			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
+			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

@@ -2291,3 +2291,47 @@ func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, 
 		return object, helper.PString(object.Response.Status), nil
 	}
 }
+
+func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Context, param map[string]interface{}) (clusterInstances []*tke.Instance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribeClusterInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "InstanceRole" {
+			request.InstanceRole = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tke.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	clusterInstances = response.Response.InstanceSet
+	return
+}
