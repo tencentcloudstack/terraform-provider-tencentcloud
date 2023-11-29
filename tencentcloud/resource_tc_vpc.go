@@ -296,12 +296,12 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		request.VpcId = &id
 
 		nowTmp := now.([]interface{})
-		if len(nowTmp) > 1 {
+		if len(nowTmp) > 0 {
 			request.NewCidrBlocks = helper.InterfacesStringsPoint(now.([]interface{}))
 		}
 
 		oldTmp := old.([]interface{})
-		if len(oldTmp) > 1 {
+		if len(oldTmp) > 0 {
 			request.OldCidrBlocks = helper.InterfacesStringsPoint(old.([]interface{}))
 		}
 
