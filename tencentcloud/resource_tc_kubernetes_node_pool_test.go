@@ -111,6 +111,17 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccTkeNodePoolClusterUpdateSize,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeNodePoolExists,
+					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepool"),
+				),
+			},
+			{
 				Config: testAccTkeNodePoolClusterUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,
@@ -128,7 +139,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_max_price", "1000"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "2"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "0"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "desired_capacity", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "name", "mynodepoolupdate"),
@@ -348,12 +359,76 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 }
 `
 
+const testAccTkeNodePoolClusterUpdateSize string = testAccTkeNodePoolClusterBasic + `
+resource "tencentcloud_kubernetes_node_pool" "np_test" {
+  name = "mynodepool"
+  cluster_id = local.cluster_id
+  max_size = 5
+  min_size = 0
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 1
+  enable_auto_scale    = true
+  scaling_group_name	   = "asg_np_test"
+  default_cooldown		   = 400
+  termination_policies	   = ["OLDEST_INSTANCE"]
+  scaling_group_project_id = var.default_project
+  deletion_protection = true
+  delete_keep_instance = false
+  node_os="tlinux2.2(tkernel3)x86_64"
+
+  auto_scaling_config {
+    instance_type      = var.ins_type
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "50"
+    orderly_security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_keep.security_groups[0].security_group_id]
+    cam_role_name = "TCB_QcsRole"
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+	host_name                  = "12.123.0.0"
+	host_name_style            = "ORIGINAL"
+  }
+  unschedulable = 0
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+	key = "test_taint"
+    value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  tags = {
+    keep-test-np1 = "test1"
+    keep-test-np2 = "test2"
+  }
+
+  node_config {
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
+  }
+}
+`
+
 const testAccTkeNodePoolClusterUpdate string = testAccTkeNodePoolClusterBasic + `
 resource "tencentcloud_kubernetes_node_pool" "np_test" {
   name = "mynodepoolupdate"
   cluster_id = local.cluster_id
   max_size = 5
-  min_size = 2
+  min_size = 0
   vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
   subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
   retry_policy         = "INCREMENTAL_INTERVALS"
