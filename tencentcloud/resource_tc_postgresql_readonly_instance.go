@@ -613,6 +613,21 @@ func resourceTencentCLoudPostgresqlReadOnlyInstanceDelete(d *schema.ResourceData
 	if err != nil {
 		return err
 	}
+
+	// Wait for status to isolated
+	_ = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_ISOLATED {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("waiting for readonly instance isolating"))
+	})
+
 	// delete
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := postgresqlService.DeletePostgresqlInstance(ctx, instanceId)
