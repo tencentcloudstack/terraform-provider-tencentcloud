@@ -79,6 +79,9 @@ func PBool(pointer *bool) bool {
 }
 
 func PUint64(pointer *uint64) uint64 {
+	if pointer == nil {
+		return 0
+	}
 	return *pointer
 }
 
