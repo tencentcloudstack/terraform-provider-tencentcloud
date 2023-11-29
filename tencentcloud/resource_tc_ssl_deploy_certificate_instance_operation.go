@@ -6,7 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_ssl_deploy_certificate_instance_operation" "deploy_certificate_instance" {
   certificate_id = "8x1eUSSl"
-  instance_id_list =[api1.ninghhuang.online|off]
+  instance_id_list = ["cdndomain1.example.com|on","cdndomain1.example.com|off"]
+  resource_type = "cdn"
 }
 ```
 
