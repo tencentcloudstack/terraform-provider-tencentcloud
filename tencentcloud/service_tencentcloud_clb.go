@@ -1299,6 +1299,11 @@ func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clb
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseClbClient().AssociateTargetGroups(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(e.GetMessage(), "Your task is working (AssociateTargetGroups)") {
+					return resource.RetryableError(e)
+				}
+			}
 			return retryError(err, InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -1378,6 +1383,11 @@ func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targetGroupI
 		ratelimit.Check(request.GetAction())
 		_, err := me.client.UseClbClient().DisassociateTargetGroups(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(e.GetMessage(), "Your task is working (DisassociateTargetGroups)") {
+					return resource.RetryableError(e)
+				}
+			}
 			return retryError(err, InternalError)
 		}
 		return nil
