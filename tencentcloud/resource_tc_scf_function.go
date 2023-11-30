@@ -203,6 +203,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
+				Default:     "Event",
 				Description: "Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.",
 			},
 			"l5_enable": {
@@ -289,7 +290,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region", "zip_file"},
-				Description:   "Image of the SCF function, conflict with ``.",
+				Description:   "Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"image_type": {
@@ -534,6 +535,38 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 					},
 				},
 			},
+			"dns_cache": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Default:     false,
+				Description: "Whether to enable Dns caching capability, only the EVENT function is supported. Default is false.",
+			},
+			"intranet_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Intranet access configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip_fixed": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Computed:    true,
+							Description: "Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.",
+						},
+						"ip_address": {
+							Type: schema.TypeList,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Computed:    true,
+							Description: "If fixed intranet IP is enabled, this field returns the IP list used.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -772,6 +805,31 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		enableStr := v.(string)
 		functionInfo.asyncRunEnable = helper.String(enableStr)
 	}
+	if *functionInfo.funcType == SCF_FUNCTION_TYPE_EVENT {
+		if v, ok := d.GetOk("dns_cache"); ok {
+			dnsCache := v.(bool)
+			dnsCacheStr := "FALSE"
+			if dnsCache {
+				dnsCacheStr = "TRUE"
+			}
+			functionInfo.dnsCache = helper.String(dnsCacheStr)
+		}
+	}
+	if raw, ok := d.GetOk("intranet_config"); ok {
+		configs := raw.([]interface{})
+		var intranetConfigs = make([]*scf.IntranetConfigIn, 0)
+
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			ipFixed := value["ip_fixed"].(string)
+
+			config := &scf.IntranetConfigIn{
+				IpFixed: &ipFixed,
+			}
+			intranetConfigs = append(intranetConfigs, config)
+		}
+		functionInfo.intranetConfig = intranetConfigs[0]
+	}
 
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
 		log.Printf("[CRITAL]%s create function failed: %+v", logId, err)
@@ -991,6 +1049,22 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 		}
 
 		if err = d.Set("image_config", imageConfig); err != nil {
+			return err
+		}
+	}
+
+	_ = d.Set("dns_cache", resp.DnsCache)
+	if resp.IntranetConfig != nil {
+		intranetConfigResp := resp.IntranetConfig
+		ipFixed := *intranetConfigResp.IpFixed == "TRUE"
+		intranetConfig := map[string]interface{}{
+			"ip_fixed": ipFixed,
+		}
+		if intranetConfigResp.IpAddress != nil {
+			intranetConfig["ip_address"] = intranetConfigResp.IpAddress
+		}
+
+		if err = d.Set("intranet_config", intranetConfig); err != nil {
 			return err
 		}
 	}
@@ -1273,6 +1347,36 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		functionInfo.publicNetConfig.EipConfig = &scf.EipConfigIn{
 			EipStatus: helper.String(status),
 		}
+	}
+
+	var funcType string
+	if raw, ok := d.GetOk("func_type"); ok {
+		funcType = raw.(string)
+	}
+	if funcType == SCF_FUNCTION_TYPE_EVENT {
+		if v, ok := d.GetOk("dns_cache"); ok {
+			dnsCache := v.(bool)
+			dnsCacheStr := "FALSE"
+			if dnsCache {
+				dnsCacheStr = "TRUE"
+			}
+			functionInfo.dnsCache = helper.String(dnsCacheStr)
+		}
+	}
+	if raw, ok := d.GetOk("intranet_config"); ok {
+		configs := raw.([]interface{})
+		var intranetConfigs = make([]*scf.IntranetConfigIn, 0)
+
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			ipFixed := value["ip_fixed"].(string)
+
+			config := &scf.IntranetConfigIn{
+				IpFixed: &ipFixed,
+			}
+			intranetConfigs = append(intranetConfigs, config)
+		}
+		functionInfo.intranetConfig = intranetConfigs[0]
 	}
 
 	// update function configuration
