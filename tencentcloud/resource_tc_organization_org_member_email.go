@@ -185,7 +185,7 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 		return nil
 	}
 
-	_ = d.Set("member_uin", memberUin)
+	_ = d.Set("member_uin", helper.StrToInt64(memberUin))
 
 	if orgMemberEmail.Email != nil {
 		_ = d.Set("email", orgMemberEmail.Email)
