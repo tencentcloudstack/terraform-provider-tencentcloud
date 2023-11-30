@@ -1,18 +1,20 @@
 /*
 Provides a resource to create a organization org_member_email
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_member_email" "org_member_email" {
-  member_uin = 100033704327
-  email = "iac-example@qq.com"
-  country_code = "86"
-  phone = "12345678901"
-  }
+
+	resource "tencentcloud_organization_org_member_email" "org_member_email" {
+	  member_uin = 100033704327
+	  email = "iac-example@qq.com"
+	  country_code = "86"
+	  phone = "12345678901"
+	  }
+
 ```
 
-Import
+# Import
 
 organization org_member_email can be imported using the id, e.g.
 
@@ -185,7 +187,7 @@ func resourceTencentCloudOrganizationOrgMemberEmailRead(d *schema.ResourceData, 
 		return nil
 	}
 
-	_ = d.Set("member_uin", memberUin)
+	_ = d.Set("member_uin", helper.StrToInt64(memberUin))
 
 	if orgMemberEmail.Email != nil {
 		_ = d.Set("email", orgMemberEmail.Email)
