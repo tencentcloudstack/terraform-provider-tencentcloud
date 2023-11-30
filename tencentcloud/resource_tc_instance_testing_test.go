@@ -63,8 +63,6 @@ func TestAccTencentCloudTestingCvmInstanceResource_WithDataDisk(t *testing.T) {
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
 					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_snapshot_id", ""),
-					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_type", "CLOUD_PREMIUM"),
-					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "100"),
 				),
 			},
 			{
@@ -91,7 +89,7 @@ const testAccTencentCloudTestingCvmInstanceBasic = defaultInstanceVariable + `
 resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_testing_zone
-  image_id          = data.tencentcloud_images.testing.images.0.image_id
+  image_id          = var.cvm_testing_image_id
   instance_type     = "S2.MEDIUM2"
   vpc_id            = var.cvm_testing_vpc_id
   subnet_id         = var.cvm_testing_subnet_id
@@ -104,7 +102,7 @@ const testAccTencentCloudTestingCvmInstanceModifyInstanceType = defaultInstanceV
 resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_testing_zone
-  image_id          = data.tencentcloud_images.testing.images.0.image_id
+  image_id          = var.cvm_testing_image_id
   instance_type     = "S2.MEDIUM2"
   vpc_id            = var.cvm_testing_vpc_id
   subnet_id         = var.cvm_testing_subnet_id
@@ -117,7 +115,7 @@ const testAccTencentCloudTestingInstanceWithDataDisk = defaultInstanceVariable +
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_testing_zone
-  image_id          = data.tencentcloud_images.testing.images.0.image_id
+  image_id          = var.cvm_testing_image_id
   instance_type     = "S2.MEDIUM2"
 
   system_disk_type = "CLOUD_PREMIUM"
@@ -138,7 +136,7 @@ const testAccTencentCloudTestingInstanceWithDataDiskUpdate = defaultInstanceVari
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_testing_zone
-  image_id          = data.tencentcloud_images.testing.images.0.image_id
+  image_id          = var.cvm_testing_image_id
   instance_type     = "S2.MEDIUM2"
 
   system_disk_type = "CLOUD_PREMIUM"

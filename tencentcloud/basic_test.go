@@ -68,6 +68,7 @@ const (
 	defaultCvmTestingAZone    = "ap-guangzhou-2"
 	defaultCvmTestingVpcId    = "vpc-701bm52d"
 	defaultCvmTestingSubnetId = "subnet-1q62lj3m"
+	defaultCvmTestingImgId    = "img-eb30mz89"
 
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
@@ -260,6 +261,10 @@ variable "cvm_testing_vpc_id" {
 
 variable "cvm_testing_subnet_id" {
   default = "` + defaultCvmTestingSubnetId + `"
+}
+
+variable "cvm_testing_image_id" {
+  default = "` + defaultCvmTestingImgId + `"
 }
 
 variable "cvm_vpc_id" {
