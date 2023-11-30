@@ -107,8 +107,7 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "ENABLE"),
-					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "intranet_config.0.ip_address"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 			{
@@ -131,7 +130,8 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.abc", "abc"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "DISABLE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "ENABLE"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "intranet_config.0.ip_address.#"),
 				),
 			},
 			{
@@ -551,7 +551,7 @@ resource "tencentcloud_scf_function" "foo" {
 
   dns_cache = false
   intranet_config {
-    ip_fixed = "ENABLE"
+    ip_fixed = "DISABLE"
   }
 
   zip_file = "%s"
@@ -573,7 +573,7 @@ resource "tencentcloud_scf_function" "foo" {
 
   dns_cache = true
   intranet_config {
-    ip_fixed = "DISABLE"
+    ip_fixed = "ENABLE"
   }
 
   description = "test"
