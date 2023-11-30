@@ -386,31 +386,31 @@ func (me *AntiddosService) DescribeListPacketFilterConfig(ctx context.Context, i
 	return
 }
 
-func (me *AntiddosService) DescribeListWaterPrintConfig(ctx context.Context, instanceId string) (result antiddos.WaterPrintRelation, err error) {
-	logId := getLogId(ctx)
-	request := antiddos.NewDescribeListWaterPrintConfigRequest()
-	request.FilterInstanceId = common.StringPtr(instanceId)
-	request.Limit = helper.IntInt64(1)
-	request.Offset = helper.IntInt64(0)
+// func (me *AntiddosService) DescribeListWaterPrintConfig(ctx context.Context, instanceId string) (result antiddos.WaterPrintRelation, err error) {
+// 	logId := getLogId(ctx)
+// 	request := antiddos.NewDescribeListWaterPrintConfigRequest()
+// 	request.FilterInstanceId = common.StringPtr(instanceId)
+// 	request.Limit = helper.IntInt64(1)
+// 	request.Offset = helper.IntInt64(0)
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, err := me.client.UseAntiddosClient().DescribeListWaterPrintConfig(request)
-		configList := response.Response.ConfigList
-		if len(configList) > 0 {
-			result = *configList[0]
-		}
-		if err != nil {
-			return resource.RetryableError(err)
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		return
-	}
-	return
-}
+// 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+// 		response, err := me.client.UseAntiddosClient().DescribeListWaterPrintConfig(request)
+// 		configList := response.Response.ConfigList
+// 		if len(configList) > 0 {
+// 			result = *configList[0]
+// 		}
+// 		if err != nil {
+// 			return resource.RetryableError(err)
+// 		}
+// 		return nil
+// 	})
+// 	if err != nil {
+// 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+// 			logId, request.GetAction(), request.ToJsonString(), err.Error())
+// 		return
+// 	}
+// 	return
+// }
 
 func (me *AntiddosService) CreateDDoSBlackWhiteIpList(ctx context.Context, instanceId string, ipList []string, ipType string) (err error) {
 	logId := getLogId(ctx)
@@ -522,6 +522,92 @@ func (me *AntiddosService) CreateProtocolBlockConfig(ctx context.Context, instan
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, err := me.client.UseAntiddosClient().CreateProtocolBlockConfig(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) CreateWaterPrintConfig(ctx context.Context, instanceId string, waterPrintConfig antiddos.WaterPrintConfig) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewCreateWaterPrintConfigRequest()
+	request.InstanceId = &instanceId
+	request.WaterPrintConfig = &waterPrintConfig
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().CreateWaterPrintConfig(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) DescribeListWaterPrintConfig(ctx context.Context, instanceId string) (result []*antiddos.WaterPrintRelation, err error) {
+	request := antiddos.NewDescribeListWaterPrintConfigRequest()
+	request.FilterInstanceId = common.StringPtr(instanceId)
+	var limit int64 = 10
+	var offset int64 = 0
+	request.Limit = &limit
+	request.Offset = &offset
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, e := me.client.UseAntiddosClient().DescribeListWaterPrintConfig(request)
+		if e != nil {
+			err = e
+			return
+		}
+		configList := response.Response.ConfigList
+		if len(configList) > 0 {
+			result = append(result, configList...)
+		}
+		if len(configList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *AntiddosService) DeleteWaterPrintConfig(ctx context.Context, instanceId string) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewDeleteWaterPrintConfigRequest()
+	request.InstanceId = &instanceId
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().DeleteWaterPrintConfig(request)
+		if err != nil {
+			return resource.RetryableError(err)
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	return
+}
+
+func (me *AntiddosService) SwitchWaterPrintConfig(ctx context.Context, instanceId string, openStatus int) (err error) {
+	logId := getLogId(ctx)
+	request := antiddos.NewSwitchWaterPrintConfigRequest()
+	request.InstanceId = &instanceId
+	request.OpenStatus = helper.IntInt64(openStatus)
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		_, err := me.client.UseAntiddosClient().SwitchWaterPrintConfig(request)
 		if err != nil {
 			return resource.RetryableError(err)
 		}
