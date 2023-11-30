@@ -1,5 +1,5 @@
 ---
-subcategory: "SSL Certificates"
+subcategory: "SSL Certificates(ssl)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_upload_revoke_letter_operation"
 sidebar_current: "docs-tencentcloud-resource-ssl_upload_revoke_letter_operation"

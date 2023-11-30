@@ -1,5 +1,5 @@
 ---
-subcategory: "API GateWay"
+subcategory: "API GateWay(apigateway)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_api_gateway_plugins"
 sidebar_current: "docs-tencentcloud-datasource-api_gateway_plugins"

@@ -1,5 +1,5 @@
 ---
-subcategory: "Anti-DDoS"
+subcategory: "Anti-DDoS(antiddos)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_antiddos_bgp_biz_trend"
 sidebar_current: "docs-tencentcloud-datasource-antiddos_bgp_biz_trend"
