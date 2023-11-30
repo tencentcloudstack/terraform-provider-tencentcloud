@@ -313,6 +313,11 @@ data "tencentcloud_availability_zones" "default" {
 
 data "tencentcloud_images" "default" {
   image_type = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+data "tencentcloud_images" "testing" {
+  image_type = ["PUBLIC_IMAGE"]
 }
 
 data "tencentcloud_instance_types" "default" {
