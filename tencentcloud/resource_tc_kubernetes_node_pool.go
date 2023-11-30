@@ -1550,12 +1550,24 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 
 	d.Partial(true)
 
+	nodePool, _, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
+	if err != nil {
+		return err
+	}
+	oldDesiredCapacity := *nodePool.DesiredNodesNum
+	oldMinSize := *nodePool.MinNodesNum
+	oldMaxSize := *nodePool.MaxNodesNum
+
+	desiredCapacity := int64(d.Get("desired_capacity").(int))
+	minSize := int64(d.Get("min_size").(int))
+	maxSize := int64(d.Get("max_size").(int))
+	if desiredCapacity != oldDesiredCapacity && (minSize != oldMinSize || maxSize != oldMaxSize) {
+		log.Printf("[CRITAL]%s modification of min_size[%v] or max_size[%v] at the same time as desired_capacity[%v] failed\n", logId, minSize, maxSize, desiredCapacity)
+		return fmt.Errorf("`min_size` or `max_size` cannot be modified at the same time as `desired_capacity`, please modify `min_size` or `max_size` first, and then modify `desired_capacity`")
+	}
+
 	// LaunchConfig
 	if d.HasChange("auto_scaling_config") {
-		nodePool, _, err := service.DescribeNodePool(ctx, clusterId, nodePoolId)
-		if err != nil {
-			return err
-		}
 		launchConfigId := *nodePool.LaunchConfigurationId
 		//  change as config here
 		request, composeError := composeAsLaunchConfigModifyRequest(d, launchConfigId)
@@ -1583,7 +1595,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 	// min 3 max 6 desired 5
 	// modify min/max first will cause error, this case must upgrade desired first
 	if d.HasChange("desired_capacity") || !desiredCapacityOutRange(d) {
-		desiredCapacity := int64(d.Get("desired_capacity").(int))
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := service.ModifyClusterNodePoolDesiredCapacity(ctx, clusterId, nodePoolId, desiredCapacity)
 			if errRet != nil {
@@ -1610,8 +1621,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		"node_os",
 		"tags",
 	) {
-		maxSize := int64(d.Get("max_size").(int))
-		minSize := int64(d.Get("min_size").(int))
 		enableAutoScale := d.Get("enable_auto_scale").(bool)
 		deletionProtection := d.Get("deletion_protection").(bool)
 		name := d.Get("name").(string)

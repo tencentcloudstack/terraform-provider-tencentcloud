@@ -1,3 +1,23 @@
+## 1.81.52 (November 29, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_antiddos_cc_black_white_ip` ([#2352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2352))
+* **New Resource:** `tencentcloud_antiddos_cc_precision_policy` ([#2352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2352))
+* **New Resource:** `tencentcloud_antiddos_packet_filter_config` ([#2352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2352))
+* **New Resource:** `tencentcloud_antiddos_port_acl_config` ([#2352](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2352))
+* **New Resource:** `tencentcloud_tse_waf_domains` ([#2348](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2348))
+* **New Resource:** `tencentcloud_tse_waf_protection` ([#2348](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2348))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_target_group_attachment: Support async task limit ([#2357](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2357))
+* tencentcloud_postgresql_readonly_instance: Optimize isolation operations. ([#2355](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2355))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_node_pool: Add verification when modifying the maximum value and expected value synchronously. ([#2354](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2354))
+
 ## 1.81.51 (November 27, 2023)
 
 FEATURES:
