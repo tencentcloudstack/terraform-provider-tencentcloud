@@ -11,7 +11,38 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+type AppType string
+type RawValuesType string
+type AppPhase string
+
+type App struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              AddonSpec `json:"spec,omitempty" `
+	Status            AppStatus `json:"status,omitempty"`
+}
+
+type AppList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []App `json:"items"`
+}
+
+type AppStatus struct {
+	Phase              AppPhase    `json:"phase"`
+	ObservedGeneration int64       `json:"observedGeneration,omitempty"`
+	ReleaseStatus      string      `json:"releaseStatus,omitempty"`
+	ReleaseLastUpdated metav1.Time `json:"releaseLastUpdated,omitempty"`
+	Revision           int64       `json:"revision,omitempty"`
+	RollbackRevision   int64       `json:"rollbackRevision,omitempty"`
+	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
+	Reason             string      `json:"reason,omitempty"`
+	Message            string      `json:"message,omitempty"`
+	Manifest           string      `json:"manifest"`
+}
 
 type AddonSpecChart struct {
 	ChartName    *string `json:"chartName,omitempty"`
@@ -78,6 +109,27 @@ func (me *TkeService) GetTkeAppChartList(ctx context.Context, request *tke.GetTk
 	info = response.Response.AppCharts
 
 	return
+}
+
+func (me *TkeService) DescribeExtensionAddonList(ctx context.Context, clusterId string) (AppList, error) {
+	var (
+		err      error
+		response string
+		appList  AppList
+	)
+
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		response, _, err = me.DescribeExtensionAddon(ctx, clusterId, "")
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if err := json.Unmarshal([]byte(response), &appList); err != nil {
+			return resource.NonRetryableError(err)
+		}
+		return nil
+	})
+
+	return appList, err
 }
 
 func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonName string, addonResponseData *AddonResponseData) (string, bool, error) {

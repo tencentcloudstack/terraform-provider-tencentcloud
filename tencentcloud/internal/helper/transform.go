@@ -79,6 +79,9 @@ func PBool(pointer *bool) bool {
 }
 
 func PUint64(pointer *uint64) uint64 {
+	if pointer == nil {
+		return 0
+	}
 	return *pointer
 }
 
@@ -87,6 +90,19 @@ func PInt64(pointer *int64) int64 {
 		return 0
 	}
 	return *pointer
+}
+
+func PStrings(strs []*string) []string {
+	if len(strs) == 0 {
+		return nil
+	}
+
+	sp := make([]string, 0, len(strs))
+	for _, s := range strs {
+		sp = append(sp, *s)
+	}
+
+	return sp
 }
 
 // Takes the result of flatmap.Expand for an array of strings

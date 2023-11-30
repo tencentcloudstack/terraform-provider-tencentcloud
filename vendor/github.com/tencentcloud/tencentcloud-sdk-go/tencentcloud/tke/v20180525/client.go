@@ -59,8 +59,9 @@ func NewAcquireClusterAdminRoleRequest() (request *AcquireClusterAdminRoleReques
 func NewAcquireClusterAdminRoleResponse() (response *AcquireClusterAdminRoleResponse) {
     response = &AcquireClusterAdminRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AcquireClusterAdminRole
@@ -139,8 +140,9 @@ func NewAddClusterCIDRRequest() (request *AddClusterCIDRRequest) {
 func NewAddClusterCIDRResponse() (response *AddClusterCIDRResponse) {
     response = &AddClusterCIDRResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddClusterCIDR
@@ -211,8 +213,9 @@ func NewAddExistedInstancesRequest() (request *AddExistedInstancesRequest) {
 func NewAddExistedInstancesResponse() (response *AddExistedInstancesResponse) {
     response = &AddExistedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddExistedInstances
@@ -297,8 +300,9 @@ func NewAddNodeToNodePoolRequest() (request *AddNodeToNodePoolRequest) {
 func NewAddNodeToNodePoolResponse() (response *AddNodeToNodePoolResponse) {
     response = &AddNodeToNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddNodeToNodePool
@@ -349,8 +353,9 @@ func NewAddVpcCniSubnetsRequest() (request *AddVpcCniSubnetsRequest) {
 func NewAddVpcCniSubnetsResponse() (response *AddVpcCniSubnetsResponse) {
     response = &AddVpcCniSubnetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddVpcCniSubnets
@@ -417,8 +422,9 @@ func NewCancelClusterReleaseRequest() (request *CancelClusterReleaseRequest) {
 func NewCancelClusterReleaseResponse() (response *CancelClusterReleaseResponse) {
     response = &CancelClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelClusterRelease
@@ -487,8 +493,9 @@ func NewCheckEdgeClusterCIDRRequest() (request *CheckEdgeClusterCIDRRequest) {
 func NewCheckEdgeClusterCIDRResponse() (response *CheckEdgeClusterCIDRResponse) {
     response = &CheckEdgeClusterCIDRResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckEdgeClusterCIDR
@@ -583,8 +590,9 @@ func NewCheckInstancesUpgradeAbleRequest() (request *CheckInstancesUpgradeAbleRe
 func NewCheckInstancesUpgradeAbleResponse() (response *CheckInstancesUpgradeAbleResponse) {
     response = &CheckInstancesUpgradeAbleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstancesUpgradeAble
@@ -655,8 +663,9 @@ func NewCreateBackupStorageLocationRequest() (request *CreateBackupStorageLocati
 func NewCreateBackupStorageLocationResponse() (response *CreateBackupStorageLocationResponse) {
     response = &CreateBackupStorageLocationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBackupStorageLocation
@@ -711,8 +720,9 @@ func NewCreateClusterRequest() (request *CreateClusterRequest) {
 func NewCreateClusterResponse() (response *CreateClusterResponse) {
     response = &CreateClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCluster
@@ -885,8 +895,9 @@ func NewCreateClusterEndpointRequest() (request *CreateClusterEndpointRequest) {
 func NewCreateClusterEndpointResponse() (response *CreateClusterEndpointResponse) {
     response = &CreateClusterEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterEndpoint
@@ -973,8 +984,9 @@ func NewCreateClusterEndpointVipRequest() (request *CreateClusterEndpointVipRequ
 func NewCreateClusterEndpointVipResponse() (response *CreateClusterEndpointVipResponse) {
     response = &CreateClusterEndpointVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterEndpointVip
@@ -1057,8 +1069,9 @@ func NewCreateClusterInstancesRequest() (request *CreateClusterInstancesRequest)
 func NewCreateClusterInstancesResponse() (response *CreateClusterInstancesResponse) {
     response = &CreateClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterInstances
@@ -1183,8 +1196,9 @@ func NewCreateClusterNodePoolRequest() (request *CreateClusterNodePoolRequest) {
 func NewCreateClusterNodePoolResponse() (response *CreateClusterNodePoolResponse) {
     response = &CreateClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterNodePool
@@ -1257,8 +1271,9 @@ func NewCreateClusterReleaseRequest() (request *CreateClusterReleaseRequest) {
 func NewCreateClusterReleaseResponse() (response *CreateClusterReleaseResponse) {
     response = &CreateClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRelease
@@ -1329,8 +1344,9 @@ func NewCreateClusterRouteRequest() (request *CreateClusterRouteRequest) {
 func NewCreateClusterRouteResponse() (response *CreateClusterRouteResponse) {
     response = &CreateClusterRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRoute
@@ -1405,8 +1421,9 @@ func NewCreateClusterRouteTableRequest() (request *CreateClusterRouteTableReques
 func NewCreateClusterRouteTableResponse() (response *CreateClusterRouteTableResponse) {
     response = &CreateClusterRouteTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRouteTable
@@ -1483,12 +1500,13 @@ func NewCreateClusterVirtualNodeRequest() (request *CreateClusterVirtualNodeRequ
 func NewCreateClusterVirtualNodeResponse() (response *CreateClusterVirtualNodeResponse) {
     response = &CreateClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterVirtualNode
-// 创建虚拟节点
+// 创建按量计费超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1503,7 +1521,7 @@ func (c *Client) CreateClusterVirtualNode(request *CreateClusterVirtualNodeReque
 }
 
 // CreateClusterVirtualNode
-// 创建虚拟节点
+// 创建按量计费超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1543,12 +1561,13 @@ func NewCreateClusterVirtualNodePoolRequest() (request *CreateClusterVirtualNode
 func NewCreateClusterVirtualNodePoolResponse() (response *CreateClusterVirtualNodePoolResponse) {
     response = &CreateClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterVirtualNodePool
-// 创建虚拟节点池
+// 创建超级节点池
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1565,7 +1584,7 @@ func (c *Client) CreateClusterVirtualNodePool(request *CreateClusterVirtualNodeP
 }
 
 // CreateClusterVirtualNodePool
-// 创建虚拟节点池
+// 创建超级节点池
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1607,8 +1626,9 @@ func NewCreateECMInstancesRequest() (request *CreateECMInstancesRequest) {
 func NewCreateECMInstancesResponse() (response *CreateECMInstancesResponse) {
     response = &CreateECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateECMInstances
@@ -1677,8 +1697,9 @@ func NewCreateEKSClusterRequest() (request *CreateEKSClusterRequest) {
 func NewCreateEKSClusterResponse() (response *CreateEKSClusterResponse) {
     response = &CreateEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEKSCluster
@@ -1747,8 +1768,9 @@ func NewCreateEKSContainerInstancesRequest() (request *CreateEKSContainerInstanc
 func NewCreateEKSContainerInstancesResponse() (response *CreateEKSContainerInstancesResponse) {
     response = &CreateEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEKSContainerInstances
@@ -1807,8 +1829,9 @@ func NewCreateEdgeCVMInstancesRequest() (request *CreateEdgeCVMInstancesRequest)
 func NewCreateEdgeCVMInstancesResponse() (response *CreateEdgeCVMInstancesResponse) {
     response = &CreateEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEdgeCVMInstances
@@ -1877,8 +1900,9 @@ func NewCreateEdgeLogConfigRequest() (request *CreateEdgeLogConfigRequest) {
 func NewCreateEdgeLogConfigResponse() (response *CreateEdgeLogConfigResponse) {
     response = &CreateEdgeLogConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEdgeLogConfig
@@ -1927,8 +1951,9 @@ func NewCreateImageCacheRequest() (request *CreateImageCacheRequest) {
 func NewCreateImageCacheResponse() (response *CreateImageCacheResponse) {
     response = &CreateImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImageCache
@@ -1977,8 +2002,9 @@ func NewCreatePrometheusAlertPolicyRequest() (request *CreatePrometheusAlertPoli
 func NewCreatePrometheusAlertPolicyResponse() (response *CreatePrometheusAlertPolicyResponse) {
     response = &CreatePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAlertPolicy
@@ -2045,8 +2071,9 @@ func NewCreatePrometheusAlertRuleRequest() (request *CreatePrometheusAlertRuleRe
 func NewCreatePrometheusAlertRuleResponse() (response *CreatePrometheusAlertRuleResponse) {
     response = &CreatePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAlertRule
@@ -2103,8 +2130,9 @@ func NewCreatePrometheusClusterAgentRequest() (request *CreatePrometheusClusterA
 func NewCreatePrometheusClusterAgentResponse() (response *CreatePrometheusClusterAgentResponse) {
     response = &CreatePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusClusterAgent
@@ -2169,8 +2197,9 @@ func NewCreatePrometheusConfigRequest() (request *CreatePrometheusConfigRequest)
 func NewCreatePrometheusConfigResponse() (response *CreatePrometheusConfigResponse) {
     response = &CreatePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusConfig
@@ -2237,8 +2266,9 @@ func NewCreatePrometheusDashboardRequest() (request *CreatePrometheusDashboardRe
 func NewCreatePrometheusDashboardResponse() (response *CreatePrometheusDashboardResponse) {
     response = &CreatePrometheusDashboardResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusDashboard
@@ -2246,6 +2276,7 @@ func NewCreatePrometheusDashboardResponse() (response *CreatePrometheusDashboard
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -2263,6 +2294,7 @@ func (c *Client) CreatePrometheusDashboard(request *CreatePrometheusDashboardReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -2301,8 +2333,9 @@ func NewCreatePrometheusGlobalNotificationRequest() (request *CreatePrometheusGl
 func NewCreatePrometheusGlobalNotificationResponse() (response *CreatePrometheusGlobalNotificationResponse) {
     response = &CreatePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusGlobalNotification
@@ -2351,8 +2384,9 @@ func NewCreatePrometheusRecordRuleYamlRequest() (request *CreatePrometheusRecord
 func NewCreatePrometheusRecordRuleYamlResponse() (response *CreatePrometheusRecordRuleYamlResponse) {
     response = &CreatePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusRecordRuleYaml
@@ -2417,8 +2451,9 @@ func NewCreatePrometheusTempRequest() (request *CreatePrometheusTempRequest) {
 func NewCreatePrometheusTempResponse() (response *CreatePrometheusTempResponse) {
     response = &CreatePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusTemp
@@ -2471,8 +2506,9 @@ func NewCreatePrometheusTemplateRequest() (request *CreatePrometheusTemplateRequ
 func NewCreatePrometheusTemplateResponse() (response *CreatePrometheusTemplateResponse) {
     response = &CreatePrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusTemplate
@@ -2523,8 +2559,9 @@ func NewCreateReservedInstancesRequest() (request *CreateReservedInstancesReques
 func NewCreateReservedInstancesResponse() (response *CreateReservedInstancesResponse) {
     response = &CreateReservedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateReservedInstances
@@ -2581,8 +2618,9 @@ func NewCreateTKEEdgeClusterRequest() (request *CreateTKEEdgeClusterRequest) {
 func NewCreateTKEEdgeClusterResponse() (response *CreateTKEEdgeClusterResponse) {
     response = &CreateTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTKEEdgeCluster
@@ -2649,8 +2687,9 @@ func NewDeleteAddonRequest() (request *DeleteAddonRequest) {
 func NewDeleteAddonResponse() (response *DeleteAddonResponse) {
     response = &DeleteAddonResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAddon
@@ -2717,8 +2756,9 @@ func NewDeleteBackupStorageLocationRequest() (request *DeleteBackupStorageLocati
 func NewDeleteBackupStorageLocationResponse() (response *DeleteBackupStorageLocationResponse) {
     response = &DeleteBackupStorageLocationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteBackupStorageLocation
@@ -2771,8 +2811,9 @@ func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
 func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
     response = &DeleteClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCluster
@@ -2786,8 +2827,10 @@ func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
+//  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
+//  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -2815,8 +2858,10 @@ func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteC
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
+//  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
+//  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -2859,8 +2904,9 @@ func NewDeleteClusterAsGroupsRequest() (request *DeleteClusterAsGroupsRequest) {
 func NewDeleteClusterAsGroupsResponse() (response *DeleteClusterAsGroupsResponse) {
     response = &DeleteClusterAsGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterAsGroups
@@ -2945,8 +2991,9 @@ func NewDeleteClusterEndpointRequest() (request *DeleteClusterEndpointRequest) {
 func NewDeleteClusterEndpointResponse() (response *DeleteClusterEndpointResponse) {
     response = &DeleteClusterEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterEndpoint
@@ -3035,8 +3082,9 @@ func NewDeleteClusterEndpointVipRequest() (request *DeleteClusterEndpointVipRequ
 func NewDeleteClusterEndpointVipResponse() (response *DeleteClusterEndpointVipResponse) {
     response = &DeleteClusterEndpointVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterEndpointVip
@@ -3119,8 +3167,9 @@ func NewDeleteClusterInstancesRequest() (request *DeleteClusterInstancesRequest)
 func NewDeleteClusterInstancesResponse() (response *DeleteClusterInstancesResponse) {
     response = &DeleteClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterInstances
@@ -3197,8 +3246,9 @@ func NewDeleteClusterNodePoolRequest() (request *DeleteClusterNodePoolRequest) {
 func NewDeleteClusterNodePoolResponse() (response *DeleteClusterNodePoolResponse) {
     response = &DeleteClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterNodePool
@@ -3255,8 +3305,9 @@ func NewDeleteClusterRouteRequest() (request *DeleteClusterRouteRequest) {
 func NewDeleteClusterRouteResponse() (response *DeleteClusterRouteResponse) {
     response = &DeleteClusterRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterRoute
@@ -3317,8 +3368,9 @@ func NewDeleteClusterRouteTableRequest() (request *DeleteClusterRouteTableReques
 func NewDeleteClusterRouteTableResponse() (response *DeleteClusterRouteTableResponse) {
     response = &DeleteClusterRouteTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterRouteTable
@@ -3375,12 +3427,13 @@ func NewDeleteClusterVirtualNodeRequest() (request *DeleteClusterVirtualNodeRequ
 func NewDeleteClusterVirtualNodeResponse() (response *DeleteClusterVirtualNodeResponse) {
     response = &DeleteClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterVirtualNode
-// 删除虚拟节点
+// 删除超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -3392,7 +3445,7 @@ func (c *Client) DeleteClusterVirtualNode(request *DeleteClusterVirtualNodeReque
 }
 
 // DeleteClusterVirtualNode
-// 删除虚拟节点
+// 删除超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -3429,12 +3482,13 @@ func NewDeleteClusterVirtualNodePoolRequest() (request *DeleteClusterVirtualNode
 func NewDeleteClusterVirtualNodePoolResponse() (response *DeleteClusterVirtualNodePoolResponse) {
     response = &DeleteClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterVirtualNodePool
-// 删除虚拟节点池
+// 删除超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -3447,7 +3501,7 @@ func (c *Client) DeleteClusterVirtualNodePool(request *DeleteClusterVirtualNodeP
 }
 
 // DeleteClusterVirtualNodePool
-// 删除虚拟节点池
+// 删除超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -3485,8 +3539,9 @@ func NewDeleteECMInstancesRequest() (request *DeleteECMInstancesRequest) {
 func NewDeleteECMInstancesResponse() (response *DeleteECMInstancesResponse) {
     response = &DeleteECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteECMInstances
@@ -3555,8 +3610,9 @@ func NewDeleteEKSClusterRequest() (request *DeleteEKSClusterRequest) {
 func NewDeleteEKSClusterResponse() (response *DeleteEKSClusterResponse) {
     response = &DeleteEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEKSCluster
@@ -3625,8 +3681,9 @@ func NewDeleteEKSContainerInstancesRequest() (request *DeleteEKSContainerInstanc
 func NewDeleteEKSContainerInstancesResponse() (response *DeleteEKSContainerInstancesResponse) {
     response = &DeleteEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEKSContainerInstances
@@ -3689,8 +3746,9 @@ func NewDeleteEdgeCVMInstancesRequest() (request *DeleteEdgeCVMInstancesRequest)
 func NewDeleteEdgeCVMInstancesResponse() (response *DeleteEdgeCVMInstancesResponse) {
     response = &DeleteEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEdgeCVMInstances
@@ -3759,8 +3817,9 @@ func NewDeleteEdgeClusterInstancesRequest() (request *DeleteEdgeClusterInstances
 func NewDeleteEdgeClusterInstancesResponse() (response *DeleteEdgeClusterInstancesResponse) {
     response = &DeleteEdgeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEdgeClusterInstances
@@ -3829,8 +3888,9 @@ func NewDeleteImageCachesRequest() (request *DeleteImageCachesRequest) {
 func NewDeleteImageCachesResponse() (response *DeleteImageCachesResponse) {
     response = &DeleteImageCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageCaches
@@ -3881,8 +3941,9 @@ func NewDeletePrometheusAlertPolicyRequest() (request *DeletePrometheusAlertPoli
 func NewDeletePrometheusAlertPolicyResponse() (response *DeletePrometheusAlertPolicyResponse) {
     response = &DeletePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusAlertPolicy
@@ -3937,8 +3998,9 @@ func NewDeletePrometheusAlertRuleRequest() (request *DeletePrometheusAlertRuleRe
 func NewDeletePrometheusAlertRuleResponse() (response *DeletePrometheusAlertRuleResponse) {
     response = &DeletePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusAlertRule
@@ -3993,8 +4055,9 @@ func NewDeletePrometheusClusterAgentRequest() (request *DeletePrometheusClusterA
 func NewDeletePrometheusClusterAgentResponse() (response *DeletePrometheusClusterAgentResponse) {
     response = &DeletePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusClusterAgent
@@ -4063,8 +4126,9 @@ func NewDeletePrometheusConfigRequest() (request *DeletePrometheusConfigRequest)
 func NewDeletePrometheusConfigResponse() (response *DeletePrometheusConfigResponse) {
     response = &DeletePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusConfig
@@ -4125,8 +4189,9 @@ func NewDeletePrometheusRecordRuleYamlRequest() (request *DeletePrometheusRecord
 func NewDeletePrometheusRecordRuleYamlResponse() (response *DeletePrometheusRecordRuleYamlResponse) {
     response = &DeletePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusRecordRuleYaml
@@ -4181,8 +4246,9 @@ func NewDeletePrometheusTempRequest() (request *DeletePrometheusTempRequest) {
 func NewDeletePrometheusTempResponse() (response *DeletePrometheusTempResponse) {
     response = &DeletePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemp
@@ -4243,8 +4309,9 @@ func NewDeletePrometheusTempSyncRequest() (request *DeletePrometheusTempSyncRequ
 func NewDeletePrometheusTempSyncResponse() (response *DeletePrometheusTempSyncResponse) {
     response = &DeletePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTempSync
@@ -4311,8 +4378,9 @@ func NewDeletePrometheusTemplateRequest() (request *DeletePrometheusTemplateRequ
 func NewDeletePrometheusTemplateResponse() (response *DeletePrometheusTemplateResponse) {
     response = &DeletePrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemplate
@@ -4369,8 +4437,9 @@ func NewDeletePrometheusTemplateSyncRequest() (request *DeletePrometheusTemplate
 func NewDeletePrometheusTemplateSyncResponse() (response *DeletePrometheusTemplateSyncResponse) {
     response = &DeletePrometheusTemplateSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemplateSync
@@ -4435,8 +4504,9 @@ func NewDeleteReservedInstancesRequest() (request *DeleteReservedInstancesReques
 func NewDeleteReservedInstancesResponse() (response *DeleteReservedInstancesResponse) {
     response = &DeleteReservedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteReservedInstances
@@ -4489,8 +4559,9 @@ func NewDeleteTKEEdgeClusterRequest() (request *DeleteTKEEdgeClusterRequest) {
 func NewDeleteTKEEdgeClusterResponse() (response *DeleteTKEEdgeClusterResponse) {
     response = &DeleteTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTKEEdgeCluster
@@ -4557,8 +4628,9 @@ func NewDescribeAddonRequest() (request *DescribeAddonRequest) {
 func NewDescribeAddonResponse() (response *DescribeAddonResponse) {
     response = &DescribeAddonResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAddon
@@ -4625,8 +4697,9 @@ func NewDescribeAddonValuesRequest() (request *DescribeAddonValuesRequest) {
 func NewDescribeAddonValuesResponse() (response *DescribeAddonValuesResponse) {
     response = &DescribeAddonValuesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAddonValues
@@ -4673,8 +4746,9 @@ func NewDescribeAvailableClusterVersionRequest() (request *DescribeAvailableClus
 func NewDescribeAvailableClusterVersionResponse() (response *DescribeAvailableClusterVersionResponse) {
     response = &DescribeAvailableClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAvailableClusterVersion
@@ -4735,8 +4809,9 @@ func NewDescribeAvailableTKEEdgeVersionRequest() (request *DescribeAvailableTKEE
 func NewDescribeAvailableTKEEdgeVersionResponse() (response *DescribeAvailableTKEEdgeVersionResponse) {
     response = &DescribeAvailableTKEEdgeVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAvailableTKEEdgeVersion
@@ -4801,8 +4876,9 @@ func NewDescribeBackupStorageLocationsRequest() (request *DescribeBackupStorageL
 func NewDescribeBackupStorageLocationsResponse() (response *DescribeBackupStorageLocationsResponse) {
     response = &DescribeBackupStorageLocationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBackupStorageLocations
@@ -4855,8 +4931,9 @@ func NewDescribeClusterAsGroupOptionRequest() (request *DescribeClusterAsGroupOp
 func NewDescribeClusterAsGroupOptionResponse() (response *DescribeClusterAsGroupOptionResponse) {
     response = &DescribeClusterAsGroupOptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAsGroupOption
@@ -4929,8 +5006,9 @@ func NewDescribeClusterAsGroupsRequest() (request *DescribeClusterAsGroupsReques
 func NewDescribeClusterAsGroupsResponse() (response *DescribeClusterAsGroupsResponse) {
     response = &DescribeClusterAsGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAsGroups
@@ -5007,8 +5085,9 @@ func NewDescribeClusterAuthenticationOptionsRequest() (request *DescribeClusterA
 func NewDescribeClusterAuthenticationOptionsResponse() (response *DescribeClusterAuthenticationOptionsResponse) {
     response = &DescribeClusterAuthenticationOptionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAuthenticationOptions
@@ -5063,8 +5142,9 @@ func NewDescribeClusterCommonNamesRequest() (request *DescribeClusterCommonNames
 func NewDescribeClusterCommonNamesResponse() (response *DescribeClusterCommonNamesResponse) {
     response = &DescribeClusterCommonNamesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterCommonNames
@@ -5129,8 +5209,9 @@ func NewDescribeClusterControllersRequest() (request *DescribeClusterControllers
 func NewDescribeClusterControllersResponse() (response *DescribeClusterControllersResponse) {
     response = &DescribeClusterControllersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterControllers
@@ -5185,8 +5266,9 @@ func NewDescribeClusterEndpointStatusRequest() (request *DescribeClusterEndpoint
 func NewDescribeClusterEndpointStatusResponse() (response *DescribeClusterEndpointStatusResponse) {
     response = &DescribeClusterEndpointStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpointStatus
@@ -5279,8 +5361,9 @@ func NewDescribeClusterEndpointVipStatusRequest() (request *DescribeClusterEndpo
 func NewDescribeClusterEndpointVipStatusResponse() (response *DescribeClusterEndpointVipStatusResponse) {
     response = &DescribeClusterEndpointVipStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpointVipStatus
@@ -5369,8 +5452,9 @@ func NewDescribeClusterEndpointsRequest() (request *DescribeClusterEndpointsRequ
 func NewDescribeClusterEndpointsResponse() (response *DescribeClusterEndpointsResponse) {
     response = &DescribeClusterEndpointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpoints
@@ -5427,6 +5511,65 @@ func (c *Client) DescribeClusterEndpointsWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeClusterExtraArgsRequest() (request *DescribeClusterExtraArgsRequest) {
+    request = &DescribeClusterExtraArgsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterExtraArgs")
+    
+    
+    return
+}
+
+func NewDescribeClusterExtraArgsResponse() (response *DescribeClusterExtraArgsResponse) {
+    response = &DescribeClusterExtraArgsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterExtraArgs
+// 查询集群自定义参数
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeClusterExtraArgs(request *DescribeClusterExtraArgsRequest) (response *DescribeClusterExtraArgsResponse, err error) {
+    return c.DescribeClusterExtraArgsWithContext(context.Background(), request)
+}
+
+// DescribeClusterExtraArgs
+// 查询集群自定义参数
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeClusterExtraArgsWithContext(ctx context.Context, request *DescribeClusterExtraArgsRequest) (response *DescribeClusterExtraArgsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterExtraArgsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterExtraArgs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterExtraArgsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterInspectionResultsOverviewRequest() (request *DescribeClusterInspectionResultsOverviewRequest) {
     request = &DescribeClusterInspectionResultsOverviewRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5441,8 +5584,9 @@ func NewDescribeClusterInspectionResultsOverviewRequest() (request *DescribeClus
 func NewDescribeClusterInspectionResultsOverviewResponse() (response *DescribeClusterInspectionResultsOverviewResponse) {
     response = &DescribeClusterInspectionResultsOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterInspectionResultsOverview
@@ -5453,6 +5597,7 @@ func NewDescribeClusterInspectionResultsOverviewResponse() (response *DescribeCl
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeClusterInspectionResultsOverview(request *DescribeClusterInspectionResultsOverviewRequest) (response *DescribeClusterInspectionResultsOverviewResponse, err error) {
     return c.DescribeClusterInspectionResultsOverviewWithContext(context.Background(), request)
 }
@@ -5465,6 +5610,7 @@ func (c *Client) DescribeClusterInspectionResultsOverview(request *DescribeClust
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeClusterInspectionResultsOverviewWithContext(ctx context.Context, request *DescribeClusterInspectionResultsOverviewRequest) (response *DescribeClusterInspectionResultsOverviewResponse, err error) {
     if request == nil {
         request = NewDescribeClusterInspectionResultsOverviewRequest()
@@ -5495,8 +5641,9 @@ func NewDescribeClusterInstancesRequest() (request *DescribeClusterInstancesRequ
 func NewDescribeClusterInstancesResponse() (response *DescribeClusterInstancesResponse) {
     response = &DescribeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterInstances
@@ -5567,8 +5714,9 @@ func NewDescribeClusterKubeconfigRequest() (request *DescribeClusterKubeconfigRe
 func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfigResponse) {
     response = &DescribeClusterKubeconfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterKubeconfig
@@ -5657,8 +5805,9 @@ func NewDescribeClusterLevelAttributeRequest() (request *DescribeClusterLevelAtt
 func NewDescribeClusterLevelAttributeResponse() (response *DescribeClusterLevelAttributeResponse) {
     response = &DescribeClusterLevelAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterLevelAttribute
@@ -5711,8 +5860,9 @@ func NewDescribeClusterLevelChangeRecordsRequest() (request *DescribeClusterLeve
 func NewDescribeClusterLevelChangeRecordsResponse() (response *DescribeClusterLevelChangeRecordsResponse) {
     response = &DescribeClusterLevelChangeRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterLevelChangeRecords
@@ -5765,8 +5915,9 @@ func NewDescribeClusterNodePoolDetailRequest() (request *DescribeClusterNodePool
 func NewDescribeClusterNodePoolDetailResponse() (response *DescribeClusterNodePoolDetailResponse) {
     response = &DescribeClusterNodePoolDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNodePoolDetail
@@ -5821,8 +5972,9 @@ func NewDescribeClusterNodePoolsRequest() (request *DescribeClusterNodePoolsRequ
 func NewDescribeClusterNodePoolsResponse() (response *DescribeClusterNodePoolsResponse) {
     response = &DescribeClusterNodePoolsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNodePools
@@ -5877,8 +6029,9 @@ func NewDescribeClusterPendingReleasesRequest() (request *DescribeClusterPending
 func NewDescribeClusterPendingReleasesResponse() (response *DescribeClusterPendingReleasesResponse) {
     response = &DescribeClusterPendingReleasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterPendingReleases
@@ -5951,8 +6104,9 @@ func NewDescribeClusterReleaseDetailsRequest() (request *DescribeClusterReleaseD
 func NewDescribeClusterReleaseDetailsResponse() (response *DescribeClusterReleaseDetailsResponse) {
     response = &DescribeClusterReleaseDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleaseDetails
@@ -6025,8 +6179,9 @@ func NewDescribeClusterReleaseHistoryRequest() (request *DescribeClusterReleaseH
 func NewDescribeClusterReleaseHistoryResponse() (response *DescribeClusterReleaseHistoryResponse) {
     response = &DescribeClusterReleaseHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleaseHistory
@@ -6097,8 +6252,9 @@ func NewDescribeClusterReleasesRequest() (request *DescribeClusterReleasesReques
 func NewDescribeClusterReleasesResponse() (response *DescribeClusterReleasesResponse) {
     response = &DescribeClusterReleasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleases
@@ -6171,8 +6327,9 @@ func NewDescribeClusterRouteTablesRequest() (request *DescribeClusterRouteTables
 func NewDescribeClusterRouteTablesResponse() (response *DescribeClusterRouteTablesResponse) {
     response = &DescribeClusterRouteTablesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterRouteTables
@@ -6219,8 +6376,9 @@ func NewDescribeClusterRoutesRequest() (request *DescribeClusterRoutesRequest) {
 func NewDescribeClusterRoutesResponse() (response *DescribeClusterRoutesResponse) {
     response = &DescribeClusterRoutesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterRoutes
@@ -6273,8 +6431,9 @@ func NewDescribeClusterSecurityRequest() (request *DescribeClusterSecurityReques
 func NewDescribeClusterSecurityResponse() (response *DescribeClusterSecurityResponse) {
     response = &DescribeClusterSecurityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterSecurity
@@ -6383,8 +6542,9 @@ func NewDescribeClusterStatusRequest() (request *DescribeClusterStatusRequest) {
 func NewDescribeClusterStatusResponse() (response *DescribeClusterStatusResponse) {
     response = &DescribeClusterStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterStatus
@@ -6463,12 +6623,13 @@ func NewDescribeClusterVirtualNodeRequest() (request *DescribeClusterVirtualNode
 func NewDescribeClusterVirtualNodeResponse() (response *DescribeClusterVirtualNodeResponse) {
     response = &DescribeClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterVirtualNode
-// 查看虚拟节点列表
+// 查看超级节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
@@ -6482,7 +6643,7 @@ func (c *Client) DescribeClusterVirtualNode(request *DescribeClusterVirtualNodeR
 }
 
 // DescribeClusterVirtualNode
-// 查看虚拟节点列表
+// 查看超级节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
@@ -6521,12 +6682,13 @@ func NewDescribeClusterVirtualNodePoolsRequest() (request *DescribeClusterVirtua
 func NewDescribeClusterVirtualNodePoolsResponse() (response *DescribeClusterVirtualNodePoolsResponse) {
     response = &DescribeClusterVirtualNodePoolsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterVirtualNodePools
-// 查看虚拟节点池列表
+// 查看超级节点池列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6539,7 +6701,7 @@ func (c *Client) DescribeClusterVirtualNodePools(request *DescribeClusterVirtual
 }
 
 // DescribeClusterVirtualNodePools
-// 查看虚拟节点池列表
+// 查看超级节点池列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -6577,8 +6739,9 @@ func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
 func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
     response = &DescribeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusters
@@ -6655,8 +6818,9 @@ func NewDescribeECMInstancesRequest() (request *DescribeECMInstancesRequest) {
 func NewDescribeECMInstancesResponse() (response *DescribeECMInstancesResponse) {
     response = &DescribeECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeECMInstances
@@ -6725,8 +6889,9 @@ func NewDescribeEKSClusterCredentialRequest() (request *DescribeEKSClusterCreden
 func NewDescribeEKSClusterCredentialResponse() (response *DescribeEKSClusterCredentialResponse) {
     response = &DescribeEKSClusterCredentialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSClusterCredential
@@ -6797,8 +6962,9 @@ func NewDescribeEKSClustersRequest() (request *DescribeEKSClustersRequest) {
 func NewDescribeEKSClustersResponse() (response *DescribeEKSClustersResponse) {
     response = &DescribeEKSClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSClusters
@@ -6869,8 +7035,9 @@ func NewDescribeEKSContainerInstanceEventRequest() (request *DescribeEKSContaine
 func NewDescribeEKSContainerInstanceEventResponse() (response *DescribeEKSContainerInstanceEventResponse) {
     response = &DescribeEKSContainerInstanceEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstanceEvent
@@ -6931,8 +7098,9 @@ func NewDescribeEKSContainerInstanceRegionsRequest() (request *DescribeEKSContai
 func NewDescribeEKSContainerInstanceRegionsResponse() (response *DescribeEKSContainerInstanceRegionsResponse) {
     response = &DescribeEKSContainerInstanceRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstanceRegions
@@ -6991,8 +7159,9 @@ func NewDescribeEKSContainerInstancesRequest() (request *DescribeEKSContainerIns
 func NewDescribeEKSContainerInstancesResponse() (response *DescribeEKSContainerInstancesResponse) {
     response = &DescribeEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstances
@@ -7047,8 +7216,9 @@ func NewDescribeEdgeAvailableExtraArgsRequest() (request *DescribeEdgeAvailableE
 func NewDescribeEdgeAvailableExtraArgsResponse() (response *DescribeEdgeAvailableExtraArgsResponse) {
     response = &DescribeEdgeAvailableExtraArgsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeAvailableExtraArgs
@@ -7097,8 +7267,9 @@ func NewDescribeEdgeCVMInstancesRequest() (request *DescribeEdgeCVMInstancesRequ
 func NewDescribeEdgeCVMInstancesResponse() (response *DescribeEdgeCVMInstancesResponse) {
     response = &DescribeEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeCVMInstances
@@ -7167,8 +7338,9 @@ func NewDescribeEdgeClusterExtraArgsRequest() (request *DescribeEdgeClusterExtra
 func NewDescribeEdgeClusterExtraArgsResponse() (response *DescribeEdgeClusterExtraArgsResponse) {
     response = &DescribeEdgeClusterExtraArgsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterExtraArgs
@@ -7227,8 +7399,9 @@ func NewDescribeEdgeClusterInstancesRequest() (request *DescribeEdgeClusterInsta
 func NewDescribeEdgeClusterInstancesResponse() (response *DescribeEdgeClusterInstancesResponse) {
     response = &DescribeEdgeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterInstances
@@ -7297,8 +7470,9 @@ func NewDescribeEdgeClusterUpgradeInfoRequest() (request *DescribeEdgeClusterUpg
 func NewDescribeEdgeClusterUpgradeInfoResponse() (response *DescribeEdgeClusterUpgradeInfoResponse) {
     response = &DescribeEdgeClusterUpgradeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterUpgradeInfo
@@ -7349,8 +7523,9 @@ func NewDescribeEdgeLogSwitchesRequest() (request *DescribeEdgeLogSwitchesReques
 func NewDescribeEdgeLogSwitchesResponse() (response *DescribeEdgeLogSwitchesResponse) {
     response = &DescribeEdgeLogSwitchesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeLogSwitches
@@ -7409,8 +7584,9 @@ func NewDescribeEksContainerInstanceLogRequest() (request *DescribeEksContainerI
 func NewDescribeEksContainerInstanceLogResponse() (response *DescribeEksContainerInstanceLogResponse) {
     response = &DescribeEksContainerInstanceLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEksContainerInstanceLog
@@ -7469,8 +7645,9 @@ func NewDescribeEnableVpcCniProgressRequest() (request *DescribeEnableVpcCniProg
 func NewDescribeEnableVpcCniProgressResponse() (response *DescribeEnableVpcCniProgressResponse) {
     response = &DescribeEnableVpcCniProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEnableVpcCniProgress
@@ -7521,8 +7698,9 @@ func NewDescribeEncryptionStatusRequest() (request *DescribeEncryptionStatusRequ
 func NewDescribeEncryptionStatusResponse() (response *DescribeEncryptionStatusResponse) {
     response = &DescribeEncryptionStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEncryptionStatus
@@ -7573,8 +7751,9 @@ func NewDescribeExistedInstancesRequest() (request *DescribeExistedInstancesRequ
 func NewDescribeExistedInstancesResponse() (response *DescribeExistedInstancesResponse) {
     response = &DescribeExistedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExistedInstances
@@ -7689,8 +7868,9 @@ func NewDescribeExternalClusterSpecRequest() (request *DescribeExternalClusterSp
 func NewDescribeExternalClusterSpecResponse() (response *DescribeExternalClusterSpecResponse) {
     response = &DescribeExternalClusterSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExternalClusterSpec
@@ -7751,6 +7931,120 @@ func (c *Client) DescribeExternalClusterSpecWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeExternalNodeSupportConfigRequest() (request *DescribeExternalNodeSupportConfigRequest) {
+    request = &DescribeExternalNodeSupportConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeExternalNodeSupportConfig")
+    
+    
+    return
+}
+
+func NewDescribeExternalNodeSupportConfigResponse() (response *DescribeExternalNodeSupportConfigResponse) {
+    response = &DescribeExternalNodeSupportConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeExternalNodeSupportConfig
+// 查看开启第三方节点池配置信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CLUSTERSTATE = "InternalError.ClusterState"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
+func (c *Client) DescribeExternalNodeSupportConfig(request *DescribeExternalNodeSupportConfigRequest) (response *DescribeExternalNodeSupportConfigResponse, err error) {
+    return c.DescribeExternalNodeSupportConfigWithContext(context.Background(), request)
+}
+
+// DescribeExternalNodeSupportConfig
+// 查看开启第三方节点池配置信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CLUSTERSTATE = "InternalError.ClusterState"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
+func (c *Client) DescribeExternalNodeSupportConfigWithContext(ctx context.Context, request *DescribeExternalNodeSupportConfigRequest) (response *DescribeExternalNodeSupportConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeExternalNodeSupportConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeExternalNodeSupportConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeExternalNodeSupportConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIPAMDRequest() (request *DescribeIPAMDRequest) {
+    request = &DescribeIPAMDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeIPAMD")
+    
+    
+    return
+}
+
+func NewDescribeIPAMDResponse() (response *DescribeIPAMDResponse) {
+    response = &DescribeIPAMDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIPAMD
+// 获取eniipamd组件信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeIPAMD(request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
+    return c.DescribeIPAMDWithContext(context.Background(), request)
+}
+
+// DescribeIPAMD
+// 获取eniipamd组件信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeIPAMDWithContext(ctx context.Context, request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
+    if request == nil {
+        request = NewDescribeIPAMDRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIPAMD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIPAMDResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeImageCachesRequest() (request *DescribeImageCachesRequest) {
     request = &DescribeImageCachesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7765,8 +8059,9 @@ func NewDescribeImageCachesRequest() (request *DescribeImageCachesRequest) {
 func NewDescribeImageCachesResponse() (response *DescribeImageCachesResponse) {
     response = &DescribeImageCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageCaches
@@ -7815,8 +8110,9 @@ func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
     response = &DescribeImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImages
@@ -7885,6 +8181,73 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeLogSwitchesRequest() (request *DescribeLogSwitchesRequest) {
+    request = &DescribeLogSwitchesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeLogSwitches")
+    
+    
+    return
+}
+
+func NewDescribeLogSwitchesResponse() (response *DescribeLogSwitchesResponse) {
+    response = &DescribeLogSwitchesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogSwitches
+// 查询集群日志（审计、事件、普通日志）开关列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeLogSwitches(request *DescribeLogSwitchesRequest) (response *DescribeLogSwitchesResponse, err error) {
+    return c.DescribeLogSwitchesWithContext(context.Background(), request)
+}
+
+// DescribeLogSwitches
+// 查询集群日志（审计、事件、普通日志）开关列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeLogSwitchesWithContext(ctx context.Context, request *DescribeLogSwitchesRequest) (response *DescribeLogSwitchesResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogSwitchesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogSwitches require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogSwitchesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePodDeductionRateRequest() (request *DescribePodDeductionRateRequest) {
     request = &DescribePodDeductionRateRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7899,8 +8262,9 @@ func NewDescribePodDeductionRateRequest() (request *DescribePodDeductionRateRequ
 func NewDescribePodDeductionRateResponse() (response *DescribePodDeductionRateResponse) {
     response = &DescribePodDeductionRateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePodDeductionRate
@@ -7949,8 +8313,9 @@ func NewDescribePodsBySpecRequest() (request *DescribePodsBySpecRequest) {
 func NewDescribePodsBySpecResponse() (response *DescribePodsBySpecResponse) {
     response = &DescribePodsBySpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePodsBySpec
@@ -7999,8 +8364,9 @@ func NewDescribePostNodeResourcesRequest() (request *DescribePostNodeResourcesRe
 func NewDescribePostNodeResourcesResponse() (response *DescribePostNodeResourcesResponse) {
     response = &DescribePostNodeResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePostNodeResources
@@ -8049,8 +8415,9 @@ func NewDescribePrometheusAgentInstancesRequest() (request *DescribePrometheusAg
 func NewDescribePrometheusAgentInstancesResponse() (response *DescribePrometheusAgentInstancesResponse) {
     response = &DescribePrometheusAgentInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgentInstances
@@ -8105,8 +8472,9 @@ func NewDescribePrometheusAgentsRequest() (request *DescribePrometheusAgentsRequ
 func NewDescribePrometheusAgentsResponse() (response *DescribePrometheusAgentsResponse) {
     response = &DescribePrometheusAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgents
@@ -8161,8 +8529,9 @@ func NewDescribePrometheusAlertHistoryRequest() (request *DescribePrometheusAler
 func NewDescribePrometheusAlertHistoryResponse() (response *DescribePrometheusAlertHistoryResponse) {
     response = &DescribePrometheusAlertHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertHistory
@@ -8170,6 +8539,7 @@ func NewDescribePrometheusAlertHistoryResponse() (response *DescribePrometheusAl
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -8188,6 +8558,7 @@ func (c *Client) DescribePrometheusAlertHistory(request *DescribePrometheusAlert
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -8227,8 +8598,9 @@ func NewDescribePrometheusAlertPolicyRequest() (request *DescribePrometheusAlert
 func NewDescribePrometheusAlertPolicyResponse() (response *DescribePrometheusAlertPolicyResponse) {
     response = &DescribePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertPolicy
@@ -8299,8 +8671,9 @@ func NewDescribePrometheusAlertRuleRequest() (request *DescribePrometheusAlertRu
 func NewDescribePrometheusAlertRuleResponse() (response *DescribePrometheusAlertRuleResponse) {
     response = &DescribePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertRule
@@ -8367,8 +8740,9 @@ func NewDescribePrometheusClusterAgentsRequest() (request *DescribePrometheusClu
 func NewDescribePrometheusClusterAgentsResponse() (response *DescribePrometheusClusterAgentsResponse) {
     response = &DescribePrometheusClusterAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusClusterAgents
@@ -8429,8 +8803,9 @@ func NewDescribePrometheusConfigRequest() (request *DescribePrometheusConfigRequ
 func NewDescribePrometheusConfigResponse() (response *DescribePrometheusConfigResponse) {
     response = &DescribePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusConfig
@@ -8503,8 +8878,9 @@ func NewDescribePrometheusGlobalConfigRequest() (request *DescribePrometheusGlob
 func NewDescribePrometheusGlobalConfigResponse() (response *DescribePrometheusGlobalConfigResponse) {
     response = &DescribePrometheusGlobalConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalConfig
@@ -8569,8 +8945,9 @@ func NewDescribePrometheusGlobalNotificationRequest() (request *DescribePromethe
 func NewDescribePrometheusGlobalNotificationResponse() (response *DescribePrometheusGlobalNotificationResponse) {
     response = &DescribePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalNotification
@@ -8631,8 +9008,9 @@ func NewDescribePrometheusInstanceRequest() (request *DescribePrometheusInstance
 func NewDescribePrometheusInstanceResponse() (response *DescribePrometheusInstanceResponse) {
     response = &DescribePrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstance
@@ -8701,8 +9079,9 @@ func NewDescribePrometheusInstanceInitStatusRequest() (request *DescribePromethe
 func NewDescribePrometheusInstanceInitStatusResponse() (response *DescribePrometheusInstanceInitStatusResponse) {
     response = &DescribePrometheusInstanceInitStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstanceInitStatus
@@ -8763,8 +9142,9 @@ func NewDescribePrometheusInstancesOverviewRequest() (request *DescribePrometheu
 func NewDescribePrometheusInstancesOverviewResponse() (response *DescribePrometheusInstancesOverviewResponse) {
     response = &DescribePrometheusInstancesOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstancesOverview
@@ -8821,8 +9201,9 @@ func NewDescribePrometheusOverviewsRequest() (request *DescribePrometheusOvervie
 func NewDescribePrometheusOverviewsResponse() (response *DescribePrometheusOverviewsResponse) {
     response = &DescribePrometheusOverviewsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusOverviews
@@ -8879,8 +9260,9 @@ func NewDescribePrometheusRecordRulesRequest() (request *DescribePrometheusRecor
 func NewDescribePrometheusRecordRulesResponse() (response *DescribePrometheusRecordRulesResponse) {
     response = &DescribePrometheusRecordRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusRecordRules
@@ -8949,8 +9331,9 @@ func NewDescribePrometheusTargetsRequest() (request *DescribePrometheusTargetsRe
 func NewDescribePrometheusTargetsResponse() (response *DescribePrometheusTargetsResponse) {
     response = &DescribePrometheusTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTargets
@@ -9015,8 +9398,9 @@ func NewDescribePrometheusTempRequest() (request *DescribePrometheusTempRequest)
 func NewDescribePrometheusTempResponse() (response *DescribePrometheusTempResponse) {
     response = &DescribePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemp
@@ -9071,8 +9455,9 @@ func NewDescribePrometheusTempSyncRequest() (request *DescribePrometheusTempSync
 func NewDescribePrometheusTempSyncResponse() (response *DescribePrometheusTempSyncResponse) {
     response = &DescribePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTempSync
@@ -9129,8 +9514,9 @@ func NewDescribePrometheusTemplateSyncRequest() (request *DescribePrometheusTemp
 func NewDescribePrometheusTemplateSyncResponse() (response *DescribePrometheusTemplateSyncResponse) {
     response = &DescribePrometheusTemplateSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemplateSync
@@ -9185,8 +9571,9 @@ func NewDescribePrometheusTemplatesRequest() (request *DescribePrometheusTemplat
 func NewDescribePrometheusTemplatesResponse() (response *DescribePrometheusTemplatesResponse) {
     response = &DescribePrometheusTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemplates
@@ -9241,8 +9628,9 @@ func NewDescribeRIUtilizationDetailRequest() (request *DescribeRIUtilizationDeta
 func NewDescribeRIUtilizationDetailResponse() (response *DescribeRIUtilizationDetailResponse) {
     response = &DescribeRIUtilizationDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRIUtilizationDetail
@@ -9297,8 +9685,9 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
@@ -9379,8 +9768,9 @@ func NewDescribeReservedInstancesRequest() (request *DescribeReservedInstancesRe
 func NewDescribeReservedInstancesResponse() (response *DescribeReservedInstancesResponse) {
     response = &DescribeReservedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeReservedInstances
@@ -9437,8 +9827,9 @@ func NewDescribeResourceUsageRequest() (request *DescribeResourceUsageRequest) {
 func NewDescribeResourceUsageResponse() (response *DescribeResourceUsageResponse) {
     response = &DescribeResourceUsageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceUsage
@@ -9497,8 +9888,9 @@ func NewDescribeRouteTableConflictsRequest() (request *DescribeRouteTableConflic
 func NewDescribeRouteTableConflictsResponse() (response *DescribeRouteTableConflictsResponse) {
     response = &DescribeRouteTableConflictsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRouteTableConflicts
@@ -9561,8 +9953,9 @@ func NewDescribeTKEEdgeClusterCredentialRequest() (request *DescribeTKEEdgeClust
 func NewDescribeTKEEdgeClusterCredentialResponse() (response *DescribeTKEEdgeClusterCredentialResponse) {
     response = &DescribeTKEEdgeClusterCredentialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusterCredential
@@ -9629,8 +10022,9 @@ func NewDescribeTKEEdgeClusterStatusRequest() (request *DescribeTKEEdgeClusterSt
 func NewDescribeTKEEdgeClusterStatusResponse() (response *DescribeTKEEdgeClusterStatusResponse) {
     response = &DescribeTKEEdgeClusterStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusterStatus
@@ -9697,8 +10091,9 @@ func NewDescribeTKEEdgeClustersRequest() (request *DescribeTKEEdgeClustersReques
 func NewDescribeTKEEdgeClustersResponse() (response *DescribeTKEEdgeClustersResponse) {
     response = &DescribeTKEEdgeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusters
@@ -9767,8 +10162,9 @@ func NewDescribeTKEEdgeExternalKubeconfigRequest() (request *DescribeTKEEdgeExte
 func NewDescribeTKEEdgeExternalKubeconfigResponse() (response *DescribeTKEEdgeExternalKubeconfigResponse) {
     response = &DescribeTKEEdgeExternalKubeconfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeExternalKubeconfig
@@ -9835,8 +10231,9 @@ func NewDescribeTKEEdgeScriptRequest() (request *DescribeTKEEdgeScriptRequest) {
 func NewDescribeTKEEdgeScriptResponse() (response *DescribeTKEEdgeScriptResponse) {
     response = &DescribeTKEEdgeScriptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeScript
@@ -9903,8 +10300,9 @@ func NewDescribeVersionsRequest() (request *DescribeVersionsRequest) {
 func NewDescribeVersionsResponse() (response *DescribeVersionsResponse) {
     response = &DescribeVersionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVersions
@@ -9989,8 +10387,9 @@ func NewDescribeVpcCniPodLimitsRequest() (request *DescribeVpcCniPodLimitsReques
 func NewDescribeVpcCniPodLimitsResponse() (response *DescribeVpcCniPodLimitsResponse) {
     response = &DescribeVpcCniPodLimitsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVpcCniPodLimits
@@ -10061,8 +10460,9 @@ func NewDisableClusterAuditRequest() (request *DisableClusterAuditRequest) {
 func NewDisableClusterAuditResponse() (response *DisableClusterAuditResponse) {
     response = &DisableClusterAuditResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableClusterAudit
@@ -10115,8 +10515,9 @@ func NewDisableClusterDeletionProtectionRequest() (request *DisableClusterDeleti
 func NewDisableClusterDeletionProtectionResponse() (response *DisableClusterDeletionProtectionResponse) {
     response = &DisableClusterDeletionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableClusterDeletionProtection
@@ -10167,8 +10568,9 @@ func NewDisableEncryptionProtectionRequest() (request *DisableEncryptionProtecti
 func NewDisableEncryptionProtectionResponse() (response *DisableEncryptionProtectionResponse) {
     response = &DisableEncryptionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableEncryptionProtection
@@ -10219,8 +10621,9 @@ func NewDisableEventPersistenceRequest() (request *DisableEventPersistenceReques
 func NewDisableEventPersistenceResponse() (response *DisableEventPersistenceResponse) {
     response = &DisableEventPersistenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableEventPersistence
@@ -10232,6 +10635,7 @@ func NewDisableEventPersistenceResponse() (response *DisableEventPersistenceResp
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
 //  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESPATCHOPERATIONERROR = "FailedOperation.KubernetesPatchOperationError"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -10253,6 +10657,7 @@ func (c *Client) DisableEventPersistence(request *DisableEventPersistenceRequest
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
 //  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESPATCHOPERATIONERROR = "FailedOperation.KubernetesPatchOperationError"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -10291,8 +10696,9 @@ func NewDisableVpcCniNetworkTypeRequest() (request *DisableVpcCniNetworkTypeRequ
 func NewDisableVpcCniNetworkTypeResponse() (response *DisableVpcCniNetworkTypeResponse) {
     response = &DisableVpcCniNetworkTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableVpcCniNetworkType
@@ -10351,12 +10757,13 @@ func NewDrainClusterVirtualNodeRequest() (request *DrainClusterVirtualNodeReques
 func NewDrainClusterVirtualNodeResponse() (response *DrainClusterVirtualNodeResponse) {
     response = &DrainClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DrainClusterVirtualNode
-// 驱逐虚拟节点
+// 驱逐超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -10367,7 +10774,7 @@ func (c *Client) DrainClusterVirtualNode(request *DrainClusterVirtualNodeRequest
 }
 
 // DrainClusterVirtualNode
-// 驱逐虚拟节点
+// 驱逐超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -10403,8 +10810,9 @@ func NewEnableClusterAuditRequest() (request *EnableClusterAuditRequest) {
 func NewEnableClusterAuditResponse() (response *EnableClusterAuditResponse) {
     response = &EnableClusterAuditResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableClusterAudit
@@ -10481,8 +10889,9 @@ func NewEnableClusterDeletionProtectionRequest() (request *EnableClusterDeletion
 func NewEnableClusterDeletionProtectionResponse() (response *EnableClusterDeletionProtectionResponse) {
     response = &EnableClusterDeletionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableClusterDeletionProtection
@@ -10533,8 +10942,9 @@ func NewEnableEncryptionProtectionRequest() (request *EnableEncryptionProtection
 func NewEnableEncryptionProtectionResponse() (response *EnableEncryptionProtectionResponse) {
     response = &EnableEncryptionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableEncryptionProtection
@@ -10587,8 +10997,9 @@ func NewEnableEventPersistenceRequest() (request *EnableEventPersistenceRequest)
 func NewEnableEventPersistenceResponse() (response *EnableEventPersistenceResponse) {
     response = &EnableEventPersistenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableEventPersistence
@@ -10683,8 +11094,9 @@ func NewEnableVpcCniNetworkTypeRequest() (request *EnableVpcCniNetworkTypeReques
 func NewEnableVpcCniNetworkTypeResponse() (response *EnableVpcCniNetworkTypeResponse) {
     response = &EnableVpcCniNetworkTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableVpcCniNetworkType
@@ -10739,8 +11151,9 @@ func NewForwardApplicationRequestV3Request() (request *ForwardApplicationRequest
 func NewForwardApplicationRequestV3Response() (response *ForwardApplicationRequestV3Response) {
     response = &ForwardApplicationRequestV3Response{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForwardApplicationRequestV3
@@ -10815,8 +11228,9 @@ func NewForwardTKEEdgeApplicationRequestV3Request() (request *ForwardTKEEdgeAppl
 func NewForwardTKEEdgeApplicationRequestV3Response() (response *ForwardTKEEdgeApplicationRequestV3Response) {
     response = &ForwardTKEEdgeApplicationRequestV3Response{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForwardTKEEdgeApplicationRequestV3
@@ -10887,8 +11301,9 @@ func NewGetClusterLevelPriceRequest() (request *GetClusterLevelPriceRequest) {
 func NewGetClusterLevelPriceResponse() (response *GetClusterLevelPriceResponse) {
     response = &GetClusterLevelPriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetClusterLevelPrice
@@ -10937,8 +11352,9 @@ func NewGetMostSuitableImageCacheRequest() (request *GetMostSuitableImageCacheRe
 func NewGetMostSuitableImageCacheResponse() (response *GetMostSuitableImageCacheResponse) {
     response = &GetMostSuitableImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetMostSuitableImageCache
@@ -10989,8 +11405,9 @@ func NewGetTkeAppChartListRequest() (request *GetTkeAppChartListRequest) {
 func NewGetTkeAppChartListResponse() (response *GetTkeAppChartListResponse) {
     response = &GetTkeAppChartListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTkeAppChartList
@@ -11039,8 +11456,9 @@ func NewGetUpgradeInstanceProgressRequest() (request *GetUpgradeInstanceProgress
 func NewGetUpgradeInstanceProgressResponse() (response *GetUpgradeInstanceProgressResponse) {
     response = &GetUpgradeInstanceProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetUpgradeInstanceProgress
@@ -11091,8 +11509,9 @@ func NewInstallAddonRequest() (request *InstallAddonRequest) {
 func NewInstallAddonResponse() (response *InstallAddonResponse) {
     response = &InstallAddonResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallAddon
@@ -11143,8 +11562,9 @@ func NewInstallEdgeLogAgentRequest() (request *InstallEdgeLogAgentRequest) {
 func NewInstallEdgeLogAgentResponse() (response *InstallEdgeLogAgentResponse) {
     response = &InstallEdgeLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallEdgeLogAgent
@@ -11197,8 +11617,9 @@ func NewInstallLogAgentRequest() (request *InstallLogAgentRequest) {
 func NewInstallLogAgentResponse() (response *InstallLogAgentResponse) {
     response = &InstallLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallLogAgent
@@ -11253,8 +11674,9 @@ func NewListClusterInspectionResultsRequest() (request *ListClusterInspectionRes
 func NewListClusterInspectionResultsResponse() (response *ListClusterInspectionResultsResponse) {
     response = &ListClusterInspectionResultsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListClusterInspectionResults
@@ -11307,8 +11729,9 @@ func NewListClusterInspectionResultsItemsRequest() (request *ListClusterInspecti
 func NewListClusterInspectionResultsItemsResponse() (response *ListClusterInspectionResultsItemsResponse) {
     response = &ListClusterInspectionResultsItemsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ListClusterInspectionResultsItems
@@ -11361,8 +11784,9 @@ func NewModifyClusterAsGroupAttributeRequest() (request *ModifyClusterAsGroupAtt
 func NewModifyClusterAsGroupAttributeResponse() (response *ModifyClusterAsGroupAttributeResponse) {
     response = &ModifyClusterAsGroupAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAsGroupAttribute
@@ -11453,8 +11877,9 @@ func NewModifyClusterAsGroupOptionAttributeRequest() (request *ModifyClusterAsGr
 func NewModifyClusterAsGroupOptionAttributeResponse() (response *ModifyClusterAsGroupOptionAttributeResponse) {
     response = &ModifyClusterAsGroupOptionAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAsGroupOptionAttribute
@@ -11537,8 +11962,9 @@ func NewModifyClusterAttributeRequest() (request *ModifyClusterAttributeRequest)
 func NewModifyClusterAttributeResponse() (response *ModifyClusterAttributeResponse) {
     response = &ModifyClusterAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAttribute
@@ -11619,8 +12045,9 @@ func NewModifyClusterAuthenticationOptionsRequest() (request *ModifyClusterAuthe
 func NewModifyClusterAuthenticationOptionsResponse() (response *ModifyClusterAuthenticationOptionsResponse) {
     response = &ModifyClusterAuthenticationOptionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAuthenticationOptions
@@ -11677,8 +12104,9 @@ func NewModifyClusterEndpointSPRequest() (request *ModifyClusterEndpointSPReques
 func NewModifyClusterEndpointSPResponse() (response *ModifyClusterEndpointSPResponse) {
     response = &ModifyClusterEndpointSPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterEndpointSP
@@ -11767,8 +12195,9 @@ func NewModifyClusterNodePoolRequest() (request *ModifyClusterNodePoolRequest) {
 func NewModifyClusterNodePoolResponse() (response *ModifyClusterNodePoolResponse) {
     response = &ModifyClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterNodePool
@@ -11831,12 +12260,13 @@ func NewModifyClusterVirtualNodePoolRequest() (request *ModifyClusterVirtualNode
 func NewModifyClusterVirtualNodePoolResponse() (response *ModifyClusterVirtualNodePoolResponse) {
     response = &ModifyClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterVirtualNodePool
-// 修改虚拟节点池
+// 修改超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -11849,7 +12279,7 @@ func (c *Client) ModifyClusterVirtualNodePool(request *ModifyClusterVirtualNodeP
 }
 
 // ModifyClusterVirtualNodePool
-// 修改虚拟节点池
+// 修改超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -11887,8 +12317,9 @@ func NewModifyNodePoolDesiredCapacityAboutAsgRequest() (request *ModifyNodePoolD
 func NewModifyNodePoolDesiredCapacityAboutAsgResponse() (response *ModifyNodePoolDesiredCapacityAboutAsgResponse) {
     response = &ModifyNodePoolDesiredCapacityAboutAsgResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNodePoolDesiredCapacityAboutAsg
@@ -11957,8 +12388,9 @@ func NewModifyNodePoolInstanceTypesRequest() (request *ModifyNodePoolInstanceTyp
 func NewModifyNodePoolInstanceTypesResponse() (response *ModifyNodePoolInstanceTypesResponse) {
     response = &ModifyNodePoolInstanceTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNodePoolInstanceTypes
@@ -12027,8 +12459,9 @@ func NewModifyPrometheusAgentExternalLabelsRequest() (request *ModifyPrometheusA
 func NewModifyPrometheusAgentExternalLabelsResponse() (response *ModifyPrometheusAgentExternalLabelsResponse) {
     response = &ModifyPrometheusAgentExternalLabelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAgentExternalLabels
@@ -12091,8 +12524,9 @@ func NewModifyPrometheusAlertPolicyRequest() (request *ModifyPrometheusAlertPoli
 func NewModifyPrometheusAlertPolicyResponse() (response *ModifyPrometheusAlertPolicyResponse) {
     response = &ModifyPrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAlertPolicy
@@ -12157,8 +12591,9 @@ func NewModifyPrometheusAlertRuleRequest() (request *ModifyPrometheusAlertRuleRe
 func NewModifyPrometheusAlertRuleResponse() (response *ModifyPrometheusAlertRuleResponse) {
     response = &ModifyPrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAlertRule
@@ -12219,8 +12654,9 @@ func NewModifyPrometheusConfigRequest() (request *ModifyPrometheusConfigRequest)
 func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigResponse) {
     response = &ModifyPrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusConfig
@@ -12285,8 +12721,9 @@ func NewModifyPrometheusGlobalNotificationRequest() (request *ModifyPrometheusGl
 func NewModifyPrometheusGlobalNotificationResponse() (response *ModifyPrometheusGlobalNotificationResponse) {
     response = &ModifyPrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusGlobalNotification
@@ -12343,8 +12780,9 @@ func NewModifyPrometheusRecordRuleYamlRequest() (request *ModifyPrometheusRecord
 func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusRecordRuleYamlResponse) {
     response = &ModifyPrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusRecordRuleYaml
@@ -12407,8 +12845,9 @@ func NewModifyPrometheusTempRequest() (request *ModifyPrometheusTempRequest) {
 func NewModifyPrometheusTempResponse() (response *ModifyPrometheusTempResponse) {
     response = &ModifyPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusTemp
@@ -12465,8 +12904,9 @@ func NewModifyPrometheusTemplateRequest() (request *ModifyPrometheusTemplateRequ
 func NewModifyPrometheusTemplateResponse() (response *ModifyPrometheusTemplateResponse) {
     response = &ModifyPrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusTemplate
@@ -12523,8 +12963,9 @@ func NewModifyReservedInstanceScopeRequest() (request *ModifyReservedInstanceSco
 func NewModifyReservedInstanceScopeResponse() (response *ModifyReservedInstanceScopeResponse) {
     response = &ModifyReservedInstanceScopeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyReservedInstanceScope
@@ -12575,8 +13016,9 @@ func NewRemoveNodeFromNodePoolRequest() (request *RemoveNodeFromNodePoolRequest)
 func NewRemoveNodeFromNodePoolResponse() (response *RemoveNodeFromNodePoolResponse) {
     response = &RemoveNodeFromNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveNodeFromNodePool
@@ -12629,8 +13071,9 @@ func NewRenewReservedInstancesRequest() (request *RenewReservedInstancesRequest)
 func NewRenewReservedInstancesResponse() (response *RenewReservedInstancesResponse) {
     response = &RenewReservedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RenewReservedInstances
@@ -12687,8 +13130,9 @@ func NewRestartEKSContainerInstancesRequest() (request *RestartEKSContainerInsta
 func NewRestartEKSContainerInstancesResponse() (response *RestartEKSContainerInstancesResponse) {
     response = &RestartEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartEKSContainerInstances
@@ -12741,8 +13185,9 @@ func NewRollbackClusterReleaseRequest() (request *RollbackClusterReleaseRequest)
 func NewRollbackClusterReleaseResponse() (response *RollbackClusterReleaseResponse) {
     response = &RollbackClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RollbackClusterRelease
@@ -12811,8 +13256,9 @@ func NewRunPrometheusInstanceRequest() (request *RunPrometheusInstanceRequest) {
 func NewRunPrometheusInstanceResponse() (response *RunPrometheusInstanceResponse) {
     response = &RunPrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunPrometheusInstance
@@ -12867,8 +13313,9 @@ func NewScaleInClusterMasterRequest() (request *ScaleInClusterMasterRequest) {
 func NewScaleInClusterMasterResponse() (response *ScaleInClusterMasterResponse) {
     response = &ScaleInClusterMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleInClusterMaster
@@ -12917,8 +13364,9 @@ func NewScaleOutClusterMasterRequest() (request *ScaleOutClusterMasterRequest) {
 func NewScaleOutClusterMasterResponse() (response *ScaleOutClusterMasterResponse) {
     response = &ScaleOutClusterMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleOutClusterMaster
@@ -12973,14 +13421,16 @@ func NewSetNodePoolNodeProtectionRequest() (request *SetNodePoolNodeProtectionRe
 func NewSetNodePoolNodeProtectionResponse() (response *SetNodePoolNodeProtectionResponse) {
     response = &SetNodePoolNodeProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetNodePoolNodeProtection
 // 仅能设置节点池中处于伸缩组的节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -12991,6 +13441,7 @@ func NewSetNodePoolNodeProtectionResponse() (response *SetNodePoolNodeProtection
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     return c.SetNodePoolNodeProtectionWithContext(context.Background(), request)
 }
@@ -12999,6 +13450,7 @@ func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionReq
 // 仅能设置节点池中处于伸缩组的节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -13009,6 +13461,7 @@ func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionReq
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtectionWithContext(ctx context.Context, request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     if request == nil {
         request = NewSetNodePoolNodeProtectionRequest()
@@ -13039,8 +13492,9 @@ func NewSyncPrometheusTempRequest() (request *SyncPrometheusTempRequest) {
 func NewSyncPrometheusTempResponse() (response *SyncPrometheusTempResponse) {
     response = &SyncPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPrometheusTemp
@@ -13109,8 +13563,9 @@ func NewSyncPrometheusTemplateRequest() (request *SyncPrometheusTemplateRequest)
 func NewSyncPrometheusTemplateResponse() (response *SyncPrometheusTemplateResponse) {
     response = &SyncPrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPrometheusTemplate
@@ -13177,8 +13632,9 @@ func NewUninstallClusterReleaseRequest() (request *UninstallClusterReleaseReques
 func NewUninstallClusterReleaseResponse() (response *UninstallClusterReleaseResponse) {
     response = &UninstallClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallClusterRelease
@@ -13249,8 +13705,9 @@ func NewUninstallEdgeLogAgentRequest() (request *UninstallEdgeLogAgentRequest) {
 func NewUninstallEdgeLogAgentResponse() (response *UninstallEdgeLogAgentResponse) {
     response = &UninstallEdgeLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallEdgeLogAgent
@@ -13301,8 +13758,9 @@ func NewUninstallLogAgentRequest() (request *UninstallLogAgentRequest) {
 func NewUninstallLogAgentResponse() (response *UninstallLogAgentResponse) {
     response = &UninstallLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallLogAgent
@@ -13361,8 +13819,9 @@ func NewUpdateAddonRequest() (request *UpdateAddonRequest) {
 func NewUpdateAddonResponse() (response *UpdateAddonResponse) {
     response = &UpdateAddonResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAddon
@@ -13421,8 +13880,9 @@ func NewUpdateClusterKubeconfigRequest() (request *UpdateClusterKubeconfigReques
 func NewUpdateClusterKubeconfigResponse() (response *UpdateClusterKubeconfigResponse) {
     response = &UpdateClusterKubeconfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateClusterKubeconfig
@@ -13479,8 +13939,9 @@ func NewUpdateClusterVersionRequest() (request *UpdateClusterVersionRequest) {
 func NewUpdateClusterVersionResponse() (response *UpdateClusterVersionResponse) {
     response = &UpdateClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateClusterVersion
@@ -13545,8 +14006,9 @@ func NewUpdateEKSClusterRequest() (request *UpdateEKSClusterRequest) {
 func NewUpdateEKSClusterResponse() (response *UpdateEKSClusterResponse) {
     response = &UpdateEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEKSCluster
@@ -13617,8 +14079,9 @@ func NewUpdateEKSContainerInstanceRequest() (request *UpdateEKSContainerInstance
 func NewUpdateEKSContainerInstanceResponse() (response *UpdateEKSContainerInstanceResponse) {
     response = &UpdateEKSContainerInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEKSContainerInstance
@@ -13669,8 +14132,9 @@ func NewUpdateEdgeClusterVersionRequest() (request *UpdateEdgeClusterVersionRequ
 func NewUpdateEdgeClusterVersionResponse() (response *UpdateEdgeClusterVersionResponse) {
     response = &UpdateEdgeClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEdgeClusterVersion
@@ -13735,8 +14199,9 @@ func NewUpdateImageCacheRequest() (request *UpdateImageCacheRequest) {
 func NewUpdateImageCacheResponse() (response *UpdateImageCacheResponse) {
     response = &UpdateImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateImageCache
@@ -13785,8 +14250,9 @@ func NewUpdateTKEEdgeClusterRequest() (request *UpdateTKEEdgeClusterRequest) {
 func NewUpdateTKEEdgeClusterResponse() (response *UpdateTKEEdgeClusterResponse) {
     response = &UpdateTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateTKEEdgeCluster
@@ -13855,8 +14321,9 @@ func NewUpgradeClusterInstancesRequest() (request *UpgradeClusterInstancesReques
 func NewUpgradeClusterInstancesResponse() (response *UpgradeClusterInstancesResponse) {
     response = &UpgradeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeClusterInstances
@@ -13923,8 +14390,9 @@ func NewUpgradeClusterReleaseRequest() (request *UpgradeClusterReleaseRequest) {
 func NewUpgradeClusterReleaseResponse() (response *UpgradeClusterReleaseResponse) {
     response = &UpgradeClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeClusterRelease

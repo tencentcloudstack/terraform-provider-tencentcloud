@@ -788,6 +788,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -803,6 +804,8 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+var importClsFlag = false
 
 func tkeCvmState() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -948,7 +951,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Optional:     true,
 			Default:      50,
-			ValidateFunc: validateIntegerInRange(50, 500),
+			ValidateFunc: validateIntegerInRange(20, 1024),
 			Description:  "Volume of system disk in GB. Default is `50`.",
 		},
 		"data_disk": {
@@ -1302,9 +1305,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_as_enabled": {
 			Type:        schema.TypeBool,
-			ForceNew:    true,
-			Optional:    true,
-			Default:     false,
+			Computed:    true,
 			Deprecated:  "This argument is deprecated because the TKE auto-scaling group was no longer available.",
 			Description: "Indicates whether to enable cluster node auto scaling. Default is false.",
 		},
@@ -1584,7 +1585,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"claim_expired_seconds": {
 			Type:     schema.TypeInt,
 			Optional: true,
-			Default:  300,
+			Computed: true,
 			Description: "Claim expired seconds to recycle ENI." +
 				" This field can only set when field `network_type` is 'VPC-CNI'." +
 				" `claim_expired_seconds` must greater or equal than 300 and less than 15768000.",
@@ -1858,6 +1859,18 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		Read:   resourceTencentCloudTkeClusterRead,
 		Update: resourceTencentCloudTkeClusterUpdate,
 		Delete: resourceTencentCloudTkeClusterDelete,
+		Importer: &schema.ResourceImporter{
+			//State: schema.ImportStatePassthrough,
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importClsFlag = true
+				err := resourceTencentCloudTkeClusterRead(d, m)
+				if err != nil {
+					return nil, fmt.Errorf("failed to import resource")
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: schemaBody,
 	}
 }
@@ -2377,7 +2390,16 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	cidrSet.MaxClusterServiceNum = int64(d.Get("cluster_max_service_num").(int))
 	cidrSet.MaxNodePodNum = int64(d.Get("cluster_max_pod_num").(int))
 	cidrSet.ServiceCIDR = d.Get("service_cidr").(string)
-	cidrSet.ClaimExpiredSeconds = int64(d.Get("claim_expired_seconds").(int))
+
+	if ClaimExpiredSeconds, ok := d.GetOk("claim_expired_seconds"); ok {
+		cidrSet.ClaimExpiredSeconds = int64(ClaimExpiredSeconds.(int))
+	} else {
+		cidrSet.ClaimExpiredSeconds = int64(300)
+
+		if err := d.Set("claim_expired_seconds", 300); err != nil {
+			return fmt.Errorf("error setting claim_expired_seconds: %s", err)
+		}
+	}
 
 	if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
 		// VPC-CNI cluster need to set eni subnet and service cidr.
@@ -2751,6 +2773,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeCluster(ctx, d.Id())
 	if err != nil {
@@ -2771,7 +2794,6 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		d.SetId("")
 		return nil
 	}
-
 	// 兼容旧的 cluster_os 的 key, 由于 cluster_os有默认值，所以不大可能为空
 	oldOs := d.Get("cluster_os").(string)
 	newOs := tkeToShowClusterOs(info.ClusterOs)
@@ -2795,48 +2817,300 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
 	_ = d.Set("tags", info.Tags)
+	_ = d.Set("deletion_protection", info.DeletionProtection)
+	_ = d.Set("cluster_level", info.ClusterLevel)
 
-	if _, ok := d.GetOk("cluster_level"); ok {
-		_ = d.Set("cluster_level", info.ClusterLevel)
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(info.Property), &data)
+	if err != nil {
+		return fmt.Errorf("error:%v", err)
+	}
+
+	if importClsFlag && info.DeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+		var masters []InstanceInfo
+		var errRet error
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			masters, _, errRet = service.DescribeClusterInstancesByRole(ctx, d.Id(), "MASTER_OR_ETCD")
+			if e, ok := errRet.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+			if errRet != nil {
+				return resource.RetryableError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		var instances []*cvm.Instance
+		instanceIds := make([]*string, 0)
+		for _, instance := range masters {
+			instanceIds = append(instanceIds, helper.String(instance.InstanceId))
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		instanceList := make([]interface{}, 0, len(instances))
+		for _, instance := range instances {
+			mapping := map[string]interface{}{
+				"count":                               1,
+				"instance_charge_type_prepaid_period": 1,
+				"instance_type":                       helper.PString(instance.InstanceType),
+				"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
+				"availability_zone":                   helper.PString(instance.Placement.Zone),
+				"instance_name":                       helper.PString(instance.InstanceName),
+				"instance_charge_type":                helper.PString(instance.InstanceChargeType),
+				"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
+				"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
+				"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
+				"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
+				"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
+				"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
+				"img_id":                              helper.PString(instance.ImageId),
+			}
+
+			if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
+				mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
+			} else {
+				mapping["instance_charge_type_prepaid_renew_flag"] = ""
+			}
+			if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
+				mapping["public_ip_assigned"] = true
+			}
+
+			if instance.CamRoleName != nil {
+				mapping["cam_role_name"] = instance.CamRoleName
+			}
+			if instance.LoginSettings != nil {
+				if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
+					mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
+				}
+				if instance.LoginSettings.Password != nil {
+					mapping["password"] = helper.PString(instance.LoginSettings.Password)
+				}
+			}
+			if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
+				mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
+			}
+			if instance.HpcClusterId != nil {
+				mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
+			}
+
+			dataDisks := make([]interface{}, 0, len(instance.DataDisks))
+			for _, v := range instance.DataDisks {
+				dataDisk := map[string]interface{}{
+					"disk_type":   helper.PString(v.DiskType),
+					"disk_size":   helper.PInt64(v.DiskSize),
+					"snapshot_id": helper.PString(v.DiskId),
+					"encrypt":     helper.PBool(v.Encrypt),
+					"kms_key_id":  helper.PString(v.KmsKeyId),
+				}
+				dataDisks = append(dataDisks, dataDisk)
+			}
+
+			mapping["data_disk"] = dataDisks
+			instanceList = append(instanceList, mapping)
+		}
+
+		_ = d.Set("master_config", instanceList)
+	}
+
+	if importClsFlag {
+		networkType, _ := data["NetworkType"].(string)
+		_ = d.Set("network_type", networkType)
+
+		nodeNameType, _ := data["NodeNameType"].(string)
+		_ = d.Set("node_name_type", nodeNameType)
+
+		enableCustomizedPodCIDR, _ := data["EnableCustomizedPodCIDR"].(bool)
+		_ = d.Set("enable_customized_pod_cidr", enableCustomizedPodCIDR)
+
+		basePodNumber, _ := data["BasePodNumber"].(int)
+		_ = d.Set("base_pod_num", basePodNumber)
+
+		isNonStaticIpMode, _ := data["IsNonStaticIpMode"].(bool)
+		_ = d.Set("is_non_static_ip_mode", isNonStaticIpMode)
+
+		_ = d.Set("runtime_version", info.RuntimeVersion)
+		_ = d.Set("cluster_os_type", info.OsCustomizeType)
+		_ = d.Set("container_runtime", info.ContainerRuntime)
+		_ = d.Set("kube_proxy_mode", info.KubeProxyMode)
+		_ = d.Set("service_cidr", info.ServiceCIDR)
+		_ = d.Set("upgrade_instances_follow_cluster", false)
+
+		switchSet, err := service.DescribeLogSwitches(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		logAgents := make([]map[string]interface{}, 0)
+		events := make([]map[string]interface{}, 0)
+		audits := make([]map[string]interface{}, 0)
+		for _, switchItem := range switchSet {
+			if switchItem.Log != nil && switchItem.Log.Enable != nil && helper.PBool(switchItem.Log.Enable) {
+				logAgent := map[string]interface{}{
+					"enabled": helper.PBool(switchItem.Log.Enable),
+				}
+				logAgents = append(logAgents, logAgent)
+			}
+			if switchItem.Event != nil && switchItem.Event.Enable != nil && helper.PBool(switchItem.Event.Enable) {
+				event := map[string]interface{}{
+					"enabled":    helper.PBool(switchItem.Event.Enable),
+					"log_set_id": helper.PString(switchItem.Event.LogsetId),
+					"topic_id":   helper.PString(switchItem.Event.TopicId),
+				}
+				events = append(events, event)
+			}
+			if switchItem.Audit != nil && switchItem.Audit.Enable != nil && helper.PBool(switchItem.Audit.Enable) {
+				audit := map[string]interface{}{
+					"enabled":    helper.PBool(switchItem.Audit.Enable),
+					"log_set_id": helper.PString(switchItem.Audit.LogsetId),
+					"topic_id":   helper.PString(switchItem.Audit.TopicId),
+				}
+				audits = append(audits, audit)
+			}
+		}
+		if len(logAgents) > 0 {
+			_ = d.Set("log_agent", logAgents)
+		}
+		if len(events) > 0 {
+			_ = d.Set("event_persistence", events)
+		}
+		if len(audits) > 0 {
+			_ = d.Set("cluster_audit", audits)
+		}
+
+		applist, err := service.DescribeExtensionAddonList(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		addons := make([]map[string]interface{}, 0)
+		for _, item := range applist.Items {
+			if item.Status.Phase == "Succeeded" && item.Labels["application.tkestack.io/type"] == "internal-addon" {
+				addonParam := AddonRequestBody{
+					Kind: helper.String("App"),
+					Spec: &AddonSpec{
+						Chart: &AddonSpecChart{
+							ChartName:    item.Spec.Chart.ChartName,
+							ChartVersion: item.Spec.Chart.ChartVersion,
+						},
+						Values: &AddonSpecValues{
+							Values:        item.Spec.Values.Values,
+							RawValues:     item.Spec.Values.RawValues,
+							RawValuesType: item.Spec.Values.RawValuesType,
+						},
+					},
+				}
+				result, err := json.Marshal(addonParam)
+				if err != nil {
+					return err
+				}
+
+				addon := map[string]interface{}{
+					"name":  item.Name,
+					"param": string(result),
+				}
+				addons = append(addons, addon)
+			}
+		}
+		if len(addons) > 0 {
+			_ = d.Set("extension_addon", addons)
+		}
+
+		resp, err := service.DescribeClusterExtraArgs(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		fmt.Println(&resp)
+		flag := false
+		extraArgs := make(map[string]interface{}, 0)
+		if len(resp.KubeAPIServer) > 0 {
+			flag = true
+			extraArgs["kube_apiserver"] = resp.KubeAPIServer
+		}
+		if len(resp.KubeControllerManager) > 0 {
+			flag = true
+			extraArgs["kube_controller_manager"] = resp.KubeControllerManager
+		}
+		if len(resp.KubeScheduler) > 0 {
+			flag = true
+			extraArgs["kube_scheduler"] = resp.KubeScheduler
+		}
+
+		if flag {
+			_ = d.Set("cluster_extra_args", []map[string]interface{}{extraArgs})
+		}
+
+		if networkType == TKE_CLUSTER_NETWORK_TYPE_CILIUM_OVERLAY {
+			resp, err := service.DescribeExternalNodeSupportConfig(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			_ = d.Set("cluster_subnet_id", resp.SubnetId)
+		}
+		if networkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
+			resp, err := service.DescribeIPAMD(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			_ = d.Set("eni_subnet_ids", helper.PStrings(resp.SubnetIds))
+
+			duration, err := time.ParseDuration(helper.PString(resp.ClaimExpiredDuration))
+			if err != nil {
+				return err
+			}
+			seconds := int(duration.Seconds())
+			if seconds > 0 {
+				_ = d.Set("claim_expired_seconds", seconds)
+			}
+		}
+
+		if info.DeployType == TKE_DEPLOY_TYPE_MANAGED {
+			options, state, _, err := service.DescribeClusterAuthenticationOptions(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			if state == "Success" {
+				authOptions := make(map[string]interface{}, 0)
+				if helper.PBool(options.UseTKEDefault) {
+					authOptions["use_tke_default"] = helper.PBool(options.UseTKEDefault)
+				} else {
+					authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
+					authOptions["issuer"] = helper.PString(options.Issuer)
+				}
+				authOptions["auto_create_discovery_anonymous_auth"] = helper.PBool(options.AutoCreateDiscoveryAnonymousAuth)
+				_ = d.Set("auth_options", []map[string]interface{}{authOptions})
+			}
+		}
 	}
 
 	if _, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+	} else if importClsFlag {
+		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+		importClsFlag = false
 	}
 
-	config, err := service.DescribeClusterConfig(ctx, d.Id(), true)
+	err = checkClusterEndpointStatus(ctx, &service, d, false)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
+		return fmt.Errorf("get internet failed, %s", err.Error())
 	}
 
+	err = checkClusterEndpointStatus(ctx, &service, d, true)
 	if err != nil {
-		return nil
+		return fmt.Errorf("get intranet failed, %s\n", err.Error())
 	}
-
-	_ = d.Set("kube_config", config)
-
-	intranetConfig, err := service.DescribeClusterConfig(ctx, d.Id(), false)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			intranetConfig, err = service.DescribeClusterConfig(ctx, d.Id(), false)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
-
-	if err != nil {
-		return nil
-	}
-
-	_ = d.Set("kube_config_intranet", intranetConfig)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
@@ -2855,7 +3129,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		})
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("get worker instances failed, %s", err.Error())
 	}
 
 	workerInstancesList := make([]map[string]interface{}, 0, len(workers))
@@ -2956,6 +3230,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 		_ = d.Set("node_pool_global_config", []map[string]interface{}{temp})
 	}
+
 	return nil
 }
 
@@ -3397,4 +3672,78 @@ func resourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []int
 
 	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
 	return
+}
+
+func checkClusterEndpointStatus(ctx context.Context, service *TkeService, d *schema.ResourceData, isInternet bool) (err error) {
+	var status, config string
+	var response tke.DescribeClusterEndpointsResponseParams
+	var isOpened bool
+	var errRet error
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		status, _, errRet = service.DescribeClusterEndpointStatus(ctx, d.Id(), isInternet)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if status == TkeInternetStatusCreating || status == TkeInternetStatusDeleting {
+			return resource.RetryableError(
+				fmt.Errorf("%s create cluster internet endpoint status still is %s", d.Id(), status))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+		isOpened = false
+	}
+	if status == TkeInternetStatusCreated {
+		isOpened = true
+	}
+	if isInternet {
+		_ = d.Set("cluster_internet", isOpened)
+	} else {
+		_ = d.Set("cluster_intranet", isOpened)
+	}
+
+	if isOpened {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			config, errRet = service.DescribeClusterConfig(ctx, d.Id(), isInternet)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, errRet = service.DescribeClusterEndpoints(ctx, d.Id())
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		if isInternet {
+			_ = d.Set("kube_config", config)
+			_ = d.Set("cluster_internet_domain", helper.PString(response.ClusterExternalDomain))
+			_ = d.Set("cluster_internet_security_group", helper.PString(response.SecurityGroup))
+		} else {
+			_ = d.Set("kube_config_intranet", config)
+			_ = d.Set("cluster_intranet_domain", helper.PString(response.ClusterIntranetDomain))
+			_ = d.Set("cluster_intranet_subnet_id", helper.PString(response.ClusterIntranetSubnetId))
+		}
+
+	} else {
+		if isInternet {
+			_ = d.Set("kube_config", "")
+		} else {
+			_ = d.Set("kube_config_intranet", "")
+		}
+	}
+	return nil
 }

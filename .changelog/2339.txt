@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: set up the cluster and import it into Terraform
+```
