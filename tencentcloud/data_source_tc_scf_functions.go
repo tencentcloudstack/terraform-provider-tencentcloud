@@ -268,6 +268,82 @@ func dataSourceTencentCloudScfFunctions() *schema.Resource {
 								},
 							},
 						},
+						"image_config": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"image_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The image type. personal or enterprise.",
+									},
+									"image_uri": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The uri of image.",
+									},
+									"registry_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The registry id of TCR. When image type is enterprise, it must be set.",
+									},
+									"entry_point": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The entrypoint of app.",
+									},
+									"command": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "The command of entrypoint.",
+									},
+									"args": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "the parameters of command.",
+									},
+									"container_image_accelerate": {
+										Type:        schema.TypeBool,
+										Computed:    true,
+										Description: "Image accelerate switch.",
+									},
+									"image_port": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.",
+									},
+								},
+							},
+						},
+						"dns_cache": {
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether to enable Dns caching capability, only the EVENT function is supported. Default is false.",
+						},
+						"intranet_config": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Intranet access configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"ip_fixed": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.",
+									},
+									"ip_address": {
+										Type: schema.TypeList,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Computed:    true,
+										Description: "If fixed intranet IP is enabled, this field returns the IP list used.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -401,6 +477,54 @@ func dataSourceTencentCloudScfFunctionsRead(d *schema.ResourceData, m interface{
 		}
 		m["tags"] = fnTags
 		m["async_run_enable"] = resp.AsyncRunEnable
+
+		imageConfigs := make([]map[string]interface{}, 0, 1)
+		if resp.ImageConfig != nil {
+			imageConfigResp := resp.ImageConfig
+
+			imageConfig := map[string]interface{}{
+				"image_type": imageConfigResp.ImageType,
+				"image_uri":  imageConfigResp.ImageUri,
+			}
+			if imageConfigResp.RegistryId != nil {
+				imageConfig["registry_id"] = imageConfigResp.RegistryId
+			}
+			if imageConfigResp.EntryPoint != nil {
+				imageConfig["entry_point"] = imageConfigResp.EntryPoint
+			}
+			if imageConfigResp.Command != nil {
+				imageConfig["command"] = imageConfigResp.Command
+			}
+			if imageConfigResp.Args != nil {
+				imageConfig["args"] = imageConfigResp.Args
+			}
+			if imageConfigResp.ContainerImageAccelerate != nil {
+				imageConfig["container_image_accelerate"] = imageConfigResp.ContainerImageAccelerate
+			}
+			if imageConfigResp.ImagePort != nil {
+				imageConfig["image_port"] = imageConfigResp.ImagePort
+			}
+			imageConfigs = append(imageConfigs, imageConfig)
+		}
+		m["image_config"] = imageConfigs
+
+		if resp.DnsCache != nil {
+			m["dns_cache"] = *resp.DnsCache == "TRUE"
+		}
+
+		intranetConfigs := make([]map[string]interface{}, 0, 1)
+		if resp.IntranetConfig != nil {
+			intranetConfigResp := resp.IntranetConfig
+
+			intranetConfig := map[string]interface{}{
+				"ip_fixed": intranetConfigResp.IpFixed,
+			}
+			if intranetConfigResp.IpAddress != nil {
+				intranetConfig["ip_address"] = intranetConfigResp.IpAddress
+			}
+			intranetConfigs = append(intranetConfigs, intranetConfig)
+		}
+		m["intranet_config"] = intranetConfigs
 
 		functions = append(functions, m)
 	}

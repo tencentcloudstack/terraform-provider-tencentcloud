@@ -46,6 +46,8 @@ type scfFunctionInfo struct {
 	tags map[string]string
 
 	asyncRunEnable *string
+	dnsCache       *string
+	intranetConfig *scf.IntranetConfigIn
 }
 
 type scfTrigger struct {
@@ -107,14 +109,18 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 
 	if len(info.tags) > 0 {
 		for k, v := range info.tags {
+			key := k
+			value := v
 			request.Tags = append(request.Tags, &scf.Tag{
-				Key:   &k,
-				Value: &v,
+				Key:   &key,
+				Value: &value,
 			})
 		}
 	}
 
 	request.AsyncRunEnable = info.asyncRunEnable
+	request.DnsCache = info.dnsCache
+	request.IntranetConfig = info.intranetConfig
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -292,6 +298,9 @@ func (me *ScfService) ModifyFunctionConfig(ctx context.Context, info scfFunction
 			request.L5Enable = helper.String("TRUE")
 		}
 	}
+
+	request.DnsCache = info.dnsCache
+	request.IntranetConfig = info.intranetConfig
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

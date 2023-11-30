@@ -15,6 +15,27 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+Using Zip file
+```
+resource "tencentcloud_scf_function" "foo" {
+  name              = "ci-test-function"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
+  enable_public_net = true
+  dns_cache         = true
+  intranet_config {
+    ip_fixed = "ENABLE"
+  }
+  vpc_id    = "vpc-391sv4w3"
+  subnet_id = "subnet-ljyn7h30"
+
+  zip_file = "/scf/first.zip"
+
+  tags = {
+    "env" = "test"
+  }
+}
+
 Using CFS config
 ```
 resource "tencentcloud_scf_function" "foo" {
@@ -202,7 +223,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"func_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
+				Default:     "Event",
 				Description: "Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.",
 			},
 			"l5_enable": {
@@ -289,7 +310,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:          schema.TypeList,
 				Optional:      true,
 				ConflictsWith: []string{"cos_bucket_name", "cos_object_name", "cos_bucket_region", "zip_file"},
-				Description:   "Image of the SCF function, conflict with ``.",
+				Description:   "Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"image_type": {
@@ -322,6 +343,19 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "the parameters of command.",
+						},
+						"container_image_accelerate": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Default:     false,
+							Description: "Image accelerate switch.",
+						},
+						"image_port": {
+							Type:         schema.TypeInt,
+							Optional:     true,
+							Default:      9000,
+							ValidateFunc: validateIntegerInRange(-1, 65535),
+							Description:  "Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.",
 						},
 					},
 				},
@@ -521,6 +555,36 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 					},
 				},
 			},
+			"dns_cache": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to enable Dns caching capability, only the EVENT function is supported. Default is false.",
+			},
+			"intranet_config": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
+				Description: "Intranet access configuration.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"ip_fixed": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.",
+						},
+						"ip_address": {
+							Type: schema.TypeList,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Computed:    true,
+							Description: "If fixed intranet IP is enabled, this field returns the IP list used.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -677,14 +741,18 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			entryPoint := value["entry_point"].(string)
 			command := value["command"].(string)
 			args := value["args"].(string)
+			containerImageAccelerate := value["container_image_accelerate"].(bool)
+			imagePort := int64(value["image_port"].(int))
 
 			config := &scf.ImageConfig{
-				ImageType:  &imageType,
-				ImageUri:   &imageUri,
-				RegistryId: &registryId,
-				EntryPoint: &entryPoint,
-				Command:    &command,
-				Args:       &args,
+				ImageType:                &imageType,
+				ImageUri:                 &imageUri,
+				RegistryId:               &registryId,
+				EntryPoint:               &entryPoint,
+				Command:                  &command,
+				Args:                     &args,
+				ContainerImageAccelerate: &containerImageAccelerate,
+				ImagePort:                &imagePort,
 			}
 			imageConfigs = append(imageConfigs, config)
 		}
@@ -738,11 +806,49 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	// Pass tag as creation param instead of modify and time.Sleep
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		functionInfo.tags = tags
+
+		tagService := TagService{client: m.(*TencentCloudClient).apiV3Conn}
+		region := m.(*TencentCloudClient).apiV3Conn.Region
+		functionId := fmt.Sprintf("%s/function/%s", *functionInfo.namespace, functionInfo.name)
+		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s create function tags failed: %+v", logId, err)
+			return err
+		}
+		// wait for tags add successfully
+		time.Sleep(time.Second)
 	}
 
 	if v, ok := d.GetOk("async_run_enable"); ok && v != nil {
 		enableStr := v.(string)
 		functionInfo.asyncRunEnable = helper.String(enableStr)
+	}
+
+	funcType := *functionInfo.funcType
+	if funcType == SCF_FUNCTION_TYPE_EVENT {
+		if v, ok := d.GetOk("dns_cache"); ok {
+			dnsCache := v.(bool)
+			if dnsCache {
+				functionInfo.dnsCache = helper.String("TRUE")
+			} else {
+				functionInfo.dnsCache = helper.String("FALSE")
+			}
+		}
+	}
+	if raw, ok := d.GetOk("intranet_config"); ok {
+		configs := raw.([]interface{})
+		var intranetConfigs = make([]*scf.IntranetConfigIn, 0)
+
+		for _, v := range configs {
+			value := v.(map[string]interface{})
+			ipFixed := value["ip_fixed"].(string)
+
+			config := &scf.IntranetConfigIn{
+				IpFixed: &ipFixed,
+			}
+			intranetConfigs = append(intranetConfigs, config)
+		}
+		functionInfo.intranetConfig = intranetConfigs[0]
 	}
 
 	if err := scfService.CreateFunction(ctx, functionInfo); err != nil {
@@ -937,6 +1043,59 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	}
 	_ = d.Set("trigger_info", triggers)
 
+	if resp.ImageConfig != nil {
+		imageConfigs := make([]map[string]interface{}, 0, 1)
+		imageConfigResp := resp.ImageConfig
+
+		imageConfig := map[string]interface{}{
+			"image_type": imageConfigResp.ImageType,
+			"image_uri":  imageConfigResp.ImageUri,
+		}
+		if imageConfigResp.RegistryId != nil {
+			imageConfig["registry_id"] = imageConfigResp.RegistryId
+		}
+		if imageConfigResp.EntryPoint != nil {
+			imageConfig["entry_point"] = imageConfigResp.EntryPoint
+		}
+		if imageConfigResp.Command != nil {
+			imageConfig["command"] = imageConfigResp.Command
+		}
+		if imageConfigResp.Args != nil {
+			imageConfig["args"] = imageConfigResp.Args
+		}
+		if imageConfigResp.ContainerImageAccelerate != nil {
+			imageConfig["container_image_accelerate"] = imageConfigResp.ContainerImageAccelerate
+		}
+		if imageConfigResp.ImagePort != nil {
+			imageConfig["image_port"] = imageConfigResp.ImagePort
+		}
+		imageConfigs = append(imageConfigs, imageConfig)
+
+		if err = d.Set("image_config", imageConfigs); err != nil {
+			return err
+		}
+	}
+
+	if resp.DnsCache != nil {
+		_ = d.Set("dns_cache", *resp.DnsCache == "TRUE")
+	}
+	if resp.IntranetConfig != nil {
+		intranetConfigs := make([]map[string]interface{}, 0, 1)
+		intranetConfigResp := resp.IntranetConfig
+
+		intranetConfig := map[string]interface{}{
+			"ip_fixed": intranetConfigResp.IpFixed,
+		}
+		if intranetConfigResp.IpAddress != nil {
+			intranetConfig["ip_address"] = intranetConfigResp.IpAddress
+		}
+		intranetConfigs = append(intranetConfigs, intranetConfig)
+
+		if err = d.Set("intranet_config", intranetConfigs); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -1038,14 +1197,18 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				entryPoint := value["entry_point"].(string)
 				command := value["command"].(string)
 				args := value["args"].(string)
+				containerImageAccelerate := value["container_image_accelerate"].(bool)
+				imagePort := int64(value["image_port"].(int))
 
 				config := &scf.ImageConfig{
-					ImageType:  &imageType,
-					ImageUri:   &imageUri,
-					RegistryId: &registryId,
-					EntryPoint: &entryPoint,
-					Command:    &command,
-					Args:       &args,
+					ImageType:                &imageType,
+					ImageUri:                 &imageUri,
+					RegistryId:               &registryId,
+					EntryPoint:               &entryPoint,
+					Command:                  &command,
+					Args:                     &args,
+					ContainerImageAccelerate: &containerImageAccelerate,
+					ImagePort:                &imagePort,
 				}
 				imageConfigs = append(imageConfigs, config)
 			}
@@ -1213,6 +1376,40 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		}
 	}
 
+	var funcType string
+	if raw, ok := d.GetOk("func_type"); ok {
+		funcType = raw.(string)
+	}
+	if funcType == SCF_FUNCTION_TYPE_EVENT && d.HasChange("dns_cache") {
+		updateAttrs = append(updateAttrs, "dns_cache")
+		if v, ok := d.GetOkExists("dns_cache"); ok {
+			dnsCache := v.(bool)
+			if dnsCache {
+				functionInfo.dnsCache = helper.String("TRUE")
+			} else {
+				functionInfo.dnsCache = helper.String("FALSE")
+			}
+		}
+	}
+	if d.HasChange("intranet_config") {
+		updateAttrs = append(updateAttrs, "intranet_config")
+		if raw, ok := d.GetOk("intranet_config"); ok {
+			configs := raw.([]interface{})
+			var intranetConfigs = make([]*scf.IntranetConfigIn, 0)
+
+			for _, v := range configs {
+				value := v.(map[string]interface{})
+				ipFixed := value["ip_fixed"].(string)
+
+				config := &scf.IntranetConfigIn{
+					IpFixed: &ipFixed,
+				}
+				intranetConfigs = append(intranetConfigs, config)
+			}
+			functionInfo.intranetConfig = intranetConfigs[0]
+		}
+	}
+
 	// update function configuration
 	if len(updateAttrs) > 0 {
 		if err := scfService.ModifyFunctionConfig(ctx, functionInfo); err != nil {
@@ -1277,11 +1474,13 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 			log.Printf("[CRITAL]%s get function id failed: %+v", logId, err)
 			return err
 		}
-		functionId := *resp.Response.FunctionId
+		fnName := *resp.Response.FunctionName
+		fnNamespace := *resp.Response.Namespace
+		functionId := fmt.Sprintf("%s/function/%s", fnNamespace, fnName)
 
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE, region, functionId)
+		resourceName := BuildTagResourceName(SCF_SERVICE, SCF_FUNCTION_RESOURCE_PREFIX, region, functionId)
 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			log.Printf("[CRITAL]%s update function tags failed: %+v", logId, err)

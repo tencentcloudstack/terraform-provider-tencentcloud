@@ -1,0 +1,11 @@
+```release-note:enhancement
+datasource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters
+```
+
+```release-note:enhancement
+resource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters
+```
+
+```release-note:bug
+resource/tencentcloud_scf_function: fix the issue where only one of multiple tag key updates takes effect
+```

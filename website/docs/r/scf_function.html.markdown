@@ -25,23 +25,29 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-### Using CFS config
+### Using Zip file
 
 ```hcl
 resource "tencentcloud_scf_function" "foo" {
-  name    = "ci-test-function"
-  handler = "main.do_it"
-  runtime = "Python3.6"
+  name              = "ci-test-function"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
+  enable_public_net = true
+  dns_cache         = true
+  intranet_config {
+    ip_fixed = "ENABLE"
+  }
+  vpc_id    = "vpc-391sv4w3"
+  subnet_id = "subnet-ljyn7h30"
 
-  cfs_config {
-    user_id          = "10000"
-    user_group_id    = "10000"
-    cfs_id           = "cfs-xxxxxxxx"
-    mount_ins_id     = "cfs-xxxxxxxx"
-    local_mount_dir  = "/mnt"
-    remote_mount_dir = "/"
+  zip_file = "/scf/first.zip"
+
+  tags = {
+    "env" = "test"
   }
 }
+
+Using CFS config
 ```
 
 ## Argument Reference
@@ -57,12 +63,14 @@ The following arguments are supported:
 * `cos_bucket_region` - (Optional, String) Cos bucket region of the SCF function, conflict with `zip_file`.
 * `cos_object_name` - (Optional, String) Cos object name of the SCF function, should have suffix `.zip` or `.jar`, conflict with `zip_file`.
 * `description` - (Optional, String) Description of the SCF function. Description supports English letters, numbers, spaces, commas, newlines, periods and Chinese, the maximum length is 1000.
+* `dns_cache` - (Optional, Bool) Whether to enable Dns caching capability, only the EVENT function is supported. Default is false.
 * `enable_eip_config` - (Optional, Bool) Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true. Default `false`.
 * `enable_public_net` - (Optional, Bool) Indicates whether public net config enabled. Default `false`. NOTE: only `vpc_id` specified can disable public net config.
 * `environment` - (Optional, Map) Environment of the SCF function.
 * `func_type` - (Optional, String) Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.
 * `handler` - (Optional, String) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
-* `image_config` - (Optional, List) Image of the SCF function, conflict with ``.
+* `image_config` - (Optional, List) Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.
+* `intranet_config` - (Optional, List) Intranet access configuration.
 * `l5_enable` - (Optional, Bool) Enable L5 for SCF function, default is `false`.
 * `layers` - (Optional, List) The list of association layers.
 * `mem_size` - (Optional, Int) Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.
@@ -91,8 +99,14 @@ The `image_config` object supports the following:
 * `image_uri` - (Required, String) The uri of image.
 * `args` - (Optional, String) the parameters of command.
 * `command` - (Optional, String) The command of entrypoint.
+* `container_image_accelerate` - (Optional, Bool) Image accelerate switch.
 * `entry_point` - (Optional, String) The entrypoint of app.
+* `image_port` - (Optional, Int) Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.
 * `registry_id` - (Optional, String) The registry id of TCR. When image type is enterprise, it must be set.
+
+The `intranet_config` object supports the following:
+
+* `ip_fixed` - (Required, String) Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.
 
 The `layers` object supports the following:
 

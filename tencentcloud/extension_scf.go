@@ -10,8 +10,9 @@ const (
 	SCF_FUNCTION_STATUS_UPDATE_FAILED  = "UpdateFailed"
 	SCF_FUNCTION_STATUS_PUBLISH_FAILED = "PublishFailed"
 
-	SCF_SERVICE           = "scf"
-	SCF_FUNCTION_RESOURCE = "lam"
+	SCF_SERVICE                  = "scf"
+	SCF_FUNCTION_RESOURCE        = "lam"
+	SCF_FUNCTION_RESOURCE_PREFIX = "namespace"
 
 	SCF_TRIGGER_TYPE_COS         = "cos"
 	SCF_TRIGGER_TYPE_CMQ         = "cmq"
