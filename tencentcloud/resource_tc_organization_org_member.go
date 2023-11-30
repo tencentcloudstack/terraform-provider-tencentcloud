@@ -375,15 +375,25 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 		if v, _ := d.GetOk("policy_type"); v != nil {
 			updateRequest.PolicyType = helper.String(v.(string))
 		}
+		if v, _ := d.GetOk("permission_ids"); v != nil {
+			ids := v.(*schema.Set).List()
+			for i := range ids {
+				id := ids[i].(int)
+				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
+			}
+		}
 	}
 
 	if d.HasChange("permission_ids") {
 		if v, _ := d.GetOk("permission_ids"); v != nil {
 			ids := v.(*schema.Set).List()
 			for i := range ids {
-				id := ids[i].(uint64)
-				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.Uint64(id))
+				id := ids[i].(int)
+				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
 			}
+		}
+		if v, _ := d.GetOk("policy_type"); v != nil {
+			updateRequest.PolicyType = helper.String(v.(string))
 		}
 	}
 
