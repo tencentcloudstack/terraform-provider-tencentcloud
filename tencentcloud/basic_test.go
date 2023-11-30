@@ -62,9 +62,12 @@ const (
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
-	defaultCvmAZone    = "ap-guangzhou-7"
-	defaultCvmVpcId    = "vpc-l0dw94uh"
-	defaultCvmSubnetId = "subnet-ccj2qg0m"
+	defaultCvmAZone           = "ap-guangzhou-7"
+	defaultCvmVpcId           = "vpc-l0dw94uh"
+	defaultCvmSubnetId        = "subnet-ccj2qg0m"
+	defaultCvmTestingAZone    = "ap-guangzhou-2"
+	defaultCvmTestingVpcId    = "vpc-701bm52d"
+	defaultCvmTestingSubnetId = "subnet-1q62lj3m"
 
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
@@ -247,6 +250,18 @@ variable "availability_cvm_zone" {
   default = "` + defaultCvmAZone + `"
 }
 
+variable "availability_cvm_testing_zone" {
+  default = "` + defaultCvmTestingAZone + `"
+}
+
+variable "cvm_testing_vpc_id" {
+  default = "` + defaultCvmTestingVpcId + `"
+}
+
+variable "cvm_testing_subnet_id" {
+  default = "` + defaultCvmTestingSubnetId + `"
+}
+
 variable "cvm_vpc_id" {
   default = "` + defaultCvmVpcId + `"
 }
@@ -298,7 +313,6 @@ data "tencentcloud_availability_zones" "default" {
 
 data "tencentcloud_images" "default" {
   image_type = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
 }
 
 data "tencentcloud_instance_types" "default" {
