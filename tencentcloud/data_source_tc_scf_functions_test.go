@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"regexp"
 	"testing"
 
@@ -35,6 +36,8 @@ func TestAccDataSourceTencentCloudScfFunctions_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.async_run_enable"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.dns_cache", "false"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 		},
@@ -68,6 +71,8 @@ func TestAccDataSourceTencentCloudScfFunctions_namespace(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.eips.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.dns_cache", "false"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 		},
@@ -102,6 +107,8 @@ func TestAccDataSourceTencentCloudScfFunctions_Desc(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.eips.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.dns_cache", "false"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 		},
@@ -136,6 +143,44 @@ func TestAccDataSourceTencentCloudScfFunctions_tag(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.tags.test", "test"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.dns_cache", "false"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_fixed", "DISABLE"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccDataSourceTencentCloudScfFunctions_IntranetConfig(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: scfFunctionCodeEmbed("first.zip", TestAccDataSourceTencentCloudScfFunctionsIntranetConfig),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_scf_functions.foo"),
+					resource.TestMatchResourceAttr("data.tencentcloud_scf_functions.foo", "functions.#", regexp.MustCompile(`^[1-9]\d*$`)),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.handler"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.mem_size"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.timeout"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.runtime"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.namespace"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.create_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.modify_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.code_size"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.err_no"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.install_dependency"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.status"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.eip_fixed"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.eips.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.l5_enable"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.trigger_info.#"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.dns_cache", "true"),
+					resource.TestCheckResourceAttr("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_fixed", "ENABLE"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_scf_functions.foo", "functions.0.intranet_config.0.ip_address.#"),
 				),
 			},
 		},
@@ -207,3 +252,25 @@ data "tencentcloud_scf_functions" "foo" {
   tags = tencentcloud_scf_function.foo.tags
 }
 `
+
+var TestAccDataSourceTencentCloudScfFunctionsIntranetConfig = fmt.Sprintf(defaultVpcVariable+`
+resource "tencentcloud_scf_function" "foo" {
+  name              = "%s"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
+  enable_public_net = true
+  dns_cache         = true
+
+  intranet_config {
+    ip_fixed = "ENABLE"
+  }
+  vpc_id    = var.vpc_id
+  subnet_id = var.subnet_id
+
+  zip_file = "%s"
+}
+
+data "tencentcloud_scf_functions" "foo" {
+  name = tencentcloud_scf_function.foo.name
+}
+`, "%s", "%s")

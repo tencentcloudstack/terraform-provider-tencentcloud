@@ -564,6 +564,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			"intranet_config": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Intranet access configuration.",
 				Elem: &schema.Resource{
