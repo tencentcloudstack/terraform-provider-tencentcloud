@@ -1,22 +1,3 @@
-/*
-Use this data source to query detailed information of kubernetes cluster_node_pools
-
-Example Usage
-
-```hcl
-data "tencentcloud_kubernetes_cluster_node_pools" "cluster_node_pools" {
-  cluster_id = "cls-kzilgv5m"
-  filters {
-    name   = "NodePoolsName"
-    values = ["mynodepool_xxxx"]
-  }
-  filters {
-    name   = "NodePoolsId"
-    values = ["np-ngjwhdv4"]
-  }
-}
-```
-*/
 package tencentcloud
 
 import (
@@ -25,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

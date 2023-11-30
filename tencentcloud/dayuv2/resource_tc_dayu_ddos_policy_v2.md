@@ -74,6 +74,16 @@ resource "tencentcloud_dayu_ddos_policy_v2" "ddos_v2" {
 		is_not=0
 		is_not2=0
 	}
+	water_print_config {
+    offset      = 1
+    open_status = 1
+    listeners {
+      frontend_port     = 90
+      forward_protocol  = "TCP"
+      frontend_port_end = 90
+    }
+    verify = "checkall"
+  }
 }
 
 ```

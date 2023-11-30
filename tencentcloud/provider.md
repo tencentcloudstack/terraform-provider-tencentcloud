@@ -549,6 +549,7 @@ Domain
 
 Elasticsearch Service(ES)
   Data Source
+    tencentcloud_elasticsearch_describe_index_list
     tencentcloud_elasticsearch_instances
     tencentcloud_elasticsearch_instance_logs
     tencentcloud_elasticsearch_instance_operations
@@ -649,6 +650,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_common_names
     tencentcloud_kubernetes_available_cluster_versions
     tencentcloud_kubernetes_cluster_authentication_options
+    tencentcloud_kubernetes_cluster_node_pools
     tencentcloud_kubernetes_cluster_instances
 
   Resource
@@ -1122,6 +1124,7 @@ Oceanus
     tencentcloud_oceanus_check_savepoint
 
   Resource
+    tencentcloud_oceanus_folder
     tencentcloud_oceanus_job
     tencentcloud_oceanus_job_config
     tencentcloud_oceanus_job_copy
@@ -1255,6 +1258,7 @@ VPN Connections(VPN)
 MapReduce(EMR)
   Data Source
     tencentcloud_emr
+    tencentcloud_emr_auto_scale_records
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
 
@@ -1608,6 +1612,7 @@ TencentCloud Automation Tools(TAT)
 
 Tencent Cloud Organization (TCO)
   Data Source
+    tencentcloud_organization_members
     tencentcloud_organization_org_auth_node
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month

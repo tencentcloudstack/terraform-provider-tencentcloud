@@ -1,12 +1,3 @@
-/*
-Use this data source to query detailed information of organization members
-
-Example Usage
-
-```hcl
-data "tencentcloud_organization_members" "members" {}
-```
-*/
 package tencentcloud
 
 import (
@@ -15,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
