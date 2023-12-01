@@ -650,11 +650,8 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_common_names
     tencentcloud_kubernetes_available_cluster_versions
     tencentcloud_kubernetes_cluster_authentication_options
-<<<<<<< HEAD
     tencentcloud_kubernetes_cluster_instances
-=======
     tencentcloud_kubernetes_cluster_node_pools
->>>>>>> 4b5cb837c (add datasource tencentcloud_kubernetes_cluster_node_pools)
 
   Resource
     tencentcloud_kubernetes_cluster
