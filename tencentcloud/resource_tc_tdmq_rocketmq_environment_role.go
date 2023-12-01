@@ -4,32 +4,29 @@ Provides a resource to create a tdmqRocketmq environment_role
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  role_name  = "tf_example_role"
+  remark     = "remark."
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_environment_role" "environment_role" {
-  environment_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  role_name = tencentcloud_tdmq_rocketmq_role.role.role_name
-  permissions = ["produce", "consume"]
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_environment_role" "example" {
+  environment_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  role_name        = tencentcloud_tdmq_rocketmq_role.example.role_name
+  permissions      = ["produce", "consume"]
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
-
 ```
 Import
 
@@ -46,8 +43,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -65,12 +62,14 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 			"environment_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Environment (namespace) name.",
 			},
 
 			"role_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Role Name.",
 			},
 
@@ -86,6 +85,7 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Cluster ID (required).",
 			},
 		},
@@ -208,18 +208,6 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 	request.RoleName = &roleName
 	request.EnvironmentId = &environmentId
 
-	if d.HasChange("environment_id") {
-
-		return fmt.Errorf("`environment_id` do not support change now.")
-
-	}
-
-	if d.HasChange("role_name") {
-
-		return fmt.Errorf("`role_name` do not support change now.")
-
-	}
-
 	if d.HasChange("permissions") {
 		if v, ok := d.GetOk("permissions"); ok {
 			permissionsSet := v.(*schema.Set).List()
@@ -228,13 +216,6 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 				request.Permissions = append(request.Permissions, &permissions)
 			}
 		}
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

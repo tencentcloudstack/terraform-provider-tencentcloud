@@ -33,8 +33,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -362,16 +362,38 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		ns := n.(*schema.Set)
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
-		if len(remove) > 0 {
-			err := resourceTencentCloudClbServerAttachmentRemove(d, meta, remove)
-			if err != nil {
-				return err
+		addLen := len(add)
+		removeLen := len(remove)
+		if removeLen > 0 {
+			for count := 0; count < removeLen; count += 20 {
+				removeList := make([]interface{}, 0, 20)
+				for i := 0; i < 20; i++ {
+					index := count + i
+					if index >= removeLen {
+						break
+					}
+					removeList = append(removeList, remove[index])
+				}
+				err := resourceTencentCloudClbServerAttachmentRemove(d, meta, removeList)
+				if err != nil {
+					return err
+				}
 			}
 		}
-		if len(add) > 0 {
-			err := resourceTencentCloudClbServerAttachmentAdd(d, meta, add)
-			if err != nil {
-				return err
+		if addLen > 0 {
+			for count := 0; count < addLen; count += 20 {
+				addList := make([]interface{}, 0, 20)
+				for i := 0; i < 20; i++ {
+					index := count + i
+					if index >= addLen {
+						break
+					}
+					addList = append(addList, add[index])
+				}
+				err := resourceTencentCloudClbServerAttachmentAdd(d, meta, addList)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		return resourceTencentCloudClbServerAttachmentRead(d, meta)
@@ -433,51 +455,25 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 	} else if instance.Targets != nil {
 		onlineTargets = instance.Targets
 	}
-
-	//this may cause problems when there are members in two dimensions array
-	//need to read state of the tfstate file to clear the relationships
-	//in this situation, import action is not supported
-	// TL,DR: just update partial targets which this resource declared.
-	stateTargets := d.Get("targets").(*schema.Set)
-	if stateTargets.Len() != 0 {
-		//the old state exist
-		//create a new attachment with state
-		exactTargets := make([]interface{}, 0)
-		for i := range onlineTargets {
-			v := onlineTargets[i]
-			if *v.Type == "CVM" && v.InstanceId != nil {
-				target := map[string]interface{}{
-					"weight":      int(*v.Weight),
-					"port":        int(*v.Port),
-					"instance_id": *v.InstanceId,
-				}
-				if stateTargets.Contains(target) {
-					exactTargets = append(exactTargets, map[string]interface{}{
-						"weight":      int(*v.Weight),
-						"port":        int(*v.Port),
-						"instance_id": *v.InstanceId,
-					})
-				}
-
-			} else if len(v.PrivateIpAddresses) > 0 && *v.PrivateIpAddresses[0] != "" {
-				target := map[string]interface{}{
-					"weight": int(*v.Weight),
-					"port":   int(*v.Port),
-					"eni_ip": *v.PrivateIpAddresses[0],
-				}
-				if stateTargets.Contains(target) {
-					exactTargets = append(exactTargets, map[string]interface{}{
-						"weight": int(*v.Weight),
-						"port":   int(*v.Port),
-						"eni_ip": *v.PrivateIpAddresses[0],
-					})
-				}
+	targets := make([]interface{}, 0)
+	for _, onlineTarget := range onlineTargets {
+		if *onlineTarget.Type == CLB_BACKEND_TYPE_CVM {
+			target := map[string]interface{}{
+				"weight":      int(*onlineTarget.Weight),
+				"port":        int(*onlineTarget.Port),
+				"instance_id": *onlineTarget.InstanceId,
 			}
+			targets = append(targets, target)
+		} else if *onlineTarget.Type == CLB_BACKEND_TYPE_ENI {
+			target := map[string]interface{}{
+				"weight": int(*onlineTarget.Weight),
+				"port":   int(*onlineTarget.Port),
+				"eni_ip": *onlineTarget.PrivateIpAddresses[0],
+			}
+			targets = append(targets, target)
 		}
-		_ = d.Set("targets", exactTargets)
-	} else {
-		_ = d.Set("targets", flattenBackendList(onlineTargets))
 	}
+	_ = d.Set("targets", targets)
 
 	return nil
 }
@@ -486,11 +482,15 @@ func resourceTencentCloudClbServerAttachmentRead(d *schema.ResourceData, meta in
 // If remove diffs created, check existing cvm instance first, filter target groups which already deregister
 func getRemoveCandidates(ctx context.Context, clbService ClbService, clbId string, listenerId string, locationId string, remove []interface{}) []interface{} {
 	removeCandidates := make([]interface{}, 0)
-	existAttachments, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+	listenerBackend, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
 	if err != nil {
 		return removeCandidates
 	}
-	existTargetGroups := existAttachments.Targets
+	existTargetGroups := make([]*clb.Backend, 0)
+	existTargetGroups = append(existTargetGroups, listenerBackend.Targets...)
+	if len(listenerBackend.Rules) > 0 {
+		existTargetGroups = append(existTargetGroups, listenerBackend.Rules[0].Targets...)
+	}
 
 	for _, item := range remove {
 		target := item.(map[string]interface{})
@@ -529,7 +529,7 @@ func targetGroupContainsEni(targets []*clb.Backend, eniIp interface{}) (contains
 		return
 	}
 	for _, target := range targets {
-		if len(target.PrivateIpAddresses) > 0 && target.PrivateIpAddresses[0] != nil {
+		if len(target.PrivateIpAddresses) == 0 || target.PrivateIpAddresses[0] == nil {
 			continue
 		}
 		if ip == *target.PrivateIpAddresses[0] {

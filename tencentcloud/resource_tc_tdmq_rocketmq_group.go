@@ -4,26 +4,24 @@ Provides a resource to create a tdmqRocketmq group
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_group" "group" {
-  group_name = "test_rocketmq_group"
-  namespace = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  read_enable = true
+resource "tencentcloud_tdmq_rocketmq_group" "example" {
+  group_name       = "tf_example"
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace        = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  read_enable      = true
   broadcast_enable = true
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark = "test rocketmq group"
+  remark           = "remark."
 }
 ```
 Import
@@ -41,8 +39,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -59,12 +57,14 @@ func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"group_name": {
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Required:    true,
 				Description: "Group name (8-64 characters).",
 			},
 
 			"namespace": {
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Required:    true,
 				Description: "Namespace. Currently, only one namespace is supported.",
 			},
@@ -84,6 +84,7 @@ func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Cluster ID.",
 			},
 
@@ -187,7 +188,6 @@ func resourceTencentCloudTdmqRocketmqGroupCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-
 		request.Remark = helper.String(v.(string))
 	}
 
@@ -278,43 +278,22 @@ func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta in
 	request.NamespaceId = &namespaceId
 	request.GroupId = &groupId
 
-	if d.HasChange("group_id") {
-
-		return fmt.Errorf("`group_id` do not support change now.")
-
-	}
-
-	if d.HasChange("namespaces") {
-
-		return fmt.Errorf("`namespaces` do not support change now.")
-
-	}
-
 	if d.HasChange("read_enable") {
 		if v, ok := d.GetOk("read_enable"); ok {
 			request.ReadEnable = helper.Bool(v.(bool))
 		}
-
 	}
 
 	if d.HasChange("broadcast_enable") {
 		if v, ok := d.GetOk("broadcast_enable"); ok {
 			request.BroadcastEnable = helper.Bool(v.(bool))
 		}
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

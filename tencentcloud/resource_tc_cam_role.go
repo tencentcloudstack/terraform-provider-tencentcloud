@@ -6,26 +6,39 @@ Example Usage
 Create normally
 
 ```hcl
-resource "tencentcloud_cam_role" "foo" {
-  name          = "cam-role-test"
-  document      = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": ["name/sts:AssumeRole"],
-      "effect": "allow",
-      "principal": {
-        "qcs": ["qcs::cam::uin/<your-account-id>:uin/<your-account-id>"]
-      }
-    }
-  ]
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  uin = data.tencentcloud_user_info.info.owner_uin
 }
-EOF
-  description   = "test"
-  console_login = true
-  tags = {
-    test  = "tf-cam-role",
+
+output "uin" {
+  value = local.uin
+}
+
+resource "tencentcloud_cam_role" "foo" {
+  name     = "cam-role-test"
+  document = jsonencode(
+    {
+      statement = [
+        {
+          action    = "name/sts:AssumeRole"
+          effect    = "allow"
+          principal = {
+            qcs = [
+              "qcs::cam::uin/${local.uin}:root",
+            ]
+          }
+        },
+      ]
+      version = "2.0"
+    }
+  )
+  console_login    = true
+  description      = "test"
+  session_duration = 7200
+  tags             = {
+    test  = "tf-cam-role"
   }
 }
 ```
@@ -33,23 +46,38 @@ EOF
 Create with SAML provider
 
 ```hcl
+variable "saml-provider" {
+  default = "example"
+}
+
+locals {
+  uin = data.tencentcloud_user_info.info.uin
+  saml_provider = var.saml-provider
+}
+
+data "tencentcloud_user_info" "info" {}
+
 resource "tencentcloud_cam_role" "boo" {
-  name          = "cam-role-test"
+  name          = "tf_cam_role"
   document      = <<EOF
 {
   "version": "2.0",
   "statement": [
     {
-      "action": ["name/sts:AssumeRole", "name/sts:AssumeRoleWithWebIdentity"],
+      "action": [
+        "name/sts:AssumeRole"
+      ],
       "effect": "allow",
       "principal": {
-        "federated": ["qcs::cam::uin/<your-account-id>:saml-provider/<your-name>"]
+        "qcs": [
+          "qcs::cam::uin/${local.uin}:saml-provider/${local.saml_provider}"
+        ]
       }
     }
   ]
 }
 EOF
-  description   = "test"
+  description   = "tf_test"
   console_login = true
 }
 ```
@@ -73,8 +101,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -124,8 +152,12 @@ func resourceTencentCloudCamRole() *schema.Resource {
 			"console_login": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the CAM role can login or not.",
+			},
+			"session_duration": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The maximum validity period of the temporary key for creating a role.",
 			},
 			"create_time": {
 				Type:        schema.TypeString,
@@ -174,6 +206,9 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 			loginInt = uint64(0)
 		}
 		request.ConsoleLogin = &loginInt
+	}
+	if v, ok := d.GetOkExists("session_duration"); ok {
+		request.SessionDuration = helper.IntUint64(v.(int))
 	}
 
 	var response *cam.CreateRoleResponse
@@ -233,7 +268,7 @@ func resourceTencentCloudCamRoleCreate(d *schema.ResourceData, meta interface{})
 			return err
 		}
 	}
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 
@@ -269,6 +304,7 @@ func resourceTencentCloudCamRoleRead(d *schema.ResourceData, meta interface{}) e
 
 	_ = d.Set("name", instance.RoleName)
 	_ = d.Set("document", instance.PolicyDocument)
+	_ = d.Set("session_duration", instance.SessionDuration)
 	_ = d.Set("create_time", instance.AddTime)
 	_ = d.Set("update_time", instance.UpdateTime)
 	if instance.Description != nil {
@@ -331,7 +367,7 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s update CAM role description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 	document := ""
 	if d.HasChange("document") {
@@ -364,7 +400,6 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 			log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("document")
 
 	}
 
@@ -382,9 +417,46 @@ func resourceTencentCloudCamRoleUpdate(d *schema.ResourceData, meta interface{})
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
+	if d.HasChange("console_login") {
+		consoleLoginRequest := cam.NewUpdateRoleConsoleLoginRequest()
+
+		if v, ok := d.GetOkExists("console_login"); ok {
+			loginBool := v.(bool)
+			loginInt := int64(1)
+			if !loginBool {
+				loginInt = int64(0)
+			}
+			consoleLoginRequest.ConsoleLogin = &loginInt
+		}
+
+		consoleLoginRequest.RoleId = helper.StrToInt64Point(roleId)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateRoleConsoleLogin(consoleLoginRequest)
+
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, consoleLoginRequest.GetAction(), consoleLoginRequest.ToJsonString(), e.Error())
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, consoleLoginRequest.GetAction(), consoleLoginRequest.ToJsonString(), response.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update CAM role console login failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	if d.HasChange("session_duration") {
+		return fmt.Errorf("`session_duration` do not support change now.")
+	}
 	return resourceTencentCloudCamRoleRead(d, meta)
 }
 

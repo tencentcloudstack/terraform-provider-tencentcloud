@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_private_dns_zone_vpc_attachment
+```

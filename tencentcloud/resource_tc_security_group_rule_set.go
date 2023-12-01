@@ -6,44 +6,86 @@ Provides a resource to create security group rule. This resource is similar with
 Example Usage
 
 ```hcl
-resource "tencentcloud_security_group" "sglab_1" {
-  name        = "mysg_1"
-  description = "favourite sg_1"
+resource "tencentcloud_security_group" "base" {
+  name        = "test-set-sg"
+  description = "Testing Rule Set Security"
 }
 
-resource "tencentcloud_security_group_rule_set" "sglab_1" {
-  security_group_id = tencentcloud_security_group.sglab_1.id
+resource "tencentcloud_security_group" "relative" {
+  name        = "for-relative"
+  description = "Used for attach security policy"
+}
+
+resource "tencentcloud_address_template" "foo" {
+  name      = "test-set-aTemp"
+  addresses = ["10.0.0.1", "10.0.1.0/24", "10.0.0.1-10.0.0.100"]
+}
+
+resource "tencentcloud_address_template_group" "foo" {
+  name         = "test-set-atg"
+  template_ids = [tencentcloud_address_template.foo.id]
+}
+
+resource "tencentcloud_security_group_rule_set" "base" {
+  security_group_id = tencentcloud_security_group.base.id
+
   ingress {
-    cidr_block  = "10.0.0.0/16" # Accept IP or CIDR
-    protocol    = "TCP" # Default is ALL
-    port        = "80" # Accept port e.g. 80 or PortRange e.g. 8080-8089
     action      = "ACCEPT"
-    description = "favourite sg rule_1"
+    cidr_block  = "10.0.0.0/22"
+    protocol    = "TCP"
+    port        = "80-90"
+    description = "A:Allow Ips and 80-90"
   }
+
   ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.2.1"
+    protocol    = "UDP"
+    port        = "8080"
+    description = "B:Allow UDP 8080"
+  }
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.2.1"
+    protocol    = "UDP"
+    port        = "8080"
+    description = "C:Allow UDP 8080"
+  }
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "172.18.1.2"
+    protocol    = "ALL"
+    port        = "ALL"
+    description = "D:Allow ALL"
+  }
+
+  ingress {
+    action             = "DROP"
     protocol           = "TCP"
     port               = "80"
-    action             = "ACCEPT"
-    source_security_id = tencentcloud_security_group.sglab_3.id
-    description        = "favourite sg rule_2"
+    source_security_id = tencentcloud_security_group.relative.id
+    description        = "E:Block relative"
   }
 
   egress {
-    action              = "ACCEPT"
-    address_template_id = "ipm-xxxxxxxx" # Support address template (group)
-    description         = "Allow address template"
-  }
-  egress {
-    action                 = "ACCEPT"
-    service_template_group = "ppmg-xxxxxxxx" # Support protocol template (group)
-    description            = "Allow protocol template"
-  }
-  egress {
-    cidr_block  = "10.0.0.0/16"
-    protocol    = "TCP"
-    port        = "80"
     action      = "DROP"
-    description = "favourite sg egress rule"
+    cidr_block  = "10.0.0.0/16"
+    protocol    = "ICMP"
+    description = "A:Block ping3"
+  }
+
+  egress {
+    action              = "DROP"
+    address_template_id = tencentcloud_address_template.foo.id
+    description         = "B:Allow template"
+  }
+
+  egress {
+    action                 = "DROP"
+    address_template_group = tencentcloud_address_template_group.foo.id
+    description            = "C:DROP template group"
   }
 }
 ```
@@ -68,7 +110,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
@@ -131,6 +173,11 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 			Computed:    true,
 			Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `service_template_*`.",
 		},
+		"policy_index": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "The security group rule index number, whose value dynamically changes with changes in security group rules.",
+		},
 	}
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupRuleSetCreate,
@@ -151,17 +198,13 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "List of ingress rule. NOTE: this block is ordered, the first rule has the highest priority.",
-				Elem: &schema.Resource{
-					Schema: ruleElem,
-				},
+				Elem:        &schema.Resource{Schema: ruleElem},
 			},
 			"egress": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "List of egress rule. NOTE: this block is ordered, the first rule has the highest priority.",
-				Elem: &schema.Resource{
-					Schema: ruleElem,
-				},
+				Elem:        &schema.Resource{Schema: ruleElem},
 			},
 			"version": {
 				Type:        schema.TypeString,
@@ -175,26 +218,33 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 func resourceTencentCloudSecurityGroupRuleSetCreate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_rule_set.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	var (
+		logId           = getLogId(contextNil)
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
+		service         = VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+		request         = vpc.NewModifySecurityGroupPoliciesRequest()
+		securityGroupId string
+		err             error
+	)
 
-	var err error
-	id := d.Get("security_group_id").(string)
-	request := vpc.NewModifySecurityGroupPoliciesRequest()
-	request.SecurityGroupId = helper.String(id)
+	if v, ok := d.GetOk("security_group_id"); ok {
+		request.SecurityGroupId = helper.String(v.(string))
+		securityGroupId = v.(string)
+	}
+
 	request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{}
 
 	if v, ok := d.GetOk("ingress"); ok {
-		rules := v.([]interface{})
-		request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(rules)
+		ingressRules := v.([]interface{})
+		request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
 		if err != nil {
 			return err
 		}
 	}
+
 	if v, ok := d.GetOk("egress"); ok {
-		rules := v.([]interface{})
-		request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(rules)
+		egressRules := v.([]interface{})
+		request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(egressRules)
 		if err != nil {
 			return err
 		}
@@ -205,7 +255,7 @@ func resourceTencentCloudSecurityGroupRuleSetCreate(d *schema.ResourceData, m in
 		return err
 	}
 
-	d.SetId(id)
+	d.SetId(securityGroupId)
 	return resourceTencentCloudSecurityGroupRuleSetRead(d, m)
 }
 
@@ -213,11 +263,13 @@ func resourceTencentCloudSecurityGroupRuleSetRead(d *schema.ResourceData, m inte
 	defer logElapsed("resource.tencentcloud_security_group_rule_set.read")()
 	defer inconsistentCheck(d, m)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+	var (
+		logId           = getLogId(contextNil)
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
+		service         = VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+		securityGroupId = d.Id()
+	)
 
-	securityGroupId := d.Id()
 	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
 	request.SecurityGroupId = &securityGroupId
 
@@ -226,56 +278,132 @@ func resourceTencentCloudSecurityGroupRuleSetRead(d *schema.ResourceData, m inte
 		return err
 	}
 
+	if result == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `tencentcloud_security_group_rule_set` %s does not exist", d.Id())
+	}
+
 	_ = d.Set("security_group_id", securityGroupId)
-	d.SetId(securityGroupId)
-	_ = d.Set("version", result.Version)
-	if len(result.Ingress) > 0 {
+
+	if result.Version != nil {
+		_ = d.Set("version", result.Version)
+	}
+
+	if result.Ingress != nil {
 		_ = d.Set("ingress", marshalSecurityPolicy(result.Ingress))
 	}
-	if len(result.Egress) > 0 {
+
+	if result.Egress != nil {
 		_ = d.Set("egress", marshalSecurityPolicy(result.Egress))
 	}
+
 	return nil
 }
 
 func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("tencentcloud_security_group_rule_set.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := m.(*TencentCloudClient).apiV3Conn
-	service := VpcService{client}
 
-	version := d.Get("version").(string)
-	ver, vErr := strconv.ParseInt(version, 10, 64)
-	nextVer := ""
+	var (
+		logId           = getLogId(contextNil)
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
+		service         = VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+		request         = vpc.NewModifySecurityGroupPoliciesRequest()
+		securityGroupId = d.Id()
+		nextVer         string
+		needChange      bool
+		err             error
+	)
 
-	request := vpc.NewModifySecurityGroupPoliciesRequest()
-	request.SecurityGroupId = helper.String(d.Id())
-	request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{}
-	request.SortPolicys = helper.Bool(true)
-	if vErr == nil {
-		nextVer = fmt.Sprintf("%d", ver+1)
-		request.SecurityGroupPolicySet.Version = &nextVer
+	mutableArgs := []string{"ingress", "egress"}
+
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
 	}
 
-	var err error
-	if d.HasChange("ingress") {
-		rules := d.Get("ingress").([]interface{})
-		request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(rules)
+	if needChange {
+		version := d.Get("version").(string)
+		ver, _ := strconv.ParseInt(version, 10, 64)
+		ver += 1
+		request.SecurityGroupId = helper.String(securityGroupId)
+		request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{}
+		request.SortPolicys = helper.Bool(true)
+
+		oldIngress, newIngress := d.GetChange("ingress")
+		oldEgress, newEgress := d.GetChange("egress")
+
+		oldIngressList := oldIngress.([]interface{})
+		newIngressList := newIngress.([]interface{})
+		oldEgressList := oldEgress.([]interface{})
+		newEgressList := newEgress.([]interface{})
+
+		if len(newIngressList) == 0 && len(newEgressList) == 0 {
+			ver = 0
+
+		} else if len(newIngressList) != 0 && len(newEgressList) == 0 {
+			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(newIngressList)
+			if err != nil {
+				return err
+			}
+
+			if len(oldEgressList) > 0 {
+				tmpList := make([]*int64, 0)
+				for _, v := range oldEgressList {
+					item := v.(map[string]interface{})
+					policyIndex := int64(item["policy_index"].(int))
+					tmpList = append(tmpList, &policyIndex)
+				}
+
+				e := service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "egress")
+				if e != nil {
+					return e
+				}
+
+				ver += 1
+			}
+
+		} else if len(newIngressList) == 0 && len(newEgressList) != 0 {
+			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(newEgressList)
+			if err != nil {
+				return err
+			}
+
+			if len(oldIngressList) > 0 {
+				tmpList := make([]*int64, 0)
+				for _, v := range oldIngressList {
+					item := v.(map[string]interface{})
+					policyIndex := int64(item["policy_index"].(int))
+					tmpList = append(tmpList, &policyIndex)
+				}
+
+				e := service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
+				if e != nil {
+					return e
+				}
+
+				ver += 1
+			}
+
+		} else {
+			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(newIngressList)
+			if err != nil {
+				return err
+			}
+
+			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(newEgressList)
+			if err != nil {
+				return err
+			}
+		}
+
+		nextVer = fmt.Sprintf("%d", ver)
+		request.SecurityGroupPolicySet.Version = helper.String(nextVer)
+		err = service.ModifySecurityGroupPolicies(ctx, request)
 		if err != nil {
 			return err
 		}
-	}
-	if d.HasChange("egress") {
-		rules := d.Get("egress").([]interface{})
-		request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(rules)
-		if err != nil {
-			return err
-		}
-	}
-	err = service.ModifySecurityGroupPolicies(ctx, request)
-	if err != nil {
-		return err
 	}
 
 	return resourceTencentCloudSecurityGroupRuleSetRead(d, m)
@@ -284,28 +412,21 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 func resourceTencentCloudSecurityGroupRuleSetDelete(d *schema.ResourceData, m interface{}) error {
 	defer logElapsed("resource.tencentcloud_security_group_rule_set.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId           = getLogId(contextNil)
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
+		service         = VpcService{client: m.(*TencentCloudClient).apiV3Conn}
+		request         = vpc.NewModifySecurityGroupPoliciesRequest()
+		securityGroupId = d.Id()
+	)
 
-	service := VpcService{client: m.(*TencentCloudClient).apiV3Conn}
-
-	id := d.Id()
-
-	request := vpc.NewModifySecurityGroupPoliciesRequest()
-	request.SecurityGroupId = &id
+	request.SecurityGroupId = &securityGroupId
 	request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{
 		Version: helper.String("0"),
 		Ingress: []*vpc.SecurityGroupPolicy{},
 		Egress:  []*vpc.SecurityGroupPolicy{},
 	}
-	//if v, ok := d.GetOk("ingress"); ok {
-	//	rules := v.([]interface{})
-	//	request.SecurityGroupPolicySet.Ingress, _ = unmarshalSecurityPolicy(rules)
-	//}
-	//if v, ok := d.GetOk("egress"); ok {
-	//	rules := v.([]interface{})
-	//	request.SecurityGroupPolicySet.Egress, _ = unmarshalSecurityPolicy(rules)
-	//}
+
 	err := service.ModifySecurityGroupPolicies(ctx, request)
 	if err != nil {
 		log.Printf("[CRITAL]%s security group rule delete failed: %s\n ", logId, err.Error())
@@ -401,7 +522,6 @@ func unmarshalSecurityPolicy(policies []interface{}) (output []*vpc.SecurityGrou
 		if desc != "" {
 			result.PolicyDescription = &desc
 		}
-		//result.PolicyIndex = helper.IntInt64(i)
 
 		output = append(output, result)
 	}
@@ -414,6 +534,9 @@ func marshalSecurityPolicy(policies []*vpc.SecurityGroupPolicy) []interface{} {
 		policy := policies[i]
 		dMap := map[string]interface{}{
 			"action": policy.Action,
+		}
+		if policy.PolicyIndex != nil {
+			dMap["policy_index"] = policy.PolicyIndex
 		}
 		if policy.CidrBlock != nil {
 			dMap["cidr_block"] = policy.CidrBlock

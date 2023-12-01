@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -31,6 +31,25 @@ func init() {
 			for i := range groups {
 				id := *groups[i].PGroupId
 				name := *groups[i].Name
+
+				rules, err := service.DescribeAccessRule(ctx, id, "")
+
+				if err == nil { // ignore deleting the access rules when an error happened
+					for _, item := range rules {
+						ruleId := *item.RuleId
+						err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+							if delErr := service.DeleteAccessRule(ctx, id, ruleId); delErr != nil {
+								// retry when Pgroup is under deleting rule operation
+								return retryError(delErr)
+							}
+							return nil
+						})
+						if err != nil {
+							return err
+						}
+					}
+				}
+
 				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
 					continue
 				}
@@ -44,7 +63,8 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudCfsAccessGroup(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudCfsAccessGroup_basic -v
+func TestAccTencentCloudCfsAccessGroup_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -54,9 +74,22 @@ func TestAccTencentCloudCfsAccessGroup(t *testing.T) {
 			{
 				Config: testAccCfsAccessGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCfsAccessGroupExists("tencentcloud_cfs_access_group.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.foo", "name", "test_cfs_access_group"),
-					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.foo", "description", "test"),
+					testAccCheckCfsAccessGroupExists("tencentcloud_cfs_access_group.example"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.example", "name", "tx_example"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.example", "description", "desc."),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cfs_access_group.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: testAccCfsAccessGroupUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCfsAccessGroupExists("tencentcloud_cfs_access_group.example"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.example", "name", "tx_example_update"),
+					resource.TestCheckResourceAttr("tencentcloud_cfs_access_group.example", "description", "desc update."),
 				),
 			},
 		},
@@ -130,8 +163,15 @@ func testAccCheckCfsAccessGroupExists(n string) resource.TestCheckFunc {
 }
 
 const testAccCfsAccessGroup = `
-resource "tencentcloud_cfs_access_group" "foo" {
-  name = "test_cfs_access_group"
-  description = "test"
+resource "tencentcloud_cfs_access_group" "example" {
+  name        = "tx_example"
+  description = "desc."
+}
+`
+
+const testAccCfsAccessGroupUpdate = `
+resource "tencentcloud_cfs_access_group" "example" {
+  name        = "tx_example_update"
+  description = "desc update."
 }
 `

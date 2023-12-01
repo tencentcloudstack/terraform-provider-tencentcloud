@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"encoding/xml"
@@ -9,15 +10,15 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/beevik/etree"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -129,15 +130,14 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 		}
 	}()
 	ratelimit.Check("CreateBucket")
-	client := me.client.UseCosClient()
-	response, err := client.CreateBucket(&request)
+	response, err := me.client.UseCosClient().CreateBucket(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], endpoint %s\n",
-		logId, "put bucket", request.String(), response.String(), client.Endpoint)
+		logId, "put bucket", request.String(), response.String(), me.client.UseCosClient().Endpoint)
 
 	return nil
 }
@@ -156,23 +156,49 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucket")
-	client := me.client.UseTencentCosClient(bucket)
-	response, err := client.Bucket.Put(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.Put(ctx, opt)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
-		logId, "put bucket", req, resp, client.BaseURL.BucketURL)
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
 
 	return nil
 }
 
-func (me *CosService) TencentCosPutBucketACL(
+func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (location string, errRet error) {
+	logId := getLogId(ctx)
+
+	req, _ := json.Marshal(opt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
+				logId, "put bucket", req, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("TencentcloudCosPutBucket")
+	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetLocation(ctx)
+	if err != nil {
+		errRet = fmt.Errorf("cos get location error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+	location = result.Location
+	resp, _ := json.Marshal(response.Response.Body)
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
+
+	return
+}
+
+func (me *CosService) TencentCosPutBucketACLBody(
 	ctx context.Context,
 	bucket string,
 	reqBody string,
@@ -187,7 +213,7 @@ func (me *CosService) TencentCosPutBucketACL(
 		err := xml.Unmarshal([]byte(reqBody), acl)
 
 		if err != nil {
-			errRet = fmt.Errorf("cos [PutBucketACL] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
+			errRet = fmt.Errorf("cos [PutBucketACLBody] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
 		opt.Body = acl
@@ -202,22 +228,22 @@ func (me *CosService) TencentCosPutBucketACL(
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
-				logId, "PutBucketACL", req, errRet.Error())
+				logId, "PutBucketACLBody", req, errRet.Error())
 		}
 	}()
 
-	ratelimit.Check("TencentcloudCosPutBucketACL")
+	ratelimit.Check("TencentcloudCosPutBucketACLBody")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutACL(ctx, opt)
 
 	if err != nil {
-		errRet = fmt.Errorf("cos [PutBucketACL] error: %s, bucket: %s", err.Error(), bucket)
+		errRet = fmt.Errorf("cos [PutBucketACLBody] error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "PutBucketACL", req, resp)
+		logId, "PutBucketACLBody", req, resp)
 
 	return nil
 }
@@ -1178,7 +1204,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
 					headers := schema.NewSet(func(i interface{}) int {
-						return hashcode.String(i.(string))
+						return helper.HashString(i.(string))
 					}, nil)
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
 						headers.Add(header.Key)
@@ -1213,7 +1239,7 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 	ratelimit.Check("PutBucketPullOrigin")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutOrigin(ctx, opt)
 	req, _ := json.Marshal(opt)
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	defer func() {
 		if errRet != nil {
@@ -1245,7 +1271,7 @@ func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string)
 
 	ratelimit.Check("DeleteBucketPullOrigin")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteOrigin(ctx)
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
 		errRet = fmt.Errorf("[DeleteBucketPullOrigin] error: %s, bucket: %s", err.Error(), bucket)
@@ -1271,7 +1297,7 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 	ratelimit.Check("TencentcloudCosGetBucketOriginDomain")
 	domain, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomain(ctx)
 
-	if response.StatusCode == 404 {
+	if response != nil && response.StatusCode == 404 {
 		log.Printf("[WARN] [GetBucketOriginDomain] returns %d, %s", 404, err)
 		return make([]map[string]interface{}, 0), nil
 	}
@@ -1291,7 +1317,7 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 		rules = append(rules, item)
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body response body [%s]\n",
 		logId, "GetBucketOriginDomain", resp)
@@ -1308,7 +1334,7 @@ func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, 
 	ratelimit.Check("PutBucketOriginDomain")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutDomain(ctx, opt)
 	req, _ := json.Marshal(opt)
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	defer func() {
 		if errRet != nil {
@@ -1340,7 +1366,7 @@ func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket strin
 
 	ratelimit.Check("DeleteBucketOriginDomain")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomain(ctx)
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
 		errRet = fmt.Errorf("[DeleteBucketOriginDomain] error: %s, bucket: %s", err.Error(), bucket)
@@ -1370,7 +1396,7 @@ func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
 		errRet = err
@@ -1403,7 +1429,7 @@ func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, r
 	ratelimit.Check("PutBucketReplication")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutBucketReplication(ctx, option)
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
 		errRet = err
@@ -1428,7 +1454,7 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	ratelimit.Check("DeleteBucketReplication")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteBucketReplication(ctx)
 
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 
 	if err != nil {
 		errRet = err
@@ -1465,7 +1491,7 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 	}()
 
 	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
-	resp, _ := json.Marshal(response)
+	resp, _ := json.Marshal(response.Response.Body)
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
 		return
@@ -1507,12 +1533,12 @@ func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, cert
 	ratelimit.Check("DeleteDomainCertificate")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
 
-	resp, _ := json.Marshal(response)
-
 	if err != nil {
 		errRet = err
 		return err
 	}
+
+	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, option [%s], response body [%s]\n",
 		logId, "DeleteDomainCertificate", option, resp)
@@ -1533,5 +1559,177 @@ func (me *CosService) parseCertId(configId string) (ret *CosBucketDomainCertItem
 	}
 
 	ret = &CosBucketDomainCertItem{bucket, domain}
+	return
+}
+
+func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket string) (*cos.BucketGetRefererResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetReferer(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*cos.BucketGetRefererResult), nil
+}
+
+func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket string) (*cos.BucketGetVersionResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetVersioning(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*cos.BucketGetVersionResult), nil
+}
+
+func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket string, opt *cos.BucketPutIntelligentTieringOptions) (errRet error) {
+	logId := getLogId(ctx)
+
+	req, _ := json.Marshal(opt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
+				logId, "put bucket", req, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("BucketPutIntelligentTiering")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutIntelligentTiering(ctx, opt)
+	if err != nil {
+		errRet = fmt.Errorf("cos bucket put intelligent tiering error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	resp, _ := json.Marshal(response.Response.Body)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
+		logId, "BucketPutIntelligentTiering", resp)
+
+	return nil
+}
+
+func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket string) (result *cos.BucketGetIntelligentTieringResult, errRet error) {
+	logId := getLogId(ctx)
+
+	ratelimit.Check("BucketGetIntelligentTiering")
+	intelligentTieringResult, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetIntelligentTiering(ctx)
+	resp, _ := json.Marshal(response.Response.Body)
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+		return
+	}
+
+	if err != nil {
+		return
+	}
+	result = intelligentTieringResult
+	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
+		logId, "GetIntelligentTiering", "", resp)
+	return
+}
+
+/*
+The ideal sequence COS wants.
+Priority 1: permission priority: Read first, then handle WRITE, FullControl, WRITE_ACP, last is the READ_ACP
+Priority 2: type priority: CanonicalUser first, then Group
+*/
+func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string) (orderlyAclBody string, errRet error) {
+	// logId := getLogId(ctx)
+
+	rawXmlDoc := etree.NewDocument()
+	orderXmlDoc := etree.NewDocument()
+
+	if err := rawXmlDoc.ReadFromString(rawAclBody); err != nil {
+		return "", fmt.Errorf("[CRITAL]read raw xml from string error: %v", err)
+	}
+
+	rawRoot := rawXmlDoc.SelectElement("AccessControlPolicy")
+	orderedRoot := orderXmlDoc.CreateElement("AccessControlPolicy")
+
+	orderedOwner := orderedRoot.CreateElement("Owner")
+	for _, ownerChild := range rawRoot.FindElements("//Owner/*") {
+		orderedOwner.AddChild(ownerChild)
+	}
+
+	orderedACL := orderedRoot.CreateElement("AccessControlList")
+
+	// by combination of permissionSeq and granteeTypeSeq
+	for _, perSeq := range COSACLPermissionSeq {
+		for _, typeSeq := range COSACLGranteeTypeSeq {
+			for _, grantEle := range rawRoot.FindElements(fmt.Sprintf("//Grant[Permission='%s']", perSeq)) {
+				granteeEle := grantEle.SelectElement("Grantee")
+				if granteeEle != nil {
+					if granteeEle.SelectAttrValue("type", "unknown") == typeSeq {
+						orderedACL.AddChild(grantEle)
+						break
+					}
+				}
+			}
+		}
+	}
+
+	buf := &bytes.Buffer{}
+	orderXmlDoc.Indent(2)
+	_, err := orderXmlDoc.WriteTo(buf)
+	if err != nil {
+		return "", fmt.Errorf("transACLBodyOrderly write xml to buffer failed, error: %v", err)
+	}
+	orderlyAclBody = buf.String()
+
+	// keep for debug the algo
+	// for _, grant := range orderedACL.FindElements("//Grant") {
+	// 	grantee := grant.SelectElement("Grantee")
+	// 	if grantee != nil {
+	// 		// fmt.Printf("===:[%s]====\n", grantee.Tag)
+	// 		id := grantee.SelectElement("ID")
+	// 		if id != nil {
+	// 			fmt.Printf("type:[%s]", id.Text())
+	// 		}
+
+	// 		uri := grantee.SelectElement("URI")
+	// 		if uri != nil {
+	// 			fmt.Printf(" type:[%s]", uri.Text())
+	// 		}
+
+	// 		permission := grant.SelectElement("Permission")
+	// 		if permission != nil {
+	// 			fmt.Printf(" permission:[%s]\n", permission.Text())
+	// 		}
+	// 	}
+	// }
 	return
 }

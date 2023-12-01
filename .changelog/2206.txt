@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_organization_org_financial_by_month
+```
+
+```release-note:new-data-source
+tencentcloud_organization_org_financial_by_product
+```
+
+```release-note:enhancement
+tencentcloud_organization_org_member: support api `UpdateOrganizationMember`
+```

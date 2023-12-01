@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_tse_gateway_certificates
+```
+
+```release-note:new-resource
+tencentcloud_tse_cngw_certificate
+```

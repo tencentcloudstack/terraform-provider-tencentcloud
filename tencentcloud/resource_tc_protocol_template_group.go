@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_protocol_template_group" "foo" {
   name                = "group-test"
-  protocols = ["ipl-axaf24151","ipl-axaf24152"]
+  template_ids = ["ipl-axaf24151","ipl-axaf24152"]
 }
 ```
 
@@ -24,8 +24,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudProtocolTemplateGroup() *schema.Resource {

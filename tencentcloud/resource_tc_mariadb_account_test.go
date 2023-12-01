@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudMariadbAccount_basic -v
@@ -34,6 +34,16 @@ func TestAccTencentCloudMariadbAccount_basic(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"password"},
+			},
+			{
+				Config: testAccMariadbAccountUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMariadbHourDbAccountExists("tencentcloud_mariadb_account.account"),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_account.account", "user_name", "account-test"),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_account.account", "host", "10.101.202.22"),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_account.account", "read_only", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mariadb_account.account", "description", "desc"),
+				),
 			},
 		},
 	})
@@ -111,6 +121,19 @@ resource "tencentcloud_mariadb_account" "account" {
 	user_name   = "account-test"
 	host        = "10.101.202.22"
 	password    = "Password123."
+	read_only   = 0
+	description = "desc"
+  }
+
+`
+
+const testAccMariadbAccountUpdate = testAccMariadbHourDbInstance + `
+
+resource "tencentcloud_mariadb_account" "account" {
+	instance_id = tencentcloud_mariadb_hour_db_instance.basic.id
+	user_name   = "account-test"
+	host        = "10.101.202.22"
+	password    = "Update123."
 	read_only   = 0
 	description = "desc"
   }

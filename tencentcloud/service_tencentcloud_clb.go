@@ -8,8 +8,8 @@ import (
 
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
@@ -228,6 +228,21 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 		return retryErr
 	}
 	return nil
+}
+
+func (me *ClbService) DescribeTaskStatusById(ctx context.Context, taskId string) (status int64, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeTaskStatusRequest()
+	request.TaskId = &taskId
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeTaskStatus(request)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	status = *response.Response.Status
+	return
 }
 
 func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[string]string) (rules []*clb.RuleOutput, errRet error) {
@@ -885,7 +900,8 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 
 	if healthSetFlag {
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
-			protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) ||
+			protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC) &&
+			applyType == HEALTH_APPLY_TYPE_LISTENER) ||
 			((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) &&
 				applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
@@ -1283,6 +1299,11 @@ func (me *ClbService) AssociateTargetGroups(ctx context.Context, listenerId, clb
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseClbClient().AssociateTargetGroups(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(e.GetMessage(), "Your task is working (AssociateTargetGroups)") {
+					return resource.RetryableError(e)
+				}
+			}
 			return retryError(err, InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -1327,7 +1348,8 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 				originLocationId = *rule.LocationId
 			}
 
-			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP || *rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
+				*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 				if originListenerId == ids[1] && originClbId == ids[2] {
 					return true, nil
 				}
@@ -1361,6 +1383,11 @@ func (me *ClbService) DisassociateTargetGroups(ctx context.Context, targetGroupI
 		ratelimit.Check(request.GetAction())
 		_, err := me.client.UseClbClient().DisassociateTargetGroups(request)
 		if err != nil {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(e.GetMessage(), "Your task is working (DisassociateTargetGroups)") {
+					return resource.RetryableError(e)
+				}
+			}
 			return retryError(err, InternalError)
 		}
 		return nil
@@ -1383,6 +1410,77 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesWeight(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *ClbService) ModifyTargetGroupInstancesPort(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) (errRet error) {
+	var instance = clb.TargetGroupInstance{
+		BindIP: &bindIp,
+		Port:   &port,
+		Weight: &weight,
+	}
+	request := clb.NewModifyTargetGroupInstancesPortRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesPort(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// not use
+func (me *ClbService) ModifyTargetPort(ctx context.Context, loadBalancerId, listenerId string, target clb.Target, newPort int64) (errRet error) {
+	request := clb.NewModifyTargetPortRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerId = &listenerId
+	request.Targets = []*clb.Target{&target}
+	request.NewPort = &newPort
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetPort(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// not use
+func (me *ClbService) ModifyTargetWeight(ctx context.Context, loadBalancerId, listenerId string, target clb.Target, weight int64) (errRet error) {
+	request := clb.NewModifyTargetWeightRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerId = &listenerId
+	request.Targets = []*clb.Target{&target}
+	request.Weight = &weight
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetWeight(request)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
@@ -1649,6 +1747,505 @@ func (me *ClbService) DeleteClbFunctionTargetsAttachmentById(ctx context.Context
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseClbClient().DeregisterFunctionTargets(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClbService) DescribeClbClusterResourcesByFilter(ctx context.Context, param map[string]interface{}) (clusterResources []*clb.ClusterResource, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeClusterResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeClusterResources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterResourceSet) < 1 {
+			break
+		}
+		clusterResources = append(clusterResources, response.Response.ClusterResourceSet...)
+		if len(response.Response.ClusterResourceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbCrossTargetsByFilter(ctx context.Context, param map[string]interface{}) (crossTargets []*clb.CrossTargets, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeCrossTargetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeCrossTargets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossTargetSet) < 1 {
+			break
+		}
+		crossTargets = append(crossTargets, response.Response.CrossTargetSet...)
+		if len(response.Response.CrossTargetSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbExclusiveClustersByFilter(ctx context.Context, param map[string]interface{}) (exclusiveClusters []*clb.Cluster, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeExclusiveClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeExclusiveClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterSet) < 1 {
+			break
+		}
+		exclusiveClusters = append(exclusiveClusters, response.Response.ClusterSet...)
+		if len(response.Response.ClusterSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbIdleInstancesByFilter(ctx context.Context, param map[string]interface{}) (idleLoadbalancers []*clb.IdleLoadBalancer, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeIdleLoadBalancersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LoadBalancerRegion" {
+			request.LoadBalancerRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeIdleLoadBalancers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.IdleLoadBalancers) < 1 {
+			break
+		}
+		idleLoadbalancers = append(idleLoadbalancers, response.Response.IdleLoadBalancers...)
+		if len(response.Response.IdleLoadBalancers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbListenersByTargets(ctx context.Context, param map[string]interface{}) (listenersByTargets []*clb.LBItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeLBListenersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Backends" {
+			request.Backends = v.([]*clb.LbRsItem)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeLBListeners(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	listenersByTargets = response.Response.LoadBalancers
+
+	return
+}
+
+func (me *ClbService) DescribeClbInstanceByCertId(ctx context.Context, param map[string]interface{}) (instances []*clb.CertIdRelatedWithLoadBalancers, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeLoadBalancerListByCertIdRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CertIds" {
+			request.CertIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeLoadBalancerListByCertId(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances = response.Response.CertSet
+
+	return
+}
+
+func (me *ClbService) DescribeClbInstanceTraffic(ctx context.Context, param map[string]interface{}) (instanceTraffic []*clb.LoadBalancerTraffic, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeLoadBalancerTrafficRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LoadBalancerRegion" {
+			request.LoadBalancerRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeLoadBalancerTraffic(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceTraffic = response.Response.LoadBalancerTraffic
+
+	return
+}
+
+func (me *ClbService) DescribeClbInstanceDetailByFilter(ctx context.Context, param map[string]interface{}) (instanceDetail []*clb.LoadBalancerDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeLoadBalancersDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Fields" {
+			request.Fields = v.([]*string)
+		}
+		if k == "TargetType" {
+			request.TargetType = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeLoadBalancersDetail(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LoadBalancerDetailSet) < 1 {
+			break
+		}
+		instanceDetail = append(instanceDetail, response.Response.LoadBalancerDetailSet...)
+		if len(response.Response.LoadBalancerDetailSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbResourcesByFilter(ctx context.Context, param map[string]interface{}) (resources []*clb.ZoneResource, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeResources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ZoneResourceSet) < 1 {
+			break
+		}
+		resources = append(resources, response.Response.ZoneResourceSet...)
+		if len(response.Response.ZoneResourceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbTargetGroupListByFilter(ctx context.Context, param map[string]interface{}) (targetGroupList []*clb.TargetGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeTargetGroupListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TargetGroupIds" {
+			request.TargetGroupIds = v.([]*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeTargetGroupList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.TargetGroupSet) < 1 {
+			break
+		}
+		targetGroupList = append(targetGroupList, response.Response.TargetGroupSet...)
+		if len(response.Response.TargetGroupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbTargetHealthByFilter(ctx context.Context, param map[string]interface{}) (targetHealth []*clb.LoadBalancerHealth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeTargetHealthRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LoadBalancerIds" {
+			request.LoadBalancerIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeTargetHealth(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	targetHealth = response.Response.LoadBalancers
+
+	return
+}
+
+func (me *ClbService) SetClbSecurityGroup(ctx context.Context, securityGroup string, lbId string, operation string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := clb.NewSetSecurityGroupForLoadbalancersRequest()
+	request.SecurityGroup = &securityGroup
+	request.LoadBalancerIds = []*string{&lbId}
+	request.OperationType = &operation
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().SetSecurityGroupForLoadbalancers(request)
 	if err != nil {
 		errRet = err
 		return

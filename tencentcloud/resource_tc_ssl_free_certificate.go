@@ -5,18 +5,20 @@ Provide a resource to create a Free Certificate.
 
 Example Usage
 
+Currently, `package_type` only support type 2. 2=TrustAsia TLS RSA CA.
+
 ```hcl
-resource "tencentcloud_ssl_free_certificate" "foo" {
-	dv_auth_method = "DNS_AUTO"
-	domain = "example.com"
-    package_type = "2"
-	contact_email = "foo@example.com"
-	contact_phone = "12345678901"
-	validity_period = 12
-	csr_encrypt_algo = "RSA"
-	csr_key_parameter = "2048"
-	csr_key_password = "xxxxxxxx"
-	alias = "my_free_cert"
+resource "tencentcloud_ssl_free_certificate" "example" {
+  dv_auth_method    = "DNS_AUTO"
+  domain            = "example.com"
+  package_type      = "2"
+  contact_email     = "test@example.com"
+  contact_phone     = "18352458901"
+  validity_period   = 12
+  csr_encrypt_algo  = "RSA"
+  csr_key_parameter = "2048"
+  csr_key_password  = "csr_pwd"
+  alias             = "example_free_cert"
 }
 ```
 
@@ -37,7 +39,7 @@ import (
 
 	ssl2 "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

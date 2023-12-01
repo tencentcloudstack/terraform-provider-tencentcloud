@@ -16,8 +16,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -57,6 +57,11 @@ func dataSourceTencentCloudTCRNamespaces() *schema.Resource {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Indicate that the namespace is public or not.",
+						},
+						"id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of TCR namespace.",
 						},
 					},
 				},
@@ -99,6 +104,7 @@ func dataSourceTencentCloudTCRNamespacesRead(d *schema.ResourceData, meta interf
 		mapping := map[string]interface{}{
 			"name":      namespace.Name,
 			"is_public": namespace.Public,
+			"id":        namespace.NamespaceId,
 		}
 
 		namespaceList = append(namespaceList, mapping)

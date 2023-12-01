@@ -1,22 +1,56 @@
 /*
-Provides a resource to create a ses template
+Provides a resource to create a ses template.
 
 Example Usage
 
+Create a ses text template
+
 ```hcl
-resource "tencentcloud_ses_template" "template" {
-  template_name = "sesTemplateName"
+resource "tencentcloud_ses_template" "example" {
+  template_name = "tf_example_ses_temp""
   template_content {
-    text = "This is the content of the test"
+    text = "example for the ses template"
   }
 }
 
 ```
+
+Create a ses html template
+
+```hcl
+resource "tencentcloud_ses_template" "example" {
+  template_name = "tf_example_ses_temp"
+  template_content {
+    html = <<-EOT
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mail title</title>
+</head>
+<body>
+<div class="container">
+  <h1>Welcome to our service! </h1>
+  <p>Dear user,</p>
+  <p>Thank you for using Tencent Cloud:</p>
+  <p><a href="https://cloud.tencent.com/document/product/1653">https://cloud.tencent.com/document/product/1653</a></p>
+  <p>If you did not request this email, please ignore it. </p>
+  <p><strong>from the iac team</strong></p>
+</div>
+</body>
+</html>
+    EOT
+  }
+}
+
+```
+
 Import
 
 ses template can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_ses_template.template template_id
+$ terraform import tencentcloud_ses_template.example template_id
 ```
 */
 package tencentcloud
@@ -28,8 +62,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

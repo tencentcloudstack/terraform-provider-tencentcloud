@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_cos_bucket_referer
+```
+
+```release-note:new-resource
+tencentcloud_cos_bucket_version
+```

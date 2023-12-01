@@ -5,6 +5,8 @@ Provide a resource to configure kubernetes cluster app addons.
 
 Example Usage
 
+Install cbs addon by passing values
+
 ```hcl
 
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
@@ -15,32 +17,81 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
     "rootdir=/var/lib/kubelet"
   ]
 }
+```
 
+Install tcr addon by passing values
+
+```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
-  cluster_id = "cls-xxxxxxxx"
-  name = "tcr"
-  # version = "1.0.0"
+  cluster_id = "cls-xxxxxxxx" #specify your tke cluster id
+  name       = "tcr"
+  version    = "1.0.0"
   values = [
     # imagePullSecretsCrs is an array which can configure image pull
-    "global.imagePullSecretsCrs[0].name=unique-sample-vpc",
-    "global.imagePullSecretsCrs[0].namespaces=tcr-assistant-system",
-    "global.imagePullSecretsCrs[0].serviceAccounts=*",
-    "global.imagePullSecretsCrs[0].type=docker",
-    "global.imagePullSecretsCrs[0].dockerUsername=100012345678",
-    "global.imagePullSecretsCrs[0].dockerPassword=a.b.tcr-token",
-    "global.imagePullSecretsCrs[0].dockerServer=xxxx.tencentcloudcr.com",
-    "global.imagePullSecretsCrs[1].name=sample-public",
-    "global.imagePullSecretsCrs[1].namespaces=*",
+    "global.imagePullSecretsCrs[0].name=${local.tcr_id}-vpc",                              #specify a unique name, invalid format as: `${tcrId}-vpc`
+    "global.imagePullSecretsCrs[0].namespaces=${local.ns_name}",                           #input the specified namespaces of the cluster, or input `*` for all.
+    "global.imagePullSecretsCrs[0].serviceAccounts=*",                                     #input the specified service account of the cluster, or input `*` for all.
+    "global.imagePullSecretsCrs[0].type=docker",                                           #only support docker now
+    "global.imagePullSecretsCrs[0].dockerUsername=${local.user_name}",                     #input the access username, or you can create it from `tencentcloud_tcr_token`
+    "global.imagePullSecretsCrs[0].dockerPassword=${local.token}",                         #input the access token, or you can create it from `tencentcloud_tcr_token`
+    "global.imagePullSecretsCrs[0].dockerServer=${local.tcr_name}-vpc.tencentcloudcr.com", #invalid format as: `${tcr_name}-vpc.tencentcloudcr.com`
+    "global.imagePullSecretsCrs[1].name=${local.tcr_id}-public",                           #specify a unique name, invalid format as: `${tcr_id}-public`
+    "global.imagePullSecretsCrs[1].namespaces=${local.ns_name}",
     "global.imagePullSecretsCrs[1].serviceAccounts=*",
     "global.imagePullSecretsCrs[1].type=docker",
-    "global.imagePullSecretsCrs[1].dockerUsername=100012345678",
-    "global.imagePullSecretsCrs[1].dockerPassword=a.b.tcr-token",
-    "global.imagePullSecretsCrs[1].dockerServer=sample",
-    # Specify global hosts
-	"global.hosts[0].domain=sample-vpc.tencentcloudcr.com",
-	"global.hosts[0].ip=10.16.0.49",
-	"global.hosts[0].disabled=false",
+    "global.imagePullSecretsCrs[1].dockerUsername=${local.user_name}",                 #refer to previous description
+    "global.imagePullSecretsCrs[1].dockerPassword=${local.token}",                     #refer to previous description
+    "global.imagePullSecretsCrs[1].dockerServer=${local.tcr_name}.tencentcloudcr.com", #invalid format as: `${tcr_name}.tencentcloudcr.com`
+    "global.cluster.region=gz",
+    "global.cluster.longregion=ap-guangzhou",
+    # Specify global hosts(optional), the numbers of hosts must be matched with the numbers of imagePullSecretsCrs
+    "global.hosts[0].domain=${local.tcr_name}-vpc.tencentcloudcr.com",                 #Corresponds to the dockerServer in the imagePullSecretsCrs above
+    "global.hosts[0].ip=${local.end_point}",                                           #input InternalEndpoint of tcr instance, you can get it from data source `tencentcloud_tcr_instances`
+    "global.hosts[0].disabled=false",                                                  #disabled this host config or not
+    "global.hosts[1].domain=${local.tcr_name}.tencentcloudcr.com",
+    "global.hosts[1].ip=${local.end_point}",
+    "global.hosts[1].disabled=false",
   ]
+}
+
+locals {
+  tcr_id   = tencentcloud_tcr_instance.mytcr.id
+  tcr_name = tencentcloud_tcr_instance.mytcr.name
+  ns_name   = tencentcloud_tcr_namespace.my_ns.name
+  user_name = tencentcloud_tcr_token.my_token.user_name
+  token     = tencentcloud_tcr_token.my_token.token
+  end_point = data.tencentcloud_tcr_instances.my_ins.instance_list.0.internal_end_point
+}
+
+resource "tencentcloud_tcr_token" "my_token" {
+  instance_id = local.tcr_id
+  description = "tcr token"
+}
+
+data "tencentcloud_tcr_instances" "my_ins" {
+  instance_id = local.tcr_id
+}
+
+resource "tencentcloud_tcr_instance" "mytcr" {
+  name          = "tf-test-tcr-addon"
+  instance_type = "basic"
+  delete_bucket = true
+
+  tags = {
+    test = "test"
+  }
+}
+
+resource "tencentcloud_tcr_namespace" "my_ns" {
+  instance_id    = local.tcr_id
+  name           = "tf_test_tcr_ns_addon"
+  is_public      = true
+  is_auto_scan   = true
+  is_prevent_vul = true
+  severity       = "medium"
+  cve_whitelist_items {
+    cve_id = "cve-xxxxx"
+  }
 }
 ```
 
@@ -79,12 +130,13 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"strings"
 
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -117,6 +169,21 @@ func resourceTencentCloudTkeAddonAttachment() *schema.Resource {
 				Description:   "Values the addon passthroughs. Conflict with `request_body`.",
 				ConflictsWith: []string{"request_body"},
 				Elem:          &schema.Schema{Type: schema.TypeString},
+			},
+			"raw_values": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				Computed:      true,
+				Description:   "Raw Values. Conflict with `request_body`. Required with `raw_values_type`.",
+				ConflictsWith: []string{"request_body"},
+				RequiredWith:  []string{"raw_values_type"},
+			},
+			"raw_values_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				Description:  "The type of raw Values. Required with `raw_values`.",
+				RequiredWith: []string{"raw_values"},
 			},
 			"request_body": {
 				Type:          schema.TypeString,
@@ -153,11 +220,13 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		clusterId = d.Get("cluster_id").(string)
-		addonName = d.Get("name").(string)
-		version   = d.Get("version").(string)
-		values    = d.Get("values").([]interface{})
-		reqBody   = d.Get("request_body").(string)
+		clusterId     = d.Get("cluster_id").(string)
+		addonName     = d.Get("name").(string)
+		version       = d.Get("version").(string)
+		values        = d.Get("values").([]interface{})
+		rawValues     *string
+		rawValuesType *string
+		reqBody       = d.Get("request_body").(string)
 	)
 
 	if version == "" {
@@ -176,9 +245,16 @@ func resourceTencentCloudTkeAddonAttachmentCreate(d *schema.ResourceData, meta i
 	}
 
 	if reqBody == "" {
+		if v, ok := d.GetOk("raw_values"); ok {
+			rawValues = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("raw_values_type"); ok {
+			rawValuesType = helper.String(v.(string))
+		}
+
 		var reqErr error
 		v := helper.InterfacesStringsPoint(values)
-		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v)
+		reqBody, reqErr = service.GetAddonReqBody(addonName, version, v, rawValues, rawValuesType)
 		if reqErr != nil {
 			return reqErr
 		}
@@ -235,7 +311,6 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 		err               error
 		response          string
 		addonResponseData = &AddonResponseData{}
-		status            = make(map[string]*string)
 	)
 
 	_, has, err = service.PollingAddonsPhase(ctx, clusterId, addonName, addonResponseData)
@@ -255,6 +330,7 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	_ = d.Set("response_body", response)
 
 	spec := addonResponseData.Spec
+	statuses := addonResponseData.Status
 
 	if spec != nil {
 		_ = d.Set("cluster_id", clusterId)
@@ -266,10 +342,22 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 			filteredValues := getFilteredValues(d, spec.Values.Values)
 			_ = d.Set("values", filteredValues)
 		}
+
+		if spec.Values != nil && spec.Values.RawValues != nil {
+			rawValues := spec.Values.RawValues
+			rawValuesType := spec.Values.RawValuesType
+
+			base64DecodeValues, _ := base64.StdEncoding.DecodeString(*rawValues)
+			jsonValues := string(base64DecodeValues)
+
+			_ = d.Set("raw_values", jsonValues)
+			_ = d.Set("raw_values_type", rawValuesType)
+		}
 	}
 
-	if status != nil {
-		err := d.Set("status", status)
+	if statuses != nil || len(statuses) == 0 {
+		strMap := helper.CovertInterfaceMapToStrPtr(statuses)
+		err := d.Set("status", strMap)
 		if err != nil {
 			return err
 		}
@@ -287,18 +375,26 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		id        = d.Id()
-		split     = strings.Split(id, FILED_SP)
-		clusterId = split[0]
-		addonName = split[1]
-		version   = d.Get("version").(string)
-		values    = d.Get("values").([]interface{})
-		reqBody   = d.Get("request_body").(string)
-		err       error
+		id            = d.Id()
+		split         = strings.Split(id, FILED_SP)
+		clusterId     = split[0]
+		addonName     = split[1]
+		version       = d.Get("version").(string)
+		values        = d.Get("values").([]interface{})
+		reqBody       = d.Get("request_body").(string)
+		err           error
+		rawValues     *string
+		rawValuesType *string
 	)
 
-	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") {
-		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values))
+	if d.HasChange("request_body") && reqBody == "" || d.HasChange("version") || d.HasChange("values") || d.HasChange("raw_values") || d.HasChange("raw_values_type") {
+		if v, ok := d.GetOk("raw_values"); ok {
+			rawValues = helper.String(v.(string))
+		}
+		if v, ok := d.GetOk("raw_values_type"); ok {
+			rawValuesType = helper.String(v.(string))
+		}
+		reqBody, err = service.GetAddonReqBody(addonName, version, helper.InterfacesStringsPoint(values), rawValues, rawValuesType)
 	}
 
 	if err != nil {
@@ -310,10 +406,6 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 	if err != nil {
 		return err
 	}
-
-	d.SetPartial("version")
-	d.SetPartial("values")
-	d.SetPartial("request_body")
 
 	return resourceTencentCloudTkeAddonAttachmentRead(d, meta)
 }

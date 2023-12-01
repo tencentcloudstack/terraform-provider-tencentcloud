@@ -11,12 +11,12 @@ import (
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_instance
+	// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_instance
 	resource.AddTestSweepers("tencentcloud_tcr_instance", &resource.Sweeper{
 		Name: "tencentcloud_tcr_instance",
 		F: func(r string) error {
@@ -27,7 +27,6 @@ func init() {
 			service := TCRService{client}
 
 			instances, err := service.DescribeTCRInstances(ctx, "", nil)
-
 			if err != nil {
 				return err
 			}
@@ -84,7 +83,7 @@ func init() {
 }
 
 func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
@@ -92,6 +91,10 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRInstance_basic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "basic"),
@@ -110,27 +113,39 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 			},
 			{
 				Config: testAccTCRInstance_basic_update_remark,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "delete_bucket", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "open_public_operation", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.#", "2"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.1.cidr_block", "10.0.0.1/16"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.1.cidr_block", "10.0.0.1/16"),
 				),
 			},
 			{
 				Config: testAccTCRInstance_basic_update_security,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "open_public_operation", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.#", "1"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
 				),
 			},
 			{
 				Config: testAccTCRInstance_basic_update_instance_type,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "premium"),
@@ -140,8 +155,9 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
-	t.Parallel()
+// Neet to fix because tcr deteleInstance api has issue
+func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
@@ -149,11 +165,32 @@ func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRInstance_paypaid,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "name", "paypaidtcrinstance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "registry_charge_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_period", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_renew_flag", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance_paypaid", "expired_at"),
+				),
+			},
+			{
+				Config: testAccTCRInstance_update_paypaid_period,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "name", "paypaidtcrinstance"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "registry_charge_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_period", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_renew_flag", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance_paypaid", "expired_at"),
 				),
@@ -169,7 +206,7 @@ func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
 }
 
 func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
@@ -177,6 +214,10 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRInstance_replica,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "2"),
@@ -190,6 +231,10 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 			//},
 			{
 				Config: testAccTCRInstance_replica_update,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "3"),
@@ -200,7 +245,6 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 }
 
 func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
-
 	inputs := []interface{}{
 		map[string]interface{}{
 			"region_id": 1,
@@ -253,7 +297,7 @@ func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
 	assert.Equalf(t, expected1, result1, "%s case 1 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected1, result1)
 
 	var registries2 []*tcr.ReplicationRegistry
-	var registries2Incr = []*tcr.ReplicationRegistry{
+	registries2Incr := []*tcr.ReplicationRegistry{
 		{
 			ReplicationRegistryId: helper.String("d"),
 			RegistryId:            helper.String("x"),
@@ -365,6 +409,19 @@ resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
   }
 }`
 
+const testAccTCRInstance_update_paypaid_period = `
+resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
+  name        = "paypaidtcrinstance"
+  instance_type = "basic"
+  delete_bucket = true
+  registry_charge_type = 2
+  instance_charge_type_prepaid_period = 2
+  instance_charge_type_prepaid_renew_flag = 1
+  tags ={
+	test = "test"
+  }
+}`
+
 const testAccTCRInstance_replica = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "tfreplicas"
@@ -372,7 +429,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   delete_bucket = true
 
   replications {
-    region_id = 4 # ap-shanghai
+    region_id = 1 # ap-guangzhou
   }
   replications {
     region_id = 5 # ap-hongkong

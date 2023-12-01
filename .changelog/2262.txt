@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_dlc_store_location_config: Support api `ModifyAdvancedStoreLocation` and `DescribeAdvancedStoreLocation`, replace `CreateStoreLocation` and `DescribeStoreLocation`
+```

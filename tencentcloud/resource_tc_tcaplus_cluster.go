@@ -5,13 +5,29 @@ Use this resource to create TcaplusDB cluster.
 
 Example Usage
 
+Create a new tcaplus cluster instance
+
 ```hcl
-resource "tencentcloud_tcaplus_cluster" "test" {
+locals {
+  vpc_id    = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_tcaplus_cluster" "example" {
   idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_cluster_test"
-  vpc_id                   = "vpc-7k6gzox6"
-  subnet_id                = "subnet-akwgvfa3"
-  password                 = "1qaA2k1wgvfa3ZZZ"
+  cluster_name             = "tf_example_tcaplus_cluster"
+  vpc_id                   = local.vpc_id
+  subnet_id                = local.subnet_id
+  password                 = "your_pw_123111"
   old_password_expire_last = 3600
 }
 ```
@@ -21,7 +37,7 @@ Import
 tcaplus cluster can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcaplus_cluster.test 26655801
+$ terraform import tencentcloud_tcaplus_cluster.example cluster_id
 ```
 
 */
@@ -33,8 +49,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -259,7 +275,6 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cluster_name")
 	}
 
 	if d.HasChange("password") {
@@ -284,11 +299,8 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
-	if d.HasChange("old_password_expire_last") {
-		d.SetPartial("old_password_expire_last")
-	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudTcaplusClusterRead(d, meta)

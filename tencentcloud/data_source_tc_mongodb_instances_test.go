@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
@@ -14,7 +14,8 @@ func TestAccTencentCloudMongodbInstancesDataSource(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstancesDataSource,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstancesDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_instances.mongodb_instances", "instance_list.#"),
 				),

@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_css_play_domain_cert_attachment
+```
+
+```release-note:new-resource
+tencentcloud_css_play_auth_key_config
+```
+
+```release-note:new-resource
+tencentcloud_css_push_auth_key_config
+```

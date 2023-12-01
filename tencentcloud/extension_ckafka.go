@@ -5,6 +5,18 @@ const (
 	CKAFKA_ACL_PRINCIPAL_STR = "User:"
 )
 
+var CKAFKA_INSTANCE_TYPE = map[string]int64{
+	"general":       1,
+	"standard":      2,
+	"advanced":      3,
+	"capacity":      4,
+	"specialized-1": 5,
+	"specialized-2": 6,
+	"specialized-3": 7,
+	"specialized-4": 8,
+	"exclusive":     9,
+}
+
 var CKAFKA_ACL_RESOURCE_TYPE = map[string]int64{
 	"UNKNOWN":          0,
 	"ANY":              1,
@@ -71,3 +83,8 @@ var CKAFKA_PERMISSION_TYPE_TO_STRING = map[int64]string{
 //sdk ckafka not found error
 const CkafkaInstanceNotFound = "InvalidParameterValue.InstanceNotExist"
 const CkafkaFailedOperation = "FailedOperation"
+
+const (
+	CKAFKA_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
+	CKAFKA_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+)

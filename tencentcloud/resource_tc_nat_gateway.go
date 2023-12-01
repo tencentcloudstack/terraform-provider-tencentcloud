@@ -3,16 +3,70 @@ Provides a resource to create a NAT gateway.
 
 Example Usage
 
+Create a traditional NAT gateway.
+
 ```hcl
-resource "tencentcloud_nat_gateway" "foo" {
-  name             = "test_nat_gateway"
-  vpc_id           = "vpc-4xxr2cy7"
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_nat_gateway_vpc"
+}
+
+resource "tencentcloud_eip" "eip_example1" {
+  name = "tf_nat_gateway_eip1"
+}
+
+resource "tencentcloud_eip" "eip_example2" {
+  name = "tf_nat_gateway_eip2"
+}
+
+resource "tencentcloud_nat_gateway" "example" {
+  name             = "tf_example_nat_gateway"
+  vpc_id           = tencentcloud_vpc.vpc.id
   bandwidth        = 100
   max_concurrent   = 1000000
-  assigned_eip_set = ["1.1.1.1"]
-
+  assigned_eip_set = [
+    tencentcloud_eip.eip_example1.public_ip,
+    tencentcloud_eip.eip_example2.public_ip,
+  ]
   tags = {
-    test = "tf"
+    tf_tag_key = "tf_tag_value"
+  }
+}
+```
+
+Create a standard NAT gateway.
+
+```hcl
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_nat_gateway_vpc"
+}
+
+resource "tencentcloud_eip" "eip_example1" {
+  name = "tf_nat_gateway_eip1"
+}
+
+resource "tencentcloud_eip" "eip_example2" {
+  name = "tf_nat_gateway_eip2"
+}
+
+resource "tencentcloud_nat_gateway" "example" {
+  name             = "tf_example_nat_gateway"
+  vpc_id           = tencentcloud_vpc.vpc.id
+  assigned_eip_set = [
+    tencentcloud_eip.eip_example1.public_ip,
+    tencentcloud_eip.eip_example2.public_ip,
+  ]
+  nat_product_version = 2
+  tags                = {
+    tf_tag_key = "tf_tag_value"
+  }
+  lifecycle {
+    ignore_changes = [
+      // standard nat will set default values for bandwidth and max_concurrent
+      bandwidth,
+      max_concurrent,
+    ]
   }
 }
 ```
@@ -33,8 +87,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -86,6 +140,26 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				MaxItems:    10,
 				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10.",
 			},
+			"zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The availability zone, such as `ap-guangzhou-3`.",
+			},
+			"subnet_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Subnet of NAT.",
+			},
+			"nat_product_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "1: traditional NAT, 2: standard NAT, default value is 1.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -122,6 +196,18 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 			publicIp := eipSet[i].(string)
 			request.PublicIpAddresses = append(request.PublicIpAddresses, &publicIp)
 		}
+	}
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("subnet_id"); ok {
+		request.SubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("nat_product_version"); ok {
+		request.NatProductVersion = helper.IntUint64(v.(int))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -173,7 +259,7 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeNatGateways(statRequest)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), e.Error())
+				logId, statRequest.GetAction(), statRequest.ToJsonString(), e.Error())
 			return retryError(e)
 		} else {
 			//if not, quit
@@ -233,8 +319,15 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("name", *nat.NatGatewayName)
 	_ = d.Set("max_concurrent", *nat.MaxConcurrentConnection)
 	_ = d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
-	_ = d.Set("create_time", *nat.CreatedTime)
+	_ = d.Set("created_time", *nat.CreatedTime)
 	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
+	_ = d.Set("zone", *nat.Zone)
+	if nat.SubnetId != nil {
+		_ = d.Set("subnet_id", *nat.SubnetId)
+	}
+	if nat.NatProductVersion != nil {
+		_ = d.Set("nat_product_version", *nat.NatProductVersion)
+	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -253,6 +346,14 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	immutableArgs := []string{"zone"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	d.Partial(true)
 	natGatewayId := d.Id()
@@ -284,12 +385,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 	}
-	if d.HasChange("name") {
-		d.SetPartial("name")
-	}
-	if d.HasChange("bandwidth") {
-		d.SetPartial("bandwidth")
-	}
 	//max concurrent
 	if d.HasChange("max_concurrent") {
 		concurrentReq := vpc.NewResetNatGatewayConnectionRequest()
@@ -310,7 +405,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify NAT gateway concurrent failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("max_concurrent")
 	}
 
 	//eip
@@ -355,10 +449,14 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 				}
 
 				if len(unassignedRequest.PublicIpAddresses) > 0 {
+					var response *vpc.DisassociateNatGatewayAddressResponseParams
 					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-						e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
+						result, e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 						if e != nil {
 							return retryError(e)
+						}
+						if result != nil && result.Response != nil {
+							response = result.Response
 						}
 						return nil
 					})
@@ -366,9 +464,16 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
+
+					if response != nil && response.RequestId != nil {
+						err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+						if err != nil {
+							return err
+						}
+					}
 				}
 			}
-			time.Sleep(3 * time.Minute)
+
 			//Assign new EIP
 			if len(newEipSet) > 0 {
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
@@ -392,12 +497,16 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					}
 				}
 				if len(assignedRequest.PublicIpAddresses) > 0 {
+					var response *vpc.AssociateNatGatewayAddressResponseParams
 					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-						_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+						result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
 						if e != nil {
 							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 								logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
 							return retryError(e)
+						}
+						if result != nil && result.Response != nil {
+							response = result.Response
 						}
 						return nil
 					})
@@ -405,18 +514,29 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
+
+					if response != nil && response.RequestId != nil {
+						err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+						if err != nil {
+							return err
+						}
+					}
 				}
 			}
-			time.Sleep(3 * time.Minute)
+
 			if backUpOldIp != "" {
 				//disassociate one old ip
+				var response *vpc.DisassociateNatGatewayAddressResponseParams
 				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
 				unassignedRequest.NatGatewayId = &natGatewayId
 				unassignedRequest.PublicIpAddresses = []*string{&backUpOldIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
+					result, e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 					if e != nil {
 						return retryError(e)
+					}
+					if result != nil && result.Response != nil {
+						response = result.Response
 					}
 					return nil
 				})
@@ -424,27 +544,42 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
 				}
+				if response != nil && response.RequestId != nil {
+					err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+					if err != nil {
+						return err
+					}
+				}
 			}
 			if backUpNewIp != "" {
 				//associate one new ip
+				var response *vpc.AssociateNatGatewayAddressResponseParams
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
 				assignedRequest.NatGatewayId = &natGatewayId
 				assignedRequest.PublicIpAddresses = []*string{&backUpNewIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
 					if e != nil {
 						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 							logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
 						return retryError(e)
 					}
+					if result != nil && result.Response != nil {
+						response = result.Response
+					}
 					return nil
 				})
 				if err != nil {
 					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
 				}
+				if response != nil && response.RequestId != nil {
+					err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+					if err != nil {
+						return err
+					}
+				}
 			}
-			d.SetPartial("assigned_eip_set")
 		}
 
 	}
@@ -461,12 +596,11 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudNatGatewayRead(d, meta)
 }
 
 func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface{}) error {

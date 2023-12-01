@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy" "application_proxy" {
-  accelerate_type      = 1
-  plat_type            = "domain"
-  proxy_name           = "applicationProxies-test-1"
-  proxy_type           = "instance"
-  security_type        = 1
-  session_persist_time = 2400
-  status               = "online"
-  tags                 = {}
-  zone_id              = "zone-2983wizgxqvm"
+    accelerate_type      = 0
+    plat_type            = "domain"
+    proxy_name           = "test"
+    proxy_type           = "instance"
+    security_type        = 1
+    session_persist_time = 0
+    status               = "online"
+    zone_id              = "zone-2o0l8g7zisgt"
 
-  ipv6 {
-    switch = "off"
-  }
+    ipv6 {
+        switch = "off"
+    }
 }
 
 ```
@@ -25,7 +24,7 @@ Import
 
 teo application_proxy can be imported using the zoneId#proxyId, e.g.
 ```
-$ terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
+terraform import tencentcloud_teo_application_proxy.application_proxy zone-2983wizgxqvm#proxy-6972528a-373a-11ed-afca-52540044a456
 ```
 */
 package tencentcloud
@@ -36,8 +35,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

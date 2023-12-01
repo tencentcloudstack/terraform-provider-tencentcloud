@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_attachment: Support `raw_values` and `raw_values_type`.
+```

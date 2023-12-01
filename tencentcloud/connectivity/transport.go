@@ -12,6 +12,8 @@ import (
 )
 
 const REQUEST_CLIENT = "TENCENTCLOUD_API_REQUEST_CLIENT"
+const ENV_TESTING_ROUTE_USER_ID = "TENCENTCLOUD_ENV_TESTING_USER_ID"
+const ENV_TESTING_ROUTE_HEADER_KEY = "x-qcloud-user-id"
 
 var ReqClient = "Terraform-latest"
 
@@ -42,7 +44,9 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	if envReqClient := os.Getenv(REQUEST_CLIENT); envReqClient != "" {
 		ReqClient = envReqClient
 	}
-
+	if routeUserID := os.Getenv(ENV_TESTING_ROUTE_USER_ID); routeUserID != "" {
+		request.Header.Set(ENV_TESTING_ROUTE_HEADER_KEY, routeUserID)
+	}
 	request.Header.Set("X-TC-RequestClient", ReqClient)
 	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)

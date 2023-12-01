@@ -64,6 +64,7 @@ The following arguments are supported:
 * `instance_region` - (Required, String, ForceNew) The region that the instance locates at.
 * `instance_type` - (Required, String, ForceNew) Type of attached instance network, and available values include `VPC`, `DIRECTCONNECT`, `BMVPC` and `VPNGW`. Note: `VPNGW` type is only for whitelist customer now.
 * `ccn_uin` - (Optional, String, ForceNew) Uin of the ccn attached. Default is ``, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.
+* `description` - (Optional, String) Remark of attachment.
 
 ## Attributes Reference
 
@@ -72,6 +73,7 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `attached_time` - Time of attaching.
 * `cidr_block` - A network address block of the instance that is attached.
+* `route_ids` - Route id list.
 * `state` - States of instance is attached. Valid values: `PENDING`, `ACTIVE`, `EXPIRED`, `REJECTED`, `DELETED`, `FAILED`, `ATTACHING`, `DETACHING` and `DETACHFAILED`. `FAILED` means asynchronous forced disassociation after 2 hours. `DETACHFAILED` means asynchronous forced disassociation after 2 hours.
 
 

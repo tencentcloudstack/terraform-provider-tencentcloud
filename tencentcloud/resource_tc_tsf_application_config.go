@@ -16,13 +16,6 @@ resource "tencentcloud_tsf_application_config" "application_config" {
 }
 ```
 
-Import
-
-tsf application_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_application_config.application_config dcfg-y4e3zngv
-```
 */
 package tencentcloud
 
@@ -31,8 +24,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -43,9 +36,9 @@ func resourceTencentCloudTsfApplicationConfig() *schema.Resource {
 		Read:   resourceTencentCloudTsfApplicationConfigRead,
 		Update: resourceTencentCloudTsfApplicationConfigUpdate,
 		Delete: resourceTencentCloudTsfApplicationConfigDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"config_name": {
 				Required:    true,
@@ -112,16 +105,13 @@ func resourceTencentCloudTsfApplicationConfigCreate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request    = tsf.NewCreateConfigRequest()
-		response   = tsf.NewCreateConfigResponse()
-		configName string
-		configId   string
+		request  = tsf.NewCreateConfigWithDetailRespRequest()
+		response = tsf.NewCreateConfigWithDetailRespResponse()
+		configId string
 	)
 	if v, ok := d.GetOk("config_name"); ok {
-		configName = v.(string)
 		request.ConfigName = helper.String(v.(string))
 	}
 
@@ -158,7 +148,7 @@ func resourceTencentCloudTsfApplicationConfigCreate(d *schema.ResourceData, meta
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfig(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfigWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -172,18 +162,8 @@ func resourceTencentCloudTsfApplicationConfigCreate(d *schema.ResourceData, meta
 		return err
 	}
 
-	if *response.Response.Result {
-		service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-		applicationConfig, err := service.DescribeTsfApplicationConfigById(ctx, "", configName)
-		if err != nil {
-			return err
-		}
-
-		configId = *applicationConfig.ConfigId
-		d.SetId(configId)
-	} else {
-		return fmt.Errorf("[DEBUG]%s api[%s] Creation failed, and the return result of interface creation is false", logId, request.GetAction())
-	}
+	configId = *response.Response.Result.ConfigId
+	d.SetId(configId)
 
 	return resourceTencentCloudTsfApplicationConfigRead(d, meta)
 }

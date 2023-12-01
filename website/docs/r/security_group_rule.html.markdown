@@ -11,11 +11,11 @@ description: |-
 
 Provides a resource to create security group rule.
 
-~> **NOTE:** Single security rule is hardly ordered, use tencentcloud_security_group_lite_rule instead.
+~> **NOTE:** This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.
 
 ## Example Usage
 
-Source is CIDR ip
+### Source is CIDR ip
 
 ```hcl
 resource "tencentcloud_security_group" "sglab_1" {
@@ -35,7 +35,7 @@ resource "tencentcloud_security_group_rule" "sglab_1" {
 }
 ```
 
-Source is a security group id
+### Source is a security group id
 
 ```hcl
 resource "tencentcloud_security_group" "sglab_2" {

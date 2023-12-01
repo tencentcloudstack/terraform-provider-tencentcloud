@@ -1,0 +1,51 @@
+```release-note:new-resource
+tencentcloud_mariadb_account_privileges
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_backup_time
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_cancel_dcn_job
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_flush_binlog
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_restart_instance
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_renew_instance
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_start_backup_full_migration
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_start_backup_incremental_migration
+```
+
+```release-note:enhancement
+resource/tencentcloud_mariadb_account: support to update `password`
+```
+
+```release-note:enhancement
+resource/tencentcloud_mariadb_hour_db_instance: support to update `project_id`, `vip`
+```
+
+```release-note:enhancement
+resource/tencentcloud_mariadb_instance: support to update `project_id`, `vip`
+```
+
+```release-note:enhancement
+resource/tencentcloud_mariadb_dedicatedcluster_db_instance: support to update `project_id`, `vip`
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_instance_config
+```

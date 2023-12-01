@@ -28,8 +28,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -667,6 +667,12 @@ func resourceTencentCloudPtsJob() *schema.Resource {
 				Description: "Cause of interruption.",
 			},
 
+			"job_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Job Id.",
+			},
+
 			"created_at": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -785,6 +791,8 @@ func resourceTencentCloudPtsJobRead(d *schema.ResourceData, meta interface{}) er
 		d.SetId("")
 		return fmt.Errorf("resource `job` %s does not exist", jobId)
 	}
+
+	_ = d.Set("job_id", jobId)
 
 	if job.ScenarioId != nil {
 		_ = d.Set("scenario_id", job.ScenarioId)

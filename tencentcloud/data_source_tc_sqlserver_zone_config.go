@@ -4,8 +4,7 @@ Use this data source to query purchasable specification configuration for each a
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_zone_config" "mysqlserver" {
-}
+data "tencentcloud_sqlserver_zone_config" "example" {}
 ```
 */
 package tencentcloud
@@ -15,7 +14,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceTencentSqlserverZoneConfig() *schema.Resource {

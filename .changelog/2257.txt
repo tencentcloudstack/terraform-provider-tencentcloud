@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dlc_restart_data_engine_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_switch_data_engine_image_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_upgrade_data_engine_image_operation
+```

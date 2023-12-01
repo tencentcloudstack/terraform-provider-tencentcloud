@@ -6,14 +6,14 @@ import (
 	"log"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudTdmqRocketmqClusterResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_cluster.cluster"
+	terraformId := "tencentcloud_tdmq_rocketmq_cluster.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -24,8 +24,8 @@ func TestAccTencentCloudTdmqRocketmqClusterResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqClusterExists(terraformId),
 					resource.TestCheckResourceAttrSet(terraformId, "id"),
-					resource.TestCheckResourceAttr(terraformId, "cluster_name", "test_rocketmq"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test rocket mq"),
+					resource.TestCheckResourceAttr(terraformId, "cluster_name", "tf_example"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark."),
 				),
 			},
 			{
@@ -33,12 +33,12 @@ func TestAccTencentCloudTdmqRocketmqClusterResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqClusterExists(terraformId),
 					resource.TestCheckResourceAttrSet(terraformId, "id"),
-					resource.TestCheckResourceAttr(terraformId, "cluster_name", "test_rocketmq_update"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test rocket update"),
+					resource.TestCheckResourceAttr(terraformId, "cluster_name", "tf_example_update"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_rocketmq_cluster.cluster",
+				ResourceName:      "tencentcloud_tdmq_rocketmq_cluster.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -104,14 +104,14 @@ func testAccCheckTdmqRocketmqClusterExists(re string) resource.TestCheckFunc {
 }
 
 const testAccTdmqRocketmqCluster = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test rocket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 `
 const testAccTdmqRocketmqClusterUpdate = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq_update"
-	remark = "test rocket update"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example_update"
+  remark       = "remark."
 }
 `

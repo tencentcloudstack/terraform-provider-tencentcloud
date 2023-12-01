@@ -36,8 +36,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -253,8 +253,7 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	}
 	items := strings.Split(d.Id(), FILED_SP)
 	if len(items) < 2 {
-		d.SetId("")
-		return nil
+		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := items[0]
 	topicName := items[1]
@@ -286,10 +285,9 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("instance_id", instanceId)
 	_ = d.Set("note", topicinfo.Note)
 	_ = d.Set("ip_white_list", topicinfo.IpWhiteList)
-	_ = d.Set("ip_white_list_count", topicListInfo.IpWhiteListCount)
 	_ = d.Set("enable_white_list", *topicinfo.EnableWhiteList == 1)
 	_ = d.Set("replica_num", topicListInfo.ReplicaNum)
-	_ = d.Set("create_time", topicinfo.CreateTime)
+	_ = d.Set("create_time", helper.FormatUnixTime(uint64(*topicinfo.CreateTime)))
 	_ = d.Set("partition_num", topicinfo.PartitionNum)
 	_ = d.Set("topic_name", topicListInfo.TopicName)
 	_ = d.Set("forward_interval", topicListInfo.ForwardInterval)
@@ -314,9 +312,16 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	ckafkcService := CkafkaService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
+
+	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) < 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	instanceId := items[0]
+	topicName := items[1]
+
 	request := ckafka.NewModifyTopicAttributesRequest()
-	instanceId := d.Get("instance_id").(string)
-	topicName := d.Get("topic_name").(string)
+	replicaNum := d.Get("replica_num").(int)
 	whiteListSwitch := d.Get("enable_white_list").(bool)
 	cleanUpPolicy := d.Get("clean_up_policy").(string)
 	retention := d.Get("retention").(int)
@@ -332,6 +337,7 @@ func resourceTencentCloudCkafkaTopicUpdate(d *schema.ResourceData, meta interfac
 	}
 	request.InstanceId = &instanceId
 	request.TopicName = &topicName
+	request.ReplicaNum = helper.IntInt64(replicaNum)
 	request.EnableWhiteList = helper.BoolToInt64Ptr(whiteListSwitch)
 	request.MinInsyncReplicas = helper.IntInt64(d.Get("sync_replica_min_num").(int))
 	request.UncleanLeaderElectionEnable = helper.BoolToInt64Ptr(d.Get("unclean_leader_election_enable").(bool))
@@ -393,8 +399,12 @@ func resourceTencentCLoudCkafkaTopicDelete(d *schema.ResourceData, meta interfac
 	ckafkcService := CkafkaService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	instanceId := d.Get("instance_id").(string)
-	topicName := d.Get("topic_name").(string)
+	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) < 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	instanceId := items[0]
+	topicName := items[1]
 
 	err := ckafkcService.DeleteCkafkaTopic(ctx, instanceId, topicName)
 	if err != nil {

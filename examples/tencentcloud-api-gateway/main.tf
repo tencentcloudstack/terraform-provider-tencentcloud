@@ -102,6 +102,13 @@ resource "tencentcloud_api_gateway_strategy_attachment" "test"{
     bind_api_id      = tencentcloud_api_gateway_api.api.id
 }
 
+resource "tencentcloud_api_gateway_api_doc" "my_api_doc" {
+  api_doc_name = "create_doc_test"
+  service_id   = tencentcloud_api_gateway_service_release.service.service_id
+  environment  = "release"
+  api_ids      = [tencentcloud_api_gateway_api.api.id]
+}
+
 data "tencentcloud_api_gateway_api_keys" "name" {
   secret_name = tencentcloud_api_gateway_api_key.test.secret_name
 }

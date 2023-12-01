@@ -1,0 +1,9 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: support set `security_groups` state.
+```
+
+```release-note:enhancement
+resource/tencentcloud_mongodb_sharding_instance: support set `security_groups` state.
+```
+
+

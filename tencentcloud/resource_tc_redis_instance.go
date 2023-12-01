@@ -7,11 +7,26 @@ Provides a resource to create a Redis instance and set its attributes.
 
 Example Usage
 
+Create a base version of redis
+
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
 }
 
-resource "tencentcloud_redis_instance" "redis_instance_test_2" {
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_redis_instance" "foo" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
   type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
   password           = "test12345789"
@@ -20,39 +35,192 @@ resource "tencentcloud_redis_instance" "redis_instance_test_2" {
   redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
   name               = "terrform_test"
   port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
 }
 ```
 
 Using multi replica zone set
-```
-data "tencentcloud_availability_zones" "az" {
 
-}
-
+```hcl
 variable "redis_replicas_num" {
   default = 3
 }
 
+variable "redis_type_id" {
+  default = 7
+}
+
+data "tencentcloud_availability_zones_by_product" "az" {
+  product = "redis"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.az.zones[0].name
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_security_group" "foo" {
+  name = "tf-redis-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "DROP#0.0.0.0/0#80-90#TCP",
+  ]
+
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#10.0.0.0/8#ALL#ICMP",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
 resource "tencentcloud_redis_instance" "red1" {
-  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
+  availability_zone  = data.tencentcloud_availability_zones_by_product.az.zones[0].name
+  type_id            = var.redis_type_id
   charge_type        = "POSTPAID"
   mem_size           = 1024
   name               = "test-redis"
   port               = 6379
   project_id         = 0
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  password           = "a12121312334"
+  security_groups    = [tencentcloud_security_group.foo.id]
   redis_replicas_num = var.redis_replicas_num
   redis_shard_num    = 1
-  security_groups    = [
-    "sg-d765yoec",
-  ]
-  subnet_id          = "subnet-ie01x91v"
-  type_id            = 6
-  vpc_id             = "vpc-k4lrsafc"
-  password = "a12121312334"
-
   replica_zone_ids = [
     for i in range(var.redis_replicas_num)
-    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id ]
+    : data.tencentcloud_availability_zones_by_product.az.zones[i % length(data.tencentcloud_availability_zones_by_product.az.zones)].id
+  ]
+}
+```
+
+Buy a month of prepaid instances
+
+```hcl
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[1].zone
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_security_group" "foo" {
+  name = "tf-redis-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "DROP#0.0.0.0/0#80-90#TCP",
+  ]
+
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#10.0.0.0/8#ALL#ICMP",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
+resource "tencentcloud_redis_instance" "foo" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+  password           = "test12345789"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+  name               = "terrform_test"
+  port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  security_groups    = [tencentcloud_security_group.foo.id]
+  charge_type        = "PREPAID"
+  prepaid_period     = 1
+}
+```
+
+Create a multi-AZ instance
+
+```hcl
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 7
+  region = "ap-guangzhou"
+}
+
+variable "replica_zone_ids" {
+  default = [100004,100006]
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_redis_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  name              = "tf_redis_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_security_group" "foo" {
+  name = "tf-redis-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "foo" {
+  security_group_id = tencentcloud_security_group.foo.id
+
+  ingress = [
+    "ACCEPT#192.168.1.0/24#80#TCP",
+    "DROP#8.8.8.8#80,90#UDP",
+    "DROP#0.0.0.0/0#80-90#TCP",
+  ]
+
+  egress = [
+    "ACCEPT#192.168.0.0/16#ALL#TCP",
+    "ACCEPT#10.0.0.0/8#ALL#ICMP",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+}
+
+resource "tencentcloud_redis_instance" "foo" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[2].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[2].type_id
+  password           = "test12345789"
+  mem_size           = 8192
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[2].redis_shard_nums[0]
+  redis_replicas_num = 2
+  replica_zone_ids   = var.replica_zone_ids
+  name               = "terrform_test"
+  port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  security_groups    = [tencentcloud_security_group.foo.id]
 }
 ```
 
@@ -71,11 +239,11 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -116,23 +284,26 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIntegerMin(2),
-				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069).",
+				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.",
 			},
 			"redis_shard_num": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "The number of instance shard, default is 1. This is not required for standalone and master slave versions.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedIntValue([]int{1, 3, 5, 8, 12, 16, 24, 32, 40, 48, 64, 80, 96, 128}),
+				Description:  "The number of instance shards; this parameter does not need to be configured for standard version instances; for cluster version instances, the number of shards ranges from: [`1`, `3`, `5`, `8`, `12`, `16`, `24 `, `32`, `40`, `48`, `64`, `80`, `96`, `128`].",
 			},
 			"redis_replicas_num": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     1,
-				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.",
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 5}),
+				Description:  "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`; Redis memory version 4.0, 5.0, 6.2 standard architecture and cluster architecture support the number of copies in the range [1, 2, 3, 4, 5]; Redis 2.8 standard version and CKV standard version only support 1 copy.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
@@ -163,7 +334,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"no_auth": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
 			},
 			"replicas_read_only": {
@@ -173,32 +343,31 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Description: "Whether copy read-only is supported, Redis 2.8 Standard Edition and CKV Standard Edition do not support replica read-only, turn on replica read-only, the instance will automatically read and write separate, write requests are routed to the primary node, read requests are routed to the replica node, if you need to open replica read-only, the recommended number of replicas >=2.",
 			},
 			"mem_size": {
-				Type:        schema.TypeInt,
-				Required:    true,
-				Description: "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
+				Type:         schema.TypeInt,
+				Required:     true,
+				ValidateFunc: validateAllowedIntValue([]int{1024, 2048, 4096, 8192, 12288, 16384, 20480, 24576, 32768, 40960, 49152, 65536}),
+				Description:  "The memory volume of an available instance(in MB), please refer to `tencentcloud_redis_zone_config.list[zone].shard_memories`. When redis is standard type, it represents total memory size of the instance; when Redis is cluster type, it represents memory size of per sharding.",
 			},
 			"vpc_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
-				Description:  "ID of the vpc with which the instance is to be associated.",
+				Description:  "ID of the vpc with which the instance is to be associated. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
-				Description:  "Specifies which subnet the instance should belong to.",
+				Description:  "Specifies which subnet the instance should belong to. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.",
 			},
 			"security_groups": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
-					return hashcode.String(v.(string))
+					return helper.HashString(v.(string))
 				},
 				Description: "ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.",
 			},
@@ -211,15 +380,36 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     6379,
-				Description: "The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.",
+				Description: "The port used to access a redis instance. The default value is 6379. When the `operation_network` is `changeVPort` or `changeVip`, this parameter needs to be configured.",
 			},
 			"params_template_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Specify params template id. If not set, will use default template.",
 			},
+
+			"operation_network": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue(REDIS_MODIFY_NETWORK_CONFIG),
+				Description:  "Refers to the category of the pre-modified network, including: `changeVip`: refers to switching the private network, including its intranet IPv4 address and port; `changeVpc`: refers to switching the subnet to which the private network belongs; `changeBaseToVpc`: refers to switching the basic network to a private network; `changeVPort`: refers to only modifying the instance network port.",
+			},
+
+			"recycle": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(REDIS_RECYCLE_TIME),
+				Description:  "Original intranet IPv4 address retention time: unit: day, value range: `0`, `1`, `2`, `3`, `7`, `15`.",
+			},
+
+			"ip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "IP address of an instance. When the `operation_network` is `changeVip`, this parameter needs to be configured.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -228,11 +418,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			},
 
 			// Computed values
-			"ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "IP address of an instance.",
-			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -315,7 +500,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	redisName := d.Get("name").(string)
 	redisType := d.Get("type").(string)
 	typeId := int64(d.Get("type_id").(int))
-	var redisShardNum int = 1
+	redisShardNum := 1
 	if v, ok := d.GetOk("redis_shard_num"); ok {
 		redisShardNum = v.(int)
 	}
@@ -331,6 +516,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	chargeType := d.Get("charge_type").(string)
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	paramsTemplateId := d.Get("params_template_id").(string)
+	operation := d.Get("operation_network").(string)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var replicasReadonly bool
 	if v, ok := d.GetOk("replicas_read_only"); ok {
@@ -420,6 +606,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	if len(numErrors) > 0 {
 		return fmt.Errorf("redis type_id `%d` only supports %s", typeId, strings.Join(numErrors, ","))
+	}
+
+	if operation != "" {
+		return fmt.Errorf("This parameter `operation_network` is not required when redis is created")
 	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
@@ -791,16 +981,17 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("password") {
+	if d.HasChange("password") || d.HasChange("no_auth") {
 		var (
 			taskId   int64
 			password = d.Get("password").(string)
+			noAuth   = d.Get("no_auth").(bool)
 			err      error
 		)
 
 		// After redis spec modified, reset password may not successfully response immediately.
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			taskId, err = redisService.ResetPassword(ctx, id, password)
+			taskId, err = redisService.ResetPassword(ctx, id, password, noAuth)
 			if err != nil {
 				log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
 				return retryError(err, redis.FAILEDOPERATION_SYSTEMERROR)
@@ -869,6 +1060,106 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
+	}
+
+	if d.HasChanges("type_id") {
+		request := redis.NewUpgradeInstanceVersionRequest()
+		typeId := d.Get("type_id").(int)
+		request.InstanceId = &id
+		request.TargetInstanceType = helper.String(strconv.Itoa(typeId))
+		request.SwitchOption = helper.IntInt64(2)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().UpgradeInstanceVersion(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate redis upgradeVersionOperation failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*readRetryTimeout)
+		if err != nil {
+			log.Printf("[CRITAL]%s redis upgradeVersionOperation fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip") {
+		if _, ok := d.GetOk("operation_network"); !ok {
+			return fmt.Errorf("When modifying `vpc_id`, `subnet_id`, `port`, `recycle`, `ip`, the `operation_network` parameter is required")
+		}
+
+		request := redis.NewModifyNetworkConfigRequest()
+		request.InstanceId = &id
+
+		operation := d.Get("operation_network").(string)
+		request.Operation = &operation
+
+		switch operation {
+		case REDIS_MODIFY_NETWORK_CONFIG[0]:
+			if v, ok := d.GetOk("ip"); ok {
+				request.Vip = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+
+			if v, ok := d.GetOk("port"); ok {
+				request.VPort = helper.IntInt64(v.(int))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		case REDIS_MODIFY_NETWORK_CONFIG[1], REDIS_MODIFY_NETWORK_CONFIG[2]:
+			if v, ok := d.GetOk("vpc_id"); ok {
+				request.VpcId = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+
+			if v, ok := d.GetOk("subnet_id"); ok {
+				request.SubnetId = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		case REDIS_MODIFY_NETWORK_CONFIG[3]:
+			if v, ok := d.GetOk("port"); ok {
+				request.VPort = helper.IntInt64(v.(int))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().ModifyNetworkConfig(request)
+			if e != nil {
+				if _, ok := e.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(e)
+				} else {
+					return resource.NonRetryableError(e)
+				}
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate redis networkConfig failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*readRetryTimeout)
+		if err != nil {
+			log.Printf("[CRITAL]%s redis networkConfig fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+
+		_ = d.Set("operation_network", operation)
 	}
 
 	if d.HasChange("tags") {
@@ -1075,6 +1366,28 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 		if err != nil {
 			return err
 		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Non-Multi-AZ modification redis_replicas_num
+	if d.HasChange("redis_replicas_num") && len(oz) == 0 && len(nz) == 0 {
+		_, replica := d.GetChange("redis_replicas_num")
+		redisReplicasNum := replica.(int)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, redisReplicasNum, nil)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
 		err = service.CheckRedisUpdateOk(ctx, id)
 		if err != nil {
 			return err

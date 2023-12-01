@@ -1,0 +1,35 @@
+```release-note:new-data-source
+tencentcloud_sqlserver_query_xevent
+```
+
+```release-note:new-data-source
+tencentcloud_sqlserver_ins_attribute
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_start_xevent
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_instance_tde
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_database_tde
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_restore_instance: support create `encryption`
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_rollback_instance: support create `encryption`
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_service: support create `instance_id` field(Exclusive instance ID); deprecated the `exclusive_set_name` field.
+```
+
+```release-note:enhancement
+data-source/tencentcloud_api_gateway_service: deprecated the `exclusive_set_name` field.
+```

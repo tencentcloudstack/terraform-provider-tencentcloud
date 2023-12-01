@@ -54,10 +54,6 @@ resource "tencentcloud_ci_media_transcode_template" "media_transcode_template" {
 		audio_bitrate_adj_method = "0"
 		delete_metadata = "false"
 		is_hdr2_sdr = "false"
-		hls_encrypt {
-			is_hls_encrypt = "false"
-			uri_key = ""
-		}
   }
   audio_mix {
 		audio_source = "https://terraform-ci-1308919341.cos.ap-guangzhou.myqcloud.com/mp3%2Fnizhan-test.mp3"
@@ -91,8 +87,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -365,17 +361,20 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "hls encryption configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_hls_encrypt": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether to enable HLS encryption, support encryption when Container.Format is hls.",
 									},
 									"uri_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "HLS encrypted key, this parameter is only meaningful when IsHlsEncrypt is true.",
 									},
 								},
@@ -663,7 +662,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 				}
 				audioMix.EffectConfig = &effectConfig
 			}
-			request.AudioMix = append(request.AudioMix, audioMix)
+			request.AudioMixArray = append(request.AudioMixArray, audioMix)
 		}
 	}
 
@@ -912,9 +911,9 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 		_ = d.Set("trans_config", []interface{}{transConfigMap})
 	}
 
-	if mediaTranscodeTemplate.AudioMix != nil {
+	if mediaTranscodeTemplate.AudioMixArray != nil {
 		audioMixArrayList := []interface{}{}
-		for _, audioMix := range mediaTranscodeTemplate.AudioMix {
+		for _, audioMix := range mediaTranscodeTemplate.AudioMixArray {
 			audioMixArrayMap := map[string]interface{}{}
 
 			if audioMix.AudioSource != "" {
@@ -1178,7 +1177,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 					}
 					audioMix.EffectConfig = &effectConfig
 				}
-				request.AudioMix = append(request.AudioMix, audioMix)
+				request.AudioMixArray = append(request.AudioMixArray, audioMix)
 			}
 		}
 	}

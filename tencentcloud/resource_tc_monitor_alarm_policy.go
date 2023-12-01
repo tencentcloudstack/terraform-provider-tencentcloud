@@ -6,11 +6,41 @@ Example Usage
 cvm_device alarm policy
 
 ```hcl
-resource "tencentcloud_monitor_alarm_policy" "group" {
-  policy_name = "hello"
+resource "tencentcloud_monitor_alarm_notice" "foo" {
+  name                  = "tf-alarm_notice"
+  notice_type           = "ALL"
+  notice_language       = "zh-CN"
+
+  user_notices    {
+      receiver_type              = "USER"
+      start_time                 = 0
+      end_time                   = 1
+      notice_way                 = ["SMS","EMAIL"]
+      user_ids                   = [10001]
+      group_ids                  = []
+      phone_order                = [10001]
+      phone_circle_times         = 2
+      phone_circle_interval      = 50
+      phone_inner_interval       = 60
+      need_phone_arrive_notice   = 1
+      phone_call_type            = "CIRCLE"
+      weekday                    =[1,2,3,4,5,6,7]
+  }
+
+  url_notices {
+      url    = "https://www.mytest.com/validate"
+      end_time =  0
+      start_time = 1
+      weekday = [1,2,3,4,5,6,7]
+  }
+
+}
+
+resource "tencentcloud_monitor_alarm_policy" "foo" {
+  policy_name = "tf-policy"
   monitor_type = "MT_QCE"
   enable = 1
-  project_id = 1244035
+  project_id = 0
   namespace = "cvm_device"
   conditions {
     is_union_rule = 1
@@ -30,7 +60,7 @@ resource "tencentcloud_monitor_alarm_policy" "group" {
   event_conditions {
     metric_name = "guest_reboot"
   }
-  notice_ids = ["notice-l9ziyxw6"]
+  notice_ids = [tencentcloud_monitor_alarm_notice.foo.id]
 
   trigger_tasks {
     type = "AS"
@@ -231,8 +261,8 @@ import (
 
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -366,7 +396,7 @@ func resourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 				Default:     -1,
 				Description: "Project ID. For products with different projects, a value other than -1 must be passed in.",
 			},
-			//nolint:all
+			//nolint:misspell
 			"conditon_template_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -498,7 +528,7 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 		request.ProjectId = helper.IntInt64(projectId)
 	}
 
-	//nolint:all
+	//nolint:misspell
 	if v, ok := d.GetOk("conditon_template_id"); ok {
 		request.ConditionTemplateId = helper.IntInt64(v.(int))
 	}
@@ -743,7 +773,7 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		d.Set("project_id", policy.ProjectId),
 	)
 
-	//nolint:all
+	//nolint:misspell
 	if policy.ConditionTemplateId != nil && *policy.ConditionTemplateId != "" {
 		id, err := strconv.ParseInt(*policy.ConditionTemplateId, 10, 64)
 		if id != 0 && err == nil {

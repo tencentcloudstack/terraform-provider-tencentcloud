@@ -44,6 +44,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `functions` - An information list of functions. Each element contains the following attributes:
+  * `async_run_enable` - Whether asynchronous attribute is enabled.
   * `cls_logset_id` - CLS logset ID of the SCF function.
   * `cls_topic_id` - CLS topic ID of the SCF function.
   * `code_error` - Code error of the SCF function.
@@ -51,6 +52,7 @@ In addition to all arguments above, the following attributes are exported:
   * `code_size` - Code size of the SCF function.
   * `create_time` - Create time of the SCF function.
   * `description` - Description of the SCF function.
+  * `dns_cache` - Whether to enable Dns caching capability, only the EVENT function is supported. Default is false.
   * `eip_fixed` - Whether EIP is a fixed IP.
   * `eips` - EIP list of the SCF function.
   * `enable_eip_config` - Whether the EIP enabled.
@@ -59,7 +61,19 @@ In addition to all arguments above, the following attributes are exported:
   * `err_no` - Errno of the SCF function.
   * `handler` - Handler of the SCF function.
   * `host` - Host of the SCF function.
+  * `image_config` - Image of the SCF function, conflict with `cos_bucket_name`, `cos_object_name`, `cos_bucket_region`, `zip_file`.
+    * `args` - the parameters of command.
+    * `command` - The command of entrypoint.
+    * `container_image_accelerate` - Image accelerate switch.
+    * `entry_point` - The entrypoint of app.
+    * `image_port` - Image function port setting. Default is `9000`, -1 indicates no port mirroring function. Other value ranges 0 ~ 65535.
+    * `image_type` - The image type. personal or enterprise.
+    * `image_uri` - The uri of image.
+    * `registry_id` - The registry id of TCR. When image type is enterprise, it must be set.
   * `install_dependency` - Whether to automatically install dependencies.
+  * `intranet_config` - Intranet access configuration.
+    * `ip_address` - If fixed intranet IP is enabled, this field returns the IP list used.
+    * `ip_fixed` - Whether to enable fixed intranet IP, ENABLE is enabled, DISABLE is disabled.
   * `l5_enable` - Whether to enable L5.
   * `mem_size` - Memory size of the SCF function runtime, unit is M.
   * `modify_time` - Modify time of the SCF function.

@@ -1,0 +1,3 @@
+```release-note:deprecation
+tencentcloud_security_group_rule
+```

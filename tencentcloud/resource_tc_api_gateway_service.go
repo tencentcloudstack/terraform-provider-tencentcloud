@@ -1,18 +1,55 @@
 /*
 Use this resource to create API gateway service.
 
+~> **NOTE:** After setting `uniq_vpc_id`, it cannot be modified.
+
 Example Usage
 
+Shared Service
+
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name   = "niceservice"
-  protocol       = "http&https"
-  service_desc   = "your nice service"
-  net_type       = ["INNER", "OUTER"]
-  ip_version     = "IPv4"
-  release_limit  = 500
-  pre_limit      = 500
-  test_limit     = 500
+resource "tencentcloud_vpc" "vpc" {
+  name       = "example-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
+  protocol     = "http&https"
+  service_desc = "desc."
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+
+  tags = {
+    createdBy = "terraform"
+  }
+
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
+}
+```
+
+Exclusive Service
+
+```hcl
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
+  protocol     = "http&https"
+  service_desc = "desc."
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+  instance_id  = "instance-rc6fcv4e"
+
+  tags = {
+    createdBy = "terraform"
+  }
+
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
 }
 ```
 
@@ -30,8 +67,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -68,6 +105,7 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Deprecated:  "It has been deprecated from version 1.81.9.",
 				Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 			},
 			"net_type": {
@@ -88,6 +126,22 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Default:      "IPv4",
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_NET_IP_VERSIONS),
 				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Exclusive instance ID.",
+			},
+			"uniq_vpc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "VPC ID.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -219,12 +273,22 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		ipVersion         = d.Get("ip_version").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
+		instanceId        string
+		vpcId             string
 		err               error
 
 		releaseLimit int
 		preLimit     int
 		testLimit    int
 	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
+
+	if v, ok := d.GetOk("uniq_vpc_id"); ok {
+		vpcId = v.(string)
+	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		serviceId, err = apiGatewayService.CreateService(ctx,
@@ -235,7 +299,10 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			ipVersion,
 			"",
 			"",
-			netTypes)
+			instanceId,
+			vpcId,
+			netTypes,
+		)
 
 		if err != nil {
 			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -295,6 +362,15 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 	if testLimit != 0 {
 		_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(testLimit), []string{API_GATEWAY_SERVICE_ENV_TEST})
 		if err != nil {
+			return err
+		}
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
@@ -403,9 +479,10 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("service_name", info.Response.ServiceName)
 	_ = d.Set("protocol", info.Response.Protocol)
 	_ = d.Set("service_desc", info.Response.ServiceDesc)
-	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
 	_ = d.Set("ip_version", info.Response.IpVersion)
 	_ = d.Set("net_type", info.Response.NetTypes)
+	_ = d.Set("instance_id", info.Response.InstanceId)
+	_ = d.Set("uniq_vpc_id", info.Response.UniqVpcId)
 	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
 	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
 	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)
@@ -451,6 +528,15 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("test_limit", testLimit)
 	_ = d.Set("release_limit", releaseLimit)
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "apigw", "service", tcClient.Region, serviceId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -487,10 +573,6 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		return err
 	}
-	d.SetPartial("service_name")
-	d.SetPartial("protocol")
-	d.SetPartial("service_desc")
-	d.SetPartial("net_type")
 
 	if d.HasChange("pre_limit") {
 		if v, ok := d.GetOk("pre_limit"); ok {
@@ -502,7 +584,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("pre_limit")
+
 	}
 
 	if d.HasChange("release_limit") {
@@ -515,7 +597,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("release_limit")
+
 	}
 
 	if d.HasChange("test_limit") {
@@ -528,7 +610,18 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("test_limit")
+
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigw", "service", tcClient.Region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
@@ -545,6 +638,20 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 		serviceId         = d.Id()
 		err               error
 	)
+
+	// del tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		tmpList := make([]string, 0)
+		for k := range tags {
+			tmpList = append(tmpList, k)
+		}
+		if e := tagService.ModifyTags(ctx, resourceName, nil, tmpList); e != nil {
+			return e
+		}
+	}
 
 	for _, env := range API_GATEWAY_SERVICE_ENVS {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

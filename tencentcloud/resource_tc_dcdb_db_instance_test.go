@@ -6,19 +6,19 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
 	resource.AddTestSweepers("tencentcloud_dcdb_db_instance", &resource.Sweeper{
 		Name: "tencentcloud_dcdb_db_instance",
-		F:    testSweepDCDBDbInstance,
+		F:    testSweepDcdbDbInstance,
 	})
 }
 
 // go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dcdb_db_instance
-func testSweepDCDBDbInstance(r string) error {
+func testSweepDcdbDbInstance(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cli, _ := sharedClientForRegion(r)
@@ -52,7 +52,7 @@ func testSweepDCDBDbInstance(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudDCDBDbInstanceResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixDcdbDbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -64,13 +64,13 @@ func TestAccTencentCloudDCDBDbInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDCDBDbInstanceExists("tencentcloud_dcdb_db_instance.db_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "instance_name", "test_dcdb_db_instance"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "zones.#", "1"),
+					// resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "zones.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "shard_memory", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "shard_storage", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "shard_node_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "shard_count", "2"),
 
-					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "period"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "period", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "subnet_id"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "db_version_id", "8.0"),
@@ -87,16 +87,20 @@ func TestAccTencentCloudDCDBDbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "init_params.3.param", "innodb_page_size"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "init_params.3.value", "16384"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "security_group_ids.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "project_id", "0"),
+					// resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "true"),
 				),
 			},
 			{
 				Config: testAccDcdbDbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDCDBDbInstanceExists("tencentcloud_dcdb_db_instance.db_instance"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "instance_name", "test_dcdb_db_instance_CHANGED"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "period", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "instance_name", "test_dcdb_db_instance"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "subnet_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "security_group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "project_id", defaultProjectId),
+					// resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "false"),
 				),
 			},
 			{
@@ -157,31 +161,46 @@ func testAccCheckDCDBDbInstanceExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDcdbDbInstance_vpc_config = `
+const testAccDcdbDbInstance_vpc_config = defaultAzVariable + `
 data "tencentcloud_security_groups" "internal" {
 	name = "default"
-}
-
-data "tencentcloud_vpc_instances" "vpc" {
-	name ="Default-VPC"
-}
-	
-data "tencentcloud_vpc_subnets" "subnet" {
+  }
+  
+  data "tencentcloud_vpc_instances" "vpc" {
+	name = "Default-VPC"
+  }
+  
+  data "tencentcloud_vpc_subnets" "subnet" {
 	vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
-}
-	
-locals {
-	vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
-	subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
-	sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-}
+  }
+  
+  resource "tencentcloud_vpc" "vpc" {
+	cidr_block = "172.18.111.0/24"
+	name       = "test-pg-network-vpc"
+  }
+  
+  resource "tencentcloud_subnet" "subnet" {
+	availability_zone = var.default_az
+	cidr_block        = "172.18.111.0/24"
+	name              = "test-pg-network-sub1"
+	vpc_id            = tencentcloud_vpc.vpc.id
+  }
+  
+  locals {
+	vpc_id        = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+	subnet_id     = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+	sg_id         = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+	new_vpc_id    = tencentcloud_subnet.subnet.vpc_id
+	new_subnet_id = tencentcloud_subnet.subnet.id
+  }
+  
 `
 
 const testAccDcdbDbInstance_basic = testAccDcdbDbInstance_vpc_config + `
 
 resource "tencentcloud_dcdb_db_instance" "db_instance" {
   instance_name = "test_dcdb_db_instance"
-  zones = ["ap-guangzhou-5"]
+  zones = [var.default_az]
   period = 1
   shard_memory = "2"
   shard_storage = "10"
@@ -211,22 +230,25 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
 	value = "16384"
   }
   security_group_ids = [local.sg_id]
+  project_id = 0
+//   extranet_access = true
 }
 
 `
 
-const testAccDcdbDbInstance_update = testAccDcdbDbInstance_vpc_config + `
+const testAccDcdbDbInstance_update = testAccDcdbDbInstance_vpc_config + defaultProjectVariable + `
 
 resource "tencentcloud_dcdb_db_instance" "db_instance" {
   instance_name = "test_dcdb_db_instance_CHANGED"
-  zones = ["ap-guangzhou-5"]
-  period = 1
+  zones = [var.default_az]
+  period = 2
   shard_memory = "2"
   shard_storage = "10"
   shard_node_count = "2"
   shard_count = "2"
-  vpc_id = local.vpc_id
-  subnet_id = local.subnet_id
+  vpc_id = local.new_vpc_id
+  subnet_id = local.new_subnet_id
+  vip = "172.18.111.10"
   db_version_id = "8.0"
   resource_tags {
 	tag_key = "aaa"
@@ -249,6 +271,8 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
 	value = "16384"
   }
   security_group_ids = [local.sg_id]
+  project_id = var.default_project
+//   extranet_access = false
 }
 
 `

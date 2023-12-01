@@ -15,7 +15,7 @@ Use this resource to create postgresql readonly group.
 
 ```hcl
 resource "tencentcloud_postgresql_readonly_group" "group" {
-  master_db_instance_id       = "postgres-f44wlfdv"
+  master_db_instance_id       = "postgres-gzg9jb2n"
   name                        = "world"
   project_id                  = 0
   vpc_id                      = "vpc-86v957zb"
@@ -42,7 +42,7 @@ The following arguments are supported:
 * `replay_lag_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the delay between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
 * `replay_latency_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the sync log size difference between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
 * `subnet_id` - (Required, String) VPC subnet ID.
-* `vpc_id` - (Required, String, ForceNew) VPC ID.
+* `vpc_id` - (Required, String) VPC ID.
 * `security_groups_ids` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 
 ## Attributes Reference

@@ -148,8 +148,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -194,7 +194,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
-				Description:  "Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.",
+				Description:  "Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration, `hybrid`: hybrid acceleration, `dynamic`: dynamic acceleration.",
 			},
 			"project_id": {
 				Type:        schema.TypeInt,
@@ -2834,7 +2834,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	if ok := checkCdnInfoWritable(d, "ip_filter", dc.IpFilter); ok {
 		dMap := map[string]interface{}{
 			"switch":      dc.IpFilter.Switch,
-			"filer_type":  dc.IpFilter.FilterType,
+			"filter_type": dc.IpFilter.FilterType,
 			"filters":     dc.IpFilter.Filters,
 			"return_code": dc.IpFilter.ReturnCode,
 		}
@@ -3039,10 +3039,10 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			for i := range rules {
 				item := rules[i]
 				rule := map[string]interface{}{
-					"follow_origin":      item.FollowOrigin,
-					"max_agent_contents": item.MaxAgeContents,
-					"max_agent_type":     item.MaxAgeType,
-					"max_agent_time":     item.MaxAgeTime,
+					"follow_origin":    item.FollowOrigin,
+					"max_age_contents": item.MaxAgeContents,
+					"max_age_type":     item.MaxAgeType,
+					"max_age_time":     item.MaxAgeTime,
 				}
 				list = append(list, rule)
 			}
@@ -4068,7 +4068,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

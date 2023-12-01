@@ -3,15 +3,13 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudNeedFixTsfRepositoryResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{

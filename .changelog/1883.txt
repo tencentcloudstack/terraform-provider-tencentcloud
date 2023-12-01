@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_instance: change key_ids null value
+```

@@ -85,6 +85,16 @@ resource "tencentcloud_dayu_ddos_policy_v2" "ddos_v2" {
     is_not       = 0
     is_not2      = 0
   }
+  water_print_config {
+    offset      = 1
+    open_status = 1
+    listeners {
+      frontend_port     = 90
+      forward_protocol  = "TCP"
+      frontend_port_end = 90
+    }
+    verify = "checkall"
+  }
 }
 ```
 
@@ -104,6 +114,7 @@ The following arguments are supported:
 * `ddos_threshold` - (Optional, Int) DDoS cleaning threshold, value[0, 60, 80, 100, 150, 200, 250, 300, 400, 500, 700, 1000]; When the value is set to 0, it means that the default value is adopted.
 * `packet_filters` - (Optional, List) Feature filtering rules for DDoS protection.
 * `protocol_block_config` - (Optional, List) Protocol block configuration for DDoS protection.
+* `water_print_config` - (Optional, List) Water print config.
 
 The `acls` object supports the following:
 
@@ -146,6 +157,12 @@ The `ddos_speed_limit_config` object supports the following:
 * `packet_rate` - (Required, Int) Packet rate pps.
 * `protocol_list` - (Required, String) IP protocol numbers, take the value[ ALL (all protocols),TCP (tcp protocol),UDP (udp protocol),SMP (smp protocol),1; 2-100 (custom protocol number range, up to 8)].
 
+The `listeners` object supports the following:
+
+* `forward_protocol` - (Required, String) Forwarding protocol, value [TCP, UDP].
+* `frontend_port_end` - (Required, Int) Upper limit of forwarding listening port. Values: [1-65535].
+* `frontend_port` - (Required, Int) Lower limit of forwarding listening port. Values: [1-65535].
+
 The `packet_filters` object supports the following:
 
 * `action` - (Required, String) Action, take the value [drop,transmit,drop_black (discard and black out),drop_rst (Interception),drop_black_rst (intercept and block),forward].
@@ -176,6 +193,13 @@ The `protocol_block_config` object supports the following:
 * `drop_other` - (Required, Int) Other block, value [0 (block off), 1 (block on)].
 * `drop_tcp` - (Required, Int) TCP block, value [0 (block off), 1 (block on)].
 * `drop_udp` - (Required, Int) UDP block, value [0 (block off), 1 (block on)].
+
+The `water_print_config` object supports the following:
+
+* `listeners` - (Required, List) List of forwarding listeners to which the watermark belongs.
+* `offset` - (Required, Int) Watermark offset, value range: [0-100].
+* `open_status` - (Required, Int) Whether it is enabled, value [0 (manual open), 1 (immediate operation)].
+* `verify` - (Required, String) Watermark check mode, value [`checkall`(normal mode), `shortfpcheckall`(simplified mode)].
 
 ## Attributes Reference
 

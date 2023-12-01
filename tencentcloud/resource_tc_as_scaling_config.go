@@ -1,12 +1,19 @@
 /*
 Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
+~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
+
 Example Usage
 
 ```hcl
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2 (Final)"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "example-launch-configuration"
+  image_id           = data.tencentcloud_images.example.images.0.image_id
   instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
@@ -20,26 +27,37 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 10
   public_ip_assigned         = true
-  password                   = "test123#"
+  password                   = "Test@123#"
   enhanced_security_service  = false
   enhanced_monitor_service   = false
   user_data                  = "dGVzdA=="
 
+  host_name_settings {
+	host_name       = "host-name-test"
+	host_name_style = "UNIQUE"
+  }
+
   instance_tags = {
-    tag = "as"
+    tag = "example"
   }
 }
 ```
 
-Using SPOT charge type
+Using `SPOTPAID` charge type
+
 ```
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2 (Final)"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name   = "launch-configuration"
+  image_id             = data.tencentcloud_images.example.images.0.image_id
+  instance_types       = ["SA1.SMALL1"]
   instance_charge_type = "SPOTPAID"
-  spot_instance_type = "one-time"
-  spot_max_price = "1000"
+  spot_instance_type   = "one-time"
+  spot_max_price       = "1000"
 }
 ```
 
@@ -48,7 +66,7 @@ Import
 AutoScaling Configuration can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
+$ terraform import tencentcloud_as_scaling_config.example asc-n32ymck2
 ```
 */
 package tencentcloud
@@ -58,8 +76,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -142,7 +160,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 						"delete_with_instance": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Description: "Indicates whether the disk remove after instance terminated.",
+							Description: "Indicates whether the disk remove after instance terminated. Default is `false`.",
 						},
 					},
 				},
@@ -183,7 +201,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 				ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
-				Description:  "Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+				Description:  "Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
@@ -256,6 +274,26 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "CAM role name authorized to access.",
+			},
+			"host_name_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Related settings of the cloud server hostname (HostName).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"host_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The host name of the cloud server; dots (.) and dashes (-) cannot be used as the first and last characters of HostName, and cannot be used consecutively; Windows instances are not supported; other types (Linux, etc.) instances: the character length is [2, 40], it is allowed to support multiple dots, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (no uppercase and lowercase restrictions), numbers and dashes (-). Pure numbers are not allowed.",
+						},
+						"host_name_style": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The style of the host name of the cloud server, the value range includes `ORIGINAL` and `UNIQUE`, the default is `ORIGINAL`; `ORIGINAL`, the AS directly passes the HostName filled in the input parameter to the CVM, and the CVM may append a sequence to the HostName number, the HostName of the instance in the scaling group will conflict; `UNIQUE`, the HostName filled in as a parameter is equivalent to the host name prefix, AS and CVM will expand it, and the HostName of the instance in the scaling group can be guaranteed to be unique.",
+						},
+					},
+				},
 			},
 			"instance_name_settings": {
 				Type:        schema.TypeList,
@@ -459,6 +497,22 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.CamRoleName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("host_name_settings"); ok {
+		settings := make([]*as.HostNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.HostNameSettings{}
+			if hostName, ok := dMap["host_name"]; ok {
+				settingsInfo.HostName = helper.String(hostName.(string))
+			}
+			if hostNameStyle, ok := dMap["host_name_style"]; ok {
+				settingsInfo.HostNameStyle = helper.String(hostNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.HostNameSettings = settings[0]
+	}
+
 	if v, ok := d.GetOk("instance_name_settings"); ok {
 		settings := make([]*as.InstanceNameSettings, 0, 10)
 		for _, item := range v.([]interface{}) {
@@ -522,7 +576,7 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("internet_charge_type", *config.InternetAccessible.InternetChargeType)
 		_ = d.Set("internet_max_bandwidth_out", *config.InternetAccessible.InternetMaxBandwidthOut)
 		_ = d.Set("public_ip_assigned", *config.InternetAccessible.PublicIpAssigned)
-		_ = d.Set("login_settings.key_ids", helper.StringsInterfaces(config.LoginSettings.KeyIds))
+		_ = d.Set("key_ids", helper.StringsInterfaces(config.LoginSettings.KeyIds))
 		_ = d.Set("security_group_ids", helper.StringsInterfaces(config.SecurityGroupIds))
 		_ = d.Set("enhanced_security_service", *config.EnhancedService.SecurityService.Enabled)
 		_ = d.Set("enhanced_monitor_service", *config.EnhancedService.MonitorService.Enabled)
@@ -531,6 +585,23 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
 
 		_ = d.Set("cam_role_name", *config.CamRoleName)
+
+		if config.HostNameSettings != nil {
+			isEmptySettings := true
+			settings := map[string]interface{}{}
+			if config.HostNameSettings.HostName != nil {
+				isEmptySettings = false
+				settings["host_name"] = config.HostNameSettings.HostName
+			}
+			if config.HostNameSettings.HostNameStyle != nil {
+				isEmptySettings = false
+				settings["host_name_style"] = config.HostNameSettings.HostNameStyle
+			}
+			if !isEmptySettings {
+				_ = d.Set("host_name_settings", []interface{}{settings})
+			}
+		}
+
 		if config.InstanceNameSettings != nil {
 			settings := make([]map[string]interface{}, 0)
 			setting := map[string]interface{}{
@@ -639,23 +710,6 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
 	}
 
-	request.LoginSettings = &as.LoginSettings{}
-	if v, ok := d.GetOk("password"); ok {
-		request.LoginSettings.Password = helper.String(v.(string))
-	}
-	if v, ok := d.GetOk("key_ids"); ok {
-		keyIds := v.([]interface{})
-		request.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
-		for i := range keyIds {
-			keyId := keyIds[i].(string)
-			request.LoginSettings.KeyIds = append(request.LoginSettings.KeyIds, &keyId)
-		}
-	}
-	if v, ok := d.GetOk("keep_image_login"); ok {
-		keepImageLogin := v.(bool)
-		request.LoginSettings.KeepImageLogin = &keepImageLogin
-	}
-
 	if v, ok := d.GetOk("security_group_ids"); ok {
 		securityGroups := v.([]interface{})
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
@@ -738,6 +792,22 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 		request.CamRoleName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("host_name_settings"); ok {
+		settings := make([]*as.HostNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.HostNameSettings{}
+			if hostName, ok := dMap["host_name"]; ok {
+				settingsInfo.HostName = helper.String(hostName.(string))
+			}
+			if hostNameStyle, ok := dMap["host_name_style"]; ok {
+				settingsInfo.HostNameStyle = helper.String(hostNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.HostNameSettings = settings[0]
+	}
+
 	if v, ok := d.GetOk("instance_name_settings"); ok {
 		settings := make([]*as.InstanceNameSettings, 0, 10)
 		for _, item := range v.([]interface{}) {
@@ -762,6 +832,34 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 	} else {
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	loginSettingRequest := as.NewModifyLaunchConfigurationAttributesRequest()
+	loginSettingRequest.LaunchConfigurationId = &configurationId
+	loginSettingRequest.LoginSettings = &as.LoginSettings{}
+	if v, ok := d.GetOk("password"); ok {
+		loginSettingRequest.LoginSettings.Password = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("key_ids"); ok {
+		keyIds := v.([]interface{})
+		loginSettingRequest.LoginSettings.KeyIds = make([]*string, 0, len(keyIds))
+		for i := range keyIds {
+			keyId := keyIds[i].(string)
+			loginSettingRequest.LoginSettings.KeyIds = append(loginSettingRequest.LoginSettings.KeyIds, &keyId)
+		}
+	}
+	if v, ok := d.GetOk("keep_image_login"); ok {
+		keepImageLogin := v.(bool)
+		loginSettingRequest.LoginSettings.KeepImageLogin = &keepImageLogin
+	}
+	loginSettingResponse, err := meta.(*TencentCloudClient).apiV3Conn.UseAsClient().ModifyLaunchConfigurationAttributes(loginSettingRequest)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, loginSettingRequest.GetAction(), loginSettingRequest.ToJsonString(), err.Error())
+		return err
+	} else {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, loginSettingRequest.GetAction(), loginSettingRequest.ToJsonString(), loginSettingResponse.ToJsonString())
 	}
 
 	return nil

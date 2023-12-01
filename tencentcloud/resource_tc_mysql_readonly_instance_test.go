@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlReadonlyInstanceResource_basic -v
 func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -30,6 +31,11 @@ func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.test", "test-tf"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_mysql_readonly_instance.mysql_readonly",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			// add tag
 			{
@@ -61,6 +67,14 @@ func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "instance_name", "mysql-readonly-update"),
+				),
+			},
+			// update mem_size
+			{
+				Config: testAccMysqlReadonlyInstance_memSize(CommonPresetMysql),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckMysqlInstanceExists("tencentcloud_mysql_readonly_instance.mysql_readonly"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "mem_size", "1000"),
 				),
 			},
 			// // update intranet_port
@@ -179,4 +193,23 @@ resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
   }
 }
 	`, mysqlTestCase, instance_name, instranet_port)
+}
+
+func testAccMysqlReadonlyInstance_memSize(mysqlTestCase string) string {
+	return fmt.Sprintf(`
+%s
+resource "tencentcloud_mysql_readonly_instance" "mysql_readonly" {
+  master_instance_id = local.mysql_id
+  mem_size           = 1000
+  cpu                = 1
+  volume_size        = 200
+  instance_name      = "mysql-readonly-test"
+  intranet_port      = 3360
+  master_region = var.region
+  zone = var.availability_zone
+  tags = {
+    test = "test-tf"
+  }
+}
+	`, mysqlTestCase)
 }

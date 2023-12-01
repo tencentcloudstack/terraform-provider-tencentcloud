@@ -3,21 +3,24 @@ Use this resource to create tcr instance.
 
 Example Usage
 
+Create a basic tcr instance.
+
 ```hcl
-resource "tencentcloud_tcr_instance" "foo" {
-  name              = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name              = "tf-example-tcr"
   instance_type		= "basic"
 
   tags = {
-    test = "tf"
+    "createdBy" = "terraform"
   }
 }
 ```
 
-Using public network access whitelist
+Create instance with the public network access whitelist.
+
 ```hcl
-resource "tencentcloud_tcr_instance" "foo" {
-  name                  = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
   instance_type		    = "basic"
   open_public_operation = true
   security_policy {
@@ -29,12 +32,11 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
-Create with Replications
+Create instance with Replications.
 
 ```hcl
-
-resource "tencentcloud_tcr_instance" "foo" {
-  name                  = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
   instance_type		    = "premium"
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
@@ -73,7 +75,7 @@ Import
 tcr instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_instance.foo cls-cda1iex1
+$ terraform import tencentcloud_tcr_instance.foo instance_id
 ```
 */
 package tencentcloud
@@ -88,8 +90,8 @@ import (
 	"github.com/hashicorp/go-multierror"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -605,7 +607,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return err
 			}
 		}
-		d.SetPartial("security_policy")
 	}
 
 	if d.HasChange("replications") {
@@ -625,7 +626,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("instance_type") {
@@ -646,6 +646,61 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 		})
 		if err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("instance_charge_type_prepaid_period") {
+		var (
+			chargeType int
+			period     int
+			renewFlag  int
+		)
+
+		if v, ok := d.GetOk("registry_charge_type"); ok {
+			chargeType = v.(int)
+
+			if v, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
+				period = v.(int)
+			}
+			if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
+				renewFlag = v.(int)
+			}
+
+			if (chargeType - 1) == REGISTRY_CHARGE_TYPE_PREPAID {
+				request := tcr.NewRenewInstanceRequest()
+				request.RegistryId = &instanceId
+				request.RegistryChargePrepaid = &tcr.RegistryChargePrepaid{
+					Period:    helper.IntInt64(period),
+					RenewFlag: helper.IntInt64(renewFlag - 1),
+				}
+				request.Flag = helper.IntInt64(0)
+
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().RenewInstance(request)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s operate tcr renewInstanceOperation failed, reason:%+v", logId, err)
+					return err
+				}
+
+				conf := BuildStateChangeConf([]string{}, []string{"Running"}, 3*readRetryTimeout, time.Second, tcrService.TcrStateRefreshFunc(instanceId, []string{}))
+
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
+
+			} else {
+				return fmt.Errorf("Only the postpaid user allows changing the `instance_charge_type_prepaid_period`! The current charge type is: [%v].", chargeType)
+			}
+
+		} else {
+			return fmt.Errorf("`registry_charge_type` must be set when trying to change the `instance_charge_type_prepaid_period`!")
 		}
 	}
 

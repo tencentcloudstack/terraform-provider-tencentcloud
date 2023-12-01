@@ -42,7 +42,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 )
 
@@ -247,6 +247,17 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 	if response.StorageClass != nil {
 		_ = d.Set("storage_class", response.StorageClass)
 	}
+
+	_, aclResponse, aclErr := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket).Object.GetACL(ctx, key)
+	if aclErr != nil {
+		return fmt.Errorf("cos [GetACL] error: %s, bucket: %s, object: %s", aclErr.Error(), bucket, key)
+	}
+	if aclResponse.StatusCode == 404 {
+		log.Printf("[WARN] [GetACL] returns %d, %s", 404, err)
+		return nil
+	}
+
+	_ = d.Set("acl", aclResponse.Header.Get("x-cos-acl"))
 
 	var tags map[string]string
 	tags, err = cosService.GetObjectTags(ctx, bucket, key)

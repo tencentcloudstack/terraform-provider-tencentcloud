@@ -1,0 +1,3 @@
+```release-note:enhancement
+data-source/tencentcloud_ssm_secret_versions: return null when a resource is not found
+```

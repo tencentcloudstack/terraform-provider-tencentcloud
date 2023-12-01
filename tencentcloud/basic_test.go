@@ -62,9 +62,13 @@ const (
 	defaultVpcCidr     = "172.16.0.0/16"
 	defaultVpcCidrLess = "172.16.0.0/18"
 
-	defaultCvmAZone    = "ap-guangzhou-7"
-	defaultCvmVpcId    = "vpc-l0dw94uh"
-	defaultCvmSubnetId = "subnet-ccj2qg0m"
+	defaultCvmAZone           = "ap-guangzhou-7"
+	defaultCvmVpcId           = "vpc-l0dw94uh"
+	defaultCvmSubnetId        = "subnet-ccj2qg0m"
+	defaultCvmTestingAZone    = "ap-guangzhou-2"
+	defaultCvmTestingVpcId    = "vpc-701bm52d"
+	defaultCvmTestingSubnetId = "subnet-1q62lj3m"
+	defaultCvmTestingImgId    = "img-eb30mz89"
 
 	defaultAZone          = "ap-guangzhou-3"
 	defaultSubnetId       = "subnet-enm92y0m"
@@ -153,6 +157,14 @@ variable "cvm_id" {
 }
 `
 
+// cvm-reboot
+const defaultRebootCvmId = "ins-f9jr4bd2"
+const defaultRebootCvmVariable = `
+variable "cvm_id" {
+  default = "` + defaultRebootCvmId + `"
+}
+`
+
 // AS
 const defaultAsVariable = `
 variable "availability_zone" {
@@ -172,8 +184,8 @@ data "tencentcloud_instance_types" "default" {
 // ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"
-	defaultKafkaVpcId      = "vpc-68vi2d3h"
-	defaultKafkaSubnetId   = "subnet-ob6clqwk"
+	defaultKafkaVpcId      = "vpc-njbzmzyd"
+	defaultKafkaSubnetId   = "subnet-2txtpql8"
 )
 
 const defaultKafkaVariable = `
@@ -239,6 +251,22 @@ variable "availability_cvm_zone" {
   default = "` + defaultCvmAZone + `"
 }
 
+variable "availability_cvm_testing_zone" {
+  default = "` + defaultCvmTestingAZone + `"
+}
+
+variable "cvm_testing_vpc_id" {
+  default = "` + defaultCvmTestingVpcId + `"
+}
+
+variable "cvm_testing_subnet_id" {
+  default = "` + defaultCvmTestingSubnetId + `"
+}
+
+variable "cvm_testing_image_id" {
+  default = "` + defaultCvmTestingImgId + `"
+}
+
 variable "cvm_vpc_id" {
   default = "` + defaultCvmVpcId + `"
 }
@@ -293,10 +321,18 @@ data "tencentcloud_images" "default" {
   image_name_regex = "Final"
 }
 
+data "tencentcloud_images" "testing" {
+  image_type = ["PUBLIC_IMAGE"]
+}
+
 data "tencentcloud_instance_types" "default" {
   filter {
     name   = "zone"
     values = [var.availability_cvm_zone]
+  }
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
   }
   cpu_core_count = 2
   exclude_sold_out = true
@@ -305,6 +341,10 @@ data "tencentcloud_instance_types" "default" {
 const defaultAzVariable = `
 variable "default_az" {
   default = "ap-guangzhou-3"
+}
+
+variable "default_az7" {
+  default = "ap-guangzhou-7"
 }
 `
 
@@ -377,6 +417,8 @@ const defaultPubSQLServerName = "keep-publish-instance"
 const defaultSubSQLServerName = "keep-subscribe-instance"
 const defaultSQLServerDB = "keep_sqlserver_db"
 const defaultSQLServerPubSubDB = "keep_pubsub_db"
+const defaultSQLServerPubDB = "keep_pub_db"
+const defaultSQLServerSubDB = "keep_sub_db"
 const defaultSQLServerAccount = "keep_sqlserver_account"
 
 const CommonPresetSQLServer = `
@@ -428,6 +470,8 @@ locals {
   pub_sqlserver_id = data.tencentcloud_sqlserver_instances.pub_sqlserver.instance_list.0.id
   sub_sqlserver_id = data.tencentcloud_sqlserver_instances.sub_sqlserver.instance_list.0.id
   sqlserver_pubsub_db = "` + defaultSQLServerPubSubDB + `"
+  sqlserver_pub_db = "` + defaultSQLServerPubDB + `"
+  sqlserver_sub_db = "` + defaultSQLServerSubDB + `"
 }
 `
 
@@ -449,7 +493,26 @@ resource "tencentcloud_instance" "default" {
 // End of SQLServer
 
 // PostgreSQL
+const defaultPGOperationName = "keep-pg-operation"
+const OperationPresetPGSQL = `
+data "tencentcloud_postgresql_instances" "foo" {
+  name = "` + defaultPGOperationName + `"
+}
 
+data "tencentcloud_postgresql_readonly_groups" "ro_groups" {
+  filters {
+	name = "db-master-instance-id"
+	values = [data.tencentcloud_postgresql_instances.foo.instance_list.0.id]
+  }
+  order_by = "CreateTime"
+  order_by_type = "asc"
+}
+
+locals {
+  pgsql_id = data.tencentcloud_postgresql_instances.foo.instance_list.0.id
+  pgrogroup_id = data.tencentcloud_postgresql_readonly_groups.ro_groups.read_only_group_list.0.read_only_group_id
+}
+`
 const defaultPGSQLName = "keep-postgresql"
 const CommonPresetPGSQL = `
 data "tencentcloud_postgresql_instances" "foo" {
@@ -537,9 +600,11 @@ variable "cam_user_basic" {
 `
 
 // TCR Service
-const defaultTCRInstanceName = "keep-tcr-instance"
-const defaultTCRNamespace = "keep-tcr-namespace"
-const defaultTCRRepoName = "keep-tcr-repo"
+const defaultTCRInstanceName = "keep-tcr-instance-sh"
+const defaultTCRInstanceId = "tcr-aoz8mxoz"
+const defaultTCRNamespace = "keep-tcr-namespace-sh"
+const defaultTCRRepoName = "keep-tcr-repo-sh"
+const defaultTCRSSL = "zjUMifFK"
 
 const defaultTCRInstanceVar = `
 variable "tcr_name" {
@@ -725,10 +790,18 @@ locals {
 // End of TKE Service
 
 // MongoDB
-
+const (
+	defaultMongoDBVPCId    = "vpc-rwj54lfr"
+	defaultMongoDBSubnetId = "subnet-nyt57zps"
+)
+const defaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
   available_zone = "ap-guangzhou-6"
+}
+
+data "tencentcloud_security_group" "foo" {
+  name = "default"
 }
 
 variable "engine_versions" {
@@ -736,7 +809,17 @@ variable "engine_versions" {
     "3.6": "MONGO_36_WT",
     "4.0": "MONGO_40_WT",
     "4.2": "MONGO_42_WT"
+    "4.4": "MONGO_44_WT"
   }
+}
+variable "sg_id" {
+  default = "` + defaultMongoDBSecurityGroupId + `"
+}
+variable "vpc_id" {
+  default = "` + defaultMongoDBVPCId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultMongoDBSubnetId + `"
 }
 
 locals {
@@ -747,6 +830,7 @@ locals {
   memory = local.spec.0.memory / 1024
   volume = local.spec.0.min_storage / 1024
   engine_version = lookup(var.engine_versions, local.spec.0.engine_version)
+  security_group_id = data.tencentcloud_security_group.foo.id
 }
 
 locals {
@@ -761,22 +845,10 @@ locals {
 
 // End of MongoDB
 
-// TEO
-
-const (
-	defaultZoneName    = "tf-teo-t.xyz"
-	defaultZoneId      = "zone-2a1u0y616jz6"
-	defaultPolicyId    = "11581"
-	applicationProxyId = "proxy-f2c15f4f-5b34-11ed-aa27-525400b35dd9"
-)
-
-// End of TEO
-
 // TCM
 
 const (
 	defaultMeshClusterId = "cls-9ae9qo9k"
-	defaultMeshId        = "mesh-rofjmux7"
 	defaultMeshVpcId     = "vpc-pyyv5k3v"
 	defaultMeshSubnetId  = "subnet-06i8auk6"
 )
@@ -793,6 +865,34 @@ const (
 	defaultDcdbSGName        = "default"
 )
 
+// ref with `local.dcdb_id`
+const CommonPresetDcdb = `
+
+variable "availability_zone" {
+  default = "` + defaultAZone + `"
+}
+variable "region" {
+  default = "` + defaultRegion + `"
+}
+
+data "tencentcloud_dcdb_instances" "dcdb" {
+  search_name = "instancename"
+  search_key = "` + defaultDcdbInstanceName + `"
+}
+
+locals {
+  dcdb_id = data.tencentcloud_dcdb_instances.dcdb.list.0.instance_id
+}
+`
+
+// ref with `local.redis_id`
+const CommonPresetRedis = `
+locals {
+  redis_id = "crs-jf4ico4v"
+  redis_name = "Keep-terraform"
+}
+`
+
 // End of DCDB
 // SES
 const (
@@ -805,6 +905,9 @@ const (
 	defaultMariadbSubnetId        = "subnet-jdi5xn22"
 	defaultMariadbVpcId           = "vpc-k1t8ickr"
 	defaultMariadbSecurityGroupId = "sg-7kpsbxdb"
+
+	defaultMariadbInstanceSubnetId = "subnet-4w4twlf4"
+	defaultMariadbInstanceVpcId    = "vpc-9m66acml"
 )
 
 // End of MARIADB
@@ -820,12 +923,15 @@ const (
 
 // CSS
 const (
-	defaultCSSLiveType   = "PullLivePushLive"
-	defaultCSSDomainName = "177154.push.tlivecloud.com"
-	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
-	defaultCSSAppName    = "live"
-	defaultCSSOperator   = "tf_admin"
-	defaultCSSPrefix     = "tf_css_"
+	defaultCSSLiveType        = "PullLivePushLive"
+	defaultCSSDomainName      = "177154.push.tlivecloud.com"
+	defaultCSSStreamName      = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName         = "live"
+	defaultCSSOperator        = "tf_admin"
+	defaultCSSPrefix          = "tf_css_"
+	defaultCSSPlayDomainName  = "test122.jingxhu.top"
+	defaultCSSPushDomainName  = "177154.push.tlivecloud.com"
+	defaultCSSBindingCertName = "keep_ssl_css_domain_test"
 )
 
 // End of CSS
@@ -833,6 +939,7 @@ const (
 // TAT
 const (
 	defaultInstanceId = "ins-881b1c8w"
+	defaultCommandId  = "cmd-rxbs7f5z"
 )
 
 // End of TAT
@@ -852,7 +959,8 @@ const (
 
 // DBBRAIN
 const (
-	defaultDbBrainsagId = "sag-01z37l4g"
+	defaultDbBrainsagId      = "sag-01z37l4g"
+	defaultDbBrainInstanceId = "cdb-fitq5t9h"
 )
 
 // End of DBBRAIN
@@ -860,13 +968,14 @@ const (
 // RUM
 const (
 	defaultRumInstanceId = "rum-pasZKEI3RLgakj"
+	defaultRumProjectId  = "131407"
 )
 
 // End of RUM
 
 // DTS
 const (
-	defaultDTSJobId = "dts-iesbn9qg"
+	defaultDTSJobId = "dts-r5gpejpe"
 )
 
 // End of DTS
@@ -885,7 +994,8 @@ const (
 
 // CI
 const (
-	defaultCiBucket = "terraform-ci-1308919341"
+	defaultCiBucket  = "terraform-ci-1308919341"
+	defaultStyleName = "terraform_test"
 )
 
 // End of CI
@@ -914,8 +1024,20 @@ variable "cynosdb_cluster_security_group_id" {
 
 // TSF
 const (
-	defaultNamespaceId      = "namespace-ym9mkeza"
-	defaultTsfApplicationId = "application-v69bo6ev"
+	defaultNamespaceId         = "namespace-aemrg36v"
+	defaultTsfApplicationId    = "application-a24x29xv"
+	defaultTsfClustId          = "cluster-vwgj5e6y"
+	defaultTsfGroupId          = "group-yrjkln9v"
+	defaultTsfGateway          = "gw-ins-lvdypq5k"
+	defaultTsfDestNamespaceId  = "namespace-aemrg36v"
+	defaultTsfConfigId         = "dcfg-y54wzk3a"
+	defaultTsfApiId            = "api-j03q029a"
+	defaultTsfGWGroupId        = "group-vzd97zpy"
+	defaultTsfFileConfigId     = "dcfg-f-ab6l9x5y"
+	defaultTsfImageId          = "img-7r9vq8wd"
+	defaultTsfGWNamespaceId    = "namespace-vwgo38wy"
+	defaultTsfContainerGroupId = "group-y43x5jpa"
+	defaultTsfpodName          = "keep-terraform-7f4874bc5c-w75q4"
 )
 
 // End of TSF
@@ -939,3 +1061,124 @@ const (
 	defaultCrsSecurityGroups = "sg-edmur627"
 	defaultCrsGroupId        = "crs-rpl-orfiwmn5"
 )
+
+const DefaultCrsVar = `
+variable "vpc_id" {
+  default = "` + defaultCrsVpcId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultCrsSubnetId + `"
+}
+`
+
+// End of CRS
+
+const (
+	defaultLighthouseInstanceId   = "lhins-g4bwdjbf"
+	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
+	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
+	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
+	defaultLighthouseSnapshotId   = "lhsnap-o2mvsvk3"
+)
+
+const DefaultLighthoustVariables = `
+variable "lighthouse_id" {
+  default = "` + defaultLighthouseInstanceId + `"
+}
+
+variable "lighthouse_disk_id" {
+  default = "` + defaultLighthoustDiskId + `"
+}
+
+variable "lighthouse_backup_disk_id" {
+  default = "` + defaultLighthouseBackupDiskId + `"
+}
+
+variable "lighthouse_backup_id" {
+  default = "` + defaultLighthouseBackUpId + `"
+}
+
+variable "lighthouse_snapshot_id" {
+  default = "` + defaultLighthouseSnapshotId + `"
+}
+`
+
+// TSE
+const (
+	defaultEngineResourceSpec = "spec-qvj6k7t4q"
+	defaultTseVpcId           = "vpc-4owdpnwr"
+	defaultTseSubnetId        = "subnet-dwj7ipnc"
+	defaultTseGatewayId       = "gateway-ddbb709b"
+	defaultTseCertId          = "vYSQkJ3K"
+)
+
+const DefaultTseVar = `
+variable "gateway_id" {
+  default = "` + defaultTseGatewayId + `"
+}
+variable "cert_id" {
+  default = "` + defaultTseCertId + `"
+}
+`
+
+// End of TSE
+
+// ES
+const (
+	defaultEsInstanceId    = "es-5wn36he6"
+	defaultEsSecurityGroup = "sg-edmur627"
+	defaultEsLogstash      = "ls-kru90fkz"
+)
+
+const DefaultEsVariables = `
+variable "instance_id" {
+  default = "` + defaultEsInstanceId + `"
+}
+
+variable "security_group_id" {
+  default = "` + defaultEsSecurityGroup + `"
+}
+
+variable "logstash_id" {
+  default = "` + defaultEsLogstash + `"
+}
+`
+
+// End of TSE
+
+// Clickhouse
+const DefaultClickhouseInstanceId = "cdwch-pcap78rz"
+
+const DefaultClickhouseVariables = `
+variable "instance_id" {
+  default = "` + DefaultClickhouseInstanceId + `"
+}
+`
+
+// End of Clickhouse
+
+// CLB
+const clbTargetEniTestCase = instanceCommonTestCase + `
+resource "tencentcloud_eni" "clb_eni_target" {
+  name        = "ci-test-eni"
+  vpc_id      = var.cvm_vpc_id
+  subnet_id   = var.cvm_subnet_id
+  description = "clb eni backend"
+  ipv4_count  = 1
+}
+
+resource "tencentcloud_eni_attachment" "foo" {
+  eni_id      = tencentcloud_eni.clb_eni_target.id
+  instance_id = tencentcloud_instance.default.id
+}
+`
+
+//End of Clb
+
+// MPS
+const (
+	defaultMpsScheduleId   = 24685
+	defaultMpsScheduleName = "keep_mps_schedule_001"
+)
+
+//End of MPS

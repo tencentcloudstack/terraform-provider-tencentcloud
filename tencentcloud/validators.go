@@ -10,7 +10,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/beevik/etree"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
@@ -239,14 +241,88 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 // specification: https://cloud.tencent.com/document/product/436/13312
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	if len(value) > 60 || len(value) < 0 {
+	if len(value) > 60 || len(value) < 1 {
 		errors = append(errors, fmt.Errorf("the length of %s must be 1-60: %s", k, value))
 	}
 
-	pattern := `^[a-z0-9]+[a-z0-9-]+[a-z0-9]+-[0-9]{10}$`
+	pattern := `^[a-z0-9]([a-z0-9-]*[a-z0-9])?-[0-9]{10}$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
 		errors = append(errors, fmt.Errorf("%s is not valid, please refer to the official documents: %s", k, value))
 	}
+	return
+}
+
+func validateACLBody(v interface{}, k string) (ws []string, errors []error) {
+	missingUrl := "https://cloud.tencent.com/document/product/436/7737"
+	aclUrl := "https://cloud.tencent.com/document/product/436/30752#.E6.93.8D.E4.BD.9C-permission"
+
+	value := v.(string)
+	xmlDoc := etree.NewDocument()
+	if err := xmlDoc.ReadFromString(value); err != nil {
+		errors = append(errors, fmt.Errorf("[CRITAL]read acl_body xml from string error: %v\n", err))
+		return
+	}
+
+	rawRoot := xmlDoc.SelectElement("AccessControlPolicy")
+	if rawRoot == nil {
+		errors = append(errors, fmt.Errorf("[CRITAL]missing the AccessControlPolicy element, please refer to the official document: %v\n", missingUrl))
+		return
+	}
+
+	if len(rawRoot.FindElements("//Owner")) == 0 {
+		errors = append(errors, fmt.Errorf("[CRITAL]missing the Owner element, please refer to the official document: %v\n", missingUrl))
+	} else {
+		if len(rawRoot.FindElements("//Owner/ID")) == 0 {
+			errors = append(errors, fmt.Errorf("[CRITAL]missing the Owner/ID element, please refer to the official document: %v\n", missingUrl))
+		}
+	}
+
+	if len(rawRoot.FindElements("//Grant")) == 0 {
+		errors = append(errors, fmt.Errorf("[CRITAL]missing the Grant element, please refer to the official document: %v\n", missingUrl))
+	}
+
+	foundT := false
+	grantees := rawRoot.FindElements("//Grantee")
+	if len(grantees) == 0 {
+		errors = append(errors, fmt.Errorf("[CRITAL]missing the Grant/Grantee element, please refer to the official document: %v\n", missingUrl))
+	}
+
+	for _, grantee := range grantees {
+		var aType string
+		foundT = false
+		for _, validType := range COSACLGranteeTypeSeq {
+			aType = grantee.SelectAttrValue("type", "unknown")
+			if aType == validType {
+				foundT = true
+				break
+			}
+		}
+		if !foundT {
+			errors = append(errors, fmt.Errorf("[CRITAL]the Grantee type[%s] is not a valid type, please refer to the official document: %v\n", aType, aclUrl))
+		}
+	}
+
+	foundP := false
+	permissions := rawRoot.FindElements("//Permission")
+	if len(permissions) == 0 {
+		errors = append(errors, fmt.Errorf("[CRITAL]missing the Grant/Permission element, please refer to the official document: %v\n", missingUrl))
+	}
+
+	for _, permission := range permissions {
+		var aPermisson string
+		foundP = false
+		for _, validPermission := range COSACLPermissionSeq {
+			aPermisson = permission.Text()
+			if aPermisson == validPermission {
+				foundP = true
+				break
+			}
+		}
+		if !foundP {
+			errors = append(errors, fmt.Errorf("[CRITAL]the Grant Permission[%s] is not a valid type, please refer to the official document: %v\n", aPermisson, aclUrl))
+		}
+	}
+
 	return
 }
 
@@ -375,6 +451,19 @@ func validateYaml(v interface{}, k string) (ws []string, errors []error) {
 	if err := yaml.Unmarshal([]byte(value), make(map[interface{}]interface{})); err != nil {
 		errors = append(errors, fmt.Errorf(
 			"%s cannot be parsed as yaml Format, value: %s", k, value))
+	}
+	return
+}
+
+func validateTkeGpuDriverVersion(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(map[string]interface{})
+	if len(value) > 0 {
+		keySet := []string{"name", "version"}
+		for _, paraKey := range keySet {
+			if value[paraKey] == nil || strings.TrimSpace(value[paraKey].(string)) == "" {
+				errors = append(errors, fmt.Errorf("%s in %s cannot be empty", paraKey, k))
+			}
+		}
 	}
 	return
 }

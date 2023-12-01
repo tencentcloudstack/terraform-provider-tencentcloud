@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_cls_ckafka_consumer
+```
+
+```release-note:new-resource
+tencentcloud_cls_cos_recharge
+```
+
+```release-note:new-resource
+tencentcloud_cls_export
+```
+
+```release-note:new-data-source
+tencentcloud_cls_shipper_tasks
+```

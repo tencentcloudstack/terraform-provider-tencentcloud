@@ -1,7 +1,7 @@
 /*
 Provides a resource to create security group rule.
 
-~> **NOTE:** Single security rule is hardly ordered, use tencentcloud_security_group_lite_rule instead.
+~> **NOTE:** This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.
 
 Example Usage
 
@@ -61,17 +61,18 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudSecurityGroupRuleCreate,
-		Read:   resourceTencentCloudSecurityGroupRuleRead,
-		Delete: resourceTencentCloudSecurityGroupRuleDelete,
+		DeprecationMessage: "This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.",
+		Create:             resourceTencentCloudSecurityGroupRuleCreate,
+		Read:               resourceTencentCloudSecurityGroupRuleRead,
+		Delete:             resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
@@ -450,12 +451,34 @@ func resourceTencentCloudSecurityGroupRuleDelete(d *schema.ResourceData, m inter
 		log.Printf("[CRITAL]%s security group rule query failed: %s\n ", logId, err.Error())
 		return err
 	}
+	if policy == nil {
+		return fmt.Errorf("The security group policy(ruleId: %s) is nil.", ruleId)
+	}
+
+	index := *policy.PolicyIndex
+
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		e := service.DeleteSecurityGroupPolicyByPolicyIndex(ctx, *policy.PolicyIndex, sgId, policyType)
+		e := service.DeleteSecurityGroupPolicyByPolicyIndex(ctx, index, sgId, policyType)
 		if e != nil {
 			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "ResourceNotFound" {
 					return nil
+				}
+
+				if ee.GetCode() == "InvalidParameterValue.Range" {
+					sgId, policyType, policy, err = service.DescribeSecurityGroupPolicy(ctx, ruleId)
+					if err != nil {
+						log.Printf("[CRITAL]%s security group rule query failed: %s\n ", logId, err.Error())
+						return retryError(err)
+					}
+
+					if policy == nil {
+						log.Printf("Security Group policy(ruleId: %s) is nil in the delete process, exit... \n", ruleId)
+						return nil
+					}
+					//update index
+					index = *policy.PolicyIndex
+					return resource.RetryableError(fmt.Errorf("The policy index has been updated, retry..."))
 				}
 			}
 			return resource.RetryableError(fmt.Errorf("security group delete failed: %s", e.Error()))

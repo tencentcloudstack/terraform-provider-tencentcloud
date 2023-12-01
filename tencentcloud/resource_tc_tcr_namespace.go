@@ -3,11 +3,27 @@ Use this resource to create tcr namespace.
 
 Example Usage
 
+Create a tcr namespace instance
+
 ```hcl
-resource "tencentcloud_tcr_namespace" "foo" {
-  instance_id		= ""
-  name              = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name          = "tf-example-tcr"
+  instance_type = "premium"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_tcr_namespace" "example" {
+  instance_id		= tencentcloud_tcr_instance.example.id
+  name          	= "example"
   is_public		 	= true
+  is_auto_scan		= true
+  is_prevent_vul	= true
+  severity			= "medium"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxxx"
+  }
 }
 ```
 
@@ -16,7 +32,7 @@ Import
 tcr namespace can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_namespace.foo cls-cda1iex1#namespace
+$ terraform import tencentcloud_tcr_namespace.example tcr_instance_id#namespace_name
 ```
 */
 package tencentcloud
@@ -26,8 +42,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudTcrNamespace() *schema.Resource {
@@ -59,6 +75,40 @@ func resourceTencentCloudTcrNamespace() *schema.Resource {
 				Default:     false,
 				Description: "Indicate that the namespace is public or not. Default is `false`.",
 			},
+			"is_auto_scan": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Scanning level, `True` is automatic, `False` is manual. Default is `false`.",
+			},
+
+			"is_prevent_vul": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Blocking switch, `True` is open, `False` is closed. Default is `false`.",
+			},
+
+			"severity": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Block vulnerability level, currently only supports `low`, `medium`, `high`.",
+			},
+
+			"cve_whitelist_items": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Vulnerability Whitelist.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cve_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Vulnerability Whitelist ID.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -72,14 +122,18 @@ func resourceTencentCloudTcrNamespaceCreate(d *schema.ResourceData, meta interfa
 	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		name          = d.Get("name").(string)
-		instanceId    = d.Get("instance_id").(string)
-		isPublic      = d.Get("is_public").(bool)
-		outErr, inErr error
+		name           = d.Get("name").(string)
+		instanceId     = d.Get("instance_id").(string)
+		isPublic       = d.Get("is_public").(bool)
+		isAutoScan     = d.Get("is_auto_scan").(bool)
+		isPreventVUL   = d.Get("is_prevent_vul").(bool)
+		severity       = d.Get("severity").(string)
+		whitelistItems = d.Get("cve_whitelist_items").([]interface{})
+		outErr, inErr  error
 	)
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr = tcrService.CreateTCRNameSpace(ctx, instanceId, name, isPublic)
+		inErr = tcrService.CreateTCRNameSpace(ctx, instanceId, name, isPublic, isAutoScan, isPreventVUL, severity, whitelistItems)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -109,23 +163,28 @@ func resourceTencentCloudTcrNamespaceUpdate(d *schema.ResourceData, meta interfa
 	instanceId := items[0]
 	namespaceName := items[1]
 
-	if d.HasChange("is_public") {
-		isPublic := d.Get("is_public").(bool)
-		var outErr, inErr error
-		tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
-		outErr = tcrService.ModifyTCRNameSpace(ctx, instanceId, namespaceName, isPublic)
-		if outErr != nil {
-			outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				inErr = tcrService.ModifyTCRNameSpace(ctx, instanceId, namespaceName, isPublic)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-		}
-		if outErr != nil {
-			return outErr
-		}
+	var (
+		isPublic       = d.Get("is_public").(bool)
+		isAutoScan     = d.Get("is_auto_scan").(bool)
+		isPreventVUL   = d.Get("is_prevent_vul").(bool)
+		severity       = d.Get("severity").(string)
+		whitelistItems = d.Get("cve_whitelist_items").([]interface{})
+		outErr, inErr  error
+	)
+
+	tcrService := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	outErr = tcrService.ModifyTCRNameSpace(ctx, instanceId, namespaceName, isPublic, isAutoScan, isPreventVUL, severity, whitelistItems)
+	if outErr != nil {
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			inErr = tcrService.ModifyTCRNameSpace(ctx, instanceId, namespaceName, isPublic, isAutoScan, isPreventVUL, severity, whitelistItems)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+	}
+	if outErr != nil {
+		return outErr
 	}
 
 	return resourceTencentCloudTcrNamespaceRead(d, meta)
@@ -169,6 +228,22 @@ func resourceTencentCloudTcrNamespaceRead(d *schema.ResourceData, meta interface
 	_ = d.Set("name", namespace.Name)
 	_ = d.Set("is_public", namespace.Public)
 	_ = d.Set("instance_id", instanceId)
+	_ = d.Set("is_auto_scan", namespace.AutoScan)
+	_ = d.Set("is_prevent_vul", namespace.PreventVUL)
+	_ = d.Set("severity", namespace.Severity)
+
+	whiteList := []interface{}{}
+	if namespace.CVEWhitelistItems != nil {
+		for _, v := range namespace.CVEWhitelistItems {
+			cveMap := map[string]interface{}{}
+			if v.CVEID != nil {
+				cveMap["cve_id"] = v.CVEID
+			}
+
+			whiteList = append(whiteList, cveMap)
+		}
+	}
+	_ = d.Set("cve_whitelist_items", whiteList)
 
 	return nil
 }

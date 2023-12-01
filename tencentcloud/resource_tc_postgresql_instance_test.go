@@ -7,8 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testPostgresqlInstanceResourceName = "tencentcloud_postgresql_instance"
@@ -87,14 +88,21 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-guangzhou")
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
 				Config: testAccPostgresqlInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -119,6 +127,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "01:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "2"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.base_backup_retention_period", "7"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version", "v13.3_r1.1"),
 					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "test"),
 				),
 			},
@@ -129,6 +138,10 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
 			},
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
 				Config: testAccPostgresqlInstanceOpenPublic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -142,6 +155,10 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
 				Config: testAccPostgresqlInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -164,6 +181,33 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
 				),
 			},
+			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlInstanceUpgradeKernelVersion,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_instance_update"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "250"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "project_id", "0"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "root_password", "t1qaA2k1wgvfa3?ZZZ"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.min_backup_start_time", "01:10:11"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "02:10:11"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "3"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version", "v13.3_r1.4"),
+					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
+				),
+			},
 		},
 	})
 }
@@ -175,6 +219,10 @@ func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Config: testAccPostgresqlInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -204,14 +252,65 @@ func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Config: testAccPostgresqlInstancePostpaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_postpaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "period"),
+				),
+			},
+			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Config: testAccPostgresqlInstancePostpaid_to_Prepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_postpaid_updated_to_prepaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "period", "2"),
+				),
+			},
+			{
+				ResourceName:            testPostgresqlInstanceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan", "period"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
+	// t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-guangzhou")
+		},
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
 				Config: testAccPostgresqlMAZInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -229,6 +328,10 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 			},
 
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
 				Config: testAccPostgresqlMAZInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
@@ -257,6 +360,11 @@ func testAccCheckPostgresqlInstanceDestroy(s *terraform.State) error {
 			return nil
 		} else {
 			if err != nil {
+				err, ok := err.(*sdkErrors.TencentCloudSDKError)
+				if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+					// it is ok
+					return nil
+				}
 				return err
 			}
 			return fmt.Errorf("delete postgresql instance %s fail", rs.Primary.ID)
@@ -304,7 +412,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type 		= "POSTPAID_BY_HOUR"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   security_groups   = [local.sg_id]
   charset			= "LATIN1"
@@ -319,11 +427,70 @@ resource "tencentcloud_postgresql_instance" "test" {
 	backup_period = ["tuesday", "wednesday"]
   }
 
+  db_kernel_version = "v13.3_r1.1"
+
   tags = {
 	tf = "test"
   }
 }
 `
+const testAccPostgresqlInstancePostpaid = defaultVpcSubnets + `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "postgres"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_postpaid"
+  availability_zone = var.default_az
+  charge_type 		= "POSTPAID_BY_HOUR"
+  period            = 1
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 2
+  storage 			= 20
+}`
+
+const testAccPostgresqlInstancePostpaid_to_Prepaid = defaultVpcSubnets + `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "postgres"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_postpaid_updated_to_prepaid"
+  availability_zone = var.default_az
+  charge_type 		= "PREPAID"
+  period            = 2
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 2
+  storage 			= 20
+}`
 
 const testAccPostgresqlInstancePrepaid = defaultVpcSubnets + `
 data "tencentcloud_availability_zones_by_product" "zone" {
@@ -344,7 +511,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type 		= "PREPAID"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   security_groups   = [local.sg_id]
   charset			= "LATIN1"
@@ -360,7 +527,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type	    = "POSTPAID_BY_HOUR"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"
   project_id 		= 0
@@ -375,20 +542,42 @@ resource "tencentcloud_postgresql_instance" "test" {
 	backup_period 			     = ["monday", "thursday", "sunday"]
   }
 
+  db_kernel_version = "v13.3_r1.1"
+
   tags = {
 	tf = "teest"
   }
 }
 `
 
-const testAccPostgresqlInstanceUpdate string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+const testAccPGNewVpcSubnet = `
+resource "tencentcloud_vpc" "vpc" {
+	cidr_block = "172.18.111.0/24"
+	name       = "test-pg-network-vpc"
+  }
+  
+  resource "tencentcloud_subnet" "subnet" {
+	availability_zone = var.default_az
+	cidr_block        = "172.18.111.0/24"
+	name              = "test-pg-network-sub1"
+	vpc_id            = tencentcloud_vpc.vpc.id
+  }
+
+  locals {
+	new_vpc_id = tencentcloud_subnet.subnet.vpc_id
+	new_subnet_id = tencentcloud_subnet.subnet.id
+  }
+
+`
+
+const testAccPostgresqlInstanceUpdate string = testAccPGNewVpcSubnet + testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance_update"
   availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
   charge_type	    = "POSTPAID_BY_HOUR"
-  vpc_id  	  		= local.vpc_id
-  subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  vpc_id  	  		= local.new_vpc_id
+  subnet_id 		= local.new_subnet_id
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"
   project_id 		= 0
@@ -402,6 +591,38 @@ resource "tencentcloud_postgresql_instance" "test" {
 	base_backup_retention_period = 5
 	backup_period 			     = ["monday", "thursday", "sunday"]
   }
+
+  db_kernel_version = "v13.3_r1.1"
+
+  tags = {
+	tf = "teest"
+  }
+}
+`
+
+const testAccPostgresqlInstanceUpgradeKernelVersion string = testAccPGNewVpcSubnet + testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_instance_update"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type	    = "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.new_vpc_id
+  subnet_id 		= local.new_subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  charset 			= "LATIN1"
+  project_id 		= 0
+  public_access_switch = false
+  security_groups   = [local.sg_id]
+  memory 			= 4
+  storage 			= 250
+  backup_plan {
+	min_backup_start_time 		 = "01:10:11"
+	max_backup_start_time		 = "02:10:11"
+	base_backup_retention_period = 5
+	backup_period 			     = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4"
 
   tags = {
 	tf = "teest"
@@ -428,7 +649,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "10.4"
+  engine_version		= "13.3"
   root_password                 = "t1qaA2k1wgvfa3?ZZZ"
   charset = "LATIN1"
   memory = 4
@@ -462,7 +683,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "10.4"
+  engine_version		= "13.3"
   root_password                 = "t1qaA2k1wgvfa3?ZZZ"
   charset = "LATIN1"
   memory = 4

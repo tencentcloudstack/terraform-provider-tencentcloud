@@ -23,7 +23,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     instance_type      = var.default_instance_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    orderly_security_group_ids = ["sg-24vswocp"]
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
@@ -55,8 +55,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -196,7 +196,7 @@ func kubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 			ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
-			Description:  "Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+			Description:  "Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 		},
 		"internet_max_bandwidth_out": {
 			Type:        schema.TypeInt,
@@ -732,7 +732,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		for _, v := range labels {
 			labelsMap[*v.Name] = *v.Value
 		}
-		d.Set("labels", labelsMap)
+		_ = d.Set("labels", labelsMap)
 		return nil
 	})
 

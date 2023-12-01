@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_role_sso" "foo" {
-	name="test"
+	name="tf_cam_role_sso"
 	identity_url="https://login.microsoftonline.com/.../v2.0"
 	identity_key="..."
 	client_ids=["..."]
@@ -27,8 +27,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

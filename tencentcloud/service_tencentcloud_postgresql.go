@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -805,7 +805,7 @@ func (me *PostgresqlService) DescribeDBEncryptionKeys(ctx context.Context, reque
 	return
 }
 
-func (me *PostgresqlService) DescribePostgresqlReadOnlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -837,7 +837,7 @@ func (me *PostgresqlService) DescribePostgresqlReadOnlyGroups(ctx context.Contex
 	}
 }
 
-func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, groupId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, dbInstanceId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -850,7 +850,7 @@ func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Con
 		request.Filters,
 		&postgresql.Filter{
 			Name:   helper.String("db-master-instance-id"),
-			Values: []*string{&groupId},
+			Values: []*string{&dbInstanceId},
 		},
 	)
 
@@ -889,4 +889,935 @@ func (me *PostgresqlService) DeletePostgresqlReadOnlyGroupById(ctx context.Conte
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroup(request)
 	return err
+}
+
+func (me *PostgresqlService) DescribePostgresqlParameterTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ParameterTemplates []*postgresql.ParameterTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeParameterTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "order_by" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "order_by_type" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePostgresqlClient().DescribeParameterTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ParameterTemplateSet) < 1 {
+			break
+		}
+		ParameterTemplates = append(ParameterTemplates, response.Response.ParameterTemplateSet...)
+		if len(response.Response.ParameterTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context.Context, templateId string) (ParameterTemplate *postgresql.DescribeParameterTemplateAttributesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeParameterTemplateAttributesRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ParameterTemplate = response.Response
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteParameterTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlUpgradeKernelVersionRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		instance, _, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.DBInstanceStatus, nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupsByFilter(ctx context.Context, param map[string]interface{}) (ReadOnlyGroups []*postgresql.ReadOnlyGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeReadOnlyGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ReadOnlyGroupList) < 1 {
+		return
+	}
+	ReadOnlyGroups = response.Response.ReadOnlyGroupList
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.Context, dBInstanceId string) (BackupPlanConfig *postgresql.BackupPlan, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeBackupPlansRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Plans) < 1 {
+		return
+	}
+
+	BackupPlanConfig = response.Response.Plans[0]
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupDownloadRestrictionConfigById(ctx context.Context, restrictionType string) (BackupDownloadRestrictionConfig *postgresql.DescribeBackupDownloadRestrictionResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeBackupDownloadRestrictionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeBackupDownloadRestriction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	BackupDownloadRestrictionConfig = response.Response
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx context.Context, dBInstanceId string, readOnlyGroupId string) (SecurityGroupConfigs []*postgresql.SecurityGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+
+	if dBInstanceId != "" {
+		request.DBInstanceId = &dBInstanceId
+	}
+	if readOnlyGroupId != "" {
+		request.ReadOnlyGroupId = &readOnlyGroupId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SecurityGroupSet) < 1 {
+		return
+	}
+
+	SecurityGroupConfigs = response.Response.SecurityGroupSet
+	return
+}
+
+func (me *PostgresqlService) PostgresqlDbInstanceOperationStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		instance, _, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.DBInstanceStatus, nil
+	}
+}
+
+func (me *PostgresqlService) PostgresqlDBInstanceStateRefreshFunc(dbInstanceId string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlDBInstanceStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, has, err := me.DescribePostgresqlInstanceById(ctx, dbInstanceId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+		if object == nil || !has {
+			return &postgresql.DBInstance{}, "closed", nil
+		}
+
+		return object, helper.PString(object.DBInstanceStatus), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlDBInstanceNetInfosById(ctx context.Context, dBInstanceId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlDBInstanceNetInfosById called")()
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeDBInstanceAttributeRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances := response.Response.DBInstance
+	if instances != nil {
+		netInfos = instances.DBInstanceNetInfo
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlDBInstanceNetworkAccessById(ctx context.Context, dBInstanceId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteDBInstanceNetworkAccessRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteDBInstanceNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlDBInstanceNetworkAccessStateRefreshFunc(dBInstanceId, vpcId, subnetId, oldVip, newVip string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlDBInstanceNetworkAccessStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		netInfos, err := me.DescribePostgresqlDBInstanceNetInfosById(ctx, dBInstanceId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+
+		var object *postgresql.DBInstanceNetInfo
+		for _, info := range netInfos {
+			if *info.NetType == "private" {
+				if *info.VpcId == vpcId && *info.SubnetId == subnetId && (*info.Ip != oldVip || *info.Ip == newVip) {
+					object = info
+					break
+				}
+			}
+		}
+
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx context.Context, dbInstanceId, roGroupId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlReadonlyGroupNetInfoById called")()
+	logId := getLogId(ctx)
+
+	paramMap := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name:   helper.String("db-master-instance-id"),
+				Values: []*string{helper.String(dbInstanceId)},
+			},
+		},
+	}
+
+	result, err := me.DescribePostgresqlReadonlyGroupsByFilter(ctx, paramMap)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	roGroup := result[0]
+	if roGroupId != "" {
+		for _, group := range result {
+			if *group.ReadOnlyGroupId == roGroupId {
+				roGroup = group
+				break
+			}
+		}
+	}
+
+	if roGroup != nil {
+		netInfos = roGroup.DBInstanceNetInfo
+	}
+
+	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupNetworkAccessById dbInstanceId:[%s] roGroupId:[%s] success, result is roGroup:[%v], \n", logId, dbInstanceId, roGroupId, roGroup)
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlReadonlyGroupNetworkAccessById(ctx context.Context, readOnlyGroupId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteReadOnlyGroupNetworkAccessRequest()
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroupNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc(dbInstanceId, roGroupId, vpcId, subnetId, oldVip, newVip string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		netInfos, err := me.DescribePostgresqlReadonlyGroupNetInfosById(ctx, dbInstanceId, roGroupId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+
+		var object *postgresql.DBInstanceNetInfo
+		for _, info := range netInfos {
+			if *info.NetType == "private" {
+				if *info.VpcId == vpcId && *info.SubnetId == subnetId && (*info.Ip != oldVip || *info.Ip == newVip) {
+					object = info
+					break
+				}
+			}
+		}
+
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupStateRefreshFunc(dbInstanceId, roGroupId string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlReadonlyGroupStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		result, err := me.DescribePostgresqlReadOnlyGroupById(ctx, dbInstanceId)
+
+		roGroup := result[0]
+		if roGroupId != "" {
+			for _, group := range result {
+				if *group.ReadOnlyGroupId == roGroupId {
+					roGroup = group
+					break
+				}
+			}
+		}
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+		if roGroup == nil {
+			return &postgresql.ReadOnlyGroup{}, "closed", nil
+		}
+
+		return roGroup, helper.PString(roGroup.Status), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupDownloadUrlsByFilter(ctx context.Context, param map[string]interface{}) (BackupDownloadUrl *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeBackupDownloadURLRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBInstanceId" {
+			request.DBInstanceId = v.(*string)
+		}
+		if k == "BackupType" {
+			request.BackupType = v.(*string)
+		}
+		if k == "BackupId" {
+			request.BackupId = v.(*string)
+		}
+		if k == "URLExpireTime" {
+			request.URLExpireTime = v.(*uint64)
+		}
+		if k == "BackupDownloadRestriction" {
+			request.BackupDownloadRestriction = v.(*postgresql.BackupDownloadRestriction)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeBackupDownloadURL(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.BackupDownloadURL == nil {
+		return
+	}
+	BackupDownloadUrl = response.Response.BackupDownloadURL
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupsByFilter(ctx context.Context, param map[string]interface{}) (BaseBackups []*postgresql.BaseBackup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeBaseBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MinFinishTime" {
+			request.MinFinishTime = v.(*string)
+		}
+		if k == "MaxFinishTime" {
+			request.MaxFinishTime = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = helper.Int64Uint64(offset)
+		request.Limit = helper.Int64Uint64(limit)
+		response, err := me.client.UsePostgresqlClient().DescribeBaseBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BaseBackupSet) < 1 {
+			break
+		}
+		BaseBackups = append(BaseBackups, response.Response.BaseBackupSet...)
+		if len(response.Response.BaseBackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlLogBackupsByFilter(ctx context.Context, param map[string]interface{}) (LogBackups []*postgresql.LogBackup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeLogBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MinFinishTime" {
+			request.MinFinishTime = v.(*string)
+		}
+		if k == "MaxFinishTime" {
+			request.MaxFinishTime = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePostgresqlClient().DescribeLogBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LogBackupSet) < 1 {
+			break
+		}
+		LogBackups = append(LogBackups, response.Response.LogBackupSet...)
+		if len(response.Response.LogBackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDbInstanceClassesByFilter(ctx context.Context, param map[string]interface{}) (DbInstanceClasses []*postgresql.ClassInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeClassesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Zone" {
+			request.Zone = v.(*string)
+		}
+		if k == "DBEngine" {
+			request.DBEngine = v.(*string)
+		}
+		if k == "DBMajorVersion" {
+			request.DBMajorVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeClasses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ClassInfoSet) < 1 {
+		return
+	}
+	DbInstanceClasses = response.Response.ClassInfoSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDefaultParametersByFilter(ctx context.Context, param map[string]interface{}) (DefaultParameters []*postgresql.ParamInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeDefaultParametersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBMajorVersion" {
+			request.DBMajorVersion = v.(*string)
+		}
+		if k == "DBEngine" {
+			request.DBEngine = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDefaultParameters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ParamInfoSet) < 1 {
+		return
+	}
+	DefaultParameters = response.Response.ParamInfoSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlRecoveryTimeByFilter(ctx context.Context, param map[string]interface{}) (ret *postgresql.DescribeAvailableRecoveryTimeResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeAvailableRecoveryTimeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBInstanceId" {
+			request.DBInstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeAvailableRecoveryTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlRegionsByFilter(ctx context.Context) (Regions []*postgresql.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeRegions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionSet) < 1 {
+		return
+	}
+	Regions = response.Response.RegionSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDbInstanceVersionsByFilter(ctx context.Context) (DbInstanceVersions []*postgresql.Version, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeDBVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.VersionSet) < 1 {
+		return
+	}
+	DbInstanceVersions = response.Response.VersionSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlZonesByFilter(ctx context.Context) (Zones []*postgresql.ZoneInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeZonesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeZones(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ZoneSet) < 1 {
+		return
+	}
+	Zones = response.Response.ZoneSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupById(ctx context.Context, baseBackupId string) (BaseBackup *postgresql.BaseBackup, errRet error) {
+	logId := getLogId(ctx)
+
+	params := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name: helper.String("base-backup-id"),
+				Values: []*string{
+					helper.String(baseBackupId),
+				},
+			},
+		},
+	}
+
+	backups, err := me.DescribePostgresqlBaseBackupsByFilter(ctx, params)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(backups) == 1 {
+		BaseBackup = backups[0]
+		log.Printf("[DEBUG]%s DescribePostgresqlBaseBackupById success, BaseBackupId:[%s]\n", logId, *BaseBackup.Id)
+	}
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlBaseBackupById(ctx context.Context, dBInstanceId string, baseBackupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteBaseBackupRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.BaseBackupId = &baseBackupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	errRet = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		response, e := me.client.UsePostgresqlClient().DeleteBaseBackup(request)
+		if e != nil {
+			tcErr := e.(*sdkErrors.TencentCloudSDKError)
+
+			if tcErr.Code == "FailedOperation.FailedOperationError" {
+				return resource.RetryableError(fmt.Errorf("state not ready, retry...: %v", e.Error()))
+			}
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		return nil
+	})
+
+	return
 }

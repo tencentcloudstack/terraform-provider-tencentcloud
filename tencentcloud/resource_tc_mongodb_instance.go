@@ -8,11 +8,11 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "mongodb"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_3_WT"
-  machine_type   = "GIO"
+  engine_version = "MONGO_36_WT"
+  machine_type   = "HIO10G"
   available_zone = "ap-guangzhou-2"
-  vpc_id         = "vpc-mz3efvbw"
-  subnet_id      = "subnet-lk0svi3p"
+  vpc_id         = "vpc-xxxxxx"
+  subnet_id      = "subnet-xxxxxx"
   project_id     = 0
   password       = "password1234"
 }
@@ -35,8 +35,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -64,8 +64,39 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 				},
 			},
 		},
+		"node_num": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "The number of nodes in each replica set. Default value: 3.",
+		},
+		"availability_zone_list": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			RequiredWith: []string{"hidden_zone"},
+			Description: `A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
+			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
+			- Version 4.2 and above are not supported.
+			- Read-only disaster recovery instances are not supported.
+			- Basic network cannot be selected.`,
+		},
+		"hidden_zone": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Computed:     true,
+			RequiredWith: []string{"availability_zone_list"},
+			Description:  "The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.",
+		},
 	}
 	basic := TencentMongodbBasicInfo()
+	conflictList := []string{"mongos_cpu", "mongos_memory", "mongos_node_num"}
+	for _, item := range conflictList {
+		delete(basic, item)
+	}
 	for k, v := range basic {
 		mongodbInstanceInfo[k] = v
 	}
@@ -103,6 +134,10 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		machine = MONGODB_MACHINE_TYPE_HIO
 	} else if machine == MONGODB_MACHINE_TYPE_TGIO {
 		machine = MONGODB_MACHINE_TYPE_HIO10G
+	}
+
+	if v, ok := d.GetOk("node_num"); ok {
+		nodeNum = v.(int)
 	}
 
 	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
@@ -156,7 +191,13 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		}
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
-
+	if v, ok := d.GetOk("availability_zone_list"); ok {
+		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
+		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
+	}
+	if v, ok := d.GetOk("hidden_zone"); ok {
+		value.FieldByName("HiddenZone").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
 	return nil
 }
 
@@ -199,11 +240,8 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		return err
 	}
 
-	var (
-		response   *mongodb.CreateDBInstanceResponse
-		err        error
-		resourceId string
-	)
+	var response *mongodb.CreateDBInstanceResponse
+	var err error
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
@@ -226,20 +264,16 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 			// }
 			return retryError(err)
 		}
-
-		if len(response.Response.InstanceIds) < 1 {
-			return resource.NonRetryableError(fmt.Errorf("mongodb instance id is nil"))
-		}
-
-		// normal user
-		resourceId = *response.Response.InstanceIds[0]
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	d.SetId(resourceId)
+	if len(response.Response.InstanceIds) < 1 {
+		return fmt.Errorf("mongodb instance id is nil")
+	}
+	d.SetId(*response.Response.InstanceIds[0])
 
 	return nil
 }
@@ -254,13 +288,6 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	mongodbService := MongodbService{client: client}
 	tagService := TagService{client: client}
 	region := client.Region
-
-	// check security group info
-	if d.Get("engine_version").(string) == MONGODB_ENGINE_VERSION_4_WT {
-		if _, ok := d.GetOk("security_groups"); ok {
-			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
-		}
-	}
 
 	chargeType := d.Get("charge_type")
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
@@ -368,6 +395,17 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	switch *instance.MachineType {
 	case MONGODB_MACHINE_TYPE_TGIO:
 		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO10G)
@@ -387,13 +425,42 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
+	_ = d.Set("node_num", *instance.SecondaryNum+1)
+
+	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	if len(replicateSets) > 0 {
+		var hiddenZone string
+		availabilityZoneList := make([]string, 0, 3)
+		for _, replicate := range replicateSets[0].Nodes {
+			itemZone := *replicate.Zone
+			if *replicate.Hidden {
+				hiddenZone = itemZone
+			}
+			availabilityZoneList = append(availabilityZoneList, itemZone)
+		}
+		_ = d.Set("hidden_zone", hiddenZone)
+		_ = d.Set("availability_zone_list", availabilityZoneList)
+	}
 
 	// standby instance list
 	var standbyInsList []map[string]string
 	for _, v := range instance.StandbyInstances {
-		standbyInsList = append(standbyInsList, map[string]string{"standby_instance_id": *v.InstanceId, "standby_instance_region": *v.Region})
+		standbyInsList = append(
+			standbyInsList,
+			map[string]string{
+				"standby_instance_id":     *v.InstanceId,
+				"standby_instance_region": *v.Region,
+			},
+		)
 	}
-	_ = d.Set("standby_instance_list", standbyInsList)
+
+	// if not standby instance, need set `standby_instance_list`
+	if _, ok := d.GetOk("father_instance_id"); !ok {
+		_ = d.Set("standby_instance_list", standbyInsList)
+	}
 
 	tags, _ := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
 
@@ -416,6 +483,14 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 	region := client.Region
 
 	d.Partial(true)
+
+	immutableArgs := []string{"node_num", "availability_zone_list", "hidden_zone"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
@@ -446,8 +521,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -456,7 +529,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -465,7 +538,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("password") {
@@ -475,7 +548,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("tags") {
@@ -487,7 +559,6 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -501,7 +572,29 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+
+		err := mongodbService.ModifyNetworkAddress(ctx, instanceId, vpcId, subnetId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("security_groups") {
+		securityGroups := d.Get("security_groups").(*schema.Set).List()
+		securityGroupIds := make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
@@ -529,12 +622,15 @@ func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta inte
 		return nil
 	}
 	if MONGODB_CHARGE_TYPE[*instanceDetail.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
-		return fmt.Errorf("PREPAID instances are not allowed to be deleted now, please isolate them on console")
-	}
-
-	err = mongodbService.IsolateInstance(ctx, instanceId)
-	if err != nil {
-		return err
+		err := mongodbService.TerminateDBInstances(ctx, instanceId)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := mongodbService.IsolateInstance(ctx, instanceId)
+		if err != nil {
+			return err
+		}
 	}
 	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId, true)
 	if err != nil {

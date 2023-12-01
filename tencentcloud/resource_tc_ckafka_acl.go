@@ -32,7 +32,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudCkafkaAcl() *schema.Resource {
@@ -78,25 +78,18 @@ func resourceTencentCloudCkafkaAcl() *schema.Resource {
 				Description: "ACL permission type. Valid values: `UNKNOWN`, `ANY`, `DENY`, `ALLOW`. and `ALLOW` by default. Currently, CKafka supports `ALLOW` (equivalent to allow list), and other fields will be used for future ACLs compatible with open-source Kafka.",
 			},
 			"host": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "*",
-				ForceNew: true,
-				ValidateFunc: func(i interface{}, s string) (rs []string, error []error) {
-					if i.(string) == "*" {
-						return
-					}
-					rs, error = validateIp(i, s)
-					return
-				},
-				Description: "IP address allowed to access. The default value is `*`, which means that any host can access.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "*",
+				ForceNew:    true,
+				Description: "The default is *, which means that any host can access it. Support filling in IP or network segment, and support `;`separation.",
 			},
 			"principal": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "*",
 				ForceNew:    true,
-				Description: "User list. The default value is `*`, which means that any user can access. The current user can only be one included in the user list.",
+				Description: "User list. The default value is `*`, which means that any user can access. The current user can only be one included in the user list. For example: `root` meaning user root can access.",
 			},
 		},
 	}

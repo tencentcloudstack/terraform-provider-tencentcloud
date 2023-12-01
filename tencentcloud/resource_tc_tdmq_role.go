@@ -4,31 +4,18 @@ Provide a resource to create a TDMQ role.
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark = "this is description."
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+  tags         = {
+    "createdBy" = "terraform"
+  }
 }
 
-resource "tencentcloud_tdmq_namespace" "bar" {
-  environ_name = "example"
-  msg_ttl = 300
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description."
-}
-
-resource "tencentcloud_tdmq_topic" "bar" {
-  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
-  topic_name = "example"
-  partitions = 6
-  topic_type = 0
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description."
-}
-
-resource "tencentcloud_tdmq_role" "bar" {
-  role_name = "example"
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description world"
+resource "tencentcloud_tdmq_role" "example" {
+  role_name  = "tf_example"
+  cluster_id = tencentcloud_tdmq_instance.example.id
+  remark     = "remark."
 }
 ```
 
@@ -46,8 +33,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -179,7 +166,6 @@ func resourceTencentCloudTdmqRoleUpdate(d *schema.ResourceData, meta interface{}
 	if err := service.ModifyTdmqRoleAttribute(ctx, roleName, clusterId, remark); err != nil {
 		return err
 	}
-	d.SetPartial("remark")
 
 	d.Partial(false)
 	return resourceTencentCloudTdmqRoleRead(d, meta)

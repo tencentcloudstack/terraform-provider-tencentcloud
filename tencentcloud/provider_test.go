@@ -8,12 +8,12 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-var testAccProviders map[string]terraform.ResourceProvider
+var testAccProviders map[string]*schema.Provider
 var testAccProvider *schema.Provider
 
 const (
@@ -24,6 +24,9 @@ const (
 	ACCOUNT_TYPE_SUB_ACCOUNT          = "SUB_ACCOUNT"
 	ACCOUNT_TYPE_SMS                  = "SMS"
 	ACCOUNT_TYPE_SES                  = "SES"
+	ACCOUNT_TYPE_TSF                  = "TSF"
+	ACCOUNT_TYPE_SSL                  = "SSL"
+	ACCOUNT_TYPE_ORGANIZATION         = "ORGANIZATION"
 	INTERNATIONAL_PROVIDER_SECRET_ID  = "TENCENTCLOUD_SECRET_ID_INTERNATIONAL"
 	INTERNATIONAL_PROVIDER_SECRET_KEY = "TENCENTCLOUD_SECRET_KEY_INTERNATIONAL"
 	PREPAY_PROVIDER_SECRET_ID         = "TENCENTCLOUD_SECRET_ID_PREPAY"
@@ -36,11 +39,17 @@ const (
 	SUB_ACCOUNT_PROVIDER_SECRET_KEY   = "TENCENTCLOUD_SECRET_KEY_SUB_ACCOUNT"
 	SMS_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_SMS"
 	SMS_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_SMS"
+	TSF_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_TSF"
+	TSF_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_TSF"
+	SSL_PROVIDER_SECRET_ID            = "TENCENTCLOUD_SECRET_ID_SSL"
+	SSL_PROVIDER_SECRET_KEY           = "TENCENTCLOUD_SECRET_KEY_SSL"
+	ORGANIZATION_PROVIDER_SECRET_ID   = "TENCENTCLOUD_SECRET_ID_ORGANIZATION"
+	ORGANIZATION_PROVIDER_SECRET_KEY  = "TENCENTCLOUD_SECRET_KEY_ORGANIZATION"
 )
 
 func init() {
-	testAccProvider = Provider().(*schema.Provider)
-	testAccProviders = map[string]terraform.ResourceProvider{
+	testAccProvider = Provider()
+	testAccProviders = map[string]*schema.Provider{
 		"tencentcloud": testAccProvider,
 	}
 	envProject := os.Getenv("QCI_JOB_ID")
@@ -51,7 +60,7 @@ func init() {
 }
 
 func TestProvider(t *testing.T) {
-	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
+	if err := Provider().InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 }
@@ -140,6 +149,30 @@ func testAccPreCheckCommon(t *testing.T, accountType string) {
 		secretKey := os.Getenv(SMS_PROVIDER_SECRET_KEY)
 		if secretId == "" || secretKey == "" {
 			t.Fatalf("%v and %v must be set for acceptance tests\n", SMS_PROVIDER_SECRET_ID, SMS_PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_TSF:
+		secretId := os.Getenv(TSF_PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(TSF_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", TSF_PROVIDER_SECRET_ID, TSF_PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_SSL:
+		secretId := os.Getenv(SSL_PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(SSL_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SSL_PROVIDER_SECRET_ID, SSL_PROVIDER_SECRET_KEY)
+		}
+		os.Setenv(PROVIDER_SECRET_ID, secretId)
+		os.Setenv(PROVIDER_SECRET_KEY, secretKey)
+	case accountType == ACCOUNT_TYPE_ORGANIZATION:
+		secretId := os.Getenv(ORGANIZATION_PROVIDER_SECRET_ID)
+		secretKey := os.Getenv(ORGANIZATION_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", ORGANIZATION_PROVIDER_SECRET_ID, ORGANIZATION_PROVIDER_SECRET_KEY)
 		}
 		os.Setenv(PROVIDER_SECRET_ID, secretId)
 		os.Setenv(PROVIDER_SECRET_KEY, secretKey)

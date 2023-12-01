@@ -2,35 +2,35 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// The unmarshal package defines an Analyzer that checks for passing
-// non-pointer or non-interface types to unmarshal and decode functions.
 package unmarshal
 
 import (
+	_ "embed"
 	"go/ast"
 	"go/types"
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
+	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
 	"golang.org/x/tools/go/types/typeutil"
+	"golang.org/x/tools/internal/typeparams"
 )
 
-const Doc = `report passing non-pointer or non-interface values to unmarshal
-
-The unmarshal analysis reports calls to functions such as json.Unmarshal
-in which the argument type is not a pointer or an interface.`
+//go:embed doc.go
+var doc string
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "unmarshal",
-	Doc:      Doc,
+	Doc:      analysisutil.MustExtractDoc(doc, "unmarshal"),
+	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/unmarshal",
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
 	switch pass.Pkg.Path() {
-	case "encoding/gob", "encoding/json", "encoding/xml":
+	case "encoding/gob", "encoding/json", "encoding/xml", "encoding/asn1":
 		// These packages know how to use their own APIs.
 		// Sometimes they are testing what happens to incorrect programs.
 		return nil, nil
@@ -53,9 +53,10 @@ func run(pass *analysis.Pass) (interface{}, error) {
 		recv := fn.Type().(*types.Signature).Recv()
 		if fn.Name() == "Unmarshal" && recv == nil {
 			// "encoding/json".Unmarshal
-			//  "encoding/xml".Unmarshal
+			// "encoding/xml".Unmarshal
+			// "encoding/asn1".Unmarshal
 			switch fn.Pkg().Path() {
-			case "encoding/json", "encoding/xml":
+			case "encoding/json", "encoding/xml", "encoding/asn1":
 				argidx = 1 // func([]byte, interface{})
 			}
 		} else if fn.Name() == "Decode" && recv != nil {
@@ -84,7 +85,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 		t := pass.TypesInfo.Types[call.Args[argidx]].Type
 		switch t.Underlying().(type) {
-		case *types.Pointer, *types.Interface:
+		case *types.Pointer, *types.Interface, *typeparams.TypeParam:
 			return
 		}
 

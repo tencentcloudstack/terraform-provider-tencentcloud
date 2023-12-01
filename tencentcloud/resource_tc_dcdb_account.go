@@ -29,9 +29,10 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -241,7 +242,30 @@ func resourceTencentCloudDcdbAccountUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("password") {
-		return fmt.Errorf("`password` do not support change now.")
+		// return fmt.Errorf("`password` do not support change now.")
+		if v, ok := d.GetOk("password"); ok {
+			request := dcdb.NewResetAccountPasswordRequest()
+			request.InstanceId = &instanceId
+			request.UserName = &userName
+			if v, ok := d.GetOk("host"); ok {
+				request.Host = helper.String(v.(string))
+			}
+			request.Password = helper.String(v.(string))
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ResetAccountPassword(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s operate dcdb resetAccountPasswordOperation failed, reason:%+v", logId, err)
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("read_only") {
@@ -305,6 +329,11 @@ func resourceTencentCloudDcdbAccountDelete(d *schema.ResourceData, meta interfac
 
 	if err := service.DeleteDcdbAccountById(ctx, instanceId, userName, host); err != nil {
 		return err
+	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"deleted"}, readRetryTimeout, time.Second, service.DcdbAccountRefreshFunc(instanceId, userName, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil

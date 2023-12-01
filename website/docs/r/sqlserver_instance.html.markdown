@@ -14,14 +14,31 @@ Use this resource to create SQL Server instance
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_instance" "foo" {
-  name              = "example"
-  availability_zone = var.availability_zone
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = "vpc-409mvdvv"
-  subnet_id         = "subnet-nf9n81ps"
-  project_id        = 123
-  memory            = 2
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
   storage           = 100
 }
 ```
@@ -46,10 +63,11 @@ The following arguments are supported:
 * `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
-* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
-* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
+* `vpc_id` - (Optional, String) ID of VPC.
+* `wait_switch` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.2. The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
 
 ## Attributes Reference
 
@@ -68,6 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_instance.example mssql-3cdq7kx5
 ```
 

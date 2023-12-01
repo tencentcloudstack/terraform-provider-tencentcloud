@@ -30,7 +30,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -218,7 +218,6 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("tags") {
@@ -234,7 +233,6 @@ func resourceTencentCloudGaapRealserverUpdate(d *schema.ResourceData, m interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

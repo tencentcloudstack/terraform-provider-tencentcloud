@@ -4,9 +4,8 @@ Use this data source to get information about a MySQL instance.
 Example Usage
 
 ```hcl
-data "tencentcloud_mysql_instance" "database" {
-  mysql_id           = "my-test-database"
-  result_output_file = "mytestpath"
+data "tencentcloud_mysql_instance" "mysql" {
+  mysql_id = "cdb-fitq5t9h"
 }
 ```
 */
@@ -16,7 +15,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -259,6 +258,28 @@ func dataSourceTencentCloudMysqlInstance() *schema.Resource {
 								Type: schema.TypeString,
 							},
 						},
+						"ro_groups": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "read-only instance group.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"group_id": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "Group ID, such as `cdbrg-pz7vg37p`.",
+									},
+									"instance_ids": {
+										Type:        schema.TypeList,
+										Computed:    true,
+										Description: "ID list of read-only type associated with the current instance.",
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+									},
+								},
+							},
+						},
 						"dr_instance_ids": {
 							Type:        schema.TypeList,
 							Computed:    true,
@@ -398,12 +419,22 @@ func dataSourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interf
 		}
 		if len(item.RoGroups) > 0 {
 			roInstanceIds := make([]string, 0)
+			roGroupList := make([]map[string]interface{}, 0, len(item.RoGroups))
 			for _, roGroupInfo := range item.RoGroups {
+				roInstanceId := make([]string, 0)
 				for _, roInfo := range roGroupInfo.RoInstances {
-					roInstanceIds = append(roInstanceIds, *roInfo.InstanceId)
+					roInstanceId = append(roInstanceId, *roInfo.InstanceId)
 				}
+				roGroup := map[string]interface{}{
+					"group_id":     *roGroupInfo.RoGroupId,
+					"instance_ids": roInstanceId,
+				}
+
+				roInstanceIds = append(roInstanceIds, roInstanceId...)
+				roGroupList = append(roGroupList, roGroup)
 			}
 			mapping["ro_instance_ids"] = roInstanceIds
+			mapping["ro_groups"] = roGroupList
 		}
 		if len(item.DrInfo) > 0 {
 			drInstanceIds := make([]string, 0)

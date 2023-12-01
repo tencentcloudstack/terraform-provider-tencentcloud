@@ -15,7 +15,53 @@ Provides a resource to create a VPN gateway.
 
 ## Example Usage
 
-POSTPAID_BY_HOUR VPN gateway
+### VPC SSL VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL"
+  vpc_id    = "vpc-86v957zb"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+### CCN IPEC VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "CCN"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+### CCN SSL VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL_CCN"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+### POSTPAID_BY_HOUR VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "my_cgw" {
@@ -30,7 +76,7 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 }
 ```
 
-PREPAID VPN gateway
+### PREPAID VPN gateway
 
 ```hcl
 resource "tencentcloud_vpn_gateway" "my_cgw" {
@@ -52,16 +98,16 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 The following arguments are supported:
 
 * `name` - (Required, String) Name of the VPN gateway. The length of character is limited to 1-60.
-* `zone` - (Required, String, ForceNew) Zone of the VPN gateway.
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
 * `cdc_id` - (Optional, String) CDC instance ID.
 * `charge_type` - (Optional, String) Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
 * `max_connection` - (Optional, Int) Maximum number of connected clients allowed for the SSL VPN gateway. Valid values: [5, 10, 20, 50, 100]. This parameter is only required for SSL VPN gateways.
-* `prepaid_period` - (Optional, Int) Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.
+* `prepaid_period` - (Optional, Int) Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be changed on `IPSEC` vpn gateway.
 * `prepaid_renew_flag` - (Optional, String) Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW`.
 * `tags` - (Optional, Map) A list of tags used to associate different resources.
-* `type` - (Optional, String) Type of gateway instance. Valid value: `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.
-* `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.
+* `type` - (Optional, String) Type of gateway instance, Default is `IPSEC`. Valid value: `IPSEC`, `SSL`, `CCN` and `SSL_CCN`.
+* `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` or `SSL_CCN` type, and doesn't make sense for `CCN` or `SSL_CCN` vpn gateway.
+* `zone` - (Optional, String, ForceNew) Zone of the VPN gateway.
 
 ## Attributes Reference
 

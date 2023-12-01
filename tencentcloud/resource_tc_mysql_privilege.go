@@ -4,27 +4,65 @@ Provides a mysql account privilege resource to grant different access privilege 
 Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_instance" "default" {
-  mem_size          = 1000
-  volume_size       = 25
-  instance_name     = "guagua"
-  engine_version    = "5.7"
-  root_password     = "0153Y474"
-  availability_zone = "ap-guangzhou-3"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  name              = "subnet-mysql"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-mysql"
+  description = "mysql test"
+}
+
+resource "tencentcloud_mysql_instance" "example" {
   internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 0
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
 
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
 }
 
-resource "tencentcloud_mysql_account" "mysql_account2" {
-  mysql_id    = tencentcloud_mysql_instance.default.id
-  name        = "test11"
-  password    = "test1234"
-  description = "test from terraform"
+resource "tencentcloud_mysql_account" "example" {
+  mysql_id             = tencentcloud_mysql_instance.example.id
+  name                 = "tf_example"
+  password             = "Qwer@234"
+  description          = "desc."
+  max_user_connections = 10
 }
 
-resource "tencentcloud_mysql_privilege" "tttt" {
-  mysql_id     = tencentcloud_mysql_instance.default.id
-  account_name = tencentcloud_mysql_account.mysql_account2.name
+resource "tencentcloud_mysql_privilege" "example" {
+  mysql_id     = tencentcloud_mysql_instance.example.id
+  account_name = tencentcloud_mysql_account.example.name
   global       = ["TRIGGER"]
   database {
     privileges    = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
@@ -66,9 +104,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -98,7 +135,7 @@ func resourceTencentCloudMysqlPrivilegeHash(v interface{}) int {
 	}
 	hashMap["privileges"] = slice
 	b, _ := json.Marshal(hashMap)
-	return hashcode.String(string(b))
+	return helper.HashString(string(b))
 }
 
 func resourceTencentCloudMysqlPrivilege() *schema.Resource {
@@ -142,7 +179,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
-					return hashcode.String(v.(string))
+					return helper.HashString(v.(string))
 				},
 				Description: `Global privileges. available values for Privileges:` + strings.Join(MYSQL_GlOBAL_PRIVILEGE, ",") + ".",
 			},
@@ -163,7 +200,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Database privilege.available values for Privileges:` + strings.Join(MYSQL_DATABASE_PRIVILEGE, ",") + ".",
 						},
@@ -192,7 +229,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Table privilege.available values for Privileges:` + strings.Join(MYSQL_TABLE_PRIVILEGE, ",") + ".",
 						},
@@ -226,7 +263,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Column privilege.available values for Privileges:` + strings.Join(MYSQL_COLUMN_PRIVILEGE, ",") + ".",
 						},

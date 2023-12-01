@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cwp_license_order
+```
+
+```release-note:new-resource
+tencentcloud_cwp_license_bind_attachment
+```
+
+```release-note:new-data-source
+tencentcloud_cwp_machines_simple
+```

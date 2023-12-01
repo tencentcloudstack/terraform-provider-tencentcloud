@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_ccn_routes
+```
+
+```release-note:new-resource
+tencentcloud_ccn_instances_accept_attach
+```
+
+```release-note:new-resource
+tencentcloud_ccn_instances_reset_attach
+```

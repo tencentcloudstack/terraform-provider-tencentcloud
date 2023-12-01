@@ -1,6 +1,7 @@
 TEST?=./...
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=tencentcloud
+CHANGED_FILES=$$(git diff --name-only master -- $(PKG_NAME))
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PLATFORMS=darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm openbsd/amd64 openbsd/386 solaris/amd64 windows/386 windows/amd64
 GO_VER ?= go
@@ -24,6 +25,16 @@ fmt:
 	@echo "==> Fixing source code with gofmt..."
 	goimports -w ./$(PKG_NAME)
 	gofmt -s -w ./$(PKG_NAME)
+
+fmt-faster:
+	@if [[ -z $(CHANGED_FILES) ]]; then \
+		echo "skip the fmt cause the CHANGED_FILES is null."; \
+		exit 0; \
+	else \
+		echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"; \
+		goimports -w $(CHANGED_FILES); \
+		gofmt -s -w $(CHANGED_FILES); \
+	fi
 
 # Currently required by tf-deploy compile
 fmtcheck:
@@ -95,10 +106,9 @@ lint:
 		./$(PKG_NAME)
 
 tools:
-	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
-	GO111MODULE=on go install github.com/client9/misspell/cmd/misspell
-	GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
-	GO111MODULE=on go install github.com/katbyte/terrafmt
+	GO111MODULE=on cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint && cd ../..
+	GO111MODULE=on cd .ci/tools && go install github.com/client9/misspell/cmd/misspell && cd ../..
+	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 && cd ../..
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
@@ -130,9 +140,24 @@ test-build-x86:
 doc:
 	cd gendoc && go run ./... && cd ..
 
+doc-faster:
+	@echo "==> [Faster]Generating doc..."
+	@if [ ! -f gendoc/gendoc ]; then \
+		$(MAKE) doc-bin-build; \
+	fi
+	@$(MAKE) doc-with-bin
+
+doc-with-bin:
+	cd gendoc && ./gendoc ./... && cd ..
+
+doc-bin-build:
+	@echo "==> Building gendoc binary..."
+	cd gendoc && go build ./... && cd ..
+
 hooks: tools
-	find .git/hooks -type l -exec rm {} \;
-	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
+	@find .git/hooks -type l -exec rm {} \;
+	@find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
+	@echo "==> Install hooks done."
 
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))

@@ -6,18 +6,29 @@ Example Usage
 Private Bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "private_sbucket" {
+  bucket = "private-bucket-${local.app_id}"
   acl    = "private"
 }
 ```
 
-
 Creation of multiple available zone bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket   = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
+  bucket   = "multi-zone-bucket-${local.app_id}"
   acl      = "private"
   multi_az = true
   versioning_enable = true
@@ -26,37 +37,77 @@ resource "tencentcloud_cos_bucket" "mycos" {
 ```
 
 Using verbose acl
+
 ```hcl
-resource "tencentcloud_cos_bucket" "with_acl_body" {
-  bucket = "mycos-1258798060"
-  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_acl" {
+  bucket = "bucketwith-acl-${local.app_id}"
+  # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
 <AccessControlPolicy>
-    <Owner>
-        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-    </Owner>
-    <AccessControlList>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
-                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
-            </Grantee>
-            <Permission>READ</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>WRITE</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>READ_ACP</Permission>
-        </Grant>
-    </AccessControlList>
+	<Owner>
+		<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+		<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+	</Owner>
+	<AccessControlList>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+	</AccessControlList>
 </AccessControlPolicy>
 EOF
 }
@@ -65,8 +116,14 @@ EOF
 Static Website
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
+  bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
     index_document = "index.html"
@@ -75,15 +132,21 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 
 output "endpoint_test" {
-    value = tencentcloud_cos_bucket.mycos.website.0.endpoint
+    value = tencentcloud_cos_bucket.bucket_with_static_website.website.0.endpoint
 }
 ```
 
 Using CORS
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+  bucket = "bucket-with-cors-${local.app_id}"
   acl    = "public-read-write"
 
   cors_rules {
@@ -99,15 +162,21 @@ resource "tencentcloud_cos_bucket" "mycos" {
 Using object lifecycle
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+  bucket = "bucket-with-lifecycle-${local.app_id}"
   acl    = "public-read-write"
 
   lifecycle_rules {
     filter_prefix = "path1/"
 
     transition {
-      date          = "2019-06-01"
+      days          = 30
       storage_class = "STANDARD_IA"
     }
 
@@ -118,113 +187,34 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using custom origin domain settings
-
-```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_domain_rules {
-    domain = "abc.example.com"
-    type = "REST"
-    status = "ENABLE"
-  }
-}
-```
-
-Using origin-pull settings
-```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_pull_rules {
-    priority = 1
-    sync_back_to_source = false
-    host = "abc.example.com"
-    prefix = "/"
-    protocol = "FOLLOW" // "HTTP" "HTTPS"
-    follow_query_string = true
-    follow_redirection = true
-    follow_http_headers = ["origin", "host"]
-    custom_http_headers = {
-	  "x-custom-header" = "custom_value"
-    }
-  }
-}
-```
-
 Using replication
 ```hcl
-resource "tencentcloud_cos_bucket" "replica1" {
-  bucket = "tf-replica-foo-1234567890"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+  uin = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+  region = "ap-guangzhou"
+}
+
+resource "tencentcloud_cos_bucket" "bucket_replicate" {
+  bucket = "bucket-replicate-${local.app_id}"
   acl    = "private"
   versioning_enable = true
 }
 
-resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket = "tf-bucket-replica-1234567890"
+resource "tencentcloud_cos_bucket" "bucket_with_replication" {
+  bucket = "bucket-with-replication-${local.app_id}"
   acl    = "private"
   versioning_enable = true
-  replica_role = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_role = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
     id = "test-rep1"
     status = "Enabled"
     prefix = "dist"
-    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
   }
-}
-```
-
-Setting log status
-
-```hcl
-resource "tencentcloud_cam_role" "cosLogGrant" {
-  name          = "CLS_QcsRole"
-  document      = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
-      "effect": "allow",
-      "principal": {
-        "service": [
-          "cls.cloud.tencent.com"
-        ]
-      }
-    }
-  ]
-}
-EOF
-
-  description   = "cos log enable grant"
-}
-
-
-data "tencentcloud_cam_policies" "cosAccess" {
-  name      = "QcloudCOSAccessForCLSRole"
-}
-
-
-resource "tencentcloud_cam_role_policy_attachment" "cosLogGrant" {
-  role_id   = tencentcloud_cam_role.cosLogGrant.id
-  policy_id = data.tencentcloud_cam_policies.cosAccess.policy_list.0.policy_id
-}
-
-
-resource "tencentcloud_cos_bucket" "mylog" {
-  bucket = "mylog-1258798060"
-  acl    = "private"
-}
-
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  log_enable = true
-  log_target_bucket = "mylog-1258798060"
-  log_prefix = "MyLogPrefix"
 }
 ```
 
@@ -246,15 +236,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"reflect"
+	"strings"
 	"time"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
+	"github.com/beevik/etree"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -312,7 +305,7 @@ func originPullRules() *schema.Resource {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Set: func(i interface{}) int {
-					return hashcode.String(i.(string))
+					return helper.HashString(i.(string))
 				},
 				Description: "Specifies the pass through headers when accessing the origin server.",
 				Elem:        &schema.Schema{Type: schema.TypeString},
@@ -410,20 +403,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional: true,
 
 				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
-					var oldXML cos.BucketGetACLResult
-					err := xml.Unmarshal([]byte(olds), &oldXML)
-					if err != nil {
-						return olds == news
-					}
-					var newXML cos.BucketGetACLResult
-					err = xml.Unmarshal([]byte(news), &newXML)
-					if err != nil {
-						return olds == news
-					}
-					suppress := reflect.DeepEqual(oldXML, newXML)
-					return suppress
+					return ACLBodyDiffFunc(olds, news, d)
 				},
-				Description: "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
+				DiffSuppressOnRefresh: true,
+				ValidateFunc:          validateACLBody,
+				Description:           "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
@@ -434,7 +418,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Enable bucket versioning.",
+				Description: "Enable bucket versioning. NOTE: The `multi_az` feature is true for the current bucket, cannot disable version control.",
 			},
 			"acceleration_enable": {
 				Type:        schema.TypeBool,
@@ -729,7 +713,25 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.",
+				Description: "Indicates whether to create a bucket of multi available zone.",
+			},
+			"enable_intelligent_tiering": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Enable intelligent tiering. NOTE: When intelligent tiering configuration is enabled, it cannot be turned off or modified.",
+			},
+			"intelligent_tiering_days": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Specifies the limit of days for standard-tier data to low-frequency data in an intelligent tiered storage configuration, with optional days of 30, 60, 90. Default value is 30.",
+			},
+			"intelligent_tiering_request_frequent": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.",
 			},
 			//computed
 			"cos_bucket_url": {
@@ -754,16 +756,12 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	role, roleOk := d.GetOk("replica_role")
 	rule, ruleOk := d.GetOk("replica_rules")
 	versioning := d.Get("versioning_enable").(bool)
-	isMAZ := d.Get("multi_az").(bool)
 
 	if !versioning {
 		if roleOk || role.(string) != "" {
 			return fmt.Errorf("cannot configure role unless versioning enable")
 		} else if ruleOk || len(rule.([]interface{})) > 0 {
 			return fmt.Errorf("cannot configure replica rule unless versioning enable")
-		}
-		if isMAZ {
-			return fmt.Errorf("cannot create MAZ bucket unless versioning enable")
 		}
 	}
 
@@ -957,6 +955,22 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		_ = d.Set("tags", tags)
 	}
 
+	//read intelligent tiering
+	result, err := cosService.BucketGetIntelligentTiering(ctx, bucket)
+	if err != nil {
+		return fmt.Errorf("get intelligent tiering failed: %v", err)
+	}
+	if result != nil {
+		if result.Status == "Enabled" {
+			_ = d.Set("enable_intelligent_tiering", true)
+		} else {
+			_ = d.Set("enable_intelligent_tiering", false)
+		}
+	}
+	if result != nil && result.Transition != nil {
+		_ = d.Set("intelligent_tiering_days", result.Transition.Days)
+		_ = d.Set("intelligent_tiering_request_frequent", result.Transition.RequestFrequent)
+	}
 	return nil
 }
 
@@ -966,34 +980,72 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
-	tcClient := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(d.Id())
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	d.Partial(true)
 
+	if d.HasChange("enable_intelligent_tiering") || d.HasChange("intelligent_tiering_days") || d.HasChange("intelligent_tiering_request_frequent") {
+		old, new := d.GetChange("enable_intelligent_tiering")
+		if old.(bool) && !new.(bool) {
+			return fmt.Errorf("enable_intelligent_tiering, intelligent_tiering_days and intelligent_tiering_request_frequent not support change!")
+		}
+		var transition cos.BucketIntelligentTieringTransition
+		if v, ok := d.GetOk("intelligent_tiering_days"); ok {
+			transition.Days = v.(int)
+		} else {
+			transition.Days = 30
+		}
+		if v, ok := d.GetOk("intelligent_tiering_request_frequent"); ok {
+			transition.RequestFrequent = v.(int)
+		} else {
+			transition.RequestFrequent = 1
+		}
+
+		if v, ok := d.GetOk("enable_intelligent_tiering"); ok && v.(bool) {
+			opt := &cos.BucketPutIntelligentTieringOptions{
+				Status:     "Enabled",
+				Transition: &transition,
+			}
+			err := cosService.BucketPutIntelligentTiering(ctx, d.Id(), opt)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if d.HasChange("acl") {
-		err := resourceTencentCloudCosBucketAclUpdate(ctx, client, d)
+		bucket := d.Get("bucket").(string)
+		err := waitAclEnable(ctx, meta, bucket)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("acl")
+
+		err = resourceTencentCloudCosBucketAclUpdate(ctx, meta, d)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("acl_body") {
 		body := d.Get("acl_body")
-		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
-			return err
-		}
-		d.Set("acl_body", body)
-	}
-
-	if d.HasChange("cors_rules") {
-		err := resourceTencentCloudCosBucketCorsUpdate(ctx, client, d)
+		bucket := d.Get("bucket").(string)
+		err := waitAclEnable(ctx, meta, bucket)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cors_rules")
+
+		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
+			return err
+		}
+		_ = d.Set("acl_body", body)
+	}
+
+	if d.HasChange("cors_rules") {
+		err := resourceTencentCloudCosBucketCorsUpdate(ctx, meta, d)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	if d.HasChange("origin_pull_rules") {
@@ -1002,7 +1054,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.Set("origin_pull_rules", rules)
+		_ = d.Set("origin_pull_rules", rules)
 	}
 
 	if d.HasChange("origin_domain_rules") {
@@ -1010,47 +1062,47 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
-		d.Set("origin_domain_rules", rules)
+		_ = d.Set("origin_domain_rules", rules)
 	}
 
 	if d.HasChange("lifecycle_rules") {
-		err := resourceTencentCloudCosBucketLifecycleUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketLifecycleUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("lifecycle_rules")
+
 	}
 
 	if d.HasChange("website") {
-		err := resourceTencentCloudCosBucketWebsiteUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketWebsiteUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("website")
+
 	}
 
 	if d.HasChange("encryption_algorithm") {
-		err := resourceTencentCloudCosBucketEncryptionUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketEncryptionUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("encryption_algorithm")
+
 	}
 
 	if d.HasChange("versioning_enable") {
-		err := resourceTencentCloudCosBucketVersioningUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketVersioningUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("versioning_enable")
+
 	}
 
 	if d.HasChange("acceleration_enable") {
-		err := resourceTencentCloudCosBucketAccelerationUpdate(ctx, tcClient, d)
+		err := resourceTencentCloudCosBucketAccelerationUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("acceleration_enable")
+
 	}
 
 	if d.HasChange("replica_role") || d.HasChange("replica_rules") {
@@ -1069,17 +1121,14 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("log_enable") || d.HasChange("log_target_bucket") || d.HasChange("log_prefix") {
-		err := resourceTencentCloudCosBucketLogStatusUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketLogStatusUpdate(ctx, meta, d)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("log_enable")
-		d.SetPartial("log_target_bucket")
-		d.SetPartial("log_prefix")
+
 	}
 
 	d.Partial(false)
@@ -1089,6 +1138,32 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCosBucketRead(d, meta)
+}
+
+func waitAclEnable(ctx context.Context, meta interface{}, bucket string) error {
+	logId := getLogId(ctx)
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		aclResult, e := cosService.GetBucketACL(ctx, bucket)
+		if e != nil {
+			sdkError, ok := e.(*errors.TencentCloudSDKError)
+			if ok {
+				log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s,%s,%s]\n", logId, "GetBucketACL", sdkError.Error(), sdkError.GetCode(), sdkError.GetMessage())
+
+				if strings.Contains(sdkError.GetMessage(), "NoSuchBucket") {
+					return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s]\n", logId, "GetBucketACL", e.Error())
+			return resource.NonRetryableError(e)
+		}
+
+		if aclResult == nil {
+			return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
+		}
+		return nil
+	})
+	return err
 }
 
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
@@ -1115,7 +1190,7 @@ func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{
 	return nil
 }
 
-func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1124,7 +1199,7 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, client *
 		request := s3.DeleteBucketEncryptionInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := client.DeleteBucketEncryption(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().DeleteBucketEncryption(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket encryption", request.String(), err.Error())
@@ -1150,7 +1225,7 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, client *
 	rules = append(rules, rule)
 	request.ServerSideEncryptionConfiguration.Rules = rules
 
-	response, err := client.PutBucketEncryption(&request)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketEncryption(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket encryption", request.String(), err.Error())
@@ -1162,7 +1237,7 @@ func resourceTencentCloudCosBucketEncryptionUpdate(ctx context.Context, client *
 	return nil
 }
 
-func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1177,7 +1252,7 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 			Status: aws.String(status),
 		},
 	}
-	response, err := client.PutBucketVersioning(&request)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketVersioning(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket encryption", request.String(), err.Error())
@@ -1189,7 +1264,7 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 	return nil
 }
 
-func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client *cos.Client, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1202,7 +1277,7 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client
 	opt := &cos.BucketPutAccelerateOptions{
 		Status: status,
 	}
-	response, err := client.Bucket.PutAccelerate(ctx, opt)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket).Bucket.PutAccelerate(ctx, opt)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, status [%s], reason[%s]\n",
 			logId, "put bucket acceleration", opt.Status, err.Error())
@@ -1244,13 +1319,10 @@ func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service Cos
 		}
 	}
 
-	d.SetPartial("replica_role")
-	d.SetPartial("replica_rules")
-
 	return nil
 }
 
-func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1259,7 +1331,7 @@ func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, 
 		Bucket: aws.String(bucket),
 		ACL:    aws.String(acl),
 	}
-	response, err := client.PutBucketAcl(&request)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketAcl(&request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, "put bucket acl", request.String(), err.Error())
@@ -1271,7 +1343,7 @@ func resourceTencentCloudCosBucketAclUpdate(ctx context.Context, client *s3.S3, 
 	return nil
 }
 
-func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1281,7 +1353,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 		request := s3.DeleteBucketCorsInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := client.DeleteBucketCors(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().DeleteBucketCors(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket cors", request.String(), err.Error())
@@ -1324,7 +1396,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 				CORSRules: rules,
 			},
 		}
-		response, err := client.PutBucketCors(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketCors(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket cors", request.String(), err.Error())
@@ -1336,7 +1408,7 @@ func resourceTencentCloudCosBucketCorsUpdate(ctx context.Context, client *s3.S3,
 	return nil
 }
 
-func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1345,7 +1417,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 		request := s3.DeleteBucketLifecycleInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := client.DeleteBucketLifecycle(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().DeleteBucketLifecycle(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket lifecycle", request.String(), err.Error())
@@ -1454,7 +1526,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 				Rules: rules,
 			},
 		}
-		response, err := client.PutBucketLifecycleConfiguration(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketLifecycleConfiguration(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket lifecycle", request.String(), err.Error())
@@ -1467,7 +1539,7 @@ func resourceTencentCloudCosBucketLifecycleUpdate(ctx context.Context, client *s
 	return nil
 }
 
-func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1477,7 +1549,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 		request := s3.DeleteBucketWebsiteInput{
 			Bucket: aws.String(bucket),
 		}
-		response, err := client.DeleteBucketWebsite(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().DeleteBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete bucket website", request.String(), err.Error())
@@ -1510,7 +1582,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 				},
 			},
 		}
-		response, err := client.PutBucketWebsite(&request)
+		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketWebsite(&request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "put bucket website", request.String(), err.Error())
@@ -1523,7 +1595,7 @@ func resourceTencentCloudCosBucketWebsiteUpdate(ctx context.Context, client *s3.
 	return nil
 }
 
-func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, meta interface{}, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Id()
@@ -1550,7 +1622,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 				},
 			}
 
-			resp, err := client.PutBucketLogging(request)
+			resp, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketLogging(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, "cos enable log error", request.String(), err.Error())
@@ -1572,7 +1644,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 			BucketLoggingStatus: &s3.BucketLoggingStatus{},
 		}
 
-		resp, err := client.PutBucketLogging(request)
+		resp, err := meta.(*TencentCloudClient).apiV3Conn.UseCosClient().PutBucketLogging(request)
 		if err != nil {
 			return fmt.Errorf("cos disable log error: %s, bucket: %s", err.Error(), bucket)
 		}
@@ -1585,6 +1657,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, client *s
 }
 
 func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
 	aclHeader := ""
 	aclBody := ""
 	body, bodyOk := d.GetOk("acl_body")
@@ -1598,9 +1671,20 @@ func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, servi
 	} else {
 		aclHeader = "private"
 	}
-	if err := service.TencentCosPutBucketACL(ctx, bucket, aclBody, aclHeader); err != nil {
+
+	aclBodyOrderly, err := service.transACLBodyOrderly(ctx, aclBody)
+	if err != nil {
+		return fmt.Errorf("transfer ACL Body failed, reason:%v", err.Error())
+	}
+
+	log.Printf("[DEBUG]%s transACLBodyOrderly success, before:[\n%s\n], after:[\n%s\n]\n", logId, aclBody, aclBodyOrderly)
+
+	if err = service.TencentCosPutBucketACLBody(ctx, bucket, aclBodyOrderly, aclHeader); err != nil {
 		return err
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, bucket:[%s]\n", logId, "put bucket acl body", bucket)
+
 	return nil
 }
 
@@ -1794,7 +1878,7 @@ func expirationHash(v interface{}) int {
 	if v, ok := m["days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentExpirationHash(v interface{}) int {
@@ -1803,7 +1887,7 @@ func nonCurrentExpirationHash(v interface{}) int {
 	if v, ok := m["non_current_days"]; ok {
 		buf.WriteString(fmt.Sprintf("%d-", v.(int)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func transitionHash(v interface{}) int {
@@ -1818,7 +1902,7 @@ func transitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func nonCurrentTransitionHash(v interface{}) int {
@@ -1830,7 +1914,7 @@ func nonCurrentTransitionHash(v interface{}) int {
 	if v, ok := m["storage_class"]; ok {
 		buf.WriteString(fmt.Sprintf("%s-", v.(string)))
 	}
-	return hashcode.String(buf.String())
+	return helper.HashString(buf.String())
 }
 
 func getBucketReplications(d *schema.ResourceData) (role string, rules []cos.BucketReplicationRule, err error) {
@@ -1882,4 +1966,141 @@ func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicatio
 	}
 	err = d.Set("replica_rules", rules)
 	return
+}
+
+func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
+	defer logElapsed("resource.tencentcloud_cos_bucket.ACLBodyDiffFunc")()
+	log.Printf("[DEBUG] ACLBodyDiffFunc called, before:[\n%s\n], after:[\n%s\n]\n", olds, news)
+
+	oldDoc := etree.NewDocument()
+	newDoc := etree.NewDocument()
+
+	if err := oldDoc.ReadFromString(olds); err != nil {
+		log.Printf("[CRITAL]read old xml from string error: %v", err)
+		return false
+	}
+
+	if err := newDoc.ReadFromString(news); err != nil {
+		log.Printf("[CRITAL]read new xml from string error: %v", err)
+		return false
+	}
+
+	oldRoot := oldDoc.SelectElement("AccessControlPolicy")
+	newRoot := newDoc.SelectElement("AccessControlPolicy")
+
+	if oldRoot == nil || newRoot == nil {
+		log.Println("[CRITAL]oldRoot or newRoot is nil: return false.")
+		return false
+	}
+
+	oldOwner := oldRoot.SelectElement("Owner")
+	newOwner := newRoot.SelectElement("Owner")
+
+	if oldOwner == nil || newOwner == nil {
+		log.Println("[CRITAL]oldOwner or newOwner is nil: return false.")
+		return false
+	}
+
+	oldOwnerId := oldOwner.SelectElement("ID")
+	oldOwnerName := oldOwner.SelectElement("DisplayName")
+	newOwnerId := newOwner.SelectElement("ID")
+	newOwnerName := newOwner.SelectElement("DisplayName")
+
+	// diff: Owner element
+	if oldOwnerId.Text() != newOwnerId.Text() || oldOwnerName.Text() != newOwnerName.Text() {
+		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] or OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text(), oldOwnerName.Text(), newOwnerName.Text())
+		return false
+	}
+
+	// diff check: owner display name(if have)
+	if oldOwnerName != nil {
+		if newOwnerName == nil {
+			log.Println("[CRITAL]newOwnerName is nil: return false.")
+			return false
+		}
+		if oldOwnerName.Text() != newOwnerName.Text() {
+			log.Printf("[CRITAL]OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerName.Text(), newOwnerName.Text())
+			return false
+		}
+	}
+
+	// diff: ACL element
+	for _, oldGrantee := range oldRoot.FindElements("//Grantee") {
+		for _, attr := range oldGrantee.Attr {
+			if attr.Key != "type" {
+				// only need to handle the type attribute
+				continue
+			}
+			// anonymous or real user
+			oldGranteeType := attr.Value
+
+			oldGranteeID := oldGrantee.SelectElement("ID")
+			oldGranteeURI := oldGrantee.SelectElement("URI")
+			oldGranteeDisplayName := oldGrantee.SelectElement("DisplayName")
+			oldGrant := oldGrantee.Parent()
+			oldGrantPermission := oldGrant.SelectElement("Permission")
+
+			// find the new grant permission by specified grantee type
+			result = false
+			for _, newGrantee := range newRoot.FindElements(fmt.Sprintf("//Grantee[@type='%s']", oldGranteeType)) {
+				newGranteeID := newGrantee.SelectElement("ID")
+				newGranteeURI := newGrantee.SelectElement("URI")
+				newGranteeDisplayName := newGrantee.SelectElement("DisplayName")
+				newGrant := newGrantee.Parent()
+				newGrantPermission := newGrant.SelectElement("Permission")
+
+				// diff check: grantee id and name for real user
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					if oldGranteeID == nil || newGranteeID == nil {
+						continue
+					}
+					if oldGranteeID.Text() != newGranteeID.Text() {
+						continue
+					}
+
+					// diff check: grantee display name(if have)
+					if oldGranteeDisplayName != nil {
+						if newGranteeDisplayName == nil {
+							continue
+						}
+						if oldGranteeDisplayName.Text() != newGranteeDisplayName.Text() {
+							continue
+						}
+					}
+				}
+
+				// diff check: grantee uri for anonymous
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_ANONYMOUS {
+					if oldGranteeURI == nil || newGranteeURI == nil {
+						continue
+					}
+					if oldGranteeURI.Text() != newGranteeURI.Text() {
+						continue
+					}
+				}
+
+				// diff check: permission
+				if oldGrantPermission == nil || newGrantPermission == nil {
+					continue
+				}
+				if oldGrantPermission.Text() != newGrantPermission.Text() {
+					continue
+				}
+
+				// congrats! passed all diff checks for this grant.
+				result = true
+
+				var uid string
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					uid = oldGranteeID.Text()
+				} else {
+					uid = oldGranteeURI.Text()
+				}
+				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s]\n", oldGranteeType, uid)
+				break
+			}
+		}
+	}
+	log.Printf("[DEBUG] Owner:%s's final equation result between old and new ACL is:[%v]\n", oldOwnerId.Text(), result)
+	return result
 }

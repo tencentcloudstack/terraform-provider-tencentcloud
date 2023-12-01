@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -76,7 +76,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
+func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -93,6 +93,14 @@ func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_id"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_role"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "unschedulable"),
+				),
+			},
+			{
+				Config: testAccTkeScaleWorkerInstanceGpuInsTypeUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeScaleWorkerExists(testTkeScaleWorkerResourceKey),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "gpu_args.#"),
 				),
 			},
 		},
@@ -232,6 +240,61 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     enhanced_monitor_service  				= false
     user_data                 				= "dGVzdA=="
     password                  				= "AABBccdd1122"
+  }
+}
+`
+
+const testAccTkeScaleWorkerInstanceGpuInsTypeUpdate string = testAccTkeScaleWorkerInstanceBasic + `
+
+resource tencentcloud_kubernetes_scale_worker test_scale {
+  cluster_id = local.cluster_id
+  
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]	
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  unschedulable = 0
+
+  worker_config {
+    count                      				= 1
+    availability_zone          				= var.default_az
+    instance_type              				= "GN6S.LARGE20"
+    subnet_id                  				= local.subnet_id
+    system_disk_type           				= "CLOUD_SSD"
+    system_disk_size           				= 50
+    internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
+    security_group_ids                      = [local.sg_id]
+	img_id 								    = "img-eb30mz89"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service 				= false
+    enhanced_monitor_service  				= false
+    user_data                 				= "dGVzdA=="
+    password                  				= "AABBccdd1122"
+  }
+
+  gpu_args {
+    mig_enable = false
+    driver = {
+      name = "NVIDIA-Linux-x86_64-470.182.03.run"
+      version = "470.182.03"
+    }
+    cuda = {
+      name = "cuda_11.4.3_470.82.01_linux.run"
+      version = "11.4.3"
+    }
+    cudnn = {
+      name = "cudnn-11.4-linux-x64-v8.2.4.15.tgz"
+      version = "8.2.4"
+    }
   }
 }
 `

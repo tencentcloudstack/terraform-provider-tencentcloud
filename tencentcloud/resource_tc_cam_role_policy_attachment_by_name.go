@@ -4,9 +4,25 @@ Provides a resource to create a CAM role policy attachment.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cam_role_policy_attachment_by_name" "foo" {
-  role_name   = xxxxx
-  policy_name = yyyyy
+variable "cam_policy_basic" {
+  default = "keep-cam-policy"
+}
+
+variable "cam_role_basic" {
+  default = "keep-cam-role"
+}
+
+data "tencentcloud_cam_policies" "policy" {
+  name        = var.cam_policy_basic
+}
+
+data "tencentcloud_cam_roles" "roles" {
+  name        = var.cam_role_basic
+}
+
+resource "tencentcloud_cam_role_policy_attachment_by_name" "role_policy_attachment_basic" {
+  role_name   = var.cam_role_basic
+  policy_name = var.cam_policy_basic
 }
 ```
 
@@ -27,8 +43,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_tcr_tag_retention_executions
+```
+
+```release-note:new-data-source
+tencentcloud_tcr_replication_instance_create_tasks
+```
+
+```release-note:new-data-source
+tencentcloud_tcr_replication_instance_sync_status
+```

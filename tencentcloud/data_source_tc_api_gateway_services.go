@@ -28,8 +28,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 )
 
@@ -83,6 +83,7 @@ func dataSourceTencentCloudAPIGatewayServices() *schema.Resource {
 						"exclusive_set_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.81.9.",
 							Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 						},
 						"net_type": {
@@ -262,11 +263,11 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 		}
 
 		list = append(list, map[string]interface{}{
-			"service_id":          info.Response.ServiceId,
-			"service_name":        info.Response.ServiceName,
-			"protocol":            info.Response.Protocol,
-			"service_desc":        info.Response.ServiceDesc,
-			"exclusive_set_name":  info.Response.ExclusiveSetName,
+			"service_id":   info.Response.ServiceId,
+			"service_name": info.Response.ServiceName,
+			"protocol":     info.Response.Protocol,
+			"service_desc": info.Response.ServiceDesc,
+			//"exclusive_set_name":  info.Response.ExclusiveSetName,
 			"ip_version":          info.Response.IpVersion,
 			"net_type":            info.Response.NetTypes,
 			"internal_sub_domain": info.Response.InternalSubDomain,

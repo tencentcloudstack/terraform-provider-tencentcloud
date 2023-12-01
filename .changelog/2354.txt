@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_node_pool: Add verification when modifying the maximum value and expected value synchronously.
+```

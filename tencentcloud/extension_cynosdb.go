@@ -1,8 +1,8 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
@@ -25,6 +25,19 @@ const (
 
 	CYNOSDB_INSGRP_HA = "ha"
 	CYNOSDB_INSGRP_RO = "ro"
+
+	// 0-成功，1-失败，2-处理中
+	CYNOSDB_FLOW_STATUS_SUCCESSFUL = "0"
+	CYNOSDB_FLOW_STATUS_FAILED     = "1"
+	CYNOSDB_FLOW_STATUS_PROCESSING = "2"
+)
+
+const (
+	STATUS_YES = "yes"
+	STATUS_NO  = "no"
+
+	RW_TYPE = "READWRITE"
+	RO_TYPE = "READONLY"
 )
 
 var (
@@ -78,7 +91,7 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 			},
 			Elem: &schema.Schema{Type: schema.TypeString},
 			Set: func(v interface{}) int {
-				return hashcode.String(v.(string))
+				return helper.HashString(v.(string))
 			},
 			Description: "Weekdays for maintenance. `[\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"]` by default.",
 		},
@@ -115,14 +128,17 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "ID of the VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "ID of the subnet within this VPC.",
+		},
+		"old_ip_reserve_hours": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.",
 		},
 		"port": {
 			Type:        schema.TypeInt,
@@ -146,13 +162,17 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"storage_limit": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
-			Description: "Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.",
+			Description: "Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.",
+		},
+		"storage_pay_mode": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.",
 		},
 		"cluster_name": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "Name of CynosDB cluster.",
 		},
 		"password": {
@@ -181,7 +201,6 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
 			Default:     0,
 			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.",
 		},

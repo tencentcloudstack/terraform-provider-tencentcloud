@@ -11,8 +11,8 @@ import (
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 var testTkeClusterName = "tencentcloud_kubernetes_cluster"
@@ -78,6 +78,8 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "auto_upgrade_cluster_level", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_internet_domain", "tf.cluster-internet.com"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_intranet_domain", "tf.cluster-intranet.com"),
 				),
 			},
 			{
@@ -87,6 +89,8 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test2"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc 2"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L5"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_internet_domain", "tf2.cluster-internet.com"),
+					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "auth_options.0.auto_create_discovery_anonymous_auth"),
 				),
 			},
 			{
@@ -356,8 +360,10 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_internet_domain                    = "tf.cluster-internet.com"
   cluster_intranet                           = true
-  cluster_version                            = "1.18.4"
+  cluster_intranet_domain                    = "tf.cluster-intranet.com"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
@@ -423,8 +429,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc 2"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_internet_domain                    = "tf2.cluster-internet.com"
   cluster_intranet                           = false
-  cluster_version                            = "1.18.4"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   cluster_internet_security_group               = local.sg_id2
@@ -473,6 +480,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   extra_args = [
  	"root-dir=/var/lib/kubelet"
   ]
+
+  auth_options {
+    auto_create_discovery_anonymous_auth = true
+    use_tke_default = true
+  }
 }
 `
 const testAccTkeClusterUpdateLevel = TkeDeps + `
@@ -488,7 +500,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc 3"
   cluster_max_service_num                    = 32
   cluster_internet                           = false
-  cluster_version                            = "1.18.4"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L20"
   auto_upgrade_cluster_level				 = false

@@ -4,15 +4,32 @@ Use this resource to create SQL Server instance
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_instance" "foo" {
-  name = "example"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id      = "vpc-409mvdvv"
-  subnet_id = "subnet-nf9n81ps"
-  project_id = 123
-  memory = 2
-  storage = 100
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 100
 }
 ```
 
@@ -21,7 +38,7 @@ Import
 SQL Server instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_instance.example mssql-3cdq7kx5
 ```
 */
 package tencentcloud
@@ -29,9 +46,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -74,13 +92,11 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		},
 		"vpc_id": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "ID of VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "ID of subnet.",
 		},
@@ -139,6 +155,12 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 			Type:        schema.TypeMap,
 			Optional:    true,
 			Description: "The tags of the SQL Server.",
+		},
+		"wait_switch": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Deprecated:  "It has been deprecated from version 1.81.2.",
+			Description: "The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.",
 		},
 	}
 
@@ -323,7 +345,7 @@ func resourceTencentCloudSqlserverInstanceCreate(d *schema.ResourceData, meta in
 	request.GoodsNum = helper.IntInt64(1)
 	request.Zone = &zone
 
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = sqlserverService.CreateSqlserverInstance(ctx, request)
 		if inErr != nil {
 			return retryError(inErr)
@@ -443,6 +465,70 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 	return nil
 }
 
+func sqlServerAllInstanceNetUpdate(d *schema.ResourceData, meta interface{}) error {
+	var (
+		logId       = getLogId(contextNil)
+		request     = sqlserver.NewModifyDBInstanceNetworkRequest()
+		flowRequest = sqlserver.NewDescribeFlowStatusRequest()
+		flowId      int64
+		instanceId  = d.Id()
+	)
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+		request.InstanceId = &instanceId
+		request.NewVpcId = &vpcId
+		request.NewSubnetId = &subnetId
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBInstanceNetwork(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil {
+				e = fmt.Errorf("sqlserver configInstanceNetwork not exists")
+				return resource.NonRetryableError(e)
+			}
+
+			flowId = *result.Response.FlowId
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update sqlserver configInstanceNetwork failed, reason:%+v", logId, err)
+			return err
+		}
+
+		flowRequest.FlowId = &flowId
+		err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().DescribeFlowStatus(flowRequest)
+			if e != nil {
+				return retryError(e)
+			}
+
+			if *result.Response.Status == SQLSERVER_TASK_SUCCESS {
+				return nil
+			} else if *result.Response.Status == SQLSERVER_TASK_RUNNING {
+				return resource.RetryableError(fmt.Errorf("sqlserver configInstanceNetwork status is running"))
+			} else if *result.Response.Status == int64(SQLSERVER_TASK_FAIL) {
+				return resource.NonRetryableError(fmt.Errorf("sqlserver configInstanceNetwork status is fail"))
+			} else {
+				e = fmt.Errorf("sqlserver configInstanceNetwork status illegal")
+				return resource.NonRetryableError(e)
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create sqlserver configInstanceNetwork failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+	return nil
+}
+
 func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_sqlserver_instance.update")()
 
@@ -452,6 +538,11 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+
+	//update network
+	if err := sqlServerAllInstanceNetUpdate(d, meta); err != nil {
 		return err
 	}
 
@@ -476,7 +567,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("maintenance_week_set") || d.HasChange("maintenance_start_time") || d.HasChange("maintenance_time_span") {
@@ -501,9 +591,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("maintenance_week_set")
-		d.SetPartial("maintenance_start_time")
-		d.SetPartial("maintenance_time_span")
 	}
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
@@ -514,7 +601,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
@@ -554,7 +640,7 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	_ = d.Set("vpc_id", instance.UniqVpcId)
 	_ = d.Set("subnet_id", instance.UniqSubnetId)
 	_ = d.Set("name", instance.Name)
-	_ = d.Set("charge_type", instance.PayMode)
+	_ = d.Set("charge_type", helper.Int64ToStr(*instance.PayMode))
 
 	if int(*instance.PayMode) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
@@ -577,7 +663,7 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	if outErr != nil {
 		errRet = outErr
 	}
-	//computed
+
 	_ = d.Set("ro_flag", instance.ROFlag)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("status", instance.Status)
@@ -701,25 +787,5 @@ func resourceTencentCLoudSqlserverInstanceDelete(d *schema.ResourceData, meta in
 		return outErr
 	}
 
-	outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
-	if outErr != nil {
-		return outErr
-	}
-
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, has, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, d.Id())
-		if inErr != nil {
-			return retryError(inErr)
-		}
-		if has {
-			inErr = fmt.Errorf("delete SQL Server instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
-			return resource.RetryableError(inErr)
-		}
-		return nil
-	})
-
-	if outErr != nil {
-		return outErr
-	}
 	return nil
 }

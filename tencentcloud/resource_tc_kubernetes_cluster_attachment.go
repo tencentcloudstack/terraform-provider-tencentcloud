@@ -5,95 +5,95 @@ Example Usage
 
 ```hcl
 
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
+	variable "availability_zone" {
+	  default = "ap-guangzhou-3"
+	}
 
-variable "cluster_cidr" {
-  default = "172.16.0.0/16"
-}
+	variable "cluster_cidr" {
+	  default = "172.16.0.0/16"
+	}
 
-variable "default_instance_type" {
-  default = "S1.SMALL1"
-}
+	variable "default_instance_type" {
+	  default = "S1.SMALL1"
+	}
 
-data "tencentcloud_images" "default" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "centos"
-}
+	data "tencentcloud_images" "default" {
+	  image_type = ["PUBLIC_IMAGE"]
+	  os_name    = "centos"
+	}
 
+	data "tencentcloud_vpc_subnets" "vpc" {
+	  is_default        = true
+	  availability_zone = var.availability_zone
+	}
 
-data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
-  availability_zone = var.availability_zone
-}
+	data "tencentcloud_instance_types" "default" {
+	  filter {
+	    name   = "instance-family"
+	    values = ["SA2"]
+	  }
 
-data "tencentcloud_instance_types" "default" {
-  filter {
-    name   = "instance-family"
-    values = ["SA2"]
-  }
+	  cpu_core_count = 8
+	  memory_size    = 16
+	}
 
-  cpu_core_count = 8
-  memory_size    = 16
-}
+	resource "tencentcloud_instance" "foo" {
+	  instance_name     = "tf-auto-test-1-1"
+	  availability_zone = var.availability_zone
+	  image_id          = data.tencentcloud_images.default.images.0.image_id
+	  instance_type     = var.default_instance_type
+	  system_disk_type  = "CLOUD_PREMIUM"
+	  system_disk_size  = 50
+	}
 
-resource "tencentcloud_instance" "foo" {
-  instance_name     = "tf-auto-test-1-1"
-  availability_zone = var.availability_zone
-  image_id          = data.tencentcloud_images.default.images.0.image_id
-  instance_type     = var.default_instance_type
-  system_disk_type  = "CLOUD_PREMIUM"
-  system_disk_size  = 50
-}
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+	  cluster_cidr            = "10.1.0.0/16"
+	  cluster_max_pod_num     = 32
+	  cluster_name            = "keep"
+	  cluster_desc            = "test cluster desc"
+	  cluster_max_service_num = 32
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
-  cluster_cidr            = "10.1.0.0/16"
-  cluster_max_pod_num     = 32
-  cluster_name            = "keep"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	  cluster_deploy_type = "MANAGED_CLUSTER"
+	}
 
-  cluster_deploy_type = "MANAGED_CLUSTER"
-}
+	resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
+	  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
+	  instance_id = tencentcloud_instance.foo.id
+	  password    = "Lo4wbdit"
 
-resource "tencentcloud_kubernetes_cluster_attachment" "test_attach" {
-  cluster_id  = tencentcloud_kubernetes_cluster.managed_cluster.id
-  instance_id = tencentcloud_instance.foo.id
-  password    = "Lo4wbdit"
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
+	  worker_config_overrides {
+	    desired_pod_num = 8
+	  }
+	}
 
-  worker_config_overrides {
-    desired_pod_num = 8
-  }
-}
 ```
 */
 package tencentcloud
@@ -103,14 +103,49 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func TKEGpuArgsSetting() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"mig_enable": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Whether to enable MIG.",
+		},
+		"driver": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+		},
+		"cuda": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
+		},
+		"cudnn": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Description: "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`." +
+				" `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
+		},
+		"custom_driver": {
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
+		},
+	}
+}
 
 func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -205,6 +240,16 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
+		},
+		"gpu_args": {
+			Type:     schema.TypeList,
+			Optional: true,
+			ForceNew: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: TKEGpuArgsSetting(),
+			},
+			Description: "GPU driver parameters.",
 		},
 	}
 }
@@ -310,31 +355,37 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 	}
 
 	if v, ok := dMap["data_disk"]; ok {
-
 		dataDisks := v.([]interface{})
-		setting.DataDisks = make([]*tke.DataDisk, 0, len(dataDisks))
+		setting.DataDisks = make([]*tke.DataDisk, len(dataDisks))
+		for i, d := range dataDisks {
+			value := d.(map[string]interface{})
+			var diskType, fileSystem, mountTarget, diskPartition string
+			if v, ok := value["disk_type"].(string); ok {
+				diskType = v
+			}
+			if v, ok := value["file_system"].(string); ok {
+				fileSystem = v
+			}
+			if v, ok := value["mount_target"].(string); ok {
+				mountTarget = v
+			}
+			if v, ok := value["disk_partition"].(string); ok {
+				diskPartition = v
+			}
 
-		for _, d := range dataDisks {
-			var (
-				value              = d.(map[string]interface{})
-				diskType           = value["disk_type"].(string)
-				diskSize           = int64(value["disk_size"].(int))
-				fileSystem         = value["file_system"].(string)
-				autoFormatAndMount = value["auto_format_and_mount"].(bool)
-				mountTarget        = value["mount_target"].(string)
-				diskPartition      = value["disk_partition"].(string)
-				dataDisk           = tke.DataDisk{
-					DiskType:           &diskType,
-					FileSystem:         &fileSystem,
-					AutoFormatAndMount: &autoFormatAndMount,
-					MountTarget:        &mountTarget,
-					DiskPartition:      &diskPartition,
-				}
-			)
+			diskSize := int64(value["disk_size"].(int))
+			autoFormatAndMount := value["auto_format_and_mount"].(bool)
+			dataDisk := &tke.DataDisk{
+				DiskType:           &diskType,
+				FileSystem:         &fileSystem,
+				AutoFormatAndMount: &autoFormatAndMount,
+				MountTarget:        &mountTarget,
+				DiskPartition:      &diskPartition,
+			}
 			if diskSize > 0 {
 				dataDisk.DiskSize = &diskSize
 			}
-			setting.DataDisks = append(setting.DataDisks, &dataDisk)
+			setting.DataDisks[i] = dataDisk
 		}
 	}
 	if v, ok := dMap["is_schedule"]; ok {
@@ -361,6 +412,51 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
 		}
 		setting.ExtraArgs = &clusterExtraArgs
+	}
+
+	// get gpu_args
+	if v, ok := dMap["gpu_args"]; ok && len(v.([]interface{})) > 0 {
+		gpuArgs := v.([]interface{})[0].(map[string]interface{})
+
+		var (
+			migEnable    = gpuArgs["mig_enable"].(bool)
+			driver       = gpuArgs["driver"].(map[string]interface{})
+			cuda         = gpuArgs["cuda"].(map[string]interface{})
+			cudnn        = gpuArgs["cudnn"].(map[string]interface{})
+			customDriver = gpuArgs["custom_driver"].(map[string]interface{})
+		)
+		tkeGpuArgs := tke.GPUArgs{}
+		tkeGpuArgs.MIGEnable = &migEnable
+		if len(driver) > 0 {
+			tkeGpuArgs.Driver = &tke.DriverVersion{
+				Version: helper.String(driver["version"].(string)),
+				Name:    helper.String(driver["name"].(string)),
+			}
+		}
+		if len(cuda) > 0 {
+			tkeGpuArgs.CUDA = &tke.DriverVersion{
+				Version: helper.String(cuda["version"].(string)),
+				Name:    helper.String(cuda["name"].(string)),
+			}
+		}
+		if len(cudnn) > 0 {
+			tkeGpuArgs.CUDNN = &tke.CUDNN{
+				Version: helper.String(cudnn["version"].(string)),
+				Name:    helper.String(cudnn["name"].(string)),
+			}
+			if cudnn["doc_name"] != nil {
+				tkeGpuArgs.CUDNN.DocName = helper.String(cudnn["doc_name"].(string))
+			}
+			if cudnn["dev_name"] != nil {
+				tkeGpuArgs.CUDNN.DevName = helper.String(cudnn["dev_name"].(string))
+			}
+		}
+		if len(customDriver) > 0 {
+			tkeGpuArgs.CustomDriver = &tke.CustomDriver{
+				Address: helper.String(customDriver["address"].(string)),
+			}
+		}
+		setting.GPUArgs = &tkeGpuArgs
 	}
 
 	return setting

@@ -1,31 +1,39 @@
 /*
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create prepaid ckafka instance.
-
 Example Usage
 
+Basic Instance
 ```hcl
-resource "tencentcloud_ckafka_instance" "foo" {
-  band_width          = 40
-  disk_size           = 500
-  disk_type           = "CLOUD_BASIC"
-  period              = 1
-  instance_name       = "ckafka-instance-tf-test"
-  specifications_type = "profession"
-  kafka_version       = "1.1.1"
-  msg_retention_time  = 1300
-  multi_zone_flag     = true
-  partition           = 800
-  public_network      = 3
-  renew_flag          = 0
-  subnet_id           = "subnet-4vwihrzk"
-  vpc_id              = "vpc-82p1t1nv"
-  zone_id             = 100006
-  zone_ids            = [
-    100006,
-    100007,
-  ]
+variable "vpc_id" {
+  default = "vpc-68vi2d3h"
+}
+
+variable "subnet_id" {
+  default = "subnet-ob6clqwk"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz" {
+  name    = "ap-guangzhou-3"
+  product = "ckafka"
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
+  instance_name      = "ckafka-instance-prepaid"
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  period             = 1
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "2.4.1"
+  disk_size          = 200
+  disk_type          = "CLOUD_BASIC"
+  band_width = 20
+  partition = 400
+
+  specifications_type = "standard"
+  instance_type       = 2
 
   config {
     auto_create_topic_enable   = true
@@ -34,10 +42,81 @@ resource "tencentcloud_ckafka_instance" "foo" {
   }
 
   dynamic_retention_config {
-    bottom_retention        = 0
-    disk_quota_percentage   = 0
-    enable                  = 1
-    step_forward_percentage = 0
+    enable = 1
+  }
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
+  instance_name      = "ckafka-instance-postpaid"
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  kafka_version      = "1.1.1"
+  disk_size          = 200
+  band_width         = 20
+  disk_type          = "CLOUD_BASIC"
+  partition          = 400
+  charge_type        = "POSTPAID_BY_HOUR"
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
+  }
+}
+```
+
+Multi zone Instance
+```hcl
+variable "vpc_id" {
+  default = "vpc-68vi2d3h"
+}
+
+variable "subnet_id" {
+  default = "subnet-ob6clqwk"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz3" {
+  name    = "ap-guangzhou-3"
+  product = "ckafka"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz6" {
+  name    = "ap-guangzhou-6"
+  product = "ckafka"
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance" {
+  instance_name   = "ckafka-instance-maz-tf-test"
+  zone_id         = data.tencentcloud_availability_zones_by_product.gz3.zones.0.id
+  multi_zone_flag = true
+  zone_ids        = [
+    data.tencentcloud_availability_zones_by_product.gz3.zones.0.id,
+    data.tencentcloud_availability_zones_by_product.gz6.zones.0.id
+  ]
+  period             = 1
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "1.1.1"
+  disk_size          = 500
+  disk_type          = "CLOUD_BASIC"
+
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
   }
 }
 ```
@@ -56,9 +135,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
+	"strings"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -103,10 +185,33 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{"standard", "profession"}),
 				Description:  "Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.",
 			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      CKAFKA_CHARGE_TYPE_PREPAID,
+				ValidateFunc: validateAllowedStringValue([]string{CKAFKA_CHARGE_TYPE_POSTPAID, CKAFKA_CHARGE_TYPE_PREPAID}),
+				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `PREPAID`.",
+			},
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Prepaid purchase time, such as 1, is one month.",
+			},
+			"instance_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}),
+				Description:  "Description of instance type. `profession`: 1, `standard`:  1(general), 2(standard), 3(advanced), 4(capacity), 5(specialized-1), 6(specialized-2), 7(specialized-3), 8(specialized-4), 9(exclusive).",
+			},
+			"upgrade_strategy": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1,
+				Description: "POSTPAID_BY_HOUR scale-down mode\n" +
+					"- 1: stable transformation;\n" +
+					"- 2: High-speed transformer.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -280,7 +385,15 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
+				Deprecated:  "It has been deprecated from version 1.81.6. If set public network value, it will cause error.",
 				Description: "Bandwidth of the public network.",
+			},
+			"max_message_byte": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateIntegerInRange(1024, 12*1024*1024),
+				Description:  "The size of a single message in bytes at the instance level. Value range: `1024 - 12*1024*1024 bytes (i.e., 1KB-12MB).",
 			},
 			"vip": {
 				Type:        schema.TypeString,
@@ -296,64 +409,59 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ckafka_instance.create")()
-	var (
-		logId   = getLogId(contextNil)
-		service = CkafkaService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
-		request  = ckafka.NewCreateInstancePreRequest()
-		response = ckafka.NewCreateInstancePreResponse()
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-	)
+func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
+	values := reflect.ValueOf(request).Elem()
+
 	instanceName := d.Get("instance_name").(string)
-	request.InstanceName = &instanceName
+	zoneId := d.Get("zone_id").(int)
+	values.FieldByName("InstanceName").Set(reflect.ValueOf(helper.String(instanceName)))
+	values.FieldByName("ZoneId").Set(reflect.ValueOf(helper.IntInt64(zoneId)))
 
-	zoneId := int64(d.Get("zone_id").(int))
-	request.ZoneId = &zoneId
+	requestType := reflect.TypeOf(request)
+	if strings.Contains(requestType.String(), "CreateInstancePreRequest") {
+		if v, ok := d.GetOk("period"); ok {
+			period := int64(v.(int))
+			values.FieldByName("Period").Set(reflect.ValueOf(helper.String(fmt.Sprintf("%dm", period))))
+		}
+		if v, ok := d.GetOk("renew_flag"); ok {
+			values.FieldByName("RenewFlag").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+		}
+	}
 
-	period := int64(d.Get("period").(int))
-	request.Period = helper.String(fmt.Sprintf("%dm", period))
-	request.InstanceType = helper.IntInt64(1)
+	instanceType := helper.IntInt64(1)
+	if v, ok := d.GetOkExists("instance_type"); ok {
+		instanceType = helper.IntInt64(v.(int))
+	}
+	values.FieldByName("InstanceType").Set(reflect.ValueOf(instanceType))
 
 	if v, ok := d.GetOk("specifications_type"); ok {
-		request.SpecificationsType = helper.String(v.(string))
+		values.FieldByName("SpecificationsType").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
-		vpcId := v.(string)
-		request.VpcId = helper.String(vpcId)
+		values.FieldByName("VpcId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("subnet_id"); ok {
-		subnetId := v.(string)
-		request.SubnetId = helper.String(subnetId)
-	}
-
-	if v, ok := d.GetOk("renew_flag"); ok {
-		renewFlag := int64(v.(int))
-		request.RenewFlag = helper.Int64(renewFlag)
+		values.FieldByName("SubnetId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("kafka_version"); ok {
-		kafkaVersion := v.(string)
-		request.KafkaVersion = helper.String(kafkaVersion)
+		values.FieldByName("KafkaVersion").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("disk_size"); ok {
-		diskSize := int64(v.(int))
-		request.DiskSize = helper.Int64(diskSize)
+		values.FieldByName("DiskSize").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+
 	}
 
 	if v, ok := d.GetOk("band_width"); ok {
-		bandWidth := int64(v.(int))
-		request.BandWidth = helper.Int64(bandWidth)
+		values.FieldByName("BandWidth").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
 	}
 
 	if v, ok := d.GetOk("partition"); ok {
-		partition := int64(v.(int))
-		request.Partition = helper.Int64(partition)
+		values.FieldByName("Partition").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -366,33 +474,85 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 			}
 			tagSet = append(tagSet, &tagInfo)
 		}
-		request.Tags = tagSet
+		values.FieldByName("Tags").Set(reflect.ValueOf(tagSet))
 	}
 
 	if v, ok := d.GetOk("disk_type"); ok {
-		diskType := v.(string)
-		request.DiskType = helper.String(diskType)
+		values.FieldByName("DiskType").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if flag := d.Get("multi_zone_flag").(bool); flag {
-		request.MultiZoneFlag = helper.Bool(flag)
+		values.FieldByName("MultiZoneFlag").Set(reflect.ValueOf(helper.Bool(flag)))
+
 		ids := d.Get("zone_ids").(*schema.Set).List()
+		zoneIds := make([]*int64, 0)
 		for _, v := range ids {
-			request.ZoneIds = append(request.ZoneIds, helper.IntInt64(v.(int)))
+			zoneIds = append(zoneIds, helper.IntInt64(v.(int)))
 		}
+		values.FieldByName("ZoneIds").Set(reflect.ValueOf(zoneIds))
 	}
+}
 
-	result, err := service.client.UseCkafkaClient().CreateInstancePre(request)
-	response = result
-
+func createCkafkaInstancePostPaid(ctx context.Context, d *schema.ResourceData, meta interface{}) (instanceId *string, err error) {
+	logId := getLogId(ctx)
+	request := ckafka.NewCreatePostPaidInstanceRequest()
+	ckafkaRequestSetParams(request, d)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().CreatePostPaidInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s create ckafka instance failed, reason:%s\n", logId, err.Error())
-		return err
+		return
 	}
+	if response.Response == nil || response.Response.Result.Data == nil {
+		err = fmt.Errorf("CreatePostPaidInstance response is nil")
+		return
+	}
+	instanceId = response.Response.Result.Data.InstanceId
+	return
+}
+func createCkafkaInstancePrePaid(ctx context.Context, d *schema.ResourceData, meta interface{}) (instanceId *string, err error) {
+	logId := getLogId(ctx)
+	request := ckafka.NewCreateInstancePreRequest()
+	ckafkaRequestSetParams(request, d)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().CreateInstancePre(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s create ckafka instance failed, reason:%s\n", logId, err.Error())
+		return
+	}
+	if response.Response == nil || response.Response.Result.Data == nil {
+		err = fmt.Errorf("CreateInstancePre response is nil")
+		return
+	}
+	instanceId = response.Response.Result.Data.InstanceId
+	return
+}
 
-	instanceId := response.Response.Result.Data.InstanceId
+func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ckafka_instance.create")()
+	var (
+		instanceId *string
+		createErr  error
+		logId      = getLogId(contextNil)
+		service    = CkafkaService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		ctx = context.WithValue(context.TODO(), logIdKey, logId)
+	)
 
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	chargeType := d.Get("charge_type").(string)
+	if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+		instanceId, createErr = createCkafkaInstancePostPaid(ctx, d, meta)
+	} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+		instanceId, createErr = createCkafkaInstancePrePaid(ctx, d, meta)
+	} else {
+		return fmt.Errorf("invalid `charge_type` value")
+	}
+	if createErr != nil {
+		return createErr
+	}
+	if instanceId == nil {
+		return fmt.Errorf("instanceId is nil")
+	}
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		has, ready, err := service.CheckCkafkaInstanceReady(ctx, *instanceId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -418,6 +578,7 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	modifyRequest.InstanceId = instanceId
 
 	if v, ok := d.GetOk("msg_retention_time"); ok {
+		needModify = true
 		retentionTime := int64(v.(int))
 		modifyRequest.MsgRetentionTime = helper.Int64(retentionTime)
 	}
@@ -475,10 +636,38 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 		modifyRequest.PublicNetwork = helper.Int64(int64(v.(int)))
 	}
 
+	//if v, ok := d.GetOk("dynamic_disk_config"); ok {
+	//	needModify = true
+	//	dynamic := make([]*ckafka.DynamicDiskConfig, 0, 10)
+	//	for _, item := range v.([]interface{}) {
+	//		dMap := item.(map[string]interface{})
+	//		dynamicInfo := ckafka.DynamicDiskConfig{}
+	//		if enable, ok := dMap["enable"]; ok {
+	//			dynamicInfo.Enable = helper.Int64(int64(enable.(int)))
+	//		}
+	//		if stepForwardPercentage, ok := dMap["step_forward_percentage"]; ok {
+	//			dynamicInfo.StepForwardPercentage = helper.Int64(int64(stepForwardPercentage.(int)))
+	//		}
+	//		if diskQuotaPercentage, ok := dMap["disk_quota_percentage"]; ok {
+	//			dynamicInfo.DiskQuotaPercentage = helper.Int64(int64(diskQuotaPercentage.(int)))
+	//		}
+	//		if maxDiskSpace, ok := dMap["max_disk_space"]; ok {
+	//			dynamicInfo.MaxDiskSpace = helper.Int64(int64(maxDiskSpace.(int)))
+	//		}
+	//		dynamic = append(dynamic, &dynamicInfo)
+	//	}
+	//	modifyRequest.DynamicDiskConfig = dynamic[0]
+	//}
+
+	if v, ok := d.GetOkExists("max_message_byte"); ok {
+		needModify = true
+		modifyRequest.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+	}
+
 	if needModify {
-		error := service.ModifyCkafkaInstanceAttributes(ctx, modifyRequest)
-		if error != nil {
-			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+		err := service.ModifyCkafkaInstanceAttributes(ctx, modifyRequest)
+		if err != nil {
+			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
 		}
 	}
 
@@ -534,11 +723,6 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
-	// calculate period
-	//createTime := *info.CreateTime
-	//expireTime := *info.ExpireTime
-	//period := (expireTime - createTime) / (3600 * 24 * 31)
-	//_ = d.Set("period", &period)
 	_ = d.Set("vpc_id", info.VpcId)
 	_ = d.Set("subnet_id", info.SubnetId)
 	_ = d.Set("renew_flag", info.RenewFlag)
@@ -551,8 +735,10 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("partition", info.MaxPartitionNumber)
 	if *info.InstanceType == "profession" {
 		_ = d.Set("specifications_type", "profession")
+		_ = d.Set("instance_type", 1)
 	} else {
 		_ = d.Set("specifications_type", "standard")
+		_ = d.Set("instance_type", CKAFKA_INSTANCE_TYPE[*info.InstanceType])
 	}
 
 	if len(info.ZoneIds) > 1 {
@@ -584,7 +770,6 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("tag_set", tags)
 
 	_ = d.Set("disk_type", info.DiskType)
-	_ = d.Set("rebalance_time", info.RebalanceTime)
 
 	// query msg_retention_time
 	var (
@@ -621,6 +806,15 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("dynamic_retention_config", dynamicConfig)
 		_ = d.Set("public_network", attr.PublicNetwork)
 
+		//dynamicDiskConfig := make([]map[string]interface{}, 0)
+		//dynamicDiskConfig = append(dynamicDiskConfig, map[string]interface{}{
+		//	"enable":                  attr.DynamicDiskConfig.Enable,
+		//	"disk_quota_percentage":   attr.DynamicDiskConfig.DiskQuotaPercentage,
+		//	"step_forward_percentage": attr.DynamicDiskConfig.StepForwardPercentage,
+		//	"max_disk_space":          attr.DynamicDiskConfig.MaxDiskSpace,
+		//})
+		//_ = d.Set("dynamic_disk_config", dynamicDiskConfig)
+
 		return nil
 	})
 	if err != nil {
@@ -642,7 +836,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"zone_id", "period", "vpc_id",
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
-		"specifications_type",
+		"specifications_type", "instance_type",
 	}
 
 	for _, v := range immutableArgs {
@@ -652,17 +846,20 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 	}
 
 	instanceId := d.Id()
+	modifyInstanceAttributesFlag := false
 	request := ckafka.NewModifyInstanceAttributesRequest()
 	request.InstanceId = &instanceId
 	if d.HasChange("instance_name") {
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("msg_retention_time") {
 		if v, ok := d.GetOk("msg_retention_time"); ok {
 			request.MsgRetentionTime = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
@@ -681,6 +878,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 				configInfo.DefaultReplicationFactor = helper.Int64(int64(defaultReplicationFactor.(int)))
 			}
 			request.Config = &configInfo
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
@@ -702,46 +900,86 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 				dynamicInfo.BottomRetention = helper.Int64(int64(bottomRetention.(int)))
 			}
 			request.DynamicRetentionConfig = &dynamicInfo
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("rebalance_time") {
 		if v, ok := d.GetOk("rebalance_time"); ok {
 			request.RebalanceTime = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
 	if d.HasChange("public_network") {
 		if v, ok := d.GetOk("public_network"); ok {
 			request.PublicNetwork = helper.Int64(int64(v.(int)))
+			modifyInstanceAttributesFlag = true
 		}
 	}
 
-	error := service.ModifyCkafkaInstanceAttributes(ctx, request)
-	if error != nil {
-		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+	if d.HasChange("max_message_byte") {
+		if v, ok := d.GetOkExists("max_message_byte"); ok {
+			request.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+			modifyInstanceAttributesFlag = true
+		}
+	}
+
+	if modifyInstanceAttributesFlag {
+		err := service.ModifyCkafkaInstanceAttributes(ctx, request)
+		if err != nil {
+			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
+		}
 	}
 
 	if d.HasChange("band_width") || d.HasChange("disk_size") || d.HasChange("partition") {
-		request := ckafka.NewModifyInstancePreRequest()
-		request.InstanceId = helper.String(instanceId)
-		if v, ok := d.GetOk("band_width"); ok {
-			request.BandWidth = helper.Int64(int64(v.(int)))
-		}
-		if v, ok := d.GetOk("disk_size"); ok {
-			request.DiskSize = helper.Int64(int64(v.(int)))
-		}
-		if v, ok := d.GetOk("partition"); ok {
-			request.Partition = helper.Int64(int64(v.(int)))
-		}
+		chargeType := d.Get("charge_type").(string)
+		if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+			request := ckafka.NewInstanceScalingDownRequest()
+			request.InstanceId = helper.String(instanceId)
+			upgradeStrategy := d.Get("upgrade_strategy").(int)
+			request.UpgradeStrategy = helper.IntInt64(upgradeStrategy)
+			if v, ok := d.GetOk("band_width"); ok && d.HasChange("band_width") {
+				request.BandWidth = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("disk_size"); ok && d.HasChange("disk_size") {
+				request.DiskSize = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("partition"); ok && d.HasChange("partition") {
+				request.Partition = helper.Int64(int64(v.(int)))
+			}
 
-		_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
-		if err != nil {
-			return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
-				request.GetAction(), request.ToJsonString(), err.Error())
-		}
+			_, err := service.client.UseCkafkaClient().InstanceScalingDown(request)
+			if err != nil {
+				return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+					request.GetAction(), request.ToJsonString(), err.Error())
+			}
+		} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+			request := ckafka.NewModifyInstancePreRequest()
+			request.InstanceId = helper.String(instanceId)
 
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+			if v, ok := d.GetOk("band_width"); ok {
+				request.BandWidth = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("disk_size"); ok {
+				request.DiskSize = helper.Int64(int64(v.(int)))
+			}
+			if v, ok := d.GetOk("partition"); ok {
+				request.Partition = helper.Int64(int64(v.(int)))
+			}
+
+			_, err := service.client.UseCkafkaClient().ModifyInstancePre(request)
+			if err != nil {
+				return fmt.Errorf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]", logId,
+					request.GetAction(), request.ToJsonString(), err.Error())
+			}
+		} else {
+			return fmt.Errorf("invalid `charge_type` value")
+		}
+		// InstanceScalingDown statue delay
+		time.Sleep(5 * time.Second)
+
+		err := resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 			_, ready, err := service.CheckCkafkaInstanceReady(ctx, instanceId)
 			if err != nil {
 				return resource.NonRetryableError(err)
@@ -783,14 +1021,28 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 		service = CkafkaService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		request = ckafka.NewDeleteInstancePreRequest()
 	)
 	instanceId := d.Id()
-	request.InstanceId = &instanceId
+	chargeType := d.Get("charge_type").(string)
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
-		if err != nil {
-			return retryError(err, "UnsupportedOperation")
+		if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+			request := ckafka.NewDeleteInstancePostRequest()
+			request.InstanceId = &instanceId
+			_, err := service.client.UseCkafkaClient().DeleteInstancePost(request)
+			if err != nil {
+				return retryError(err, "UnsupportedOperation")
+			}
+
+		} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+			request := ckafka.NewDeleteInstancePreRequest()
+			request.InstanceId = &instanceId
+			_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+			if err != nil {
+				return retryError(err, "UnsupportedOperation")
+			}
+		} else {
+			return resource.NonRetryableError(fmt.Errorf("invalid `charge_type` value"))
 		}
 		return nil
 	})

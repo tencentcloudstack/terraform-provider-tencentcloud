@@ -18,8 +18,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -35,12 +35,6 @@ func resourceTencentCloudDtsMigrateJobStartOperation() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Job Id from `tencentcloud_dts_migrate_job`.",
-			},
-
-			"status": {
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Migrate job status.",
 			},
 		},
 	}
@@ -110,32 +104,6 @@ func resourceTencentCloudDtsMigrateJobStartOperationCreate(d *schema.ResourceDat
 func resourceTencentCloudDtsMigrateJobStartOperationRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dts_migrate_job_start_operation.read")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	jobId := d.Id()
-
-	migrateJob, err := service.DescribeDtsMigrateJobById(ctx, jobId)
-	if err != nil {
-		return err
-	}
-
-	if migrateJob == nil {
-		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
-	}
-
-	if migrateJob.JobId != nil {
-		_ = d.Set("job_id", migrateJob.JobId)
-	}
-
-	if migrateJob.Status != nil {
-		_ = d.Set("status", migrateJob.Status)
-	}
 
 	return nil
 }

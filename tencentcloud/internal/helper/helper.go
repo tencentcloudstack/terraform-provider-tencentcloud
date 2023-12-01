@@ -12,8 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 )
 
@@ -25,7 +24,12 @@ func DataResourceIdsHash(ids []string) string {
 		buf.WriteString(fmt.Sprintf("%s-", id))
 	}
 
-	return fmt.Sprintf("%d", hashcode.String(buf.String()))
+	return fmt.Sprintf("%d", HashString(buf.String()))
+}
+
+// Generates a hash for the resource
+func ResourceIdsHash(ids []string) string {
+	return DataResourceIdsHash(ids)
 }
 
 // HashString hashes a string to a unique hashcode.
@@ -41,6 +45,17 @@ func HashString(s string) int {
 	}
 	// v == MinInt
 	return 0
+}
+
+// Strings hashes a list of strings to a unique hashcode.
+func HashStrings(strings []string) string {
+	var buf bytes.Buffer
+
+	for _, s := range strings {
+		buf.WriteString(fmt.Sprintf("%s-", s))
+	}
+
+	return fmt.Sprintf("%d", String(buf.String()))
 }
 
 // Generates a hash for the set hash function used by the ID
@@ -174,6 +189,17 @@ func ConvertInterfacesHeadToMap(v interface{}) (result map[string]interface{}, o
 	return
 }
 
+// CovertInterfaceMapToStrPtr returns [string:string] map from a [string:interface] map
+func CovertInterfaceMapToStrPtr(m map[string]interface{}) map[string]*string {
+	result := make(map[string]*string)
+	for k, v := range m {
+		if s, ok := v.(string); ok {
+			result[k] = &s
+		}
+	}
+	return result
+}
+
 func SetMapInterfaces(d *schema.ResourceData, key string, values ...map[string]interface{}) error {
 	val := make([]interface{}, 0, len(values))
 	for i := range values {
@@ -218,4 +244,24 @@ func IsEmptyStr(s *string) bool {
 		return true
 	}
 	return *s == ""
+}
+
+func MapToString(param map[string]interface{}) (string, bool) {
+	data, err := json.Marshal(param)
+	if err != nil {
+		return "", false
+	}
+
+	return string(data), true
+}
+
+func JsonToMap(str string) (map[string]interface{}, error) {
+	var temp map[string]interface{}
+
+	err := json.Unmarshal([]byte(str), &temp)
+	if err != nil {
+		return nil, err
+	}
+
+	return temp, nil
 }

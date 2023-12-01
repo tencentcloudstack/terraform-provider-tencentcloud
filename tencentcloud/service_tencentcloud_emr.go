@@ -2,10 +2,11 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
@@ -163,6 +164,18 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 	if v, ok := d.GetOk("extend_fs_field"); ok {
 		request.ExtendFsField = common.StringPtr(v.(string))
 	}
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		emrTags := make([]*emr.Tag, 0)
+		for k, v := range tags {
+			tagKey := k
+			tagValue := v
+			emrTags = append(emrTags, &emr.Tag{
+				TagKey:   helper.String(tagKey),
+				TagValue: helper.String(tagValue),
+			})
+		}
+		request.Tags = emrTags
+	}
 
 	ratelimit.Check(request.GetAction())
 	//API: https://cloud.tencent.com/document/api/589/34261
@@ -265,5 +278,162 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 		return
 	}
 	nodes = response.Response.NodeList
+	return
+}
+
+func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, instanceId string, oldTags, newTags map[string]interface{}) error {
+	resourceName := BuildTagResourceName("emr", "emr-instance", region, instanceId)
+	rTags, dTags := diffTags(oldTags, newTags)
+	tagService := &TagService{client: me.client}
+	if err := tagService.ModifyTags(ctx, resourceName, rTags, dTags); err != nil {
+		return err
+	}
+
+	addTags := make([]*emr.Tag, 0)
+	modifyTags := make([]*emr.Tag, 0)
+	deleteTags := make([]*emr.Tag, 0)
+	for k, v := range newTags {
+		tagKey := k
+		tageValue := v.(string)
+		_, ok := oldTags[tagKey]
+		if !ok {
+			addTags = append(addTags, &emr.Tag{
+				TagKey:   &tagKey,
+				TagValue: &tageValue,
+			})
+		} else if oldTags[tagKey].(string) != tageValue {
+			modifyTags = append(modifyTags, &emr.Tag{
+				TagKey:   &tagKey,
+				TagValue: &tageValue,
+			})
+		}
+	}
+	for k, v := range oldTags {
+		tagKey := k
+		tageValue := v.(string)
+		_, ok := newTags[tagKey]
+		if !ok {
+			deleteTags = append(deleteTags, &emr.Tag{
+				TagKey:   &tagKey,
+				TagValue: &tageValue,
+			})
+		}
+	}
+	modifyResourceTags := &emr.ModifyResourceTags{
+		Resource:       helper.String(resourceName),
+		ResourceId:     helper.String(instanceId),
+		ResourceRegion: helper.String(region),
+	}
+	if len(addTags) > 0 {
+		modifyResourceTags.AddTags = addTags
+	}
+	if len(modifyTags) > 0 {
+		modifyResourceTags.ModifyTags = modifyTags
+	}
+	if len(deleteTags) > 0 {
+		modifyResourceTags.DeleteTags = deleteTags
+	}
+
+	request := emr.NewModifyResourcesTagsRequest()
+	ratelimit.Check(request.GetAction())
+	request.ModifyType = helper.String("Cluster")
+	request.ModifyResourceTagsInfoList = []*emr.ModifyResourceTags{modifyResourceTags}
+
+	response, err := me.client.UseEmrClient().ModifyResourcesTags(request)
+	if err != nil {
+		return err
+	}
+	if response != nil && response.Response != nil && len(response.Response.FailList) > 0 {
+		return fmt.Errorf("file resource list: %v", response.Response.FailList)
+	}
+	return nil
+}
+
+func (me *EMRService) DescribeEmrUserManagerById(ctx context.Context, instanceId string, userName string) (userManager *emr.DescribeUsersForUserManagerResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := emr.NewDescribeUsersForUserManagerRequest()
+	request.InstanceId = &instanceId
+	request.UserManagerFilter = &emr.UserManagerFilter{
+		UserName: &userName,
+	}
+	request.PageNo = helper.IntInt64(0)
+	request.PageSize = helper.IntInt64(100)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeUsersForUserManager(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	userManager = response.Response
+	return
+}
+
+func (me *EMRService) DeleteEmrUserManagerById(ctx context.Context, instanceId string, userName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := emr.NewDeleteUserManagerUserListRequest()
+	request.InstanceId = &instanceId
+	request.UserNameList = []*string{&userName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DeleteUserManagerUserList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *EMRService) DescribeEmrCvmQuotaByFilter(ctx context.Context, param map[string]interface{}) (cvmQuota *emr.DescribeCvmQuotaResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = emr.NewDescribeCvmQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "ZoneId" {
+			request.ZoneId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEmrClient().DescribeCvmQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	cvmQuota = response.Response
 	return
 }

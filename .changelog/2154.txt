@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_teo_ownership_verify
+```
+
+```release-note:new-resource
+tencentcloud_teo_certificate_config
+```
+
+```release-note:new-resource
+tencentcloud_teo_acceleration_domain
+```
+
+```release-note:enhancement
+resource/tencentcloud_teo_zone: Support create zone with existing plan
+```

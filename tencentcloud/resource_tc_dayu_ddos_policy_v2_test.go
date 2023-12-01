@@ -6,14 +6,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccTencentCloudDayuDdosPolicyV2Resource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATIONAL) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDayuDdosPolicyV2Destroy,
 		Steps: []resource.TestStep{
@@ -103,7 +103,7 @@ func testAccCheckDayuDdosPolicyV2Exists(n string) resource.TestCheckFunc {
 
 const testAccDayuDdosPolicyV2 string = `
 resource "tencentcloud_dayu_ddos_policy_v2" "test_policy" {
-	resource_id = "bgpip-000004xf"
+	resource_id = "bgpip-0000078h"
 	business = "bgpip"
 	ddos_threshold="100"
 	ddos_level="low"
@@ -172,5 +172,15 @@ resource "tencentcloud_dayu_ddos_policy_v2" "test_policy" {
 		offset2=2
 		is_not=0
 		is_not2=0
+	}
+	water_print_config {
+		offset = 1
+		open_status = 1
+		listeners {
+			frontend_port = 90
+			forward_protocol = "TCP"
+			frontend_port_end = 90
+		}
+		verify = "checkall"
 	}
 }`

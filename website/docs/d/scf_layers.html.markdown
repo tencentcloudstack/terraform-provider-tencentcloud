@@ -1,0 +1,42 @@
+---
+subcategory: "Serverless Cloud Function(SCF)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_scf_layers"
+sidebar_current: "docs-tencentcloud-datasource-scf_layers"
+description: |-
+  Use this data source to query detailed information of scf layers
+---
+
+# tencentcloud_scf_layers
+
+Use this data source to query detailed information of scf layers
+
+## Example Usage
+
+```hcl
+data "tencentcloud_scf_layers" "layers" {}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `compatible_runtime` - (Optional, String) Compatible runtimes.
+* `result_output_file` - (Optional, String) Used to save results.
+* `search_key` - (Optional, String) Query key, which fuzzily matches the name.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `layers` - Layer list.
+  * `add_time` - Creation time.
+  * `compatible_runtimes` - Runtime applicable to a versionNote: This field may return null, indicating that no valid values can be obtained.
+  * `description` - Version descriptionNote: This field may return null, indicating that no valid values can be obtained.
+  * `layer_name` - Layer name.
+  * `layer_version` - Version number.
+  * `license_info` - License informationNote: This field may return null, indicating that no valid values can be obtained.
+  * `stamp` - StampNote: This field may return null, indicating that no valid values can be obtained.
+  * `status` - Current status of specific layer version. For valid values, please see [here](https://intl.cloud.tencent.com/document/product/583/47175?from_cn_redirect=1#.E5.B1.82.EF.BC.88layer.EF.BC.89.E7.8A.B6.E6.80.81).
+
+

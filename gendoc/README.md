@@ -38,7 +38,7 @@ DataSourcesMap: map[string]*schema.Resource{
 description 包括一个用于表头的一句话描述，与一个用于正文的详细说明。
 example usage 则是一个或几个使用示例。
 
-description & example usage 需要在对应 resource 及 data_source 定义的文件中出现，它是符合 golang 标准文档注释的写法。例如：
+description & example usage & usage description 需要在对应 resource 及 data_source 定义的文件中出现，它是符合 golang 标准文档注释的写法。例如：
 
     /*
     Use this data source to get information about a MySQL instance.
@@ -46,6 +46,21 @@ description & example usage 需要在对应 resource 及 data_source 定义的�
     ~> **NOTE:** The terminate operation of mysql does NOT take effect immediately，maybe takes for several hours.
     \n
     Example Usage
+    \n
+    Scenario1 title
+    \n
+    Description of the Scenario1
+    \n
+    ```hcl
+    data "tencentcloud_mysql_instance" "database"{
+      mysql_id = "my-test-database"
+      result_output_file = "mytestpath"
+    }
+    ```
+    \n
+    Scenario2 title
+    \n
+    Description of the Scenario2
     \n
     ```hcl
     data "tencentcloud_mysql_instance" "database"{
@@ -65,7 +80,16 @@ description & example usage 需要在对应 resource 及 data_source 定义的�
     \n
     Example Usage
     \n
-    Example Usage 是必须的，在 Example Usage 以下的内容都会当成 Example Usage 填充到文档中。
+    Example Usage 是必须的，在 Example Usage 以下的内容都会填充到文档中。
+    Example Usage 由一个到多个Scenario(场景)构成。
+    每个Scenario 由 Scenario title 和 Scenario description 构成。
+    \n
+    Usage1 title
+    \n
+    Description of the Usage1
+    \n
+    Scenario title 是必须的。
+    Scenario description 是可选的，可以根据情况填写。
     */
     package tencentcloud
 

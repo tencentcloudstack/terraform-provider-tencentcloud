@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a tcm tracing_config
 
+~> **NOTE:** If you use the config attribute tracing in tencentcloud_tcm_mesh, do not use tencentcloud_tcm_tracing_config
+
 Example Usage
 
 ```hcl
@@ -49,8 +51,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 )
 

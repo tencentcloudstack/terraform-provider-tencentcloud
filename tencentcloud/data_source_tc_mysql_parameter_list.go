@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_parameter_list" "mysql" {
-  mysql_id           = "my-test-database"
+  mysql_id           = "terraform-test-local-database"
   engine_version     = "5.5"
   result_output_file = "mytestpath"
 }
@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -88,8 +88,8 @@ func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 			"engine_version": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7"}),
-				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
+				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7", "8.0"}),
+				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

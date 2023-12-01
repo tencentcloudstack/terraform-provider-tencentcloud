@@ -4,8 +4,13 @@ Use this data source to query detailed information of tdmqRocketmq cluster
 Example Usage
 
 ```hcl
-data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  name_keyword = "test_rocketmq"
+data "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  name_keyword = tencentcloud_tdmq_rocketmq_cluster.example.cluster_name
+}
+
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 ```
 */
@@ -15,8 +20,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	rocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

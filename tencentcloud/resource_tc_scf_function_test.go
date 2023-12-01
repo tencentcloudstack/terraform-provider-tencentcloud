@@ -14,8 +14,8 @@ import (
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/pkg/errors"
 )
 
@@ -44,6 +44,9 @@ func init() {
 					createTime := stringTotime(*fun.AddTime)
 					now := time.Now()
 					interval := now.Sub(createTime).Minutes()
+					if strings.HasPrefix(*fun.FunctionName, keepResource) || strings.HasPrefix(*fun.FunctionName, defaultResource) {
+						continue
+					}
 					// less than 30 minute, not delete
 					if needProtect == 1 && int64(interval) < 30 {
 						continue
@@ -100,7 +103,11 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "host", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.example", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 			{
@@ -121,6 +128,10 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckNoResourceAttr("tencentcloud_scf_function.foo", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.abc", "abc"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "ENABLE"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "intranet_config.0.ip_address.#"),
 				),
 			},
 			{
@@ -532,15 +543,22 @@ func scfFunctionRandomName() string {
 
 const testAccScfFunctionBasic = `
 resource "tencentcloud_scf_function" "foo" {
-  name      = "%s"
-  handler   = "first.do_it_first"
-  runtime   = "Python3.6"
+  name              = "%s"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
   enable_public_net = true
+  async_run_enable  = "FALSE"
+
+  dns_cache = false
+  intranet_config {
+    ip_fixed = "DISABLE"
+  }
 
   zip_file = "%s"
 
   tags = {
-    "test" = "test"
+    "test"    = "test"
+    "example" = "test"
   }
 }
 `
@@ -551,6 +569,12 @@ resource "tencentcloud_scf_function" "foo" {
   handler   = "second.do_it_second"
   runtime   = "Python3.6"
   enable_public_net = true
+  async_run_enable = "FALSE"
+
+  dns_cache = true
+  intranet_config {
+    ip_fixed = "ENABLE"
+  }
 
   description = "test"
   mem_size    = 1536

@@ -27,8 +27,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -108,7 +108,7 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls logset failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tdmq instance failed, reason:%+v", logId, err)
 		return err
 	}
 

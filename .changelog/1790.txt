@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_clb_instance_sla_config
+```
+
+```release-note:new-resource
+tencentcloud_clb_instance_mix_ip_target_config
+```
+
+```release-note:new-resource
+tencentcloud_clb_replace_cert_for_lbs
+```

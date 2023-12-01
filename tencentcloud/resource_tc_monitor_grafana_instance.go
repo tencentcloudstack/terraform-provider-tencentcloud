@@ -4,12 +4,29 @@ Provides a resource to create a monitor grafanaInstance
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_monitor_grafana_instance" "foo" {
   instance_name         = "test-grafana"
-  vpc_id                = "vpc-2hfyray3"
-  subnet_ids            = ["subnet-rdkj0agk"]
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
-  enable_internet = false
+  enable_internet 		= false
+  is_destroy 			= true
 
   tags = {
     "createdBy" = "test"
@@ -21,7 +38,7 @@ Import
 
 monitor grafanaInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id
+$ terraform import tencentcloud_monitor_grafana_instance.foo grafanaInstance_id
 ```
 */
 package tencentcloud
@@ -31,8 +48,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -96,10 +113,35 @@ func resourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 				Description: "Control whether grafana could be accessed by internet.",
 			},
 
+			"is_distroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.81.16.",
+				Description: "Whether to clean up completely, the default is false.",
+			},
+
+			"is_destroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to clean up completely, the default is false.",
+			},
+
 			"instance_status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Grafana instance status, 1: Creating, 2: Running, 6: Stopped.",
+			},
+
+			"internet_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Grafana intranet address.",
+			},
+
+			"internal_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Grafana public address.",
 			},
 
 			"tags": {
@@ -143,6 +185,7 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 	}
 
 	if v, _ := d.GetOk("enable_internet"); v != nil {
+		// Internal account won't open
 		request.EnableInternet = helper.Bool(v.(bool))
 	}
 
@@ -249,6 +292,14 @@ func resourceTencentCloudMonitorGrafanaInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("enable_internet", false)
 	}
 
+	if grafanaInstance.InternetUrl != nil {
+		_ = d.Set("internet_url", grafanaInstance.InternetUrl)
+	}
+
+	if grafanaInstance.InternalUrl != nil {
+		_ = d.Set("internal_url", grafanaInstance.InternalUrl)
+	}
+
 	if grafanaInstance.InstanceStatus != nil {
 		_ = d.Set("instance_status", grafanaInstance.InstanceStatus)
 	}
@@ -271,15 +322,28 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := monitor.NewModifyGrafanaInstanceRequest()
-
 	instanceId := d.Id()
 
-	request.InstanceId = &instanceId
-
 	if d.HasChange("instance_name") {
+		request := monitor.NewModifyGrafanaInstanceRequest()
+		request.InstanceId = &instanceId
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyGrafanaInstance(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			return err
 		}
 	}
 
@@ -296,22 +360,26 @@ func resourceTencentCloudMonitorGrafanaInstanceUpdate(d *schema.ResourceData, me
 	}
 
 	if d.HasChange("enable_internet") {
-		return fmt.Errorf("`enable_internet` do not support change now.")
-	}
+		request := monitor.NewEnableGrafanaInternetRequest()
+		request.InstanceID = &instanceId
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyGrafanaInstance(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		if v, ok := d.GetOk("enable_internet"); ok {
+			request.EnableInternet = helper.Bool(v.(bool))
 		}
-		return nil
-	})
 
-	if err != nil {
-		return err
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().EnableGrafanaInternet(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -359,5 +427,33 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 	if err != nil {
 		return err
 	}
+
+	claenFlag := false
+	if v, ok := d.GetOk("is_distroy"); ok && v.(bool) {
+		claenFlag = true
+	}
+	if v, ok := d.GetOk("is_destroy"); ok && v.(bool) {
+		claenFlag = true
+	}
+	if claenFlag {
+		if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance == nil {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }

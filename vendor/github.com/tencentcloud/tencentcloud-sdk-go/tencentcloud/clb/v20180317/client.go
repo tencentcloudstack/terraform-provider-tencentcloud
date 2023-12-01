@@ -3991,6 +3991,70 @@ func (c *Client) ModifyDomainAttributesWithContext(ctx context.Context, request 
     return
 }
 
+func NewModifyFunctionTargetsRequest() (request *ModifyFunctionTargetsRequest) {
+    request = &ModifyFunctionTargetsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "ModifyFunctionTargets")
+    
+    
+    return
+}
+
+func NewModifyFunctionTargetsResponse() (response *ModifyFunctionTargetsResponse) {
+    response = &ModifyFunctionTargetsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyFunctionTargets
+// 修改负载均衡转发规则上所绑定的云函数。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyFunctionTargets(request *ModifyFunctionTargetsRequest) (response *ModifyFunctionTargetsResponse, err error) {
+    return c.ModifyFunctionTargetsWithContext(context.Background(), request)
+}
+
+// ModifyFunctionTargets
+// 修改负载均衡转发规则上所绑定的云函数。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) ModifyFunctionTargetsWithContext(ctx context.Context, request *ModifyFunctionTargetsRequest) (response *ModifyFunctionTargetsResponse, err error) {
+    if request == nil {
+        request = NewModifyFunctionTargetsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyFunctionTargets require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyFunctionTargetsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyListenerRequest() (request *ModifyListenerRequest) {
     request = &ModifyListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4228,8 +4292,6 @@ func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse
 //
 // - 升级为性能容量型实例后，不支持再回退到共享型实例。
 //
-// - 目前性能容量型实例处于内测中，如需升级为性能容量型实例，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。
-//
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
 // 可能返回的错误码:
@@ -4253,8 +4315,6 @@ func (c *Client) ModifyLoadBalancerSla(request *ModifyLoadBalancerSlaRequest) (r
 // - 本接口只支持升级按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行升级。
 //
 // - 升级为性能容量型实例后，不支持再回退到共享型实例。
-//
-// - 目前性能容量型实例处于内测中，如需升级为性能容量型实例，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。
 //
 // - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
@@ -5205,6 +5265,7 @@ func NewSetLoadBalancerSecurityGroupsResponse() (response *SetLoadBalancerSecuri
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) SetLoadBalancerSecurityGroups(request *SetLoadBalancerSecurityGroupsRequest) (response *SetLoadBalancerSecurityGroupsResponse, err error) {
     return c.SetLoadBalancerSecurityGroupsWithContext(context.Background(), request)
@@ -5224,6 +5285,7 @@ func (c *Client) SetLoadBalancerSecurityGroups(request *SetLoadBalancerSecurityG
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 func (c *Client) SetLoadBalancerSecurityGroupsWithContext(ctx context.Context, request *SetLoadBalancerSecurityGroupsRequest) (response *SetLoadBalancerSecurityGroupsResponse, err error) {
     if request == nil {

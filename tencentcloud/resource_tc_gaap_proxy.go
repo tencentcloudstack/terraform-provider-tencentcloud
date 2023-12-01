@@ -35,7 +35,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -68,24 +68,24 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"bandwidth": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps. Valid value: `10`, `20`, `50`, `100`, `200`, `500` and `1000`.",
+				Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps. Valid value: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000` and `10000`. To set `2000`, `5000` or `10000`, you need to apply for a whitelist from Tencent Cloud.",
 			},
 			"concurrent": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Maximum concurrency of the GAAP proxy, unit is 10k. Valid value: `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` and `100`.",
+				Description: "Maximum concurrency of the GAAP proxy, unit is 10k. Valid value: `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, `100`, `150`, `200`, `250` and `300`. To set `150`, `200`, `250` or `300`, you need to apply for a whitelist from Tencent Cloud.",
 			},
 			"access_region": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Access region of the GAAP proxy. Valid value: `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.",
+				Description: "Access region of the GAAP proxy. Valid value: `Hongkong`, `SoutheastAsia`, `Korea`, `Europe`, `NorthAmerica`, `Canada`, `WestIndia`, `Thailand`, `Virginia`, `Japan`, `Taipei`, `SL_AZURE_NorthUAE`, `SL_AZURE_EastAUS`, `SL_AZURE_NorthCentralUSA`, `SL_AZURE_SouthIndia`, `SL_AZURE_SouthBrazil`, `SL_AZURE_NorthZAF`, `SL_AZURE_SoutheastAsia`, `SL_AZURE_CentralFrance`, `SL_AZURE_SouthEngland`, `SL_AZURE_EastUS`, `SL_AZURE_WestUS`, `SL_AZURE_SouthCentralUSA`, `Jakarta`, `Beijing`, `Shanghai`, `Guangzhou`, `Chengdu`, `SL_AZURE_NorwayEast`, `Chongqing`, `Nanjing`, `SaoPaulo`, `SL_AZURE_JapanEast`, `Changsha`, `Xian`, `Wuhan`, `Fuzhou`, `Shenyang`, `Zhengzhou`, `Jinan`, `Hangzhou`, `Shijiazhuang`, `Hefei`.",
 			},
 			"realserver_region": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Region of the GAAP realserver. Valid value: `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.",
+				Description: "Region of the GAAP realserver. Valid value: `Hongkong`, `SoutheastAsia`, `Korea`, `Europe`, `NorthAmerica`, `Canada`, `WestIndia`, `Thailand`, `Virginia`, `Japan`, `Taipei`, `SL_AZURE_NorthUAE`, `SL_AZURE_EastAUS`, `SL_AZURE_NorthCentralUSA`, `SL_AZURE_SouthIndia`, `SL_AZURE_SouthBrazil`, `SL_AZURE_NorthZAF`, `SL_AZURE_SoutheastAsia`, `SL_AZURE_CentralFrance`, `SL_AZURE_SouthEngland`, `SL_AZURE_EastUS`, `SL_AZURE_WestUS`, `SL_AZURE_SouthCentralUSA`, `Jakarta`, `Beijing`, `Shanghai`, `Guangzhou`, `Chengdu`, `SL_AZURE_NorwayEast`, `Chongqing`, `Nanjing`, `SaoPaulo`, `SL_AZURE_JapanEast`.",
 			},
 			"enable": {
 				Type:        schema.TypeBool,
@@ -97,6 +97,14 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tags of the GAAP proxy. Tags that do not exist are not created automatically.",
+			},
+			"network_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(PROXY_NETWORK_TYPE),
+				Description:  "Network type. `normal`: regular BGP, `cn2`: boutique BGP, `triple`: triple play.",
 			},
 
 			// computed
@@ -148,6 +156,7 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	params := make(map[string]interface{})
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
 	bandwidth := d.Get("bandwidth").(int)
@@ -157,9 +166,13 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 	enable := d.Get("enable").(bool)
 	tags := helper.GetTags(d, "tags")
 
+	if v, ok := d.GetOk("network_type"); ok {
+		params["network_type"] = v.(string)
+	}
+
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	id, err := service.CreateProxy(ctx, name, accessRegion, realserverRegion, bandwidth, concurrent, projectId, tags)
+	id, err := service.CreateProxy(ctx, name, accessRegion, realserverRegion, bandwidth, concurrent, projectId, tags, params)
 	if err != nil {
 		return err
 	}
@@ -285,6 +298,9 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	}
 	_ = d.Set("forward_ip", proxy.ForwardIP)
 
+	if proxy.NetworkType != nil {
+		_ = d.Set("network_type", proxy.NetworkType)
+	}
 	return nil
 }
 
@@ -305,7 +321,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyName(ctx, id, name); err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -313,7 +329,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyProjectId(ctx, id, projectId); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("bandwidth") || d.HasChange("concurrent") {
@@ -330,12 +346,6 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyConfiguration(ctx, id, bandwidth, concurrent); err != nil {
 			return err
 		}
-		if d.HasChange("bandwidth") {
-			d.SetPartial("bandwidth")
-		}
-		if d.HasChange("concurrent") {
-			d.SetPartial("concurrent")
-		}
 		//deal with sync delay
 		time.Sleep(time.Duration(10) * time.Second)
 	}
@@ -351,7 +361,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 				return err
 			}
 		}
-		d.SetPartial("enable")
+
 	}
 
 	if d.HasChange("tags") {
@@ -367,7 +377,6 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

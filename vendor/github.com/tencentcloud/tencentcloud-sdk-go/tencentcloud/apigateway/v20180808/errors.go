@@ -41,6 +41,12 @@ const (
 	// 当前API正在操作中，请稍后再试。
 	FAILEDOPERATION_APIINOPERATION = "FailedOperation.ApiInOperation"
 
+	// 返回域名错误
+	FAILEDOPERATION_BACKENDDOMAINERROR = "FailedOperation.BackendDomainError"
+
+	// CAM异常
+	FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
+
 	// 证书绑定错误。
 	FAILEDOPERATION_CERTIFICATEIDBINDERROR = "FailedOperation.CertificateIdBindError"
 
@@ -119,14 +125,14 @@ const (
 	// 域名格式错误。
 	FAILEDOPERATION_FORMATERROR = "FailedOperation.FormatError"
 
-	// API文档生成失败。
-	FAILEDOPERATION_GENERATEAPIDOCUMENTERROR = "FailedOperation.GenerateApiDocumentError"
-
 	// 获取角色失败，请确认完成API网关相关服务接口授权。
 	FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
 
 	// 实例不存在，或者无效状态。
 	FAILEDOPERATION_INSTANCENOTEXIST = "FailedOperation.InstanceNotExist"
+
+	// 无效的输入json
+	FAILEDOPERATION_INVALIDINPUTJSON = "FailedOperation.InvalidInputJSON"
 
 	// Apis 自定义路径与默认路径冲突。
 	FAILEDOPERATION_ISDEFAULTMAPPING = "FailedOperation.IsDefaultMapping"
@@ -161,6 +167,9 @@ const (
 	// 标签绑定服务失败。
 	FAILEDOPERATION_TAGBINDSERVICEERROR = "FailedOperation.TagBindServiceError"
 
+	// 迁移任务重复
+	FAILEDOPERATION_TASKALREADYEXIST = "FailedOperation.TaskAlreadyExist"
+
 	// 协议类型错误。
 	FAILEDOPERATION_UNKNOWNPROTOCOLTYPEERROR = "FailedOperation.UnknownProtocolTypeError"
 
@@ -170,6 +179,9 @@ const (
 	// API网关内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 
+	// CAM内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
+	INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
+
 	// CAuth内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_CAUTHEXCEPTION = "InternalError.CauthException"
 
@@ -178,6 +190,9 @@ const (
 
 	// oss内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+
+	// 标签回调失败。
+	INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 
 	// SCF内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
@@ -244,9 +259,6 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
-
-	// 参数GenLanguage取值错误。
-	INVALIDPARAMETERVALUE_INVALIDGENLANGUAGE = "InvalidParameterValue.InvalidGenLanguage"
 
 	// 参数后端地址取值错误。
 	INVALIDPARAMETERVALUE_INVALIDIPADDRESS = "InvalidParameterValue.InvalidIPAddress"
@@ -331,6 +343,9 @@ const (
 
 	// 参数取值错误，不在参数范围内。
 	INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
+
+	// 无效的参数值
+	INVALIDPARAMETERVALUE_TRAFFICCONTROL = "InvalidParameterValue.TrafficControl"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE_UNSUPPORTEDPARAMETER = "InvalidParameterValue.UnsupportedParameter"
@@ -452,14 +467,23 @@ const (
 	// 密钥已绑定使用计划。
 	UNSUPPORTEDOPERATION_ALREADYBINDUSAGEPLAN = "UnsupportedOperation.AlreadyBindUsagePlan"
 
+	// API列表不为空
+	UNSUPPORTEDOPERATION_APILISTNOTEMPTY = "UnsupportedOperation.ApiListNotEmpty"
+
 	// 当前插件不支持绑定。
 	UNSUPPORTEDOPERATION_ATTACHPLUGIN = "UnsupportedOperation.AttachPlugin"
 
 	// 基础版服务不能创建超过一个API。
 	UNSUPPORTEDOPERATION_BASICSERVICENOMOREAPI = "UnsupportedOperation.BasicServiceNoMoreApi"
 
+	// 基础服务不允许连接插件
+	UNSUPPORTEDOPERATION_BASICSERVICENOTALLOWATTACHPLUGIN = "UnsupportedOperation.BasicServiceNotAllowAttachPlugin"
+
 	// 日志检索起始时间间隔。
 	UNSUPPORTEDOPERATION_CLSSEARCHTIME = "UnsupportedOperation.ClsSearchTime"
+
+	// 存在现网环境
+	UNSUPPORTEDOPERATION_EXISTINGONLINEENVIRONMENT = "UnsupportedOperation.ExistingOnlineEnvironment"
 
 	// 协议为HTTP时，不支持强制Https。
 	UNSUPPORTEDOPERATION_FORCEHTTPS = "UnsupportedOperation.ForceHttps"
@@ -494,6 +518,9 @@ const (
 	// 不支持减少网络类型的操作。
 	UNSUPPORTEDOPERATION_REDUCENETTYPES = "UnsupportedOperation.ReduceNetTypes"
 
+	// 请求Post失败
+	UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
+
 	// 资源已关联，请先解除。
 	UNSUPPORTEDOPERATION_RESOURCEASSOCIATED = "UnsupportedOperation.ResourceAssociated"
 
@@ -503,8 +530,17 @@ const (
 	// 资源未关联。
 	UNSUPPORTEDOPERATION_RESOURCEUNASSOCIATED = "UnsupportedOperation.ResourceUnassociated"
 
+	// 服务不存在
+	UNSUPPORTEDOPERATION_SERVICEEXIST = "UnsupportedOperation.ServiceExist"
+
+	// 标签不为空
+	UNSUPPORTEDOPERATION_TAGSNOTEMPTY = "UnsupportedOperation.TagsNotEmpty"
+
 	// 当前Uin未在手工密钥白名单列表内。
 	UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
+
+	// Unpack函数错误
+	UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 
 	// 密钥已绑定使用计划。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDBINDAPIKEY = "UnsupportedOperation.UnsupportedBindApiKey"

@@ -3,14 +3,85 @@ Provides a resource to create a group of AS (Auto scaling) instances.
 
 Example Usage
 
+Create a basic Scaling Group
+
 ```hcl
-resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name   = "tf-as-scaling-group"
-  configuration_id     = "asc-oqio4yyj"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "as"
+}
+
+data "tencentcloud_images" "image" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2 (Final)"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "subnet-example"
+  cidr_block        = "10.0.0.0/16"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "tf-example"
+  image_id           = data.tencentcloud_images.image.images.0.image_id
+  instance_types     = ["SA1.SMALL1", "SA2.SMALL1", "SA2.SMALL2", "SA2.SMALL4"]
+  instance_name_settings {
+    instance_name = "test-ins-name"
+  }
+}
+
+resource "tencentcloud_as_scaling_group" "example" {
+  scaling_group_name = "tf-example"
+  configuration_id   = tencentcloud_as_scaling_config.example.id
+  max_size           = 1
+  min_size           = 0
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_ids         = [tencentcloud_subnet.subnet.id]
+}
+```
+
+Create a complete Scaling Group
+
+```hcl
+resource "tencentcloud_clb_instance" "example" {
+  network_type = "INTERNAL"
+  clb_name     = "clb-example"
+  project_id   = 0
+  vpc_id       = tencentcloud_vpc.vpc.id
+  subnet_id    = tencentcloud_subnet.subnet.id
+
+  tags = {
+    test = "tf"
+  }
+}
+
+resource "tencentcloud_clb_listener" "example" {
+  clb_id        = tencentcloud_clb_instance.example.id
+  listener_name = "listener-example"
+  port          = 80
+  protocol      = "HTTP"
+}
+
+resource "tencentcloud_clb_listener_rule" "example" {
+  listener_id = tencentcloud_clb_listener.example.listener_id
+  clb_id      = tencentcloud_clb_instance.example.id
+  domain      = "foo.net"
+  url         = "/bar"
+}
+
+resource "tencentcloud_as_scaling_group" "example" {
+  scaling_group_name   = "tf-example"
+  configuration_id     = tencentcloud_as_scaling_config.example.id
   max_size             = 1
   min_size             = 0
-  vpc_id               = "vpc-3efmz0z"
-  subnet_ids           = ["subnet-mc3egos"]
+  vpc_id               = tencentcloud_vpc.vpc.id
+  subnet_ids           = [tencentcloud_subnet.subnet.id]
   project_id           = 0
   default_cooldown     = 400
   desired_capacity     = 1
@@ -18,14 +89,18 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   retry_policy         = "INCREMENTAL_INTERVALS"
 
   forward_balancer_ids {
-    load_balancer_id = "lb-hk693b1l"
-    listener_id      = "lbl-81wr497k"
-    rule_id          = "loc-kiodx943"
+    load_balancer_id = tencentcloud_clb_instance.example.id
+    listener_id      = tencentcloud_clb_listener.example.listener_id
+    rule_id          = tencentcloud_clb_listener_rule.example.rule_id
 
     target_attribute {
       port   = 80
       weight = 90
     }
+  }
+
+  tags = {
+    "createBy" = "tfExample"
   }
 }
 ```
@@ -45,8 +120,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -482,10 +557,10 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 				targetAttributes = append(targetAttributes, targetAttribute)
 			}
 			forwardLoadBalancer := map[string]interface{}{
-				"load_balancer_id":  *v.LoadBalancerId,
-				"listener_id":       *v.ListenerId,
-				"target_attributes": targetAttributes,
-				"rule_id":           *v.LocationId,
+				"load_balancer_id": *v.LoadBalancerId,
+				"listener_id":      *v.ListenerId,
+				"target_attribute": targetAttributes,
+				"rule_id":          *v.LocationId,
 			}
 			forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 		}
@@ -622,9 +697,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
-	}
 	updateAttrs = updateAttrs[:0]
 
 	balancerRequest := as.NewModifyLoadBalancersRequest()
@@ -685,10 +757,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}); err != nil {
 			return err
 		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("tags") {
@@ -700,7 +768,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

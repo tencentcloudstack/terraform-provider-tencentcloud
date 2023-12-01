@@ -9,12 +9,12 @@ import (
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_namespace
+	// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_namespace
 	resource.AddTestSweepers("tencentcloud_tcr_namespace", &resource.Sweeper{
 		Name: "tencentcloud_tcr_namespace",
 		F: func(r string) error {
@@ -32,19 +32,17 @@ func init() {
 			})
 
 			instances, err := service.DescribeTCRInstances(ctx, "", filters)
-
 			if err != nil {
 				return err
 			}
 
 			if len(instances) == 0 {
-				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+				return nil
 			}
 
 			instanceId := *instances[0].RegistryId
 
 			namespaces, err := service.DescribeTCRNameSpaces(ctx, instanceId, "test")
-
 			if err != nil {
 				return err
 			}
@@ -65,18 +63,27 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRNamespace_basic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test_ns"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "severity", "medium"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.0.cve_id", "cve-xxxxx"),
 				),
 			},
 			{
@@ -86,10 +93,19 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 			},
 			{
 				Config: testAccTCRNamespace_basic_update_remark,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRNamespaceExists("tencentcloud_tcr_namespace.mytcr_namespace"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2_ns"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "severity", "high"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.0.cve_id", "cve-xxxx"),
 				),
 			},
 		},
@@ -157,15 +173,27 @@ func testAccCheckTCRNamespaceExists(n string) resource.TestCheckFunc {
 const testAccTCRNamespace_basic = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = local.tcr_id
-  name        = "test"
-  is_public   = true
+  instance_id 	 = local.tcr_id
+  name			 = "test_ns"
+  is_public		 = true
+  is_auto_scan	 = true
+  is_prevent_vul = true
+  severity		 = "medium"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxxx"
+  }
 }`
 
 const testAccTCRNamespace_basic_update_remark = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = local.tcr_id
-  name        = "test2"
-  is_public   = false
+  instance_id 	 = local.tcr_id
+  name        	 = "test2_ns"
+  is_public   	 = false
+  is_auto_scan	 = false
+  is_prevent_vul = false
+  severity		 = "high"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxx"
+  }
 }`

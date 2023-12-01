@@ -7,6 +7,7 @@
 package unusedresult
 
 import (
+	_ "embed"
 	"go/ast"
 	"go/token"
 	"go/types"
@@ -17,11 +18,8 @@ import (
 	"golang.org/x/tools/go/analysis/passes/inspect"
 	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
+	"golang.org/x/tools/internal/typeparams"
 )
-
-// TODO(adonovan): make this analysis modular: export a mustUseResult
-// fact for each function that tail-calls one of the functions that we
-// check, and check those functions too.
 
 const Doc = `check for unused results of calls to some functions
 
@@ -31,9 +29,13 @@ calls to certain functions in which the result of the call is ignored.
 
 The set of functions may be controlled using flags.`
 
+//go:embed doc.go
+var doc string
+
 var Analyzer = &analysis.Analyzer{
 	Name:     "unusedresult",
-	Doc:      Doc,
+	Doc:      analysisutil.MustExtractDoc(doc, "unusedresult"),
+	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/unusedresult",
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }
@@ -42,9 +44,28 @@ var Analyzer = &analysis.Analyzer{
 var funcs, stringMethods stringSetFlag
 
 func init() {
-	// TODO(adonovan): provide a comment syntax to allow users to
-	// add their functions to this set using facts.
-	funcs.Set("errors.New,fmt.Errorf,fmt.Sprintf,fmt.Sprint,sort.Reverse")
+	// TODO(adonovan): provide a comment or declaration syntax to
+	// allow users to add their functions to this set using facts.
+	// For example:
+	//
+	//    func ignoringTheErrorWouldBeVeryBad() error {
+	//      type mustUseResult struct{} // enables vet unusedresult check
+	//      ...
+	//    }
+	//
+	//    ignoringTheErrorWouldBeVeryBad() // oops
+	//
+
+	// Also, it is tempting to make this analysis modular: one
+	// could export a "mustUseResult" fact for each function that
+	// tail-calls one of the functions that we check, and check
+	// those functions too.
+	//
+	// However, just because you must use the result of
+	// fmt.Sprintf doesn't mean you need to use the result of
+	// every function that returns a formatted string:
+	// it may have other results and effects.
+	funcs.Set("errors.New,fmt.Errorf,fmt.Sprintf,fmt.Sprint,sort.Reverse,context.WithValue,context.WithCancel,context.WithDeadline,context.WithTimeout")
 	Analyzer.Flags.Var(&funcs, "funcs",
 		"comma-separated list of functions whose results must be used")
 
@@ -68,6 +89,11 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 		if pass.TypesInfo.Types[fun].IsType() {
 			return // a conversion, not a call
+		}
+
+		x, _, _, _ := typeparams.UnpackIndexExpr(fun)
+		if x != nil {
+			fun = x // If this is generic function or method call, skip the instantiation arguments
 		}
 
 		selector, ok := fun.(*ast.SelectorExpr)

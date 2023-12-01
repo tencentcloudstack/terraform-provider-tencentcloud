@@ -3,34 +3,135 @@ Provides an elasticsearch instance resource.
 
 Example Usage
 
+Create a basic version of elasticsearch instance paid by the hour
+
 ```hcl
-resource "tencentcloud_elasticsearch_instance" "foo" {
-  instance_name     = "tf-test"
-  availability_zone = "ap-guangzhou-3"
-  version           = "7.5.1"
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
-  password          = "Test12345"
-  license_type      = "oss"
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example_es"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
 
   web_node_type_info {
-    node_num = 1
+    node_num  = 1
     node_type = "ES.S1.MEDIUM4"
   }
 
   node_info_list {
     node_num  = 2
-    node_type = "ES.S1.MEDIUM4"
-    encrypt = false
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
   }
 
   es_acl {
-    black_list = [
-	  "9.9.9.9",
-	  "8.8.8.8",
-  ]
+    # black_list = [
+    #   "9.9.9.9",
+    #   "8.8.8.8",
+    # ]
     white_list = [
-	  "0.0.0.0",
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+Create a basic version of elasticsearch instance for multi-availability zone deployment
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_subnet" "subnet_multi_zone" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.1.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.2.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
+  instance_name       = "tf_example_es"
+  availability_zone   = "-"
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = "-"
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
+  deploy_mode         = 1
+
+  multi_zone_infos {
+    availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+    subnet_id = tencentcloud_subnet.subnet.id
+  }
+
+  multi_zone_infos {
+    availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.1.name
+    subnet_id = tencentcloud_subnet.subnet_multi_zone.id
+  }
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    # black_list = [
+    #   "9.9.9.9",
+    #   "8.8.8.8",
+    # ]
+    white_list = [
+      "127.0.0.1",
     ]
   }
 
@@ -56,8 +157,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -71,7 +172,9 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 		Update: resourceTencentCloudElasticsearchInstanceUpdate,
 		Delete: resourceTencentCloudElasticsearchInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"basic_security_type": ES_BASIC_SECURITY_TYPE_OFF,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -86,12 +189,12 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "Availability zone. When create multi-az es, this parameter must be omitted.",
+				Description: "Availability zone. When create multi-az es, this parameter must be omitted or `-`.",
 			},
 			"version": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.",
+				Description: "Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2`, `7.5.1` and `7.10.1`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -104,13 +207,13 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.",
+				Description: "The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted or `-`.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Sensitive:   true,
-				Description: "Password to an instance.",
+				Description: "Password to an instance, the password needs to be 8 to 16 characters, including at least two items ([a-z,A-Z], [0-9] and [-!@#$%&^*+=_:;,.?] special symbols.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
@@ -245,7 +348,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Optional:     true,
 							Default:      CVM_DISK_TYPE_CLOUD_SSD,
 							ValidateFunc: validateAllowedStringValue(ES_NODE_DISK_TYPE),
-							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.",
+							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, `CLOUD_HSSD`. The default value is `CLOUD_SSD`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
@@ -267,7 +370,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_BASIC_SECURITY_TYPE_OFF,
 				ValidateFunc: validateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
-				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.",
+				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -307,20 +410,15 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 
 func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
-	var (
-		logId = getLogId(contextNil)
-		ctx   = context.WithValue(context.TODO(), logIdKey, logId)
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-		client               = meta.(*TencentCloudClient).apiV3Conn
-		elasticsearchService = ElasticsearchService{client: client}
-		billingService       = BillingService{client: client}
-		tagService           = TagService{client: client}
-		region               = client.Region
-		chargeType           string
-
-		request = es.NewCreateInstanceRequest()
-	)
-
+		client               := meta.(*TencentCloudClient).apiV3Conn
+		elasticsearchService := ElasticsearchService{client: client}
+		billingService       := BillingService{client: client}
+		tagService           := TagService{client: client}
+		region               := client.Region
+	request := es.NewCreateInstanceRequest()
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -330,7 +428,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		chargeType = v.(string)
+		chargeType := v.(string)
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
@@ -363,11 +461,15 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 		}
 	}
+	var licenseType string
 	if v, ok := d.GetOk("license_type"); ok {
-		request.LicenseType = helper.String(v.(string))
+		licenseType = v.(string)
+		request.LicenseType = helper.String(licenseType)
 	}
 	if v, ok := d.GetOk("basic_security_type"); ok {
-		request.BasicSecurityType = helper.IntUint64(v.(int))
+		if licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
+			request.BasicSecurityType = helper.IntUint64(v.(int))
+		}
 	}
 	if v, ok := d.GetOk("web_node_type_info"); ok {
 		infos := v.([]interface{})
@@ -445,7 +547,6 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 			return retryError(err)
 		}
-		// normal user
 		instanceId = *response.Response.InstanceId
 		return nil
 	})
@@ -491,6 +592,46 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
+	// es acl
+	esAcl := es.EsAcl{}
+	if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
+		if v, ok := aclMap["black_list"]; ok {
+			bList := v.(*schema.Set).List()
+			for _, d := range bList {
+				esAcl.BlackIpList = append(esAcl.BlackIpList, helper.String(d.(string)))
+			}
+		}
+		if v, ok := aclMap["white_list"]; ok {
+			wList := v.(*schema.Set).List()
+			for _, d := range wList {
+				esAcl.WhiteIpList = append(esAcl.WhiteIpList, helper.String(d.(string)))
+			}
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
+		errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, nil, &esAcl)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	// tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		client := meta.(*TencentCloudClient).apiV3Conn
+		tagService := TagService{client: client}
+		region := client.Region
+		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
+		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudElasticsearchInstanceRead(d, meta)
 }
 
@@ -531,7 +672,10 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("renew_flag", instance.RenewFlag)
 	_ = d.Set("deploy_mode", instance.DeployMode)
 	_ = d.Set("license_type", instance.LicenseType)
-	_ = d.Set("basic_security_type", instance.SecurityType)
+	licenseType := instance.LicenseType
+	if licenseType != nil && *licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
+		_ = d.Set("basic_security_type", instance.SecurityType)
+	}
 	_ = d.Set("elasticsearch_domain", instance.EsDomain)
 	_ = d.Set("elasticsearch_vip", instance.EsVip)
 	_ = d.Set("elasticsearch_port", instance.EsPort)
@@ -617,7 +761,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
@@ -783,14 +926,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		esAcl := es.EsAcl{}
 		if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
 			if v, ok := aclMap["black_list"]; ok {
-				blist := v.(*schema.Set).List()
-				for _, d := range blist {
+				bList := v.(*schema.Set).List()
+				for _, d := range bList {
 					esAcl.BlackIpList = append(esAcl.BlackIpList, helper.String(d.(string)))
 				}
 			}
 			if v, ok := aclMap["white_list"]; ok {
-				wlist := v.(*schema.Set).List()
-				for _, d := range wlist {
+				wList := v.(*schema.Set).List()
+				for _, d := range wList {
 					esAcl.WhiteIpList = append(esAcl.WhiteIpList, helper.String(d.(string)))
 				}
 			}

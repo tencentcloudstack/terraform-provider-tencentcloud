@@ -15,8 +15,8 @@ Provides a resource to create a CAM group.
 
 ```hcl
 resource "tencentcloud_cam_group" "foo" {
-  name   = "cam-group-test"
-  remark = "test"
+  name   = "tf_cam_group"
+  remark = "tf_group_remark"
 }
 ```
 

@@ -32,8 +32,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -181,7 +181,7 @@ func resourceTencentCloudDtsMigrateServiceCreate(d *schema.ResourceData, meta in
 
 	jobId = *response.Response.JobIds[0]
 	// wait created
-	if err = service.PollingMigrateJobStatusUntil(ctx, jobId, DTSJobStatus, "created"); err != nil {
+	if err = service.PollingMigrateJobStatusUntil(ctx, jobId, DTSJobStatus, []string{"created"}); err != nil {
 		return err
 	}
 

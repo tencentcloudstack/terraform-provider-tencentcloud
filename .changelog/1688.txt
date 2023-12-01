@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_instance: fix key_ids update exception
+```

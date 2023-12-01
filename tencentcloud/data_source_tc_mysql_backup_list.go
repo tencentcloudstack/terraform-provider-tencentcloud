@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_mysql_backup_list" "default" {
-  mysql_id           = "my-test-database"
+  mysql_id           = "terraform-test-local-database"
   max_number         = 10
   result_output_file = "mytestpath"
 }
@@ -19,7 +19,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

@@ -11,12 +11,12 @@ import (
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_token
+	// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_token
 	resource.AddTestSweepers("tencentcloud_tcr_token", &resource.Sweeper{
 		Name: "tencentcloud_tcr_token",
 		F: func(r string) error {
@@ -34,19 +34,17 @@ func init() {
 			})
 
 			instances, err := service.DescribeTCRInstances(ctx, "", filters)
-
 			if err != nil {
 				return err
 			}
 
 			if len(instances) == 0 {
-				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+				return nil
 			}
 
 			instanceId := *instances[0].RegistryId
 
 			tokens, err := service.DescribeTCRTokens(ctx, instanceId, "")
-
 			if err != nil {
 				return err
 			}
@@ -73,15 +71,19 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrToken_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRTokenDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRToken_basic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "description", "test token"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "enable", "true"),
@@ -100,6 +102,10 @@ func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
 			},
 			{
 				Config: testAccTCRToken_basic_update_remark,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRTokenExists("tencentcloud_tcr_token.mytcr_token"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "enable", "false"),

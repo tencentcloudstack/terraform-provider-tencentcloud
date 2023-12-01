@@ -104,11 +104,17 @@ const (
 	// 获取CLS采集配置失败。
 	FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
 
+	// 获取CLS索引配置失败。
+	FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
+
 	// 查询主题集失败。
 	FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
 
 	// 获取CLS机器组失败。
 	FAILEDOPERATION_GETCLSMACHINEGROUP = "FailedOperation.GetClsMachineGroup"
+
+	// 获取CLS日志主题失败。
+	FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
 
 	// 通过配置文件创建集群Client错误。
 	FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
@@ -155,6 +161,9 @@ const (
 	// 网络扩展错误。
 	FAILEDOPERATION_NETWORKSCALEERROR = "FailedOperation.NetworkScaleError"
 
+	// 节点存在辅助网卡
+	FAILEDOPERATION_NODEEXISTSSECONDARYNETWORKINTERFACE = "FailedOperation.NodeExistsSecondaryNetworkInterface"
+
 	// 镜像OS不支持。
 	FAILEDOPERATION_OSNOTSUPPORT = "FailedOperation.OsNotSupport"
 
@@ -179,8 +188,14 @@ const (
 	// 记录没有发现。
 	FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 
+	// tag错误
+	FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
+
 	// 已有相同任务执行中。
 	FAILEDOPERATION_TASKALREADYRUNNING = "FailedOperation.TaskAlreadyRunning"
+
+	// 任务当前所处状态不支持此操作。
+	FAILEDOPERATION_TASKLIFESTATEERROR = "FailedOperation.TaskLifeStateError"
 
 	// 询价错误。
 	FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
@@ -299,6 +314,9 @@ const (
 	// 初始化master失败。
 	INTERNALERROR_INITMASTERFAILED = "InternalError.InitMasterFailed"
 
+	// 余额不足。
+	INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
+
 	// 无效CIDR。
 	INTERNALERROR_INVALIDPRIVATENETWORKCIDR = "InternalError.InvalidPrivateNetworkCidr"
 
@@ -343,6 +361,12 @@ const (
 
 	// 操作应用Release失败。
 	INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
+
+	// 无支付权限。
+	INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
+
+	// 未实名认证。
+	INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
 
 	// 镜像OS不支持。
 	INTERNALERROR_OSNOTSUPPORT = "InternalError.OsNotSupport"
@@ -389,7 +413,7 @@ const (
 	// 任务未找到。
 	INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
 
-	// 询价错误。
+	// 计费错误。
 	INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
 
 	// 账户余额不足。
@@ -526,6 +550,9 @@ const (
 
 	// 未找到该kubernetes资源。
 	RESOURCENOTFOUND_KUBERNETESRESOURCENOTFOUND = "ResourceNotFound.KubernetesResourceNotFound"
+
+	// 资源未找到。
+	RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 
 	// 找不到对应路由表。
 	RESOURCENOTFOUND_ROUTETABLENOTFOUND = "ResourceNotFound.RouteTableNotFound"

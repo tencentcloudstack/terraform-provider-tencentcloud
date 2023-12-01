@@ -416,6 +416,42 @@ func (me *ClsService) DeleteClsMachineGroup(ctx context.Context, id string) (err
 	return
 }
 
+func (me *ClsService) DescribeClsMachineGroupByConfigId(ctx context.Context, configId, groupId string) (machineGroup *cls.MachineGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeConfigMachineGroupsRequest()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ConfigId = &configId
+
+	response, err := me.client.UseClsClient().DescribeConfigMachineGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances := response.Response.MachineGroups
+
+	for _, instance := range instances {
+		if *instance.GroupId == groupId {
+			machineGroup = instance
+			break
+		}
+	}
+
+	return
+}
+
 // cls cos shipper
 func (me *ClsService) DescribeClsCosShippersByFilter(ctx context.Context, filters map[string]string) (instances []*cls.ShipperInfo, errRet error) {
 	var (
@@ -548,6 +584,58 @@ func (me *ClsService) DeleteClsCosShipper(ctx context.Context, id string) (errRe
 }
 
 // cls config
+func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string) (config *cls.ConfigInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConfigsRequest()
+
+	filter := &cls.Filter{
+		Key:    helper.String("configId"),
+		Values: []*string{&configId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.ConfigInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Configs) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Configs...)
+		if len(response.Response.Configs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	config = instances[0]
+	return
+}
+
 func (me *ClsService) DeleteClsConfig(ctx context.Context, id string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -574,6 +662,58 @@ func (me *ClsService) DeleteClsConfig(ctx context.Context, id string) (errRet er
 }
 
 // cls config extra
+func (me *ClsService) DescribeClsConfigExtraById(ctx context.Context, configExtraId string) (config *cls.ConfigExtraInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConfigExtrasRequest()
+
+	filter := &cls.Filter{
+		Key:    helper.String("configExtraId"),
+		Values: []*string{&configExtraId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*cls.ConfigExtraInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeConfigExtras(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Configs) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Configs...)
+		if len(response.Response.Configs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	config = instances[0]
+	return
+}
+
 func (me *ClsService) DeleteClsConfigExtra(ctx context.Context, id string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -621,6 +761,548 @@ func (me *ClsService) DeleteClsIndex(ctx context.Context, id string) (errRet err
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) (alarm *cls.AlarmInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeAlarmsRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("alarmId"),
+		Values: []*string{&alarmId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.AlarmInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeAlarms(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Alarms) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Alarms...)
+		if len(response.Response.Alarms) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	alarm = instances[0]
+	return
+}
+
+func (me *ClsService) DeleteClsAlarmById(ctx context.Context, alarmId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteAlarmRequest()
+	request.AlarmId = &alarmId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteAlarm(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (alarmNotice *cls.AlarmNotice, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeAlarmNoticesRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("alarmNoticeId"),
+		Values: []*string{&alarmNoticeId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.AlarmNotice, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeAlarmNotices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AlarmNotices) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.AlarmNotices...)
+		if len(response.Response.AlarmNotices) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	alarmNotice = instances[0]
+	return
+}
+
+func (me *ClsService) DeleteClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteAlarmNoticeRequest()
+	request.AlarmNoticeId = &alarmNoticeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteAlarmNotice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsCkafkaConsumerById(ctx context.Context, topicId string) (ckafkaConsumer *cls.DescribeConsumerResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConsumerRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeConsumer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ckafkaConsumer = response.Response
+	return
+}
+
+func (me *ClsService) DeleteClsCkafkaConsumerById(ctx context.Context, topicId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteConsumerRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteConsumer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsCosRechargeById(ctx context.Context, topicId string, rechargeId string) (cosRecharge *cls.CosRechargeInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeCosRechargesRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeCosRecharges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, info := range response.Response.Data {
+		if *info.Id == rechargeId {
+			cosRecharge = info
+			break
+		}
+	}
+	return
+}
+
+func (me *ClsService) DescribeClsExportById(ctx context.Context, topicId string, exportId string) (export *cls.ExportInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeExportsRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeExports(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, info := range response.Response.Exports {
+		if *info.ExportId == exportId {
+			export = info
+			break
+		}
+	}
+
+	return
+}
+
+func (me *ClsService) DeleteClsExportById(ctx context.Context, exportId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteExportRequest()
+	request.ExportId = &exportId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteExport(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param map[string]interface{}) (shipperTasks []*cls.ShipperTaskInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeShipperTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ShipperId" {
+			request.ShipperId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeShipperTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	shipperTasks = response.Response.Tasks
+
+	return
+}
+
+func (me *ClsService) DescribeClsMachinesByFilter(ctx context.Context, param map[string]interface{}) (machines []*cls.MachineInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeMachinesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeMachines(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	machines = response.Response.Machines
+
+	return
+}
+
+func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context, param map[string]interface{}) (machineGroupConfigs []*cls.ConfigInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeMachineGroupConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeMachineGroupConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	machineGroupConfigs = response.Response.Configs
+	return
+}
+
+func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId string) (dataTransform *cls.DataTransformTaskInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeDataTransformInfoRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeDataTransformInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DataTransformTaskInfos) < 1 {
+		return
+	}
+
+	dataTransform = response.Response.DataTransformTaskInfos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsDataTransformById(ctx context.Context, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteDataTransformRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteDataTransform(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *ClsService) DescribeClsKafkaRechargeById(ctx context.Context, id string, topic string) (kafkaRecharge *cls.KafkaRechargeInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeKafkaRechargesRequest()
+	request.Id = &id
+	request.TopicId = &topic
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeKafkaRecharges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Infos) < 1 {
+		return
+	}
+
+	kafkaRecharge = response.Response.Infos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsKafkaRechargeById(ctx context.Context, id string, topic string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteKafkaRechargeRequest()
+	request.Id = &id
+	request.TopicId = &topic
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteKafkaRecharge(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsScheduledSqlById(ctx context.Context, taskId string) (scheduledSql *cls.ScheduledSqlTaskInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeScheduledSqlInfoRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeScheduledSqlInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ScheduledSqlTaskInfos) < 1 {
+		return
+	}
+
+	scheduledSql = response.Response.ScheduledSqlTaskInfos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId string, srcTopicId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteScheduledSqlRequest()
+	request.TaskId = &taskId
+	request.SrcTopicId = &srcTopicId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteScheduledSql(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

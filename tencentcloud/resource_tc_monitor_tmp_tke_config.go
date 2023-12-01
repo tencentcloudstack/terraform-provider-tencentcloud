@@ -4,11 +4,167 @@ Provides a resource to create a tke tmpPrometheusConfig
 Example Usage
 
 ```hcl
+variable "default_instance_type" {
+  default = "SA1.MEDIUM2"
+}
+
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "availability_zone_second" {
+  default = "ap-guangzhou-4"
+}
+
+variable "example_cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
+}
+
+data "tencentcloud_vpc_subnets" "vpc_one" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+data "tencentcloud_vpc_subnets" "vpc_two" {
+  is_default        = true
+  availability_zone = var.availability_zone_second
+}
+
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    # key_ids                   = ["skey-11112222"]
+    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_second
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.second_subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    # key_ids                   = ["skey-11112222"]
+    cam_role_name = "CVM_QcsRole"
+    password      = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+
+
+# create monitor
+variable "zone" {
+  default = "ap-guangzhou"
+}
+
+variable "cluster_type" {
+  default = "tke"
+}
+
+resource "tencentcloud_monitor_tmp_instance" "foo" {
+  instance_name       = "tf-tmp-instance"
+  vpc_id              = local.first_vpc_id
+  subnet_id           = local.first_subnet_id
+  data_retention_time = 30
+  zone                = var.availability_zone_second
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+# tmp tke bind
+resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
+  instance_id = tencentcloud_monitor_tmp_instance.foo.id
+
+  agents {
+    region          = var.zone
+    cluster_type    = var.cluster_type
+    cluster_id      = tencentcloud_kubernetes_cluster.example.id
+    enable_external = false
+  }
+}
 
 resource "tencentcloud_monitor_tmp_tke_config" "foo" {
-  instance_id  = "xxx"
-  cluster_type = "xxx"
-  cluster_id   = "xxx"
+  instance_id  = tencentcloud_monitor_tmp_instance.foo.id
+  cluster_type = var.cluster_type
+  cluster_id   = tencentcloud_kubernetes_cluster.example.id
 
   raw_jobs {
     name   = "raw_jobs_001"
@@ -36,9 +192,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -155,7 +311,7 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 	var (
 		logId    = getLogId(contextNil)
 		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service  = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		configId = d.Id()
 	)
 
@@ -184,8 +340,7 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		logId   = getLogId(contextNil)
-		request = tke.NewCreatePrometheusConfigRequest()
-		client  = meta.(*TencentCloudClient).apiV3Conn.UseTkeClient()
+		request = monitor.NewCreatePrometheusConfigRequest()
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -210,7 +365,7 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	ids := strings.Join([]string{*request.InstanceId, *request.ClusterType, *request.ClusterId}, FILED_SP)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := client.CreatePrometheusConfig(request)
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusConfig(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -235,9 +390,9 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 
 	var (
 		logId   = getLogId(contextNil)
-		request = tke.NewModifyPrometheusConfigRequest()
+		request = monitor.NewModifyPrometheusConfigRequest()
 		client  = meta.(*TencentCloudClient).apiV3Conn
-		service = TkeService{client: client}
+		service = MonitorService{client: client}
 	)
 
 	ids, err := service.parseConfigId(d.Id())
@@ -267,7 +422,7 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := client.UseTkeClient().ModifyPrometheusConfig(request)
+		response, e := client.UseMonitorClient().ModifyPrometheusConfig(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -291,7 +446,7 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	var (
 		logId           = getLogId(contextNil)
 		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service         = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		ServiceMonitors = []*string{}
 		PodMonitors     = []*string{}
 		RawJobs         = []*string{}
@@ -316,12 +471,12 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {
+func serializePromConfigItems(v interface{}) []*monitor.PrometheusConfigItem {
 	resList := v.([]interface{})
-	items := make([]*tke.PrometheusConfigItem, 0, len(resList))
+	items := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 	for _, res := range resList {
 		vv := res.(map[string]interface{})
-		var item tke.PrometheusConfigItem
+		var item monitor.PrometheusConfigItem
 		if v, ok := vv["name"]; ok {
 			item.Name = helper.String(v.(string))
 		}

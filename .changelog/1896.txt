@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_tcr_tag_retention_execution_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_tcr_tag_retention_rule: add a computed field `retention_id`.
+```
+
+```release-note:enhancement
+resource/tencentcloud_tcr_instance: support to update `instance_charge_type_prepaid_period` field.
+```

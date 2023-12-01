@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_as_complete_lifecycle
+```

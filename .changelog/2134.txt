@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_trocket_rocketmq_instance: fix `enable_public` read problem
+```

@@ -67,21 +67,28 @@ func NewAttachPluginResponse() (response *AttachPluginResponse) {
 // 绑定插件到API上。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINPUTJSON = "FailedOperation.InvalidInputJSON"
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
+//  FAILEDOPERATION_TASKALREADYEXIST = "FailedOperation.TaskAlreadyExist"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_DUPLICATEPLUGINCONFIG = "InvalidParameter.DuplicatePluginConfig"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_DUPLICATEPLUGINCONFIG = "InvalidParameterValue.DuplicatePluginConfig"
 //  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  INVALIDPARAMETERVALUE_INVALIDSERVICECONFIG = "InvalidParameterValue.InvalidServiceConfig"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TRAFFICCONTROL = "InvalidParameterValue.TrafficControl"
 //  LIMITEXCEEDED_SERVICECOUNTFORPLUGINLIMITEXCEEDED = "LimitExceeded.ServiceCountForPluginLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
+//  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_ATTACHPLUGIN = "UnsupportedOperation.AttachPlugin"
+//  UNSUPPORTEDOPERATION_BASICSERVICENOTALLOWATTACHPLUGIN = "UnsupportedOperation.BasicServiceNotAllowAttachPlugin"
 //  UNSUPPORTEDOPERATION_INVALIDENDPOINTTYPE = "UnsupportedOperation.InvalidEndpointType"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) AttachPlugin(request *AttachPluginRequest) (response *AttachPluginResponse, err error) {
     return c.AttachPluginWithContext(context.Background(), request)
 }
@@ -90,21 +97,28 @@ func (c *Client) AttachPlugin(request *AttachPluginRequest) (response *AttachPlu
 // 绑定插件到API上。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INVALIDINPUTJSON = "FailedOperation.InvalidInputJSON"
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
+//  FAILEDOPERATION_TASKALREADYEXIST = "FailedOperation.TaskAlreadyExist"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_DUPLICATEPLUGINCONFIG = "InvalidParameter.DuplicatePluginConfig"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_DUPLICATEPLUGINCONFIG = "InvalidParameterValue.DuplicatePluginConfig"
 //  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  INVALIDPARAMETERVALUE_INVALIDSERVICECONFIG = "InvalidParameterValue.InvalidServiceConfig"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TRAFFICCONTROL = "InvalidParameterValue.TrafficControl"
 //  LIMITEXCEEDED_SERVICECOUNTFORPLUGINLIMITEXCEEDED = "LimitExceeded.ServiceCountForPluginLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
+//  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_ATTACHPLUGIN = "UnsupportedOperation.AttachPlugin"
+//  UNSUPPORTEDOPERATION_BASICSERVICENOTALLOWATTACHPLUGIN = "UnsupportedOperation.BasicServiceNotAllowAttachPlugin"
 //  UNSUPPORTEDOPERATION_INVALIDENDPOINTTYPE = "UnsupportedOperation.InvalidEndpointType"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) AttachPluginWithContext(ctx context.Context, request *AttachPluginRequest) (response *AttachPluginResponse, err error) {
     if request == nil {
         request = NewAttachPluginRequest()
@@ -289,6 +303,7 @@ func NewBindIPStrategyResponse() (response *BindIPStrategyResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  LIMITEXCEEDED_REQUESTLIMITEXCEEDED = "LimitExceeded.RequestLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDIPSTRATEGY = "ResourceNotFound.InvalidIPStrategy"
@@ -303,6 +318,7 @@ func (c *Client) BindIPStrategy(request *BindIPStrategyRequest) (response *BindI
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  LIMITEXCEEDED_REQUESTLIMITEXCEEDED = "LimitExceeded.RequestLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDIPSTRATEGY = "ResourceNotFound.InvalidIPStrategy"
@@ -686,6 +702,7 @@ func NewCreateApiResponse() (response *CreateApiResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_APIINOPERATION = "FailedOperation.ApiInOperation"
+//  FAILEDOPERATION_BACKENDDOMAINERROR = "FailedOperation.BackendDomainError"
 //  FAILEDOPERATION_EIAMERROR = "FailedOperation.EIAMError"
 //  FAILEDOPERATION_EBERROR = "FailedOperation.EbError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
@@ -693,6 +710,7 @@ func NewCreateApiResponse() (response *CreateApiResponse) {
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CAUTHEXCEPTION = "InternalError.CauthException"
 //  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
@@ -732,6 +750,8 @@ func NewCreateApiResponse() (response *CreateApiResponse) {
 //  UNSUPPORTEDOPERATION_BASICSERVICENOMOREAPI = "UnsupportedOperation.BasicServiceNoMoreApi"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 //  UNSUPPORTEDOPERATION_INVALIDENDPOINTTYPE = "UnsupportedOperation.InvalidEndpointType"
+//  UNSUPPORTEDOPERATION_SERVICEEXIST = "UnsupportedOperation.ServiceExist"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDNETTYPE = "UnsupportedOperation.UnsupportedNetType"
 func (c *Client) CreateApi(request *CreateApiRequest) (response *CreateApiResponse, err error) {
     return c.CreateApiWithContext(context.Background(), request)
@@ -742,6 +762,7 @@ func (c *Client) CreateApi(request *CreateApiRequest) (response *CreateApiRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_APIINOPERATION = "FailedOperation.ApiInOperation"
+//  FAILEDOPERATION_BACKENDDOMAINERROR = "FailedOperation.BackendDomainError"
 //  FAILEDOPERATION_EIAMERROR = "FailedOperation.EIAMError"
 //  FAILEDOPERATION_EBERROR = "FailedOperation.EbError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
@@ -749,6 +770,7 @@ func (c *Client) CreateApi(request *CreateApiRequest) (response *CreateApiRespon
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CAUTHEXCEPTION = "InternalError.CauthException"
 //  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
@@ -788,6 +810,8 @@ func (c *Client) CreateApi(request *CreateApiRequest) (response *CreateApiRespon
 //  UNSUPPORTEDOPERATION_BASICSERVICENOMOREAPI = "UnsupportedOperation.BasicServiceNoMoreApi"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 //  UNSUPPORTEDOPERATION_INVALIDENDPOINTTYPE = "UnsupportedOperation.InvalidEndpointType"
+//  UNSUPPORTEDOPERATION_SERVICEEXIST = "UnsupportedOperation.ServiceExist"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDNETTYPE = "UnsupportedOperation.UnsupportedNetType"
 func (c *Client) CreateApiWithContext(ctx context.Context, request *CreateApiRequest) (response *CreateApiResponse, err error) {
     if request == nil {
@@ -834,6 +858,7 @@ func NewCreateApiAppResponse() (response *CreateApiAppResponse) {
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIAPPCOUNTLIMITEXCEEDED = "LimitExceeded.ApiAppCountLimitExceeded"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateApiApp(request *CreateApiAppRequest) (response *CreateApiAppResponse, err error) {
     return c.CreateApiAppWithContext(context.Background(), request)
 }
@@ -849,6 +874,7 @@ func (c *Client) CreateApiApp(request *CreateApiAppRequest) (response *CreateApi
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIAPPCOUNTLIMITEXCEEDED = "LimitExceeded.ApiAppCountLimitExceeded"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateApiAppWithContext(ctx context.Context, request *CreateApiAppRequest) (response *CreateApiAppResponse, err error) {
     if request == nil {
         request = NewCreateApiAppRequest()
@@ -888,9 +914,12 @@ func NewCreateApiKeyResponse() (response *CreateApiKeyResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCESSKEYEXIST = "FailedOperation.AccessKeyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateApiKey(request *CreateApiKeyRequest) (response *CreateApiKeyResponse, err error) {
     return c.CreateApiKeyWithContext(context.Background(), request)
 }
@@ -900,9 +929,12 @@ func (c *Client) CreateApiKey(request *CreateApiKeyRequest) (response *CreateApi
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCESSKEYEXIST = "FailedOperation.AccessKeyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateApiKeyWithContext(ctx context.Context, request *CreateApiKeyRequest) (response *CreateApiKeyResponse, err error) {
     if request == nil {
         request = NewCreateApiKeyRequest()
@@ -1026,6 +1058,7 @@ func NewCreatePluginResponse() (response *CreatePluginResponse) {
 //  MISSINGPARAMETER_PLUGINCONFIG = "MissingParameter.PluginConfig"
 //  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreatePlugin(request *CreatePluginRequest) (response *CreatePluginResponse, err error) {
     return c.CreatePluginWithContext(context.Background(), request)
 }
@@ -1063,6 +1096,7 @@ func (c *Client) CreatePlugin(request *CreatePluginRequest) (response *CreatePlu
 //  MISSINGPARAMETER_PLUGINCONFIG = "MissingParameter.PluginConfig"
 //  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreatePluginWithContext(ctx context.Context, request *CreatePluginRequest) (response *CreatePluginResponse, err error) {
     if request == nil {
         request = NewCreatePluginRequest()
@@ -1100,7 +1134,7 @@ func NewCreateServiceResponse() (response *CreateServiceResponse) {
 // CreateService
 // 本接口（CreateService）用于创建服务。
 //
-// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。 
+// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1130,6 +1164,7 @@ func NewCreateServiceResponse() (response *CreateServiceResponse) {
 //  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 //  UNSUPPORTEDOPERATION_ACCOUNTARREARS = "UnsupportedOperation.AccountArrears"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateService(request *CreateServiceRequest) (response *CreateServiceResponse, err error) {
     return c.CreateServiceWithContext(context.Background(), request)
 }
@@ -1137,7 +1172,7 @@ func (c *Client) CreateService(request *CreateServiceRequest) (response *CreateS
 // CreateService
 // 本接口（CreateService）用于创建服务。
 //
-// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。 
+// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1167,6 +1202,7 @@ func (c *Client) CreateService(request *CreateServiceRequest) (response *CreateS
 //  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 //  UNSUPPORTEDOPERATION_ACCOUNTARREARS = "UnsupportedOperation.AccountArrears"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateServiceWithContext(ctx context.Context, request *CreateServiceRequest) (response *CreateServiceResponse, err error) {
     if request == nil {
         request = NewCreateServiceRequest()
@@ -1202,7 +1238,7 @@ func NewCreateUpstreamResponse() (response *CreateUpstreamResponse) {
 }
 
 // CreateUpstream
-// 用于创建创建后端通道
+// 用于创建后端通道
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1230,7 +1266,7 @@ func (c *Client) CreateUpstream(request *CreateUpstreamRequest) (response *Creat
 }
 
 // CreateUpstream
-// 用于创建创建后端通道
+// 用于创建后端通道
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1297,6 +1333,7 @@ func NewCreateUsagePlanResponse() (response *CreateUsagePlanResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDMAXREQUESTNUM = "InvalidParameterValue.InvalidMaxRequestNum"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  LIMITEXCEEDED_USAGEPLANLIMITEXCEEDED = "LimitExceeded.UsagePlanLimitExceeded"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateUsagePlan(request *CreateUsagePlanRequest) (response *CreateUsagePlanResponse, err error) {
     return c.CreateUsagePlanWithContext(context.Background(), request)
 }
@@ -1311,6 +1348,7 @@ func (c *Client) CreateUsagePlan(request *CreateUsagePlanRequest) (response *Cre
 //  INVALIDPARAMETERVALUE_INVALIDMAXREQUESTNUM = "InvalidParameterValue.InvalidMaxRequestNum"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  LIMITEXCEEDED_USAGEPLANLIMITEXCEEDED = "LimitExceeded.UsagePlanLimitExceeded"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) CreateUsagePlanWithContext(ctx context.Context, request *CreateUsagePlanRequest) (response *CreateUsagePlanResponse, err error) {
     if request == nil {
         request = NewCreateUsagePlanRequest()
@@ -1704,6 +1742,7 @@ func NewDeletePluginResponse() (response *DeletePluginResponse) {
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DeletePlugin(request *DeletePluginRequest) (response *DeletePluginResponse, err error) {
     return c.DeletePluginWithContext(context.Background(), request)
 }
@@ -1717,6 +1756,7 @@ func (c *Client) DeletePlugin(request *DeletePluginRequest) (response *DeletePlu
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DeletePluginWithContext(ctx context.Context, request *DeletePluginRequest) (response *DeletePluginResponse, err error) {
     if request == nil {
         request = NewDeletePluginRequest()
@@ -1761,8 +1801,13 @@ func NewDeleteServiceResponse() (response *DeleteServiceResponse) {
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_APILISTNOTEMPTY = "UnsupportedOperation.ApiListNotEmpty"
+//  UNSUPPORTEDOPERATION_EXISTINGONLINEENVIRONMENT = "UnsupportedOperation.ExistingOnlineEnvironment"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_TAGSNOTEMPTY = "UnsupportedOperation.TagsNotEmpty"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDDELETESERVICE = "UnsupportedOperation.UnsupportedDeleteService"
+//  UNSUPPORTEDOPERATION_USAGEPLANINUSE = "UnsupportedOperation.UsagePlanInUse"
 func (c *Client) DeleteService(request *DeleteServiceRequest) (response *DeleteServiceResponse, err error) {
     return c.DeleteServiceWithContext(context.Background(), request)
 }
@@ -1777,8 +1822,13 @@ func (c *Client) DeleteService(request *DeleteServiceRequest) (response *DeleteS
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_APILISTNOTEMPTY = "UnsupportedOperation.ApiListNotEmpty"
+//  UNSUPPORTEDOPERATION_EXISTINGONLINEENVIRONMENT = "UnsupportedOperation.ExistingOnlineEnvironment"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_TAGSNOTEMPTY = "UnsupportedOperation.TagsNotEmpty"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDDELETESERVICE = "UnsupportedOperation.UnsupportedDeleteService"
+//  UNSUPPORTEDOPERATION_USAGEPLANINUSE = "UnsupportedOperation.UsagePlanInUse"
 func (c *Client) DeleteServiceWithContext(ctx context.Context, request *DeleteServiceRequest) (response *DeleteServiceResponse, err error) {
     if request == nil {
         request = NewDeleteServiceRequest()
@@ -2300,7 +2350,7 @@ func NewDescribeApiAppResponse() (response *DescribeApiAppResponse) {
 }
 
 // DescribeApiApp
-// 本接口（DescribeApiApp）用于根据应用ID搜索应用。
+// 本接口（DescribeApiApp）用于根据应用ID搜索应用。此接口已下线，如需使用功能请使用DescribeApiAppsStatus接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
@@ -2311,7 +2361,7 @@ func (c *Client) DescribeApiApp(request *DescribeApiAppRequest) (response *Descr
 }
 
 // DescribeApiApp
-// 本接口（DescribeApiApp）用于根据应用ID搜索应用。
+// 本接口（DescribeApiApp）用于根据应用ID搜索应用。此接口已下线，如需使用功能请使用DescribeApiAppsStatus接口。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
@@ -2410,8 +2460,10 @@ func NewDescribeApiAppsStatusResponse() (response *DescribeApiAppsStatusResponse
 //
 // 可能返回的错误码:
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeApiAppsStatus(request *DescribeApiAppsStatusRequest) (response *DescribeApiAppsStatusResponse, err error) {
     return c.DescribeApiAppsStatusWithContext(context.Background(), request)
 }
@@ -2421,8 +2473,10 @@ func (c *Client) DescribeApiAppsStatus(request *DescribeApiAppsStatusRequest) (r
 //
 // 可能返回的错误码:
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeApiAppsStatusWithContext(ctx context.Context, request *DescribeApiAppsStatusRequest) (response *DescribeApiAppsStatusResponse, err error) {
     if request == nil {
         request = NewDescribeApiAppsStatusRequest()
@@ -2569,9 +2623,11 @@ func NewDescribeApiForApiAppResponse() (response *DescribeApiForApiAppResponse) 
 //  FAILEDOPERATION_SERVICENOTEXIST = "FailedOperation.ServiceNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DescribeApiForApiApp(request *DescribeApiForApiAppRequest) (response *DescribeApiForApiAppResponse, err error) {
     return c.DescribeApiForApiAppWithContext(context.Background(), request)
 }
@@ -2584,9 +2640,11 @@ func (c *Client) DescribeApiForApiApp(request *DescribeApiForApiAppRequest) (res
 //  FAILEDOPERATION_SERVICENOTEXIST = "FailedOperation.ServiceNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DescribeApiForApiAppWithContext(ctx context.Context, request *DescribeApiForApiAppRequest) (response *DescribeApiForApiAppResponse, err error) {
     if request == nil {
         request = NewDescribeApiForApiAppRequest()
@@ -2627,6 +2685,7 @@ func NewDescribeApiKeyResponse() (response *DescribeApiKeyResponse) {
 // 用户在创建密钥后，可用此接口查询一个 API 密钥的详情，该接口会显示密钥 Key。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 func (c *Client) DescribeApiKey(request *DescribeApiKeyRequest) (response *DescribeApiKeyResponse, err error) {
     return c.DescribeApiKeyWithContext(context.Background(), request)
@@ -2638,6 +2697,7 @@ func (c *Client) DescribeApiKey(request *DescribeApiKeyRequest) (response *Descr
 // 用户在创建密钥后，可用此接口查询一个 API 密钥的详情，该接口会显示密钥 Key。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 func (c *Client) DescribeApiKeyWithContext(ctx context.Context, request *DescribeApiKeyRequest) (response *DescribeApiKeyResponse, err error) {
     if request == nil {
@@ -2679,6 +2739,8 @@ func NewDescribeApiKeysStatusResponse() (response *DescribeApiKeysStatusResponse
 // 当用户创建了多个密钥对时，可使用本接口查询一个或多个 API 密钥信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 func (c *Client) DescribeApiKeysStatus(request *DescribeApiKeysStatusRequest) (response *DescribeApiKeysStatusResponse, err error) {
@@ -2691,6 +2753,8 @@ func (c *Client) DescribeApiKeysStatus(request *DescribeApiKeysStatusRequest) (r
 // 当用户创建了多个密钥对时，可使用本接口查询一个或多个 API 密钥信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 func (c *Client) DescribeApiKeysStatusWithContext(ctx context.Context, request *DescribeApiKeysStatusRequest) (response *DescribeApiKeysStatusResponse, err error) {
@@ -2793,6 +2857,7 @@ func NewDescribeApisStatusResponse() (response *DescribeApisStatusResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeApisStatus(request *DescribeApisStatusRequest) (response *DescribeApisStatusResponse, err error) {
     return c.DescribeApisStatusWithContext(context.Background(), request)
 }
@@ -2807,6 +2872,7 @@ func (c *Client) DescribeApisStatus(request *DescribeApisStatusRequest) (respons
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeApisStatusWithContext(ctx context.Context, request *DescribeApisStatusRequest) (response *DescribeApisStatusResponse, err error) {
     if request == nil {
         request = NewDescribeApisStatusRequest()
@@ -2842,7 +2908,7 @@ func NewDescribeExclusiveInstanceDetailResponse() (response *DescribeExclusiveIn
 }
 
 // DescribeExclusiveInstanceDetail
-// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。​
+// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2860,7 +2926,7 @@ func (c *Client) DescribeExclusiveInstanceDetail(request *DescribeExclusiveInsta
 }
 
 // DescribeExclusiveInstanceDetail
-// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。​
+// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2908,7 +2974,7 @@ func NewDescribeExclusiveInstancesResponse() (response *DescribeExclusiveInstanc
 }
 
 // DescribeExclusiveInstances
-// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。​
+// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2917,6 +2983,7 @@ func NewDescribeExclusiveInstancesResponse() (response *DescribeExclusiveInstanc
 //  FAILEDOPERATION_CLSERROR = "FailedOperation.ClsError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2928,7 +2995,7 @@ func (c *Client) DescribeExclusiveInstances(request *DescribeExclusiveInstancesR
 }
 
 // DescribeExclusiveInstances
-// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。​
+// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2937,6 +3004,7 @@ func (c *Client) DescribeExclusiveInstances(request *DescribeExclusiveInstancesR
 //  FAILEDOPERATION_CLSERROR = "FailedOperation.ClsError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2986,11 +3054,13 @@ func NewDescribeExclusiveInstancesStatusResponse() (response *DescribeExclusiveI
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLSERROR = "FailedOperation.ClsError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeExclusiveInstancesStatus(request *DescribeExclusiveInstancesStatusRequest) (response *DescribeExclusiveInstancesStatusResponse, err error) {
     return c.DescribeExclusiveInstancesStatusWithContext(context.Background(), request)
 }
@@ -3004,11 +3074,13 @@ func (c *Client) DescribeExclusiveInstancesStatus(request *DescribeExclusiveInst
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLSERROR = "FailedOperation.ClsError"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeExclusiveInstancesStatusWithContext(ctx context.Context, request *DescribeExclusiveInstancesStatusRequest) (response *DescribeExclusiveInstancesStatusResponse, err error) {
     if request == nil {
         request = NewDescribeExclusiveInstancesStatusRequest()
@@ -3148,7 +3220,7 @@ func NewDescribeIPStrategysStatusResponse() (response *DescribeIPStrategysStatus
 }
 
 // DescribeIPStrategysStatus
-// 本接口（DescribeIPStrategysStatus）用于查询服务IP策略列表。
+// 本接口（DescribeIPStrategysStatus）用于查询服务IP策略列表，因为接口名拼写错误，已不推荐使用，请优先使用DescribeIPStrategiesStatus接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -3159,7 +3231,7 @@ func (c *Client) DescribeIPStrategysStatus(request *DescribeIPStrategysStatusReq
 }
 
 // DescribeIPStrategysStatus
-// 本接口（DescribeIPStrategysStatus）用于查询服务IP策略列表。
+// 本接口（DescribeIPStrategysStatus）用于查询服务IP策略列表，因为接口名拼写错误，已不推荐使用，请优先使用DescribeIPStrategiesStatus接口。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -3204,6 +3276,7 @@ func NewDescribeLogSearchResponse() (response *DescribeLogSearchResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
+//  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_CLSSEARCHTIME = "UnsupportedOperation.ClsSearchTime"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) DescribeLogSearch(request *DescribeLogSearchRequest) (response *DescribeLogSearchResponse, err error) {
@@ -3215,6 +3288,7 @@ func (c *Client) DescribeLogSearch(request *DescribeLogSearchRequest) (response 
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
+//  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_CLSSEARCHTIME = "UnsupportedOperation.ClsSearchTime"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
 func (c *Client) DescribeLogSearchWithContext(ctx context.Context, request *DescribeLogSearchRequest) (response *DescribeLogSearchResponse, err error) {
@@ -3255,6 +3329,7 @@ func NewDescribePluginResponse() (response *DescribePluginResponse) {
 // 展示插件详情，支持按照插件ID进行。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
@@ -3266,6 +3341,7 @@ func (c *Client) DescribePlugin(request *DescribePluginRequest) (response *Descr
 // 展示插件详情，支持按照插件ID进行。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
@@ -3363,12 +3439,14 @@ func NewDescribePluginsResponse() (response *DescribePluginsResponse) {
 // 展示插件列表和详情，支持分页，支持按照插件类型查询，支持按照插件ID批量查询，支持按照插件名称查询。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribePlugins(request *DescribePluginsRequest) (response *DescribePluginsResponse, err error) {
     return c.DescribePluginsWithContext(context.Background(), request)
 }
@@ -3377,12 +3455,14 @@ func (c *Client) DescribePlugins(request *DescribePluginsRequest) (response *Des
 // 展示插件列表和详情，支持分页，支持按照插件类型查询，支持按照插件ID批量查询，支持按照插件名称查询。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribePluginsWithContext(ctx context.Context, request *DescribePluginsRequest) (response *DescribePluginsResponse, err error) {
     if request == nil {
         request = NewDescribePluginsRequest()
@@ -3480,12 +3560,18 @@ func NewDescribeServiceResponse() (response *DescribeServiceResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DescribeService(request *DescribeServiceRequest) (response *DescribeServiceResponse, err error) {
     return c.DescribeServiceWithContext(context.Background(), request)
 }
@@ -3497,12 +3583,18 @@ func (c *Client) DescribeService(request *DescribeServiceRequest) (response *Des
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DescribeServiceWithContext(ctx context.Context, request *DescribeServiceRequest) (response *DescribeServiceResponse, err error) {
     if request == nil {
         request = NewDescribeServiceRequest()
@@ -3974,7 +4066,9 @@ func NewDescribeServicesStatusResponse() (response *DescribeServicesStatusRespon
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
@@ -3991,6 +4085,7 @@ func NewDescribeServicesStatusResponse() (response *DescribeServicesStatusRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeServicesStatus(request *DescribeServicesStatusRequest) (response *DescribeServicesStatusResponse, err error) {
     return c.DescribeServicesStatusWithContext(context.Background(), request)
 }
@@ -4002,7 +4097,9 @@ func (c *Client) DescribeServicesStatus(request *DescribeServicesStatusRequest) 
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
@@ -4019,6 +4116,7 @@ func (c *Client) DescribeServicesStatus(request *DescribeServicesStatusRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) DescribeServicesStatusWithContext(ctx context.Context, request *DescribeServicesStatusRequest) (response *DescribeServicesStatusResponse, err error) {
     if request == nil {
         request = NewDescribeServicesStatusRequest()
@@ -4126,7 +4224,9 @@ func NewDescribeUpstreamsResponse() (response *DescribeUpstreamsResponse) {
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -4145,7 +4245,9 @@ func (c *Client) DescribeUpstreams(request *DescribeUpstreamsRequest) (response 
 //  AUTHFAILURE = "AuthFailure"
 //  DRYRUNOPERATION = "DryRunOperation"
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CAMEXCEPTION = "FailedOperation.CamException"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMEXCEPTION = "InternalError.CamException"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -4408,6 +4510,7 @@ func NewDetachPluginResponse() (response *DetachPluginResponse) {
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DetachPlugin(request *DetachPluginRequest) (response *DetachPluginResponse, err error) {
     return c.DetachPluginWithContext(context.Background(), request)
 }
@@ -4425,6 +4528,7 @@ func (c *Client) DetachPlugin(request *DetachPluginRequest) (response *DetachPlu
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) DetachPluginWithContext(ctx context.Context, request *DetachPluginRequest) (response *DetachPluginResponse, err error) {
     if request == nil {
         request = NewDetachPluginRequest()
@@ -4547,60 +4651,6 @@ func (c *Client) EnableApiKeyWithContext(ctx context.Context, request *EnableApi
     return
 }
 
-func NewGenerateApiDocumentRequest() (request *GenerateApiDocumentRequest) {
-    request = &GenerateApiDocumentRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("apigateway", APIVersion, "GenerateApiDocument")
-    
-    
-    return
-}
-
-func NewGenerateApiDocumentResponse() (response *GenerateApiDocumentResponse) {
-    response = &GenerateApiDocumentResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// GenerateApiDocument
-// 本接口（GenerateApiDocument）用于自动生成 API 文档和 SDK，一个服务的一个环境生成一份文档和 SDK。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_GENERATEAPIDOCUMENTERROR = "FailedOperation.GenerateApiDocumentError"
-//  FAILEDOPERATION_SERVICENOTEXIST = "FailedOperation.ServiceNotExist"
-//  INVALIDPARAMETERVALUE_INVALIDGENLANGUAGE = "InvalidParameterValue.InvalidGenLanguage"
-//  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
-func (c *Client) GenerateApiDocument(request *GenerateApiDocumentRequest) (response *GenerateApiDocumentResponse, err error) {
-    return c.GenerateApiDocumentWithContext(context.Background(), request)
-}
-
-// GenerateApiDocument
-// 本接口（GenerateApiDocument）用于自动生成 API 文档和 SDK，一个服务的一个环境生成一份文档和 SDK。
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION_GENERATEAPIDOCUMENTERROR = "FailedOperation.GenerateApiDocumentError"
-//  FAILEDOPERATION_SERVICENOTEXIST = "FailedOperation.ServiceNotExist"
-//  INVALIDPARAMETERVALUE_INVALIDGENLANGUAGE = "InvalidParameterValue.InvalidGenLanguage"
-//  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
-func (c *Client) GenerateApiDocumentWithContext(ctx context.Context, request *GenerateApiDocumentRequest) (response *GenerateApiDocumentResponse, err error) {
-    if request == nil {
-        request = NewGenerateApiDocumentRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("GenerateApiDocument require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewGenerateApiDocumentResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewImportOpenApiRequest() (request *ImportOpenApiRequest) {
     request = &ImportOpenApiRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4636,6 +4686,7 @@ func NewImportOpenApiResponse() (response *ImportOpenApiResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ImportOpenApi(request *ImportOpenApiRequest) (response *ImportOpenApiResponse, err error) {
     return c.ImportOpenApiWithContext(context.Background(), request)
 }
@@ -4657,6 +4708,7 @@ func (c *Client) ImportOpenApi(request *ImportOpenApiRequest) (response *ImportO
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ImportOpenApiWithContext(ctx context.Context, request *ImportOpenApiRequest) (response *ImportOpenApiResponse, err error) {
     if request == nil {
         request = NewImportOpenApiRequest()
@@ -4757,12 +4809,14 @@ func NewModifyApiResponse() (response *ModifyApiResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_APIERROR = "FailedOperation.ApiError"
 //  FAILEDOPERATION_APIINOPERATION = "FailedOperation.ApiInOperation"
+//  FAILEDOPERATION_BACKENDDOMAINERROR = "FailedOperation.BackendDomainError"
 //  FAILEDOPERATION_EIAMERROR = "FailedOperation.EIAMError"
 //  FAILEDOPERATION_EBERROR = "FailedOperation.EbError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
@@ -4803,6 +4857,7 @@ func NewModifyApiResponse() (response *ModifyApiResponse) {
 //  UNSUPPORTEDOPERATION_MODIFYEIAMAUTHAPI = "UnsupportedOperation.ModifyEIAMAuthApi"
 //  UNSUPPORTEDOPERATION_MODIFYPROTOCOL = "UnsupportedOperation.ModifyProtocol"
 //  UNSUPPORTEDOPERATION_RESOURCEASSOCIATED = "UnsupportedOperation.ResourceAssociated"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyApi(request *ModifyApiRequest) (response *ModifyApiResponse, err error) {
     return c.ModifyApiWithContext(context.Background(), request)
 }
@@ -4813,12 +4868,14 @@ func (c *Client) ModifyApi(request *ModifyApiRequest) (response *ModifyApiRespon
 // 可能返回的错误码:
 //  FAILEDOPERATION_APIERROR = "FailedOperation.ApiError"
 //  FAILEDOPERATION_APIINOPERATION = "FailedOperation.ApiInOperation"
+//  FAILEDOPERATION_BACKENDDOMAINERROR = "FailedOperation.BackendDomainError"
 //  FAILEDOPERATION_EIAMERROR = "FailedOperation.EIAMError"
 //  FAILEDOPERATION_EBERROR = "FailedOperation.EbError"
 //  FAILEDOPERATION_GETROLEERROR = "FailedOperation.GetRoleError"
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
@@ -4859,6 +4916,7 @@ func (c *Client) ModifyApi(request *ModifyApiRequest) (response *ModifyApiRespon
 //  UNSUPPORTEDOPERATION_MODIFYEIAMAUTHAPI = "UnsupportedOperation.ModifyEIAMAuthApi"
 //  UNSUPPORTEDOPERATION_MODIFYPROTOCOL = "UnsupportedOperation.ModifyProtocol"
 //  UNSUPPORTEDOPERATION_RESOURCEASSOCIATED = "UnsupportedOperation.ResourceAssociated"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyApiWithContext(ctx context.Context, request *ModifyApiRequest) (response *ModifyApiResponse, err error) {
     if request == nil {
         request = NewModifyApiRequest()
@@ -5210,7 +5268,9 @@ func NewModifyPluginResponse() (response *ModifyPluginResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FORMATERROR = "FailedOperation.FormatError"
+//  FAILEDOPERATION_INVALIDINPUTJSON = "FailedOperation.InvalidInputJSON"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
 //  INTERNALERROR_VPCEXCEPTION = "InternalError.VpcException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5239,6 +5299,7 @@ func NewModifyPluginResponse() (response *ModifyPluginResponse) {
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyPlugin(request *ModifyPluginRequest) (response *ModifyPluginResponse, err error) {
     return c.ModifyPluginWithContext(context.Background(), request)
 }
@@ -5248,7 +5309,9 @@ func (c *Client) ModifyPlugin(request *ModifyPluginRequest) (response *ModifyPlu
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_FORMATERROR = "FailedOperation.FormatError"
+//  FAILEDOPERATION_INVALIDINPUTJSON = "FailedOperation.InvalidInputJSON"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
 //  INTERNALERROR_VPCEXCEPTION = "InternalError.VpcException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
@@ -5277,6 +5340,7 @@ func (c *Client) ModifyPlugin(request *ModifyPluginRequest) (response *ModifyPlu
 //  RESOURCENOTFOUND_INVALIDPLUGIN = "ResourceNotFound.InvalidPlugin"
 //  UNAUTHORIZEDOPERATION_ACCESSRESOURCE = "UnauthorizedOperation.AccessResource"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyPluginWithContext(ctx context.Context, request *ModifyPluginRequest) (response *ModifyPluginResponse, err error) {
     if request == nil {
         request = NewModifyPluginRequest()
@@ -5323,6 +5387,7 @@ func NewModifyServiceResponse() (response *ModifyServiceResponse) {
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_MODIFYNETTYPE = "UnsupportedOperation.ModifyNetType"
 //  UNSUPPORTEDOPERATION_REDUCENETTYPES = "UnsupportedOperation.ReduceNetTypes"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyService(request *ModifyServiceRequest) (response *ModifyServiceResponse, err error) {
     return c.ModifyServiceWithContext(context.Background(), request)
 }
@@ -5339,6 +5404,7 @@ func (c *Client) ModifyService(request *ModifyServiceRequest) (response *ModifyS
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_MODIFYNETTYPE = "UnsupportedOperation.ModifyNetType"
 //  UNSUPPORTEDOPERATION_REDUCENETTYPES = "UnsupportedOperation.ReduceNetTypes"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyServiceWithContext(ctx context.Context, request *ModifyServiceRequest) (response *ModifyServiceResponse, err error) {
     if request == nil {
         request = NewModifyServiceRequest()
@@ -5513,6 +5579,7 @@ func NewModifyUpstreamResponse() (response *ModifyUpstreamResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDUPSTREAM = "InvalidParameterValue.InvalidUpstream"
+//  INVALIDPARAMETERVALUE_INVALIDVPCCONFIG = "InvalidParameterValue.InvalidVpcConfig"
 //  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
 //  INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -5536,6 +5603,7 @@ func (c *Client) ModifyUpstream(request *ModifyUpstreamRequest) (response *Modif
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDUPSTREAM = "InvalidParameterValue.InvalidUpstream"
+//  INVALIDPARAMETERVALUE_INVALIDVPCCONFIG = "InvalidParameterValue.InvalidVpcConfig"
 //  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
 //  INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -5637,6 +5705,8 @@ func NewReleaseServiceResponse() (response *ReleaseServiceResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
+//  FAILEDOPERATION_TASKALREADYEXIST = "FailedOperation.TaskAlreadyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
@@ -5644,6 +5714,7 @@ func NewReleaseServiceResponse() (response *ReleaseServiceResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ReleaseService(request *ReleaseServiceRequest) (response *ReleaseServiceResponse, err error) {
     return c.ReleaseServiceWithContext(context.Background(), request)
 }
@@ -5656,6 +5727,8 @@ func (c *Client) ReleaseService(request *ReleaseServiceRequest) (response *Relea
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
+//  FAILEDOPERATION_TASKALREADYEXIST = "FailedOperation.TaskAlreadyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
@@ -5663,6 +5736,7 @@ func (c *Client) ReleaseService(request *ReleaseServiceRequest) (response *Relea
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ReleaseServiceWithContext(ctx context.Context, request *ReleaseServiceRequest) (response *ReleaseServiceResponse, err error) {
     if request == nil {
         request = NewReleaseServiceRequest()
@@ -5866,6 +5940,7 @@ func NewUnBindSecretIdsResponse() (response *UnBindSecretIdsResponse) {
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  RESOURCENOTFOUND_INVALIDUSAGEPLAN = "ResourceNotFound.InvalidUsagePlan"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) UnBindSecretIds(request *UnBindSecretIdsRequest) (response *UnBindSecretIdsResponse, err error) {
     return c.UnBindSecretIdsWithContext(context.Background(), request)
 }
@@ -5877,6 +5952,7 @@ func (c *Client) UnBindSecretIds(request *UnBindSecretIdsRequest) (response *UnB
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  RESOURCENOTFOUND_INVALIDUSAGEPLAN = "ResourceNotFound.InvalidUsagePlan"
+//  UNSUPPORTEDOPERATION_REQUESTPOSTERROR = "UnsupportedOperation.RequestPostError"
 func (c *Client) UnBindSecretIdsWithContext(ctx context.Context, request *UnBindSecretIdsRequest) (response *UnBindSecretIdsResponse, err error) {
     if request == nil {
         request = NewUnBindSecretIdsRequest()
@@ -5926,6 +6002,7 @@ func NewUnBindSubDomainResponse() (response *UnBindSubDomainResponse) {
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDSTATUS = "UnsupportedOperation.InvalidStatus"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnBindSubDomain(request *UnBindSubDomainRequest) (response *UnBindSubDomainResponse, err error) {
     return c.UnBindSubDomainWithContext(context.Background(), request)
 }
@@ -5945,6 +6022,7 @@ func (c *Client) UnBindSubDomain(request *UnBindSubDomainRequest) (response *UnB
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDSTATUS = "UnsupportedOperation.InvalidStatus"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnBindSubDomainWithContext(ctx context.Context, request *UnBindSubDomainRequest) (response *UnBindSubDomainResponse, err error) {
     if request == nil {
         request = NewUnBindSubDomainRequest()
@@ -5994,6 +6072,7 @@ func NewUnReleaseServiceResponse() (response *UnReleaseServiceResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnReleaseService(request *UnReleaseServiceRequest) (response *UnReleaseServiceResponse, err error) {
     return c.UnReleaseServiceWithContext(context.Background(), request)
 }
@@ -6013,6 +6092,7 @@ func (c *Client) UnReleaseService(request *UnReleaseServiceRequest) (response *U
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnReleaseServiceWithContext(ctx context.Context, request *UnReleaseServiceRequest) (response *UnReleaseServiceResponse, err error) {
     if request == nil {
         request = NewUnReleaseServiceRequest()
@@ -6054,6 +6134,7 @@ func NewUnbindApiAppResponse() (response *UnbindApiAppResponse) {
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDENV = "InvalidParameterValue.InvalidEnv"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
@@ -6072,6 +6153,7 @@ func (c *Client) UnbindApiApp(request *UnbindApiAppRequest) (response *UnbindApi
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INTERNALERROR_RETURNABLEEXCEPTION = "InternalError.ReturnableException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDENV = "InvalidParameterValue.InvalidEnv"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
@@ -6189,6 +6271,8 @@ func NewUpdateApiKeyResponse() (response *UpdateApiKeyResponse) {
 // 本接口（UpdateApiKey）用于更换用户已创建的一对 API 密钥。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
 func (c *Client) UpdateApiKey(request *UpdateApiKeyRequest) (response *UpdateApiKeyResponse, err error) {
@@ -6199,6 +6283,8 @@ func (c *Client) UpdateApiKey(request *UpdateApiKeyRequest) (response *UpdateApi
 // 本接口（UpdateApiKey）用于更换用户已创建的一对 API 密钥。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
 func (c *Client) UpdateApiKeyWithContext(ctx context.Context, request *UpdateApiKeyRequest) (response *UpdateApiKeyResponse, err error) {
@@ -6236,7 +6322,7 @@ func NewUpdateServiceResponse() (response *UpdateServiceResponse) {
 }
 
 // UpdateService
-// 本接口（UpdateService）用于从服务发布的环境中运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，多因为开发过程会产生多个版本，此时可调用本接口。
+// 本接口（UpdateService）用于从服务已发布的环境中将运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，如在开发过程产生多个版本需要切换，此时可调用本接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
@@ -6251,7 +6337,7 @@ func (c *Client) UpdateService(request *UpdateServiceRequest) (response *UpdateS
 }
 
 // UpdateService
-// 本接口（UpdateService）用于从服务发布的环境中运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，多因为开发过程会产生多个版本，此时可调用本接口。
+// 本接口（UpdateService）用于从服务已发布的环境中将运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，如在开发过程产生多个版本需要切换，此时可调用本接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"

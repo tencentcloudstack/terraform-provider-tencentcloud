@@ -3,35 +3,121 @@ Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
+~> **NOTE:** The value of parameter `parameters` can be used with tencentcloud_mysql_parameter_list to obtain.
+
 Example Usage
 
+Create a single node instance
+
 ```hcl
-resource "tencentcloud_mysql_instance" "default" {
-  internet_service = 1
-  engine_version   = "5.7"
-  charge_type = "POSTPAID"
-  root_password     = "********"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  name              = "subnet-mysql"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-mysql"
+  description = "mysql test"
+}
+
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
   slave_deploy_mode = 0
-  first_slave_zone  = "ap-guangzhou-4"
-  second_slave_zone = "ap-guangzhou-4"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   slave_sync_mode   = 1
-  availability_zone = "ap-guangzhou-4"
-  project_id        = 201901010001
-  instance_name     = "myTestMysql"
-  mem_size          = 128000
-  volume_size       = 250
-  vpc_id            = "vpc-12mt3l31"
-  subnet_id         = "subnet-9uivyb1g"
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
   intranet_port     = 3306
-  security_groups   = ["sg-ot8eclwz"]
+  security_groups   = [tencentcloud_security_group.security_group.id]
 
   tags = {
     name = "test"
   }
 
   parameters = {
-    character_set_server = "UTF8"
-    max_connections = "1000"
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+}
+```
+
+Create a double node instance
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 1
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  first_slave_zone  = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+}
+```
+
+Create a three node instance
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 1
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  first_slave_zone  = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
   }
 }
 ```
@@ -41,7 +127,7 @@ Import
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
+$ terraform import tencentcloud_mysql_instance.foo cdb-12345678
 ```
 
 */
@@ -53,15 +139,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
-
-var importFlag = false
 
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -176,7 +259,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional: true,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 			Set: func(v interface{}) int {
-				return hashcode.String(v.(string))
+				return helper.HashString(v.(string))
 			},
 			Description: "Security groups to use.",
 		},
@@ -193,6 +276,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"device_type": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
 		},
 		"tags": {
@@ -242,7 +326,6 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"parameters": {
 			Type:        schema.TypeMap,
 			Optional:    true,
-			Computed:    true,
 			Description: "List of parameters to use.",
 		},
 		"internet_service": {
@@ -254,11 +337,20 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"engine_version": {
 			Type:         schema.TypeString,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.",
+			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
+		},
+		"upgrade_subversion": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.",
+		},
+		"max_deay_time": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Latency threshold. Value range 1~10. Only need to fill in when upgrading kernel subversion and engine version.",
 		},
 
 		"availability_zone": {
@@ -278,26 +370,23 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
 			Optional:     true,
-			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
 		"first_slave_zone": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
+			Computed:    true,
 			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Zone information about second slave instance.",
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
@@ -334,26 +423,18 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		Delete: resourceTencentCloudMysqlInstanceDelete,
 		Schema: specialInfo,
 		Importer: &schema.ResourceImporter{
-			State: func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-				importFlag = true
-				defaultValues := map[string]interface{}{
-					"charge_type":       MYSQL_CHARGE_TYPE_POSTPAID,
-					"prepaid_period":    1,
-					"auto_renew_flag":   0,
-					"intranet_port":     3306,
-					"force_delete":      false,
-					"internet_service":  0,
-					"engine_version":    MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-					"slave_deploy_mode": 0,
-					"slave_sync_mode":   0,
-					"project_id":        0,
-				}
-
-				for k, v := range defaultValues {
-					_ = d.Set(k, v)
-				}
-				return []*schema.ResourceData{d}, nil
-			},
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"charge_type":       MYSQL_CHARGE_TYPE_POSTPAID,
+				"prepaid_period":    1,
+				"auto_renew_flag":   0,
+				"intranet_port":     3306,
+				"force_delete":      false,
+				"internet_service":  0,
+				"engine_version":    MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
+				"slave_deploy_mode": 0,
+				"slave_sync_mode":   0,
+				"project_id":        0,
+			}),
 		},
 	}
 }
@@ -623,8 +704,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-		// normal user
-		instanceId = *response.Response.InstanceIds[0]
+
 		return nil
 	})
 
@@ -633,7 +713,10 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	d.SetId(instanceId)
+	if len(response.Response.InstanceIds) != 1 {
+		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
+	}
+	d.SetId(*response.Response.InstanceIds[0])
 	return nil
 }
 
@@ -733,21 +816,21 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return resource.NonRetryableError(err)
 		}
 		if mysqlInfo == nil {
-			err = fmt.Errorf("mysqlid %s instance not exists, retrying...", mysqlID)
-			return resource.RetryableError(err)
+			err = fmt.Errorf("mysqlid %s instance not exists", mysqlID)
+			return resource.NonRetryableError(err)
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_DELIVING {
-			return resource.RetryableError(fmt.Errorf("create mysql task status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
+			return resource.RetryableError(fmt.Errorf("create mysql task  status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
 			return nil
 		}
-		err = fmt.Errorf("create mysql task status is %v,we won't wait for it finish", *mysqlInfo.Status)
+		err = fmt.Errorf("create mysql    task status is %v,we won't wait for it finish", *mysqlInfo.Status)
 		return resource.NonRetryableError(err)
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -833,11 +916,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("volume_size", mysqlInfo.Volume)
 	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
-
-	isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
-	if _, ok := d.GetOk("device_type"); ok || !isUniversal {
-		_ = d.Set("device_type", mysqlInfo.DeviceType)
-	}
+	_ = d.Set("device_type", mysqlInfo.DeviceType)
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
@@ -932,27 +1011,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-
-	if importFlag {
-		// import logic:
-		log.Printf("[INFO] %v ,begin to import parameter...\n", logId)
-		parameterList, err := mysqlService.DescribeInstanceParameters(ctx, *mysqlInfo.InstanceId)
-		if err != nil {
-			return err
-		}
-
-		parameters := make(map[string]string)
-		for _, v := range parameterList {
-			parameters[*v.Name] = *v.CurrentValue
-		}
-		if e := d.Set("parameters", parameters); e != nil {
-			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
-			return e
-		}
-		_ = d.Set("availability_zone", mysqlInfo.Zone)
-		importFlag = false
-	} else if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
-		// read logic:
+	parametersMap, ok := d.Get("parameters").(map[string]interface{})
+	if !ok {
+		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
+	} else {
 		var cares []string
 		for k := range parametersMap {
 			cares = append(cares, k)
@@ -995,14 +1057,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
 		_ = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-			if _, ok := d.GetOk("first_slave_zone"); ok {
-				_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-			}
+			_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
 		}
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-			if _, ok := d.GetOk("second_slave_zone"); ok {
-				_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-			}
+			_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 		}
 		return nil
 	})
@@ -1015,7 +1073,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 /*
    [master] and [dr] and [ro] all need update
 */
-func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}, isReadonly bool) error {
 
 	logId := getLogId(ctx)
 
@@ -1025,7 +1083,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err := mysqlService.ModifyDBInstanceName(ctx, d.Id(), d.Get("instance_name").(string)); err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("intranet_port") || d.HasChange("vpc_id") || d.HasChange("subnet_id") {
@@ -1050,72 +1108,117 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err := mysqlService.ModifyDBInstanceVipVport(ctx, d.Id(), vpcId, subnetId, intranetPort); err != nil {
 			return err
 		}
-		if d.HasChange("intranet_port") {
-			d.SetPartial("intranet_port")
-		}
-		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
-		}
-		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
-		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
+	if isReadonly {
+		if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
 
-		memSize := int64(d.Get("mem_size").(int))
-		cpu := int64(d.Get("cpu").(int))
-		volumeSize := int64(d.Get("volume_size").(int))
-		deviceType := ""
+			memSize := int64(d.Get("mem_size").(int))
+			cpu := int64(d.Get("cpu").(int))
+			volumeSize := int64(d.Get("volume_size").(int))
+			deviceType := ""
 
-		fastUpgrade := int64(0)
-		if v, ok := d.GetOk("fast_upgrade"); ok {
-			fastUpgrade = int64(v.(int))
-		}
-		if v, ok := d.GetOk("device_type"); ok {
-			deviceType = v.(string)
-		}
+			fastUpgrade := int64(0)
+			if v, ok := d.GetOk("fast_upgrade"); ok {
+				fastUpgrade = int64(v.(int))
+			}
+			if v, ok := d.GetOk("device_type"); ok {
+				deviceType = v.(string)
+			}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType)
-
-		if err != nil {
-			return err
-		}
-
-		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
-			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, -1, -1, "", "")
 
 			if err != nil {
-				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
+				return err
+			}
+
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
 				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
+				}
+				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
+					",", message)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
+		}
+	} else {
+		if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
+
+			memSize := int64(d.Get("mem_size").(int))
+			cpu := int64(d.Get("cpu").(int))
+			volumeSize := int64(d.Get("volume_size").(int))
+			slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+			slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
+			deviceType := ""
+			firstSlaveZone := ""
+			secondSlaveZone := ""
+
+			fastUpgrade := int64(0)
+			if v, ok := d.GetOk("fast_upgrade"); ok {
+				fastUpgrade = int64(v.(int))
+			}
+			if v, ok := d.GetOk("device_type"); ok {
+				deviceType = v.(string)
 			}
 
-			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-				return nil
+			if v, ok := d.GetOk("first_slave_zone"); ok {
+				firstSlaveZone = v.(string)
 			}
-			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-				return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
-			}
-			err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
-				",", message)
-			return resource.NonRetryableError(err)
-		})
 
-		if err != nil {
-			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
-			return err
-		}
-		if d.HasChange("mem_size") {
-			d.SetPartial("mem_size")
-		}
-		if d.HasChange("cpu") {
-			d.SetPartial("cpu")
-		}
-		if d.HasChange("volume_size") {
-			d.SetPartial("volume_size")
+			if v, ok := d.GetOk("second_slave_zone"); ok {
+				secondSlaveZone = v.(string)
+			}
+
+			asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
+
+			if err != nil {
+				return err
+			}
+
+			err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+				taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+				if err != nil {
+					if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+						return resource.RetryableError(err)
+					} else {
+						return resource.NonRetryableError(err)
+					}
+				}
+
+				if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+					return nil
+				}
+				if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+					return resource.RetryableError(fmt.Errorf("update mysql  mem_size/volume_size status is %s", taskStatus))
+				}
+				err = fmt.Errorf("update mysql  mem_size/volume_size task status is %s,we won't wait for it finish ,it show message:%s",
+					",", message)
+				return resource.NonRetryableError(err)
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
+				return err
+			}
 		}
 	}
 
@@ -1147,7 +1250,54 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 				return err
 			}
 		}
-		d.SetPartial("security_groups")
+
+	}
+
+	if d.HasChange("engine_version") || d.HasChange("upgrade_subversion") || d.HasChange("max_deay_time") {
+		engineVersion := ""
+		var upgradeSubversion int64
+		var maxDelayTime int64
+		if v, ok := d.GetOk("engine_version"); ok {
+			engineVersion = v.(string)
+		}
+		if v, ok := d.GetOk("upgrade_subversion"); ok {
+			upgradeSubversion = int64(v.(int))
+		}
+		if v, ok := d.GetOk("max_deay_time"); ok {
+			maxDelayTime = int64(v.(int))
+		}
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
+			}
+			err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
+				",", message)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -1170,6 +1320,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 
 		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("param_template_id") {
@@ -1191,7 +1342,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		if err := mysqlService.ModifyDBInstanceProject(ctx, d.Id(), newProjectId); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("parameters") {
@@ -1216,6 +1367,11 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		}
 		for _, parameter := range parameterList {
 			supportsParameters[*parameter.Name] = parameter
+		}
+
+		version := d.Get("engine_version").(string)
+		if version == "8.0" && oldParameters["lower_case_table_names"] != newParameters["lower_case_table_names"] {
+			return fmt.Errorf("this mysql 8.0 not support param `lower_case_table_names` set")
 		}
 
 		for parameName := range newParameters {
@@ -1272,7 +1428,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 				return err
 			}
 		}
-		d.SetPartial("parameters")
+
 	}
 
 	if d.HasChange("internet_service") {
@@ -1316,7 +1472,7 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			log.Printf("[CRITAL]%s update mysql  %s  fail, reason:%s\n ", logId, tag, err.Error())
 			return err
 		}
-		d.SetPartial("internet_service")
+
 	}
 
 	if d.HasChange("root_password") {
@@ -1355,13 +1511,13 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			log.Printf("[CRITAL]%s change root password   fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("root_password")
+
 	}
 	return nil
 }
 
 func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta, false); err != nil {
 		return err
 	}
 	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
@@ -1374,7 +1530,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
 	}
 
 	if d.HasChange("period") || d.HasChange("prepaid_period") {
@@ -1384,7 +1540,7 @@ func mysqlUpdateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 }
 
 func mysqlUpdateInstancePayByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+	if err := mysqlAllInstanceRoleUpdate(ctx, d, meta, false); err != nil {
 		return err
 	}
 	if err := mysqlMasterInstanceRoleUpdate(ctx, d, meta); err != nil {
@@ -1433,7 +1589,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
 		if err != nil {
 			//for the pay order wait
-			return retryError(err)
+			return retryError(err, InternalError)
 		}
 		return nil
 	})

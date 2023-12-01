@@ -12,11 +12,19 @@ description: |-
 Provide a resource to create a kubernetes cluster.
 
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
-~> **NOTE:**  We recommend the usage of one cluster without worker config + node pool to manage cluster and nodes. It's a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+
+~> **NOTE:** We recommend this usage that uses the `tencentcloud_kubernetes_cluster` resource to create a cluster without any `worker_config`, then adds nodes by the `tencentcloud_kubernetes_node_pool` resource.
+It's more flexible than managing worker config directly with `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_scale_worker`, or existing node management of `tencentcloud_kubernetes_attachment`. The reason is that `worker_config` is unchangeable and may cause the whole cluster resource to `ForceNew`.
 
 ## Example Usage
 
+### Create a basic cluster with two worker nodes
+
 ```hcl
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
 variable "availability_zone_first" {
   default = "ap-guangzhou-3"
 }
@@ -25,34 +33,63 @@ variable "availability_zone_second" {
   default = "ap-guangzhou-4"
 }
 
-variable "cluster_cidr" {
+variable "example_cluster_cidr" {
   default = "10.31.0.0/16"
 }
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
 }
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
+data "tencentcloud_vpc_subnets" "vpc_one" {
   is_default        = true
   availability_zone = var.availability_zone_first
 }
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
+data "tencentcloud_vpc_subnets" "vpc_two" {
   is_default        = true
   availability_zone = var.availability_zone_second
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr            = var.cluster_cidr
-  cluster_max_pod_num     = 32
-  cluster_name            = "test"
-  cluster_desc            = "test cluster desc"
-  cluster_max_service_num = 32
-  cluster_internet        = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type = "MANAGED_CLUSTER"
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -63,8 +100,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    img_id                     = "img-rkiynh11"
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -74,7 +111,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # key_ids                   = ["skey-11112222"]
+    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   worker_config {
@@ -86,7 +124,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+    subnet_id                  = local.second_subnet_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -96,8 +134,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    key_ids                   = ["skey-11112222"]
     cam_role_name             = "CVM_QcsRole"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -107,9 +146,15 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Use Kubelet
+### Create an empty cluster with a node pool
+
+The cluster does not have any nodes, nodes will be added through node pool.
 
 ```hcl
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
 variable "availability_zone_first" {
   default = "ap-guangzhou-3"
 }
@@ -118,34 +163,324 @@ variable "availability_zone_second" {
   default = "ap-guangzhou-4"
 }
 
-variable "cluster_cidr" {
+variable "example_cluster_cidr" {
   default = "10.31.0.0/16"
 }
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
+locals {
+  first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  sg_id           = tencentcloud_security_group.sg.id
 }
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
+data "tencentcloud_vpc_subnets" "vpc_one" {
   is_default        = true
   availability_zone = var.availability_zone_first
 }
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
+data "tencentcloud_vpc_subnets" "vpc_two" {
   is_default        = true
   availability_zone = var.availability_zone_second
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr            = var.cluster_cidr
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-np-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                  = local.first_vpc_id
+  cluster_cidr            = var.example_cluster_cidr
   cluster_max_pod_num     = 32
-  cluster_name            = "test"
-  cluster_desc            = "test cluster desc"
+  cluster_name            = "tf_example_cluster_np"
+  cluster_desc            = "example for tke cluster"
   cluster_max_service_num = 32
-  cluster_internet        = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type = "MANAGED_CLUSTER"
+  cluster_version         = "1.22.5"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  # without any worker config
+}
+
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf_example_node_pool"
+  cluster_id               = tencentcloud_kubernetes_cluster.example.id
+  max_size                 = 6 # set the node scaling range [1,6]
+  min_size                 = 1
+  vpc_id                   = local.first_vpc_id
+  subnet_ids               = [local.first_subnet_id]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  desired_capacity         = 4
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+
+  auto_scaling_config {
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = [local.sg_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "12.123.0.0"
+    host_name_style            = "ORIGINAL"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+    key    = "test_taint"
+    value  = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+    key    = "test_taint2"
+    value  = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
+  node_config {
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
+  }
+}
+```
+
+### Create a cluster with a node pool and open the network access with cluster endpoint
+
+The cluster's internet and intranet access will be opened after nodes are added through node pool.
+
+```hcl
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "availability_zone_second" {
+  default = "ap-guangzhou-4"
+}
+
+variable "example_cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+locals {
+  first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  sg_id           = tencentcloud_security_group.sg.id
+}
+
+data "tencentcloud_vpc_subnets" "vpc_one" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+data "tencentcloud_vpc_subnets" "vpc_two" {
+  is_default        = true
+  availability_zone = var.availability_zone_second
+}
+
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-np-ep-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                  = local.first_vpc_id
+  cluster_cidr            = var.example_cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "tf_example_cluster"
+  cluster_desc            = "example for tke cluster"
+  cluster_max_service_num = 32
+  cluster_internet        = false # (can be ignored) open it after the nodes added
+  cluster_version         = "1.22.5"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+  # without any worker config
+}
+
+resource "tencentcloud_kubernetes_node_pool" "example" {
+  name                     = "tf_example_node_pool"
+  cluster_id               = tencentcloud_kubernetes_cluster.example.id
+  max_size                 = 6 # set the node scaling range [1,6]
+  min_size                 = 1
+  vpc_id                   = local.first_vpc_id
+  subnet_ids               = [local.first_subnet_id]
+  retry_policy             = "INCREMENTAL_INTERVALS"
+  desired_capacity         = 4
+  enable_auto_scale        = true
+  multi_zone_subnet_policy = "EQUALITY"
+
+  auto_scaling_config {
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = [local.sg_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    password                   = "test123#"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    host_name                  = "12.123.0.0"
+    host_name_style            = "ORIGINAL"
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+
+  taints {
+    key    = "test_taint"
+    value  = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  taints {
+    key    = "test_taint2"
+    value  = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
+  node_config {
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
+  }
+}
+
+resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
+  cluster_id                      = tencentcloud_kubernetes_cluster.example.id
+  cluster_internet                = true # open the internet here
+  cluster_intranet                = true
+  cluster_internet_security_group = local.sg_id
+  cluster_intranet_subnet_id      = local.first_subnet_id
+  depends_on = [ # wait for the node pool ready
+    tencentcloud_kubernetes_node_pool.example
+  ]
+}
+```
+
+### Use Kubelet
+
+```hcl
+# Create a baisc kubernetes cluster with two nodes.
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "availability_zone_second" {
+  default = "ap-guangzhou-4"
+}
+
+variable "example_cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
+}
+
+data "tencentcloud_vpc_subnets" "vpc_one" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+data "tencentcloud_vpc_subnets" "vpc_two" {
+  is_default        = true
+  availability_zone = var.availability_zone_second
+}
+
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -156,17 +491,22 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
+      encrypt   = false
     }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    disaster_recover_group_ids = []
+    security_group_ids         = []
+    key_ids                    = []
+    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   worker_config {
@@ -178,18 +518,21 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+    subnet_id                  = local.second_subnet_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-    cam_role_name             = "CVM_QcsRole"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    disaster_recover_group_ids = []
+    security_group_ids         = []
+    key_ids                    = []
+    cam_role_name              = "CVM_QcsRole"
+    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -203,7 +546,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Use extension addons
+### Use extension addons
 
 ```hcl
 variable "availability_zone_first" {
@@ -257,7 +600,8 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_security_service  = false
     enhanced_monitor_service   = false
     user_data                  = "dGVzdA=="
-    password                   = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    key_ids = "skey-11112222"
   }
 
   extension_addon {
@@ -290,7 +634,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
 }
 ```
 
-Use node pool global config
+### Use node pool global config
 
 ```hcl
 variable "availability_zone" {
@@ -339,7 +683,8 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    key_ids = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -361,7 +706,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
 }
 ```
 
-Using VPC-CNI network type
+### Using VPC-CNI network type
 
 ```hcl
 variable "availability_zone" {
@@ -408,7 +753,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    key_ids = "skey-11112222"
   }
 
   labels = {
@@ -418,7 +764,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Using ops options
+### Using ops options
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
@@ -430,15 +776,15 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 
   event_persistence {
-    enabled       = true
-    log_set_id    = "" # optional
-    log_set_topic = "" # optional
+    enabled    = true
+    log_set_id = "" # optional
+    topic_id   = "" # optional
   }
 
   cluster_audit {
-    enabled       = true
-    log_set_id    = "" # optional
-    log_set_topic = "" # optional
+    enabled    = true
+    log_set_id = "" # optional
+    topic_id   = "" # optional
   }
 }
 ```
@@ -453,16 +799,17 @@ The following arguments are supported:
 * `auto_upgrade_cluster_level` - (Optional, Bool) Whether the cluster level auto upgraded, valid for managed cluster.
 * `base_pod_num` - (Optional, Int, ForceNew) The number of basic pods. valid when enable_customized_pod_cidr=true.
 * `claim_expired_seconds` - (Optional, Int) Claim expired seconds to recycle ENI. This field can only set when field `network_type` is 'VPC-CNI'. `claim_expired_seconds` must greater or equal than 300 and less than 15768000.
-* `cluster_as_enabled` - (Optional, Bool, ForceNew, **Deprecated**) This argument is deprecated because the TKE auto-scaling group was no longer available. Indicates whether to enable cluster node auto scaling. Default is false.
 * `cluster_audit` - (Optional, List) Specify Cluster Audit config. NOTE: Please make sure your TKE CamRole have permission to access CLS service.
 * `cluster_cidr` - (Optional, String, ForceNew) A network address block of the cluster. Different from vpc cidr and cidr of other clusters within this vpc. Must be in  10./192.168/172.[16-31] segments.
 * `cluster_deploy_type` - (Optional, String, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional, String) Description of the cluster.
 * `cluster_extra_args` - (Optional, List, ForceNew) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
+* `cluster_internet_domain` - (Optional, String) Domain name for cluster Kube-apiserver internet access. Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.
 * `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
-* `cluster_internet` - (Optional, Bool) Open internet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
+* `cluster_internet` - (Optional, Bool) Open internet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.
+* `cluster_intranet_domain` - (Optional, String) Domain name for cluster Kube-apiserver intranet access. Be careful if you modify value of this parameter, the pgw_endpoint value may be changed automatically too.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
-* `cluster_intranet` - (Optional, Bool) Open intranet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
+* `cluster_intranet` - (Optional, Bool) Open intranet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint. You may open it through `tencentcloud_kubernetes_cluster_endpoint`.
 * `cluster_ipvs` - (Optional, Bool, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
 * `cluster_level` - (Optional, String) Specify cluster level, valid for managed cluster, use data source `tencentcloud_kubernetes_cluster_levels` to query available levels. Available value examples `L5`, `L20`, `L50`, `L100`, etc.
 * `cluster_max_pod_num` - (Optional, Int, ForceNew) The maximum number of Pods per node in the cluster. Default is 256. The minimum value is 4. When its power unequal to 2, it will round upward to the closest power of 2.
@@ -470,8 +817,9 @@ The following arguments are supported:
 * `cluster_name` - (Optional, String) Name of the cluster.
 * `cluster_os_type` - (Optional, String, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
 * `cluster_os` - (Optional, String, ForceNew) Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.
-* `cluster_version` - (Optional, String) Version of the cluster, Default is '1.10.5'.
-* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
+* `cluster_subnet_id` - (Optional, String) Subnet ID of the cluster, such as: subnet-b3p7d7q5.
+* `cluster_version` - (Optional, String) Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.
+* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher.Default is 'docker'.
 * `deletion_protection` - (Optional, Bool) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.
@@ -489,7 +837,7 @@ The following arguments are supported:
 * `managed_cluster_internet_security_policies` - (Optional, List: [`String`], **Deprecated**) this argument was deprecated, use `cluster_internet_security_group` instead. Security policies for managed cluster internet, like:'192.168.1.0/24' or '113.116.51.27', '0.0.0.0/0' means all. This field can only set when field `cluster_deploy_type` is 'MANAGED_CLUSTER' and `cluster_internet` is true. `managed_cluster_internet_security_policies` can not delete or empty once be set.
 * `master_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'MASTER_ETCD' service, and create <=7 units for common users.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
-* `network_type` - (Optional, String, ForceNew) Cluster network type, GR or VPC-CNI. Default is GR.
+* `network_type` - (Optional, String, ForceNew) Cluster network type, the available values include: 'GR' and 'VPC-CNI' and 'CiliumOverlay'. Default is GR.
 * `node_name_type` - (Optional, String, ForceNew) Node name type of Cluster, the available values include: 'lan-ip' and 'hostname', Default is 'lan-ip'.
 * `node_pool_global_config` - (Optional, List) Global config effective for all node pools.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
@@ -503,8 +851,9 @@ The following arguments are supported:
 The `auth_options` object supports the following:
 
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
-* `issuer` - (Optional, String) Specify service-account-issuer.
-* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri.
+* `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
+* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field, it will be ignored anyway.
+* `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri, and they will be ignored.
 
 The `cluster_audit` object supports the following:
 
@@ -636,6 +985,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `certification_authority` - The certificate used for access.
+* `cluster_as_enabled` - (**Deprecated**) This argument is deprecated because the TKE auto-scaling group was no longer available. Indicates whether to enable cluster node auto scaling. Default is false.
 * `cluster_external_endpoint` - External network address to access.
 * `cluster_node_num` - Number of nodes in the cluster.
 * `domain` - Domain name for access.

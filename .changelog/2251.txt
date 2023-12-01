@@ -1,0 +1,14 @@
+```release-note:new-resource
+tencentcloud_dlc_modify_data_engine_description_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_modify_user_typ_operation
+```
+
+```release-note:new-resource
+tencentcloud_dlc_renew_data_engine_operation
+```
+
+
+

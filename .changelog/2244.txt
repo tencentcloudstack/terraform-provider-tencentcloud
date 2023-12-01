@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_dlc_describe_user_type
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_describe_user_info
+```
+
+```release-note:new-data-source
+tencentcloud_dlc_describe_user_roles
+```

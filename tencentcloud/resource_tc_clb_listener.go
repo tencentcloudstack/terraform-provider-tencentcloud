@@ -136,6 +136,27 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
   target_type                = "TARGETGROUP"
 }
 ```
+
+Port Range Listener
+
+```hcl
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-listener-test"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  port                = 1
+  end_port            = 6
+  protocol            = "TCP"
+  listener_name       = "listener_basic"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "NODE"
+}
+```
+
 Import
 
 CLB listener can be imported using the id (version >= 1.47.0), e.g.
@@ -152,8 +173,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -196,7 +217,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.",
+				Description:  "Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS`, `TCP_SSL` and `QUIC`.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -215,8 +236,8 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Type:         schema.TypeInt,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateIntegerInRange(5, 300),
-				Description:  "Interval time of health check. Valid value ranges: [5~300] sec. and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
+				ValidateFunc: validateIntegerInRange(2, 300),
+				Description:  "Interval time of health check. Valid value ranges: [2~300] sec. and the default is 5 sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
 			},
 			"health_check_health_num": {
 				Type:         schema.TypeInt,
@@ -262,10 +283,11 @@ func resourceTencentCloudClbListener() *schema.Resource {
 			"health_check_http_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{1, 2, 4, 8, 16}),
-				Description: "HTTP health check code of TCP listener. When the value of `health_check_type` of " +
+				ValidateFunc: validateIntegerInRange(1, 31),
+				Description: "HTTP health check code of TCP listener, Valid value ranges: [1~31]. When the value of `health_check_type` of " +
 					"the health check protocol is `HTTP`, this field is required. Valid values: `1`, `2`, `4`, `8`, `16`. " +
-					"`1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx.",
+					"`1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx." +
+					"If you want multiple return codes to indicate health, need to add the corresponding values.",
 			},
 			"health_check_http_path": {
 				Type:        schema.TypeString,
@@ -356,6 +378,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
 				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
+			"end_port": {
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Computed:    true,
+				Optional:    true,
+				Description: "This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -419,7 +448,8 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("target_type"); ok {
 		targetType := v.(string)
 		request.TargetType = &targetType
-	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
+		protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC {
 		targetType := CLB_TARGET_TYPE_NODE
 		request.TargetType = &targetType
 	}
@@ -450,6 +480,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			request.SniSwitch = &vvv
 		}
 	}
+	if v, ok := d.GetOkExists("end_port"); ok {
+		request.EndPort = helper.IntUint64(v.(int))
+	}
+
 	var response *clb.CreateListenerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
@@ -539,7 +573,8 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	if instance.SessionExpireTime != nil {
 		_ = d.Set("session_expire_time", instance.SessionExpireTime)
 	}
-	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL ||
+		*instance.Protocol == CLB_LISTENER_PROTOCOL_UDP || *instance.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 		_ = d.Set("scheduler", instance.Scheduler)
 	}
 	_ = d.Set("sni_switch", *instance.SniSwitch > 0)
@@ -603,6 +638,10 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		}
 	}
 
+	if instance.EndPort != nil {
+		_ = d.Set("end_port", instance.EndPort)
+	}
+
 	return nil
 }
 
@@ -637,8 +676,9 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", listenerId)
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
+			protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC) {
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL/QUIC or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler == CLB_LISTENER_SCHEDULER_IP_HASH {
 			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)

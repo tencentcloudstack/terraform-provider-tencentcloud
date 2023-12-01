@@ -10,8 +10,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
@@ -77,6 +77,7 @@ func init() {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlAccountResource_basic -v
 func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -89,8 +90,27 @@ func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlAccountExists("tencentcloud_mysql_account.mysql_account"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "keep_dbbrain"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "terraform_test"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "description", "test from terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "max_user_connections", "10"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_mysql_account.mysql_account",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+				},
+			},
+			{
+				Config: testAccMysqlAccountUp(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckMysqlAccountExists("tencentcloud_mysql_account.mysql_account"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "terraform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "description", "test from terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "max_user_connections", "10"),
 				),
 			},
 		},
@@ -194,10 +214,26 @@ func testAccMysqlAccount() string {
 
 resource "tencentcloud_mysql_account" "mysql_account" {
 	mysql_id = local.mysql_id
-	name    = "keep_dbbrain"
+	name    = "terraform_test"
     host = "192.168.0.%%"
 	password = "Test@123456#"
 	description = "test from terraform"
+	max_user_connections = 10
+}
+	`, CommonPresetMysql)
+}
+
+func testAccMysqlAccountUp() string {
+	return fmt.Sprintf(`
+%s
+
+resource "tencentcloud_mysql_account" "mysql_account" {
+	mysql_id = local.mysql_id
+	name    = "terraform_test"
+    host = "192.168.1.%%"
+	password = "Test@123456#"
+	description = "test from terraform"
+	max_user_connections = 10
 }
 	`, CommonPresetMysql)
 }

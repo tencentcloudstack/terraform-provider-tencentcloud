@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -64,7 +64,7 @@ func testSweepCvmInstance(region string) error {
 func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 	t.Parallel()
 
-	id := "tencentcloud_instance.foo"
+	id := "tencentcloud_instance.cvm_basic"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
@@ -216,6 +216,15 @@ func TestAccTencentCloudInstanceResource_WithKeyPairs(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithKeyPair_withoutKeyPair,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithKeyPair(
 					"[tencentcloud_key_pair.key_pair_0.id, tencentcloud_key_pair.key_pair_1.id]",
 				),
@@ -297,6 +306,7 @@ func TestAccTencentCloudInstanceResource_WithImageLogin(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(id, "keep_image_login", "true"),
+					resource.TestCheckResourceAttr(id, "disable_api_termination", "false"),
 				),
 			},
 		},
@@ -554,6 +564,53 @@ func TestAccTencentCloudInstanceResource_WithSpotpaid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceResource_DataDiskOrder(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithDataDiskOrder,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "data_disks.2.data_disk_size", "70"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceResource_DataDiskByCbs(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.cvm_add_data_disk_by_cbs"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceAddDataDiskByCbs,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
@@ -688,6 +745,19 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudInstanceBasic = defaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+`
+
+const testAccTencentCloudInstanceWithDataDiskOrder = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
@@ -697,6 +767,60 @@ resource "tencentcloud_instance" "foo" {
   subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
+
+  data_disks {
+    data_disk_size         = 100
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 50
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 70
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+}
+`
+
+const testAccTencentCloudInstanceAddDataDiskByCbs = defaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_add_data_disk_by_cbs" {
+  instance_name     = "cvm-add-data-disk-by-cbs"
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+
+resource "tencentcloud_cbs_storage" "cbs_disk1" {
+	storage_name = "cbs_disk1"
+	storage_type = "CLOUD_SSD"
+	storage_size = 200
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage" "cbs_disk2" {
+	storage_name = "cbs_disk2"
+	storage_type = "CLOUD_SSD"
+	storage_size = 100
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk1" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk1.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk2" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk2.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
 }
 `
 
@@ -753,7 +877,7 @@ data "tencentcloud_instance_types" "new_type" {
 	memory_size    = 2
   }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
@@ -937,6 +1061,16 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
+const testAccTencentCloudInstanceWithKeyPair_withoutKeyPair = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+	instance_name     = var.instance_name
+	availability_zone = var.availability_cvm_zone
+	image_id          = data.tencentcloud_images.default.images.0.image_id
+	instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+	system_disk_type  = "CLOUD_PREMIUM"
+}
+`
+
 func testAccTencentCloudInstanceWithKeyPair(keyIds string) string {
 
 	return fmt.Sprintf(
@@ -996,6 +1130,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   keep_image_login 			 = true
   system_disk_type           = "CLOUD_PREMIUM"
+  disable_api_termination    = false
 }
 `
 

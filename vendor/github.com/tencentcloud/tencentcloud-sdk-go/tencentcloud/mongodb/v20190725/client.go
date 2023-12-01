@@ -118,7 +118,7 @@ func NewCreateAccountUserResponse() (response *CreateAccountUserResponse) {
 }
 
 // CreateAccountUser
-// 本接口(CreateAccountUser)用于创建mongodb实例账号。
+// 本接口（CreateAccountUser）用于自定义实例访问账号。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -131,7 +131,7 @@ func (c *Client) CreateAccountUser(request *CreateAccountUserRequest) (response 
 }
 
 // CreateAccountUser
-// 本接口(CreateAccountUser)用于创建mongodb实例账号。
+// 本接口（CreateAccountUser）用于自定义实例访问账号。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -174,7 +174,7 @@ func NewCreateBackupDBInstanceResponse() (response *CreateBackupDBInstanceRespon
 }
 
 // CreateBackupDBInstance
-// 备份实例接口
+// 本接口（CreateBackupDBInstance）用于备份实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -189,7 +189,7 @@ func (c *Client) CreateBackupDBInstance(request *CreateBackupDBInstanceRequest) 
 }
 
 // CreateBackupDBInstance
-// 备份实例接口
+// 本接口（CreateBackupDBInstance）用于备份实例。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -370,7 +370,7 @@ func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) 
 }
 
 // CreateDBInstanceHour
-// 本接口(CreateDBInstanceHour)用于创建按量计费的MongoDB云数据库实例。
+// 本接口（CreateDBInstanceHour）用于创建按量计费的MongoDB云数据库实例。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -385,6 +385,7 @@ func NewCreateDBInstanceHourResponse() (response *CreateDBInstanceHourResponse) 
 //  INVALIDPARAMETERVALUE_REGIONERROR = "InvalidParameterValue.RegionError"
 //  INVALIDPARAMETERVALUE_REPLICASETNUMERROR = "InvalidParameterValue.ReplicaSetNumError"
 //  INVALIDPARAMETERVALUE_SPECNOTONSALE = "InvalidParameterValue.SpecNotOnSale"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 //  INVALIDPARAMETERVALUE_TAGNOTFOUND = "InvalidParameterValue.TagNotFound"
 //  INVALIDPARAMETERVALUE_VPCIDORSUBNETIDNOTFOUND = "InvalidParameterValue.VpcIdOrSubnetIdNotFound"
 //  INVALIDPARAMETERVALUE_ZONECLOSED = "InvalidParameterValue.ZoneClosed"
@@ -395,7 +396,7 @@ func (c *Client) CreateDBInstanceHour(request *CreateDBInstanceHourRequest) (res
 }
 
 // CreateDBInstanceHour
-// 本接口(CreateDBInstanceHour)用于创建按量计费的MongoDB云数据库实例。
+// 本接口（CreateDBInstanceHour）用于创建按量计费的MongoDB云数据库实例。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -410,6 +411,7 @@ func (c *Client) CreateDBInstanceHour(request *CreateDBInstanceHourRequest) (res
 //  INVALIDPARAMETERVALUE_REGIONERROR = "InvalidParameterValue.RegionError"
 //  INVALIDPARAMETERVALUE_REPLICASETNUMERROR = "InvalidParameterValue.ReplicaSetNumError"
 //  INVALIDPARAMETERVALUE_SPECNOTONSALE = "InvalidParameterValue.SpecNotOnSale"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 //  INVALIDPARAMETERVALUE_TAGNOTFOUND = "InvalidParameterValue.TagNotFound"
 //  INVALIDPARAMETERVALUE_VPCIDORSUBNETIDNOTFOUND = "InvalidParameterValue.VpcIdOrSubnetIdNotFound"
 //  INVALIDPARAMETERVALUE_ZONECLOSED = "InvalidParameterValue.ZoneClosed"
@@ -427,6 +429,88 @@ func (c *Client) CreateDBInstanceHourWithContext(ctx context.Context, request *C
     request.SetContext(ctx)
     
     response = NewCreateDBInstanceHourResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAccountUserRequest() (request *DeleteAccountUserRequest) {
+    request = &DeleteAccountUserRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("mongodb", APIVersion, "DeleteAccountUser")
+    
+    
+    return
+}
+
+func NewDeleteAccountUserResponse() (response *DeleteAccountUserResponse) {
+    response = &DeleteAccountUserResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteAccountUser
+// 本接口（DeleteAccountUser）用于删除实例的自定义账号。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CLUSTERTYPEERROR = "InvalidParameterValue.ClusterTypeError"
+//  INVALIDPARAMETERVALUE_INVALIDTRADEOPERATION = "InvalidParameterValue.InvalidTradeOperation"
+//  INVALIDPARAMETERVALUE_MACHINETYPEERROR = "InvalidParameterValue.MachineTypeError"
+//  INVALIDPARAMETERVALUE_MONGOVERSIONERROR = "InvalidParameterValue.MongoVersionError"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEFAILED = "InvalidParameterValue.PasswordRuleFailed"
+//  INVALIDPARAMETERVALUE_POSTPAIDINSTANCEBEYONDLIMIT = "InvalidParameterValue.PostPaidInstanceBeyondLimit"
+//  INVALIDPARAMETERVALUE_PROJECTNOTFOUND = "InvalidParameterValue.ProjectNotFound"
+//  INVALIDPARAMETERVALUE_REGIONERROR = "InvalidParameterValue.RegionError"
+//  INVALIDPARAMETERVALUE_REPLICASETNUMERROR = "InvalidParameterValue.ReplicaSetNumError"
+//  INVALIDPARAMETERVALUE_SPECNOTONSALE = "InvalidParameterValue.SpecNotOnSale"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+//  INVALIDPARAMETERVALUE_TAGNOTFOUND = "InvalidParameterValue.TagNotFound"
+//  INVALIDPARAMETERVALUE_VPCIDORSUBNETIDNOTFOUND = "InvalidParameterValue.VpcIdOrSubnetIdNotFound"
+//  INVALIDPARAMETERVALUE_ZONECLOSED = "InvalidParameterValue.ZoneClosed"
+//  INVALIDPARAMETERVALUE_ZONEERROR = "InvalidParameterValue.ZoneError"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORT = "UnsupportedOperation.VersionNotSupport"
+func (c *Client) DeleteAccountUser(request *DeleteAccountUserRequest) (response *DeleteAccountUserResponse, err error) {
+    return c.DeleteAccountUserWithContext(context.Background(), request)
+}
+
+// DeleteAccountUser
+// 本接口（DeleteAccountUser）用于删除实例的自定义账号。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_CLUSTERTYPEERROR = "InvalidParameterValue.ClusterTypeError"
+//  INVALIDPARAMETERVALUE_INVALIDTRADEOPERATION = "InvalidParameterValue.InvalidTradeOperation"
+//  INVALIDPARAMETERVALUE_MACHINETYPEERROR = "InvalidParameterValue.MachineTypeError"
+//  INVALIDPARAMETERVALUE_MONGOVERSIONERROR = "InvalidParameterValue.MongoVersionError"
+//  INVALIDPARAMETERVALUE_PASSWORDRULEFAILED = "InvalidParameterValue.PasswordRuleFailed"
+//  INVALIDPARAMETERVALUE_POSTPAIDINSTANCEBEYONDLIMIT = "InvalidParameterValue.PostPaidInstanceBeyondLimit"
+//  INVALIDPARAMETERVALUE_PROJECTNOTFOUND = "InvalidParameterValue.ProjectNotFound"
+//  INVALIDPARAMETERVALUE_REGIONERROR = "InvalidParameterValue.RegionError"
+//  INVALIDPARAMETERVALUE_REPLICASETNUMERROR = "InvalidParameterValue.ReplicaSetNumError"
+//  INVALIDPARAMETERVALUE_SPECNOTONSALE = "InvalidParameterValue.SpecNotOnSale"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
+//  INVALIDPARAMETERVALUE_TAGNOTFOUND = "InvalidParameterValue.TagNotFound"
+//  INVALIDPARAMETERVALUE_VPCIDORSUBNETIDNOTFOUND = "InvalidParameterValue.VpcIdOrSubnetIdNotFound"
+//  INVALIDPARAMETERVALUE_ZONECLOSED = "InvalidParameterValue.ZoneClosed"
+//  INVALIDPARAMETERVALUE_ZONEERROR = "InvalidParameterValue.ZoneError"
+//  UNSUPPORTEDOPERATION_VERSIONNOTSUPPORT = "UnsupportedOperation.VersionNotSupport"
+func (c *Client) DeleteAccountUserWithContext(ctx context.Context, request *DeleteAccountUserRequest) (response *DeleteAccountUserResponse, err error) {
+    if request == nil {
+        request = NewDeleteAccountUserRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAccountUser require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAccountUserResponse()
     err = c.Send(request, response)
     return
 }
@@ -450,7 +534,7 @@ func NewDescribeAccountUsersResponse() (response *DescribeAccountUsersResponse) 
 }
 
 // DescribeAccountUsers
-// 本接口(DescribeAccountUsers)用于获取当前实例的全部账号。
+// 本接口（DescribeAccountUsers）用于获取当前实例的全部账号。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -460,7 +544,7 @@ func (c *Client) DescribeAccountUsers(request *DescribeAccountUsersRequest) (res
 }
 
 // DescribeAccountUsers
-// 本接口(DescribeAccountUsers)用于获取当前实例的全部账号。
+// 本接口（DescribeAccountUsers）用于获取当前实例的全部账号。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -608,7 +692,7 @@ func NewDescribeClientConnectionsResponse() (response *DescribeClientConnections
 }
 
 // DescribeClientConnections
-// 本接口(DescribeClientConnections)用于查询实例客户端连接信息，包括连接IP和连接数量。
+// 本接口（DescribeClientConnections）用于查询实例客户端连接信息，包括连接 IP 和连接数量。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -621,7 +705,7 @@ func (c *Client) DescribeClientConnections(request *DescribeClientConnectionsReq
 }
 
 // DescribeClientConnections
-// 本接口(DescribeClientConnections)用于查询实例客户端连接信息，包括连接IP和连接数量。
+// 本接口（DescribeClientConnections）用于查询实例客户端连接信息，包括连接 IP 和连接数量。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -880,7 +964,7 @@ func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
 }
 
 // DescribeDBInstances
-// 本接口(DescribeDBInstances)用于查询云数据库实例列表，支持通过项目ID、实例ID、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
+// 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目ID、实例ID、实例状态等过滤条件来筛选主实例、灾备实例和只读实例信息列表。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -894,7 +978,7 @@ func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (respo
 }
 
 // DescribeDBInstances
-// 本接口(DescribeDBInstances)用于查询云数据库实例列表，支持通过项目ID、实例ID、实例状态等过滤条件来筛选实例。支持查询主实例、灾备实例和只读实例信息列表。
+// 本接口（DescribeDBInstances）用于查询云数据库实例列表，支持通过项目ID、实例ID、实例状态等过滤条件来筛选主实例、灾备实例和只读实例信息列表。
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -938,7 +1022,7 @@ func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsRespon
 }
 
 // DescribeInstanceParams
-// 本接口(DescribeInstanceParams)用于查询当前实例可修改的参数列表。
+// 本接口（DescribeInstanceParams）用于查询当前实例可修改的参数列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -952,7 +1036,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 }
 
 // DescribeInstanceParams
-// 本接口(DescribeInstanceParams)用于查询当前实例可修改的参数列表。
+// 本接口（DescribeInstanceParams）用于查询当前实例可修改的参数列表。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -996,7 +1080,7 @@ func NewDescribeSecurityGroupResponse() (response *DescribeSecurityGroupResponse
 }
 
 // DescribeSecurityGroup
-// 查询实例绑定的安全组
+// 本就口（DescribeSecurityGroup）用于查询实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1008,7 +1092,7 @@ func (c *Client) DescribeSecurityGroup(request *DescribeSecurityGroupRequest) (r
 }
 
 // DescribeSecurityGroup
-// 查询实例绑定的安全组
+// 本就口（DescribeSecurityGroup）用于查询实例绑定的安全组。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1344,7 +1428,7 @@ func NewInquirePriceModifyDBInstanceSpecResponse() (response *InquirePriceModify
 }
 
 // InquirePriceModifyDBInstanceSpec
-// 本接口 (InquirePriceModifyDBInstanceSpec) 用于调整实例的配置询价。
+// 本接口 (InquirePriceModifyDBInstanceSpec) 用于查询实例配置变更后的价格。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_FINDINSTANCEFAILED = "InternalError.FindInstanceFailed"
@@ -1355,7 +1439,7 @@ func (c *Client) InquirePriceModifyDBInstanceSpec(request *InquirePriceModifyDBI
 }
 
 // InquirePriceModifyDBInstanceSpec
-// 本接口 (InquirePriceModifyDBInstanceSpec) 用于调整实例的配置询价。
+// 本接口 (InquirePriceModifyDBInstanceSpec) 用于查询实例配置变更后的价格。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_FINDINSTANCEFAILED = "InternalError.FindInstanceFailed"
@@ -1622,24 +1706,30 @@ func NewModifyDBInstanceSecurityGroupResponse() (response *ModifyDBInstanceSecur
 }
 
 // ModifyDBInstanceSecurityGroup
-// 修改实例绑定的安全组
+// 本接口（ModifyDBInstanceSecurityGroup）用于修改实例绑定的安全组
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
 //  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPID = "InvalidParameterValue.SecurityGroupId"
 //  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 func (c *Client) ModifyDBInstanceSecurityGroup(request *ModifyDBInstanceSecurityGroupRequest) (response *ModifyDBInstanceSecurityGroupResponse, err error) {
     return c.ModifyDBInstanceSecurityGroupWithContext(context.Background(), request)
 }
 
 // ModifyDBInstanceSecurityGroup
-// 修改实例绑定的安全组
+// 本接口（ModifyDBInstanceSecurityGroup）用于修改实例绑定的安全组
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
 //  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPID = "InvalidParameterValue.SecurityGroupId"
 //  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 func (c *Client) ModifyDBInstanceSecurityGroupWithContext(ctx context.Context, request *ModifyDBInstanceSecurityGroupRequest) (response *ModifyDBInstanceSecurityGroupResponse, err error) {
     if request == nil {
@@ -1746,6 +1836,7 @@ func NewOfflineIsolatedDBInstanceResponse() (response *OfflineIsolatedDBInstance
 //  INVALIDPARAMETERVALUE_INSTANCEHASBEENDELETED = "InvalidParameterValue.InstanceHasBeenDeleted"
 //  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
 //  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 func (c *Client) OfflineIsolatedDBInstance(request *OfflineIsolatedDBInstanceRequest) (response *OfflineIsolatedDBInstanceResponse, err error) {
     return c.OfflineIsolatedDBInstanceWithContext(context.Background(), request)
 }
@@ -1759,6 +1850,7 @@ func (c *Client) OfflineIsolatedDBInstance(request *OfflineIsolatedDBInstanceReq
 //  INVALIDPARAMETERVALUE_INSTANCEHASBEENDELETED = "InvalidParameterValue.InstanceHasBeenDeleted"
 //  INVALIDPARAMETERVALUE_LOCKFAILED = "InvalidParameterValue.LockFailed"
 //  INVALIDPARAMETERVALUE_NOTFOUNDINSTANCE = "InvalidParameterValue.NotFoundInstance"
+//  INVALIDPARAMETERVALUE_STATUSABNORMAL = "InvalidParameterValue.StatusAbnormal"
 func (c *Client) OfflineIsolatedDBInstanceWithContext(ctx context.Context, request *OfflineIsolatedDBInstanceRequest) (response *OfflineIsolatedDBInstanceResponse, err error) {
     if request == nil {
         request = NewOfflineIsolatedDBInstanceRequest()
@@ -1968,7 +2060,7 @@ func NewSetAccountUserPrivilegeResponse() (response *SetAccountUserPrivilegeResp
 }
 
 // SetAccountUserPrivilege
-// 本接口(SetAccountUserPrivilege)用于设置mongodb实例的账号权限。
+// 本接口（SetAccountUserPrivilege）用于设置实例的账号权限。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1979,7 +2071,7 @@ func (c *Client) SetAccountUserPrivilege(request *SetAccountUserPrivilegeRequest
 }
 
 // SetAccountUserPrivilege
-// 本接口(SetAccountUserPrivilege)用于设置mongodb实例的账号权限。
+// 本接口（SetAccountUserPrivilege）用于设置实例的账号权限。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"

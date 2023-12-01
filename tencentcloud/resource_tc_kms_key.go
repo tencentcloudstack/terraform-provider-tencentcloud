@@ -3,16 +3,44 @@ Provide a resource to create a KMS key.
 
 Example Usage
 
-```hcl
-resource "tencentcloud_kms_key" "foo" {
-	alias = "test"
-	description = "describe key test message."
-	key_rotation_enabled = true
-	is_enabled = true
+Create and enable a instance.
 
-	tags = {
-		"test-tag":"key-test"
-	}
+```hcl
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Specify the Key Usage as an asymmetry method.
+
+```hcl
+resource "tencentcloud_kms_key" "example2" {
+  alias       = "tf-example-kms-key"
+  description = "example of kms key"
+  key_usage   = "ASYMMETRIC_DECRYPT_RSA_2048"
+  is_enabled  = false
+}
+```
+
+Disable the kms key instance.
+
+```hcl
+resource "tencentcloud_kms_key" "example3" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = false
+
+  tags = {
+    "test-tag" = "unit-test"
+  }
 }
 ```
 
@@ -33,8 +61,8 @@ import (
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -120,19 +148,21 @@ func resourceTencentCloudKmsKey() *schema.Resource {
 func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kms_key.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		kmsService = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	keyType := KMS_ORIGIN_TYPE[KMS_ORIGIN_TENCENT_KMS]
 	alias := d.Get("alias").(string)
 	description := ""
 	keyUsage := ""
+
 	if v, ok := d.GetOk("description"); ok {
 		description = v.(string)
 	}
+
 	if v, ok := d.GetOk("key_usage"); ok {
 		keyUsage = v.(string)
 	}
@@ -144,12 +174,15 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		log.Printf("[CRITAL]%s create KMS key failed, reason:%+v", logId, outErr)
 		return outErr
 	}
+
 	d.SetId(keyId)
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
@@ -158,8 +191,10 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
@@ -173,8 +208,10 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 				if e != nil {
 					return retryError(e)
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 				return err
@@ -188,8 +225,10 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 			return err
@@ -203,6 +242,7 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
+
 		resourceName := BuildTagResourceName("kms", "key", tcClient.Region, *keyMetaData.ResourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -210,29 +250,30 @@ func resourceTencentCloudKmsKeyCreate(d *schema.ResourceData, meta interface{}) 
 	}
 
 	return resourceTencentCloudKmsKeyRead(d, meta)
-
 }
 
 func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kms_key.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		kmsService = &KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		keyId      = d.Id()
+		key        *kms.KeyMetadata
+	)
 
-	keyId := d.Id()
-	kmsService := &KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
-	var key *kms.KeyMetadata
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := kmsService.DescribeKeyById(ctx, keyId)
 		if e != nil {
 			return retryError(e)
 		}
+
 		key = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s read KMS key failed, reason:%+v", logId, err)
 		return err
@@ -256,6 +297,7 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("tags", tags)
 	return nil
 }
@@ -263,14 +305,14 @@ func resourceTencentCloudKmsKeyRead(d *schema.ResourceData, meta interface{}) er
 func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kms_key.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	keyId := d.Id()
-	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
-	d.Partial(true)
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		kmsService = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		keyId      = d.Id()
+	)
 
+	d.Partial(true)
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -278,13 +320,15 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify KMS key description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	if d.HasChange("alias") {
@@ -294,13 +338,15 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify KMS key alias failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("alias")
+
 	}
 
 	if keyState := d.Get("key_state").(string); keyState == KMS_KEY_STATE_ENABLED || keyState == KMS_KEY_STATE_DISABLED || keyState == KMS_KEY_STATE_ARCHIVED {
@@ -310,7 +356,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_archived")
+
 		} else {
 			isEnabled := d.Get("is_enabled").(bool)
 			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
@@ -318,7 +364,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_enabled")
+
 		}
 	}
 
@@ -330,7 +376,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("key_rotation_enabled")
+
 		}
 	}
 
@@ -348,7 +394,6 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
@@ -359,13 +404,13 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_kms_key.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		kmsService = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		keyId      = d.Id()
+	)
 
-	keyId := d.Id()
 	pendingDeleteWindowInDays := d.Get("pending_delete_window_in_days").(int)
 	isEnabled := d.Get("is_enabled").(bool)
 	if isEnabled {
@@ -376,15 +421,19 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 				if ok && IsContains(KMS_RETRYABLE_ERROR, ee.Code) {
 					return resource.RetryableError(fmt.Errorf("kms key disable error: %s, retrying", e.Error()))
 				}
+
 				return resource.NonRetryableError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify KMS key state failed, reason:%+v", logId, err)
 			return err
 		}
 	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := kmsService.DeleteKey(ctx, keyId, uint64(pendingDeleteWindowInDays))
 		if e != nil {
@@ -392,10 +441,13 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 			if ok && IsContains(KMS_RETRYABLE_ERROR, ee.Code) {
 				return resource.RetryableError(fmt.Errorf("kms key delete error: %s, retrying", e.Error()))
 			}
+
 			return resource.NonRetryableError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete KMS key failed, reason:%+v", logId, err)
 		return err
@@ -406,9 +458,11 @@ func resourceTencentCloudKmsKeyDelete(d *schema.ResourceData, meta interface{}) 
 		if e != nil {
 			return retryError(e)
 		}
+
 		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("delete fail"))
 	})
 }

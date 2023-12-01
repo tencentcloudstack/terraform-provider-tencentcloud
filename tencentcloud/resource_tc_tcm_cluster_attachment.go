@@ -32,8 +32,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -57,6 +57,7 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 			"cluster_list": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Cluster list.",
 				Elem: &schema.Resource{
@@ -84,6 +85,7 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Subnet id, only needed if it&#39;s standalone mesh.",
 						},
 						"type": {

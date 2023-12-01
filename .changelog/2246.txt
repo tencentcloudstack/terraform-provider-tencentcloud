@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_scale_worker: set up the node and import it into Terraform
+```
+```release-note:bug
+resource/tencentcloud_kubernetes_cluster_attachment: fix the null pointer issue in data_disk
+```

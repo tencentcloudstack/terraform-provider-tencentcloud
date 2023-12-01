@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 var testDayuL7RuleV2ResourceName = "tencentcloud_dayu_l7_rule_v2"
@@ -53,7 +53,7 @@ func testAccCheckDayuL7RuleV2Destroy(s *terraform.State) error {
 		extendParams["domain"] = domain
 		extendParams["protocol"] = protocol
 		dayuService := DayuService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, 0, 10, extendParams)
+		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 		if err != nil {
 			return err
 		}
@@ -101,7 +101,7 @@ func testAccCheckDayuL7RuleV2Exists(n string) resource.TestCheckFunc {
 		extendParams["domain"] = domain
 		extendParams["protocol"] = protocol
 		dayuService := DayuService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, 0, 10, extendParams)
+		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 
 		if err != nil {
 			return err

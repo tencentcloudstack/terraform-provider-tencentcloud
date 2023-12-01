@@ -4,46 +4,88 @@ Provide a resource to create a emr cluster.
 Example Usage
 
 ```hcl
-resource "tencentcloud_emr_cluster" "emrrrr" {
-  product_id=4
-  display_strategy="clusterList"
-  vpc_settings={
-    vpc_id="vpc-fuwly8x5"
-    subnet_id:"subnet-d830wfso"
-  }
-  softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
-  support_ha=0
-  instance_name="emr-test"
-  resource_spec {
-    master_resource_spec {
-      mem_size=8192
-      cpu=4
-      disk_size=100
-      disk_type="CLOUD_PREMIUM"
-      spec="CVM.S2"
-      storage_type=5
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_instance_types" "cvm4c8m" {
+	exclude_sold_out=true
+	cpu_core_count=4
+	memory_size=8
+    filter {
+      name   = "instance-charge-type"
+      values = ["POSTPAID_BY_HOUR"]
     }
-    core_resource_spec {
-      mem_size=8192
-      cpu=4
-      disk_size=100
-      disk_type="CLOUD_PREMIUM"
-      spec="CVM.S2"
-      storage_type=5
-    }
-    master_count=1
-    core_count=2
+    filter {
+    name   = "zone"
+    values = [var.availability_zone]
   }
-  login_settings={
-    password="Tencent@cloud123"
-  }
-  time_span=1
-  time_unit="m"
-  pay_mode=1
-  placement={
-    zone="ap-guangzhou-3"
-    project_id=0
-  }
+}
+
+resource "tencentcloud_vpc" "emr_vpc" {
+  name       = "emr-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "emr_subnet" {
+  availability_zone = var.availability_zone
+  name              = "emr-subnets"
+  vpc_id            = tencentcloud_vpc.emr_vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "emr_sg" {
+  name        = "emr-sg"
+  description = "emr sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_emr_cluster" "emr_cluster" {
+	product_id=4
+	display_strategy="clusterList"
+	vpc_settings={
+	  vpc_id=tencentcloud_vpc.emr_vpc.id
+      subnet_id=tencentcloud_subnet.emr_subnet.id
+	}
+	softwares=[
+	  "zookeeper-3.6.1",
+    ]
+	support_ha=0
+	instance_name="emr-cluster-test"
+	resource_spec {
+	  master_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  core_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  master_count=1
+	  core_count=2
+	}
+	login_settings={
+	  password="Tencent@cloud123"
+	}
+	time_span=3600
+	time_unit="s"
+	pay_mode=0
+	placement={
+	  zone=var.availability_zone
+	  project_id=0
+	}
+	sg_id=tencentcloud_security_group.emr_sg.id
 }
 ```
 */
@@ -54,8 +96,8 @@ import (
 	innerErr "errors"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
@@ -75,11 +117,22 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Description: "Display strategy of EMR instance.",
 			},
 			"product_id": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(1, 30),
-				Description:  "The product id of EMR instance.",
+				Type:     schema.TypeInt,
+				Required: true,
+				ForceNew: true,
+				Description: "Product ID. Different products ID represents different EMR product versions. Value range:\n" +
+					"- 16: represents EMR-V2.3.0\n" +
+					"- 20: indicates EMR-V2.5.0\n" +
+					"- 25: represents EMR-V3.1.0\n" +
+					"- 27: represents KAFKA-V1.0.0\n" +
+					"- 30: indicates EMR-V2.6.0\n" +
+					"- 33: represents EMR-V3.2.1\n" +
+					"- 34: stands for EMR-V3.3.0\n" +
+					"- 36: represents STARROCKS-V1.0.0\n" +
+					"- 37: indicates EMR-V3.4.0\n" +
+					"- 38: represents EMR-V2.7.0\n" +
+					"- 39: stands for STARROCKS-V1.1.0\n" +
+					"- 41: represents DRUID-V1.1.0.",
 			},
 			"vpc_settings": {
 				Type:        schema.TypeMap,
@@ -198,6 +251,12 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				ForceNew:    true,
 				Description: "The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -216,6 +275,15 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	if !hasTimeUnit || !hasTimeSpan || !hasPayMode {
 		return innerErr.New("Time_unit, time_span or pay_mode must be set.")
 	}
+	if d.HasChange("tags") {
+		oldTags, newTags := d.GetChange("tags")
+		err := emrService.ModifyResourcesTags(ctx, meta.(*TencentCloudClient).apiV3Conn.Region, instanceId, oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		if err != nil {
+			return err
+		}
+	}
+
+	hasChange := false
 	request := emr.NewScaleOutInstanceRequest()
 	request.TimeUnit = common.StringPtr(timeUnit.(string))
 	request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
@@ -227,15 +295,21 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("resource_spec.0.master_count") {
 		request.MasterCount = common.Uint64Ptr((uint64)(resourceSpec["master_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.task_count") {
 		request.TaskCount = common.Uint64Ptr((uint64)(resourceSpec["task_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.core_count") {
 		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("extend_fs_field") {
 		return innerErr.New("extend_fs_field not support update.")
+	}
+	if !hasChange {
+		return nil
 	}
 	_, err := emrService.UpdateInstance(ctx, request)
 	if err != nil {
@@ -281,7 +355,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 	d.SetId(instanceId)
-	d.Set("instance_id", instanceId)
+	_ = d.Set("instance_id", instanceId)
 	var displayStrategy string
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)
@@ -311,6 +385,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -405,5 +480,13 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "emr", "emr-instance", region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 	return nil
 }

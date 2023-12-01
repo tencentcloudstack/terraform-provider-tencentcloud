@@ -101,3 +101,29 @@ const (
 	MysqlInstanceIdNotFound2 = "InvalidParameter"
 	MysqlInstanceIdNotFound3 = "InternalError.DatabaseAccessError"
 )
+
+var MYSQL_TASK_STATUS = map[string]int64{
+	"UNDEFINED": -1,
+	"INITIAL":   0,
+	"RUNNING":   1,
+	"SUCCEED":   2,
+	"FAILED":    3,
+	"KILLED":    4,
+	"REMOVED":   5,
+	"PAUSED":    6,
+}
+
+var MYSQL_TASK_TYPES = map[string]int64{
+	"ROLLBACK":            1,
+	"SQL OPERATION":       2,
+	"IMPORT DATA":         3,
+	"MODIFY PARAM":        5,
+	"INITIAL":             6,
+	"REBOOT":              7,
+	"OPEN GTID":           8,
+	"UPGRADE RO":          9,
+	"BATCH ROLLBACK":      10,
+	"UPGRADE MASTER":      11,
+	"DROP TABLES":         12,
+	"SWITCH DR TO MASTER": 13,
+}

@@ -6,29 +6,33 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudTCRVPCAttachment_basic(t *testing.T) {
+func TestAccTencentCloudTcrVPCAttachment_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRVPCAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTCRVPCAttachment_basic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment", "status"),
-					//this access ip will solve out with very long time
-					//resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment", "access_ip"),
+					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "status"),
+					// this access ip will solve out with very long time
+					// resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "access_ip"),
 				),
-				Destroy: false,
+				// Destroy: false,
 			},
 			{
-				ResourceName:      "tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment",
+				ResourceName:      "tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -98,14 +102,14 @@ func testAccCheckTCRVPCAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRVPCAttachment_basic = defaultVpcSubnets + `
+const testAccTCRVPCAttachment_basic = defaultTcrVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "test-resource-attach"
   instance_type = "basic"
   delete_bucket = true
 }
 
-resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment" {
+resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment_resource" {
   instance_id = tencentcloud_tcr_instance.mytcr_instance.id
   vpc_id = local.vpc_id
   subnet_id = local.subnet_id

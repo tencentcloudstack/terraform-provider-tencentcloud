@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tcr_namespace: Support is_auto_scan, is_prevent_vul, severity, cve_whitelist_items field
+```

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -81,6 +81,30 @@ func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudAsScalingConfig_loginSettings(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAsScalingConfigDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAsScalingConfigLoginSetting("skey-58gbxolb"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.login_setting"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.login_setting", "key_ids.0", "skey-58gbxolb"),
+				),
+			},
+			{
+				Config: testAccAsScalingConfigLoginSetting("skey-i55cwgvl"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.login_setting"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.login_setting", "key_ids.0", "skey-i55cwgvl"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -107,6 +131,9 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "public_ip_assigned", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_monitor_service", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name", "host-name"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name_style", "ORIGINAL"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "user_data", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.tag", "as"),
 				),
@@ -129,6 +156,9 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_monitor_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "user_data", "dGVzdA=="),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name", "host-name-test"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name_style", "UNIQUE"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.tag", "as"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.test", "update"),
 				),
@@ -252,6 +282,11 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   enhanced_security_service  = false
   enhanced_monitor_service   = false
   user_data                  = "test"
+
+  host_name_settings {
+	host_name       = "host-name"
+	host_name_style = "ORIGINAL"
+  }
   
   instance_tags = {
     tag = "as"
@@ -283,6 +318,11 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   enhanced_security_service  = true
   enhanced_monitor_service   = true
   user_data                  = "dGVzdA=="
+
+  host_name_settings {
+	host_name       = "host-name-test"
+	host_name_style = "UNIQUE"
+  }
   
   instance_tags = {
     tag  = "as"
@@ -328,4 +368,16 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 	`
+}
+
+func testAccAsScalingConfigLoginSetting(keyId string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_as_scaling_config" "login_setting" {
+  configuration_name   = "test-as-login-setting"
+  image_id = "img-2lr9q49h"
+  instance_types = ["S5.SMALL2"]
+  instance_charge_type = "POSTPAID_BY_HOUR"
+  key_ids              = ["%s"]
+}
+`, keyId)
 }

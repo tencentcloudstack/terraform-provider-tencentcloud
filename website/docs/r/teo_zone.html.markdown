@@ -15,21 +15,12 @@ Provides a resource to create a teo zone
 
 ```hcl
 resource "tencentcloud_teo_zone" "zone" {
-  zone_name = "toutiao2.com"
-  plan_type = "sta"
-  type      = "full"
-  paused    = false
-  #  vanity_name_servers {
-  #    switch = ""
-  #    servers = ""
-  #
-  #  }
-  cname_speed_up = "enabled"
-  #  tags {
-  #    tag_key = ""
-  #    tag_value = ""
-  #
-  #  }
+  zone_name       = "tf-teo.com"
+  type            = "partial"
+  area            = "overseas"
+  alias_zone_name = "teo-test"
+  paused          = false
+  plan_id         = "edgeone-2kfv1h391n6w"
   tags = {
     "createdBy" = "terraform"
   }
@@ -40,54 +31,32 @@ resource "tencentcloud_teo_zone" "zone" {
 
 The following arguments are supported:
 
-* `plan_type` - (Required, String) Plan type of the zone. See details in data source `zone_available_plans`.
-* `zone_name` - (Required, String) Site name.
-* `cname_speed_up` - (Optional, String) Specifies whether CNAME acceleration is enabled. Valid values: `enabled`, `disabled`.
+* `area` - (Required, String) When the `type` value is `partial` or `full`, the acceleration region of the L7 domain name. The following are the values of this parameter, and the default value is `overseas` if not filled in. When the `type` value is `noDomainAccess`, please leave this value empty. Valid values: `global`: Global availability zone; `mainland`: Chinese mainland availability zone; `overseas`: Global availability zone (excluding Chinese mainland).
+* `plan_id` - (Required, String, ForceNew) The target Plan ID to be bound. When you have an existing Plan in your account, you can fill in this parameter to directly bind the site to the Plan. If you do not have a Plan that can be bound at the moment, please go to the console to purchase a Plan to complete the site creation.
+* `type` - (Required, String) Site access type. The value of this parameter is as follows, and the default is `partial` if not filled in. Valid values: `partial`: CNAME access; `full`: NS access; `noDomainAccess`: No domain access.
+* `zone_name` - (Required, String, ForceNew) Site name. When accessing CNAME/NS, please pass the second-level domain (example.com) as the site name; when accessing without a domain name, please leave this value empty.
+* `alias_zone_name` - (Optional, String) Alias site identifier. Limit the input to a combination of numbers, English, - and _, within 20 characters. For details, refer to the alias site identifier. If there is no such usage scenario, leave this field empty.
 * `paused` - (Optional, Bool) Indicates whether the site is disabled.
 * `tags` - (Optional, Map) Tag description list.
-* `type` - (Optional, String) Specifies how the site is connected to EdgeOne.- `full`: The site is connected via NS.- `partial`: The site is connected via CNAME.
-* `vanity_name_servers` - (Optional, List) User-defined name server information. Note: This field may return null, indicating that no valid value can be obtained.
-
-The `vanity_name_servers` object supports the following:
-
-* `switch` - (Required, String) Whether to enable the custom name server.- `on`: Enable.- `off`: Disable.
-* `servers` - (Optional, Set) List of custom name servers.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `area` - Acceleration area of the zone. Valid values: `mainland`, `overseas`.
-* `cname_status` - Ownership verification status of the site when it accesses via CNAME.- `finished`: The site is verified.- `pending`: The site is waiting for verification.
-* `created_on` - Site creation date.
-* `modified_on` - Site modification date.
-* `name_servers` - List of name servers assigned by Tencent Cloud.
-* `original_name_servers` - Name server used by the site.
-* `resources` - Billing resources of the zone.
-  * `area` - Valid values: `mainland`, `overseas`.
-  * `auto_renew_flag` - Whether to automatically renew. Valid values:- `0`: Default.- `1`: Enable automatic renewal.- `2`: Disable automatic renewal.
-  * `create_time` - Resource creation date.
-  * `enable_time` - Enable time of the resource.
-  * `expire_time` - Expire time of the resource.
-  * `id` - Resource ID.
-  * `pay_mode` - Resource pay mode. Valid values:- `0`: post pay mode.
-  * `plan_id` - Associated plan ID.
-  * `status` - Status of the resource. Valid values: `normal`, `isolated`, `destroyed`.
-  * `sv` - Price inquiry parameters.
-    * `key` - Parameter Key.
-    * `value` - Parameter Value.
-* `status` - Site status. Valid values:- `active`: NS is switched.- `pending`: NS is not switched.- `moved`: NS is moved.- `deactivated`: this site is blocked.
-* `vanity_name_servers_ips` - User-defined name server IP information. Note: This field may return null, indicating that no valid value can be obtained.
-  * `ipv4` - IPv4 address of the custom name server.
-  * `name` - Name of the custom name server.
-* `zone_id` - Site ID.
+* `name_servers` - NS list allocated by Tencent Cloud.
+* `ownership_verification` - Ownership verification information. Note: This field may return null, indicating that no valid value can be obtained.
+  * `dns_verification` - CNAME access, using DNS to resolve the information required for authentication. For details, please refer to [Site/Domain Name Ownership Verification ](https://cloud.tencent.com/document/product/1552/70789#7af6ecf8-afca-4e35-8811-b5797ed1bde5). Note: This field may return null, indicating that no valid value can be obtained.
+    * `record_type` - Record type.
+    * `record_value` - Record the value.
+    * `subdomain` - Host record.
+* `status` - Site status. Valid values: `active`: NS is switched; `pending`: NS is not switched; `moved`: NS is moved; `deactivated`: this site is blocked.
 
 
 ## Import
 
 teo zone can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_teo_zone.zone zone_id
+terraform import tencentcloud_teo_zone.zone zone_id
 ```
 

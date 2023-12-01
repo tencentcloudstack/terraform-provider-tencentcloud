@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudClsConfigAttachment_basic(t *testing.T) {
@@ -15,6 +15,11 @@ func TestAccTencentCloudClsConfigAttachment_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClsConfigAttachment,
+			},
+			{
+				ResourceName:      "tencentcloud_cls_config_attachment.attach",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})

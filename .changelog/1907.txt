@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: support `enable_intelligent_tiering` and format client called
+```
+
+```release-note:enhancement
+resource/tencentcloud_cos_bucket_domain_certificate_attachment: format client called
+```
+
+```release-note:enhancement
+resource/tencentcloud_cos_bucket_object: format client called
+```
+
+```release-note:new-resource
+tencentcloud_cos_bucket_inventory
+```

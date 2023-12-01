@@ -15,11 +15,9 @@ import (
 	"fmt"
 	"hash"
 	"io"
-	"io/ioutil"
-	"math/bits"
 
-	"golang.org/x/crypto/internal/chacha20"
-	"golang.org/x/crypto/poly1305"
+	"golang.org/x/crypto/chacha20"
+	"golang.org/x/crypto/internal/poly1305"
 )
 
 const (
@@ -98,13 +96,13 @@ func streamCipherMode(skip int, createFunc func(key, iv []byte) (cipher.Stream, 
 // are not supported and will not be negotiated, even if explicitly requested in
 // ClientConfig.Crypto.Ciphers.
 var cipherModes = map[string]*cipherMode{
-	// Ciphers from RFC4344, which introduced many CTR-based ciphers. Algorithms
+	// Ciphers from RFC 4344, which introduced many CTR-based ciphers. Algorithms
 	// are defined in the order specified in the RFC.
 	"aes128-ctr": {16, aes.BlockSize, streamCipherMode(0, newAESCTR)},
 	"aes192-ctr": {24, aes.BlockSize, streamCipherMode(0, newAESCTR)},
 	"aes256-ctr": {32, aes.BlockSize, streamCipherMode(0, newAESCTR)},
 
-	// Ciphers from RFC4345, which introduces security-improved arcfour ciphers.
+	// Ciphers from RFC 4345, which introduces security-improved arcfour ciphers.
 	// They are defined in the order specified in the RFC.
 	"arcfour128": {16, 0, streamCipherMode(1536, newRC4)},
 	"arcfour256": {32, 0, streamCipherMode(1536, newRC4)},
@@ -112,15 +110,16 @@ var cipherModes = map[string]*cipherMode{
 	// Cipher defined in RFC 4253, which describes SSH Transport Layer Protocol.
 	// Note that this cipher is not safe, as stated in RFC 4253: "Arcfour (and
 	// RC4) has problems with weak keys, and should be used with caution."
-	// RFC4345 introduces improved versions of Arcfour.
+	// RFC 4345 introduces improved versions of Arcfour.
 	"arcfour": {16, 0, streamCipherMode(0, newRC4)},
 
 	// AEAD ciphers
-	gcmCipherID:        {16, 12, newGCMCipher},
+	gcm128CipherID:     {16, 12, newGCMCipher},
+	gcm256CipherID:     {32, 12, newGCMCipher},
 	chacha20Poly1305ID: {64, 0, newChaCha20Cipher},
 
 	// CBC mode is insecure and so is not included in the default config.
-	// (See http://www.isg.rhul.ac.uk/~kp/SandPfinal.pdf). If absolutely
+	// (See https://www.ieee-security.org/TC/SP2013/papers/4977a526.pdf). If absolutely
 	// needed, it's possible to specify a custom Config to enable it.
 	// You should expect that an active attacker can recover plaintext if
 	// you do.
@@ -395,6 +394,10 @@ func (c *gcmCipher) readCipherPacket(seqNum uint32, r io.Reader) ([]byte, error)
 	}
 	c.incIV()
 
+	if len(plain) == 0 {
+		return nil, errors.New("ssh: empty packet")
+	}
+
 	padding := plain[0]
 	if padding < 4 {
 		// padding is a byte, so it automatically satisfies
@@ -494,7 +497,7 @@ func (c *cbcCipher) readCipherPacket(seqNum uint32, r io.Reader) ([]byte, error)
 			// data, to make distinguishing between
 			// failing MAC and failing length check more
 			// difficult.
-			io.CopyN(ioutil.Discard, r, int64(c.oracleCamouflage))
+			io.CopyN(io.Discard, r, int64(c.oracleCamouflage))
 		}
 	}
 	return p, err
@@ -637,13 +640,13 @@ const chacha20Poly1305ID = "chacha20-poly1305@openssh.com"
 // chacha20Poly1305Cipher implements the chacha20-poly1305@openssh.com
 // AEAD, which is described here:
 //
-//   https://tools.ietf.org/html/draft-josefsson-ssh-chacha20-poly1305-openssh-00
+//	https://tools.ietf.org/html/draft-josefsson-ssh-chacha20-poly1305-openssh-00
 //
-// the methods here also implement padding, which RFC4253 Section 6
+// the methods here also implement padding, which RFC 4253 Section 6
 // also requires of stream ciphers.
 type chacha20Poly1305Cipher struct {
-	lengthKey  [8]uint32
-	contentKey [8]uint32
+	lengthKey  [32]byte
+	contentKey [32]byte
 	buf        []byte
 }
 
@@ -656,21 +659,21 @@ func newChaCha20Cipher(key, unusedIV, unusedMACKey []byte, unusedAlgs directionA
 		buf: make([]byte, 256),
 	}
 
-	for i := range c.contentKey {
-		c.contentKey[i] = binary.LittleEndian.Uint32(key[i*4 : (i+1)*4])
-	}
-	for i := range c.lengthKey {
-		c.lengthKey[i] = binary.LittleEndian.Uint32(key[(i+8)*4 : (i+9)*4])
-	}
+	copy(c.contentKey[:], key[:32])
+	copy(c.lengthKey[:], key[32:])
 	return c, nil
 }
 
 func (c *chacha20Poly1305Cipher) readCipherPacket(seqNum uint32, r io.Reader) ([]byte, error) {
-	nonce := [3]uint32{0, 0, bits.ReverseBytes32(seqNum)}
-	s := chacha20.New(c.contentKey, nonce)
-	var polyKey [32]byte
+	nonce := make([]byte, 12)
+	binary.BigEndian.PutUint32(nonce[8:], seqNum)
+	s, err := chacha20.NewUnauthenticatedCipher(c.contentKey[:], nonce)
+	if err != nil {
+		return nil, err
+	}
+	var polyKey, discardBuf [32]byte
 	s.XORKeyStream(polyKey[:], polyKey[:])
-	s.Advance() // skip next 32 bytes
+	s.XORKeyStream(discardBuf[:], discardBuf[:]) // skip the next 32 bytes
 
 	encryptedLength := c.buf[:4]
 	if _, err := io.ReadFull(r, encryptedLength); err != nil {
@@ -678,7 +681,11 @@ func (c *chacha20Poly1305Cipher) readCipherPacket(seqNum uint32, r io.Reader) ([
 	}
 
 	var lenBytes [4]byte
-	chacha20.New(c.lengthKey, nonce).XORKeyStream(lenBytes[:], encryptedLength)
+	ls, err := chacha20.NewUnauthenticatedCipher(c.lengthKey[:], nonce)
+	if err != nil {
+		return nil, err
+	}
+	ls.XORKeyStream(lenBytes[:], encryptedLength)
 
 	length := binary.BigEndian.Uint32(lenBytes[:])
 	if length > maxPacket {
@@ -707,6 +714,10 @@ func (c *chacha20Poly1305Cipher) readCipherPacket(seqNum uint32, r io.Reader) ([
 	plain := c.buf[4:contentEnd]
 	s.XORKeyStream(plain, plain)
 
+	if len(plain) == 0 {
+		return nil, errors.New("ssh: empty packet")
+	}
+
 	padding := plain[0]
 	if padding < 4 {
 		// padding is a byte, so it automatically satisfies
@@ -724,11 +735,15 @@ func (c *chacha20Poly1305Cipher) readCipherPacket(seqNum uint32, r io.Reader) ([
 }
 
 func (c *chacha20Poly1305Cipher) writeCipherPacket(seqNum uint32, w io.Writer, rand io.Reader, payload []byte) error {
-	nonce := [3]uint32{0, 0, bits.ReverseBytes32(seqNum)}
-	s := chacha20.New(c.contentKey, nonce)
-	var polyKey [32]byte
+	nonce := make([]byte, 12)
+	binary.BigEndian.PutUint32(nonce[8:], seqNum)
+	s, err := chacha20.NewUnauthenticatedCipher(c.contentKey[:], nonce)
+	if err != nil {
+		return err
+	}
+	var polyKey, discardBuf [32]byte
 	s.XORKeyStream(polyKey[:], polyKey[:])
-	s.Advance() // skip next 32 bytes
+	s.XORKeyStream(discardBuf[:], discardBuf[:]) // skip the next 32 bytes
 
 	// There is no blocksize, so fall back to multiple of 8 byte
 	// padding, as described in RFC 4253, Sec 6.
@@ -748,7 +763,11 @@ func (c *chacha20Poly1305Cipher) writeCipherPacket(seqNum uint32, w io.Writer, r
 	}
 
 	binary.BigEndian.PutUint32(c.buf, uint32(1+len(payload)+padding))
-	chacha20.New(c.lengthKey, nonce).XORKeyStream(c.buf, c.buf[:4])
+	ls, err := chacha20.NewUnauthenticatedCipher(c.lengthKey[:], nonce)
+	if err != nil {
+		return err
+	}
+	ls.XORKeyStream(c.buf, c.buf[:4])
 	c.buf[4] = byte(padding)
 	copy(c.buf[5:], payload)
 	packetEnd := 5 + len(payload) + padding

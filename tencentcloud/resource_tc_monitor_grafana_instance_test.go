@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
@@ -27,6 +26,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
+					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_instance.grafanaInstance", "internal_url"),
 				),
 			},
 			{
@@ -36,14 +36,14 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "instance_name", "test-grafana-update"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "true"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_monitor_grafana_instance.grafanaInstance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"grafana_init_password"},
+				ImportStateVerifyIgnore: []string{"grafana_init_password", "is_destroy"},
 			},
 		},
 	})
@@ -123,6 +123,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
+  is_destroy = true
 
   tags = {
     "createdBy" = "test"
@@ -136,7 +137,8 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   vpc_id = var.vpc_id
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
-  enable_internet = false
+  enable_internet = true
+  is_destroy = true
 
   tags = {
     "createdBy" = "test"

@@ -33,8 +33,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -143,6 +143,12 @@ func resourceTencentCloudPtsCronJob() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "User ID.",
+			},
+
+			"cron_job_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Cron job ID.",
 			},
 
 			"sub_account_uin": {
@@ -257,6 +263,8 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 		d.SetId("")
 		return fmt.Errorf("resource `cronJob` %s does not exist", cronJobId)
 	}
+
+	_ = d.Set("cron_job_id", cronJobId)
 
 	if cronJob.Name != nil {
 		_ = d.Set("name", cronJob.Name)

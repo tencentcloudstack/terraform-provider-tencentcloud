@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster: Support `cluster_name, storage_limit, vpc_id, subnet_id, old_ip_reserve_hours` modification
+```

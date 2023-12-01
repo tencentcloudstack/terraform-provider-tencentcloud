@@ -4,15 +4,15 @@ Provides a resource to create a tdmqRocketmq role
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  role_name  = "tf_example"
+  remark     = "remark."
 }
 ```
 Import
@@ -30,8 +30,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

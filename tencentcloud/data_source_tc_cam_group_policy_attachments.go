@@ -23,8 +23,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -45,10 +45,10 @@ func dataSourceTencentCloudCamGroupPolicyAttachments() *schema.Resource {
 				Description: "ID of CAM policy to be queried.",
 			},
 			"create_mode": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{1, 2}),
-				Description:  "Mode of creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
+				Type:     schema.TypeInt,
+				Optional: true,
+
+				Description: "Mode of creation of the CAM user policy attachment. 1 means the cam policy attachment is created by production, and the others indicate syntax strategy ways.",
 			},
 			"policy_type": {
 				Type:         schema.TypeString,

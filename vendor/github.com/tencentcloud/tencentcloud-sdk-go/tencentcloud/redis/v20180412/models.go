@@ -318,16 +318,16 @@ func (r *AssociateSecurityGroupsResponse) FromJsonString(s string) error {
 }
 
 type BackupDownloadInfo struct {
-	// 备份文件名称。
+	// 备份文件名称
 	FileName *string `json:"FileName,omitempty" name:"FileName"`
 
-	// 备份文件大小，单位B，如果为0，表示无效。
-	FileSize *int64 `json:"FileSize,omitempty" name:"FileSize"`
+	// 备份文件大小，单位B，如果为0，表示无效
+	FileSize *uint64 `json:"FileSize,omitempty" name:"FileSize"`
 
-	// 备份文件外网下载地址。下载地址的有效时长为6小时，过期后请重新获取。
+	// 备份文件外网下载地址（6小时）
 	DownloadUrl *string `json:"DownloadUrl,omitempty" name:"DownloadUrl"`
 
-	// 备份文件内网下载地址。下载地址的有效时长为6小时，过期后请重新获取。
+	// 备份文件内网下载地址（6小时）
 	InnerDownloadUrl *string `json:"InnerDownloadUrl,omitempty" name:"InnerDownloadUrl"`
 }
 
@@ -443,33 +443,21 @@ func (r *ChangeInstanceRoleResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ChangeMasterInstanceRequestParams struct {
-	// 复制组ID。创建复制组时，系统自动分配的 ID，是复制组的唯一标识。例如：crs-rpl-m3zt****，请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
+	// 复制组ID
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 指定待提升为主实例的只读实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
-	// 
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 标识是否强制提主。
-	// - true：强制提主。
-	// - false：不强制提主。
-	ForceSwitch *bool `json:"ForceSwitch,omitempty" name:"ForceSwitch"`
 }
 
 type ChangeMasterInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID。创建复制组时，系统自动分配的 ID，是复制组的唯一标识。例如：crs-rpl-m3zt****，请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
+	// 复制组ID
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 指定待提升为主实例的只读实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
-	// 
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 标识是否强制提主。
-	// - true：强制提主。
-	// - false：不强制提主。
-	ForceSwitch *bool `json:"ForceSwitch,omitempty" name:"ForceSwitch"`
 }
 
 func (r *ChangeMasterInstanceRequest) ToJsonString() string {
@@ -486,7 +474,6 @@ func (r *ChangeMasterInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "GroupId")
 	delete(f, "InstanceId")
-	delete(f, "ForceSwitch")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ChangeMasterInstanceRequest has unknown keys!", "")
 	}
@@ -495,7 +482,7 @@ func (r *ChangeMasterInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ChangeMasterInstanceResponseParams struct {
-	// 异步流程ID。
+	// 异步流程ID
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1444,7 +1431,7 @@ type CreateReplicationGroupRequestParams struct {
 	// 指定复制组中的主实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 复制组名称。名称只支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
+	// 复制组名称。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 
 	// 备注信息。
@@ -1457,7 +1444,7 @@ type CreateReplicationGroupRequest struct {
 	// 指定复制组中的主实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 复制组名称。名称只支持长度为2-64个字符的中文、英文、数字、下划线_、分隔符-。
+	// 复制组名称。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 
 	// 备注信息。
@@ -1511,16 +1498,16 @@ func (r *CreateReplicationGroupResponse) FromJsonString(s string) error {
 }
 
 type DelayDistribution struct {
-	// 指延时分布阶梯，其与延时区间的对应关系如下所示。
-	// - 1：[0ms,1ms]。
-	// - 5： [1ms,5ms]。
-	// - 10： [5ms,10ms]。
-	// - 50： [10ms,50ms]。
-	// - 200：[50ms,200ms]。
-	// - -1： [200ms,∞]。
+	// 分布阶梯，延时和Ladder值的对应关系：
+	// [0ms,1ms]: 1；
+	// [1ms,5ms]: 5；
+	// [5ms,10ms]: 10；
+	// [10ms,50ms]: 50；
+	// [50ms,200ms]: 200；
+	// [200ms,∞]: -1。
 	Ladder *int64 `json:"Ladder,omitempty" name:"Ladder"`
 
-	// 延时处于当前分布阶梯的命令数量，单位：个。
+	// 延时处于当前分布阶梯的命令数量，个。
 	Size *int64 `json:"Size,omitempty" name:"Size"`
 
 	// 修改时间。
@@ -1718,14 +1705,14 @@ func (r *DeleteReplicationInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAutoBackupConfigRequestParams struct {
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type DescribeAutoBackupConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis)在实例列表复制实例 ID。
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1750,19 +1737,19 @@ func (r *DescribeAutoBackupConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeAutoBackupConfigResponseParams struct {
-	// 该参数因兼容性问题暂时保留，请忽略。
+	// 备份类型。自动备份类型： 1 “定时回档”
 	AutoBackupType *int64 `json:"AutoBackupType,omitempty" name:"AutoBackupType"`
 
-	// 备份周期，默认为每天自动备份，Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。
+	// Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。
 	WeekDays []*string `json:"WeekDays,omitempty" name:"WeekDays"`
 
-	// 备份任务发起时间段。
+	// 时间段。
 	TimePeriod *string `json:"TimePeriod,omitempty" name:"TimePeriod"`
 
-	// 全量备份文件保存天数。默认为7天。如需保存更多天数，请[提交工单](https://console.cloud.tencent.com/workorder/category)申请。
+	// 全量备份文件保存天数
 	BackupStorageDays *int64 `json:"BackupStorageDays,omitempty" name:"BackupStorageDays"`
 
-	// 该参数不再使用，请忽略。
+	// tendis binlog备份文件保存天数
 	BinlogStorageDays *int64 `json:"BinlogStorageDays,omitempty" name:"BinlogStorageDays"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3580,17 +3567,10 @@ type DescribeInstancesRequestParams struct {
 	// 
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例列表排序依据，枚举值如下所示：
-	// - projectId：依据项目ID排序。
-	// - createtime：依据实例创建时间排序。
-	// - instancename：依据实例名称排序。
-	// - type：依据实例类型排序。
-	// - curDeadline：依据实例到期时间排序。
+	// 实例列表排序依据，枚举值如下所示：<ul><li>projectId：依据项目ID排序。</li><li>createtime：依据实例创建时间排序。</li><li>instancename：依据实例名称排序。</li><li>type：依据实例类型排序。</li><li>curDeadline：依据实例到期时间排序。</li></ul>
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 实例排序方式，默认为倒序排序。
-	// - 1：倒序。
-	// - 0：顺序。
+	// 实例排序方式，默认为倒序排序。<ul><li>1：倒序。</li><li>0：顺序。</li></ul>
 	OrderType *int64 `json:"OrderType,omitempty" name:"OrderType"`
 
 	// 私有网络 ID 数组。如果不配置该参数或设置数组为空则默认选择基础网络。例如47525。该参数暂时保留，可忽略。请根据 UniqVpcIds 参数格式设置私有网络ID数组。
@@ -3599,7 +3579,7 @@ type DescribeInstancesRequestParams struct {
 	// 私有网络所属子网 ID 数组，例如：56854。该参数暂时保留，可忽略。请根据 UniqSubnetIds 参数格式设置私有网络子网 ID 数组。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
 
-	// 设置模糊查询关键字段，仅实例名称支持模糊查询。
+	// 设置模糊查询关键字，支持根据实例名称或实例ID模糊查询实例。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
 	// 项目 ID 组成的数组。
@@ -3617,32 +3597,19 @@ type DescribeInstancesRequestParams struct {
 	// 地域 ID 数组，该参数已经弃用，可通过公共参数Region查询对应地域。
 	RegionIds []*int64 `json:"RegionIds,omitempty" name:"RegionIds"`
 
-	// 实例状态。
-	// - 0：待初始化。
-	// - 1：流程中。
-	// - 2：运行中。
-	// - -2：已隔离。
-	// - -3：待删除。
+	// 实例状态。<ul><li>0：待初始化。</li><li>1：流程中。</li><li>2：运行中。</li><li>-2：已隔离。</li><li>-3：待删除。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 实例架构版本。
-	// - 1：单机版。
-	// - 2：主从版。
-	// - 3：集群版。
+	// 实例架构版本。<ul><li>1：单机版。</li><li>2：主从版。</li><li>3：集群版。</li></ul>
 	TypeVersion *int64 `json:"TypeVersion,omitempty" name:"TypeVersion"`
 
 	// 存储引擎信息。可设置为Redis-2.8、Redis-4.0、Redis-5.0、Redis-6.0 或者 CKV。
 	EngineName *string `json:"EngineName,omitempty" name:"EngineName"`
 
-	// 续费模式。
-	// - 0：手动续费。
-	// - 1：自动续费。
-	// - 2：到期不再续费。
+	// 续费模式。<ul><li>0：手动续费。</li><li>1：自动续费。</li><li>2：到期不再续费。</ul>
 	AutoRenew []*int64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 
-	// 计费模式。
-	// - postpaid：按量计费。
-	// - prepaid：包年包月。
+	// 计费模式。<ul><li>postpaid：按量计费。</li><li>prepaid：包年包月。</li></ul>
 	BillingMode *string `json:"BillingMode,omitempty" name:"BillingMode"`
 
 	// 实例类型。
@@ -3658,7 +3625,7 @@ type DescribeInstancesRequestParams struct {
 	// - 16：Redis 6.2内存版（集群架构）。
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
-	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址搜索实例。
+	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址查询实例。
 	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys"`
 
 	// 内部参数，用户可忽略。
@@ -3673,17 +3640,13 @@ type DescribeInstancesRequestParams struct {
 	// 根据标签的 Key 筛选资源，该参数不配置或者数组设置为空值，则不根据标签Key进行过滤。
 	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
-	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。
-	// - local：本地盘版。
-	// - cdc：独享集群版。
+	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。<ul><li>local：本地盘版。</li><li>cdc：独享集群版。</li></ul>
 	ProductVersions []*string `json:"ProductVersions,omitempty" name:"ProductVersions"`
 
 	// 批量查询指定的实例 ID，返回结果已 Limit 限制为主。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// 可用区模式。
-	// - singleaz：单可用区。
-	// - multiaz：多可用区。
+	// 可用区模式。<ul><li>singleaz：单可用区。</li><li>multiaz：多可用区。</li></ul>
 	AzMode *string `json:"AzMode,omitempty" name:"AzMode"`
 }
 
@@ -3700,17 +3663,10 @@ type DescribeInstancesRequest struct {
 	// 
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例列表排序依据，枚举值如下所示：
-	// - projectId：依据项目ID排序。
-	// - createtime：依据实例创建时间排序。
-	// - instancename：依据实例名称排序。
-	// - type：依据实例类型排序。
-	// - curDeadline：依据实例到期时间排序。
+	// 实例列表排序依据，枚举值如下所示：<ul><li>projectId：依据项目ID排序。</li><li>createtime：依据实例创建时间排序。</li><li>instancename：依据实例名称排序。</li><li>type：依据实例类型排序。</li><li>curDeadline：依据实例到期时间排序。</li></ul>
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 实例排序方式，默认为倒序排序。
-	// - 1：倒序。
-	// - 0：顺序。
+	// 实例排序方式，默认为倒序排序。<ul><li>1：倒序。</li><li>0：顺序。</li></ul>
 	OrderType *int64 `json:"OrderType,omitempty" name:"OrderType"`
 
 	// 私有网络 ID 数组。如果不配置该参数或设置数组为空则默认选择基础网络。例如47525。该参数暂时保留，可忽略。请根据 UniqVpcIds 参数格式设置私有网络ID数组。
@@ -3719,7 +3675,7 @@ type DescribeInstancesRequest struct {
 	// 私有网络所属子网 ID 数组，例如：56854。该参数暂时保留，可忽略。请根据 UniqSubnetIds 参数格式设置私有网络子网 ID 数组。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
 
-	// 设置模糊查询关键字段，仅实例名称支持模糊查询。
+	// 设置模糊查询关键字，支持根据实例名称或实例ID模糊查询实例。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
 	// 项目 ID 组成的数组。
@@ -3737,32 +3693,19 @@ type DescribeInstancesRequest struct {
 	// 地域 ID 数组，该参数已经弃用，可通过公共参数Region查询对应地域。
 	RegionIds []*int64 `json:"RegionIds,omitempty" name:"RegionIds"`
 
-	// 实例状态。
-	// - 0：待初始化。
-	// - 1：流程中。
-	// - 2：运行中。
-	// - -2：已隔离。
-	// - -3：待删除。
+	// 实例状态。<ul><li>0：待初始化。</li><li>1：流程中。</li><li>2：运行中。</li><li>-2：已隔离。</li><li>-3：待删除。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 实例架构版本。
-	// - 1：单机版。
-	// - 2：主从版。
-	// - 3：集群版。
+	// 实例架构版本。<ul><li>1：单机版。</li><li>2：主从版。</li><li>3：集群版。</li></ul>
 	TypeVersion *int64 `json:"TypeVersion,omitempty" name:"TypeVersion"`
 
 	// 存储引擎信息。可设置为Redis-2.8、Redis-4.0、Redis-5.0、Redis-6.0 或者 CKV。
 	EngineName *string `json:"EngineName,omitempty" name:"EngineName"`
 
-	// 续费模式。
-	// - 0：手动续费。
-	// - 1：自动续费。
-	// - 2：到期不再续费。
+	// 续费模式。<ul><li>0：手动续费。</li><li>1：自动续费。</li><li>2：到期不再续费。</ul>
 	AutoRenew []*int64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 
-	// 计费模式。
-	// - postpaid：按量计费。
-	// - prepaid：包年包月。
+	// 计费模式。<ul><li>postpaid：按量计费。</li><li>prepaid：包年包月。</li></ul>
 	BillingMode *string `json:"BillingMode,omitempty" name:"BillingMode"`
 
 	// 实例类型。
@@ -3778,7 +3721,7 @@ type DescribeInstancesRequest struct {
 	// - 16：Redis 6.2内存版（集群架构）。
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
-	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址搜索实例。
+	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址查询实例。
 	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys"`
 
 	// 内部参数，用户可忽略。
@@ -3793,17 +3736,13 @@ type DescribeInstancesRequest struct {
 	// 根据标签的 Key 筛选资源，该参数不配置或者数组设置为空值，则不根据标签Key进行过滤。
 	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
-	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。
-	// - local：本地盘版。
-	// - cdc：独享集群版。
+	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。<ul><li>local：本地盘版。</li><li>cdc：独享集群版。</li></ul>
 	ProductVersions []*string `json:"ProductVersions,omitempty" name:"ProductVersions"`
 
 	// 批量查询指定的实例 ID，返回结果已 Limit 限制为主。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// 可用区模式。
-	// - singleaz：单可用区。
-	// - multiaz：多可用区。
+	// 可用区模式。<ul><li>singleaz：单可用区。</li><li>multiaz：多可用区。</li></ul>
 	AzMode *string `json:"AzMode,omitempty" name:"AzMode"`
 }
 
@@ -4405,10 +4344,10 @@ type DescribeReplicationGroupRequestParams struct {
 	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 指定复制组 ID。例如：crs-rpl-m3zt****。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID及名称。
+	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
@@ -4421,10 +4360,10 @@ type DescribeReplicationGroupRequest struct {
 	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 指定复制组 ID。例如：crs-rpl-m3zt****。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID。
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。请登录[Redis 控制台](https://console.cloud.tencent.com/redis/replication)的全球复制组列表获取复制组 ID及名称。
+	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
@@ -4657,14 +4596,14 @@ func (r *DescribeSlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTaskInfoRequestParams struct {
-	// 任务 ID。
+	// 任务ID
 	TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
 }
 
 type DescribeTaskInfoRequest struct {
 	*tchttp.BaseRequest
 	
-	// 任务 ID。
+	// 任务ID
 	TaskId *uint64 `json:"TaskId,omitempty" name:"TaskId"`
 }
 
@@ -4689,24 +4628,19 @@ func (r *DescribeTaskInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeTaskInfoResponseParams struct {
-	// 任务状态。
-	// - preparing：待执行。
-	// - running：执行中。
-	// - succeed：成功。
-	// - failed：失败。
-	// - error：执行出错。
+	// 任务状态preparing:待执行，running：执行中，succeed：成功，failed：失败，error 执行出错
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 任务开始时间。
+	// 任务开始时间
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 任务类型。常见的类型包含：新建类型、配置变更、关闭实例、清空实例、重置密码、版本升级、备份实例、改变网络类型、实例可用区迁移、手动提主等。
+	// 任务类型
 	TaskType *string `json:"TaskType,omitempty" name:"TaskType"`
 
-	// 实例的 ID。
+	// 实例的ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 任务执行返回的信息，执行错误时显示错误信息。执行中或执行成功则为空。
+	// 任务信息，错误时显示错误信息。执行中与成功则为空
 	TaskMessage *string `json:"TaskMessage,omitempty" name:"TaskMessage"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -5337,6 +5271,7 @@ type Groups struct {
 	// - 21：印度 
 	// - 22：美东（弗吉尼亚）
 	// - 23：泰国 
+	// - 24：俄罗斯 
 	// - 25：日本
 	RegionId *int64 `json:"RegionId,omitempty" name:"RegionId"`
 
@@ -6195,7 +6130,7 @@ type Instances struct {
 	// 分片内存大小。
 	RedisShardSize *int64 `json:"RedisShardSize,omitempty" name:"RedisShardSize"`
 
-	// 实例的磁盘大小。
+	// 实例的磁盘大小
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
@@ -7623,7 +7558,7 @@ type RedisBackupSet struct {
 	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
 
 	// 备份类型。
-	// - 1：凌晨系统发起的自动备份。
+	// - 1：凌晨系统发起的备份。
 	// - 0：用户发起的手动备份。
 	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
 
@@ -7748,7 +7683,7 @@ type RedisNodeInfo struct {
 	// 节点类型。<ul><li>0：为主节点。</li><li>1：为副本节点。</li></ul>
 	NodeType *int64 `json:"NodeType,omitempty" name:"NodeType"`
 
-	// 主节点或者副本节点的 ID。<ul><li>该参数用于创建 Redis 实例接口[CreateInstances](https://cloud.tencent.com/document/product/239/20026) 并不需要设置，而用于变更实例配置的接口 [UpgradeInstance](https://cloud.tencent.com/document/product/239/20013) 删除副本时才需要设置。</li><li>该参数可使用接口 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 获取Integer类型的节点 ID。</li></ul>
+	// 主节点或者副本节点的 ID。<ul><li>该参数用于创建 Redis 实例接口[CreateInstances](https://cloud.tencent.com/document/product/239/20026) 并不需要设置，而用于变更实例配置的接口 [UpgradeInstance](https://cloud.tencent.com/document/product/239/20013) 则需要设置。</li><li>该参数可使用接口 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 获取Integer类型的节点 ID。</li></ul>
 	NodeId *int64 `json:"NodeId,omitempty" name:"NodeId"`
 
 	// 主节点或者副本节点的可用区 ID。
@@ -8227,10 +8162,10 @@ type SourceCommand struct {
 }
 
 type SourceInfo struct {
-	// 来源 IP 地址。
+	// 来源IP
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 
-	// 客户端连接数量。
+	// 连接数
 	Conn *int64 `json:"Conn,omitempty" name:"Conn"`
 
 	// 命令
@@ -8652,38 +8587,26 @@ func (r *UpgradeInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeInstanceVersionRequestParams struct {
-	// 目标实例类型，同 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的**TypeId**，即实例要变更的目标类型。
-	// - Redis 4.0 及以上的版本，支持相同版本的实例从标准架构升级至集群架构，例如，支持 Redis 4.0 标准架构升级至 Redis 4.0 集群架构。
-	// - 不支持跨版本架构升级，例如，Redis 4.0 标准架构升级至 Redis 5.0 集群架构。
-	// - 不支持 Redis 2.8 版本升级架构。
-	// - 不支持从集群架构降级至标准架构。
+	// 目标实例类型，同 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的Type，即实例要变更的目标类型
 	TargetInstanceType *string `json:"TargetInstanceType,omitempty" name:"TargetInstanceType"`
 
-	// 切换时间。
-	// - 1：维护时间窗切换。
-	// - 2：立即切换。
+	// 切换模式：1-维护时间窗切换，2-立即切换
 	SwitchOption *int64 `json:"SwitchOption,omitempty" name:"SwitchOption"`
 
-	// 指定实例 ID。例如：crs-xjhsdj****，请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type UpgradeInstanceVersionRequest struct {
 	*tchttp.BaseRequest
 	
-	// 目标实例类型，同 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的**TypeId**，即实例要变更的目标类型。
-	// - Redis 4.0 及以上的版本，支持相同版本的实例从标准架构升级至集群架构，例如，支持 Redis 4.0 标准架构升级至 Redis 4.0 集群架构。
-	// - 不支持跨版本架构升级，例如，Redis 4.0 标准架构升级至 Redis 5.0 集群架构。
-	// - 不支持 Redis 2.8 版本升级架构。
-	// - 不支持从集群架构降级至标准架构。
+	// 目标实例类型，同 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的Type，即实例要变更的目标类型
 	TargetInstanceType *string `json:"TargetInstanceType,omitempty" name:"TargetInstanceType"`
 
-	// 切换时间。
-	// - 1：维护时间窗切换。
-	// - 2：立即切换。
+	// 切换模式：1-维护时间窗切换，2-立即切换
 	SwitchOption *int64 `json:"SwitchOption,omitempty" name:"SwitchOption"`
 
-	// 指定实例 ID。例如：crs-xjhsdj****，请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
+	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 

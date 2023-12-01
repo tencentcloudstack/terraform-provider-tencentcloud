@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_tag
+```
+
+```release-note:new-resource
+tencentcloud_tag_attachment
+```

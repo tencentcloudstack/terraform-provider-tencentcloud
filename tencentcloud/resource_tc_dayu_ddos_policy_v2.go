@@ -75,6 +75,16 @@ resource "tencentcloud_dayu_ddos_policy_v2" "ddos_v2" {
 		is_not=0
 		is_not2=0
 	}
+	water_print_config {
+		offset = 1
+		open_status = 1
+		listeners {
+			frontend_port = 90
+			forward_protocol = "TCP"
+			frontend_port_end = 90
+		}
+		verify = "checkall"
+	}
 }
 
 ```
@@ -87,7 +97,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -212,6 +222,54 @@ func resourceTencentCloudDayuDdosPolicyV2() *schema.Resource {
 					},
 				},
 				Description: "Protocol block configuration for DDoS protection.",
+			},
+			"water_print_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"offset": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Watermark offset, value range: [0-100].",
+						},
+						"open_status": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Whether it is enabled, value [0 (manual open), 1 (immediate operation)].",
+						},
+						"listeners": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"frontend_port": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Lower limit of forwarding listening port. Values: [1-65535].",
+									},
+									"forward_protocol": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Forwarding protocol, value [TCP, UDP].",
+									},
+									"frontend_port_end": {
+										Type:        schema.TypeInt,
+										Required:    true,
+										Description: "Upper limit of forwarding listening port. Values: [1-65535].",
+									},
+								},
+							},
+							Description: "List of forwarding listeners to which the watermark belongs.",
+						},
+						"verify": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Watermark check mode, value [`checkall`(normal mode), `shortfpcheckall`(simplified mode)].",
+						},
+					},
+				},
+				Description: "Water print config.",
 			},
 			"ddos_connect_limit": {
 				Type:     schema.TypeList,
@@ -553,6 +611,39 @@ func resourceTencentCloudDayuDdosPolicyV2Create(d *schema.ResourceData, meta int
 		}
 	}
 
+	if v, ok := d.GetOk("water_print_config"); ok {
+		waterPrintConfigs := v.([]interface{})
+		for _, waterPrintConfigItem := range waterPrintConfigs {
+			waterPrintConfigs := waterPrintConfigItem.(map[string]interface{})
+			offset := waterPrintConfigs["offset"].(int)
+			openStatus := waterPrintConfigs["open_status"].(int)
+			verify := waterPrintConfigs["verify"].(string)
+			listeners := waterPrintConfigs["listeners"].([]interface{})
+			listenerList := make([]*antiddos.ForwardListener, 0)
+			for _, listenerItem := range listeners {
+				listener := listenerItem.(map[string]interface{})
+				frontendPort := listener["frontend_port"].(int)
+				forwardProtocol := listener["forward_protocol"].(string)
+				frontendPortEnd := listener["frontend_port_end"].(int)
+				listenerList = append(listenerList, &antiddos.ForwardListener{
+					FrontendPort:    helper.IntInt64(frontendPort),
+					ForwardProtocol: helper.String(forwardProtocol),
+					FrontendPortEnd: helper.IntInt64(frontendPortEnd),
+				})
+			}
+			tmpWaterPrintConfig := antiddos.WaterPrintConfig{
+				Offset:     helper.IntInt64(offset),
+				OpenStatus: helper.IntInt64(openStatus),
+				Verify:     helper.String(verify),
+				Listeners:  listenerList,
+			}
+			err := antiddosService.CreateWaterPrintConfig(ctx, resourceId, tmpWaterPrintConfig)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	if v, ok := d.GetOk("ddos_connect_limit"); ok {
 		ddosConnectLimits := v.([]interface{})
 		for _, ddosConnectLimitItem := range ddosConnectLimits {
@@ -720,8 +811,8 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	}
 	ddosLevel := protectThresholdRelation.DDoSLevel
 	ddosThreshold := protectThresholdRelation.DDoSThreshold
-	d.Set("ddos_level", ddosLevel)
-	d.Set("ddos_threshold", ddosThreshold)
+	_ = d.Set("ddos_level", ddosLevel)
+	_ = d.Set("ddos_threshold", ddosThreshold)
 
 	blackWhiteIpRelationList, err := antiddosService.DescribeListBlackWhiteIpList(ctx, instanceId)
 	if err != nil {
@@ -733,7 +824,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ipType := blackWhiteIpRelation.Type
 		blackWhiteIpInfos = append(blackWhiteIpInfos, map[string]string{"ip": *ip, "ip_type": *ipType})
 	}
-	d.Set("black_white_ips", blackWhiteIpInfos)
+	_ = d.Set("black_white_ips", blackWhiteIpInfos)
 
 	aclConfigRelationList, err := antiddosService.DescribeListPortAclList(ctx, instanceId)
 	if err != nil {
@@ -758,7 +849,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		acl["forward_protocol"] = forwardProtocol
 		acls = append(acls, acl)
 	}
-	d.Set("acls", acls)
+	_ = d.Set("acls", acls)
 
 	protocolBlockRelation, err := antiddosService.DescribeListProtocolBlockConfig(ctx, instanceId)
 	if err != nil {
@@ -774,8 +865,32 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		protocolBlockConfig["drop_tcp"] = dropTcp
 		protocolBlockConfig["drop_udp"] = dropUdp
 		protocolBlockConfig["drop_other"] = dropOther
-		d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
+		_ = d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
 	}
+
+	waterPrintConfigs, err := antiddosService.DescribeListWaterPrintConfig(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	waterPrintConfigList := make([]map[string]interface{}, 0)
+
+	for _, waterPrintConfig := range waterPrintConfigs {
+		waterPrintConfigMap := make(map[string]interface{})
+		waterPrintConfigMap["offset"] = waterPrintConfig.WaterPrintConfig.Offset
+		waterPrintConfigMap["open_status"] = waterPrintConfig.WaterPrintConfig.OpenStatus
+		waterPrintConfigMap["verify"] = waterPrintConfig.WaterPrintConfig.Verify
+		listenerList := make([]interface{}, 0)
+		for _, listener := range waterPrintConfig.WaterPrintConfig.Listeners {
+			listenerMap := make(map[string]interface{})
+			listenerMap["frontend_port"] = listener.FrontendPort
+			listenerMap["forward_protocol"] = listener.ForwardProtocol
+			listenerMap["frontend_port_end"] = listener.FrontendPortEnd
+			listenerList = append(listenerList, listenerMap)
+		}
+		waterPrintConfigMap["listeners"] = listenerList
+		waterPrintConfigList = append(waterPrintConfigList, waterPrintConfigMap)
+	}
+	_ = d.Set("water_print_config", waterPrintConfigList)
 
 	connectLimitRelation, err := antiddosService.DescribeDDoSConnectLimitList(ctx, instanceId)
 	if err != nil {
@@ -791,13 +906,13 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	ddosConnectLimit["syn_limit"] = connectLimitRelation.SynLimit
 	ddosConnectLimit["conn_timeout"] = connectLimitRelation.ConnTimeout
 	ddosConnectLimit["null_conn_enable"] = connectLimitRelation.NullConnEnable
-	d.Set("ddos_connect_limit", []map[string]interface{}{ddosConnectLimit})
+	_ = d.Set("ddos_connect_limit", []map[string]interface{}{ddosConnectLimit})
 
 	ddoSAIRelation, err := antiddosService.DescribeListDDoSAI(ctx, instanceId)
 	if err != nil {
 		return err
 	}
-	d.Set("ddos_ai", ddoSAIRelation.DDoSAI)
+	_ = d.Set("ddos_ai", ddoSAIRelation.DDoSAI)
 
 	ddosGeoIPBlockConfigRelations, err := antiddosService.DescribeListDDoSGeoIPBlockConfig(ctx, instanceId)
 	if err != nil {
@@ -809,12 +924,11 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ddosGeoIPBlockConfig := make(map[string]interface{})
 		ddosGeoIPBlockConfig["action"] = ddosGeoIPBlockConfigRelation.GeoIPBlockConfig.Action
 		ddosGeoIPBlockConfig["area_list"] = ddosGeoIPBlockConfigRelation.GeoIPBlockConfig.AreaList
-		ddosGeoIPBlockConfig["id"] = ddosGeoIPBlockConfigRelation.GeoIPBlockConfig.Id
 		ddosGeoIPBlockConfig["region_type"] = ddosGeoIPBlockConfigRelation.GeoIPBlockConfig.RegionType
 		ddosGeoIPBlockConfigList = append(ddosGeoIPBlockConfigList, ddosGeoIPBlockConfig)
 	}
 
-	d.Set("ddos_geo_ip_block_config", ddosGeoIPBlockConfigList)
+	_ = d.Set("ddos_geo_ip_block_config", ddosGeoIPBlockConfigList)
 
 	ddosSpeedLimitConfigRelations, err := antiddosService.DescribeListDDoSSpeedLimitConfig(ctx, instanceId)
 	if err != nil {
@@ -838,7 +952,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ddosSpeedLimitConfigs = append(ddosSpeedLimitConfigs, ddosSpeedLimitConfig)
 	}
 
-	d.Set("ddos_speed_limit_config", ddosSpeedLimitConfigs)
+	_ = d.Set("ddos_speed_limit_config", ddosSpeedLimitConfigs)
 
 	packetFilterRelationList, err := antiddosService.DescribeListPacketFilterConfig(ctx, instanceId)
 	if err != nil {
@@ -847,7 +961,6 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	packetFilters := make([]map[string]interface{}, 0)
 	for _, packetFilterRelation := range packetFilterRelationList {
 		tmpPacketFilter := make(map[string]interface{})
-		tmpPacketFilter["id"] = packetFilterRelation.PacketFilterConfig.Id
 		tmpPacketFilter["s_port_start"] = packetFilterRelation.PacketFilterConfig.SportStart
 		tmpPacketFilter["s_port_end"] = packetFilterRelation.PacketFilterConfig.SportEnd
 		tmpPacketFilter["d_port_start"] = packetFilterRelation.PacketFilterConfig.DportStart
@@ -861,9 +974,15 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		tmpPacketFilter["match_type2"] = packetFilterRelation.PacketFilterConfig.MatchType2
 		tmpPacketFilter["match_begin"] = packetFilterRelation.PacketFilterConfig.MatchBegin
 		tmpPacketFilter["match_begin2"] = packetFilterRelation.PacketFilterConfig.MatchBegin2
+		tmpPacketFilter["action"] = packetFilterRelation.PacketFilterConfig.Action
+		tmpPacketFilter["depth"] = packetFilterRelation.PacketFilterConfig.Depth
+		tmpPacketFilter["depth2"] = packetFilterRelation.PacketFilterConfig.Depth2
+		tmpPacketFilter["offset"] = packetFilterRelation.PacketFilterConfig.Offset
+		tmpPacketFilter["offset2"] = packetFilterRelation.PacketFilterConfig.Offset2
+		tmpPacketFilter["protocol"] = packetFilterRelation.PacketFilterConfig.Protocol
 		packetFilters = append(packetFilters, tmpPacketFilter)
 	}
-	d.Set("packet_filters", packetFilters)
+	_ = d.Set("packet_filters", packetFilters)
 
 	return nil
 }
@@ -915,7 +1034,7 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("protocol_block_config")
+
 	}
 
 	if d.HasChange("ddos_connect_limit") {
@@ -947,14 +1066,14 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("ddos_connect_limit")
+
 	}
 	if d.HasChange("ddos_ai") {
 		err := antiddosService.CreateDDoSAI(ctx, resourceId, d.Get("ddos_ai").(string))
 		if err != nil {
 			return err
 		}
-		d.SetPartial("ddos_ai")
+
 	}
 
 	if d.HasChange("black_white_ips") {
@@ -991,7 +1110,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("black_white_ips")
 	}
 
 	if d.HasChange("acls") {
@@ -1043,7 +1161,66 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("acls")
+	}
+
+	if d.HasChange("water_print_config.0.offset") || d.HasChange("water_print_config.0.listeners") || d.HasChange("water_print_config.0.verify") {
+		oldWaterPrintConfigList, err := antiddosService.DescribeListWaterPrintConfig(ctx, resourceId)
+		if err != nil {
+			return err
+		}
+		if len(oldWaterPrintConfigList) > 0 {
+			err := antiddosService.DeleteWaterPrintConfig(ctx, resourceId)
+			if err != nil {
+				return err
+			}
+		}
+
+		waterPrintConfigs := d.Get("water_print_config").([]interface{})
+		if len(waterPrintConfigs) > 0 {
+			waterPrintConfigItem := waterPrintConfigs[0]
+			waterPrintConfigItemMap := waterPrintConfigItem.(map[string]interface{})
+			offset := waterPrintConfigItemMap["offset"].(int)
+			openStatus := waterPrintConfigItemMap["open_status"].(int)
+			verify := waterPrintConfigItemMap["verify"].(string)
+			listeners := waterPrintConfigItemMap["listeners"].([]interface{})
+			listenerList := make([]*antiddos.ForwardListener, 0)
+			for _, listenerItem := range listeners {
+				listenerMap := listenerItem.(map[string]interface{})
+				frontendPort := listenerMap["frontend_port"].(int)
+				forwardProtocol := listenerMap["forward_protocol"].(string)
+				frontendPortEnd := listenerMap["frontend_port_end"].(int)
+				listenerList = append(listenerList, &antiddos.ForwardListener{
+					FrontendPort:    helper.IntInt64(frontendPort),
+					ForwardProtocol: helper.String(forwardProtocol),
+					FrontendPortEnd: helper.IntInt64(frontendPortEnd),
+				})
+			}
+			tmpWaterPrintConfig := antiddos.WaterPrintConfig{
+				Offset:     helper.IntInt64(offset),
+				OpenStatus: helper.IntInt64(openStatus),
+				Verify:     helper.String(verify),
+				Listeners:  listenerList,
+			}
+			err := antiddosService.CreateWaterPrintConfig(ctx, resourceId, tmpWaterPrintConfig)
+			if err != nil {
+				return err
+			}
+
+		}
+
+	}
+
+	if d.HasChange("water_print_config.0.open_status") {
+		waterPrintConfigs := d.Get("water_print_config").([]interface{})
+		if len(waterPrintConfigs) > 0 {
+			waterPrintConfigItem := waterPrintConfigs[0]
+			waterPrintConfigItemMap := waterPrintConfigItem.(map[string]interface{})
+			openStatus := waterPrintConfigItemMap["open_status"].(int)
+			err := antiddosService.SwitchWaterPrintConfig(ctx, resourceId, openStatus)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("ddos_geo_ip_block_config") {
@@ -1094,7 +1271,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("ddos_geo_ip_block_config")
 	}
 
 	if d.HasChange("ddos_speed_limit_config") {
@@ -1154,7 +1330,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("ddos_speed_limit_config")
 	}
 
 	if d.HasChange("packet_filters") {
@@ -1239,7 +1414,6 @@ func resourceTencentCloudDayuDdosPolicyV2Update(d *schema.ResourceData, meta int
 			}
 		}
 
-		d.SetPartial("packet_filters")
 	}
 
 	d.Partial(false)
@@ -1322,6 +1496,17 @@ func resourceTencentCloudDayuDdosPolicyV2Delete(d *schema.ResourceData, meta int
 
 	for _, packetFilterRelation := range packetFilterRelationList {
 		_ = antiddosService.DeletePacketFilterConfig(ctx, resourceId, *packetFilterRelation.PacketFilterConfig)
+	}
+
+	oldWaterPrintConfigList, err := antiddosService.DescribeListWaterPrintConfig(ctx, resourceId)
+	if err != nil {
+		return err
+	}
+	if len(oldWaterPrintConfigList) > 0 {
+		err := antiddosService.DeleteWaterPrintConfig(ctx, resourceId)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

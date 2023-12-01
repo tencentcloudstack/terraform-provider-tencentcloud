@@ -23,7 +23,7 @@ import (
 	"crypto/md5"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -263,6 +263,11 @@ func dataSourceTencentMonitorAlarmNotices() *schema.Resource {
 							Description: "List of alarm policy IDs bound to the alarm notification template.",
 							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
+						"amp_consumer_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "AMP consumer ID.",
+						},
 					},
 				},
 			},
@@ -337,6 +342,7 @@ func dataSourceTencentMonitorAlarmNoticesRead(d *schema.ResourceData, meta inter
 			"is_preset":       noticesItem.IsPreset,
 			"notice_language": noticesItem.NoticeLanguage,
 			"policy_ids":      noticesItem.PolicyIds,
+			"amp_consumer_id": noticesItem.AMPConsumerId,
 		}
 
 		userNoticesItems := make([]interface{}, 0, 100)

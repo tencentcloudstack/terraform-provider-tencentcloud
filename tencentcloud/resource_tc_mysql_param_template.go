@@ -4,12 +4,72 @@ Provides a resource to create a mysql param template
 Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_param_template" "param_template" {
-  name           = "terraform-test"
-  description    = "terraform-test"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  name              = "subnet-mysql"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-mysql"
+  description = "mysql test"
+}
+
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 0
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "utf8"
+    max_connections      = "1000"
+  }
+}
+
+resource "tencentcloud_mysql_param_template" "example" {
+  name           = "tf-example"
+  description    = "desc."
   engine_version = "8.0"
-  template_type  = "HIGH_STABILITY"
-  engine_type    = "InnoDB"
+  param_list {
+    current_value = "1"
+    name          = "auto_increment_increment"
+  }
+  param_list {
+    current_value = "1"
+    name          = "auto_increment_offset"
+  }
+  param_list {
+    current_value = "ON"
+    name          = "automatic_sp_privileges"
+  }
+  template_type = "HIGH_STABILITY"
+  engine_type   = "InnoDB"
 }
 ```
 
@@ -28,8 +88,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mysql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -62,6 +122,36 @@ func resourceTencentCloudMysqlParamTemplate() *schema.Resource {
 				Description: "The version of MySQL.",
 			},
 
+			"template_id": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "The ID of source parameter template.",
+			},
+
+			"param_list": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "parameter list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The name of parameter.",
+						},
+						"current_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "The value of parameter.",
+						},
+					},
+				},
+			},
+
 			"template_type": {
 				Optional:    true,
 				Type:        schema.TypeString,
@@ -72,32 +162,6 @@ func resourceTencentCloudMysqlParamTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "The engine type of instance, optional value is InnoDB or RocksDB, default to InnoDB.",
-			},
-
-			"template_id": {
-				Computed:    true,
-				Type:        schema.TypeInt,
-				Description: "The ID of source parameter template.",
-			},
-
-			"param_list": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "parameter list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of parameter.",
-						},
-						"current_value": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The value of parameter.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -124,6 +188,24 @@ func resourceTencentCloudMysqlParamTemplateCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("engine_version"); ok {
 		request.EngineVersion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("template_id"); ok {
+		request.TemplateId = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("param_list"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			parameter := mysql.Parameter{}
+			if v, ok := dMap["name"]; ok {
+				parameter.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["current_value"]; ok {
+				parameter.CurrentValue = helper.String(v.(string))
+			}
+			request.ParamList = append(request.ParamList, &parameter)
+		}
 	}
 
 	if v, ok := d.GetOk("template_type"); ok {
@@ -177,6 +259,16 @@ func resourceTencentCloudMysqlParamTemplateRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("resource `MysqlParamTemplate` %s does not exist", d.Id())
 	}
 
+	paramTemplateInfo, err := service.DescribeMysqlParamTemplateInfoById(ctx, templateId)
+	if err != nil {
+		return err
+	}
+
+	if paramTemplateInfo == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `MysqlParamTemplateInfo` %s does not exist", d.Id())
+	}
+
 	if paramTemplate.Name != nil {
 		_ = d.Set("name", paramTemplate.Name)
 	}
@@ -189,27 +281,54 @@ func resourceTencentCloudMysqlParamTemplateRead(d *schema.ResourceData, meta int
 		_ = d.Set("engine_version", paramTemplate.EngineVersion)
 	}
 
-	if paramTemplate.TemplateId != nil {
-		_ = d.Set("template_id", paramTemplate.TemplateId)
+	if paramTemplateInfo.EngineType != nil {
+		_ = d.Set("engine_type", paramTemplateInfo.EngineType)
+	}
+
+	params := make([]string, 0)
+	if v, ok := d.GetOk("param_list"); ok {
+		for _, item := range v.([]interface{}) {
+			if item != nil {
+				dMap := item.(map[string]interface{})
+				if v, ok := dMap["name"]; ok {
+					params = append(params, v.(string))
+				}
+			}
+		}
 	}
 
 	if paramTemplate.Items != nil {
-		paramListList := []interface{}{}
-		for _, paramList := range paramTemplate.Items {
-			paramListMap := map[string]interface{}{}
-
-			if paramList.Name != nil {
-				paramListMap["name"] = paramList.Name
+		paramItemsList := []interface{}{}
+		if len(params) > 0 {
+			// if set params list
+			for _, param := range params {
+				for _, paramList := range paramTemplate.Items {
+					if *paramList.Name == param {
+						paramListMap := map[string]interface{}{}
+						if paramList.Name != nil {
+							paramListMap["name"] = paramList.Name
+						}
+						if paramList.CurrentValue != nil {
+							paramListMap["current_value"] = paramList.CurrentValue
+						}
+						paramItemsList = append(paramItemsList, paramListMap)
+					}
+				}
 			}
-
-			if paramList.CurrentValue != nil {
-				paramListMap["current_value"] = paramList.CurrentValue
+		} else {
+			// if not set params list
+			for _, paramList := range paramTemplate.Items {
+				paramListMap := map[string]interface{}{}
+				if paramList.Name != nil {
+					paramListMap["name"] = paramList.Name
+				}
+				if paramList.CurrentValue != nil {
+					paramListMap["current_value"] = paramList.CurrentValue
+				}
+				paramItemsList = append(paramItemsList, paramListMap)
 			}
-
-			paramListList = append(paramListList, paramListMap)
 		}
-
-		_ = d.Set("param_list", paramListList)
+		_ = d.Set("param_list", paramItemsList)
 
 	}
 
@@ -249,6 +368,22 @@ func resourceTencentCloudMysqlParamTemplateUpdate(d *schema.ResourceData, meta i
 	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("param_list") {
+		if v, ok := d.GetOk("param_list"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				parameter := mysql.Parameter{}
+				if v, ok := dMap["name"]; ok {
+					parameter.Name = helper.String(v.(string))
+				}
+				if v, ok := dMap["current_value"]; ok {
+					parameter.CurrentValue = helper.String(v.(string))
+				}
+				request.ParamList = append(request.ParamList, &parameter)
+			}
 		}
 	}
 

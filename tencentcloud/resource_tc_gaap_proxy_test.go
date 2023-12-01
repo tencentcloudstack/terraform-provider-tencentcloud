@@ -7,8 +7,8 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccTencentCloudGaapProxyResource_basic(t *testing.T) {
@@ -182,6 +182,7 @@ resource tencentcloud_gaap_proxy "foo" {
   concurrent        = 2
   access_region     = "Guangzhou"
   realserver_region = "Beijing"
+  network_type = "normal"
 }
 `
 

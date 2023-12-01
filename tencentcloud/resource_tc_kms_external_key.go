@@ -3,14 +3,48 @@ Provide a resource to create a KMS external key.
 
 Example Usage
 
+Create a basic instance.
+
 ```hcl
-resource "tencentcloud_kms_external_key" "foo" {
-	alias = "test"
-	description = "describe key test message."
-	wrapping_algorithm = "RSAES_PKCS1_V1_5"
-	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
-	valid_to = 2147443200
-	is_enabled = true
+resource "tencentcloud_kms_external_key" "example" {
+  alias               = "tf-example-kms-externalkey"
+  description         = "example of kms external key"
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Specify the encryption algorithm and public key.
+
+```hcl
+resource "tencentcloud_kms_external_key" "example" {
+  alias               = "tf-example-kms-externalkey"
+  description         = "example of kms external key"
+  wrapping_algorithm  = "RSAES_PKCS1_V1_5"
+  key_material_base64 = "your_public_key_base64_encoded"
+  is_enabled          = true
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Disable the external kms key.
+
+```hcl
+resource "tencentcloud_kms_external_key" "example" {
+  alias               = "tf-example-kms-externalkey"
+  description         = "example of kms external key"
+  wrapping_algorithm  = "RSAES_PKCS1_V1_5"
+  key_material_base64 = "your_public_key_base64_encoded"
+  is_enabled          = false
+
+  tags = {
+    "test-tag" = "unit-test"
+  }
 }
 ```
 
@@ -19,7 +53,7 @@ Import
 KMS external keys can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_kms_external_key.foo 287e8f40-7cbb-11eb-9a3a-5254004f7f94
+$ terraform import tencentcloud_kms_external_key.example 287e8f40-7cbb-11eb-9a3a-xxxxx
 ```
 */
 package tencentcloud
@@ -29,8 +63,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -241,7 +275,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	if d.HasChange("alias") {
@@ -257,7 +291,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s modify KMS external key alias failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("alias")
+
 	}
 
 	if d.HasChange("key_material_base64") || d.HasChange("valid_to") {
@@ -265,12 +299,6 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			log.Printf("[CRITAL]%s import KMS external key material key failed, reason:%+v", logId, err)
 			return err
-		}
-		if d.HasChange("key_material_base64") {
-			d.SetPartial("key_material_base64")
-		}
-		if d.HasChange("valid_to") {
-			d.SetPartial("valid_to")
 		}
 	}
 
@@ -295,7 +323,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_archived")
+
 		} else {
 			isEnabled := d.Get("is_enabled").(bool)
 			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
@@ -303,7 +331,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_enabled")
+
 		}
 	}
 
@@ -321,12 +349,12 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)
 
-	return resourceTencentCloudKmsKeyRead(d, meta)
+	return resourceTencentCloudKmsExternalKeyRead(d, meta)
 }
 
 func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta interface{}) error {

@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_antiddos_packet_filter_config
+```
+
+```release-note:new-resource
+tencentcloud_antiddos_port_acl_config
+```
+
+```release-note:new-resource
+tencentcloud_antiddos_cc_black_white_ip
+```
+
+```release-note:new-resource
+tencentcloud_antiddos_cc_precision_policy
+```

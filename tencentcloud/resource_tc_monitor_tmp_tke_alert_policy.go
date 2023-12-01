@@ -4,29 +4,188 @@ Provides a resource to create a tke tmpAlertPolicy
 Example Usage
 
 ```hcl
+variable "default_instance_type" {
+  default = "SA1.MEDIUM2"
+}
 
+variable "availability_zone_first" {
+  default = "ap-guangzhou-3"
+}
+
+variable "availability_zone_second" {
+  default = "ap-guangzhou-4"
+}
+
+variable "example_cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
+}
+
+data "tencentcloud_vpc_subnets" "vpc_one" {
+  is_default        = true
+  availability_zone = var.availability_zone_first
+}
+
+data "tencentcloud_vpc_subnets" "vpc_two" {
+  is_default        = true
+  availability_zone = var.availability_zone_second
+}
+
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_first
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    # key_ids                   = ["skey-11112222"]
+    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone_second
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.second_subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    # key_ids                   = ["skey-11112222"]
+    cam_role_name = "CVM_QcsRole"
+    password      = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+  }
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+}
+
+
+# create monitor
+variable "zone" {
+  default = "ap-guangzhou"
+}
+
+variable "cluster_type" {
+  default = "tke"
+}
+
+resource "tencentcloud_monitor_tmp_instance" "foo" {
+  instance_name       = "tf-tmp-instance"
+  vpc_id              = local.first_vpc_id
+  subnet_id           = local.first_subnet_id
+  data_retention_time = 30
+  zone                = var.availability_zone_second
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+# tmp tke bind
+resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
+  instance_id = tencentcloud_monitor_tmp_instance.foo.id
+
+  agents {
+    region          = var.zone
+    cluster_type    = var.cluster_type
+    cluster_id      = tencentcloud_kubernetes_cluster.example.id
+    enable_external = false
+  }
+}
+
+# create record rule
 resource "tencentcloud_monitor_tmp_tke_alert_policy" "basic" {
-  instance_id = "prom-xxxxxx"
+  instance_id = tencentcloud_monitor_tmp_instance.foo.id
   alert_rule {
     name = "alert_rule-test"
     rules {
-      name = "rules-test"
-      rule = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
+      name     = "rules-test"
+      rule     = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
       template = "The CPU requested by the Pod in the cluster {{ $labels.cluster }} is overloaded, and the current CPU application ratio is {{ $value | humanizePercentage }}"
-      for = "5m"
+      for      = "5m"
       labels {
         name  = "severity"
         value = "warning"
       }
     }
     notification {
-      type = "amp"
+      type    = "amp"
       enabled = true
       alert_manager {
-		url	= "xxx"
-	  }
+        url = "xxx"
+      }
     }
   }
+
+  depends_on = [tencentcloud_monitor_tmp_tke_cluster_agent.foo]
 }
 ```
 */
@@ -38,9 +197,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -292,8 +451,8 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tke.NewCreatePrometheusAlertPolicyRequest()
-		response *tke.CreatePrometheusAlertPolicyResponse
+		request  = monitor.NewCreatePrometheusAlertPolicyRequest()
+		response *monitor.CreatePrometheusAlertPolicyResponse
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -301,14 +460,14 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "alert_rule"); ok {
-		prometheusAlertPolicyItem := tke.PrometheusAlertPolicyItem{}
+		prometheusAlertPolicyItem := monitor.PrometheusAlertPolicyItem{}
 		if v, ok := dMap["name"]; ok {
 			prometheusAlertPolicyItem.Name = helper.String(v.(string))
 		}
 		if v, ok := dMap["rules"]; ok {
 			for _, item := range v.([]interface{}) {
 				RulesMap := item.(map[string]interface{})
-				prometheusAlertRule := tke.PrometheusAlertRule{}
+				prometheusAlertRule := monitor.PrometheusAlertRule{}
 				if v, ok := RulesMap["name"]; ok {
 					prometheusAlertRule.Name = helper.String(v.(string))
 				}
@@ -327,7 +486,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 				if v, ok := RulesMap["labels"]; ok {
 					for _, item := range v.([]interface{}) {
 						labelsMap := item.(map[string]interface{})
-						label := tke.Label{}
+						label := monitor.Label{}
 						if v, ok := labelsMap["name"]; ok {
 							label.Name = helper.String(v.(string))
 						}
@@ -340,7 +499,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 				if v, ok := RulesMap["annotations"]; ok {
 					for _, item := range v.([]interface{}) {
 						AnnotationsMap := item.(map[string]interface{})
-						label := tke.Label{}
+						label := monitor.Label{}
 						if v, ok := AnnotationsMap["name"]; ok {
 							label.Name = helper.String(v.(string))
 						}
@@ -363,7 +522,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 			prometheusAlertPolicyItem.TemplateId = helper.String(v.(string))
 		}
 		if NotificationMap, ok := helper.InterfaceToMap(dMap, "notification"); ok {
-			prometheusNotificationItem := tke.PrometheusNotificationItem{}
+			prometheusNotificationItem := monitor.PrometheusNotificationItem{}
 			if v, ok := NotificationMap["enabled"]; ok {
 				prometheusNotificationItem.Enabled = helper.Bool(v.(bool))
 			}
@@ -374,7 +533,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 				prometheusNotificationItem.WebHook = helper.String(v.(string))
 			}
 			if AlertManagerMap, ok := helper.InterfaceToMap(NotificationMap, "alert_manager"); ok {
-				prometheusAlertManagerConfig := tke.PrometheusAlertManagerConfig{}
+				prometheusAlertManagerConfig := monitor.PrometheusAlertManagerConfig{}
 				if v, ok := AlertManagerMap["url"]; ok {
 					prometheusAlertManagerConfig.Url = helper.String(v.(string))
 				}
@@ -440,7 +599,7 @@ func resourceTencentCloudTkeTmpAlertPolicyCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().CreatePrometheusAlertPolicy(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusAlertPolicy(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -478,7 +637,7 @@ func resourceTencentCloudTkeTmpAlertPolicyRead(d *schema.ResourceData, meta inte
 	instanceId := ids[0]
 	tmpAlertPolicyId := ids[1]
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	tmpAlertPolicy, err := service.DescribeTkeTmpAlertPolicy(ctx, instanceId, tmpAlertPolicyId)
 	if err != nil {
 		return err
@@ -588,7 +747,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewModifyPrometheusAlertPolicyRequest()
+	request := monitor.NewModifyPrometheusAlertPolicyRequest()
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
@@ -596,6 +755,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 	}
 
 	instanceId := ids[0]
+	policyId := ids[1]
 
 	request.InstanceId = &instanceId
 
@@ -603,18 +763,17 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 		return fmt.Errorf("`instance_id` do not support change now.")
 	}
 
-	if d.HasChange("alert_rule") {
-		return fmt.Errorf("`alert_rule` do not support change now.")
-	}
 	if dMap, ok := helper.InterfacesHeadMap(d, "alert_rule"); ok {
-		prometheusAlertPolicyItem := tke.PrometheusAlertPolicyItem{}
+		prometheusAlertPolicyItem := monitor.PrometheusAlertPolicyItem{}
+		prometheusAlertPolicyItem.Id = &policyId
+
 		if v, ok := dMap["name"]; ok {
 			prometheusAlertPolicyItem.Name = helper.String(v.(string))
 		}
 		if v, ok := dMap["rules"]; ok {
 			for _, item := range v.([]interface{}) {
 				RulesMap := item.(map[string]interface{})
-				prometheusAlertRule := tke.PrometheusAlertRule{}
+				prometheusAlertRule := monitor.PrometheusAlertRule{}
 				if v, ok := RulesMap["name"]; ok {
 					prometheusAlertRule.Name = helper.String(v.(string))
 				}
@@ -633,7 +792,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 				if v, ok := RulesMap["annotations"]; ok {
 					for _, item := range v.([]interface{}) {
 						AnnotationsMap := item.(map[string]interface{})
-						label := tke.Label{}
+						label := monitor.Label{}
 						if v, ok := AnnotationsMap["name"]; ok {
 							label.Name = helper.String(v.(string))
 						}
@@ -643,20 +802,30 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 						prometheusAlertRule.Annotations = append(prometheusAlertRule.Annotations, &label)
 					}
 				}
+				if v, ok := RulesMap["labels"]; ok {
+					for _, item := range v.([]interface{}) {
+						labelsMap := item.(map[string]interface{})
+						label := monitor.Label{}
+						if v, ok := labelsMap["name"]; ok {
+							label.Name = helper.String(v.(string))
+						}
+						if v, ok := labelsMap["value"]; ok {
+							label.Value = helper.String(v.(string))
+						}
+						prometheusAlertRule.Labels = append(prometheusAlertRule.Labels, &label)
+					}
+				}
 				if v, ok := RulesMap["rule_state"]; ok {
 					prometheusAlertRule.RuleState = helper.IntInt64(v.(int))
 				}
 				prometheusAlertPolicyItem.Rules = append(prometheusAlertPolicyItem.Rules, &prometheusAlertRule)
 			}
 		}
-		if v, ok := dMap["id"]; ok {
-			prometheusAlertPolicyItem.Id = helper.String(v.(string))
-		}
 		if v, ok := dMap["template_id"]; ok {
 			prometheusAlertPolicyItem.TemplateId = helper.String(v.(string))
 		}
 		if NotificationMap, ok := helper.InterfaceToMap(dMap, "notification"); ok {
-			prometheusNotificationItem := tke.PrometheusNotificationItem{}
+			prometheusNotificationItem := monitor.PrometheusNotificationItem{}
 			if v, ok := NotificationMap["enabled"]; ok {
 				prometheusNotificationItem.Enabled = helper.Bool(v.(bool))
 			}
@@ -667,7 +836,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 				prometheusNotificationItem.WebHook = helper.String(v.(string))
 			}
 			if AlertManagerMap, ok := helper.InterfaceToMap(NotificationMap, "alert_manager"); ok {
-				prometheusAlertManagerConfig := tke.PrometheusAlertManagerConfig{}
+				prometheusAlertManagerConfig := monitor.PrometheusAlertManagerConfig{}
 				if v, ok := AlertManagerMap["url"]; ok {
 					prometheusAlertManagerConfig.Url = helper.String(v.(string))
 				}
@@ -733,7 +902,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusAlertPolicy(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyPrometheusAlertPolicy(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -757,7 +926,7 @@ func resourceTencentCloudTkeTmpAlertPolicyDelete(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())

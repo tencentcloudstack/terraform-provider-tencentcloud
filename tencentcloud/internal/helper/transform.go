@@ -71,13 +71,38 @@ func PString(pointer *string) string {
 	}
 	return *pointer
 }
+func PBool(pointer *bool) bool {
+	if pointer == nil {
+		return false
+	}
+	return *pointer
+}
 
 func PUint64(pointer *uint64) uint64 {
+	if pointer == nil {
+		return 0
+	}
 	return *pointer
 }
 
 func PInt64(pointer *int64) int64 {
+	if pointer == nil {
+		return 0
+	}
 	return *pointer
+}
+
+func PStrings(strs []*string) []string {
+	if len(strs) == 0 {
+		return nil
+	}
+
+	sp := make([]string, 0, len(strs))
+	for _, s := range strs {
+		sp = append(sp, *s)
+	}
+
+	return sp
 }
 
 // Takes the result of flatmap.Expand for an array of strings
@@ -85,7 +110,9 @@ func PInt64(pointer *int64) int64 {
 func InterfacesStrings(configured []interface{}) []string {
 	vs := make([]string, 0, len(configured))
 	for _, v := range configured {
-		vs = append(vs, v.(string))
+		if v != nil {
+			vs = append(vs, v.(string))
+		}
 	}
 	return vs
 }
@@ -93,7 +120,9 @@ func InterfacesStrings(configured []interface{}) []string {
 func InterfacesStringsPoint(configured []interface{}) []*string {
 	vs := make([]*string, 0, len(configured))
 	for _, v := range configured {
-		vs = append(vs, String(v.(string)))
+		if v != nil {
+			vs = append(vs, String(v.(string)))
+		}
 	}
 	return vs
 }
@@ -128,6 +157,14 @@ func InterfacesUint64Point(configured []interface{}) []*uint64 {
 	vs := make([]*uint64, 0, len(configured))
 	for _, v := range configured {
 		vs = append(vs, Uint64(v.(uint64)))
+	}
+	return vs
+}
+
+func InterfacesIntUInt64Point(configured []interface{}) []*uint64 {
+	vs := make([]*uint64, 0, len(configured))
+	for _, v := range configured {
+		vs = append(vs, Uint64(uint64(v.(int))))
 	}
 	return vs
 }
@@ -175,6 +212,11 @@ func BoolToInt64Ptr(s bool) (i *int64) {
 	return
 }
 
+func IntToStr(s int) (i string) {
+	i = strconv.Itoa(s)
+	return
+}
+
 func Int64ToStr(s int64) (i string) {
 	i = strconv.FormatInt(s, 10)
 	return
@@ -187,6 +229,11 @@ func Int64ToStrPoint(s int64) *string {
 
 func StrToInt64(s string) (i int64) {
 	i, _ = strconv.ParseInt(s, 10, 64)
+	return
+}
+
+func StrToInt(s string) (i int) {
+	i, _ = strconv.Atoi(s)
 	return
 }
 

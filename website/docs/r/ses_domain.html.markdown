@@ -30,7 +30,10 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `attributes` - DNS configuration details.
+  * `expected_value` - Values that need to be configured.
+  * `send_domain` - Domain name.
+  * `type` - Record Type CNAME | A | TXT | MX.
 
 
 ## Import

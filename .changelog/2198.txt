@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_organization_org_financial_by_member
+```
+
+```release-note:new-resource
+tencentcloud_organization_instance
+```
+
+```release-note:new-resource
+tencentcloud_organization_org_member_email
+```

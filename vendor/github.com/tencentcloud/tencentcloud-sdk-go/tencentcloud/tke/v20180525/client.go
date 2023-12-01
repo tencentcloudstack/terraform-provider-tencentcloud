@@ -59,8 +59,9 @@ func NewAcquireClusterAdminRoleRequest() (request *AcquireClusterAdminRoleReques
 func NewAcquireClusterAdminRoleResponse() (response *AcquireClusterAdminRoleResponse) {
     response = &AcquireClusterAdminRoleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AcquireClusterAdminRole
@@ -76,6 +77,7 @@ func NewAcquireClusterAdminRoleResponse() (response *AcquireClusterAdminRoleResp
 //  INTERNALERROR_KUBERNETESCREATEOPERATIONERROR = "InternalError.KubernetesCreateOperationError"
 //  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INTERNALERROR_WHITELISTUNEXPECTEDERROR = "InternalError.WhitelistUnexpectedError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -100,6 +102,7 @@ func (c *Client) AcquireClusterAdminRole(request *AcquireClusterAdminRoleRequest
 //  INTERNALERROR_KUBERNETESCREATEOPERATIONERROR = "InternalError.KubernetesCreateOperationError"
 //  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INTERNALERROR_WHITELISTUNEXPECTEDERROR = "InternalError.WhitelistUnexpectedError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -137,8 +140,9 @@ func NewAddClusterCIDRRequest() (request *AddClusterCIDRRequest) {
 func NewAddClusterCIDRResponse() (response *AddClusterCIDRResponse) {
     response = &AddClusterCIDRResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddClusterCIDR
@@ -209,8 +213,9 @@ func NewAddExistedInstancesRequest() (request *AddExistedInstancesRequest) {
 func NewAddExistedInstancesResponse() (response *AddExistedInstancesResponse) {
     response = &AddExistedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddExistedInstances
@@ -222,6 +227,7 @@ func NewAddExistedInstancesResponse() (response *AddExistedInstancesResponse) {
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_NETWORKSCALEERROR = "FailedOperation.NetworkScaleError"
+//  FAILEDOPERATION_NODEEXISTSSECONDARYNETWORKINTERFACE = "FailedOperation.NodeExistsSecondaryNetworkInterface"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_QUOTAMAXNODLIMIT = "FailedOperation.QuotaMaxNodLimit"
 //  INTERNALERROR = "InternalError"
@@ -249,6 +255,7 @@ func (c *Client) AddExistedInstances(request *AddExistedInstancesRequest) (respo
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_NETWORKSCALEERROR = "FailedOperation.NetworkScaleError"
+//  FAILEDOPERATION_NODEEXISTSSECONDARYNETWORKINTERFACE = "FailedOperation.NodeExistsSecondaryNetworkInterface"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_QUOTAMAXNODLIMIT = "FailedOperation.QuotaMaxNodLimit"
 //  INTERNALERROR = "InternalError"
@@ -293,8 +300,9 @@ func NewAddNodeToNodePoolRequest() (request *AddNodeToNodePoolRequest) {
 func NewAddNodeToNodePoolResponse() (response *AddNodeToNodePoolResponse) {
     response = &AddNodeToNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddNodeToNodePool
@@ -345,8 +353,9 @@ func NewAddVpcCniSubnetsRequest() (request *AddVpcCniSubnetsRequest) {
 func NewAddVpcCniSubnetsResponse() (response *AddVpcCniSubnetsResponse) {
     response = &AddVpcCniSubnetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddVpcCniSubnets
@@ -413,8 +422,9 @@ func NewCancelClusterReleaseRequest() (request *CancelClusterReleaseRequest) {
 func NewCancelClusterReleaseResponse() (response *CancelClusterReleaseResponse) {
     response = &CancelClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelClusterRelease
@@ -483,8 +493,9 @@ func NewCheckEdgeClusterCIDRRequest() (request *CheckEdgeClusterCIDRRequest) {
 func NewCheckEdgeClusterCIDRResponse() (response *CheckEdgeClusterCIDRResponse) {
     response = &CheckEdgeClusterCIDRResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckEdgeClusterCIDR
@@ -579,12 +590,13 @@ func NewCheckInstancesUpgradeAbleRequest() (request *CheckInstancesUpgradeAbleRe
 func NewCheckInstancesUpgradeAbleResponse() (response *CheckInstancesUpgradeAbleResponse) {
     response = &CheckInstancesUpgradeAbleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckInstancesUpgradeAble
-// 检查给定节点列表中哪些是可升级的 
+// 检查给定节点列表中哪些是可升级的
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECLIENTCONNECTION = "FailedOperation.KubeClientConnection"
@@ -605,7 +617,7 @@ func (c *Client) CheckInstancesUpgradeAble(request *CheckInstancesUpgradeAbleReq
 }
 
 // CheckInstancesUpgradeAble
-// 检查给定节点列表中哪些是可升级的 
+// 检查给定节点列表中哪些是可升级的
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBECLIENTCONNECTION = "FailedOperation.KubeClientConnection"
@@ -637,6 +649,63 @@ func (c *Client) CheckInstancesUpgradeAbleWithContext(ctx context.Context, reque
     return
 }
 
+func NewCreateBackupStorageLocationRequest() (request *CreateBackupStorageLocationRequest) {
+    request = &CreateBackupStorageLocationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "CreateBackupStorageLocation")
+    
+    
+    return
+}
+
+func NewCreateBackupStorageLocationResponse() (response *CreateBackupStorageLocationResponse) {
+    response = &CreateBackupStorageLocationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateBackupStorageLocation
+// 创建备份仓库，指定了存储仓库类型（如COS）、COS桶地区、名称等信息，当前最多允许创建100个仓库， 注意此接口当前是全局接口，多个地域的TKE集群如果要备份到相同的备份仓库中，不需要重复创建备份仓库
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) CreateBackupStorageLocation(request *CreateBackupStorageLocationRequest) (response *CreateBackupStorageLocationResponse, err error) {
+    return c.CreateBackupStorageLocationWithContext(context.Background(), request)
+}
+
+// CreateBackupStorageLocation
+// 创建备份仓库，指定了存储仓库类型（如COS）、COS桶地区、名称等信息，当前最多允许创建100个仓库， 注意此接口当前是全局接口，多个地域的TKE集群如果要备份到相同的备份仓库中，不需要重复创建备份仓库
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) CreateBackupStorageLocationWithContext(ctx context.Context, request *CreateBackupStorageLocationRequest) (response *CreateBackupStorageLocationResponse, err error) {
+    if request == nil {
+        request = NewCreateBackupStorageLocationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBackupStorageLocation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBackupStorageLocationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateClusterRequest() (request *CreateClusterRequest) {
     request = &CreateClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -651,8 +720,9 @@ func NewCreateClusterRequest() (request *CreateClusterRequest) {
 func NewCreateClusterResponse() (response *CreateClusterResponse) {
     response = &CreateClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCluster
@@ -668,6 +738,7 @@ func NewCreateClusterResponse() (response *CreateClusterResponse) {
 //  FAILEDOPERATION_CVMVPCIDNOTMATCH = "FailedOperation.CvmVpcidNotMatch"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_DFWGETUSGQUOTA = "FailedOperation.DfwGetUSGQuota"
+//  FAILEDOPERATION_NODEEXISTSSECONDARYNETWORKINTERFACE = "FailedOperation.NodeExistsSecondaryNetworkInterface"
 //  FAILEDOPERATION_OSNOTSUPPORT = "FailedOperation.OsNotSupport"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_QUOTAMAXCLSLIMIT = "FailedOperation.QuotaMaxClsLimit"
@@ -739,6 +810,7 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
 //  FAILEDOPERATION_CVMVPCIDNOTMATCH = "FailedOperation.CvmVpcidNotMatch"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_DFWGETUSGQUOTA = "FailedOperation.DfwGetUSGQuota"
+//  FAILEDOPERATION_NODEEXISTSSECONDARYNETWORKINTERFACE = "FailedOperation.NodeExistsSecondaryNetworkInterface"
 //  FAILEDOPERATION_OSNOTSUPPORT = "FailedOperation.OsNotSupport"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_QUOTAMAXCLSLIMIT = "FailedOperation.QuotaMaxClsLimit"
@@ -823,8 +895,9 @@ func NewCreateClusterEndpointRequest() (request *CreateClusterEndpointRequest) {
 func NewCreateClusterEndpointResponse() (response *CreateClusterEndpointResponse) {
     response = &CreateClusterEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterEndpoint
@@ -911,12 +984,13 @@ func NewCreateClusterEndpointVipRequest() (request *CreateClusterEndpointVipRequ
 func NewCreateClusterEndpointVipResponse() (response *CreateClusterEndpointVipResponse) {
     response = &CreateClusterEndpointVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterEndpointVip
-// 创建托管集群外网访问端口（老的方式，仅支持托管集群外网端口）
+// 创建托管集群外网访问端口（不再维护，准备下线）请使用新接口：CreateClusterEndpoint
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -943,7 +1017,7 @@ func (c *Client) CreateClusterEndpointVip(request *CreateClusterEndpointVipReque
 }
 
 // CreateClusterEndpointVip
-// 创建托管集群外网访问端口（老的方式，仅支持托管集群外网端口）
+// 创建托管集群外网访问端口（不再维护，准备下线）请使用新接口：CreateClusterEndpoint
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -995,8 +1069,9 @@ func NewCreateClusterInstancesRequest() (request *CreateClusterInstancesRequest)
 func NewCreateClusterInstancesResponse() (response *CreateClusterInstancesResponse) {
     response = &CreateClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterInstances
@@ -1121,8 +1196,9 @@ func NewCreateClusterNodePoolRequest() (request *CreateClusterNodePoolRequest) {
 func NewCreateClusterNodePoolResponse() (response *CreateClusterNodePoolResponse) {
     response = &CreateClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterNodePool
@@ -1195,12 +1271,13 @@ func NewCreateClusterReleaseRequest() (request *CreateClusterReleaseRequest) {
 func NewCreateClusterReleaseResponse() (response *CreateClusterReleaseResponse) {
     response = &CreateClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRelease
-// 在应用市场中给集群创建应用
+// 集群创建应用
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1221,7 +1298,7 @@ func (c *Client) CreateClusterRelease(request *CreateClusterReleaseRequest) (res
 }
 
 // CreateClusterRelease
-// 在应用市场中给集群创建应用
+// 集群创建应用
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1267,8 +1344,9 @@ func NewCreateClusterRouteRequest() (request *CreateClusterRouteRequest) {
 func NewCreateClusterRouteResponse() (response *CreateClusterRouteResponse) {
     response = &CreateClusterRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRoute
@@ -1343,8 +1421,9 @@ func NewCreateClusterRouteTableRequest() (request *CreateClusterRouteTableReques
 func NewCreateClusterRouteTableResponse() (response *CreateClusterRouteTableResponse) {
     response = &CreateClusterRouteTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterRouteTable
@@ -1421,16 +1500,18 @@ func NewCreateClusterVirtualNodeRequest() (request *CreateClusterVirtualNodeRequ
 func NewCreateClusterVirtualNodeResponse() (response *CreateClusterVirtualNodeResponse) {
     response = &CreateClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterVirtualNode
-// 创建虚拟节点
+// 创建按量计费超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_SUBNETINVALIDERROR = "InvalidParameter.SubnetInvalidError"
 //  RESOURCEINUSE_SUBNETALREADYEXIST = "ResourceInUse.SubnetAlreadyExist"
 //  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
@@ -1440,11 +1521,12 @@ func (c *Client) CreateClusterVirtualNode(request *CreateClusterVirtualNodeReque
 }
 
 // CreateClusterVirtualNode
-// 创建虚拟节点
+// 创建按量计费超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_SUBNETINVALIDERROR = "InvalidParameter.SubnetInvalidError"
 //  RESOURCEINUSE_SUBNETALREADYEXIST = "ResourceInUse.SubnetAlreadyExist"
 //  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
 //  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
@@ -1479,12 +1561,13 @@ func NewCreateClusterVirtualNodePoolRequest() (request *CreateClusterVirtualNode
 func NewCreateClusterVirtualNodePoolResponse() (response *CreateClusterVirtualNodePoolResponse) {
     response = &CreateClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateClusterVirtualNodePool
-// 创建虚拟节点池
+// 创建超级节点池
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1501,7 +1584,7 @@ func (c *Client) CreateClusterVirtualNodePool(request *CreateClusterVirtualNodeP
 }
 
 // CreateClusterVirtualNodePool
-// 创建虚拟节点池
+// 创建超级节点池
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -1543,8 +1626,9 @@ func NewCreateECMInstancesRequest() (request *CreateECMInstancesRequest) {
 func NewCreateECMInstancesResponse() (response *CreateECMInstancesResponse) {
     response = &CreateECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateECMInstances
@@ -1613,8 +1697,9 @@ func NewCreateEKSClusterRequest() (request *CreateEKSClusterRequest) {
 func NewCreateEKSClusterResponse() (response *CreateEKSClusterResponse) {
     response = &CreateEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEKSCluster
@@ -1683,8 +1768,9 @@ func NewCreateEKSContainerInstancesRequest() (request *CreateEKSContainerInstanc
 func NewCreateEKSContainerInstancesResponse() (response *CreateEKSContainerInstancesResponse) {
     response = &CreateEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEKSContainerInstances
@@ -1743,8 +1829,9 @@ func NewCreateEdgeCVMInstancesRequest() (request *CreateEdgeCVMInstancesRequest)
 func NewCreateEdgeCVMInstancesResponse() (response *CreateEdgeCVMInstancesResponse) {
     response = &CreateEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEdgeCVMInstances
@@ -1813,8 +1900,9 @@ func NewCreateEdgeLogConfigRequest() (request *CreateEdgeLogConfigRequest) {
 func NewCreateEdgeLogConfigResponse() (response *CreateEdgeLogConfigResponse) {
     response = &CreateEdgeLogConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateEdgeLogConfig
@@ -1863,8 +1951,9 @@ func NewCreateImageCacheRequest() (request *CreateImageCacheRequest) {
 func NewCreateImageCacheResponse() (response *CreateImageCacheResponse) {
     response = &CreateImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateImageCache
@@ -1913,20 +2002,24 @@ func NewCreatePrometheusAlertPolicyRequest() (request *CreatePrometheusAlertPoli
 func NewCreatePrometheusAlertPolicyResponse() (response *CreatePrometheusAlertPolicyResponse) {
     response = &CreatePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAlertPolicy
 // 创建告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreatePrometheusAlertPolicy(request *CreatePrometheusAlertPolicyRequest) (response *CreatePrometheusAlertPolicyResponse, err error) {
@@ -1937,12 +2030,15 @@ func (c *Client) CreatePrometheusAlertPolicy(request *CreatePrometheusAlertPolic
 // 创建告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreatePrometheusAlertPolicyWithContext(ctx context.Context, request *CreatePrometheusAlertPolicyRequest) (response *CreatePrometheusAlertPolicyResponse, err error) {
@@ -1975,8 +2071,9 @@ func NewCreatePrometheusAlertRuleRequest() (request *CreatePrometheusAlertRuleRe
 func NewCreatePrometheusAlertRuleResponse() (response *CreatePrometheusAlertRuleResponse) {
     response = &CreatePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAlertRule
@@ -2033,8 +2130,9 @@ func NewCreatePrometheusClusterAgentRequest() (request *CreatePrometheusClusterA
 func NewCreatePrometheusClusterAgentResponse() (response *CreatePrometheusClusterAgentResponse) {
     response = &CreatePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusClusterAgent
@@ -2043,6 +2141,7 @@ func NewCreatePrometheusClusterAgentResponse() (response *CreatePrometheusCluste
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -2060,6 +2159,7 @@ func (c *Client) CreatePrometheusClusterAgent(request *CreatePrometheusClusterAg
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -2097,8 +2197,9 @@ func NewCreatePrometheusConfigRequest() (request *CreatePrometheusConfigRequest)
 func NewCreatePrometheusConfigResponse() (response *CreatePrometheusConfigResponse) {
     response = &CreatePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusConfig
@@ -2165,8 +2266,9 @@ func NewCreatePrometheusDashboardRequest() (request *CreatePrometheusDashboardRe
 func NewCreatePrometheusDashboardResponse() (response *CreatePrometheusDashboardResponse) {
     response = &CreatePrometheusDashboardResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusDashboard
@@ -2174,6 +2276,7 @@ func NewCreatePrometheusDashboardResponse() (response *CreatePrometheusDashboard
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -2191,6 +2294,7 @@ func (c *Client) CreatePrometheusDashboard(request *CreatePrometheusDashboardReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -2229,8 +2333,9 @@ func NewCreatePrometheusGlobalNotificationRequest() (request *CreatePrometheusGl
 func NewCreatePrometheusGlobalNotificationResponse() (response *CreatePrometheusGlobalNotificationResponse) {
     response = &CreatePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusGlobalNotification
@@ -2279,8 +2384,9 @@ func NewCreatePrometheusRecordRuleYamlRequest() (request *CreatePrometheusRecord
 func NewCreatePrometheusRecordRuleYamlResponse() (response *CreatePrometheusRecordRuleYamlResponse) {
     response = &CreatePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusRecordRuleYaml
@@ -2345,8 +2451,9 @@ func NewCreatePrometheusTempRequest() (request *CreatePrometheusTempRequest) {
 func NewCreatePrometheusTempResponse() (response *CreatePrometheusTempResponse) {
     response = &CreatePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusTemp
@@ -2399,8 +2506,9 @@ func NewCreatePrometheusTemplateRequest() (request *CreatePrometheusTemplateRequ
 func NewCreatePrometheusTemplateResponse() (response *CreatePrometheusTemplateResponse) {
     response = &CreatePrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusTemplate
@@ -2437,6 +2545,65 @@ func (c *Client) CreatePrometheusTemplateWithContext(ctx context.Context, reques
     return
 }
 
+func NewCreateReservedInstancesRequest() (request *CreateReservedInstancesRequest) {
+    request = &CreateReservedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "CreateReservedInstances")
+    
+    
+    return
+}
+
+func NewCreateReservedInstancesResponse() (response *CreateReservedInstancesResponse) {
+    response = &CreateReservedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateReservedInstances
+// 预留券实例的购买会预先扣除本次实例购买所需金额，在调用本接口前请确保账户余额充足。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
+//  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
+//  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) CreateReservedInstances(request *CreateReservedInstancesRequest) (response *CreateReservedInstancesResponse, err error) {
+    return c.CreateReservedInstancesWithContext(context.Background(), request)
+}
+
+// CreateReservedInstances
+// 预留券实例的购买会预先扣除本次实例购买所需金额，在调用本接口前请确保账户余额充足。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
+//  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
+//  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) CreateReservedInstancesWithContext(ctx context.Context, request *CreateReservedInstancesRequest) (response *CreateReservedInstancesResponse, err error) {
+    if request == nil {
+        request = NewCreateReservedInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateReservedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateReservedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateTKEEdgeClusterRequest() (request *CreateTKEEdgeClusterRequest) {
     request = &CreateTKEEdgeClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2451,8 +2618,9 @@ func NewCreateTKEEdgeClusterRequest() (request *CreateTKEEdgeClusterRequest) {
 func NewCreateTKEEdgeClusterResponse() (response *CreateTKEEdgeClusterResponse) {
     response = &CreateTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateTKEEdgeCluster
@@ -2505,6 +2673,130 @@ func (c *Client) CreateTKEEdgeClusterWithContext(ctx context.Context, request *C
     return
 }
 
+func NewDeleteAddonRequest() (request *DeleteAddonRequest) {
+    request = &DeleteAddonRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteAddon")
+    
+    
+    return
+}
+
+func NewDeleteAddonResponse() (response *DeleteAddonResponse) {
+    response = &DeleteAddonResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteAddon
+// 删除一个addon
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAddon(request *DeleteAddonRequest) (response *DeleteAddonResponse, err error) {
+    return c.DeleteAddonWithContext(context.Background(), request)
+}
+
+// DeleteAddon
+// 删除一个addon
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DeleteAddonWithContext(ctx context.Context, request *DeleteAddonRequest) (response *DeleteAddonResponse, err error) {
+    if request == nil {
+        request = NewDeleteAddonRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAddon require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAddonResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteBackupStorageLocationRequest() (request *DeleteBackupStorageLocationRequest) {
+    request = &DeleteBackupStorageLocationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteBackupStorageLocation")
+    
+    
+    return
+}
+
+func NewDeleteBackupStorageLocationResponse() (response *DeleteBackupStorageLocationResponse) {
+    response = &DeleteBackupStorageLocationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteBackupStorageLocation
+// 删除备份仓库
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteBackupStorageLocation(request *DeleteBackupStorageLocationRequest) (response *DeleteBackupStorageLocationResponse, err error) {
+    return c.DeleteBackupStorageLocationWithContext(context.Background(), request)
+}
+
+// DeleteBackupStorageLocation
+// 删除备份仓库
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteBackupStorageLocationWithContext(ctx context.Context, request *DeleteBackupStorageLocationRequest) (response *DeleteBackupStorageLocationResponse, err error) {
+    if request == nil {
+        request = NewDeleteBackupStorageLocationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBackupStorageLocation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBackupStorageLocationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
     request = &DeleteClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2519,8 +2811,9 @@ func NewDeleteClusterRequest() (request *DeleteClusterRequest) {
 func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
     response = &DeleteClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCluster
@@ -2532,9 +2825,12 @@ func NewDeleteClusterResponse() (response *DeleteClusterResponse) {
 //  FAILEDOPERATION_CLUSTERFORBIDDENTODELETE = "FailedOperation.ClusterForbiddenToDelete"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
+//  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
+//  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -2560,9 +2856,12 @@ func (c *Client) DeleteCluster(request *DeleteClusterRequest) (response *DeleteC
 //  FAILEDOPERATION_CLUSTERFORBIDDENTODELETE = "FailedOperation.ClusterForbiddenToDelete"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
-//  FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
+//  FAILEDOPERATION_CVMCOMMON = "FailedOperation.CvmCommon"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
+//  FAILEDOPERATION_TAGCOMMON = "FailedOperation.TagCommon"
+//  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -2605,8 +2904,9 @@ func NewDeleteClusterAsGroupsRequest() (request *DeleteClusterAsGroupsRequest) {
 func NewDeleteClusterAsGroupsResponse() (response *DeleteClusterAsGroupsResponse) {
     response = &DeleteClusterAsGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterAsGroups
@@ -2614,6 +2914,7 @@ func NewDeleteClusterAsGroupsResponse() (response *DeleteClusterAsGroupsResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
@@ -2641,6 +2942,7 @@ func (c *Client) DeleteClusterAsGroups(request *DeleteClusterAsGroupsRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
@@ -2689,8 +2991,9 @@ func NewDeleteClusterEndpointRequest() (request *DeleteClusterEndpointRequest) {
 func NewDeleteClusterEndpointResponse() (response *DeleteClusterEndpointResponse) {
     response = &DeleteClusterEndpointResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterEndpoint
@@ -2779,8 +3082,9 @@ func NewDeleteClusterEndpointVipRequest() (request *DeleteClusterEndpointVipRequ
 func NewDeleteClusterEndpointVipResponse() (response *DeleteClusterEndpointVipResponse) {
     response = &DeleteClusterEndpointVipResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterEndpointVip
@@ -2863,8 +3167,9 @@ func NewDeleteClusterInstancesRequest() (request *DeleteClusterInstancesRequest)
 func NewDeleteClusterInstancesResponse() (response *DeleteClusterInstancesResponse) {
     response = &DeleteClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterInstances
@@ -2941,8 +3246,9 @@ func NewDeleteClusterNodePoolRequest() (request *DeleteClusterNodePoolRequest) {
 func NewDeleteClusterNodePoolResponse() (response *DeleteClusterNodePoolResponse) {
     response = &DeleteClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterNodePool
@@ -2999,14 +3305,16 @@ func NewDeleteClusterRouteRequest() (request *DeleteClusterRouteRequest) {
 func NewDeleteClusterRouteResponse() (response *DeleteClusterRouteResponse) {
     response = &DeleteClusterRouteResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterRoute
 // 删除集群路由
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -3022,6 +3330,7 @@ func (c *Client) DeleteClusterRoute(request *DeleteClusterRouteRequest) (respons
 // 删除集群路由
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  FAILEDOPERATION_VPCCOMMON = "FailedOperation.VpcCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -3059,8 +3368,9 @@ func NewDeleteClusterRouteTableRequest() (request *DeleteClusterRouteTableReques
 func NewDeleteClusterRouteTableResponse() (response *DeleteClusterRouteTableResponse) {
     response = &DeleteClusterRouteTableResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterRouteTable
@@ -3117,12 +3427,13 @@ func NewDeleteClusterVirtualNodeRequest() (request *DeleteClusterVirtualNodeRequ
 func NewDeleteClusterVirtualNodeResponse() (response *DeleteClusterVirtualNodeResponse) {
     response = &DeleteClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterVirtualNode
-// 删除虚拟节点
+// 删除超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -3134,7 +3445,7 @@ func (c *Client) DeleteClusterVirtualNode(request *DeleteClusterVirtualNodeReque
 }
 
 // DeleteClusterVirtualNode
-// 删除虚拟节点
+// 删除超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -3171,12 +3482,13 @@ func NewDeleteClusterVirtualNodePoolRequest() (request *DeleteClusterVirtualNode
 func NewDeleteClusterVirtualNodePoolResponse() (response *DeleteClusterVirtualNodePoolResponse) {
     response = &DeleteClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteClusterVirtualNodePool
-// 删除虚拟节点池
+// 删除超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -3189,7 +3501,7 @@ func (c *Client) DeleteClusterVirtualNodePool(request *DeleteClusterVirtualNodeP
 }
 
 // DeleteClusterVirtualNodePool
-// 删除虚拟节点池
+// 删除超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
@@ -3227,8 +3539,9 @@ func NewDeleteECMInstancesRequest() (request *DeleteECMInstancesRequest) {
 func NewDeleteECMInstancesResponse() (response *DeleteECMInstancesResponse) {
     response = &DeleteECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteECMInstances
@@ -3297,8 +3610,9 @@ func NewDeleteEKSClusterRequest() (request *DeleteEKSClusterRequest) {
 func NewDeleteEKSClusterResponse() (response *DeleteEKSClusterResponse) {
     response = &DeleteEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEKSCluster
@@ -3367,8 +3681,9 @@ func NewDeleteEKSContainerInstancesRequest() (request *DeleteEKSContainerInstanc
 func NewDeleteEKSContainerInstancesResponse() (response *DeleteEKSContainerInstancesResponse) {
     response = &DeleteEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEKSContainerInstances
@@ -3431,8 +3746,9 @@ func NewDeleteEdgeCVMInstancesRequest() (request *DeleteEdgeCVMInstancesRequest)
 func NewDeleteEdgeCVMInstancesResponse() (response *DeleteEdgeCVMInstancesResponse) {
     response = &DeleteEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEdgeCVMInstances
@@ -3501,8 +3817,9 @@ func NewDeleteEdgeClusterInstancesRequest() (request *DeleteEdgeClusterInstances
 func NewDeleteEdgeClusterInstancesResponse() (response *DeleteEdgeClusterInstancesResponse) {
     response = &DeleteEdgeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteEdgeClusterInstances
@@ -3571,8 +3888,9 @@ func NewDeleteImageCachesRequest() (request *DeleteImageCachesRequest) {
 func NewDeleteImageCachesResponse() (response *DeleteImageCachesResponse) {
     response = &DeleteImageCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteImageCaches
@@ -3623,14 +3941,16 @@ func NewDeletePrometheusAlertPolicyRequest() (request *DeletePrometheusAlertPoli
 func NewDeletePrometheusAlertPolicyResponse() (response *DeletePrometheusAlertPolicyResponse) {
     response = &DeletePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusAlertPolicy
 // 删除2.0实例告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3643,6 +3963,7 @@ func (c *Client) DeletePrometheusAlertPolicy(request *DeletePrometheusAlertPolic
 // 删除2.0实例告警策略
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3677,14 +3998,16 @@ func NewDeletePrometheusAlertRuleRequest() (request *DeletePrometheusAlertRuleRe
 func NewDeletePrometheusAlertRuleResponse() (response *DeletePrometheusAlertRuleResponse) {
     response = &DeletePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusAlertRule
 // 删除告警规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3697,6 +4020,7 @@ func (c *Client) DeletePrometheusAlertRule(request *DeletePrometheusAlertRuleReq
 // 删除告警规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3731,8 +4055,9 @@ func NewDeletePrometheusClusterAgentRequest() (request *DeletePrometheusClusterA
 func NewDeletePrometheusClusterAgentResponse() (response *DeletePrometheusClusterAgentResponse) {
     response = &DeletePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusClusterAgent
@@ -3801,8 +4126,9 @@ func NewDeletePrometheusConfigRequest() (request *DeletePrometheusConfigRequest)
 func NewDeletePrometheusConfigResponse() (response *DeletePrometheusConfigResponse) {
     response = &DeletePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusConfig
@@ -3816,6 +4142,7 @@ func NewDeletePrometheusConfigResponse() (response *DeletePrometheusConfigRespon
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusConfig(request *DeletePrometheusConfigRequest) (response *DeletePrometheusConfigResponse, err error) {
     return c.DeletePrometheusConfigWithContext(context.Background(), request)
 }
@@ -3831,6 +4158,7 @@ func (c *Client) DeletePrometheusConfig(request *DeletePrometheusConfigRequest) 
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusConfigWithContext(ctx context.Context, request *DeletePrometheusConfigRequest) (response *DeletePrometheusConfigResponse, err error) {
     if request == nil {
         request = NewDeletePrometheusConfigRequest()
@@ -3861,14 +4189,16 @@ func NewDeletePrometheusRecordRuleYamlRequest() (request *DeletePrometheusRecord
 func NewDeletePrometheusRecordRuleYamlResponse() (response *DeletePrometheusRecordRuleYamlResponse) {
     response = &DeletePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusRecordRuleYaml
 // 删除聚合实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -3881,6 +4211,7 @@ func (c *Client) DeletePrometheusRecordRuleYaml(request *DeletePrometheusRecordR
 // 删除聚合实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -3915,19 +4246,23 @@ func NewDeletePrometheusTempRequest() (request *DeletePrometheusTempRequest) {
 func NewDeletePrometheusTempResponse() (response *DeletePrometheusTempResponse) {
     response = &DeletePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemp
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusTemp(request *DeletePrometheusTempRequest) (response *DeletePrometheusTempResponse, err error) {
     return c.DeletePrometheusTempWithContext(context.Background(), request)
 }
@@ -3936,11 +4271,14 @@ func (c *Client) DeletePrometheusTemp(request *DeletePrometheusTempRequest) (res
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusTempWithContext(ctx context.Context, request *DeletePrometheusTempRequest) (response *DeletePrometheusTempResponse, err error) {
     if request == nil {
         request = NewDeletePrometheusTempRequest()
@@ -3971,8 +4309,9 @@ func NewDeletePrometheusTempSyncRequest() (request *DeletePrometheusTempSyncRequ
 func NewDeletePrometheusTempSyncResponse() (response *DeletePrometheusTempSyncResponse) {
     response = &DeletePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTempSync
@@ -3982,6 +4321,7 @@ func NewDeletePrometheusTempSyncResponse() (response *DeletePrometheusTempSyncRe
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4000,6 +4340,7 @@ func (c *Client) DeletePrometheusTempSync(request *DeletePrometheusTempSyncReque
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4037,8 +4378,9 @@ func NewDeletePrometheusTemplateRequest() (request *DeletePrometheusTemplateRequ
 func NewDeletePrometheusTemplateResponse() (response *DeletePrometheusTemplateResponse) {
     response = &DeletePrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemplate
@@ -4050,6 +4392,7 @@ func NewDeletePrometheusTemplateResponse() (response *DeletePrometheusTemplateRe
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusTemplate(request *DeletePrometheusTemplateRequest) (response *DeletePrometheusTemplateResponse, err error) {
     return c.DeletePrometheusTemplateWithContext(context.Background(), request)
 }
@@ -4063,6 +4406,7 @@ func (c *Client) DeletePrometheusTemplate(request *DeletePrometheusTemplateReque
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_RESOURCENOTFOUND = "InvalidParameter.ResourceNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePrometheusTemplateWithContext(ctx context.Context, request *DeletePrometheusTemplateRequest) (response *DeletePrometheusTemplateResponse, err error) {
     if request == nil {
         request = NewDeletePrometheusTemplateRequest()
@@ -4093,14 +4437,17 @@ func NewDeletePrometheusTemplateSyncRequest() (request *DeletePrometheusTemplate
 func NewDeletePrometheusTemplateSyncResponse() (response *DeletePrometheusTemplateSyncResponse) {
     response = &DeletePrometheusTemplateSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemplateSync
 // 取消模板同步，这将会删除目标中该模板所生产的配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4117,6 +4464,8 @@ func (c *Client) DeletePrometheusTemplateSync(request *DeletePrometheusTemplateS
 // 取消模板同步，这将会删除目标中该模板所生产的配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -4141,6 +4490,61 @@ func (c *Client) DeletePrometheusTemplateSyncWithContext(ctx context.Context, re
     return
 }
 
+func NewDeleteReservedInstancesRequest() (request *DeleteReservedInstancesRequest) {
+    request = &DeleteReservedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteReservedInstances")
+    
+    
+    return
+}
+
+func NewDeleteReservedInstancesResponse() (response *DeleteReservedInstancesResponse) {
+    response = &DeleteReservedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DeleteReservedInstances
+// 预留券实例如符合退还规则，可通过本接口主动退还。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) DeleteReservedInstances(request *DeleteReservedInstancesRequest) (response *DeleteReservedInstancesResponse, err error) {
+    return c.DeleteReservedInstancesWithContext(context.Background(), request)
+}
+
+// DeleteReservedInstances
+// 预留券实例如符合退还规则，可通过本接口主动退还。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) DeleteReservedInstancesWithContext(ctx context.Context, request *DeleteReservedInstancesRequest) (response *DeleteReservedInstancesResponse, err error) {
+    if request == nil {
+        request = NewDeleteReservedInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteReservedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteReservedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteTKEEdgeClusterRequest() (request *DeleteTKEEdgeClusterRequest) {
     request = &DeleteTKEEdgeClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4155,8 +4559,9 @@ func NewDeleteTKEEdgeClusterRequest() (request *DeleteTKEEdgeClusterRequest) {
 func NewDeleteTKEEdgeClusterResponse() (response *DeleteTKEEdgeClusterResponse) {
     response = &DeleteTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteTKEEdgeCluster
@@ -4209,6 +4614,124 @@ func (c *Client) DeleteTKEEdgeClusterWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribeAddonRequest() (request *DescribeAddonRequest) {
+    request = &DescribeAddonRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeAddon")
+    
+    
+    return
+}
+
+func NewDescribeAddonResponse() (response *DescribeAddonResponse) {
+    response = &DescribeAddonResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAddon
+// 获取addon列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAddon(request *DescribeAddonRequest) (response *DescribeAddonResponse, err error) {
+    return c.DescribeAddonWithContext(context.Background(), request)
+}
+
+// DescribeAddon
+// 获取addon列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeAddonWithContext(ctx context.Context, request *DescribeAddonRequest) (response *DescribeAddonResponse, err error) {
+    if request == nil {
+        request = NewDescribeAddonRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAddon require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAddonResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAddonValuesRequest() (request *DescribeAddonValuesRequest) {
+    request = &DescribeAddonValuesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeAddonValues")
+    
+    
+    return
+}
+
+func NewDescribeAddonValuesResponse() (response *DescribeAddonValuesResponse) {
+    response = &DescribeAddonValuesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAddonValues
+// 获取一个addon的参数
+//
+// 可能返回的错误码:
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeAddonValues(request *DescribeAddonValuesRequest) (response *DescribeAddonValuesResponse, err error) {
+    return c.DescribeAddonValuesWithContext(context.Background(), request)
+}
+
+// DescribeAddonValues
+// 获取一个addon的参数
+//
+// 可能返回的错误码:
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeAddonValuesWithContext(ctx context.Context, request *DescribeAddonValuesRequest) (response *DescribeAddonValuesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAddonValuesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAddonValues require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAddonValuesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeAvailableClusterVersionRequest() (request *DescribeAvailableClusterVersionRequest) {
     request = &DescribeAvailableClusterVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4223,8 +4746,9 @@ func NewDescribeAvailableClusterVersionRequest() (request *DescribeAvailableClus
 func NewDescribeAvailableClusterVersionResponse() (response *DescribeAvailableClusterVersionResponse) {
     response = &DescribeAvailableClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAvailableClusterVersion
@@ -4285,8 +4809,9 @@ func NewDescribeAvailableTKEEdgeVersionRequest() (request *DescribeAvailableTKEE
 func NewDescribeAvailableTKEEdgeVersionResponse() (response *DescribeAvailableTKEEdgeVersionResponse) {
     response = &DescribeAvailableTKEEdgeVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAvailableTKEEdgeVersion
@@ -4337,6 +4862,61 @@ func (c *Client) DescribeAvailableTKEEdgeVersionWithContext(ctx context.Context,
     return
 }
 
+func NewDescribeBackupStorageLocationsRequest() (request *DescribeBackupStorageLocationsRequest) {
+    request = &DescribeBackupStorageLocationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeBackupStorageLocations")
+    
+    
+    return
+}
+
+func NewDescribeBackupStorageLocationsResponse() (response *DescribeBackupStorageLocationsResponse) {
+    response = &DescribeBackupStorageLocationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBackupStorageLocations
+// 查询备份仓库信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBackupStorageLocations(request *DescribeBackupStorageLocationsRequest) (response *DescribeBackupStorageLocationsResponse, err error) {
+    return c.DescribeBackupStorageLocationsWithContext(context.Background(), request)
+}
+
+// DescribeBackupStorageLocations
+// 查询备份仓库信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBackupStorageLocationsWithContext(ctx context.Context, request *DescribeBackupStorageLocationsRequest) (response *DescribeBackupStorageLocationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupStorageLocationsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupStorageLocations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupStorageLocationsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterAsGroupOptionRequest() (request *DescribeClusterAsGroupOptionRequest) {
     request = &DescribeClusterAsGroupOptionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4351,8 +4931,9 @@ func NewDescribeClusterAsGroupOptionRequest() (request *DescribeClusterAsGroupOp
 func NewDescribeClusterAsGroupOptionResponse() (response *DescribeClusterAsGroupOptionResponse) {
     response = &DescribeClusterAsGroupOptionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAsGroupOption
@@ -4362,6 +4943,7 @@ func NewDescribeClusterAsGroupOptionResponse() (response *DescribeClusterAsGroup
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_ASCOMMON = "InternalError.AsCommon"
@@ -4383,6 +4965,7 @@ func (c *Client) DescribeClusterAsGroupOption(request *DescribeClusterAsGroupOpt
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_ASCOMMON = "InternalError.AsCommon"
@@ -4423,8 +5006,9 @@ func NewDescribeClusterAsGroupsRequest() (request *DescribeClusterAsGroupsReques
 func NewDescribeClusterAsGroupsResponse() (response *DescribeClusterAsGroupsResponse) {
     response = &DescribeClusterAsGroupsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAsGroups
@@ -4501,8 +5085,9 @@ func NewDescribeClusterAuthenticationOptionsRequest() (request *DescribeClusterA
 func NewDescribeClusterAuthenticationOptionsResponse() (response *DescribeClusterAuthenticationOptionsResponse) {
     response = &DescribeClusterAuthenticationOptionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAuthenticationOptions
@@ -4510,6 +5095,7 @@ func NewDescribeClusterAuthenticationOptionsResponse() (response *DescribeCluste
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
@@ -4522,6 +5108,7 @@ func (c *Client) DescribeClusterAuthenticationOptions(request *DescribeClusterAu
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
@@ -4555,8 +5142,9 @@ func NewDescribeClusterCommonNamesRequest() (request *DescribeClusterCommonNames
 func NewDescribeClusterCommonNamesResponse() (response *DescribeClusterCommonNamesResponse) {
     response = &DescribeClusterCommonNamesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterCommonNames
@@ -4621,8 +5209,9 @@ func NewDescribeClusterControllersRequest() (request *DescribeClusterControllers
 func NewDescribeClusterControllersResponse() (response *DescribeClusterControllersResponse) {
     response = &DescribeClusterControllersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterControllers
@@ -4677,8 +5266,9 @@ func NewDescribeClusterEndpointStatusRequest() (request *DescribeClusterEndpoint
 func NewDescribeClusterEndpointStatusResponse() (response *DescribeClusterEndpointStatusResponse) {
     response = &DescribeClusterEndpointStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpointStatus
@@ -4771,8 +5361,9 @@ func NewDescribeClusterEndpointVipStatusRequest() (request *DescribeClusterEndpo
 func NewDescribeClusterEndpointVipStatusResponse() (response *DescribeClusterEndpointVipStatusResponse) {
     response = &DescribeClusterEndpointVipStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpointVipStatus
@@ -4861,8 +5452,9 @@ func NewDescribeClusterEndpointsRequest() (request *DescribeClusterEndpointsRequ
 func NewDescribeClusterEndpointsResponse() (response *DescribeClusterEndpointsResponse) {
     response = &DescribeClusterEndpointsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterEndpoints
@@ -4877,6 +5469,7 @@ func NewDescribeClusterEndpointsResponse() (response *DescribeClusterEndpointsRe
 //  INTERNALERROR_KUBECLIENTCONNECTION = "InternalError.KubeClientConnection"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_KUBERESOURCENOTFOUND = "ResourceNotFound.KubeResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERINABNORMALSTAT = "ResourceUnavailable.ClusterInAbnormalStat"
@@ -4897,6 +5490,7 @@ func (c *Client) DescribeClusterEndpoints(request *DescribeClusterEndpointsReque
 //  INTERNALERROR_KUBECLIENTCONNECTION = "InternalError.KubeClientConnection"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_KUBERESOURCENOTFOUND = "ResourceNotFound.KubeResourceNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERINABNORMALSTAT = "ResourceUnavailable.ClusterInAbnormalStat"
@@ -4917,6 +5511,122 @@ func (c *Client) DescribeClusterEndpointsWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeClusterExtraArgsRequest() (request *DescribeClusterExtraArgsRequest) {
+    request = &DescribeClusterExtraArgsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterExtraArgs")
+    
+    
+    return
+}
+
+func NewDescribeClusterExtraArgsResponse() (response *DescribeClusterExtraArgsResponse) {
+    response = &DescribeClusterExtraArgsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterExtraArgs
+// 查询集群自定义参数
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeClusterExtraArgs(request *DescribeClusterExtraArgsRequest) (response *DescribeClusterExtraArgsResponse, err error) {
+    return c.DescribeClusterExtraArgsWithContext(context.Background(), request)
+}
+
+// DescribeClusterExtraArgs
+// 查询集群自定义参数
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+func (c *Client) DescribeClusterExtraArgsWithContext(ctx context.Context, request *DescribeClusterExtraArgsRequest) (response *DescribeClusterExtraArgsResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterExtraArgsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterExtraArgs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterExtraArgsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClusterInspectionResultsOverviewRequest() (request *DescribeClusterInspectionResultsOverviewRequest) {
+    request = &DescribeClusterInspectionResultsOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeClusterInspectionResultsOverview")
+    
+    
+    return
+}
+
+func NewDescribeClusterInspectionResultsOverviewResponse() (response *DescribeClusterInspectionResultsOverviewResponse) {
+    response = &DescribeClusterInspectionResultsOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeClusterInspectionResultsOverview
+// 查询用户单个Region下的所有集群巡检结果概览信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeClusterInspectionResultsOverview(request *DescribeClusterInspectionResultsOverviewRequest) (response *DescribeClusterInspectionResultsOverviewResponse, err error) {
+    return c.DescribeClusterInspectionResultsOverviewWithContext(context.Background(), request)
+}
+
+// DescribeClusterInspectionResultsOverview
+// 查询用户单个Region下的所有集群巡检结果概览信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeClusterInspectionResultsOverviewWithContext(ctx context.Context, request *DescribeClusterInspectionResultsOverviewRequest) (response *DescribeClusterInspectionResultsOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeClusterInspectionResultsOverviewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClusterInspectionResultsOverview require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClusterInspectionResultsOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterInstancesRequest() (request *DescribeClusterInstancesRequest) {
     request = &DescribeClusterInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4931,12 +5641,13 @@ func NewDescribeClusterInstancesRequest() (request *DescribeClusterInstancesRequ
 func NewDescribeClusterInstancesResponse() (response *DescribeClusterInstancesResponse) {
     response = &DescribeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterInstances
-//  查询集群下节点实例信息 
+// 查询集群下节点实例信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4957,7 +5668,7 @@ func (c *Client) DescribeClusterInstances(request *DescribeClusterInstancesReque
 }
 
 // DescribeClusterInstances
-//  查询集群下节点实例信息 
+// 查询集群下节点实例信息
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -5003,8 +5714,9 @@ func NewDescribeClusterKubeconfigRequest() (request *DescribeClusterKubeconfigRe
 func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfigResponse) {
     response = &DescribeClusterKubeconfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterKubeconfig
@@ -5014,6 +5726,7 @@ func NewDescribeClusterKubeconfigResponse() (response *DescribeClusterKubeconfig
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
@@ -5043,6 +5756,7 @@ func (c *Client) DescribeClusterKubeconfig(request *DescribeClusterKubeconfigReq
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INTERNALERROR_COMPONENTCLIENTHTTP = "InternalError.ComponentClientHttp"
@@ -5091,8 +5805,9 @@ func NewDescribeClusterLevelAttributeRequest() (request *DescribeClusterLevelAtt
 func NewDescribeClusterLevelAttributeResponse() (response *DescribeClusterLevelAttributeResponse) {
     response = &DescribeClusterLevelAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterLevelAttribute
@@ -5145,8 +5860,9 @@ func NewDescribeClusterLevelChangeRecordsRequest() (request *DescribeClusterLeve
 func NewDescribeClusterLevelChangeRecordsResponse() (response *DescribeClusterLevelChangeRecordsResponse) {
     response = &DescribeClusterLevelChangeRecordsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterLevelChangeRecords
@@ -5199,8 +5915,9 @@ func NewDescribeClusterNodePoolDetailRequest() (request *DescribeClusterNodePool
 func NewDescribeClusterNodePoolDetailResponse() (response *DescribeClusterNodePoolDetailResponse) {
     response = &DescribeClusterNodePoolDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNodePoolDetail
@@ -5255,8 +5972,9 @@ func NewDescribeClusterNodePoolsRequest() (request *DescribeClusterNodePoolsRequ
 func NewDescribeClusterNodePoolsResponse() (response *DescribeClusterNodePoolsResponse) {
     response = &DescribeClusterNodePoolsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNodePools
@@ -5311,8 +6029,9 @@ func NewDescribeClusterPendingReleasesRequest() (request *DescribeClusterPending
 func NewDescribeClusterPendingReleasesResponse() (response *DescribeClusterPendingReleasesResponse) {
     response = &DescribeClusterPendingReleasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterPendingReleases
@@ -5385,8 +6104,9 @@ func NewDescribeClusterReleaseDetailsRequest() (request *DescribeClusterReleaseD
 func NewDescribeClusterReleaseDetailsResponse() (response *DescribeClusterReleaseDetailsResponse) {
     response = &DescribeClusterReleaseDetailsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleaseDetails
@@ -5459,8 +6179,9 @@ func NewDescribeClusterReleaseHistoryRequest() (request *DescribeClusterReleaseH
 func NewDescribeClusterReleaseHistoryResponse() (response *DescribeClusterReleaseHistoryResponse) {
     response = &DescribeClusterReleaseHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleaseHistory
@@ -5531,8 +6252,9 @@ func NewDescribeClusterReleasesRequest() (request *DescribeClusterReleasesReques
 func NewDescribeClusterReleasesResponse() (response *DescribeClusterReleasesResponse) {
     response = &DescribeClusterReleasesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterReleases
@@ -5605,8 +6327,9 @@ func NewDescribeClusterRouteTablesRequest() (request *DescribeClusterRouteTables
 func NewDescribeClusterRouteTablesResponse() (response *DescribeClusterRouteTablesResponse) {
     response = &DescribeClusterRouteTablesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterRouteTables
@@ -5653,8 +6376,9 @@ func NewDescribeClusterRoutesRequest() (request *DescribeClusterRoutesRequest) {
 func NewDescribeClusterRoutesResponse() (response *DescribeClusterRoutesResponse) {
     response = &DescribeClusterRoutesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterRoutes
@@ -5707,8 +6431,9 @@ func NewDescribeClusterSecurityRequest() (request *DescribeClusterSecurityReques
 func NewDescribeClusterSecurityResponse() (response *DescribeClusterSecurityResponse) {
     response = &DescribeClusterSecurityResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterSecurity
@@ -5817,8 +6542,9 @@ func NewDescribeClusterStatusRequest() (request *DescribeClusterStatusRequest) {
 func NewDescribeClusterStatusResponse() (response *DescribeClusterStatusResponse) {
     response = &DescribeClusterStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterStatus
@@ -5897,12 +6623,13 @@ func NewDescribeClusterVirtualNodeRequest() (request *DescribeClusterVirtualNode
 func NewDescribeClusterVirtualNodeResponse() (response *DescribeClusterVirtualNodeResponse) {
     response = &DescribeClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterVirtualNode
-// 查看虚拟节点列表
+// 查看超级节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
@@ -5910,12 +6637,13 @@ func NewDescribeClusterVirtualNodeResponse() (response *DescribeClusterVirtualNo
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 func (c *Client) DescribeClusterVirtualNode(request *DescribeClusterVirtualNodeRequest) (response *DescribeClusterVirtualNodeResponse, err error) {
     return c.DescribeClusterVirtualNodeWithContext(context.Background(), request)
 }
 
 // DescribeClusterVirtualNode
-// 查看虚拟节点列表
+// 查看超级节点列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
@@ -5923,6 +6651,7 @@ func (c *Client) DescribeClusterVirtualNode(request *DescribeClusterVirtualNodeR
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 func (c *Client) DescribeClusterVirtualNodeWithContext(ctx context.Context, request *DescribeClusterVirtualNodeRequest) (response *DescribeClusterVirtualNodeResponse, err error) {
     if request == nil {
         request = NewDescribeClusterVirtualNodeRequest()
@@ -5953,30 +6682,33 @@ func NewDescribeClusterVirtualNodePoolsRequest() (request *DescribeClusterVirtua
 func NewDescribeClusterVirtualNodePoolsResponse() (response *DescribeClusterVirtualNodePoolsResponse) {
     response = &DescribeClusterVirtualNodePoolsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterVirtualNodePools
-// 查看虚拟节点池列表
+// 查看超级节点池列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 func (c *Client) DescribeClusterVirtualNodePools(request *DescribeClusterVirtualNodePoolsRequest) (response *DescribeClusterVirtualNodePoolsResponse, err error) {
     return c.DescribeClusterVirtualNodePoolsWithContext(context.Background(), request)
 }
 
 // DescribeClusterVirtualNodePools
-// 查看虚拟节点池列表
+// 查看超级节点池列表
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 func (c *Client) DescribeClusterVirtualNodePoolsWithContext(ctx context.Context, request *DescribeClusterVirtualNodePoolsRequest) (response *DescribeClusterVirtualNodePoolsResponse, err error) {
     if request == nil {
         request = NewDescribeClusterVirtualNodePoolsRequest()
@@ -6007,8 +6739,9 @@ func NewDescribeClustersRequest() (request *DescribeClustersRequest) {
 func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
     response = &DescribeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusters
@@ -6085,8 +6818,9 @@ func NewDescribeECMInstancesRequest() (request *DescribeECMInstancesRequest) {
 func NewDescribeECMInstancesResponse() (response *DescribeECMInstancesResponse) {
     response = &DescribeECMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeECMInstances
@@ -6155,8 +6889,9 @@ func NewDescribeEKSClusterCredentialRequest() (request *DescribeEKSClusterCreden
 func NewDescribeEKSClusterCredentialResponse() (response *DescribeEKSClusterCredentialResponse) {
     response = &DescribeEKSClusterCredentialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSClusterCredential
@@ -6227,8 +6962,9 @@ func NewDescribeEKSClustersRequest() (request *DescribeEKSClustersRequest) {
 func NewDescribeEKSClustersResponse() (response *DescribeEKSClustersResponse) {
     response = &DescribeEKSClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSClusters
@@ -6299,8 +7035,9 @@ func NewDescribeEKSContainerInstanceEventRequest() (request *DescribeEKSContaine
 func NewDescribeEKSContainerInstanceEventResponse() (response *DescribeEKSContainerInstanceEventResponse) {
     response = &DescribeEKSContainerInstanceEventResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstanceEvent
@@ -6361,8 +7098,9 @@ func NewDescribeEKSContainerInstanceRegionsRequest() (request *DescribeEKSContai
 func NewDescribeEKSContainerInstanceRegionsResponse() (response *DescribeEKSContainerInstanceRegionsResponse) {
     response = &DescribeEKSContainerInstanceRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstanceRegions
@@ -6421,8 +7159,9 @@ func NewDescribeEKSContainerInstancesRequest() (request *DescribeEKSContainerIns
 func NewDescribeEKSContainerInstancesResponse() (response *DescribeEKSContainerInstancesResponse) {
     response = &DescribeEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEKSContainerInstances
@@ -6477,8 +7216,9 @@ func NewDescribeEdgeAvailableExtraArgsRequest() (request *DescribeEdgeAvailableE
 func NewDescribeEdgeAvailableExtraArgsResponse() (response *DescribeEdgeAvailableExtraArgsResponse) {
     response = &DescribeEdgeAvailableExtraArgsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeAvailableExtraArgs
@@ -6527,8 +7267,9 @@ func NewDescribeEdgeCVMInstancesRequest() (request *DescribeEdgeCVMInstancesRequ
 func NewDescribeEdgeCVMInstancesResponse() (response *DescribeEdgeCVMInstancesResponse) {
     response = &DescribeEdgeCVMInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeCVMInstances
@@ -6597,8 +7338,9 @@ func NewDescribeEdgeClusterExtraArgsRequest() (request *DescribeEdgeClusterExtra
 func NewDescribeEdgeClusterExtraArgsResponse() (response *DescribeEdgeClusterExtraArgsResponse) {
     response = &DescribeEdgeClusterExtraArgsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterExtraArgs
@@ -6657,8 +7399,9 @@ func NewDescribeEdgeClusterInstancesRequest() (request *DescribeEdgeClusterInsta
 func NewDescribeEdgeClusterInstancesResponse() (response *DescribeEdgeClusterInstancesResponse) {
     response = &DescribeEdgeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterInstances
@@ -6727,8 +7470,9 @@ func NewDescribeEdgeClusterUpgradeInfoRequest() (request *DescribeEdgeClusterUpg
 func NewDescribeEdgeClusterUpgradeInfoResponse() (response *DescribeEdgeClusterUpgradeInfoResponse) {
     response = &DescribeEdgeClusterUpgradeInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeClusterUpgradeInfo
@@ -6779,12 +7523,13 @@ func NewDescribeEdgeLogSwitchesRequest() (request *DescribeEdgeLogSwitchesReques
 func NewDescribeEdgeLogSwitchesResponse() (response *DescribeEdgeLogSwitchesResponse) {
     response = &DescribeEdgeLogSwitchesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEdgeLogSwitches
-// 获取事件、审计和日志的状态接口
+// 获取事件、审计和日志的状态
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6799,7 +7544,7 @@ func (c *Client) DescribeEdgeLogSwitches(request *DescribeEdgeLogSwitchesRequest
 }
 
 // DescribeEdgeLogSwitches
-// 获取事件、审计和日志的状态接口
+// 获取事件、审计和日志的状态
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -6839,8 +7584,9 @@ func NewDescribeEksContainerInstanceLogRequest() (request *DescribeEksContainerI
 func NewDescribeEksContainerInstanceLogResponse() (response *DescribeEksContainerInstanceLogResponse) {
     response = &DescribeEksContainerInstanceLogResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEksContainerInstanceLog
@@ -6899,8 +7645,9 @@ func NewDescribeEnableVpcCniProgressRequest() (request *DescribeEnableVpcCniProg
 func NewDescribeEnableVpcCniProgressResponse() (response *DescribeEnableVpcCniProgressResponse) {
     response = &DescribeEnableVpcCniProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEnableVpcCniProgress
@@ -6937,6 +7684,59 @@ func (c *Client) DescribeEnableVpcCniProgressWithContext(ctx context.Context, re
     return
 }
 
+func NewDescribeEncryptionStatusRequest() (request *DescribeEncryptionStatusRequest) {
+    request = &DescribeEncryptionStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeEncryptionStatus")
+    
+    
+    return
+}
+
+func NewDescribeEncryptionStatusResponse() (response *DescribeEncryptionStatusResponse) {
+    response = &DescribeEncryptionStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeEncryptionStatus
+// 查询etcd数据是否进行加密
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeEncryptionStatus(request *DescribeEncryptionStatusRequest) (response *DescribeEncryptionStatusResponse, err error) {
+    return c.DescribeEncryptionStatusWithContext(context.Background(), request)
+}
+
+// DescribeEncryptionStatus
+// 查询etcd数据是否进行加密
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeEncryptionStatusWithContext(ctx context.Context, request *DescribeEncryptionStatusRequest) (response *DescribeEncryptionStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeEncryptionStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeEncryptionStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeEncryptionStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeExistedInstancesRequest() (request *DescribeExistedInstancesRequest) {
     request = &DescribeExistedInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6951,8 +7751,9 @@ func NewDescribeExistedInstancesRequest() (request *DescribeExistedInstancesRequ
 func NewDescribeExistedInstancesResponse() (response *DescribeExistedInstancesResponse) {
     response = &DescribeExistedInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExistedInstances
@@ -7067,8 +7868,9 @@ func NewDescribeExternalClusterSpecRequest() (request *DescribeExternalClusterSp
 func NewDescribeExternalClusterSpecResponse() (response *DescribeExternalClusterSpecResponse) {
     response = &DescribeExternalClusterSpecResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExternalClusterSpec
@@ -7129,6 +7931,120 @@ func (c *Client) DescribeExternalClusterSpecWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeExternalNodeSupportConfigRequest() (request *DescribeExternalNodeSupportConfigRequest) {
+    request = &DescribeExternalNodeSupportConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeExternalNodeSupportConfig")
+    
+    
+    return
+}
+
+func NewDescribeExternalNodeSupportConfigResponse() (response *DescribeExternalNodeSupportConfigResponse) {
+    response = &DescribeExternalNodeSupportConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeExternalNodeSupportConfig
+// 查看开启第三方节点池配置信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CLUSTERSTATE = "InternalError.ClusterState"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
+func (c *Client) DescribeExternalNodeSupportConfig(request *DescribeExternalNodeSupportConfigRequest) (response *DescribeExternalNodeSupportConfigResponse, err error) {
+    return c.DescribeExternalNodeSupportConfigWithContext(context.Background(), request)
+}
+
+// DescribeExternalNodeSupportConfig
+// 查看开启第三方节点池配置信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR_CLUSTERSTATE = "InternalError.ClusterState"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+//  UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
+func (c *Client) DescribeExternalNodeSupportConfigWithContext(ctx context.Context, request *DescribeExternalNodeSupportConfigRequest) (response *DescribeExternalNodeSupportConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeExternalNodeSupportConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeExternalNodeSupportConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeExternalNodeSupportConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeIPAMDRequest() (request *DescribeIPAMDRequest) {
+    request = &DescribeIPAMDRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeIPAMD")
+    
+    
+    return
+}
+
+func NewDescribeIPAMDResponse() (response *DescribeIPAMDResponse) {
+    response = &DescribeIPAMDResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeIPAMD
+// 获取eniipamd组件信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeIPAMD(request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
+    return c.DescribeIPAMDWithContext(context.Background(), request)
+}
+
+// DescribeIPAMD
+// 获取eniipamd组件信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_ENABLEVPCCNIFAILED = "FailedOperation.EnableVPCCNIFailed"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeIPAMDWithContext(ctx context.Context, request *DescribeIPAMDRequest) (response *DescribeIPAMDResponse, err error) {
+    if request == nil {
+        request = NewDescribeIPAMDRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIPAMD require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIPAMDResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeImageCachesRequest() (request *DescribeImageCachesRequest) {
     request = &DescribeImageCachesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7143,8 +8059,9 @@ func NewDescribeImageCachesRequest() (request *DescribeImageCachesRequest) {
 func NewDescribeImageCachesResponse() (response *DescribeImageCachesResponse) {
     response = &DescribeImageCachesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImageCaches
@@ -7193,8 +8110,9 @@ func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
     response = &DescribeImagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImages
@@ -7263,6 +8181,226 @@ func (c *Client) DescribeImagesWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeLogSwitchesRequest() (request *DescribeLogSwitchesRequest) {
+    request = &DescribeLogSwitchesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeLogSwitches")
+    
+    
+    return
+}
+
+func NewDescribeLogSwitchesResponse() (response *DescribeLogSwitchesResponse) {
+    response = &DescribeLogSwitchesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeLogSwitches
+// 查询集群日志（审计、事件、普通日志）开关列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeLogSwitches(request *DescribeLogSwitchesRequest) (response *DescribeLogSwitchesResponse, err error) {
+    return c.DescribeLogSwitchesWithContext(context.Background(), request)
+}
+
+// DescribeLogSwitches
+// 查询集群日志（审计、事件、普通日志）开关列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_KUBERNETESCLIENTBUILDERROR = "InternalError.KubernetesClientBuildError"
+//  INTERNALERROR_KUBERNETESGETOPERATIONERROR = "InternalError.KubernetesGetOperationError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribeLogSwitchesWithContext(ctx context.Context, request *DescribeLogSwitchesRequest) (response *DescribeLogSwitchesResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogSwitchesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogSwitches require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogSwitchesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePodDeductionRateRequest() (request *DescribePodDeductionRateRequest) {
+    request = &DescribePodDeductionRateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribePodDeductionRate")
+    
+    
+    return
+}
+
+func NewDescribePodDeductionRateResponse() (response *DescribePodDeductionRateResponse) {
+    response = &DescribePodDeductionRateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePodDeductionRate
+// 查询各个规格的 Pod 的抵扣率
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodDeductionRate(request *DescribePodDeductionRateRequest) (response *DescribePodDeductionRateResponse, err error) {
+    return c.DescribePodDeductionRateWithContext(context.Background(), request)
+}
+
+// DescribePodDeductionRate
+// 查询各个规格的 Pod 的抵扣率
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodDeductionRateWithContext(ctx context.Context, request *DescribePodDeductionRateRequest) (response *DescribePodDeductionRateResponse, err error) {
+    if request == nil {
+        request = NewDescribePodDeductionRateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePodDeductionRate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePodDeductionRateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePodsBySpecRequest() (request *DescribePodsBySpecRequest) {
+    request = &DescribePodsBySpecRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribePodsBySpec")
+    
+    
+    return
+}
+
+func NewDescribePodsBySpecResponse() (response *DescribePodsBySpecResponse) {
+    response = &DescribePodsBySpecResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePodsBySpec
+// 查询可以用预留券抵扣的 Pod 信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodsBySpec(request *DescribePodsBySpecRequest) (response *DescribePodsBySpecResponse, err error) {
+    return c.DescribePodsBySpecWithContext(context.Background(), request)
+}
+
+// DescribePodsBySpec
+// 查询可以用预留券抵扣的 Pod 信息。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) DescribePodsBySpecWithContext(ctx context.Context, request *DescribePodsBySpecRequest) (response *DescribePodsBySpecResponse, err error) {
+    if request == nil {
+        request = NewDescribePodsBySpecRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePodsBySpec require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePodsBySpecResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePostNodeResourcesRequest() (request *DescribePostNodeResourcesRequest) {
+    request = &DescribePostNodeResourcesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribePostNodeResources")
+    
+    
+    return
+}
+
+func NewDescribePostNodeResourcesResponse() (response *DescribePostNodeResourcesResponse) {
+    response = &DescribePostNodeResourcesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePostNodeResources
+// 包括 Pod 资源统计和绑定的预留券资源统计。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+func (c *Client) DescribePostNodeResources(request *DescribePostNodeResourcesRequest) (response *DescribePostNodeResourcesResponse, err error) {
+    return c.DescribePostNodeResourcesWithContext(context.Background(), request)
+}
+
+// DescribePostNodeResources
+// 包括 Pod 资源统计和绑定的预留券资源统计。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+func (c *Client) DescribePostNodeResourcesWithContext(ctx context.Context, request *DescribePostNodeResourcesRequest) (response *DescribePostNodeResourcesResponse, err error) {
+    if request == nil {
+        request = NewDescribePostNodeResourcesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePostNodeResources require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePostNodeResourcesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribePrometheusAgentInstancesRequest() (request *DescribePrometheusAgentInstancesRequest) {
     request = &DescribePrometheusAgentInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -7277,14 +8415,16 @@ func NewDescribePrometheusAgentInstancesRequest() (request *DescribePrometheusAg
 func NewDescribePrometheusAgentInstancesResponse() (response *DescribePrometheusAgentInstancesResponse) {
     response = &DescribePrometheusAgentInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgentInstances
 // 获取关联目标集群的实例列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -7297,6 +8437,7 @@ func (c *Client) DescribePrometheusAgentInstances(request *DescribePrometheusAge
 // 获取关联目标集群的实例列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -7331,8 +8472,9 @@ func NewDescribePrometheusAgentsRequest() (request *DescribePrometheusAgentsRequ
 func NewDescribePrometheusAgentsResponse() (response *DescribePrometheusAgentsResponse) {
     response = &DescribePrometheusAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgents
@@ -7387,8 +8529,9 @@ func NewDescribePrometheusAlertHistoryRequest() (request *DescribePrometheusAler
 func NewDescribePrometheusAlertHistoryResponse() (response *DescribePrometheusAlertHistoryResponse) {
     response = &DescribePrometheusAlertHistoryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertHistory
@@ -7396,6 +8539,7 @@ func NewDescribePrometheusAlertHistoryResponse() (response *DescribePrometheusAl
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -7414,6 +8558,7 @@ func (c *Client) DescribePrometheusAlertHistory(request *DescribePrometheusAlert
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -7453,8 +8598,9 @@ func NewDescribePrometheusAlertPolicyRequest() (request *DescribePrometheusAlert
 func NewDescribePrometheusAlertPolicyResponse() (response *DescribePrometheusAlertPolicyResponse) {
     response = &DescribePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertPolicy
@@ -7472,6 +8618,7 @@ func NewDescribePrometheusAlertPolicyResponse() (response *DescribePrometheusAle
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusAlertPolicy(request *DescribePrometheusAlertPolicyRequest) (response *DescribePrometheusAlertPolicyResponse, err error) {
     return c.DescribePrometheusAlertPolicyWithContext(context.Background(), request)
@@ -7492,6 +8639,7 @@ func (c *Client) DescribePrometheusAlertPolicy(request *DescribePrometheusAlertP
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusAlertPolicyWithContext(ctx context.Context, request *DescribePrometheusAlertPolicyRequest) (response *DescribePrometheusAlertPolicyResponse, err error) {
     if request == nil {
@@ -7523,8 +8671,9 @@ func NewDescribePrometheusAlertRuleRequest() (request *DescribePrometheusAlertRu
 func NewDescribePrometheusAlertRuleResponse() (response *DescribePrometheusAlertRuleResponse) {
     response = &DescribePrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertRule
@@ -7532,6 +8681,7 @@ func NewDescribePrometheusAlertRuleResponse() (response *DescribePrometheusAlert
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -7550,6 +8700,7 @@ func (c *Client) DescribePrometheusAlertRule(request *DescribePrometheusAlertRul
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBRECORDNOTFOUND = "InternalError.DbRecordNotFound"
@@ -7589,8 +8740,9 @@ func NewDescribePrometheusClusterAgentsRequest() (request *DescribePrometheusClu
 func NewDescribePrometheusClusterAgentsResponse() (response *DescribePrometheusClusterAgentsResponse) {
     response = &DescribePrometheusClusterAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusClusterAgents
@@ -7599,6 +8751,8 @@ func NewDescribePrometheusClusterAgentsResponse() (response *DescribePrometheusC
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -7613,6 +8767,8 @@ func (c *Client) DescribePrometheusClusterAgents(request *DescribePrometheusClus
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -7647,8 +8803,9 @@ func NewDescribePrometheusConfigRequest() (request *DescribePrometheusConfigRequ
 func NewDescribePrometheusConfigResponse() (response *DescribePrometheusConfigResponse) {
     response = &DescribePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusConfig
@@ -7721,8 +8878,9 @@ func NewDescribePrometheusGlobalConfigRequest() (request *DescribePrometheusGlob
 func NewDescribePrometheusGlobalConfigResponse() (response *DescribePrometheusGlobalConfigResponse) {
     response = &DescribePrometheusGlobalConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalConfig
@@ -7736,6 +8894,8 @@ func NewDescribePrometheusGlobalConfigResponse() (response *DescribePrometheusGl
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusGlobalConfig(request *DescribePrometheusGlobalConfigRequest) (response *DescribePrometheusGlobalConfigResponse, err error) {
     return c.DescribePrometheusGlobalConfigWithContext(context.Background(), request)
@@ -7752,6 +8912,8 @@ func (c *Client) DescribePrometheusGlobalConfig(request *DescribePrometheusGloba
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusGlobalConfigWithContext(ctx context.Context, request *DescribePrometheusGlobalConfigRequest) (response *DescribePrometheusGlobalConfigResponse, err error) {
     if request == nil {
@@ -7783,8 +8945,9 @@ func NewDescribePrometheusGlobalNotificationRequest() (request *DescribePromethe
 func NewDescribePrometheusGlobalNotificationResponse() (response *DescribePrometheusGlobalNotificationResponse) {
     response = &DescribePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalNotification
@@ -7797,6 +8960,7 @@ func NewDescribePrometheusGlobalNotificationResponse() (response *DescribePromet
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusGlobalNotification(request *DescribePrometheusGlobalNotificationRequest) (response *DescribePrometheusGlobalNotificationResponse, err error) {
     return c.DescribePrometheusGlobalNotificationWithContext(context.Background(), request)
@@ -7812,6 +8976,7 @@ func (c *Client) DescribePrometheusGlobalNotification(request *DescribePrometheu
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusGlobalNotificationWithContext(ctx context.Context, request *DescribePrometheusGlobalNotificationRequest) (response *DescribePrometheusGlobalNotificationResponse, err error) {
     if request == nil {
@@ -7843,8 +9008,9 @@ func NewDescribePrometheusInstanceRequest() (request *DescribePrometheusInstance
 func NewDescribePrometheusInstanceResponse() (response *DescribePrometheusInstanceResponse) {
     response = &DescribePrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstance
@@ -7913,8 +9079,9 @@ func NewDescribePrometheusInstanceInitStatusRequest() (request *DescribePromethe
 func NewDescribePrometheusInstanceInitStatusResponse() (response *DescribePrometheusInstanceInitStatusResponse) {
     response = &DescribePrometheusInstanceInitStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstanceInitStatus
@@ -7975,8 +9142,9 @@ func NewDescribePrometheusInstancesOverviewRequest() (request *DescribePrometheu
 func NewDescribePrometheusInstancesOverviewResponse() (response *DescribePrometheusInstancesOverviewResponse) {
     response = &DescribePrometheusInstancesOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstancesOverview
@@ -8033,8 +9201,9 @@ func NewDescribePrometheusOverviewsRequest() (request *DescribePrometheusOvervie
 func NewDescribePrometheusOverviewsResponse() (response *DescribePrometheusOverviewsResponse) {
     response = &DescribePrometheusOverviewsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusOverviews
@@ -8091,8 +9260,9 @@ func NewDescribePrometheusRecordRulesRequest() (request *DescribePrometheusRecor
 func NewDescribePrometheusRecordRulesResponse() (response *DescribePrometheusRecordRulesResponse) {
     response = &DescribePrometheusRecordRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusRecordRules
@@ -8109,6 +9279,7 @@ func NewDescribePrometheusRecordRulesResponse() (response *DescribePrometheusRec
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusRecordRules(request *DescribePrometheusRecordRulesRequest) (response *DescribePrometheusRecordRulesResponse, err error) {
     return c.DescribePrometheusRecordRulesWithContext(context.Background(), request)
@@ -8128,6 +9299,7 @@ func (c *Client) DescribePrometheusRecordRules(request *DescribePrometheusRecord
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusRecordRulesWithContext(ctx context.Context, request *DescribePrometheusRecordRulesRequest) (response *DescribePrometheusRecordRulesResponse, err error) {
     if request == nil {
@@ -8159,8 +9331,9 @@ func NewDescribePrometheusTargetsRequest() (request *DescribePrometheusTargetsRe
 func NewDescribePrometheusTargetsResponse() (response *DescribePrometheusTargetsResponse) {
     response = &DescribePrometheusTargetsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTargets
@@ -8225,8 +9398,9 @@ func NewDescribePrometheusTempRequest() (request *DescribePrometheusTempRequest)
 func NewDescribePrometheusTempResponse() (response *DescribePrometheusTempResponse) {
     response = &DescribePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemp
@@ -8281,8 +9455,9 @@ func NewDescribePrometheusTempSyncRequest() (request *DescribePrometheusTempSync
 func NewDescribePrometheusTempSyncResponse() (response *DescribePrometheusTempSyncResponse) {
     response = &DescribePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTempSync
@@ -8339,8 +9514,9 @@ func NewDescribePrometheusTemplateSyncRequest() (request *DescribePrometheusTemp
 func NewDescribePrometheusTemplateSyncResponse() (response *DescribePrometheusTemplateSyncResponse) {
     response = &DescribePrometheusTemplateSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemplateSync
@@ -8395,8 +9571,9 @@ func NewDescribePrometheusTemplatesRequest() (request *DescribePrometheusTemplat
 func NewDescribePrometheusTemplatesResponse() (response *DescribePrometheusTemplatesResponse) {
     response = &DescribePrometheusTemplatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemplates
@@ -8437,6 +9614,63 @@ func (c *Client) DescribePrometheusTemplatesWithContext(ctx context.Context, req
     return
 }
 
+func NewDescribeRIUtilizationDetailRequest() (request *DescribeRIUtilizationDetailRequest) {
+    request = &DescribeRIUtilizationDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeRIUtilizationDetail")
+    
+    
+    return
+}
+
+func NewDescribeRIUtilizationDetailResponse() (response *DescribeRIUtilizationDetailResponse) {
+    response = &DescribeRIUtilizationDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeRIUtilizationDetail
+// 预留实例用量查询
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeRIUtilizationDetail(request *DescribeRIUtilizationDetailRequest) (response *DescribeRIUtilizationDetailResponse, err error) {
+    return c.DescribeRIUtilizationDetailWithContext(context.Background(), request)
+}
+
+// DescribeRIUtilizationDetail
+// 预留实例用量查询
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeRIUtilizationDetailWithContext(ctx context.Context, request *DescribeRIUtilizationDetailRequest) (response *DescribeRIUtilizationDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeRIUtilizationDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRIUtilizationDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRIUtilizationDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
     request = &DescribeRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8451,8 +9685,9 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
     response = &DescribeRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRegions
@@ -8519,6 +9754,65 @@ func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeReservedInstancesRequest() (request *DescribeReservedInstancesRequest) {
+    request = &DescribeReservedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeReservedInstances")
+    
+    
+    return
+}
+
+func NewDescribeReservedInstancesResponse() (response *DescribeReservedInstancesResponse) {
+    response = &DescribeReservedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeReservedInstances
+// 查询预留实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeReservedInstances(request *DescribeReservedInstancesRequest) (response *DescribeReservedInstancesResponse, err error) {
+    return c.DescribeReservedInstancesWithContext(context.Background(), request)
+}
+
+// DescribeReservedInstances
+// 查询预留实例列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) DescribeReservedInstancesWithContext(ctx context.Context, request *DescribeReservedInstancesRequest) (response *DescribeReservedInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribeReservedInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeReservedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeReservedInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeResourceUsageRequest() (request *DescribeResourceUsageRequest) {
     request = &DescribeResourceUsageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -8533,14 +9827,16 @@ func NewDescribeResourceUsageRequest() (request *DescribeResourceUsageRequest) {
 func NewDescribeResourceUsageResponse() (response *DescribeResourceUsageResponse) {
     response = &DescribeResourceUsageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceUsage
 // 获取集群资源使用量
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
@@ -8555,6 +9851,7 @@ func (c *Client) DescribeResourceUsage(request *DescribeResourceUsageRequest) (r
 // 获取集群资源使用量
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
@@ -8591,8 +9888,9 @@ func NewDescribeRouteTableConflictsRequest() (request *DescribeRouteTableConflic
 func NewDescribeRouteTableConflictsResponse() (response *DescribeRouteTableConflictsResponse) {
     response = &DescribeRouteTableConflictsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRouteTableConflicts
@@ -8655,8 +9953,9 @@ func NewDescribeTKEEdgeClusterCredentialRequest() (request *DescribeTKEEdgeClust
 func NewDescribeTKEEdgeClusterCredentialResponse() (response *DescribeTKEEdgeClusterCredentialResponse) {
     response = &DescribeTKEEdgeClusterCredentialResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusterCredential
@@ -8723,8 +10022,9 @@ func NewDescribeTKEEdgeClusterStatusRequest() (request *DescribeTKEEdgeClusterSt
 func NewDescribeTKEEdgeClusterStatusResponse() (response *DescribeTKEEdgeClusterStatusResponse) {
     response = &DescribeTKEEdgeClusterStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusterStatus
@@ -8791,8 +10091,9 @@ func NewDescribeTKEEdgeClustersRequest() (request *DescribeTKEEdgeClustersReques
 func NewDescribeTKEEdgeClustersResponse() (response *DescribeTKEEdgeClustersResponse) {
     response = &DescribeTKEEdgeClustersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeClusters
@@ -8801,6 +10102,7 @@ func NewDescribeTKEEdgeClustersResponse() (response *DescribeTKEEdgeClustersResp
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -8820,6 +10122,7 @@ func (c *Client) DescribeTKEEdgeClusters(request *DescribeTKEEdgeClustersRequest
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -8859,8 +10162,9 @@ func NewDescribeTKEEdgeExternalKubeconfigRequest() (request *DescribeTKEEdgeExte
 func NewDescribeTKEEdgeExternalKubeconfigResponse() (response *DescribeTKEEdgeExternalKubeconfigResponse) {
     response = &DescribeTKEEdgeExternalKubeconfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeExternalKubeconfig
@@ -8927,8 +10231,9 @@ func NewDescribeTKEEdgeScriptRequest() (request *DescribeTKEEdgeScriptRequest) {
 func NewDescribeTKEEdgeScriptResponse() (response *DescribeTKEEdgeScriptResponse) {
     response = &DescribeTKEEdgeScriptResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeTKEEdgeScript
@@ -8995,8 +10300,9 @@ func NewDescribeVersionsRequest() (request *DescribeVersionsRequest) {
 func NewDescribeVersionsResponse() (response *DescribeVersionsResponse) {
     response = &DescribeVersionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVersions
@@ -9081,8 +10387,9 @@ func NewDescribeVpcCniPodLimitsRequest() (request *DescribeVpcCniPodLimitsReques
 func NewDescribeVpcCniPodLimitsResponse() (response *DescribeVpcCniPodLimitsResponse) {
     response = &DescribeVpcCniPodLimitsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeVpcCniPodLimits
@@ -9153,8 +10460,9 @@ func NewDisableClusterAuditRequest() (request *DisableClusterAuditRequest) {
 func NewDisableClusterAuditResponse() (response *DisableClusterAuditResponse) {
     response = &DisableClusterAuditResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableClusterAudit
@@ -9207,8 +10515,9 @@ func NewDisableClusterDeletionProtectionRequest() (request *DisableClusterDeleti
 func NewDisableClusterDeletionProtectionResponse() (response *DisableClusterDeletionProtectionResponse) {
     response = &DisableClusterDeletionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableClusterDeletionProtection
@@ -9245,6 +10554,59 @@ func (c *Client) DisableClusterDeletionProtectionWithContext(ctx context.Context
     return
 }
 
+func NewDisableEncryptionProtectionRequest() (request *DisableEncryptionProtectionRequest) {
+    request = &DisableEncryptionProtectionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DisableEncryptionProtection")
+    
+    
+    return
+}
+
+func NewDisableEncryptionProtectionResponse() (response *DisableEncryptionProtectionResponse) {
+    response = &DisableEncryptionProtectionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DisableEncryptionProtection
+// 关闭加密信息保护
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DisableEncryptionProtection(request *DisableEncryptionProtectionRequest) (response *DisableEncryptionProtectionResponse, err error) {
+    return c.DisableEncryptionProtectionWithContext(context.Background(), request)
+}
+
+// DisableEncryptionProtection
+// 关闭加密信息保护
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DisableEncryptionProtectionWithContext(ctx context.Context, request *DisableEncryptionProtectionRequest) (response *DisableEncryptionProtectionResponse, err error) {
+    if request == nil {
+        request = NewDisableEncryptionProtectionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisableEncryptionProtection require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDisableEncryptionProtectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDisableEventPersistenceRequest() (request *DisableEventPersistenceRequest) {
     request = &DisableEventPersistenceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9259,8 +10621,9 @@ func NewDisableEventPersistenceRequest() (request *DisableEventPersistenceReques
 func NewDisableEventPersistenceResponse() (response *DisableEventPersistenceResponse) {
     response = &DisableEventPersistenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableEventPersistence
@@ -9269,7 +10632,10 @@ func NewDisableEventPersistenceResponse() (response *DisableEventPersistenceResp
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+//  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESPATCHOPERATIONERROR = "FailedOperation.KubernetesPatchOperationError"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -9288,7 +10654,10 @@ func (c *Client) DisableEventPersistence(request *DisableEventPersistenceRequest
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
+//  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSTOPIC = "FailedOperation.GetClsTopic"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  FAILEDOPERATION_KUBERNETESPATCHOPERATIONERROR = "FailedOperation.KubernetesPatchOperationError"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -9327,8 +10696,9 @@ func NewDisableVpcCniNetworkTypeRequest() (request *DisableVpcCniNetworkTypeRequ
 func NewDisableVpcCniNetworkTypeResponse() (response *DisableVpcCniNetworkTypeResponse) {
     response = &DisableVpcCniNetworkTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisableVpcCniNetworkType
@@ -9336,6 +10706,7 @@ func NewDisableVpcCniNetworkTypeResponse() (response *DisableVpcCniNetworkTypeRe
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DISABLEVPCCNIFAILED = "FailedOperation.DisableVPCCNIFailed"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR_KUBECLIENTCREATE = "InternalError.KubeClientCreate"
 //  INTERNALERROR_KUBECOMMON = "InternalError.KubeCommon"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -9350,6 +10721,7 @@ func (c *Client) DisableVpcCniNetworkType(request *DisableVpcCniNetworkTypeReque
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DISABLEVPCCNIFAILED = "FailedOperation.DisableVPCCNIFailed"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR_KUBECLIENTCREATE = "InternalError.KubeClientCreate"
 //  INTERNALERROR_KUBECOMMON = "InternalError.KubeCommon"
 //  INTERNALERROR_UNEXCEPTEDINTERNAL = "InternalError.UnexceptedInternal"
@@ -9385,25 +10757,28 @@ func NewDrainClusterVirtualNodeRequest() (request *DrainClusterVirtualNodeReques
 func NewDrainClusterVirtualNodeResponse() (response *DrainClusterVirtualNodeResponse) {
     response = &DrainClusterVirtualNodeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DrainClusterVirtualNode
-// 驱逐虚拟节点
+// 驱逐超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DrainClusterVirtualNode(request *DrainClusterVirtualNodeRequest) (response *DrainClusterVirtualNodeResponse, err error) {
     return c.DrainClusterVirtualNodeWithContext(context.Background(), request)
 }
 
 // DrainClusterVirtualNode
-// 驱逐虚拟节点
+// 驱逐超级节点
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DrainClusterVirtualNodeWithContext(ctx context.Context, request *DrainClusterVirtualNodeRequest) (response *DrainClusterVirtualNodeResponse, err error) {
     if request == nil {
@@ -9435,8 +10810,9 @@ func NewEnableClusterAuditRequest() (request *EnableClusterAuditRequest) {
 func NewEnableClusterAuditResponse() (response *EnableClusterAuditResponse) {
     response = &EnableClusterAuditResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableClusterAudit
@@ -9444,10 +10820,12 @@ func NewEnableClusterAuditResponse() (response *EnableClusterAuditResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSCLIENT = "FailedOperation.CreateClsClient"
 //  FAILEDOPERATION_CREATECLSINDEX = "FailedOperation.CreateClsIndex"
 //  FAILEDOPERATION_CREATECLSMACHINEGROUP = "FailedOperation.CreateClsMachineGroup"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSMACHINEGROUP = "FailedOperation.GetClsMachineGroup"
 //  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
@@ -9466,10 +10844,12 @@ func (c *Client) EnableClusterAudit(request *EnableClusterAuditRequest) (respons
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_CREATECLSCLIENT = "FailedOperation.CreateClsClient"
 //  FAILEDOPERATION_CREATECLSINDEX = "FailedOperation.CreateClsIndex"
 //  FAILEDOPERATION_CREATECLSMACHINEGROUP = "FailedOperation.CreateClsMachineGroup"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSMACHINEGROUP = "FailedOperation.GetClsMachineGroup"
 //  FAILEDOPERATION_KUBERNETESCREATEOPERATIONERROR = "FailedOperation.KubernetesCreateOperationError"
 //  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
@@ -9509,8 +10889,9 @@ func NewEnableClusterDeletionProtectionRequest() (request *EnableClusterDeletion
 func NewEnableClusterDeletionProtectionResponse() (response *EnableClusterDeletionProtectionResponse) {
     response = &EnableClusterDeletionProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableClusterDeletionProtection
@@ -9547,6 +10928,61 @@ func (c *Client) EnableClusterDeletionProtectionWithContext(ctx context.Context,
     return
 }
 
+func NewEnableEncryptionProtectionRequest() (request *EnableEncryptionProtectionRequest) {
+    request = &EnableEncryptionProtectionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "EnableEncryptionProtection")
+    
+    
+    return
+}
+
+func NewEnableEncryptionProtectionResponse() (response *EnableEncryptionProtectionResponse) {
+    response = &EnableEncryptionProtectionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// EnableEncryptionProtection
+// 开启加密数据保护
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) EnableEncryptionProtection(request *EnableEncryptionProtectionRequest) (response *EnableEncryptionProtectionResponse, err error) {
+    return c.EnableEncryptionProtectionWithContext(context.Background(), request)
+}
+
+// EnableEncryptionProtection
+// 开启加密数据保护
+//
+// 可能返回的错误码:
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) EnableEncryptionProtectionWithContext(ctx context.Context, request *EnableEncryptionProtectionRequest) (response *EnableEncryptionProtectionResponse, err error) {
+    if request == nil {
+        request = NewEnableEncryptionProtectionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("EnableEncryptionProtection require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewEnableEncryptionProtectionResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewEnableEventPersistenceRequest() (request *EnableEventPersistenceRequest) {
     request = &EnableEventPersistenceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -9561,8 +10997,9 @@ func NewEnableEventPersistenceRequest() (request *EnableEventPersistenceRequest)
 func NewEnableEventPersistenceResponse() (response *EnableEventPersistenceResponse) {
     response = &EnableEventPersistenceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableEventPersistence
@@ -9578,6 +11015,7 @@ func NewEnableEventPersistenceResponse() (response *EnableEventPersistenceRespon
 //  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
 //  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
@@ -9610,6 +11048,7 @@ func (c *Client) EnableEventPersistence(request *EnableEventPersistenceRequest) 
 //  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
 //  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
@@ -9655,8 +11094,9 @@ func NewEnableVpcCniNetworkTypeRequest() (request *EnableVpcCniNetworkTypeReques
 func NewEnableVpcCniNetworkTypeResponse() (response *EnableVpcCniNetworkTypeResponse) {
     response = &EnableVpcCniNetworkTypeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableVpcCniNetworkType
@@ -9711,8 +11151,9 @@ func NewForwardApplicationRequestV3Request() (request *ForwardApplicationRequest
 func NewForwardApplicationRequestV3Response() (response *ForwardApplicationRequestV3Response) {
     response = &ForwardApplicationRequestV3Response{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForwardApplicationRequestV3
@@ -9787,8 +11228,9 @@ func NewForwardTKEEdgeApplicationRequestV3Request() (request *ForwardTKEEdgeAppl
 func NewForwardTKEEdgeApplicationRequestV3Response() (response *ForwardTKEEdgeApplicationRequestV3Response) {
     response = &ForwardTKEEdgeApplicationRequestV3Response{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ForwardTKEEdgeApplicationRequestV3
@@ -9859,8 +11301,9 @@ func NewGetClusterLevelPriceRequest() (request *GetClusterLevelPriceRequest) {
 func NewGetClusterLevelPriceResponse() (response *GetClusterLevelPriceResponse) {
     response = &GetClusterLevelPriceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetClusterLevelPrice
@@ -9909,8 +11352,9 @@ func NewGetMostSuitableImageCacheRequest() (request *GetMostSuitableImageCacheRe
 func NewGetMostSuitableImageCacheResponse() (response *GetMostSuitableImageCacheResponse) {
     response = &GetMostSuitableImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetMostSuitableImageCache
@@ -9961,8 +11405,9 @@ func NewGetTkeAppChartListRequest() (request *GetTkeAppChartListRequest) {
 func NewGetTkeAppChartListResponse() (response *GetTkeAppChartListResponse) {
     response = &GetTkeAppChartListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetTkeAppChartList
@@ -10011,12 +11456,13 @@ func NewGetUpgradeInstanceProgressRequest() (request *GetUpgradeInstanceProgress
 func NewGetUpgradeInstanceProgressResponse() (response *GetUpgradeInstanceProgressResponse) {
     response = &GetUpgradeInstanceProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetUpgradeInstanceProgress
-// 获得节点升级当前的进度 
+// 获得节点升级当前的进度
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
@@ -10027,7 +11473,7 @@ func (c *Client) GetUpgradeInstanceProgress(request *GetUpgradeInstanceProgressR
 }
 
 // GetUpgradeInstanceProgress
-// 获得节点升级当前的进度 
+// 获得节点升级当前的进度
 //
 // 可能返回的错误码:
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
@@ -10049,6 +11495,59 @@ func (c *Client) GetUpgradeInstanceProgressWithContext(ctx context.Context, requ
     return
 }
 
+func NewInstallAddonRequest() (request *InstallAddonRequest) {
+    request = &InstallAddonRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "InstallAddon")
+    
+    
+    return
+}
+
+func NewInstallAddonResponse() (response *InstallAddonResponse) {
+    response = &InstallAddonResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// InstallAddon
+// 为目标集群安装一个addon
+//
+// 可能返回的错误码:
+//  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) InstallAddon(request *InstallAddonRequest) (response *InstallAddonResponse, err error) {
+    return c.InstallAddonWithContext(context.Background(), request)
+}
+
+// InstallAddon
+// 为目标集群安装一个addon
+//
+// 可能返回的错误码:
+//  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) InstallAddonWithContext(ctx context.Context, request *InstallAddonRequest) (response *InstallAddonResponse, err error) {
+    if request == nil {
+        request = NewInstallAddonRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InstallAddon require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInstallAddonResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewInstallEdgeLogAgentRequest() (request *InstallEdgeLogAgentRequest) {
     request = &InstallEdgeLogAgentRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10063,8 +11562,9 @@ func NewInstallEdgeLogAgentRequest() (request *InstallEdgeLogAgentRequest) {
 func NewInstallEdgeLogAgentResponse() (response *InstallEdgeLogAgentResponse) {
     response = &InstallEdgeLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallEdgeLogAgent
@@ -10117,8 +11617,9 @@ func NewInstallLogAgentRequest() (request *InstallLogAgentRequest) {
 func NewInstallLogAgentResponse() (response *InstallLogAgentResponse) {
     response = &InstallLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallLogAgent
@@ -10159,6 +11660,116 @@ func (c *Client) InstallLogAgentWithContext(ctx context.Context, request *Instal
     return
 }
 
+func NewListClusterInspectionResultsRequest() (request *ListClusterInspectionResultsRequest) {
+    request = &ListClusterInspectionResultsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ListClusterInspectionResults")
+    
+    
+    return
+}
+
+func NewListClusterInspectionResultsResponse() (response *ListClusterInspectionResultsResponse) {
+    response = &ListClusterInspectionResultsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListClusterInspectionResults
+// 查询指定集群的巡检结果信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ListClusterInspectionResults(request *ListClusterInspectionResultsRequest) (response *ListClusterInspectionResultsResponse, err error) {
+    return c.ListClusterInspectionResultsWithContext(context.Background(), request)
+}
+
+// ListClusterInspectionResults
+// 查询指定集群的巡检结果信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ListClusterInspectionResultsWithContext(ctx context.Context, request *ListClusterInspectionResultsRequest) (response *ListClusterInspectionResultsResponse, err error) {
+    if request == nil {
+        request = NewListClusterInspectionResultsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListClusterInspectionResults require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListClusterInspectionResultsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewListClusterInspectionResultsItemsRequest() (request *ListClusterInspectionResultsItemsRequest) {
+    request = &ListClusterInspectionResultsItemsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ListClusterInspectionResultsItems")
+    
+    
+    return
+}
+
+func NewListClusterInspectionResultsItemsResponse() (response *ListClusterInspectionResultsItemsResponse) {
+    response = &ListClusterInspectionResultsItemsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ListClusterInspectionResultsItems
+// 查询集群巡检结果历史列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ListClusterInspectionResultsItems(request *ListClusterInspectionResultsItemsRequest) (response *ListClusterInspectionResultsItemsResponse, err error) {
+    return c.ListClusterInspectionResultsItemsWithContext(context.Background(), request)
+}
+
+// ListClusterInspectionResultsItems
+// 查询集群巡检结果历史列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBERNETESCLIENTBUILDERROR = "FailedOperation.KubernetesClientBuildError"
+//  FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+func (c *Client) ListClusterInspectionResultsItemsWithContext(ctx context.Context, request *ListClusterInspectionResultsItemsRequest) (response *ListClusterInspectionResultsItemsResponse, err error) {
+    if request == nil {
+        request = NewListClusterInspectionResultsItemsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ListClusterInspectionResultsItems require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewListClusterInspectionResultsItemsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyClusterAsGroupAttributeRequest() (request *ModifyClusterAsGroupAttributeRequest) {
     request = &ModifyClusterAsGroupAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -10173,8 +11784,9 @@ func NewModifyClusterAsGroupAttributeRequest() (request *ModifyClusterAsGroupAtt
 func NewModifyClusterAsGroupAttributeResponse() (response *ModifyClusterAsGroupAttributeResponse) {
     response = &ModifyClusterAsGroupAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAsGroupAttribute
@@ -10182,6 +11794,7 @@ func NewModifyClusterAsGroupAttributeResponse() (response *ModifyClusterAsGroupA
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -10212,6 +11825,7 @@ func (c *Client) ModifyClusterAsGroupAttribute(request *ModifyClusterAsGroupAttr
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_PARAM = "FailedOperation.Param"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
@@ -10263,8 +11877,9 @@ func NewModifyClusterAsGroupOptionAttributeRequest() (request *ModifyClusterAsGr
 func NewModifyClusterAsGroupOptionAttributeResponse() (response *ModifyClusterAsGroupOptionAttributeResponse) {
     response = &ModifyClusterAsGroupOptionAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAsGroupOptionAttribute
@@ -10347,8 +11962,9 @@ func NewModifyClusterAttributeRequest() (request *ModifyClusterAttributeRequest)
 func NewModifyClusterAttributeResponse() (response *ModifyClusterAttributeResponse) {
     response = &ModifyClusterAttributeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAttribute
@@ -10429,8 +12045,9 @@ func NewModifyClusterAuthenticationOptionsRequest() (request *ModifyClusterAuthe
 func NewModifyClusterAuthenticationOptionsResponse() (response *ModifyClusterAuthenticationOptionsResponse) {
     response = &ModifyClusterAuthenticationOptionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterAuthenticationOptions
@@ -10487,8 +12104,9 @@ func NewModifyClusterEndpointSPRequest() (request *ModifyClusterEndpointSPReques
 func NewModifyClusterEndpointSPResponse() (response *ModifyClusterEndpointSPResponse) {
     response = &ModifyClusterEndpointSPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterEndpointSP
@@ -10496,6 +12114,8 @@ func NewModifyClusterEndpointSPResponse() (response *ModifyClusterEndpointSPResp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_LBCOMMON = "FailedOperation.LbCommon"
 //  FAILEDOPERATION_VPCUNEXPECTEDERROR = "FailedOperation.VPCUnexpectedError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
@@ -10524,6 +12144,8 @@ func (c *Client) ModifyClusterEndpointSP(request *ModifyClusterEndpointSPRequest
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_KUBERNETESGETOPERATIONERROR = "FailedOperation.KubernetesGetOperationError"
+//  FAILEDOPERATION_LBCOMMON = "FailedOperation.LbCommon"
 //  FAILEDOPERATION_VPCUNEXPECTEDERROR = "FailedOperation.VPCUnexpectedError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMNOAUTH = "InternalError.CamNoAuth"
@@ -10573,8 +12195,9 @@ func NewModifyClusterNodePoolRequest() (request *ModifyClusterNodePoolRequest) {
 func NewModifyClusterNodePoolResponse() (response *ModifyClusterNodePoolResponse) {
     response = &ModifyClusterNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterNodePool
@@ -10582,6 +12205,7 @@ func NewModifyClusterNodePoolResponse() (response *ModifyClusterNodePoolResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -10598,6 +12222,7 @@ func (c *Client) ModifyClusterNodePool(request *ModifyClusterNodePoolRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -10635,29 +12260,32 @@ func NewModifyClusterVirtualNodePoolRequest() (request *ModifyClusterVirtualNode
 func NewModifyClusterVirtualNodePoolResponse() (response *ModifyClusterVirtualNodePoolResponse) {
     response = &ModifyClusterVirtualNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyClusterVirtualNodePool
-// 修改虚拟节点池
+// 修改超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
 func (c *Client) ModifyClusterVirtualNodePool(request *ModifyClusterVirtualNodePoolRequest) (response *ModifyClusterVirtualNodePoolResponse, err error) {
     return c.ModifyClusterVirtualNodePoolWithContext(context.Background(), request)
 }
 
 // ModifyClusterVirtualNodePool
-// 修改虚拟节点池
+// 修改超级节点池
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
 func (c *Client) ModifyClusterVirtualNodePoolWithContext(ctx context.Context, request *ModifyClusterVirtualNodePoolRequest) (response *ModifyClusterVirtualNodePoolResponse, err error) {
     if request == nil {
@@ -10689,8 +12317,9 @@ func NewModifyNodePoolDesiredCapacityAboutAsgRequest() (request *ModifyNodePoolD
 func NewModifyNodePoolDesiredCapacityAboutAsgResponse() (response *ModifyNodePoolDesiredCapacityAboutAsgResponse) {
     response = &ModifyNodePoolDesiredCapacityAboutAsgResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNodePoolDesiredCapacityAboutAsg
@@ -10759,8 +12388,9 @@ func NewModifyNodePoolInstanceTypesRequest() (request *ModifyNodePoolInstanceTyp
 func NewModifyNodePoolInstanceTypesResponse() (response *ModifyNodePoolInstanceTypesResponse) {
     response = &ModifyNodePoolInstanceTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNodePoolInstanceTypes
@@ -10778,6 +12408,7 @@ func NewModifyNodePoolInstanceTypesResponse() (response *ModifyNodePoolInstanceT
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyNodePoolInstanceTypes(request *ModifyNodePoolInstanceTypesRequest) (response *ModifyNodePoolInstanceTypesResponse, err error) {
     return c.ModifyNodePoolInstanceTypesWithContext(context.Background(), request)
 }
@@ -10797,6 +12428,7 @@ func (c *Client) ModifyNodePoolInstanceTypes(request *ModifyNodePoolInstanceType
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyNodePoolInstanceTypesWithContext(ctx context.Context, request *ModifyNodePoolInstanceTypesRequest) (response *ModifyNodePoolInstanceTypesResponse, err error) {
     if request == nil {
         request = NewModifyNodePoolInstanceTypesRequest()
@@ -10827,8 +12459,9 @@ func NewModifyPrometheusAgentExternalLabelsRequest() (request *ModifyPrometheusA
 func NewModifyPrometheusAgentExternalLabelsResponse() (response *ModifyPrometheusAgentExternalLabelsResponse) {
     response = &ModifyPrometheusAgentExternalLabelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAgentExternalLabels
@@ -10836,6 +12469,7 @@ func NewModifyPrometheusAgentExternalLabelsResponse() (response *ModifyPrometheu
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -10852,6 +12486,7 @@ func (c *Client) ModifyPrometheusAgentExternalLabels(request *ModifyPrometheusAg
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
+//  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -10889,8 +12524,9 @@ func NewModifyPrometheusAlertPolicyRequest() (request *ModifyPrometheusAlertPoli
 func NewModifyPrometheusAlertPolicyResponse() (response *ModifyPrometheusAlertPolicyResponse) {
     response = &ModifyPrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAlertPolicy
@@ -10906,6 +12542,7 @@ func NewModifyPrometheusAlertPolicyResponse() (response *ModifyPrometheusAlertPo
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusAlertPolicy(request *ModifyPrometheusAlertPolicyRequest) (response *ModifyPrometheusAlertPolicyResponse, err error) {
     return c.ModifyPrometheusAlertPolicyWithContext(context.Background(), request)
 }
@@ -10923,6 +12560,7 @@ func (c *Client) ModifyPrometheusAlertPolicy(request *ModifyPrometheusAlertPolic
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusAlertPolicyWithContext(ctx context.Context, request *ModifyPrometheusAlertPolicyRequest) (response *ModifyPrometheusAlertPolicyResponse, err error) {
     if request == nil {
         request = NewModifyPrometheusAlertPolicyRequest()
@@ -10953,12 +12591,13 @@ func NewModifyPrometheusAlertRuleRequest() (request *ModifyPrometheusAlertRuleRe
 func NewModifyPrometheusAlertRuleResponse() (response *ModifyPrometheusAlertRuleResponse) {
     response = &ModifyPrometheusAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAlertRule
-// 修改告警规则 
+// 修改告警规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -10974,7 +12613,7 @@ func (c *Client) ModifyPrometheusAlertRule(request *ModifyPrometheusAlertRuleReq
 }
 
 // ModifyPrometheusAlertRule
-// 修改告警规则 
+// 修改告警规则
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
@@ -11015,14 +12654,17 @@ func NewModifyPrometheusConfigRequest() (request *ModifyPrometheusConfigRequest)
 func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigResponse) {
     response = &ModifyPrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusConfig
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -11039,6 +12681,8 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -11077,8 +12721,9 @@ func NewModifyPrometheusGlobalNotificationRequest() (request *ModifyPrometheusGl
 func NewModifyPrometheusGlobalNotificationResponse() (response *ModifyPrometheusGlobalNotificationResponse) {
     response = &ModifyPrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusGlobalNotification
@@ -11087,7 +12732,9 @@ func NewModifyPrometheusGlobalNotificationResponse() (response *ModifyPrometheus
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusGlobalNotification(request *ModifyPrometheusGlobalNotificationRequest) (response *ModifyPrometheusGlobalNotificationResponse, err error) {
     return c.ModifyPrometheusGlobalNotificationWithContext(context.Background(), request)
@@ -11099,7 +12746,9 @@ func (c *Client) ModifyPrometheusGlobalNotification(request *ModifyPrometheusGlo
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusGlobalNotificationWithContext(ctx context.Context, request *ModifyPrometheusGlobalNotificationRequest) (response *ModifyPrometheusGlobalNotificationResponse, err error) {
     if request == nil {
@@ -11131,18 +12780,21 @@ func NewModifyPrometheusRecordRuleYamlRequest() (request *ModifyPrometheusRecord
 func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusRecordRuleYamlResponse) {
     response = &ModifyPrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusRecordRuleYaml
 // 通过yaml的方式修改Prometheus聚合实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11154,10 +12806,12 @@ func (c *Client) ModifyPrometheusRecordRuleYaml(request *ModifyPrometheusRecordR
 // 通过yaml的方式修改Prometheus聚合实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11191,8 +12845,9 @@ func NewModifyPrometheusTempRequest() (request *ModifyPrometheusTempRequest) {
 func NewModifyPrometheusTempResponse() (response *ModifyPrometheusTempResponse) {
     response = &ModifyPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusTemp
@@ -11249,8 +12904,9 @@ func NewModifyPrometheusTemplateRequest() (request *ModifyPrometheusTemplateRequ
 func NewModifyPrometheusTemplateResponse() (response *ModifyPrometheusTemplateResponse) {
     response = &ModifyPrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusTemplate
@@ -11293,6 +12949,59 @@ func (c *Client) ModifyPrometheusTemplateWithContext(ctx context.Context, reques
     return
 }
 
+func NewModifyReservedInstanceScopeRequest() (request *ModifyReservedInstanceScopeRequest) {
+    request = &ModifyReservedInstanceScopeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "ModifyReservedInstanceScope")
+    
+    
+    return
+}
+
+func NewModifyReservedInstanceScopeResponse() (response *ModifyReservedInstanceScopeResponse) {
+    response = &ModifyReservedInstanceScopeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// ModifyReservedInstanceScope
+// 修改预留券的抵扣范围，抵扣范围取值：Region、Zone 和 Node。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) ModifyReservedInstanceScope(request *ModifyReservedInstanceScopeRequest) (response *ModifyReservedInstanceScopeResponse, err error) {
+    return c.ModifyReservedInstanceScopeWithContext(context.Background(), request)
+}
+
+// ModifyReservedInstanceScope
+// 修改预留券的抵扣范围，抵扣范围取值：Region、Zone 和 Node。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+func (c *Client) ModifyReservedInstanceScopeWithContext(ctx context.Context, request *ModifyReservedInstanceScopeRequest) (response *ModifyReservedInstanceScopeResponse, err error) {
+    if request == nil {
+        request = NewModifyReservedInstanceScopeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyReservedInstanceScope require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyReservedInstanceScopeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRemoveNodeFromNodePoolRequest() (request *RemoveNodeFromNodePoolRequest) {
     request = &RemoveNodeFromNodePoolRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -11307,16 +13016,19 @@ func NewRemoveNodeFromNodePoolRequest() (request *RemoveNodeFromNodePoolRequest)
 func NewRemoveNodeFromNodePoolResponse() (response *RemoveNodeFromNodePoolResponse) {
     response = &RemoveNodeFromNodePoolResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RemoveNodeFromNodePool
 // 移出节点池节点，但保留在集群内
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) RemoveNodeFromNodePool(request *RemoveNodeFromNodePoolRequest) (response *RemoveNodeFromNodePoolResponse, err error) {
     return c.RemoveNodeFromNodePoolWithContext(context.Background(), request)
 }
@@ -11325,8 +13037,10 @@ func (c *Client) RemoveNodeFromNodePool(request *RemoveNodeFromNodePoolRequest) 
 // 移出节点池节点，但保留在集群内
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) RemoveNodeFromNodePoolWithContext(ctx context.Context, request *RemoveNodeFromNodePoolRequest) (response *RemoveNodeFromNodePoolResponse, err error) {
     if request == nil {
         request = NewRemoveNodeFromNodePoolRequest()
@@ -11339,6 +13053,65 @@ func (c *Client) RemoveNodeFromNodePoolWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRemoveNodeFromNodePoolResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenewReservedInstancesRequest() (request *RenewReservedInstancesRequest) {
+    request = &RenewReservedInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "RenewReservedInstances")
+    
+    
+    return
+}
+
+func NewRenewReservedInstancesResponse() (response *RenewReservedInstancesResponse) {
+    response = &RenewReservedInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// RenewReservedInstances
+// 续费时请确保账户余额充足。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
+//  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
+//  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) RenewReservedInstances(request *RenewReservedInstancesRequest) (response *RenewReservedInstancesResponse, err error) {
+    return c.RenewReservedInstancesWithContext(context.Background(), request)
+}
+
+// RenewReservedInstances
+// 续费时请确保账户余额充足。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INSUFFICIENTBALANCE = "InternalError.InsufficientBalance"
+//  INTERNALERROR_NOPAYMENTACCESS = "InternalError.NoPaymentAccess"
+//  INTERNALERROR_NOTVERIFIED = "InternalError.NotVerified"
+//  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_TRADECOMMON = "InternalError.TradeCommon"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+func (c *Client) RenewReservedInstancesWithContext(ctx context.Context, request *RenewReservedInstancesRequest) (response *RenewReservedInstancesResponse, err error) {
+    if request == nil {
+        request = NewRenewReservedInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenewReservedInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenewReservedInstancesResponse()
     err = c.Send(request, response)
     return
 }
@@ -11357,8 +13130,9 @@ func NewRestartEKSContainerInstancesRequest() (request *RestartEKSContainerInsta
 func NewRestartEKSContainerInstancesResponse() (response *RestartEKSContainerInstancesResponse) {
     response = &RestartEKSContainerInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RestartEKSContainerInstances
@@ -11411,8 +13185,9 @@ func NewRollbackClusterReleaseRequest() (request *RollbackClusterReleaseRequest)
 func NewRollbackClusterReleaseResponse() (response *RollbackClusterReleaseResponse) {
     response = &RollbackClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RollbackClusterRelease
@@ -11420,6 +13195,8 @@ func NewRollbackClusterReleaseResponse() (response *RollbackClusterReleaseRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MARKETGETAUTHFAILED = "FailedOperation.MarketGetAuthFailed"
+//  FAILEDOPERATION_MARKETRELEASEOPERATION = "FailedOperation.MarketReleaseOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_MARKETGETAUTHFAILED = "InternalError.MarketGetAuthFailed"
 //  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
@@ -11438,6 +13215,8 @@ func (c *Client) RollbackClusterRelease(request *RollbackClusterReleaseRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_MARKETGETAUTHFAILED = "FailedOperation.MarketGetAuthFailed"
+//  FAILEDOPERATION_MARKETRELEASEOPERATION = "FailedOperation.MarketReleaseOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_MARKETGETAUTHFAILED = "InternalError.MarketGetAuthFailed"
 //  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
@@ -11477,8 +13256,9 @@ func NewRunPrometheusInstanceRequest() (request *RunPrometheusInstanceRequest) {
 func NewRunPrometheusInstanceResponse() (response *RunPrometheusInstanceResponse) {
     response = &RunPrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunPrometheusInstance
@@ -11486,6 +13266,7 @@ func NewRunPrometheusInstanceResponse() (response *RunPrometheusInstanceResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11498,6 +13279,7 @@ func (c *Client) RunPrometheusInstance(request *RunPrometheusInstanceRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11531,8 +13313,9 @@ func NewScaleInClusterMasterRequest() (request *ScaleInClusterMasterRequest) {
 func NewScaleInClusterMasterResponse() (response *ScaleInClusterMasterResponse) {
     response = &ScaleInClusterMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleInClusterMaster
@@ -11581,8 +13364,9 @@ func NewScaleOutClusterMasterRequest() (request *ScaleOutClusterMasterRequest) {
 func NewScaleOutClusterMasterResponse() (response *ScaleOutClusterMasterResponse) {
     response = &ScaleOutClusterMasterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleOutClusterMaster
@@ -11637,14 +13421,16 @@ func NewSetNodePoolNodeProtectionRequest() (request *SetNodePoolNodeProtectionRe
 func NewSetNodePoolNodeProtectionResponse() (response *SetNodePoolNodeProtectionResponse) {
     response = &SetNodePoolNodeProtectionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetNodePoolNodeProtection
 // 仅能设置节点池中处于伸缩组的节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -11655,6 +13441,7 @@ func NewSetNodePoolNodeProtectionResponse() (response *SetNodePoolNodeProtection
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     return c.SetNodePoolNodeProtectionWithContext(context.Background(), request)
 }
@@ -11663,6 +13450,7 @@ func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionReq
 // 仅能设置节点池中处于伸缩组的节点
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ACCOUNTUSERNOTAUTHENTICATED = "InternalError.AccountUserNotAuthenticated"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
@@ -11673,6 +13461,7 @@ func (c *Client) SetNodePoolNodeProtection(request *SetNodePoolNodeProtectionReq
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SetNodePoolNodeProtectionWithContext(ctx context.Context, request *SetNodePoolNodeProtectionRequest) (response *SetNodePoolNodeProtectionResponse, err error) {
     if request == nil {
         request = NewSetNodePoolNodeProtectionRequest()
@@ -11703,14 +13492,16 @@ func NewSyncPrometheusTempRequest() (request *SyncPrometheusTempRequest) {
 func NewSyncPrometheusTempResponse() (response *SyncPrometheusTempResponse) {
     response = &SyncPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPrometheusTemp
 // 同步模板到实例或者集群，针对V2版本实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -11730,6 +13521,7 @@ func (c *Client) SyncPrometheusTemp(request *SyncPrometheusTempRequest) (respons
 // 同步模板到实例或者集群，针对V2版本实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -11771,8 +13563,9 @@ func NewSyncPrometheusTemplateRequest() (request *SyncPrometheusTemplateRequest)
 func NewSyncPrometheusTemplateResponse() (response *SyncPrometheusTemplateResponse) {
     response = &SyncPrometheusTemplateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPrometheusTemplate
@@ -11839,8 +13632,9 @@ func NewUninstallClusterReleaseRequest() (request *UninstallClusterReleaseReques
 func NewUninstallClusterReleaseResponse() (response *UninstallClusterReleaseResponse) {
     response = &UninstallClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallClusterRelease
@@ -11855,6 +13649,7 @@ func NewUninstallClusterReleaseResponse() (response *UninstallClusterReleaseResp
 //  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
 //  INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -11875,6 +13670,7 @@ func (c *Client) UninstallClusterRelease(request *UninstallClusterReleaseRequest
 //  INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
 //  INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -11909,8 +13705,9 @@ func NewUninstallEdgeLogAgentRequest() (request *UninstallEdgeLogAgentRequest) {
 func NewUninstallEdgeLogAgentResponse() (response *UninstallEdgeLogAgentResponse) {
     response = &UninstallEdgeLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallEdgeLogAgent
@@ -11961,8 +13758,9 @@ func NewUninstallLogAgentRequest() (request *UninstallLogAgentRequest) {
 func NewUninstallLogAgentResponse() (response *UninstallLogAgentResponse) {
     response = &UninstallLogAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallLogAgent
@@ -12007,6 +13805,126 @@ func (c *Client) UninstallLogAgentWithContext(ctx context.Context, request *Unin
     return
 }
 
+func NewUpdateAddonRequest() (request *UpdateAddonRequest) {
+    request = &UpdateAddonRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "UpdateAddon")
+    
+    
+    return
+}
+
+func NewUpdateAddonResponse() (response *UpdateAddonResponse) {
+    response = &UpdateAddonResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateAddon
+// 更新一个addon的参数和版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) UpdateAddon(request *UpdateAddonRequest) (response *UpdateAddonResponse, err error) {
+    return c.UpdateAddonWithContext(context.Background(), request)
+}
+
+// UpdateAddon
+// 更新一个addon的参数和版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CLUSTERSTATE = "FailedOperation.ClusterState"
+//  FAILEDOPERATION_DB = "FailedOperation.Db"
+//  FAILEDOPERATION_KUBERNETESDELETEOPERATIONERROR = "FailedOperation.KubernetesDeleteOperationError"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+//  RESOURCEUNAVAILABLE_CLUSTERSTATE = "ResourceUnavailable.ClusterState"
+func (c *Client) UpdateAddonWithContext(ctx context.Context, request *UpdateAddonRequest) (response *UpdateAddonResponse, err error) {
+    if request == nil {
+        request = NewUpdateAddonRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateAddon require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateAddonResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateClusterKubeconfigRequest() (request *UpdateClusterKubeconfigRequest) {
+    request = &UpdateClusterKubeconfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "UpdateClusterKubeconfig")
+    
+    
+    return
+}
+
+func NewUpdateClusterKubeconfigResponse() (response *UpdateClusterKubeconfigResponse) {
+    response = &UpdateClusterKubeconfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// UpdateClusterKubeconfig
+// 对集群的Kubeconfig信息进行更新
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateClusterKubeconfig(request *UpdateClusterKubeconfigRequest) (response *UpdateClusterKubeconfigResponse, err error) {
+    return c.UpdateClusterKubeconfigWithContext(context.Background(), request)
+}
+
+// UpdateClusterKubeconfig
+// 对集群的Kubeconfig信息进行更新
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateClusterKubeconfigWithContext(ctx context.Context, request *UpdateClusterKubeconfigRequest) (response *UpdateClusterKubeconfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateClusterKubeconfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateClusterKubeconfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateClusterKubeconfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUpdateClusterVersionRequest() (request *UpdateClusterVersionRequest) {
     request = &UpdateClusterVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -12021,8 +13939,9 @@ func NewUpdateClusterVersionRequest() (request *UpdateClusterVersionRequest) {
 func NewUpdateClusterVersionResponse() (response *UpdateClusterVersionResponse) {
     response = &UpdateClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateClusterVersion
@@ -12087,8 +14006,9 @@ func NewUpdateEKSClusterRequest() (request *UpdateEKSClusterRequest) {
 func NewUpdateEKSClusterResponse() (response *UpdateEKSClusterResponse) {
     response = &UpdateEKSClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEKSCluster
@@ -12159,8 +14079,9 @@ func NewUpdateEKSContainerInstanceRequest() (request *UpdateEKSContainerInstance
 func NewUpdateEKSContainerInstanceResponse() (response *UpdateEKSContainerInstanceResponse) {
     response = &UpdateEKSContainerInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEKSContainerInstance
@@ -12211,8 +14132,9 @@ func NewUpdateEdgeClusterVersionRequest() (request *UpdateEdgeClusterVersionRequ
 func NewUpdateEdgeClusterVersionResponse() (response *UpdateEdgeClusterVersionResponse) {
     response = &UpdateEdgeClusterVersionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateEdgeClusterVersion
@@ -12277,8 +14199,9 @@ func NewUpdateImageCacheRequest() (request *UpdateImageCacheRequest) {
 func NewUpdateImageCacheResponse() (response *UpdateImageCacheResponse) {
     response = &UpdateImageCacheResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateImageCache
@@ -12327,12 +14250,13 @@ func NewUpdateTKEEdgeClusterRequest() (request *UpdateTKEEdgeClusterRequest) {
 func NewUpdateTKEEdgeClusterResponse() (response *UpdateTKEEdgeClusterResponse) {
     response = &UpdateTKEEdgeClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateTKEEdgeCluster
-// 修改边缘计算集群名称等属性 
+// 修改边缘计算集群名称等属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -12352,7 +14276,7 @@ func (c *Client) UpdateTKEEdgeCluster(request *UpdateTKEEdgeClusterRequest) (res
 }
 
 // UpdateTKEEdgeCluster
-// 修改边缘计算集群名称等属性 
+// 修改边缘计算集群名称等属性
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -12397,8 +14321,9 @@ func NewUpgradeClusterInstancesRequest() (request *UpgradeClusterInstancesReques
 func NewUpgradeClusterInstancesResponse() (response *UpgradeClusterInstancesResponse) {
     response = &UpgradeClusterInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeClusterInstances
@@ -12406,6 +14331,7 @@ func NewUpgradeClusterInstancesResponse() (response *UpgradeClusterInstancesResp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKALREADYRUNNING = "FailedOperation.TaskAlreadyRunning"
+//  FAILEDOPERATION_TASKLIFESTATEERROR = "FailedOperation.TaskLifeStateError"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TASKALREADYRUNNING = "InternalError.TaskAlreadyRunning"
@@ -12424,6 +14350,7 @@ func (c *Client) UpgradeClusterInstances(request *UpgradeClusterInstancesRequest
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_TASKALREADYRUNNING = "FailedOperation.TaskAlreadyRunning"
+//  FAILEDOPERATION_TASKLIFESTATEERROR = "FailedOperation.TaskLifeStateError"
 //  INTERNALERROR_CLUSTERNOTFOUND = "InternalError.ClusterNotFound"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_TASKALREADYRUNNING = "InternalError.TaskAlreadyRunning"
@@ -12463,8 +14390,9 @@ func NewUpgradeClusterReleaseRequest() (request *UpgradeClusterReleaseRequest) {
 func NewUpgradeClusterReleaseResponse() (response *UpgradeClusterReleaseResponse) {
     response = &UpgradeClusterReleaseResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeClusterRelease
@@ -12483,6 +14411,7 @@ func NewUpgradeClusterReleaseResponse() (response *UpgradeClusterReleaseResponse
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) UpgradeClusterRelease(request *UpgradeClusterReleaseRequest) (response *UpgradeClusterReleaseResponse, err error) {
     return c.UpgradeClusterReleaseWithContext(context.Background(), request)
@@ -12504,6 +14433,7 @@ func (c *Client) UpgradeClusterRelease(request *UpgradeClusterReleaseRequest) (r
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNAUTHORIZEDOPERATION_CAMNOAUTH = "UnauthorizedOperation.CamNoAuth"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) UpgradeClusterReleaseWithContext(ctx context.Context, request *UpgradeClusterReleaseRequest) (response *UpgradeClusterReleaseResponse, err error) {
     if request == nil {

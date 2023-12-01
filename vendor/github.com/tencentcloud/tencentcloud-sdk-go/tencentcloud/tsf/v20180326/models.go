@@ -198,6 +198,9 @@ type AddInstancesRequestParams struct {
 
 	// 云主机导入方式，虚拟机集群必填，容器集群不填写此字段，R：重装TSF系统镜像，M：手动安装agent
 	InstanceImportMode *string `json:"InstanceImportMode,omitempty" name:"InstanceImportMode"`
+
+	// 安全组id
+	SecurityGroupIds *string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 type AddInstancesRequest struct {
@@ -226,6 +229,9 @@ type AddInstancesRequest struct {
 
 	// 云主机导入方式，虚拟机集群必填，容器集群不填写此字段，R：重装TSF系统镜像，M：手动安装agent
 	InstanceImportMode *string `json:"InstanceImportMode,omitempty" name:"InstanceImportMode"`
+
+	// 安全组id
+	SecurityGroupIds *string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 func (r *AddInstancesRequest) ToJsonString() string {
@@ -248,6 +254,7 @@ func (r *AddInstancesRequest) FromJsonString(s string) error {
 	delete(f, "KeyId")
 	delete(f, "SgId")
 	delete(f, "InstanceImportMode")
+	delete(f, "SecurityGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddInstancesRequest has unknown keys!", "")
 	}
@@ -389,6 +396,22 @@ type ApiDetailInfo struct {
 	// API路径匹配类型。normal：普通API；wildcard：通配API。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiMatchType *string `json:"ApiMatchType,omitempty" name:"ApiMatchType"`
+
+	// RPC 额外信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RpcExt *string `json:"RpcExt,omitempty" name:"RpcExt"`
+
+	// 部署组id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GatewayDeployGroupId *string `json:"GatewayDeployGroupId,omitempty" name:"GatewayDeployGroupId"`
+
+	// md5
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Md5 *string `json:"Md5,omitempty" name:"Md5"`
+
+	// RPC 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RpcType *string `json:"RpcType,omitempty" name:"RpcType"`
 }
 
 type ApiDetailResponse struct {
@@ -681,6 +704,10 @@ type ApplicationForPage struct {
 	// 服务配置信息列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceConfigList []*ServiceConfig `json:"ServiceConfigList,omitempty" name:"ServiceConfigList"`
+
+	// IgnoreCreateImageRepository
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IgnoreCreateImageRepository *bool `json:"IgnoreCreateImageRepository,omitempty" name:"IgnoreCreateImageRepository"`
 }
 
 // Predefined struct for user
@@ -1684,6 +1711,10 @@ type ContainGroup struct {
 	// KubeInjectEnable值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KubeInjectEnable *bool `json:"KubeInjectEnable,omitempty" name:"KubeInjectEnable"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedTime *string `json:"UpdatedTime,omitempty" name:"UpdatedTime"`
 }
 
 type ContainGroupResult struct {
@@ -2031,6 +2062,61 @@ type ContainerGroupDetail struct {
 	// 部署组健康检查设置
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HealthCheckSettings *HealthCheckSettings `json:"HealthCheckSettings,omitempty" name:"HealthCheckSettings"`
+
+	// 允许PlainYamlDeploy
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AllowPlainYamlDeploy *bool `json:"AllowPlainYamlDeploy,omitempty" name:"AllowPlainYamlDeploy"`
+
+	// 是否不等于ServiceConfig
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsNotEqualServiceConfig *bool `json:"IsNotEqualServiceConfig,omitempty" name:"IsNotEqualServiceConfig"`
+
+	// 仓库名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
+
+	// 别名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Alias *string `json:"Alias,omitempty" name:"Alias"`
+}
+
+type ContainerGroupOther struct {
+	// 实例总数
+	InstanceNum *int64 `json:"InstanceNum,omitempty" name:"InstanceNum"`
+
+	// 已启动实例总数
+	CurrentNum *int64 `json:"CurrentNum,omitempty" name:"CurrentNum"`
+
+	// 负载均衡ip
+	LbIp *string `json:"LbIp,omitempty" name:"LbIp"`
+
+	// Service ip
+	ClusterIp *string `json:"ClusterIp,omitempty" name:"ClusterIp"`
+
+	// 服务状态，请参考后面的的状态定义
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 服务状态，请参考后面的的状态定义
+	Message *string `json:"Message,omitempty" name:"Message"`
+
+	// 环境变量
+	Envs []*Env `json:"Envs,omitempty" name:"Envs"`
+
+	// Service NodePort
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodePort *uint64 `json:"NodePort,omitempty" name:"NodePort"`
+
+	// 子网ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 健康检查相关字段
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthCheckSettings *HealthCheckSettings `json:"HealthCheckSettings,omitempty" name:"HealthCheckSettings"`
+
+	// 服务配置信息是否匹配
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsNotEqualServiceConfig *bool `json:"IsNotEqualServiceConfig,omitempty" name:"IsNotEqualServiceConfig"`
 }
 
 // Predefined struct for user
@@ -2408,6 +2494,78 @@ func (r *CreateApiRateLimitRuleResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateApiRateLimitRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateApiRateLimitRuleWithDetailRespRequestParams struct {
+	// Api Id
+	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
+
+	// qps值
+	MaxQps *uint64 `json:"MaxQps,omitempty" name:"MaxQps"`
+
+	// 开启/禁用，enabled/disabled, 不传默认开启
+	UsableStatus *string `json:"UsableStatus,omitempty" name:"UsableStatus"`
+}
+
+type CreateApiRateLimitRuleWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// Api Id
+	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
+
+	// qps值
+	MaxQps *uint64 `json:"MaxQps,omitempty" name:"MaxQps"`
+
+	// 开启/禁用，enabled/disabled, 不传默认开启
+	UsableStatus *string `json:"UsableStatus,omitempty" name:"UsableStatus"`
+}
+
+func (r *CreateApiRateLimitRuleWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateApiRateLimitRuleWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ApiId")
+	delete(f, "MaxQps")
+	delete(f, "UsableStatus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateApiRateLimitRuleWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateApiRateLimitRuleWithDetailRespResponseParams struct {
+	// 创建的规则 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *ApiRateLimitRule `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateApiRateLimitRuleWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateApiRateLimitRuleWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreateApiRateLimitRuleWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateApiRateLimitRuleWithDetailRespResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2895,6 +3053,199 @@ func (r *CreateConfigTemplateResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateConfigTemplateWithDetailRespRequestParams struct {
+	// 配置模板名称
+	ConfigTemplateName *string `json:"ConfigTemplateName,omitempty" name:"ConfigTemplateName"`
+
+	// 配置模板对应的微服务框架
+	ConfigTemplateType *string `json:"ConfigTemplateType,omitempty" name:"ConfigTemplateType"`
+
+	// 配置模板数据
+	ConfigTemplateValue *string `json:"ConfigTemplateValue,omitempty" name:"ConfigTemplateValue"`
+
+	// 配置模板描述
+	ConfigTemplateDesc *string `json:"ConfigTemplateDesc,omitempty" name:"ConfigTemplateDesc"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+type CreateConfigTemplateWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置模板名称
+	ConfigTemplateName *string `json:"ConfigTemplateName,omitempty" name:"ConfigTemplateName"`
+
+	// 配置模板对应的微服务框架
+	ConfigTemplateType *string `json:"ConfigTemplateType,omitempty" name:"ConfigTemplateType"`
+
+	// 配置模板数据
+	ConfigTemplateValue *string `json:"ConfigTemplateValue,omitempty" name:"ConfigTemplateValue"`
+
+	// 配置模板描述
+	ConfigTemplateDesc *string `json:"ConfigTemplateDesc,omitempty" name:"ConfigTemplateDesc"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+func (r *CreateConfigTemplateWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigTemplateWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigTemplateName")
+	delete(f, "ConfigTemplateType")
+	delete(f, "ConfigTemplateValue")
+	delete(f, "ConfigTemplateDesc")
+	delete(f, "ProgramIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConfigTemplateWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigTemplateWithDetailRespResponseParams struct {
+	// 创建成功，返回 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *ConfigTemplate `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateConfigTemplateWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateConfigTemplateWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreateConfigTemplateWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigTemplateWithDetailRespResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigWithDetailRespRequestParams struct {
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项值
+	ConfigValue *string `json:"ConfigValue,omitempty" name:"ConfigValue"`
+
+	// 应用ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项值类型
+	ConfigType *string `json:"ConfigType,omitempty" name:"ConfigType"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+type CreateConfigWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项值
+	ConfigValue *string `json:"ConfigValue,omitempty" name:"ConfigValue"`
+
+	// 应用ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项值类型
+	ConfigType *string `json:"ConfigType,omitempty" name:"ConfigType"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+func (r *CreateConfigWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigName")
+	delete(f, "ConfigVersion")
+	delete(f, "ConfigValue")
+	delete(f, "ApplicationId")
+	delete(f, "ConfigVersionDesc")
+	delete(f, "ConfigType")
+	delete(f, "EncodeWithBase64")
+	delete(f, "ProgramIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateConfigWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateConfigWithDetailRespResponseParams struct {
+	// 配置项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *Config `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateConfigWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateConfigWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreateConfigWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateConfigWithDetailRespResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateContainGroupRequestParams struct {
 	// 分组所属应用ID
 	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
@@ -3237,6 +3588,134 @@ func (r *CreateFileConfigResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateFileConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateFileConfigWithDetailRespRequestParams struct {
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项文件名
+	ConfigFileName *string `json:"ConfigFileName,omitempty" name:"ConfigFileName"`
+
+	// 配置项文件内容（原始内容编码需要 utf-8 格式，如果 ConfigFileCode 为 gbk，后台会进行转换）
+	ConfigFileValue *string `json:"ConfigFileValue,omitempty" name:"ConfigFileValue"`
+
+	// 配置项关联应用ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 发布路径
+	ConfigFilePath *string `json:"ConfigFilePath,omitempty" name:"ConfigFilePath"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项文件编码，utf-8 或 gbk。注：如果选择 gbk，需要新版本 tsf-consul-template （公有云虚拟机需要使用 1.32 tsf-agent，容器需要从文档中获取最新的 tsf-consul-template-docker.tar.gz）的支持
+	ConfigFileCode *string `json:"ConfigFileCode,omitempty" name:"ConfigFileCode"`
+
+	// 后置命令
+	ConfigPostCmd *string `json:"ConfigPostCmd,omitempty" name:"ConfigPostCmd"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+type CreateFileConfigWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项文件名
+	ConfigFileName *string `json:"ConfigFileName,omitempty" name:"ConfigFileName"`
+
+	// 配置项文件内容（原始内容编码需要 utf-8 格式，如果 ConfigFileCode 为 gbk，后台会进行转换）
+	ConfigFileValue *string `json:"ConfigFileValue,omitempty" name:"ConfigFileValue"`
+
+	// 配置项关联应用ID
+	ApplicationId *string `json:"ApplicationId,omitempty" name:"ApplicationId"`
+
+	// 发布路径
+	ConfigFilePath *string `json:"ConfigFilePath,omitempty" name:"ConfigFilePath"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项文件编码，utf-8 或 gbk。注：如果选择 gbk，需要新版本 tsf-consul-template （公有云虚拟机需要使用 1.32 tsf-agent，容器需要从文档中获取最新的 tsf-consul-template-docker.tar.gz）的支持
+	ConfigFileCode *string `json:"ConfigFileCode,omitempty" name:"ConfigFileCode"`
+
+	// 后置命令
+	ConfigPostCmd *string `json:"ConfigPostCmd,omitempty" name:"ConfigPostCmd"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+func (r *CreateFileConfigWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFileConfigWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigName")
+	delete(f, "ConfigVersion")
+	delete(f, "ConfigFileName")
+	delete(f, "ConfigFileValue")
+	delete(f, "ApplicationId")
+	delete(f, "ConfigFilePath")
+	delete(f, "ConfigVersionDesc")
+	delete(f, "ConfigFileCode")
+	delete(f, "ConfigPostCmd")
+	delete(f, "EncodeWithBase64")
+	delete(f, "ProgramIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateFileConfigWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateFileConfigWithDetailRespResponseParams struct {
+	// 文件配置项
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *FileConfig `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateFileConfigWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateFileConfigWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreateFileConfigWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFileConfigWithDetailRespResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3899,6 +4378,64 @@ func (r *CreatePathRewritesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreatePathRewritesWithDetailRespRequestParams struct {
+	// 路径重写列表
+	PathRewrites []*PathRewriteCreateObject `json:"PathRewrites,omitempty" name:"PathRewrites"`
+}
+
+type CreatePathRewritesWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 路径重写列表
+	PathRewrites []*PathRewriteCreateObject `json:"PathRewrites,omitempty" name:"PathRewrites"`
+}
+
+func (r *CreatePathRewritesWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePathRewritesWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "PathRewrites")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePathRewritesWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePathRewritesWithDetailRespResponseParams struct {
+	// 返回路径重写规则 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result []*string `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreatePathRewritesWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreatePathRewritesWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreatePathRewritesWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePathRewritesWithDetailRespResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreatePublicConfigRequestParams struct {
 	// 配置项名称
 	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
@@ -3995,6 +4532,106 @@ func (r *CreatePublicConfigResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreatePublicConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePublicConfigWithDetailRespRequestParams struct {
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项值，总是接收yaml格式的内容
+	ConfigValue *string `json:"ConfigValue,omitempty" name:"ConfigValue"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项类型
+	ConfigType *string `json:"ConfigType,omitempty" name:"ConfigType"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+type CreatePublicConfigWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置项名称
+	ConfigName *string `json:"ConfigName,omitempty" name:"ConfigName"`
+
+	// 配置项版本
+	ConfigVersion *string `json:"ConfigVersion,omitempty" name:"ConfigVersion"`
+
+	// 配置项值，总是接收yaml格式的内容
+	ConfigValue *string `json:"ConfigValue,omitempty" name:"ConfigValue"`
+
+	// 配置项版本描述
+	ConfigVersionDesc *string `json:"ConfigVersionDesc,omitempty" name:"ConfigVersionDesc"`
+
+	// 配置项类型
+	ConfigType *string `json:"ConfigType,omitempty" name:"ConfigType"`
+
+	// Base64编码的配置项
+	EncodeWithBase64 *bool `json:"EncodeWithBase64,omitempty" name:"EncodeWithBase64"`
+
+	// 无
+	ProgramIdList []*string `json:"ProgramIdList,omitempty" name:"ProgramIdList"`
+}
+
+func (r *CreatePublicConfigWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePublicConfigWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigName")
+	delete(f, "ConfigVersion")
+	delete(f, "ConfigValue")
+	delete(f, "ConfigVersionDesc")
+	delete(f, "ConfigType")
+	delete(f, "EncodeWithBase64")
+	delete(f, "ProgramIdList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreatePublicConfigWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreatePublicConfigWithDetailRespResponseParams struct {
+	// 公共配置项 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *Config `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreatePublicConfigWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreatePublicConfigWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreatePublicConfigWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreatePublicConfigWithDetailRespResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4341,6 +4978,71 @@ func (r *CreateTaskResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateUnitNamespacesRequestParams struct {
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 单元化命名空间对象列表
+	UnitNamespaceList []*UnitNamespace `json:"UnitNamespaceList,omitempty" name:"UnitNamespaceList"`
+}
+
+type CreateUnitNamespacesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 单元化命名空间对象列表
+	UnitNamespaceList []*UnitNamespace `json:"UnitNamespaceList,omitempty" name:"UnitNamespaceList"`
+}
+
+func (r *CreateUnitNamespacesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUnitNamespacesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayInstanceId")
+	delete(f, "UnitNamespaceList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUnitNamespacesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateUnitNamespacesResponseParams struct {
+	// 是否成功
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateUnitNamespacesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateUnitNamespacesResponseParams `json:"Response"`
+}
+
+func (r *CreateUnitNamespacesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUnitNamespacesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateUnitRuleRequestParams struct {
 	// 网关实体ID
 	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
@@ -4419,6 +5121,85 @@ func (r *CreateUnitRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateUnitRuleWithDetailRespRequestParams struct {
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 规则名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 规则描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 规则项列表
+	UnitRuleItemList []*UnitRuleItem `json:"UnitRuleItemList,omitempty" name:"UnitRuleItemList"`
+}
+
+type CreateUnitRuleWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 规则名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 规则描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 规则项列表
+	UnitRuleItemList []*UnitRuleItem `json:"UnitRuleItemList,omitempty" name:"UnitRuleItemList"`
+}
+
+func (r *CreateUnitRuleWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUnitRuleWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayInstanceId")
+	delete(f, "Name")
+	delete(f, "Description")
+	delete(f, "UnitRuleItemList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateUnitRuleWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateUnitRuleWithDetailRespResponseParams struct {
+	// 单元化规则 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *UnitRule `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateUnitRuleWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateUnitRuleWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *CreateUnitRuleWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateUnitRuleWithDetailRespResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CurvePoint struct {
 	// 当前坐标 X轴的值 当前是日期格式:"yyyy-MM-dd HH:mm:ss"
 	Label *string `json:"Label,omitempty" name:"Label"`
@@ -4484,6 +5265,63 @@ func (r *DeleteApiGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteApiGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteApiRateLimitRuleRequestParams struct {
+	// 限流规则ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+}
+
+type DeleteApiRateLimitRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 限流规则ID
+	RuleId *string `json:"RuleId,omitempty" name:"RuleId"`
+}
+
+func (r *DeleteApiRateLimitRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteApiRateLimitRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RuleId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteApiRateLimitRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteApiRateLimitRuleResponseParams struct {
+	// 是否成功
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteApiRateLimitRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteApiRateLimitRuleResponseParams `json:"Response"`
+}
+
+func (r *DeleteApiRateLimitRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteApiRateLimitRuleResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4783,6 +5621,128 @@ func (r *DeleteContainerGroupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteContainerGroupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFileConfigRequestParams struct {
+	// 文件配置项ID
+	ConfigId *string `json:"ConfigId,omitempty" name:"ConfigId"`
+}
+
+type DeleteFileConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 文件配置项ID
+	ConfigId *string `json:"ConfigId,omitempty" name:"ConfigId"`
+}
+
+func (r *DeleteFileConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFileConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteFileConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFileConfigResponseParams struct {
+	// 删除结果
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteFileConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteFileConfigResponseParams `json:"Response"`
+}
+
+func (r *DeleteFileConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFileConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGatewayApiRequestParams struct {
+	// 分组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// Api ID 数组
+	ApiList []*string `json:"ApiList,omitempty" name:"ApiList"`
+}
+
+type DeleteGatewayApiRequest struct {
+	*tchttp.BaseRequest
+	
+	// 分组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// Api ID 数组
+	ApiList []*string `json:"ApiList,omitempty" name:"ApiList"`
+}
+
+func (r *DeleteGatewayApiRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGatewayApiRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupId")
+	delete(f, "ApiList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteGatewayApiRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteGatewayApiResponseParams struct {
+	// 是否成功
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteGatewayApiResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteGatewayApiResponseParams `json:"Response"`
+}
+
+func (r *DeleteGatewayApiResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteGatewayApiResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5663,6 +6623,50 @@ type DeliveryConfigBindGroup struct {
 	// 创建时间
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// KafkaVIp
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KafkaVIp *string `json:"KafkaVIp,omitempty" name:"KafkaVIp"`
+
+	// KafkaAddress
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KafkaAddress *string `json:"KafkaAddress,omitempty" name:"KafkaAddress"`
+
+	// KafkaVPort
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KafkaVPort *string `json:"KafkaVPort,omitempty" name:"KafkaVPort"`
+
+	// Topic
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Topic *string `json:"Topic,omitempty" name:"Topic"`
+
+	// LineRule
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LineRule *string `json:"LineRule,omitempty" name:"LineRule"`
+
+	// CustomRule
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CustomRule *string `json:"CustomRule,omitempty" name:"CustomRule"`
+
+	// EnableGlobalLineRule
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableGlobalLineRule *bool `json:"EnableGlobalLineRule,omitempty" name:"EnableGlobalLineRule"`
+
+	// EnableAuth
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableAuth *bool `json:"EnableAuth,omitempty" name:"EnableAuth"`
+
+	// Username
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Username *string `json:"Username,omitempty" name:"Username"`
+
+	// Password
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// KafkaInfos
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KafkaInfos []*DeliveryKafkaInfo `json:"KafkaInfos,omitempty" name:"KafkaInfos"`
 }
 
 type DeliveryConfigBindGroups struct {
@@ -7951,6 +8955,63 @@ func (r *DescribeContainerEventsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeContainerEventsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeContainerGroupAttributeRequestParams struct {
+	// 部署组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+}
+
+type DescribeContainerGroupAttributeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 部署组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+}
+
+func (r *DescribeContainerGroupAttributeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeContainerGroupAttributeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeContainerGroupAttributeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeContainerGroupAttributeResponseParams struct {
+	// 部署组列表-其它字段
+	Result *ContainerGroupOther `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeContainerGroupAttributeResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeContainerGroupAttributeResponseParams `json:"Response"`
+}
+
+func (r *DescribeContainerGroupAttributeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeContainerGroupAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -12329,6 +13390,63 @@ func (r *DescribeRepositoryResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeResourceTaskStatusRequestParams struct {
+	// 任务ID
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+}
+
+type DescribeResourceTaskStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务ID
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+}
+
+func (r *DescribeResourceTaskStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceTaskStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TaskId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeResourceTaskStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeResourceTaskStatusResponseParams struct {
+	// 资源任务执行状态结果
+	Result *ResourceTaskStatusResult `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeResourceTaskStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeResourceTaskStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeResourceTaskStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeResourceTaskStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSimpleApplicationsRequestParams struct {
 	// 应用ID列表
 	ApplicationIdList []*string `json:"ApplicationIdList,omitempty" name:"ApplicationIdList"`
@@ -13487,6 +14605,92 @@ func (r *DescribeUnitRulesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeUnitRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUnitRulesV2RequestParams struct {
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 根据规则名或备注内容模糊查询
+	SearchWord *string `json:"SearchWord,omitempty" name:"SearchWord"`
+
+	// 启用状态, disabled: 未发布， enabled: 发布
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 翻页查询偏移量
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 翻页查询每页记录数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeUnitRulesV2Request struct {
+	*tchttp.BaseRequest
+	
+	// 网关实体ID
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 根据规则名或备注内容模糊查询
+	SearchWord *string `json:"SearchWord,omitempty" name:"SearchWord"`
+
+	// 启用状态, disabled: 未发布， enabled: 发布
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 翻页查询偏移量
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 翻页查询每页记录数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeUnitRulesV2Request) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUnitRulesV2Request) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GatewayInstanceId")
+	delete(f, "SearchWord")
+	delete(f, "Status")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUnitRulesV2Request has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUnitRulesV2ResponseParams struct {
+	// 分页列表信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *TsfPageUnitRuleV2 `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeUnitRulesV2Response struct {
+	*tchttp.BaseResponse
+	Response *DescribeUnitRulesV2ResponseParams `json:"Response"`
+}
+
+func (r *DescribeUnitRulesV2Response) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUnitRulesV2Response) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -15110,6 +16314,10 @@ type ImageRepository struct {
 	// ApplicationName值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApplicationNameReal *string `json:"ApplicationNameReal,omitempty" name:"ApplicationNameReal"`
+
+	// 是否公共,1:公有,0:私有
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Public *int64 `json:"Public,omitempty" name:"Public"`
 }
 
 type ImageRepositoryResult struct {
@@ -15596,6 +16804,10 @@ type KafkaDeliveryConfig struct {
 	// 自定义分行规则
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CustomRule *string `json:"CustomRule,omitempty" name:"CustomRule"`
+
+	// KafkaAddress
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KafkaAddress *string `json:"KafkaAddress,omitempty" name:"KafkaAddress"`
 }
 
 type LaneGroup struct {
@@ -16607,6 +17819,10 @@ func (r *ModifyNamespaceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNamespaceResponseParams struct {
+	// Result
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *bool `json:"Result,omitempty" name:"Result"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -18014,6 +19230,78 @@ func (r *ReleaseConfigResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ReleaseConfigWithDetailRespRequestParams struct {
+	// 配置ID
+	ConfigId *string `json:"ConfigId,omitempty" name:"ConfigId"`
+
+	// 部署组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 发布描述
+	ReleaseDesc *string `json:"ReleaseDesc,omitempty" name:"ReleaseDesc"`
+}
+
+type ReleaseConfigWithDetailRespRequest struct {
+	*tchttp.BaseRequest
+	
+	// 配置ID
+	ConfigId *string `json:"ConfigId,omitempty" name:"ConfigId"`
+
+	// 部署组ID
+	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
+
+	// 发布描述
+	ReleaseDesc *string `json:"ReleaseDesc,omitempty" name:"ReleaseDesc"`
+}
+
+func (r *ReleaseConfigWithDetailRespRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReleaseConfigWithDetailRespRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ConfigId")
+	delete(f, "GroupId")
+	delete(f, "ReleaseDesc")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReleaseConfigWithDetailRespRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReleaseConfigWithDetailRespResponseParams struct {
+	// 配置项发布 ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Result *ConfigRelease `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ReleaseConfigWithDetailRespResponse struct {
+	*tchttp.BaseResponse
+	Response *ReleaseConfigWithDetailRespResponseParams `json:"Response"`
+}
+
+func (r *ReleaseConfigWithDetailRespResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReleaseConfigWithDetailRespResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ReleaseFileConfigRequestParams struct {
 	// 配置ID
 	ConfigId *string `json:"ConfigId,omitempty" name:"ConfigId"`
@@ -18336,6 +19624,12 @@ type ResourceFieldRef struct {
 	Resource *string `json:"Resource,omitempty" name:"Resource"`
 }
 
+type ResourceTaskStatusResult struct {
+	// 任务的执行状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TaskStatus *uint64 `json:"TaskStatus,omitempty" name:"TaskStatus"`
+}
+
 // Predefined struct for user
 type RevocationConfigRequestParams struct {
 	// 配置项发布ID
@@ -18601,6 +19895,14 @@ type ScalableRule struct {
 	// 备注
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 是否关闭指标伸缩, 默认0, 0:打开指标伸缩 1:关闭指标伸缩
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DisableMetricAS *uint64 `json:"DisableMetricAS,omitempty" name:"DisableMetricAS"`
+
+	// 开启定时伸缩规则, 默认0, 0:关闭定时伸缩 1:开启定时伸缩
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnableCronAS *uint64 `json:"EnableCronAS,omitempty" name:"EnableCronAS"`
 }
 
 type SchedulingStrategy struct {
@@ -20220,6 +21522,16 @@ type TsfPageUnitRule struct {
 	Content []*UnitRule `json:"Content,omitempty" name:"Content"`
 }
 
+type TsfPageUnitRuleV2 struct {
+	// 记录总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 记录实体列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Content []*UnitRule `json:"Content,omitempty" name:"Content"`
+}
+
 type TsfPageVmGroup struct {
 	// 虚拟机部署组总数目
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -20297,6 +21609,18 @@ type UnitNamespace struct {
 	// 单元化命名空间ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Id *string `json:"Id,omitempty" name:"Id"`
+
+	// 网关实体ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GatewayInstanceId *string `json:"GatewayInstanceId,omitempty" name:"GatewayInstanceId"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedTime *string `json:"UpdatedTime,omitempty" name:"UpdatedTime"`
 }
 
 type UnitRule struct {
@@ -20322,6 +21646,14 @@ type UnitRule struct {
 	// 规则项列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitRuleItemList []*UnitRuleItem `json:"UnitRuleItemList,omitempty" name:"UnitRuleItemList"`
+
+	// CreatedTime
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// UpdatedTime
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedTime *string `json:"UpdatedTime,omitempty" name:"UpdatedTime"`
 }
 
 type UnitRuleItem struct {
@@ -20356,6 +21688,18 @@ type UnitRuleItem struct {
 	// 规则标签列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitRuleTagList []*UnitRuleTag `json:"UnitRuleTagList,omitempty" name:"UnitRuleTagList"`
+
+	// 项目id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ItemIndex *int64 `json:"ItemIndex,omitempty" name:"ItemIndex"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 修改时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdatedTime *string `json:"UpdatedTime,omitempty" name:"UpdatedTime"`
 }
 
 type UnitRuleTag struct {
@@ -21302,6 +22646,10 @@ type VmGroupOther struct {
 	// 服务配置信息是否匹配
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsNotEqualServiceConfig *bool `json:"IsNotEqualServiceConfig,omitempty" name:"IsNotEqualServiceConfig"`
+
+	// HealthCheckSettings
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthCheckSettings *HealthCheckSettings `json:"HealthCheckSettings,omitempty" name:"HealthCheckSettings"`
 }
 
 type VmGroupSimple struct {

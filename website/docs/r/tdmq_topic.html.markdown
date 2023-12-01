@@ -14,25 +14,32 @@ Provide a resource to create a TDMQ topic.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark       = "this is description."
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 
-resource "tencentcloud_tdmq_namespace" "bar" {
-  environ_name = "example"
+resource "tencentcloud_tdmq_namespace" "example" {
+  environ_name = "tf_example"
   msg_ttl      = 300
-  cluster_id   = "${tencentcloud_tdmq_instance.foo.id}"
-  remark       = "this is description."
+  cluster_id   = tencentcloud_tdmq_instance.example.id
+  retention_policy {
+    time_in_minutes = 60
+    size_in_mb      = 10
+  }
+  remark = "remark."
 }
 
-resource "tencentcloud_tdmq_topic" "bar" {
-  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
-  topic_name = "example"
-  partitions = 6
-  topic_type = 0
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark     = "this is description."
+resource "tencentcloud_tdmq_topic" "example" {
+  environ_id        = tencentcloud_tdmq_namespace.example.environ_name
+  cluster_id        = tencentcloud_tdmq_instance.example.id
+  topic_name        = "tf-example-topic"
+  partitions        = 6
+  pulsar_topic_type = 3
+  remark            = "remark."
 }
 ```
 
@@ -44,8 +51,9 @@ The following arguments are supported:
 * `environ_id` - (Required, String, ForceNew) The name of tdmq namespace.
 * `partitions` - (Required, Int) The partitions of topic.
 * `topic_name` - (Required, String, ForceNew) The name of topic to be created.
-* `topic_type` - (Required, Int, ForceNew) The type of topic.
+* `pulsar_topic_type` - (Optional, Int) Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.
 * `remark` - (Optional, String) Description of the namespace.
+* `topic_type` - (Optional, Int, **Deprecated**) This input will be gradually discarded and can be switched to PulsarTopicType parameter 0: Normal message; 1: Global sequential messages; 2: Local sequential messages; 3: Retrying queue; 4: Dead letter queue. The type of topic.
 
 ## Attributes Reference
 

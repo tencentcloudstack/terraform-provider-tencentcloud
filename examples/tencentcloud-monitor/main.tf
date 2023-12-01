@@ -1,40 +1,45 @@
-data "tencentcloud_cam_groups" "groups" {
-  //You should first create a user group with CAM
-}
-data "tencentcloud_instances" "instances" {
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
 }
 
-resource "tencentcloud_monitor_policy_group" "group" {
-  group_name       = "nice_group"
-  policy_view_name = "cvm_device"
-  remark           = "this is a test policy group"
-  conditions {
-    metric_id           = 33
-    alarm_notify_type   = 1
-    alarm_notify_period = 600
-    calc_type           = 1
-    calc_value          = 3
-    calc_period         = 300
-    continue_period     = 2
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+
+resource "tencentcloud_monitor_tmp_instance" "foo" {
+  instance_name       = "tf-tmp-instance"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  data_retention_time = 30
+  zone                = var.availability_zone
+  tags = {
+    "createdBy" = "terraform"
   }
 }
 
-#for cvm
-resource "tencentcloud_monitor_binding_object" "binding" {
-  group_id = tencentcloud_monitor_policy_group.group.id
-  dimensions {
-    dimensions_json = "{\"unInstanceId\":\"${data.tencentcloud_instances.instances.instance_list[0].instance_id}\"}"
+resource "tencentcloud_monitor_grafana_instance" "foo" {
+  instance_name         = "tf-grafana"
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_ids            = [tencentcloud_subnet.subnet.id]
+  grafana_init_password = "1234567890"
+  enable_internet 		= false
+  is_destroy 			= true
+
+  tags = {
+    "createdBy" = "test"
   }
 }
 
-resource "tencentcloud_monitor_binding_receiver" "receiver" {
-  group_id = tencentcloud_monitor_policy_group.group.id
-  receivers {
-    start_time          = 0
-    end_time            = 86399
-    notify_way          = ["SMS"]
-    receiver_type       = "group"
-    receiver_group_list = [data.tencentcloud_cam_groups.groups.group_list[0].group_id]
-    receive_language    = "en-US"
-  }
+resource "tencentcloud_monitor_tmp_manage_grafana_attachment" "foo" {
+    grafana_id  = tencentcloud_monitor_grafana_instance.foo.id
+    instance_id = tencentcloud_monitor_tmp_instance.foo.id
 }

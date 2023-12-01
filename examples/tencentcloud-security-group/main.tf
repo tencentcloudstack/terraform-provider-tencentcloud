@@ -1,8 +1,9 @@
-resource "tencentcloud_security_group" "group" {
-  name        = var.short_name
-  description = "New security group"
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example-sg"
+  description = "sg test"
+  project_id  = 0
 
   tags = {
-    "test" = "test"
+    "example" = "test"
   }
 }

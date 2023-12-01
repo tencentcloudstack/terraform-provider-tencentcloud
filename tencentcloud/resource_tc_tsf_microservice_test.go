@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTsfMicroserviceResource_basic -v
@@ -15,9 +15,7 @@ func TestAccTencentCloudTsfMicroserviceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfMicroserviceDestroy,
 		Steps: []resource.TestStep{

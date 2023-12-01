@@ -14,7 +14,7 @@ resource "tencentcloud_api_gateway_service" "service" {
 
 resource "tencentcloud_api_gateway_api" "api" {
     service_id            = tencentcloud_api_gateway_service.service.id
-    api_name              = "hello_update"
+    api_name              = "tf_example"
     api_desc              = "my hello api update"
     auth_type             = "SECRET"
     protocol              = "HTTP"
@@ -68,8 +68,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 )
 

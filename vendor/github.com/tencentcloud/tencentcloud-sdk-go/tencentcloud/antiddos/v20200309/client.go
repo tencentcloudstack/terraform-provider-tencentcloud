@@ -16,6 +16,7 @@ package v20200309
 
 import (
     "context"
+    "errors"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
     tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
@@ -48,6 +49,7 @@ func NewAssociateDDoSEipAddressRequest() (request *AssociateDDoSEipAddressReques
     request = &AssociateDDoSEipAddressRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "AssociateDDoSEipAddress")
     
     
@@ -57,8 +59,9 @@ func NewAssociateDDoSEipAddressRequest() (request *AssociateDDoSEipAddressReques
 func NewAssociateDDoSEipAddressResponse() (response *AssociateDDoSEipAddressResponse) {
     response = &AssociateDDoSEipAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateDDoSEipAddress
@@ -84,13 +87,7 @@ func NewAssociateDDoSEipAddressResponse() (response *AssociateDDoSEipAddressResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AssociateDDoSEipAddress(request *AssociateDDoSEipAddressRequest) (response *AssociateDDoSEipAddressResponse, err error) {
-    if request == nil {
-        request = NewAssociateDDoSEipAddressRequest()
-    }
-    
-    response = NewAssociateDDoSEipAddressResponse()
-    err = c.Send(request, response)
-    return
+    return c.AssociateDDoSEipAddressWithContext(context.Background(), request)
 }
 
 // AssociateDDoSEipAddress
@@ -119,6 +116,11 @@ func (c *Client) AssociateDDoSEipAddressWithContext(ctx context.Context, request
     if request == nil {
         request = NewAssociateDDoSEipAddressRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateDDoSEipAddress require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewAssociateDDoSEipAddressResponse()
@@ -130,6 +132,7 @@ func NewAssociateDDoSEipLoadBalancerRequest() (request *AssociateDDoSEipLoadBala
     request = &AssociateDDoSEipLoadBalancerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "AssociateDDoSEipLoadBalancer")
     
     
@@ -139,8 +142,9 @@ func NewAssociateDDoSEipLoadBalancerRequest() (request *AssociateDDoSEipLoadBala
 func NewAssociateDDoSEipLoadBalancerResponse() (response *AssociateDDoSEipLoadBalancerResponse) {
     response = &AssociateDDoSEipLoadBalancerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AssociateDDoSEipLoadBalancer
@@ -166,13 +170,7 @@ func NewAssociateDDoSEipLoadBalancerResponse() (response *AssociateDDoSEipLoadBa
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) AssociateDDoSEipLoadBalancer(request *AssociateDDoSEipLoadBalancerRequest) (response *AssociateDDoSEipLoadBalancerResponse, err error) {
-    if request == nil {
-        request = NewAssociateDDoSEipLoadBalancerRequest()
-    }
-    
-    response = NewAssociateDDoSEipLoadBalancerResponse()
-    err = c.Send(request, response)
-    return
+    return c.AssociateDDoSEipLoadBalancerWithContext(context.Background(), request)
 }
 
 // AssociateDDoSEipLoadBalancer
@@ -201,6 +199,11 @@ func (c *Client) AssociateDDoSEipLoadBalancerWithContext(ctx context.Context, re
     if request == nil {
         request = NewAssociateDDoSEipLoadBalancerRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssociateDDoSEipLoadBalancer require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewAssociateDDoSEipLoadBalancerResponse()
@@ -212,6 +215,7 @@ func NewCreateBlackWhiteIpListRequest() (request *CreateBlackWhiteIpListRequest)
     request = &CreateBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateBlackWhiteIpList")
     
     
@@ -221,8 +225,9 @@ func NewCreateBlackWhiteIpListRequest() (request *CreateBlackWhiteIpListRequest)
 func NewCreateBlackWhiteIpListResponse() (response *CreateBlackWhiteIpListResponse) {
     response = &CreateBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBlackWhiteIpList
@@ -233,13 +238,7 @@ func NewCreateBlackWhiteIpListResponse() (response *CreateBlackWhiteIpListRespon
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateBlackWhiteIpList(request *CreateBlackWhiteIpListRequest) (response *CreateBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewCreateBlackWhiteIpListRequest()
-    }
-    
-    response = NewCreateBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // CreateBlackWhiteIpList
@@ -253,6 +252,11 @@ func (c *Client) CreateBlackWhiteIpListWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateBlackWhiteIpListResponse()
@@ -264,6 +268,7 @@ func NewCreateBoundIPRequest() (request *CreateBoundIPRequest) {
     request = &CreateBoundIPRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateBoundIP")
     
     
@@ -273,29 +278,24 @@ func NewCreateBoundIPRequest() (request *CreateBoundIPRequest) {
 func NewCreateBoundIPResponse() (response *CreateBoundIPResponse) {
     response = &CreateBoundIPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateBoundIP
-// 绑定IP到高防包实例，支持独享包、共享包；需要注意的是此接口绑定或解绑IP是异步接口，当处于绑定或解绑中时，则不允许再进行绑定或解绑，需要等待当前绑定或解绑完成。
+// 绑定IP到高防包实例，支持独享包、共享包（新版）；需要注意的是此接口绑定或解绑IP是异步接口，当处于绑定或解绑中时，则不允许再进行绑定或解绑，需要等待当前绑定或解绑完成。
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateBoundIP(request *CreateBoundIPRequest) (response *CreateBoundIPResponse, err error) {
-    if request == nil {
-        request = NewCreateBoundIPRequest()
-    }
-    
-    response = NewCreateBoundIPResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateBoundIPWithContext(context.Background(), request)
 }
 
 // CreateBoundIP
-// 绑定IP到高防包实例，支持独享包、共享包；需要注意的是此接口绑定或解绑IP是异步接口，当处于绑定或解绑中时，则不允许再进行绑定或解绑，需要等待当前绑定或解绑完成。
+// 绑定IP到高防包实例，支持独享包、共享包（新版）；需要注意的是此接口绑定或解绑IP是异步接口，当处于绑定或解绑中时，则不允许再进行绑定或解绑，需要等待当前绑定或解绑完成。
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -305,6 +305,11 @@ func (c *Client) CreateBoundIPWithContext(ctx context.Context, request *CreateBo
     if request == nil {
         request = NewCreateBoundIPRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBoundIP require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateBoundIPResponse()
@@ -316,6 +321,7 @@ func NewCreateCCPrecisionPolicyRequest() (request *CreateCCPrecisionPolicyReques
     request = &CreateCCPrecisionPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateCCPrecisionPolicy")
     
     
@@ -325,8 +331,9 @@ func NewCreateCCPrecisionPolicyRequest() (request *CreateCCPrecisionPolicyReques
 func NewCreateCCPrecisionPolicyResponse() (response *CreateCCPrecisionPolicyResponse) {
     response = &CreateCCPrecisionPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCCPrecisionPolicy
@@ -351,13 +358,7 @@ func NewCreateCCPrecisionPolicyResponse() (response *CreateCCPrecisionPolicyResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCCPrecisionPolicy(request *CreateCCPrecisionPolicyRequest) (response *CreateCCPrecisionPolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateCCPrecisionPolicyRequest()
-    }
-    
-    response = NewCreateCCPrecisionPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateCCPrecisionPolicyWithContext(context.Background(), request)
 }
 
 // CreateCCPrecisionPolicy
@@ -385,6 +386,11 @@ func (c *Client) CreateCCPrecisionPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreateCCPrecisionPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCCPrecisionPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateCCPrecisionPolicyResponse()
@@ -396,6 +402,7 @@ func NewCreateCCReqLimitPolicyRequest() (request *CreateCCReqLimitPolicyRequest)
     request = &CreateCCReqLimitPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateCCReqLimitPolicy")
     
     
@@ -405,8 +412,9 @@ func NewCreateCCReqLimitPolicyRequest() (request *CreateCCReqLimitPolicyRequest)
 func NewCreateCCReqLimitPolicyResponse() (response *CreateCCReqLimitPolicyResponse) {
     response = &CreateCCReqLimitPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCCReqLimitPolicy
@@ -431,13 +439,7 @@ func NewCreateCCReqLimitPolicyResponse() (response *CreateCCReqLimitPolicyRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCCReqLimitPolicy(request *CreateCCReqLimitPolicyRequest) (response *CreateCCReqLimitPolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateCCReqLimitPolicyRequest()
-    }
-    
-    response = NewCreateCCReqLimitPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateCCReqLimitPolicyWithContext(context.Background(), request)
 }
 
 // CreateCCReqLimitPolicy
@@ -465,6 +467,11 @@ func (c *Client) CreateCCReqLimitPolicyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateCCReqLimitPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCCReqLimitPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateCCReqLimitPolicyResponse()
@@ -476,6 +483,7 @@ func NewCreateCcBlackWhiteIpListRequest() (request *CreateCcBlackWhiteIpListRequ
     request = &CreateCcBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateCcBlackWhiteIpList")
     
     
@@ -485,8 +493,9 @@ func NewCreateCcBlackWhiteIpListRequest() (request *CreateCcBlackWhiteIpListRequ
 func NewCreateCcBlackWhiteIpListResponse() (response *CreateCcBlackWhiteIpListResponse) {
     response = &CreateCcBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCcBlackWhiteIpList
@@ -497,13 +506,7 @@ func NewCreateCcBlackWhiteIpListResponse() (response *CreateCcBlackWhiteIpListRe
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCcBlackWhiteIpList(request *CreateCcBlackWhiteIpListRequest) (response *CreateCcBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewCreateCcBlackWhiteIpListRequest()
-    }
-    
-    response = NewCreateCcBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateCcBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // CreateCcBlackWhiteIpList
@@ -517,6 +520,11 @@ func (c *Client) CreateCcBlackWhiteIpListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateCcBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCcBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateCcBlackWhiteIpListResponse()
@@ -528,6 +536,7 @@ func NewCreateCcGeoIPBlockConfigRequest() (request *CreateCcGeoIPBlockConfigRequ
     request = &CreateCcGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateCcGeoIPBlockConfig")
     
     
@@ -537,8 +546,9 @@ func NewCreateCcGeoIPBlockConfigRequest() (request *CreateCcGeoIPBlockConfigRequ
 func NewCreateCcGeoIPBlockConfigResponse() (response *CreateCcGeoIPBlockConfigResponse) {
     response = &CreateCcGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCcGeoIPBlockConfig
@@ -548,13 +558,7 @@ func NewCreateCcGeoIPBlockConfigResponse() (response *CreateCcGeoIPBlockConfigRe
 //  LIMITEXCEEDED = "LimitExceeded"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCcGeoIPBlockConfig(request *CreateCcGeoIPBlockConfigRequest) (response *CreateCcGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateCcGeoIPBlockConfigRequest()
-    }
-    
-    response = NewCreateCcGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateCcGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // CreateCcGeoIPBlockConfig
@@ -567,6 +571,11 @@ func (c *Client) CreateCcGeoIPBlockConfigWithContext(ctx context.Context, reques
     if request == nil {
         request = NewCreateCcGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCcGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateCcGeoIPBlockConfigResponse()
@@ -578,6 +587,7 @@ func NewCreateDDoSAIRequest() (request *CreateDDoSAIRequest) {
     request = &CreateDDoSAIRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDDoSAI")
     
     
@@ -587,34 +597,36 @@ func NewCreateDDoSAIRequest() (request *CreateDDoSAIRequest) {
 func NewCreateDDoSAIResponse() (response *CreateDDoSAIResponse) {
     response = &CreateDDoSAIResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDDoSAI
 // 设置DDoS防护的AI防护开关
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateDDoSAI(request *CreateDDoSAIRequest) (response *CreateDDoSAIResponse, err error) {
-    if request == nil {
-        request = NewCreateDDoSAIRequest()
-    }
-    
-    response = NewCreateDDoSAIResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDDoSAIWithContext(context.Background(), request)
 }
 
 // CreateDDoSAI
 // 设置DDoS防护的AI防护开关
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) CreateDDoSAIWithContext(ctx context.Context, request *CreateDDoSAIRequest) (response *CreateDDoSAIResponse, err error) {
     if request == nil {
         request = NewCreateDDoSAIRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDDoSAI require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDDoSAIResponse()
@@ -626,6 +638,7 @@ func NewCreateDDoSBlackWhiteIpListRequest() (request *CreateDDoSBlackWhiteIpList
     request = &CreateDDoSBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDDoSBlackWhiteIpList")
     
     
@@ -635,8 +648,9 @@ func NewCreateDDoSBlackWhiteIpListRequest() (request *CreateDDoSBlackWhiteIpList
 func NewCreateDDoSBlackWhiteIpListResponse() (response *CreateDDoSBlackWhiteIpListResponse) {
     response = &CreateDDoSBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDDoSBlackWhiteIpList
@@ -644,16 +658,11 @@ func NewCreateDDoSBlackWhiteIpListResponse() (response *CreateDDoSBlackWhiteIpLi
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateDDoSBlackWhiteIpList(request *CreateDDoSBlackWhiteIpListRequest) (response *CreateDDoSBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewCreateDDoSBlackWhiteIpListRequest()
-    }
-    
-    response = NewCreateDDoSBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDDoSBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // CreateDDoSBlackWhiteIpList
@@ -661,12 +670,18 @@ func (c *Client) CreateDDoSBlackWhiteIpList(request *CreateDDoSBlackWhiteIpListR
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateDDoSBlackWhiteIpListWithContext(ctx context.Context, request *CreateDDoSBlackWhiteIpListRequest) (response *CreateDDoSBlackWhiteIpListResponse, err error) {
     if request == nil {
         request = NewCreateDDoSBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDDoSBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDDoSBlackWhiteIpListResponse()
@@ -678,6 +693,7 @@ func NewCreateDDoSConnectLimitRequest() (request *CreateDDoSConnectLimitRequest)
     request = &CreateDDoSConnectLimitRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDDoSConnectLimit")
     
     
@@ -687,8 +703,9 @@ func NewCreateDDoSConnectLimitRequest() (request *CreateDDoSConnectLimitRequest)
 func NewCreateDDoSConnectLimitResponse() (response *CreateDDoSConnectLimitResponse) {
     response = &CreateDDoSConnectLimitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDDoSConnectLimit
@@ -714,13 +731,7 @@ func NewCreateDDoSConnectLimitResponse() (response *CreateDDoSConnectLimitRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateDDoSConnectLimit(request *CreateDDoSConnectLimitRequest) (response *CreateDDoSConnectLimitResponse, err error) {
-    if request == nil {
-        request = NewCreateDDoSConnectLimitRequest()
-    }
-    
-    response = NewCreateDDoSConnectLimitResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDDoSConnectLimitWithContext(context.Background(), request)
 }
 
 // CreateDDoSConnectLimit
@@ -749,6 +760,11 @@ func (c *Client) CreateDDoSConnectLimitWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateDDoSConnectLimitRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDDoSConnectLimit require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDDoSConnectLimitResponse()
@@ -760,6 +776,7 @@ func NewCreateDDoSGeoIPBlockConfigRequest() (request *CreateDDoSGeoIPBlockConfig
     request = &CreateDDoSGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDDoSGeoIPBlockConfig")
     
     
@@ -769,8 +786,9 @@ func NewCreateDDoSGeoIPBlockConfigRequest() (request *CreateDDoSGeoIPBlockConfig
 func NewCreateDDoSGeoIPBlockConfigResponse() (response *CreateDDoSGeoIPBlockConfigResponse) {
     response = &CreateDDoSGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDDoSGeoIPBlockConfig
@@ -781,13 +799,7 @@ func NewCreateDDoSGeoIPBlockConfigResponse() (response *CreateDDoSGeoIPBlockConf
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateDDoSGeoIPBlockConfig(request *CreateDDoSGeoIPBlockConfigRequest) (response *CreateDDoSGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateDDoSGeoIPBlockConfigRequest()
-    }
-    
-    response = NewCreateDDoSGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDDoSGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // CreateDDoSGeoIPBlockConfig
@@ -801,6 +813,11 @@ func (c *Client) CreateDDoSGeoIPBlockConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateDDoSGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDDoSGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDDoSGeoIPBlockConfigResponse()
@@ -812,6 +829,7 @@ func NewCreateDDoSSpeedLimitConfigRequest() (request *CreateDDoSSpeedLimitConfig
     request = &CreateDDoSSpeedLimitConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDDoSSpeedLimitConfig")
     
     
@@ -821,8 +839,9 @@ func NewCreateDDoSSpeedLimitConfigRequest() (request *CreateDDoSSpeedLimitConfig
 func NewCreateDDoSSpeedLimitConfigResponse() (response *CreateDDoSSpeedLimitConfigResponse) {
     response = &CreateDDoSSpeedLimitConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDDoSSpeedLimitConfig
@@ -833,13 +852,7 @@ func NewCreateDDoSSpeedLimitConfigResponse() (response *CreateDDoSSpeedLimitConf
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateDDoSSpeedLimitConfig(request *CreateDDoSSpeedLimitConfigRequest) (response *CreateDDoSSpeedLimitConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateDDoSSpeedLimitConfigRequest()
-    }
-    
-    response = NewCreateDDoSSpeedLimitConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDDoSSpeedLimitConfigWithContext(context.Background(), request)
 }
 
 // CreateDDoSSpeedLimitConfig
@@ -853,6 +866,11 @@ func (c *Client) CreateDDoSSpeedLimitConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewCreateDDoSSpeedLimitConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDDoSSpeedLimitConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDDoSSpeedLimitConfigResponse()
@@ -864,6 +882,7 @@ func NewCreateDefaultAlarmThresholdRequest() (request *CreateDefaultAlarmThresho
     request = &CreateDefaultAlarmThresholdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateDefaultAlarmThreshold")
     
     
@@ -873,8 +892,9 @@ func NewCreateDefaultAlarmThresholdRequest() (request *CreateDefaultAlarmThresho
 func NewCreateDefaultAlarmThresholdResponse() (response *CreateDefaultAlarmThresholdResponse) {
     response = &CreateDefaultAlarmThresholdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateDefaultAlarmThreshold
@@ -883,13 +903,7 @@ func NewCreateDefaultAlarmThresholdResponse() (response *CreateDefaultAlarmThres
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
 func (c *Client) CreateDefaultAlarmThreshold(request *CreateDefaultAlarmThresholdRequest) (response *CreateDefaultAlarmThresholdResponse, err error) {
-    if request == nil {
-        request = NewCreateDefaultAlarmThresholdRequest()
-    }
-    
-    response = NewCreateDefaultAlarmThresholdResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateDefaultAlarmThresholdWithContext(context.Background(), request)
 }
 
 // CreateDefaultAlarmThreshold
@@ -901,6 +915,11 @@ func (c *Client) CreateDefaultAlarmThresholdWithContext(ctx context.Context, req
     if request == nil {
         request = NewCreateDefaultAlarmThresholdRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDefaultAlarmThreshold require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateDefaultAlarmThresholdResponse()
@@ -912,6 +931,7 @@ func NewCreateIPAlarmThresholdConfigRequest() (request *CreateIPAlarmThresholdCo
     request = &CreateIPAlarmThresholdConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateIPAlarmThresholdConfig")
     
     
@@ -921,8 +941,9 @@ func NewCreateIPAlarmThresholdConfigRequest() (request *CreateIPAlarmThresholdCo
 func NewCreateIPAlarmThresholdConfigResponse() (response *CreateIPAlarmThresholdConfigResponse) {
     response = &CreateIPAlarmThresholdConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateIPAlarmThresholdConfig
@@ -931,13 +952,7 @@ func NewCreateIPAlarmThresholdConfigResponse() (response *CreateIPAlarmThreshold
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
 func (c *Client) CreateIPAlarmThresholdConfig(request *CreateIPAlarmThresholdConfigRequest) (response *CreateIPAlarmThresholdConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateIPAlarmThresholdConfigRequest()
-    }
-    
-    response = NewCreateIPAlarmThresholdConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateIPAlarmThresholdConfigWithContext(context.Background(), request)
 }
 
 // CreateIPAlarmThresholdConfig
@@ -949,6 +964,11 @@ func (c *Client) CreateIPAlarmThresholdConfigWithContext(ctx context.Context, re
     if request == nil {
         request = NewCreateIPAlarmThresholdConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateIPAlarmThresholdConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateIPAlarmThresholdConfigResponse()
@@ -960,6 +980,7 @@ func NewCreateL7RuleCertsRequest() (request *CreateL7RuleCertsRequest) {
     request = &CreateL7RuleCertsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateL7RuleCerts")
     
     
@@ -969,8 +990,9 @@ func NewCreateL7RuleCertsRequest() (request *CreateL7RuleCertsRequest) {
 func NewCreateL7RuleCertsResponse() (response *CreateL7RuleCertsResponse) {
     response = &CreateL7RuleCertsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateL7RuleCerts
@@ -985,13 +1007,7 @@ func NewCreateL7RuleCertsResponse() (response *CreateL7RuleCertsResponse) {
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) CreateL7RuleCerts(request *CreateL7RuleCertsRequest) (response *CreateL7RuleCertsResponse, err error) {
-    if request == nil {
-        request = NewCreateL7RuleCertsRequest()
-    }
-    
-    response = NewCreateL7RuleCertsResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateL7RuleCertsWithContext(context.Background(), request)
 }
 
 // CreateL7RuleCerts
@@ -1009,9 +1025,65 @@ func (c *Client) CreateL7RuleCertsWithContext(ctx context.Context, request *Crea
     if request == nil {
         request = NewCreateL7RuleCertsRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateL7RuleCerts require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateL7RuleCertsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateNewL7RulesRequest() (request *CreateNewL7RulesRequest) {
+    request = &CreateNewL7RulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "CreateNewL7Rules")
+    
+    
+    return
+}
+
+func NewCreateNewL7RulesResponse() (response *CreateNewL7RulesResponse) {
+    response = &CreateNewL7RulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// CreateNewL7Rules
+// 添加7层转发规则
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateNewL7Rules(request *CreateNewL7RulesRequest) (response *CreateNewL7RulesResponse, err error) {
+    return c.CreateNewL7RulesWithContext(context.Background(), request)
+}
+
+// CreateNewL7Rules
+// 添加7层转发规则
+//
+// 可能返回的错误码:
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateNewL7RulesWithContext(ctx context.Context, request *CreateNewL7RulesRequest) (response *CreateNewL7RulesResponse, err error) {
+    if request == nil {
+        request = NewCreateNewL7RulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateNewL7Rules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateNewL7RulesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1020,6 +1092,7 @@ func NewCreatePacketFilterConfigRequest() (request *CreatePacketFilterConfigRequ
     request = &CreatePacketFilterConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreatePacketFilterConfig")
     
     
@@ -1029,8 +1102,9 @@ func NewCreatePacketFilterConfigRequest() (request *CreatePacketFilterConfigRequ
 func NewCreatePacketFilterConfigResponse() (response *CreatePacketFilterConfigResponse) {
     response = &CreatePacketFilterConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePacketFilterConfig
@@ -1038,16 +1112,11 @@ func NewCreatePacketFilterConfigResponse() (response *CreatePacketFilterConfigRe
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreatePacketFilterConfig(request *CreatePacketFilterConfigRequest) (response *CreatePacketFilterConfigResponse, err error) {
-    if request == nil {
-        request = NewCreatePacketFilterConfigRequest()
-    }
-    
-    response = NewCreatePacketFilterConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreatePacketFilterConfigWithContext(context.Background(), request)
 }
 
 // CreatePacketFilterConfig
@@ -1055,12 +1124,18 @@ func (c *Client) CreatePacketFilterConfig(request *CreatePacketFilterConfigReque
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreatePacketFilterConfigWithContext(ctx context.Context, request *CreatePacketFilterConfigRequest) (response *CreatePacketFilterConfigResponse, err error) {
     if request == nil {
         request = NewCreatePacketFilterConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePacketFilterConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreatePacketFilterConfigResponse()
@@ -1072,6 +1147,7 @@ func NewCreatePortAclConfigRequest() (request *CreatePortAclConfigRequest) {
     request = &CreatePortAclConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreatePortAclConfig")
     
     
@@ -1081,8 +1157,9 @@ func NewCreatePortAclConfigRequest() (request *CreatePortAclConfigRequest) {
 func NewCreatePortAclConfigResponse() (response *CreatePortAclConfigResponse) {
     response = &CreatePortAclConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePortAclConfig
@@ -1108,13 +1185,7 @@ func NewCreatePortAclConfigResponse() (response *CreatePortAclConfigResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreatePortAclConfig(request *CreatePortAclConfigRequest) (response *CreatePortAclConfigResponse, err error) {
-    if request == nil {
-        request = NewCreatePortAclConfigRequest()
-    }
-    
-    response = NewCreatePortAclConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreatePortAclConfigWithContext(context.Background(), request)
 }
 
 // CreatePortAclConfig
@@ -1143,6 +1214,11 @@ func (c *Client) CreatePortAclConfigWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreatePortAclConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePortAclConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreatePortAclConfigResponse()
@@ -1154,6 +1230,7 @@ func NewCreatePortAclConfigListRequest() (request *CreatePortAclConfigListReques
     request = &CreatePortAclConfigListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreatePortAclConfigList")
     
     
@@ -1163,8 +1240,9 @@ func NewCreatePortAclConfigListRequest() (request *CreatePortAclConfigListReques
 func NewCreatePortAclConfigListResponse() (response *CreatePortAclConfigListResponse) {
     response = &CreatePortAclConfigListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePortAclConfigList
@@ -1190,13 +1268,7 @@ func NewCreatePortAclConfigListResponse() (response *CreatePortAclConfigListResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreatePortAclConfigList(request *CreatePortAclConfigListRequest) (response *CreatePortAclConfigListResponse, err error) {
-    if request == nil {
-        request = NewCreatePortAclConfigListRequest()
-    }
-    
-    response = NewCreatePortAclConfigListResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreatePortAclConfigListWithContext(context.Background(), request)
 }
 
 // CreatePortAclConfigList
@@ -1225,6 +1297,11 @@ func (c *Client) CreatePortAclConfigListWithContext(ctx context.Context, request
     if request == nil {
         request = NewCreatePortAclConfigListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreatePortAclConfigList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreatePortAclConfigListResponse()
@@ -1236,6 +1313,7 @@ func NewCreateProtocolBlockConfigRequest() (request *CreateProtocolBlockConfigRe
     request = &CreateProtocolBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateProtocolBlockConfig")
     
     
@@ -1245,36 +1323,38 @@ func NewCreateProtocolBlockConfigRequest() (request *CreateProtocolBlockConfigRe
 func NewCreateProtocolBlockConfigResponse() (response *CreateProtocolBlockConfigResponse) {
     response = &CreateProtocolBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateProtocolBlockConfig
 // 设置DDoS防护的协议封禁配置
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateProtocolBlockConfig(request *CreateProtocolBlockConfigRequest) (response *CreateProtocolBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateProtocolBlockConfigRequest()
-    }
-    
-    response = NewCreateProtocolBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateProtocolBlockConfigWithContext(context.Background(), request)
 }
 
 // CreateProtocolBlockConfig
 // 设置DDoS防护的协议封禁配置
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateProtocolBlockConfigWithContext(ctx context.Context, request *CreateProtocolBlockConfigRequest) (response *CreateProtocolBlockConfigResponse, err error) {
     if request == nil {
         request = NewCreateProtocolBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateProtocolBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateProtocolBlockConfigResponse()
@@ -1286,6 +1366,7 @@ func NewCreateSchedulingDomainRequest() (request *CreateSchedulingDomainRequest)
     request = &CreateSchedulingDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateSchedulingDomain")
     
     
@@ -1295,8 +1376,9 @@ func NewCreateSchedulingDomainRequest() (request *CreateSchedulingDomainRequest)
 func NewCreateSchedulingDomainResponse() (response *CreateSchedulingDomainResponse) {
     response = &CreateSchedulingDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSchedulingDomain
@@ -1314,13 +1396,7 @@ func NewCreateSchedulingDomainResponse() (response *CreateSchedulingDomainRespon
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) CreateSchedulingDomain(request *CreateSchedulingDomainRequest) (response *CreateSchedulingDomainResponse, err error) {
-    if request == nil {
-        request = NewCreateSchedulingDomainRequest()
-    }
-    
-    response = NewCreateSchedulingDomainResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateSchedulingDomainWithContext(context.Background(), request)
 }
 
 // CreateSchedulingDomain
@@ -1341,6 +1417,11 @@ func (c *Client) CreateSchedulingDomainWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateSchedulingDomainRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateSchedulingDomain require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateSchedulingDomainResponse()
@@ -1352,6 +1433,7 @@ func NewCreateWaterPrintConfigRequest() (request *CreateWaterPrintConfigRequest)
     request = &CreateWaterPrintConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateWaterPrintConfig")
     
     
@@ -1361,8 +1443,9 @@ func NewCreateWaterPrintConfigRequest() (request *CreateWaterPrintConfigRequest)
 func NewCreateWaterPrintConfigResponse() (response *CreateWaterPrintConfigResponse) {
     response = &CreateWaterPrintConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWaterPrintConfig
@@ -1374,13 +1457,7 @@ func NewCreateWaterPrintConfigResponse() (response *CreateWaterPrintConfigRespon
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateWaterPrintConfig(request *CreateWaterPrintConfigRequest) (response *CreateWaterPrintConfigResponse, err error) {
-    if request == nil {
-        request = NewCreateWaterPrintConfigRequest()
-    }
-    
-    response = NewCreateWaterPrintConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateWaterPrintConfigWithContext(context.Background(), request)
 }
 
 // CreateWaterPrintConfig
@@ -1395,6 +1472,11 @@ func (c *Client) CreateWaterPrintConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewCreateWaterPrintConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateWaterPrintConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateWaterPrintConfigResponse()
@@ -1406,6 +1488,7 @@ func NewCreateWaterPrintKeyRequest() (request *CreateWaterPrintKeyRequest) {
     request = &CreateWaterPrintKeyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "CreateWaterPrintKey")
     
     
@@ -1415,8 +1498,9 @@ func NewCreateWaterPrintKeyRequest() (request *CreateWaterPrintKeyRequest) {
 func NewCreateWaterPrintKeyResponse() (response *CreateWaterPrintKeyResponse) {
     response = &CreateWaterPrintKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateWaterPrintKey
@@ -1428,13 +1512,7 @@ func NewCreateWaterPrintKeyResponse() (response *CreateWaterPrintKeyResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateWaterPrintKey(request *CreateWaterPrintKeyRequest) (response *CreateWaterPrintKeyResponse, err error) {
-    if request == nil {
-        request = NewCreateWaterPrintKeyRequest()
-    }
-    
-    response = NewCreateWaterPrintKeyResponse()
-    err = c.Send(request, response)
-    return
+    return c.CreateWaterPrintKeyWithContext(context.Background(), request)
 }
 
 // CreateWaterPrintKey
@@ -1449,59 +1527,14 @@ func (c *Client) CreateWaterPrintKeyWithContext(ctx context.Context, request *Cr
     if request == nil {
         request = NewCreateWaterPrintKeyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateWaterPrintKey require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewCreateWaterPrintKeyResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteBlackWhiteIpListRequest() (request *DeleteBlackWhiteIpListRequest) {
-    request = &DeleteBlackWhiteIpListRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    request.Init().WithApiInfo("antiddos", APIVersion, "DeleteBlackWhiteIpList")
-    
-    
-    return
-}
-
-func NewDeleteBlackWhiteIpListResponse() (response *DeleteBlackWhiteIpListResponse) {
-    response = &DeleteBlackWhiteIpListResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteBlackWhiteIpList
-// 删除DDoS防护的IP黑白名单
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DeleteBlackWhiteIpList(request *DeleteBlackWhiteIpListRequest) (response *DeleteBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDeleteBlackWhiteIpListRequest()
-    }
-    
-    response = NewDeleteBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
-}
-
-// DeleteBlackWhiteIpList
-// 删除DDoS防护的IP黑白名单
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-func (c *Client) DeleteBlackWhiteIpListWithContext(ctx context.Context, request *DeleteBlackWhiteIpListRequest) (response *DeleteBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDeleteBlackWhiteIpListRequest()
-    }
-    request.SetContext(ctx)
-    
-    response = NewDeleteBlackWhiteIpListResponse()
     err = c.Send(request, response)
     return
 }
@@ -1510,6 +1543,7 @@ func NewDeleteCCLevelPolicyRequest() (request *DeleteCCLevelPolicyRequest) {
     request = &DeleteCCLevelPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCCLevelPolicy")
     
     
@@ -1519,8 +1553,9 @@ func NewDeleteCCLevelPolicyRequest() (request *DeleteCCLevelPolicyRequest) {
 func NewDeleteCCLevelPolicyResponse() (response *DeleteCCLevelPolicyResponse) {
     response = &DeleteCCLevelPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCCLevelPolicy
@@ -1545,13 +1580,7 @@ func NewDeleteCCLevelPolicyResponse() (response *DeleteCCLevelPolicyResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCCLevelPolicy(request *DeleteCCLevelPolicyRequest) (response *DeleteCCLevelPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteCCLevelPolicyRequest()
-    }
-    
-    response = NewDeleteCCLevelPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCCLevelPolicyWithContext(context.Background(), request)
 }
 
 // DeleteCCLevelPolicy
@@ -1579,6 +1608,11 @@ func (c *Client) DeleteCCLevelPolicyWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeleteCCLevelPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCCLevelPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCCLevelPolicyResponse()
@@ -1590,6 +1624,7 @@ func NewDeleteCCPrecisionPolicyRequest() (request *DeleteCCPrecisionPolicyReques
     request = &DeleteCCPrecisionPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCCPrecisionPolicy")
     
     
@@ -1599,8 +1634,9 @@ func NewDeleteCCPrecisionPolicyRequest() (request *DeleteCCPrecisionPolicyReques
 func NewDeleteCCPrecisionPolicyResponse() (response *DeleteCCPrecisionPolicyResponse) {
     response = &DeleteCCPrecisionPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCCPrecisionPolicy
@@ -1625,13 +1661,7 @@ func NewDeleteCCPrecisionPolicyResponse() (response *DeleteCCPrecisionPolicyResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCCPrecisionPolicy(request *DeleteCCPrecisionPolicyRequest) (response *DeleteCCPrecisionPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteCCPrecisionPolicyRequest()
-    }
-    
-    response = NewDeleteCCPrecisionPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCCPrecisionPolicyWithContext(context.Background(), request)
 }
 
 // DeleteCCPrecisionPolicy
@@ -1659,6 +1689,11 @@ func (c *Client) DeleteCCPrecisionPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteCCPrecisionPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCCPrecisionPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCCPrecisionPolicyResponse()
@@ -1670,6 +1705,7 @@ func NewDeleteCCRequestLimitPolicyRequest() (request *DeleteCCRequestLimitPolicy
     request = &DeleteCCRequestLimitPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCCRequestLimitPolicy")
     
     
@@ -1679,8 +1715,9 @@ func NewDeleteCCRequestLimitPolicyRequest() (request *DeleteCCRequestLimitPolicy
 func NewDeleteCCRequestLimitPolicyResponse() (response *DeleteCCRequestLimitPolicyResponse) {
     response = &DeleteCCRequestLimitPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCCRequestLimitPolicy
@@ -1705,13 +1742,7 @@ func NewDeleteCCRequestLimitPolicyResponse() (response *DeleteCCRequestLimitPoli
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCCRequestLimitPolicy(request *DeleteCCRequestLimitPolicyRequest) (response *DeleteCCRequestLimitPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteCCRequestLimitPolicyRequest()
-    }
-    
-    response = NewDeleteCCRequestLimitPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCCRequestLimitPolicyWithContext(context.Background(), request)
 }
 
 // DeleteCCRequestLimitPolicy
@@ -1739,6 +1770,11 @@ func (c *Client) DeleteCCRequestLimitPolicyWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteCCRequestLimitPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCCRequestLimitPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCCRequestLimitPolicyResponse()
@@ -1750,6 +1786,7 @@ func NewDeleteCCThresholdPolicyRequest() (request *DeleteCCThresholdPolicyReques
     request = &DeleteCCThresholdPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCCThresholdPolicy")
     
     
@@ -1759,8 +1796,9 @@ func NewDeleteCCThresholdPolicyRequest() (request *DeleteCCThresholdPolicyReques
 func NewDeleteCCThresholdPolicyResponse() (response *DeleteCCThresholdPolicyResponse) {
     response = &DeleteCCThresholdPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCCThresholdPolicy
@@ -1785,13 +1823,7 @@ func NewDeleteCCThresholdPolicyResponse() (response *DeleteCCThresholdPolicyResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCCThresholdPolicy(request *DeleteCCThresholdPolicyRequest) (response *DeleteCCThresholdPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteCCThresholdPolicyRequest()
-    }
-    
-    response = NewDeleteCCThresholdPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCCThresholdPolicyWithContext(context.Background(), request)
 }
 
 // DeleteCCThresholdPolicy
@@ -1819,6 +1851,11 @@ func (c *Client) DeleteCCThresholdPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewDeleteCCThresholdPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCCThresholdPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCCThresholdPolicyResponse()
@@ -1830,6 +1867,7 @@ func NewDeleteCcBlackWhiteIpListRequest() (request *DeleteCcBlackWhiteIpListRequ
     request = &DeleteCcBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCcBlackWhiteIpList")
     
     
@@ -1839,8 +1877,9 @@ func NewDeleteCcBlackWhiteIpListRequest() (request *DeleteCcBlackWhiteIpListRequ
 func NewDeleteCcBlackWhiteIpListResponse() (response *DeleteCcBlackWhiteIpListResponse) {
     response = &DeleteCcBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCcBlackWhiteIpList
@@ -1848,16 +1887,11 @@ func NewDeleteCcBlackWhiteIpListResponse() (response *DeleteCcBlackWhiteIpListRe
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCcBlackWhiteIpList(request *DeleteCcBlackWhiteIpListRequest) (response *DeleteCcBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDeleteCcBlackWhiteIpListRequest()
-    }
-    
-    response = NewDeleteCcBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCcBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DeleteCcBlackWhiteIpList
@@ -1865,12 +1899,18 @@ func (c *Client) DeleteCcBlackWhiteIpList(request *DeleteCcBlackWhiteIpListReque
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCcBlackWhiteIpListWithContext(ctx context.Context, request *DeleteCcBlackWhiteIpListRequest) (response *DeleteCcBlackWhiteIpListResponse, err error) {
     if request == nil {
         request = NewDeleteCcBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCcBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCcBlackWhiteIpListResponse()
@@ -1882,6 +1922,7 @@ func NewDeleteCcGeoIPBlockConfigRequest() (request *DeleteCcGeoIPBlockConfigRequ
     request = &DeleteCcGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteCcGeoIPBlockConfig")
     
     
@@ -1891,8 +1932,9 @@ func NewDeleteCcGeoIPBlockConfigRequest() (request *DeleteCcGeoIPBlockConfigRequ
 func NewDeleteCcGeoIPBlockConfigResponse() (response *DeleteCcGeoIPBlockConfigResponse) {
     response = &DeleteCcGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCcGeoIPBlockConfig
@@ -1900,15 +1942,10 @@ func NewDeleteCcGeoIPBlockConfigResponse() (response *DeleteCcGeoIPBlockConfigRe
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCcGeoIPBlockConfig(request *DeleteCcGeoIPBlockConfigRequest) (response *DeleteCcGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewDeleteCcGeoIPBlockConfigRequest()
-    }
-    
-    response = NewDeleteCcGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteCcGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // DeleteCcGeoIPBlockConfig
@@ -1916,11 +1953,17 @@ func (c *Client) DeleteCcGeoIPBlockConfig(request *DeleteCcGeoIPBlockConfigReque
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteCcGeoIPBlockConfigWithContext(ctx context.Context, request *DeleteCcGeoIPBlockConfigRequest) (response *DeleteCcGeoIPBlockConfigResponse, err error) {
     if request == nil {
         request = NewDeleteCcGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCcGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteCcGeoIPBlockConfigResponse()
@@ -1932,6 +1975,7 @@ func NewDeleteDDoSBlackWhiteIpListRequest() (request *DeleteDDoSBlackWhiteIpList
     request = &DeleteDDoSBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteDDoSBlackWhiteIpList")
     
     
@@ -1941,8 +1985,9 @@ func NewDeleteDDoSBlackWhiteIpListRequest() (request *DeleteDDoSBlackWhiteIpList
 func NewDeleteDDoSBlackWhiteIpListResponse() (response *DeleteDDoSBlackWhiteIpListResponse) {
     response = &DeleteDDoSBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDDoSBlackWhiteIpList
@@ -1952,13 +1997,7 @@ func NewDeleteDDoSBlackWhiteIpListResponse() (response *DeleteDDoSBlackWhiteIpLi
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteDDoSBlackWhiteIpList(request *DeleteDDoSBlackWhiteIpListRequest) (response *DeleteDDoSBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDeleteDDoSBlackWhiteIpListRequest()
-    }
-    
-    response = NewDeleteDDoSBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteDDoSBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DeleteDDoSBlackWhiteIpList
@@ -1971,6 +2010,11 @@ func (c *Client) DeleteDDoSBlackWhiteIpListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteDDoSBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDDoSBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteDDoSBlackWhiteIpListResponse()
@@ -1982,6 +2026,7 @@ func NewDeleteDDoSGeoIPBlockConfigRequest() (request *DeleteDDoSGeoIPBlockConfig
     request = &DeleteDDoSGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteDDoSGeoIPBlockConfig")
     
     
@@ -1991,8 +2036,9 @@ func NewDeleteDDoSGeoIPBlockConfigRequest() (request *DeleteDDoSGeoIPBlockConfig
 func NewDeleteDDoSGeoIPBlockConfigResponse() (response *DeleteDDoSGeoIPBlockConfigResponse) {
     response = &DeleteDDoSGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDDoSGeoIPBlockConfig
@@ -2001,13 +2047,7 @@ func NewDeleteDDoSGeoIPBlockConfigResponse() (response *DeleteDDoSGeoIPBlockConf
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteDDoSGeoIPBlockConfig(request *DeleteDDoSGeoIPBlockConfigRequest) (response *DeleteDDoSGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewDeleteDDoSGeoIPBlockConfigRequest()
-    }
-    
-    response = NewDeleteDDoSGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteDDoSGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // DeleteDDoSGeoIPBlockConfig
@@ -2019,6 +2059,11 @@ func (c *Client) DeleteDDoSGeoIPBlockConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteDDoSGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDDoSGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteDDoSGeoIPBlockConfigResponse()
@@ -2030,6 +2075,7 @@ func NewDeleteDDoSSpeedLimitConfigRequest() (request *DeleteDDoSSpeedLimitConfig
     request = &DeleteDDoSSpeedLimitConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteDDoSSpeedLimitConfig")
     
     
@@ -2039,8 +2085,9 @@ func NewDeleteDDoSSpeedLimitConfigRequest() (request *DeleteDDoSSpeedLimitConfig
 func NewDeleteDDoSSpeedLimitConfigResponse() (response *DeleteDDoSSpeedLimitConfigResponse) {
     response = &DeleteDDoSSpeedLimitConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteDDoSSpeedLimitConfig
@@ -2049,13 +2096,7 @@ func NewDeleteDDoSSpeedLimitConfigResponse() (response *DeleteDDoSSpeedLimitConf
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteDDoSSpeedLimitConfig(request *DeleteDDoSSpeedLimitConfigRequest) (response *DeleteDDoSSpeedLimitConfigResponse, err error) {
-    if request == nil {
-        request = NewDeleteDDoSSpeedLimitConfigRequest()
-    }
-    
-    response = NewDeleteDDoSSpeedLimitConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteDDoSSpeedLimitConfigWithContext(context.Background(), request)
 }
 
 // DeleteDDoSSpeedLimitConfig
@@ -2067,6 +2108,11 @@ func (c *Client) DeleteDDoSSpeedLimitConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDeleteDDoSSpeedLimitConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteDDoSSpeedLimitConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteDDoSSpeedLimitConfigResponse()
@@ -2078,6 +2124,7 @@ func NewDeletePacketFilterConfigRequest() (request *DeletePacketFilterConfigRequ
     request = &DeletePacketFilterConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeletePacketFilterConfig")
     
     
@@ -2087,34 +2134,36 @@ func NewDeletePacketFilterConfigRequest() (request *DeletePacketFilterConfigRequ
 func NewDeletePacketFilterConfigResponse() (response *DeletePacketFilterConfigResponse) {
     response = &DeletePacketFilterConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePacketFilterConfig
 // 删除DDoS防护的特征过滤规则
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePacketFilterConfig(request *DeletePacketFilterConfigRequest) (response *DeletePacketFilterConfigResponse, err error) {
-    if request == nil {
-        request = NewDeletePacketFilterConfigRequest()
-    }
-    
-    response = NewDeletePacketFilterConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeletePacketFilterConfigWithContext(context.Background(), request)
 }
 
 // DeletePacketFilterConfig
 // 删除DDoS防护的特征过滤规则
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeletePacketFilterConfigWithContext(ctx context.Context, request *DeletePacketFilterConfigRequest) (response *DeletePacketFilterConfigResponse, err error) {
     if request == nil {
         request = NewDeletePacketFilterConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeletePacketFilterConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeletePacketFilterConfigResponse()
@@ -2126,6 +2175,7 @@ func NewDeletePortAclConfigRequest() (request *DeletePortAclConfigRequest) {
     request = &DeletePortAclConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeletePortAclConfig")
     
     
@@ -2135,8 +2185,9 @@ func NewDeletePortAclConfigRequest() (request *DeletePortAclConfigRequest) {
 func NewDeletePortAclConfigResponse() (response *DeletePortAclConfigResponse) {
     response = &DeletePortAclConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePortAclConfig
@@ -2162,13 +2213,7 @@ func NewDeletePortAclConfigResponse() (response *DeletePortAclConfigResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeletePortAclConfig(request *DeletePortAclConfigRequest) (response *DeletePortAclConfigResponse, err error) {
-    if request == nil {
-        request = NewDeletePortAclConfigRequest()
-    }
-    
-    response = NewDeletePortAclConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeletePortAclConfigWithContext(context.Background(), request)
 }
 
 // DeletePortAclConfig
@@ -2197,6 +2242,11 @@ func (c *Client) DeletePortAclConfigWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDeletePortAclConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeletePortAclConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeletePortAclConfigResponse()
@@ -2208,6 +2258,7 @@ func NewDeleteWaterPrintConfigRequest() (request *DeleteWaterPrintConfigRequest)
     request = &DeleteWaterPrintConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteWaterPrintConfig")
     
     
@@ -2217,8 +2268,9 @@ func NewDeleteWaterPrintConfigRequest() (request *DeleteWaterPrintConfigRequest)
 func NewDeleteWaterPrintConfigResponse() (response *DeleteWaterPrintConfigResponse) {
     response = &DeleteWaterPrintConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWaterPrintConfig
@@ -2228,13 +2280,7 @@ func NewDeleteWaterPrintConfigResponse() (response *DeleteWaterPrintConfigRespon
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) DeleteWaterPrintConfig(request *DeleteWaterPrintConfigRequest) (response *DeleteWaterPrintConfigResponse, err error) {
-    if request == nil {
-        request = NewDeleteWaterPrintConfigRequest()
-    }
-    
-    response = NewDeleteWaterPrintConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteWaterPrintConfigWithContext(context.Background(), request)
 }
 
 // DeleteWaterPrintConfig
@@ -2247,6 +2293,11 @@ func (c *Client) DeleteWaterPrintConfigWithContext(ctx context.Context, request 
     if request == nil {
         request = NewDeleteWaterPrintConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteWaterPrintConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteWaterPrintConfigResponse()
@@ -2258,6 +2309,7 @@ func NewDeleteWaterPrintKeyRequest() (request *DeleteWaterPrintKeyRequest) {
     request = &DeleteWaterPrintKeyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DeleteWaterPrintKey")
     
     
@@ -2267,34 +2319,38 @@ func NewDeleteWaterPrintKeyRequest() (request *DeleteWaterPrintKeyRequest) {
 func NewDeleteWaterPrintKeyResponse() (response *DeleteWaterPrintKeyResponse) {
     response = &DeleteWaterPrintKeyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteWaterPrintKey
 // 删除DDoS防护的水印防护密钥
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWaterPrintKey(request *DeleteWaterPrintKeyRequest) (response *DeleteWaterPrintKeyResponse, err error) {
-    if request == nil {
-        request = NewDeleteWaterPrintKeyRequest()
-    }
-    
-    response = NewDeleteWaterPrintKeyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DeleteWaterPrintKeyWithContext(context.Background(), request)
 }
 
 // DeleteWaterPrintKey
 // 删除DDoS防护的水印防护密钥
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteWaterPrintKeyWithContext(ctx context.Context, request *DeleteWaterPrintKeyRequest) (response *DeleteWaterPrintKeyResponse, err error) {
     if request == nil {
         request = NewDeleteWaterPrintKeyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteWaterPrintKey require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDeleteWaterPrintKeyResponse()
@@ -2306,6 +2362,7 @@ func NewDescribeBasicDeviceStatusRequest() (request *DescribeBasicDeviceStatusRe
     request = &DescribeBasicDeviceStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBasicDeviceStatus")
     
     
@@ -2315,37 +2372,228 @@ func NewDescribeBasicDeviceStatusRequest() (request *DescribeBasicDeviceStatusRe
 func NewDescribeBasicDeviceStatusResponse() (response *DescribeBasicDeviceStatusResponse) {
     response = &DescribeBasicDeviceStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBasicDeviceStatus
 // 获取基础防护攻击状态
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBasicDeviceStatus(request *DescribeBasicDeviceStatusRequest) (response *DescribeBasicDeviceStatusResponse, err error) {
+    return c.DescribeBasicDeviceStatusWithContext(context.Background(), request)
+}
+
+// DescribeBasicDeviceStatus
+// 获取基础防护攻击状态
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBasicDeviceStatusWithContext(ctx context.Context, request *DescribeBasicDeviceStatusRequest) (response *DescribeBasicDeviceStatusResponse, err error) {
     if request == nil {
         request = NewDescribeBasicDeviceStatusRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBasicDeviceStatus require credential")
+    }
+
+    request.SetContext(ctx)
     
     response = NewDescribeBasicDeviceStatusResponse()
     err = c.Send(request, response)
     return
 }
 
-// DescribeBasicDeviceStatus
-// 获取基础防护攻击状态
+func NewDescribeBgpBizTrendRequest() (request *DescribeBgpBizTrendRequest) {
+    request = &DescribeBgpBizTrendRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBgpBizTrend")
+    
+    
+    return
+}
+
+func NewDescribeBgpBizTrendResponse() (response *DescribeBgpBizTrendResponse) {
+    response = &DescribeBgpBizTrendResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBgpBizTrend
+// 获取高防包流量折线图
 //
 // 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeBasicDeviceStatusWithContext(ctx context.Context, request *DescribeBasicDeviceStatusRequest) (response *DescribeBasicDeviceStatusResponse, err error) {
+func (c *Client) DescribeBgpBizTrend(request *DescribeBgpBizTrendRequest) (response *DescribeBgpBizTrendResponse, err error) {
+    return c.DescribeBgpBizTrendWithContext(context.Background(), request)
+}
+
+// DescribeBgpBizTrend
+// 获取高防包流量折线图
+//
+// 可能返回的错误码:
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBgpBizTrendWithContext(ctx context.Context, request *DescribeBgpBizTrendRequest) (response *DescribeBgpBizTrendResponse, err error) {
     if request == nil {
-        request = NewDescribeBasicDeviceStatusRequest()
+        request = NewDescribeBgpBizTrendRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBgpBizTrend require credential")
+    }
+
     request.SetContext(ctx)
     
-    response = NewDescribeBasicDeviceStatusResponse()
+    response = NewDescribeBgpBizTrendResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBizHttpStatusRequest() (request *DescribeBizHttpStatusRequest) {
+    request = &DescribeBizHttpStatusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBizHttpStatus")
+    
+    
+    return
+}
+
+func NewDescribeBizHttpStatusResponse() (response *DescribeBizHttpStatusResponse) {
+    response = &DescribeBizHttpStatusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBizHttpStatus
+// 获取业务流量状态码统计列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeBizHttpStatus(request *DescribeBizHttpStatusRequest) (response *DescribeBizHttpStatusResponse, err error) {
+    return c.DescribeBizHttpStatusWithContext(context.Background(), request)
+}
+
+// DescribeBizHttpStatus
+// 获取业务流量状态码统计列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DescribeBizHttpStatusWithContext(ctx context.Context, request *DescribeBizHttpStatusRequest) (response *DescribeBizHttpStatusResponse, err error) {
+    if request == nil {
+        request = NewDescribeBizHttpStatusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBizHttpStatus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBizHttpStatusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBizMonitorTrendRequest() (request *DescribeBizMonitorTrendRequest) {
+    request = &DescribeBizMonitorTrendRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBizMonitorTrend")
+    
+    
+    return
+}
+
+func NewDescribeBizMonitorTrendResponse() (response *DescribeBizMonitorTrendResponse) {
+    response = &DescribeBizMonitorTrendResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeBizMonitorTrend
+// 获取高防IP业务监控流量曲线
+//
+// 可能返回的错误码:
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeBizMonitorTrend(request *DescribeBizMonitorTrendRequest) (response *DescribeBizMonitorTrendResponse, err error) {
+    return c.DescribeBizMonitorTrendWithContext(context.Background(), request)
+}
+
+// DescribeBizMonitorTrend
+// 获取高防IP业务监控流量曲线
+//
+// 可能返回的错误码:
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+func (c *Client) DescribeBizMonitorTrendWithContext(ctx context.Context, request *DescribeBizMonitorTrendRequest) (response *DescribeBizMonitorTrendResponse, err error) {
+    if request == nil {
+        request = NewDescribeBizMonitorTrendRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBizMonitorTrend require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBizMonitorTrendResponse()
     err = c.Send(request, response)
     return
 }
@@ -2354,6 +2602,7 @@ func NewDescribeBizTrendRequest() (request *DescribeBizTrendRequest) {
     request = &DescribeBizTrendRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBizTrend")
     
     
@@ -2363,8 +2612,9 @@ func NewDescribeBizTrendRequest() (request *DescribeBizTrendRequest) {
 func NewDescribeBizTrendResponse() (response *DescribeBizTrendResponse) {
     response = &DescribeBizTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBizTrend
@@ -2382,13 +2632,7 @@ func NewDescribeBizTrendResponse() (response *DescribeBizTrendResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeBizTrend(request *DescribeBizTrendRequest) (response *DescribeBizTrendResponse, err error) {
-    if request == nil {
-        request = NewDescribeBizTrendRequest()
-    }
-    
-    response = NewDescribeBizTrendResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeBizTrendWithContext(context.Background(), request)
 }
 
 // DescribeBizTrend
@@ -2409,6 +2653,11 @@ func (c *Client) DescribeBizTrendWithContext(ctx context.Context, request *Descr
     if request == nil {
         request = NewDescribeBizTrendRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBizTrend require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeBizTrendResponse()
@@ -2420,6 +2669,7 @@ func NewDescribeBlackWhiteIpListRequest() (request *DescribeBlackWhiteIpListRequ
     request = &DescribeBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeBlackWhiteIpList")
     
     
@@ -2429,11 +2679,16 @@ func NewDescribeBlackWhiteIpListRequest() (request *DescribeBlackWhiteIpListRequ
 func NewDescribeBlackWhiteIpListResponse() (response *DescribeBlackWhiteIpListResponse) {
     response = &DescribeBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBlackWhiteIpList
+// 接口变更
+//
+// 
+//
 // 获取DDoS防护的IP黑白名单
 //
 // 可能返回的错误码:
@@ -2455,16 +2710,14 @@ func NewDescribeBlackWhiteIpListResponse() (response *DescribeBlackWhiteIpListRe
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeBlackWhiteIpList(request *DescribeBlackWhiteIpListRequest) (response *DescribeBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDescribeBlackWhiteIpListRequest()
-    }
-    
-    response = NewDescribeBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DescribeBlackWhiteIpList
+// 接口变更
+//
+// 
+//
 // 获取DDoS防护的IP黑白名单
 //
 // 可能返回的错误码:
@@ -2489,6 +2742,11 @@ func (c *Client) DescribeBlackWhiteIpListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewDescribeBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeBlackWhiteIpListResponse()
@@ -2500,6 +2758,7 @@ func NewDescribeCCLevelListRequest() (request *DescribeCCLevelListRequest) {
     request = &DescribeCCLevelListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCLevelList")
     
     
@@ -2509,12 +2768,13 @@ func NewDescribeCCLevelListRequest() (request *DescribeCCLevelListRequest) {
 func NewDescribeCCLevelListResponse() (response *DescribeCCLevelListResponse) {
     response = &DescribeCCLevelListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCLevelList
-// 获取CC防护等级列表
+// 获取边界防护CC防护等级列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2535,17 +2795,11 @@ func NewDescribeCCLevelListResponse() (response *DescribeCCLevelListResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCLevelList(request *DescribeCCLevelListRequest) (response *DescribeCCLevelListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCLevelListRequest()
-    }
-    
-    response = NewDescribeCCLevelListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCLevelListWithContext(context.Background(), request)
 }
 
 // DescribeCCLevelList
-// 获取CC防护等级列表
+// 获取边界防护CC防护等级列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2569,6 +2823,11 @@ func (c *Client) DescribeCCLevelListWithContext(ctx context.Context, request *De
     if request == nil {
         request = NewDescribeCCLevelListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCLevelList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCLevelListResponse()
@@ -2580,6 +2839,7 @@ func NewDescribeCCLevelPolicyRequest() (request *DescribeCCLevelPolicyRequest) {
     request = &DescribeCCLevelPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCLevelPolicy")
     
     
@@ -2589,8 +2849,9 @@ func NewDescribeCCLevelPolicyRequest() (request *DescribeCCLevelPolicyRequest) {
 func NewDescribeCCLevelPolicyResponse() (response *DescribeCCLevelPolicyResponse) {
     response = &DescribeCCLevelPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCLevelPolicy
@@ -2615,13 +2876,7 @@ func NewDescribeCCLevelPolicyResponse() (response *DescribeCCLevelPolicyResponse
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCLevelPolicy(request *DescribeCCLevelPolicyRequest) (response *DescribeCCLevelPolicyResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCLevelPolicyRequest()
-    }
-    
-    response = NewDescribeCCLevelPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCLevelPolicyWithContext(context.Background(), request)
 }
 
 // DescribeCCLevelPolicy
@@ -2649,6 +2904,11 @@ func (c *Client) DescribeCCLevelPolicyWithContext(ctx context.Context, request *
     if request == nil {
         request = NewDescribeCCLevelPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCLevelPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCLevelPolicyResponse()
@@ -2660,6 +2920,7 @@ func NewDescribeCCPrecisionPlyListRequest() (request *DescribeCCPrecisionPlyList
     request = &DescribeCCPrecisionPlyListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCPrecisionPlyList")
     
     
@@ -2669,8 +2930,9 @@ func NewDescribeCCPrecisionPlyListRequest() (request *DescribeCCPrecisionPlyList
 func NewDescribeCCPrecisionPlyListResponse() (response *DescribeCCPrecisionPlyListResponse) {
     response = &DescribeCCPrecisionPlyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCPrecisionPlyList
@@ -2695,13 +2957,7 @@ func NewDescribeCCPrecisionPlyListResponse() (response *DescribeCCPrecisionPlyLi
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCPrecisionPlyList(request *DescribeCCPrecisionPlyListRequest) (response *DescribeCCPrecisionPlyListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCPrecisionPlyListRequest()
-    }
-    
-    response = NewDescribeCCPrecisionPlyListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCPrecisionPlyListWithContext(context.Background(), request)
 }
 
 // DescribeCCPrecisionPlyList
@@ -2729,6 +2985,11 @@ func (c *Client) DescribeCCPrecisionPlyListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeCCPrecisionPlyListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCPrecisionPlyList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCPrecisionPlyListResponse()
@@ -2740,6 +3001,7 @@ func NewDescribeCCReqLimitPolicyListRequest() (request *DescribeCCReqLimitPolicy
     request = &DescribeCCReqLimitPolicyListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCReqLimitPolicyList")
     
     
@@ -2749,8 +3011,9 @@ func NewDescribeCCReqLimitPolicyListRequest() (request *DescribeCCReqLimitPolicy
 func NewDescribeCCReqLimitPolicyListResponse() (response *DescribeCCReqLimitPolicyListResponse) {
     response = &DescribeCCReqLimitPolicyListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCReqLimitPolicyList
@@ -2775,13 +3038,7 @@ func NewDescribeCCReqLimitPolicyListResponse() (response *DescribeCCReqLimitPoli
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCReqLimitPolicyList(request *DescribeCCReqLimitPolicyListRequest) (response *DescribeCCReqLimitPolicyListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCReqLimitPolicyListRequest()
-    }
-    
-    response = NewDescribeCCReqLimitPolicyListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCReqLimitPolicyListWithContext(context.Background(), request)
 }
 
 // DescribeCCReqLimitPolicyList
@@ -2809,6 +3066,11 @@ func (c *Client) DescribeCCReqLimitPolicyListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeCCReqLimitPolicyListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCReqLimitPolicyList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCReqLimitPolicyListResponse()
@@ -2820,6 +3082,7 @@ func NewDescribeCCThresholdListRequest() (request *DescribeCCThresholdListReques
     request = &DescribeCCThresholdListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCThresholdList")
     
     
@@ -2829,8 +3092,9 @@ func NewDescribeCCThresholdListRequest() (request *DescribeCCThresholdListReques
 func NewDescribeCCThresholdListResponse() (response *DescribeCCThresholdListResponse) {
     response = &DescribeCCThresholdListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCThresholdList
@@ -2855,13 +3119,7 @@ func NewDescribeCCThresholdListResponse() (response *DescribeCCThresholdListResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCThresholdList(request *DescribeCCThresholdListRequest) (response *DescribeCCThresholdListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCThresholdListRequest()
-    }
-    
-    response = NewDescribeCCThresholdListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCThresholdListWithContext(context.Background(), request)
 }
 
 // DescribeCCThresholdList
@@ -2889,6 +3147,11 @@ func (c *Client) DescribeCCThresholdListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeCCThresholdListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCThresholdList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCThresholdListResponse()
@@ -2900,6 +3163,7 @@ func NewDescribeCCTrendRequest() (request *DescribeCCTrendRequest) {
     request = &DescribeCCTrendRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCCTrend")
     
     
@@ -2909,8 +3173,9 @@ func NewDescribeCCTrendRequest() (request *DescribeCCTrendRequest) {
 func NewDescribeCCTrendResponse() (response *DescribeCCTrendResponse) {
     response = &DescribeCCTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCCTrend
@@ -2935,13 +3200,7 @@ func NewDescribeCCTrendResponse() (response *DescribeCCTrendResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCCTrend(request *DescribeCCTrendRequest) (response *DescribeCCTrendResponse, err error) {
-    if request == nil {
-        request = NewDescribeCCTrendRequest()
-    }
-    
-    response = NewDescribeCCTrendResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCCTrendWithContext(context.Background(), request)
 }
 
 // DescribeCCTrend
@@ -2969,6 +3228,11 @@ func (c *Client) DescribeCCTrendWithContext(ctx context.Context, request *Descri
     if request == nil {
         request = NewDescribeCCTrendRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCCTrend require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCCTrendResponse()
@@ -2980,6 +3244,7 @@ func NewDescribeCcBlackWhiteIpListRequest() (request *DescribeCcBlackWhiteIpList
     request = &DescribeCcBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCcBlackWhiteIpList")
     
     
@@ -2989,8 +3254,9 @@ func NewDescribeCcBlackWhiteIpListRequest() (request *DescribeCcBlackWhiteIpList
 func NewDescribeCcBlackWhiteIpListResponse() (response *DescribeCcBlackWhiteIpListResponse) {
     response = &DescribeCcBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCcBlackWhiteIpList
@@ -3001,13 +3267,7 @@ func NewDescribeCcBlackWhiteIpListResponse() (response *DescribeCcBlackWhiteIpLi
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCcBlackWhiteIpList(request *DescribeCcBlackWhiteIpListRequest) (response *DescribeCcBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCcBlackWhiteIpListRequest()
-    }
-    
-    response = NewDescribeCcBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCcBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DescribeCcBlackWhiteIpList
@@ -3021,6 +3281,11 @@ func (c *Client) DescribeCcBlackWhiteIpListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeCcBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCcBlackWhiteIpListResponse()
@@ -3032,6 +3297,7 @@ func NewDescribeCcGeoIPBlockConfigListRequest() (request *DescribeCcGeoIPBlockCo
     request = &DescribeCcGeoIPBlockConfigListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeCcGeoIPBlockConfigList")
     
     
@@ -3041,8 +3307,9 @@ func NewDescribeCcGeoIPBlockConfigListRequest() (request *DescribeCcGeoIPBlockCo
 func NewDescribeCcGeoIPBlockConfigListResponse() (response *DescribeCcGeoIPBlockConfigListResponse) {
     response = &DescribeCcGeoIPBlockConfigListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCcGeoIPBlockConfigList
@@ -3050,15 +3317,10 @@ func NewDescribeCcGeoIPBlockConfigListResponse() (response *DescribeCcGeoIPBlock
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCcGeoIPBlockConfigList(request *DescribeCcGeoIPBlockConfigListRequest) (response *DescribeCcGeoIPBlockConfigListResponse, err error) {
-    if request == nil {
-        request = NewDescribeCcGeoIPBlockConfigListRequest()
-    }
-    
-    response = NewDescribeCcGeoIPBlockConfigListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeCcGeoIPBlockConfigListWithContext(context.Background(), request)
 }
 
 // DescribeCcGeoIPBlockConfigList
@@ -3066,11 +3328,17 @@ func (c *Client) DescribeCcGeoIPBlockConfigList(request *DescribeCcGeoIPBlockCon
 //
 // 可能返回的错误码:
 //  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeCcGeoIPBlockConfigListWithContext(ctx context.Context, request *DescribeCcGeoIPBlockConfigListRequest) (response *DescribeCcGeoIPBlockConfigListResponse, err error) {
     if request == nil {
         request = NewDescribeCcGeoIPBlockConfigListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCcGeoIPBlockConfigList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeCcGeoIPBlockConfigListResponse()
@@ -3082,6 +3350,7 @@ func NewDescribeDDoSBlackWhiteIpListRequest() (request *DescribeDDoSBlackWhiteIp
     request = &DescribeDDoSBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeDDoSBlackWhiteIpList")
     
     
@@ -3091,8 +3360,9 @@ func NewDescribeDDoSBlackWhiteIpListRequest() (request *DescribeDDoSBlackWhiteIp
 func NewDescribeDDoSBlackWhiteIpListResponse() (response *DescribeDDoSBlackWhiteIpListResponse) {
     response = &DescribeDDoSBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSBlackWhiteIpList
@@ -3117,13 +3387,7 @@ func NewDescribeDDoSBlackWhiteIpListResponse() (response *DescribeDDoSBlackWhite
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDDoSBlackWhiteIpList(request *DescribeDDoSBlackWhiteIpListRequest) (response *DescribeDDoSBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDoSBlackWhiteIpListRequest()
-    }
-    
-    response = NewDescribeDDoSBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDDoSBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DescribeDDoSBlackWhiteIpList
@@ -3151,6 +3415,11 @@ func (c *Client) DescribeDDoSBlackWhiteIpListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDDoSBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDDoSBlackWhiteIpListResponse()
@@ -3162,6 +3431,7 @@ func NewDescribeDDoSConnectLimitListRequest() (request *DescribeDDoSConnectLimit
     request = &DescribeDDoSConnectLimitListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeDDoSConnectLimitList")
     
     
@@ -3171,8 +3441,9 @@ func NewDescribeDDoSConnectLimitListRequest() (request *DescribeDDoSConnectLimit
 func NewDescribeDDoSConnectLimitListResponse() (response *DescribeDDoSConnectLimitListResponse) {
     response = &DescribeDDoSConnectLimitListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSConnectLimitList
@@ -3198,13 +3469,7 @@ func NewDescribeDDoSConnectLimitListResponse() (response *DescribeDDoSConnectLim
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDDoSConnectLimitList(request *DescribeDDoSConnectLimitListRequest) (response *DescribeDDoSConnectLimitListResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDoSConnectLimitListRequest()
-    }
-    
-    response = NewDescribeDDoSConnectLimitListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDDoSConnectLimitListWithContext(context.Background(), request)
 }
 
 // DescribeDDoSConnectLimitList
@@ -3233,6 +3498,11 @@ func (c *Client) DescribeDDoSConnectLimitListWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeDDoSConnectLimitListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSConnectLimitList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDDoSConnectLimitListResponse()
@@ -3244,6 +3514,7 @@ func NewDescribeDDoSTrendRequest() (request *DescribeDDoSTrendRequest) {
     request = &DescribeDDoSTrendRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeDDoSTrend")
     
     
@@ -3253,8 +3524,9 @@ func NewDescribeDDoSTrendRequest() (request *DescribeDDoSTrendRequest) {
 func NewDescribeDDoSTrendResponse() (response *DescribeDDoSTrendResponse) {
     response = &DescribeDDoSTrendResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDDoSTrend
@@ -3280,13 +3552,7 @@ func NewDescribeDDoSTrendResponse() (response *DescribeDDoSTrendResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDDoSTrend(request *DescribeDDoSTrendRequest) (response *DescribeDDoSTrendResponse, err error) {
-    if request == nil {
-        request = NewDescribeDDoSTrendRequest()
-    }
-    
-    response = NewDescribeDDoSTrendResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDDoSTrendWithContext(context.Background(), request)
 }
 
 // DescribeDDoSTrend
@@ -3315,6 +3581,11 @@ func (c *Client) DescribeDDoSTrendWithContext(ctx context.Context, request *Desc
     if request == nil {
         request = NewDescribeDDoSTrendRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDDoSTrend require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDDoSTrendResponse()
@@ -3326,6 +3597,7 @@ func NewDescribeDefaultAlarmThresholdRequest() (request *DescribeDefaultAlarmThr
     request = &DescribeDefaultAlarmThresholdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeDefaultAlarmThreshold")
     
     
@@ -3335,8 +3607,9 @@ func NewDescribeDefaultAlarmThresholdRequest() (request *DescribeDefaultAlarmThr
 func NewDescribeDefaultAlarmThresholdResponse() (response *DescribeDefaultAlarmThresholdResponse) {
     response = &DescribeDefaultAlarmThresholdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDefaultAlarmThreshold
@@ -3362,13 +3635,7 @@ func NewDescribeDefaultAlarmThresholdResponse() (response *DescribeDefaultAlarmT
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDefaultAlarmThreshold(request *DescribeDefaultAlarmThresholdRequest) (response *DescribeDefaultAlarmThresholdResponse, err error) {
-    if request == nil {
-        request = NewDescribeDefaultAlarmThresholdRequest()
-    }
-    
-    response = NewDescribeDefaultAlarmThresholdResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeDefaultAlarmThresholdWithContext(context.Background(), request)
 }
 
 // DescribeDefaultAlarmThreshold
@@ -3397,6 +3664,11 @@ func (c *Client) DescribeDefaultAlarmThresholdWithContext(ctx context.Context, r
     if request == nil {
         request = NewDescribeDefaultAlarmThresholdRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDefaultAlarmThreshold require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeDefaultAlarmThresholdResponse()
@@ -3408,6 +3680,7 @@ func NewDescribeL7RulesBySSLCertIdRequest() (request *DescribeL7RulesBySSLCertId
     request = &DescribeL7RulesBySSLCertIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeL7RulesBySSLCertId")
     
     
@@ -3417,8 +3690,9 @@ func NewDescribeL7RulesBySSLCertIdRequest() (request *DescribeL7RulesBySSLCertId
 func NewDescribeL7RulesBySSLCertIdResponse() (response *DescribeL7RulesBySSLCertIdResponse) {
     response = &DescribeL7RulesBySSLCertIdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeL7RulesBySSLCertId
@@ -3434,13 +3708,7 @@ func NewDescribeL7RulesBySSLCertIdResponse() (response *DescribeL7RulesBySSLCert
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeL7RulesBySSLCertId(request *DescribeL7RulesBySSLCertIdRequest) (response *DescribeL7RulesBySSLCertIdResponse, err error) {
-    if request == nil {
-        request = NewDescribeL7RulesBySSLCertIdRequest()
-    }
-    
-    response = NewDescribeL7RulesBySSLCertIdResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeL7RulesBySSLCertIdWithContext(context.Background(), request)
 }
 
 // DescribeL7RulesBySSLCertId
@@ -3459,6 +3727,11 @@ func (c *Client) DescribeL7RulesBySSLCertIdWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDescribeL7RulesBySSLCertIdRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeL7RulesBySSLCertId require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeL7RulesBySSLCertIdResponse()
@@ -3470,6 +3743,7 @@ func NewDescribeListBGPIPInstancesRequest() (request *DescribeListBGPIPInstances
     request = &DescribeListBGPIPInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListBGPIPInstances")
     
     
@@ -3479,48 +3753,34 @@ func NewDescribeListBGPIPInstancesRequest() (request *DescribeListBGPIPInstances
 func NewDescribeListBGPIPInstancesResponse() (response *DescribeListBGPIPInstancesResponse) {
     response = &DescribeListBGPIPInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListBGPIPInstances
 // 获取高防IP资产实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBGPIPInstances(request *DescribeListBGPIPInstancesRequest) (response *DescribeListBGPIPInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeListBGPIPInstancesRequest()
-    }
-    
-    response = NewDescribeListBGPIPInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListBGPIPInstancesWithContext(context.Background(), request)
 }
 
 // DescribeListBGPIPInstances
 // 获取高防IP资产实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBGPIPInstancesWithContext(ctx context.Context, request *DescribeListBGPIPInstancesRequest) (response *DescribeListBGPIPInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeListBGPIPInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListBGPIPInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListBGPIPInstancesResponse()
@@ -3532,6 +3792,7 @@ func NewDescribeListBGPInstancesRequest() (request *DescribeListBGPInstancesRequ
     request = &DescribeListBGPInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListBGPInstances")
     
     
@@ -3541,48 +3802,34 @@ func NewDescribeListBGPInstancesRequest() (request *DescribeListBGPInstancesRequ
 func NewDescribeListBGPInstancesResponse() (response *DescribeListBGPInstancesResponse) {
     response = &DescribeListBGPInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListBGPInstances
 // 获取高防包资产实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBGPInstances(request *DescribeListBGPInstancesRequest) (response *DescribeListBGPInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeListBGPInstancesRequest()
-    }
-    
-    response = NewDescribeListBGPInstancesResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListBGPInstancesWithContext(context.Background(), request)
 }
 
 // DescribeListBGPInstances
 // 获取高防包资产实例列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBGPInstancesWithContext(ctx context.Context, request *DescribeListBGPInstancesRequest) (response *DescribeListBGPInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeListBGPInstancesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListBGPInstances require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListBGPInstancesResponse()
@@ -3594,6 +3841,7 @@ func NewDescribeListBlackWhiteIpListRequest() (request *DescribeListBlackWhiteIp
     request = &DescribeListBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListBlackWhiteIpList")
     
     
@@ -3603,48 +3851,34 @@ func NewDescribeListBlackWhiteIpListRequest() (request *DescribeListBlackWhiteIp
 func NewDescribeListBlackWhiteIpListResponse() (response *DescribeListBlackWhiteIpListResponse) {
     response = &DescribeListBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListBlackWhiteIpList
 // 获取DDoS防护的IP黑白名单列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBlackWhiteIpList(request *DescribeListBlackWhiteIpListRequest) (response *DescribeListBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewDescribeListBlackWhiteIpListRequest()
-    }
-    
-    response = NewDescribeListBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // DescribeListBlackWhiteIpList
 // 获取DDoS防护的IP黑白名单列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListBlackWhiteIpListWithContext(ctx context.Context, request *DescribeListBlackWhiteIpListRequest) (response *DescribeListBlackWhiteIpListResponse, err error) {
     if request == nil {
         request = NewDescribeListBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListBlackWhiteIpListResponse()
@@ -3656,6 +3890,7 @@ func NewDescribeListDDoSAIRequest() (request *DescribeListDDoSAIRequest) {
     request = &DescribeListDDoSAIRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListDDoSAI")
     
     
@@ -3665,48 +3900,34 @@ func NewDescribeListDDoSAIRequest() (request *DescribeListDDoSAIRequest) {
 func NewDescribeListDDoSAIResponse() (response *DescribeListDDoSAIResponse) {
     response = &DescribeListDDoSAIResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListDDoSAI
 // 获取DDoS防护的AI防护开关列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSAI(request *DescribeListDDoSAIRequest) (response *DescribeListDDoSAIResponse, err error) {
-    if request == nil {
-        request = NewDescribeListDDoSAIRequest()
-    }
-    
-    response = NewDescribeListDDoSAIResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListDDoSAIWithContext(context.Background(), request)
 }
 
 // DescribeListDDoSAI
 // 获取DDoS防护的AI防护开关列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSAIWithContext(ctx context.Context, request *DescribeListDDoSAIRequest) (response *DescribeListDDoSAIResponse, err error) {
     if request == nil {
         request = NewDescribeListDDoSAIRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListDDoSAI require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListDDoSAIResponse()
@@ -3718,6 +3939,7 @@ func NewDescribeListDDoSGeoIPBlockConfigRequest() (request *DescribeListDDoSGeoI
     request = &DescribeListDDoSGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListDDoSGeoIPBlockConfig")
     
     
@@ -3727,48 +3949,34 @@ func NewDescribeListDDoSGeoIPBlockConfigRequest() (request *DescribeListDDoSGeoI
 func NewDescribeListDDoSGeoIPBlockConfigResponse() (response *DescribeListDDoSGeoIPBlockConfigResponse) {
     response = &DescribeListDDoSGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListDDoSGeoIPBlockConfig
 // 获取DDoS防护的区域封禁配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSGeoIPBlockConfig(request *DescribeListDDoSGeoIPBlockConfigRequest) (response *DescribeListDDoSGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListDDoSGeoIPBlockConfigRequest()
-    }
-    
-    response = NewDescribeListDDoSGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListDDoSGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // DescribeListDDoSGeoIPBlockConfig
 // 获取DDoS防护的区域封禁配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSGeoIPBlockConfigWithContext(ctx context.Context, request *DescribeListDDoSGeoIPBlockConfigRequest) (response *DescribeListDDoSGeoIPBlockConfigResponse, err error) {
     if request == nil {
         request = NewDescribeListDDoSGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListDDoSGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListDDoSGeoIPBlockConfigResponse()
@@ -3780,6 +3988,7 @@ func NewDescribeListDDoSSpeedLimitConfigRequest() (request *DescribeListDDoSSpee
     request = &DescribeListDDoSSpeedLimitConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListDDoSSpeedLimitConfig")
     
     
@@ -3789,48 +3998,34 @@ func NewDescribeListDDoSSpeedLimitConfigRequest() (request *DescribeListDDoSSpee
 func NewDescribeListDDoSSpeedLimitConfigResponse() (response *DescribeListDDoSSpeedLimitConfigResponse) {
     response = &DescribeListDDoSSpeedLimitConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListDDoSSpeedLimitConfig
 // 获取DDoS防护的访问限速配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSSpeedLimitConfig(request *DescribeListDDoSSpeedLimitConfigRequest) (response *DescribeListDDoSSpeedLimitConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListDDoSSpeedLimitConfigRequest()
-    }
-    
-    response = NewDescribeListDDoSSpeedLimitConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListDDoSSpeedLimitConfigWithContext(context.Background(), request)
 }
 
 // DescribeListDDoSSpeedLimitConfig
 // 获取DDoS防护的访问限速配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListDDoSSpeedLimitConfigWithContext(ctx context.Context, request *DescribeListDDoSSpeedLimitConfigRequest) (response *DescribeListDDoSSpeedLimitConfigResponse, err error) {
     if request == nil {
         request = NewDescribeListDDoSSpeedLimitConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListDDoSSpeedLimitConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListDDoSSpeedLimitConfigResponse()
@@ -3842,6 +4037,7 @@ func NewDescribeListIPAlarmConfigRequest() (request *DescribeListIPAlarmConfigRe
     request = &DescribeListIPAlarmConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListIPAlarmConfig")
     
     
@@ -3851,48 +4047,34 @@ func NewDescribeListIPAlarmConfigRequest() (request *DescribeListIPAlarmConfigRe
 func NewDescribeListIPAlarmConfigResponse() (response *DescribeListIPAlarmConfigResponse) {
     response = &DescribeListIPAlarmConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListIPAlarmConfig
 // 获取单IP告警阈值配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListIPAlarmConfig(request *DescribeListIPAlarmConfigRequest) (response *DescribeListIPAlarmConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListIPAlarmConfigRequest()
-    }
-    
-    response = NewDescribeListIPAlarmConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListIPAlarmConfigWithContext(context.Background(), request)
 }
 
 // DescribeListIPAlarmConfig
 // 获取单IP告警阈值配置列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListIPAlarmConfigWithContext(ctx context.Context, request *DescribeListIPAlarmConfigRequest) (response *DescribeListIPAlarmConfigResponse, err error) {
     if request == nil {
         request = NewDescribeListIPAlarmConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListIPAlarmConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListIPAlarmConfigResponse()
@@ -3904,6 +4086,7 @@ func NewDescribeListListenerRequest() (request *DescribeListListenerRequest) {
     request = &DescribeListListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListListener")
     
     
@@ -3913,48 +4096,34 @@ func NewDescribeListListenerRequest() (request *DescribeListListenerRequest) {
 func NewDescribeListListenerResponse() (response *DescribeListListenerResponse) {
     response = &DescribeListListenerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListListener
 // 获取转发监听器列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListListener(request *DescribeListListenerRequest) (response *DescribeListListenerResponse, err error) {
-    if request == nil {
-        request = NewDescribeListListenerRequest()
-    }
-    
-    response = NewDescribeListListenerResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListListenerWithContext(context.Background(), request)
 }
 
 // DescribeListListener
 // 获取转发监听器列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListListenerWithContext(ctx context.Context, request *DescribeListListenerRequest) (response *DescribeListListenerResponse, err error) {
     if request == nil {
         request = NewDescribeListListenerRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListListener require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListListenerResponse()
@@ -3966,6 +4135,7 @@ func NewDescribeListPacketFilterConfigRequest() (request *DescribeListPacketFilt
     request = &DescribeListPacketFilterConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListPacketFilterConfig")
     
     
@@ -3975,48 +4145,34 @@ func NewDescribeListPacketFilterConfigRequest() (request *DescribeListPacketFilt
 func NewDescribeListPacketFilterConfigResponse() (response *DescribeListPacketFilterConfigResponse) {
     response = &DescribeListPacketFilterConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListPacketFilterConfig
 // 获取DDoS防护的特征过滤规则列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListPacketFilterConfig(request *DescribeListPacketFilterConfigRequest) (response *DescribeListPacketFilterConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListPacketFilterConfigRequest()
-    }
-    
-    response = NewDescribeListPacketFilterConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListPacketFilterConfigWithContext(context.Background(), request)
 }
 
 // DescribeListPacketFilterConfig
 // 获取DDoS防护的特征过滤规则列表
 //
 // 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  AUTHFAILURE = "AuthFailure"
 func (c *Client) DescribeListPacketFilterConfigWithContext(ctx context.Context, request *DescribeListPacketFilterConfigRequest) (response *DescribeListPacketFilterConfigResponse, err error) {
     if request == nil {
         request = NewDescribeListPacketFilterConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListPacketFilterConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListPacketFilterConfigResponse()
@@ -4028,6 +4184,7 @@ func NewDescribeListPortAclListRequest() (request *DescribeListPortAclListReques
     request = &DescribeListPortAclListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListPortAclList")
     
     
@@ -4037,8 +4194,9 @@ func NewDescribeListPortAclListRequest() (request *DescribeListPortAclListReques
 func NewDescribeListPortAclListResponse() (response *DescribeListPortAclListResponse) {
     response = &DescribeListPortAclListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListPortAclList
@@ -4064,13 +4222,7 @@ func NewDescribeListPortAclListResponse() (response *DescribeListPortAclListResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeListPortAclList(request *DescribeListPortAclListRequest) (response *DescribeListPortAclListResponse, err error) {
-    if request == nil {
-        request = NewDescribeListPortAclListRequest()
-    }
-    
-    response = NewDescribeListPortAclListResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListPortAclListWithContext(context.Background(), request)
 }
 
 // DescribeListPortAclList
@@ -4099,6 +4251,11 @@ func (c *Client) DescribeListPortAclListWithContext(ctx context.Context, request
     if request == nil {
         request = NewDescribeListPortAclListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListPortAclList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListPortAclListResponse()
@@ -4110,6 +4267,7 @@ func NewDescribeListProtectThresholdConfigRequest() (request *DescribeListProtec
     request = &DescribeListProtectThresholdConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListProtectThresholdConfig")
     
     
@@ -4119,11 +4277,16 @@ func NewDescribeListProtectThresholdConfigRequest() (request *DescribeListProtec
 func NewDescribeListProtectThresholdConfigResponse() (response *DescribeListProtectThresholdConfigResponse) {
     response = &DescribeListProtectThresholdConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListProtectThresholdConfig
+// 接口变更
+//
+// 
+//
 // 获取防护阈值配置列表，包括DDoS的AI、等级、CC阈值开关等
 //
 // 可能返回的错误码:
@@ -4146,16 +4309,14 @@ func NewDescribeListProtectThresholdConfigResponse() (response *DescribeListProt
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeListProtectThresholdConfig(request *DescribeListProtectThresholdConfigRequest) (response *DescribeListProtectThresholdConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListProtectThresholdConfigRequest()
-    }
-    
-    response = NewDescribeListProtectThresholdConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListProtectThresholdConfigWithContext(context.Background(), request)
 }
 
 // DescribeListProtectThresholdConfig
+// 接口变更
+//
+// 
+//
 // 获取防护阈值配置列表，包括DDoS的AI、等级、CC阈值开关等
 //
 // 可能返回的错误码:
@@ -4181,6 +4342,11 @@ func (c *Client) DescribeListProtectThresholdConfigWithContext(ctx context.Conte
     if request == nil {
         request = NewDescribeListProtectThresholdConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListProtectThresholdConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListProtectThresholdConfigResponse()
@@ -4192,6 +4358,7 @@ func NewDescribeListProtocolBlockConfigRequest() (request *DescribeListProtocolB
     request = &DescribeListProtocolBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListProtocolBlockConfig")
     
     
@@ -4201,8 +4368,9 @@ func NewDescribeListProtocolBlockConfigRequest() (request *DescribeListProtocolB
 func NewDescribeListProtocolBlockConfigResponse() (response *DescribeListProtocolBlockConfigResponse) {
     response = &DescribeListProtocolBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListProtocolBlockConfig
@@ -4228,13 +4396,7 @@ func NewDescribeListProtocolBlockConfigResponse() (response *DescribeListProtoco
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeListProtocolBlockConfig(request *DescribeListProtocolBlockConfigRequest) (response *DescribeListProtocolBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListProtocolBlockConfigRequest()
-    }
-    
-    response = NewDescribeListProtocolBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListProtocolBlockConfigWithContext(context.Background(), request)
 }
 
 // DescribeListProtocolBlockConfig
@@ -4263,6 +4425,11 @@ func (c *Client) DescribeListProtocolBlockConfigWithContext(ctx context.Context,
     if request == nil {
         request = NewDescribeListProtocolBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListProtocolBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListProtocolBlockConfigResponse()
@@ -4274,6 +4441,7 @@ func NewDescribeListSchedulingDomainRequest() (request *DescribeListSchedulingDo
     request = &DescribeListSchedulingDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListSchedulingDomain")
     
     
@@ -4283,8 +4451,9 @@ func NewDescribeListSchedulingDomainRequest() (request *DescribeListSchedulingDo
 func NewDescribeListSchedulingDomainResponse() (response *DescribeListSchedulingDomainResponse) {
     response = &DescribeListSchedulingDomainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListSchedulingDomain
@@ -4310,13 +4479,7 @@ func NewDescribeListSchedulingDomainResponse() (response *DescribeListScheduling
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeListSchedulingDomain(request *DescribeListSchedulingDomainRequest) (response *DescribeListSchedulingDomainResponse, err error) {
-    if request == nil {
-        request = NewDescribeListSchedulingDomainRequest()
-    }
-    
-    response = NewDescribeListSchedulingDomainResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListSchedulingDomainWithContext(context.Background(), request)
 }
 
 // DescribeListSchedulingDomain
@@ -4345,6 +4508,11 @@ func (c *Client) DescribeListSchedulingDomainWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeListSchedulingDomainRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListSchedulingDomain require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListSchedulingDomainResponse()
@@ -4356,6 +4524,7 @@ func NewDescribeListWaterPrintConfigRequest() (request *DescribeListWaterPrintCo
     request = &DescribeListWaterPrintConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DescribeListWaterPrintConfig")
     
     
@@ -4365,8 +4534,9 @@ func NewDescribeListWaterPrintConfigRequest() (request *DescribeListWaterPrintCo
 func NewDescribeListWaterPrintConfigResponse() (response *DescribeListWaterPrintConfigResponse) {
     response = &DescribeListWaterPrintConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeListWaterPrintConfig
@@ -4392,13 +4562,7 @@ func NewDescribeListWaterPrintConfigResponse() (response *DescribeListWaterPrint
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeListWaterPrintConfig(request *DescribeListWaterPrintConfigRequest) (response *DescribeListWaterPrintConfigResponse, err error) {
-    if request == nil {
-        request = NewDescribeListWaterPrintConfigRequest()
-    }
-    
-    response = NewDescribeListWaterPrintConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.DescribeListWaterPrintConfigWithContext(context.Background(), request)
 }
 
 // DescribeListWaterPrintConfig
@@ -4427,9 +4591,610 @@ func (c *Client) DescribeListWaterPrintConfigWithContext(ctx context.Context, re
     if request == nil {
         request = NewDescribeListWaterPrintConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeListWaterPrintConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDescribeListWaterPrintConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNewL7RulesRequest() (request *DescribeNewL7RulesRequest) {
+    request = &DescribeNewL7RulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeNewL7Rules")
+    
+    
+    return
+}
+
+func NewDescribeNewL7RulesResponse() (response *DescribeNewL7RulesResponse) {
+    response = &DescribeNewL7RulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNewL7Rules
+// 高防IP获取7层规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+func (c *Client) DescribeNewL7Rules(request *DescribeNewL7RulesRequest) (response *DescribeNewL7RulesResponse, err error) {
+    return c.DescribeNewL7RulesWithContext(context.Background(), request)
+}
+
+// DescribeNewL7Rules
+// 高防IP获取7层规则
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+func (c *Client) DescribeNewL7RulesWithContext(ctx context.Context, request *DescribeNewL7RulesRequest) (response *DescribeNewL7RulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeNewL7RulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNewL7Rules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNewL7RulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeNewL7RulesErrHealthRequest() (request *DescribeNewL7RulesErrHealthRequest) {
+    request = &DescribeNewL7RulesErrHealthRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeNewL7RulesErrHealth")
+    
+    
+    return
+}
+
+func NewDescribeNewL7RulesErrHealthResponse() (response *DescribeNewL7RulesErrHealthResponse) {
+    response = &DescribeNewL7RulesErrHealthResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeNewL7RulesErrHealth
+// 获取L7转发规则健康检查异常结果列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+func (c *Client) DescribeNewL7RulesErrHealth(request *DescribeNewL7RulesErrHealthRequest) (response *DescribeNewL7RulesErrHealthResponse, err error) {
+    return c.DescribeNewL7RulesErrHealthWithContext(context.Background(), request)
+}
+
+// DescribeNewL7RulesErrHealth
+// 获取L7转发规则健康检查异常结果列表
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+func (c *Client) DescribeNewL7RulesErrHealthWithContext(ctx context.Context, request *DescribeNewL7RulesErrHealthRequest) (response *DescribeNewL7RulesErrHealthResponse, err error) {
+    if request == nil {
+        request = NewDescribeNewL7RulesErrHealthRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeNewL7RulesErrHealth require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeNewL7RulesErrHealthResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOverviewAttackTrendRequest() (request *DescribeOverviewAttackTrendRequest) {
+    request = &DescribeOverviewAttackTrendRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeOverviewAttackTrend")
+    
+    
+    return
+}
+
+func NewDescribeOverviewAttackTrendResponse() (response *DescribeOverviewAttackTrendResponse) {
+    response = &DescribeOverviewAttackTrendResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOverviewAttackTrend
+// 拉取防护概览攻击趋势
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewAttackTrend(request *DescribeOverviewAttackTrendRequest) (response *DescribeOverviewAttackTrendResponse, err error) {
+    return c.DescribeOverviewAttackTrendWithContext(context.Background(), request)
+}
+
+// DescribeOverviewAttackTrend
+// 拉取防护概览攻击趋势
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewAttackTrendWithContext(ctx context.Context, request *DescribeOverviewAttackTrendRequest) (response *DescribeOverviewAttackTrendResponse, err error) {
+    if request == nil {
+        request = NewDescribeOverviewAttackTrendRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOverviewAttackTrend require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOverviewAttackTrendResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOverviewCCTrendRequest() (request *DescribeOverviewCCTrendRequest) {
+    request = &DescribeOverviewCCTrendRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeOverviewCCTrend")
+    
+    
+    return
+}
+
+func NewDescribeOverviewCCTrendResponse() (response *DescribeOverviewCCTrendResponse) {
+    response = &DescribeOverviewCCTrendResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOverviewCCTrend
+// 获取防护概览总请求峰值(QPS)和攻击请求(QPS)以及总请求次数和攻击请求次数
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewCCTrend(request *DescribeOverviewCCTrendRequest) (response *DescribeOverviewCCTrendResponse, err error) {
+    return c.DescribeOverviewCCTrendWithContext(context.Background(), request)
+}
+
+// DescribeOverviewCCTrend
+// 获取防护概览总请求峰值(QPS)和攻击请求(QPS)以及总请求次数和攻击请求次数
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewCCTrendWithContext(ctx context.Context, request *DescribeOverviewCCTrendRequest) (response *DescribeOverviewCCTrendResponse, err error) {
+    if request == nil {
+        request = NewDescribeOverviewCCTrendRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOverviewCCTrend require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOverviewCCTrendResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOverviewDDoSEventListRequest() (request *DescribeOverviewDDoSEventListRequest) {
+    request = &DescribeOverviewDDoSEventListRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeOverviewDDoSEventList")
+    
+    
+    return
+}
+
+func NewDescribeOverviewDDoSEventListResponse() (response *DescribeOverviewDDoSEventListResponse) {
+    response = &DescribeOverviewDDoSEventListResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOverviewDDoSEventList
+// 获取防护概览的ddos攻击事件
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewDDoSEventList(request *DescribeOverviewDDoSEventListRequest) (response *DescribeOverviewDDoSEventListResponse, err error) {
+    return c.DescribeOverviewDDoSEventListWithContext(context.Background(), request)
+}
+
+// DescribeOverviewDDoSEventList
+// 获取防护概览的ddos攻击事件
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewDDoSEventListWithContext(ctx context.Context, request *DescribeOverviewDDoSEventListRequest) (response *DescribeOverviewDDoSEventListResponse, err error) {
+    if request == nil {
+        request = NewDescribeOverviewDDoSEventListRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOverviewDDoSEventList require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOverviewDDoSEventListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOverviewDDoSTrendRequest() (request *DescribeOverviewDDoSTrendRequest) {
+    request = &DescribeOverviewDDoSTrendRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeOverviewDDoSTrend")
+    
+    
+    return
+}
+
+func NewDescribeOverviewDDoSTrendResponse() (response *DescribeOverviewDDoSTrendResponse) {
+    response = &DescribeOverviewDDoSTrendResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOverviewDDoSTrend
+// 获取防护概览DDoS攻击流量带宽和攻击包速率数据
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewDDoSTrend(request *DescribeOverviewDDoSTrendRequest) (response *DescribeOverviewDDoSTrendResponse, err error) {
+    return c.DescribeOverviewDDoSTrendWithContext(context.Background(), request)
+}
+
+// DescribeOverviewDDoSTrend
+// 获取防护概览DDoS攻击流量带宽和攻击包速率数据
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewDDoSTrendWithContext(ctx context.Context, request *DescribeOverviewDDoSTrendRequest) (response *DescribeOverviewDDoSTrendResponse, err error) {
+    if request == nil {
+        request = NewDescribeOverviewDDoSTrendRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOverviewDDoSTrend require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOverviewDDoSTrendResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeOverviewIndexRequest() (request *DescribeOverviewIndexRequest) {
+    request = &DescribeOverviewIndexRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribeOverviewIndex")
+    
+    
+    return
+}
+
+func NewDescribeOverviewIndexResponse() (response *DescribeOverviewIndexResponse) {
+    response = &DescribeOverviewIndexResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeOverviewIndex
+// 拉取防护概览指标
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewIndex(request *DescribeOverviewIndexRequest) (response *DescribeOverviewIndexResponse, err error) {
+    return c.DescribeOverviewIndexWithContext(context.Background(), request)
+}
+
+// DescribeOverviewIndex
+// 拉取防护概览指标
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeOverviewIndexWithContext(ctx context.Context, request *DescribeOverviewIndexRequest) (response *DescribeOverviewIndexResponse, err error) {
+    if request == nil {
+        request = NewDescribeOverviewIndexRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeOverviewIndex require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeOverviewIndexResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePendingRiskInfoRequest() (request *DescribePendingRiskInfoRequest) {
+    request = &DescribePendingRiskInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("antiddos", APIVersion, "DescribePendingRiskInfo")
+    
+    
+    return
+}
+
+func NewDescribePendingRiskInfoResponse() (response *DescribePendingRiskInfoResponse) {
+    response = &DescribePendingRiskInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribePendingRiskInfo
+// 查询账号维度待处理风险信息，包括是否为付费用户，查询攻击中、封堵中、过期资源数量等
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePendingRiskInfo(request *DescribePendingRiskInfoRequest) (response *DescribePendingRiskInfoResponse, err error) {
+    return c.DescribePendingRiskInfoWithContext(context.Background(), request)
+}
+
+// DescribePendingRiskInfo
+// 查询账号维度待处理风险信息，包括是否为付费用户，查询攻击中、封堵中、过期资源数量等
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCESSOLDOUT = "ResourcesSoldOut"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribePendingRiskInfoWithContext(ctx context.Context, request *DescribePendingRiskInfoRequest) (response *DescribePendingRiskInfoResponse, err error) {
+    if request == nil {
+        request = NewDescribePendingRiskInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePendingRiskInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePendingRiskInfoResponse()
     err = c.Send(request, response)
     return
 }
@@ -4438,6 +5203,7 @@ func NewDisassociateDDoSEipAddressRequest() (request *DisassociateDDoSEipAddress
     request = &DisassociateDDoSEipAddressRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "DisassociateDDoSEipAddress")
     
     
@@ -4447,8 +5213,9 @@ func NewDisassociateDDoSEipAddressRequest() (request *DisassociateDDoSEipAddress
 func NewDisassociateDDoSEipAddressResponse() (response *DisassociateDDoSEipAddressResponse) {
     response = &DisassociateDDoSEipAddressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DisassociateDDoSEipAddress
@@ -4474,13 +5241,7 @@ func NewDisassociateDDoSEipAddressResponse() (response *DisassociateDDoSEipAddre
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DisassociateDDoSEipAddress(request *DisassociateDDoSEipAddressRequest) (response *DisassociateDDoSEipAddressResponse, err error) {
-    if request == nil {
-        request = NewDisassociateDDoSEipAddressRequest()
-    }
-    
-    response = NewDisassociateDDoSEipAddressResponse()
-    err = c.Send(request, response)
-    return
+    return c.DisassociateDDoSEipAddressWithContext(context.Background(), request)
 }
 
 // DisassociateDDoSEipAddress
@@ -4509,6 +5270,11 @@ func (c *Client) DisassociateDDoSEipAddressWithContext(ctx context.Context, requ
     if request == nil {
         request = NewDisassociateDDoSEipAddressRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DisassociateDDoSEipAddress require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewDisassociateDDoSEipAddressResponse()
@@ -4520,6 +5286,7 @@ func NewModifyCCLevelPolicyRequest() (request *ModifyCCLevelPolicyRequest) {
     request = &ModifyCCLevelPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyCCLevelPolicy")
     
     
@@ -4529,8 +5296,9 @@ func NewModifyCCLevelPolicyRequest() (request *ModifyCCLevelPolicyRequest) {
 func NewModifyCCLevelPolicyResponse() (response *ModifyCCLevelPolicyResponse) {
     response = &ModifyCCLevelPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCCLevelPolicy
@@ -4555,13 +5323,7 @@ func NewModifyCCLevelPolicyResponse() (response *ModifyCCLevelPolicyResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCCLevelPolicy(request *ModifyCCLevelPolicyRequest) (response *ModifyCCLevelPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifyCCLevelPolicyRequest()
-    }
-    
-    response = NewModifyCCLevelPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyCCLevelPolicyWithContext(context.Background(), request)
 }
 
 // ModifyCCLevelPolicy
@@ -4589,6 +5351,11 @@ func (c *Client) ModifyCCLevelPolicyWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyCCLevelPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCCLevelPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyCCLevelPolicyResponse()
@@ -4600,6 +5367,7 @@ func NewModifyCCPrecisionPolicyRequest() (request *ModifyCCPrecisionPolicyReques
     request = &ModifyCCPrecisionPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyCCPrecisionPolicy")
     
     
@@ -4609,8 +5377,9 @@ func NewModifyCCPrecisionPolicyRequest() (request *ModifyCCPrecisionPolicyReques
 func NewModifyCCPrecisionPolicyResponse() (response *ModifyCCPrecisionPolicyResponse) {
     response = &ModifyCCPrecisionPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCCPrecisionPolicy
@@ -4635,13 +5404,7 @@ func NewModifyCCPrecisionPolicyResponse() (response *ModifyCCPrecisionPolicyResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCCPrecisionPolicy(request *ModifyCCPrecisionPolicyRequest) (response *ModifyCCPrecisionPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifyCCPrecisionPolicyRequest()
-    }
-    
-    response = NewModifyCCPrecisionPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyCCPrecisionPolicyWithContext(context.Background(), request)
 }
 
 // ModifyCCPrecisionPolicy
@@ -4669,6 +5432,11 @@ func (c *Client) ModifyCCPrecisionPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyCCPrecisionPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCCPrecisionPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyCCPrecisionPolicyResponse()
@@ -4680,6 +5448,7 @@ func NewModifyCCReqLimitPolicyRequest() (request *ModifyCCReqLimitPolicyRequest)
     request = &ModifyCCReqLimitPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyCCReqLimitPolicy")
     
     
@@ -4689,8 +5458,9 @@ func NewModifyCCReqLimitPolicyRequest() (request *ModifyCCReqLimitPolicyRequest)
 func NewModifyCCReqLimitPolicyResponse() (response *ModifyCCReqLimitPolicyResponse) {
     response = &ModifyCCReqLimitPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCCReqLimitPolicy
@@ -4715,13 +5485,7 @@ func NewModifyCCReqLimitPolicyResponse() (response *ModifyCCReqLimitPolicyRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCCReqLimitPolicy(request *ModifyCCReqLimitPolicyRequest) (response *ModifyCCReqLimitPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifyCCReqLimitPolicyRequest()
-    }
-    
-    response = NewModifyCCReqLimitPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyCCReqLimitPolicyWithContext(context.Background(), request)
 }
 
 // ModifyCCReqLimitPolicy
@@ -4749,6 +5513,11 @@ func (c *Client) ModifyCCReqLimitPolicyWithContext(ctx context.Context, request 
     if request == nil {
         request = NewModifyCCReqLimitPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCCReqLimitPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyCCReqLimitPolicyResponse()
@@ -4760,6 +5529,7 @@ func NewModifyCCThresholdPolicyRequest() (request *ModifyCCThresholdPolicyReques
     request = &ModifyCCThresholdPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyCCThresholdPolicy")
     
     
@@ -4769,8 +5539,9 @@ func NewModifyCCThresholdPolicyRequest() (request *ModifyCCThresholdPolicyReques
 func NewModifyCCThresholdPolicyResponse() (response *ModifyCCThresholdPolicyResponse) {
     response = &ModifyCCThresholdPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCCThresholdPolicy
@@ -4795,13 +5566,7 @@ func NewModifyCCThresholdPolicyResponse() (response *ModifyCCThresholdPolicyResp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCCThresholdPolicy(request *ModifyCCThresholdPolicyRequest) (response *ModifyCCThresholdPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifyCCThresholdPolicyRequest()
-    }
-    
-    response = NewModifyCCThresholdPolicyResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyCCThresholdPolicyWithContext(context.Background(), request)
 }
 
 // ModifyCCThresholdPolicy
@@ -4829,6 +5594,11 @@ func (c *Client) ModifyCCThresholdPolicyWithContext(ctx context.Context, request
     if request == nil {
         request = NewModifyCCThresholdPolicyRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCCThresholdPolicy require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyCCThresholdPolicyResponse()
@@ -4840,6 +5610,7 @@ func NewModifyCcBlackWhiteIpListRequest() (request *ModifyCcBlackWhiteIpListRequ
     request = &ModifyCcBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyCcBlackWhiteIpList")
     
     
@@ -4849,8 +5620,9 @@ func NewModifyCcBlackWhiteIpListRequest() (request *ModifyCcBlackWhiteIpListRequ
 func NewModifyCcBlackWhiteIpListResponse() (response *ModifyCcBlackWhiteIpListResponse) {
     response = &ModifyCcBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCcBlackWhiteIpList
@@ -4861,13 +5633,7 @@ func NewModifyCcBlackWhiteIpListResponse() (response *ModifyCcBlackWhiteIpListRe
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCcBlackWhiteIpList(request *ModifyCcBlackWhiteIpListRequest) (response *ModifyCcBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewModifyCcBlackWhiteIpListRequest()
-    }
-    
-    response = NewModifyCcBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyCcBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // ModifyCcBlackWhiteIpList
@@ -4881,6 +5647,11 @@ func (c *Client) ModifyCcBlackWhiteIpListWithContext(ctx context.Context, reques
     if request == nil {
         request = NewModifyCcBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCcBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyCcBlackWhiteIpListResponse()
@@ -4892,6 +5663,7 @@ func NewModifyDDoSBlackWhiteIpListRequest() (request *ModifyDDoSBlackWhiteIpList
     request = &ModifyDDoSBlackWhiteIpListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDDoSBlackWhiteIpList")
     
     
@@ -4901,8 +5673,9 @@ func NewModifyDDoSBlackWhiteIpListRequest() (request *ModifyDDoSBlackWhiteIpList
 func NewModifyDDoSBlackWhiteIpListResponse() (response *ModifyDDoSBlackWhiteIpListResponse) {
     response = &ModifyDDoSBlackWhiteIpListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDDoSBlackWhiteIpList
@@ -4913,13 +5686,7 @@ func NewModifyDDoSBlackWhiteIpListResponse() (response *ModifyDDoSBlackWhiteIpLi
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyDDoSBlackWhiteIpList(request *ModifyDDoSBlackWhiteIpListRequest) (response *ModifyDDoSBlackWhiteIpListResponse, err error) {
-    if request == nil {
-        request = NewModifyDDoSBlackWhiteIpListRequest()
-    }
-    
-    response = NewModifyDDoSBlackWhiteIpListResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDDoSBlackWhiteIpListWithContext(context.Background(), request)
 }
 
 // ModifyDDoSBlackWhiteIpList
@@ -4933,6 +5700,11 @@ func (c *Client) ModifyDDoSBlackWhiteIpListWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyDDoSBlackWhiteIpListRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDDoSBlackWhiteIpList require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDDoSBlackWhiteIpListResponse()
@@ -4944,6 +5716,7 @@ func NewModifyDDoSGeoIPBlockConfigRequest() (request *ModifyDDoSGeoIPBlockConfig
     request = &ModifyDDoSGeoIPBlockConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDDoSGeoIPBlockConfig")
     
     
@@ -4953,8 +5726,9 @@ func NewModifyDDoSGeoIPBlockConfigRequest() (request *ModifyDDoSGeoIPBlockConfig
 func NewModifyDDoSGeoIPBlockConfigResponse() (response *ModifyDDoSGeoIPBlockConfigResponse) {
     response = &ModifyDDoSGeoIPBlockConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDDoSGeoIPBlockConfig
@@ -4963,13 +5737,7 @@ func NewModifyDDoSGeoIPBlockConfigResponse() (response *ModifyDDoSGeoIPBlockConf
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyDDoSGeoIPBlockConfig(request *ModifyDDoSGeoIPBlockConfigRequest) (response *ModifyDDoSGeoIPBlockConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyDDoSGeoIPBlockConfigRequest()
-    }
-    
-    response = NewModifyDDoSGeoIPBlockConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDDoSGeoIPBlockConfigWithContext(context.Background(), request)
 }
 
 // ModifyDDoSGeoIPBlockConfig
@@ -4981,6 +5749,11 @@ func (c *Client) ModifyDDoSGeoIPBlockConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyDDoSGeoIPBlockConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDDoSGeoIPBlockConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDDoSGeoIPBlockConfigResponse()
@@ -4992,6 +5765,7 @@ func NewModifyDDoSLevelRequest() (request *ModifyDDoSLevelRequest) {
     request = &ModifyDDoSLevelRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDDoSLevel")
     
     
@@ -5001,8 +5775,9 @@ func NewModifyDDoSLevelRequest() (request *ModifyDDoSLevelRequest) {
 func NewModifyDDoSLevelResponse() (response *ModifyDDoSLevelResponse) {
     response = &ModifyDDoSLevelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDDoSLevel
@@ -5011,13 +5786,7 @@ func NewModifyDDoSLevelResponse() (response *ModifyDDoSLevelResponse) {
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyDDoSLevel(request *ModifyDDoSLevelRequest) (response *ModifyDDoSLevelResponse, err error) {
-    if request == nil {
-        request = NewModifyDDoSLevelRequest()
-    }
-    
-    response = NewModifyDDoSLevelResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDDoSLevelWithContext(context.Background(), request)
 }
 
 // ModifyDDoSLevel
@@ -5029,6 +5798,11 @@ func (c *Client) ModifyDDoSLevelWithContext(ctx context.Context, request *Modify
     if request == nil {
         request = NewModifyDDoSLevelRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDDoSLevel require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDDoSLevelResponse()
@@ -5040,6 +5814,7 @@ func NewModifyDDoSSpeedLimitConfigRequest() (request *ModifyDDoSSpeedLimitConfig
     request = &ModifyDDoSSpeedLimitConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDDoSSpeedLimitConfig")
     
     
@@ -5049,8 +5824,9 @@ func NewModifyDDoSSpeedLimitConfigRequest() (request *ModifyDDoSSpeedLimitConfig
 func NewModifyDDoSSpeedLimitConfigResponse() (response *ModifyDDoSSpeedLimitConfigResponse) {
     response = &ModifyDDoSSpeedLimitConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDDoSSpeedLimitConfig
@@ -5059,13 +5835,7 @@ func NewModifyDDoSSpeedLimitConfigResponse() (response *ModifyDDoSSpeedLimitConf
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyDDoSSpeedLimitConfig(request *ModifyDDoSSpeedLimitConfigRequest) (response *ModifyDDoSSpeedLimitConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyDDoSSpeedLimitConfigRequest()
-    }
-    
-    response = NewModifyDDoSSpeedLimitConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDDoSSpeedLimitConfigWithContext(context.Background(), request)
 }
 
 // ModifyDDoSSpeedLimitConfig
@@ -5077,6 +5847,11 @@ func (c *Client) ModifyDDoSSpeedLimitConfigWithContext(ctx context.Context, requ
     if request == nil {
         request = NewModifyDDoSSpeedLimitConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDDoSSpeedLimitConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDDoSSpeedLimitConfigResponse()
@@ -5088,6 +5863,7 @@ func NewModifyDDoSThresholdRequest() (request *ModifyDDoSThresholdRequest) {
     request = &ModifyDDoSThresholdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDDoSThreshold")
     
     
@@ -5097,8 +5873,9 @@ func NewModifyDDoSThresholdRequest() (request *ModifyDDoSThresholdRequest) {
 func NewModifyDDoSThresholdResponse() (response *ModifyDDoSThresholdResponse) {
     response = &ModifyDDoSThresholdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDDoSThreshold
@@ -5107,13 +5884,7 @@ func NewModifyDDoSThresholdResponse() (response *ModifyDDoSThresholdResponse) {
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyDDoSThreshold(request *ModifyDDoSThresholdRequest) (response *ModifyDDoSThresholdResponse, err error) {
-    if request == nil {
-        request = NewModifyDDoSThresholdRequest()
-    }
-    
-    response = NewModifyDDoSThresholdResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDDoSThresholdWithContext(context.Background(), request)
 }
 
 // ModifyDDoSThreshold
@@ -5125,6 +5896,11 @@ func (c *Client) ModifyDDoSThresholdWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyDDoSThresholdRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDDoSThreshold require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDDoSThresholdResponse()
@@ -5136,6 +5912,7 @@ func NewModifyDomainUsrNameRequest() (request *ModifyDomainUsrNameRequest) {
     request = &ModifyDomainUsrNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyDomainUsrName")
     
     
@@ -5145,8 +5922,9 @@ func NewModifyDomainUsrNameRequest() (request *ModifyDomainUsrNameRequest) {
 func NewModifyDomainUsrNameResponse() (response *ModifyDomainUsrNameResponse) {
     response = &ModifyDomainUsrNameResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyDomainUsrName
@@ -5155,13 +5933,7 @@ func NewModifyDomainUsrNameResponse() (response *ModifyDomainUsrNameResponse) {
 // 可能返回的错误码:
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyDomainUsrName(request *ModifyDomainUsrNameRequest) (response *ModifyDomainUsrNameResponse, err error) {
-    if request == nil {
-        request = NewModifyDomainUsrNameRequest()
-    }
-    
-    response = NewModifyDomainUsrNameResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyDomainUsrNameWithContext(context.Background(), request)
 }
 
 // ModifyDomainUsrName
@@ -5173,59 +5945,14 @@ func (c *Client) ModifyDomainUsrNameWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyDomainUsrNameRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDomainUsrName require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyDomainUsrNameResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewModifyL7RulesEdgeRequest() (request *ModifyL7RulesEdgeRequest) {
-    request = &ModifyL7RulesEdgeRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    request.Init().WithApiInfo("antiddos", APIVersion, "ModifyL7RulesEdge")
-    
-    
-    return
-}
-
-func NewModifyL7RulesEdgeResponse() (response *ModifyL7RulesEdgeResponse) {
-    response = &ModifyL7RulesEdgeResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// ModifyL7RulesEdge
-// 修改边界防护L7转发规则
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ModifyL7RulesEdge(request *ModifyL7RulesEdgeRequest) (response *ModifyL7RulesEdgeResponse, err error) {
-    if request == nil {
-        request = NewModifyL7RulesEdgeRequest()
-    }
-    
-    response = NewModifyL7RulesEdgeResponse()
-    err = c.Send(request, response)
-    return
-}
-
-// ModifyL7RulesEdge
-// 修改边界防护L7转发规则
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) ModifyL7RulesEdgeWithContext(ctx context.Context, request *ModifyL7RulesEdgeRequest) (response *ModifyL7RulesEdgeResponse, err error) {
-    if request == nil {
-        request = NewModifyL7RulesEdgeRequest()
-    }
-    request.SetContext(ctx)
-    
-    response = NewModifyL7RulesEdgeResponse()
     err = c.Send(request, response)
     return
 }
@@ -5234,6 +5961,7 @@ func NewModifyNewDomainRulesRequest() (request *ModifyNewDomainRulesRequest) {
     request = &ModifyNewDomainRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyNewDomainRules")
     
     
@@ -5243,8 +5971,9 @@ func NewModifyNewDomainRulesRequest() (request *ModifyNewDomainRulesRequest) {
 func NewModifyNewDomainRulesResponse() (response *ModifyNewDomainRulesResponse) {
     response = &ModifyNewDomainRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyNewDomainRules
@@ -5254,13 +5983,7 @@ func NewModifyNewDomainRulesResponse() (response *ModifyNewDomainRulesResponse) 
 //  RESOURCEINUSE = "ResourceInUse"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyNewDomainRules(request *ModifyNewDomainRulesRequest) (response *ModifyNewDomainRulesResponse, err error) {
-    if request == nil {
-        request = NewModifyNewDomainRulesRequest()
-    }
-    
-    response = NewModifyNewDomainRulesResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyNewDomainRulesWithContext(context.Background(), request)
 }
 
 // ModifyNewDomainRules
@@ -5273,6 +5996,11 @@ func (c *Client) ModifyNewDomainRulesWithContext(ctx context.Context, request *M
     if request == nil {
         request = NewModifyNewDomainRulesRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyNewDomainRules require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyNewDomainRulesResponse()
@@ -5284,6 +6012,7 @@ func NewModifyPacketFilterConfigRequest() (request *ModifyPacketFilterConfigRequ
     request = &ModifyPacketFilterConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyPacketFilterConfig")
     
     
@@ -5293,8 +6022,9 @@ func NewModifyPacketFilterConfigRequest() (request *ModifyPacketFilterConfigRequ
 func NewModifyPacketFilterConfigResponse() (response *ModifyPacketFilterConfigResponse) {
     response = &ModifyPacketFilterConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPacketFilterConfig
@@ -5302,15 +6032,9 @@ func NewModifyPacketFilterConfigResponse() (response *ModifyPacketFilterConfigRe
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyPacketFilterConfig(request *ModifyPacketFilterConfigRequest) (response *ModifyPacketFilterConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyPacketFilterConfigRequest()
-    }
-    
-    response = NewModifyPacketFilterConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyPacketFilterConfigWithContext(context.Background(), request)
 }
 
 // ModifyPacketFilterConfig
@@ -5318,11 +6042,16 @@ func (c *Client) ModifyPacketFilterConfig(request *ModifyPacketFilterConfigReque
 //
 // 可能返回的错误码:
 //  RESOURCEINUSE = "ResourceInUse"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyPacketFilterConfigWithContext(ctx context.Context, request *ModifyPacketFilterConfigRequest) (response *ModifyPacketFilterConfigResponse, err error) {
     if request == nil {
         request = NewModifyPacketFilterConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyPacketFilterConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyPacketFilterConfigResponse()
@@ -5334,6 +6063,7 @@ func NewModifyPortAclConfigRequest() (request *ModifyPortAclConfigRequest) {
     request = &ModifyPortAclConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "ModifyPortAclConfig")
     
     
@@ -5343,8 +6073,9 @@ func NewModifyPortAclConfigRequest() (request *ModifyPortAclConfigRequest) {
 func NewModifyPortAclConfigResponse() (response *ModifyPortAclConfigResponse) {
     response = &ModifyPortAclConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPortAclConfig
@@ -5370,13 +6101,7 @@ func NewModifyPortAclConfigResponse() (response *ModifyPortAclConfigResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyPortAclConfig(request *ModifyPortAclConfigRequest) (response *ModifyPortAclConfigResponse, err error) {
-    if request == nil {
-        request = NewModifyPortAclConfigRequest()
-    }
-    
-    response = NewModifyPortAclConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.ModifyPortAclConfigWithContext(context.Background(), request)
 }
 
 // ModifyPortAclConfig
@@ -5405,6 +6130,11 @@ func (c *Client) ModifyPortAclConfigWithContext(ctx context.Context, request *Mo
     if request == nil {
         request = NewModifyPortAclConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyPortAclConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewModifyPortAclConfigResponse()
@@ -5416,6 +6146,7 @@ func NewSwitchWaterPrintConfigRequest() (request *SwitchWaterPrintConfigRequest)
     request = &SwitchWaterPrintConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("antiddos", APIVersion, "SwitchWaterPrintConfig")
     
     
@@ -5425,8 +6156,9 @@ func NewSwitchWaterPrintConfigRequest() (request *SwitchWaterPrintConfigRequest)
 func NewSwitchWaterPrintConfigResponse() (response *SwitchWaterPrintConfigResponse) {
     response = &SwitchWaterPrintConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SwitchWaterPrintConfig
@@ -5435,15 +6167,10 @@ func NewSwitchWaterPrintConfigResponse() (response *SwitchWaterPrintConfigRespon
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) SwitchWaterPrintConfig(request *SwitchWaterPrintConfigRequest) (response *SwitchWaterPrintConfigResponse, err error) {
-    if request == nil {
-        request = NewSwitchWaterPrintConfigRequest()
-    }
-    
-    response = NewSwitchWaterPrintConfigResponse()
-    err = c.Send(request, response)
-    return
+    return c.SwitchWaterPrintConfigWithContext(context.Background(), request)
 }
 
 // SwitchWaterPrintConfig
@@ -5452,11 +6179,17 @@ func (c *Client) SwitchWaterPrintConfig(request *SwitchWaterPrintConfigRequest) 
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) SwitchWaterPrintConfigWithContext(ctx context.Context, request *SwitchWaterPrintConfigRequest) (response *SwitchWaterPrintConfigResponse, err error) {
     if request == nil {
         request = NewSwitchWaterPrintConfigRequest()
     }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SwitchWaterPrintConfig require credential")
+    }
+
     request.SetContext(ctx)
     
     response = NewSwitchWaterPrintConfigResponse()

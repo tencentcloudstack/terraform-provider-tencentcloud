@@ -9,7 +9,9 @@ go-httpheader is a Go library for encoding structs into Header fields.
 
 ## install
 
-`go get -u github.com/mozillazg/go-httpheader`
+```
+go get github.com/mozillazg/go-httpheader
+```
 
 
 ## usage

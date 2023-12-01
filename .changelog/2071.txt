@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_scf_trigger_config: support new para, update api UpdateTrigger
+```

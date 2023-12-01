@@ -15,33 +15,55 @@ Provides a alarm notice resource for monitor.
 
 ```hcl
 resource "tencentcloud_monitor_alarm_notice" "example" {
-  name            = "test_alarm_notice_1"
-  notice_type     = "ALL"
+  name            = "test_alarm_notice"
   notice_language = "zh-CN"
-
-  user_notices {
-    receiver_type            = "USER"
-    start_time               = 0
-    end_time                 = 1
-    notice_way               = ["SMS", "EMAIL"]
-    user_ids                 = [10001]
-    group_ids                = []
-    phone_order              = [10001]
-    phone_circle_times       = 2
-    phone_circle_interval    = 50
-    phone_inner_interval     = 60
-    need_phone_arrive_notice = 1
-    phone_call_type          = "CIRCLE"
-    weekday                  = [1, 2, 3, 4, 5, 6, 7]
-  }
+  notice_type     = "ALL"
 
   url_notices {
+    end_time   = 86399
+    is_valid   = 0
+    start_time = 0
     url        = "https://www.mytest.com/validate"
-    end_time   = 0
-    start_time = 1
-    weekday    = [1, 2, 3, 4, 5, 6, 7]
+    weekday = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+    ]
   }
 
+  user_notices {
+    end_time                 = 86399
+    group_ids                = []
+    need_phone_arrive_notice = 1
+    notice_way = [
+      "EMAIL",
+      "SMS",
+    ]
+    phone_call_type       = "CIRCLE"
+    phone_circle_interval = 180
+    phone_circle_times    = 2
+    phone_inner_interval  = 180
+    phone_order           = []
+    receiver_type         = "USER"
+    start_time            = 0
+    user_ids = [
+      11082189,
+      11082190,
+    ]
+    weekday = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+    ]
+  }
 }
 ```
 
@@ -67,7 +89,9 @@ The `url_notices` object supports the following:
 
 * `url` - (Required, String) Callback URL (limited to 256 characters).
 * `end_time` - (Optional, Int) Notification End Time Seconds at the start of a day.
+* `is_valid` - (Optional, Int) If passed verification `0` is no, `1` is yes. Default `0`.
 * `start_time` - (Optional, Int) Notification Start Time Number of seconds at the start of a day.
+* `validation_code` - (Optional, String) Verification code.
 * `weekday` - (Optional, Set) Notification period 1-7 indicates Monday to Sunday.
 
 The `user_notices` object supports the following:
@@ -91,6 +115,7 @@ The `user_notices` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `amp_consumer_id` - Amp consumer ID.
 * `is_preset` - Whether it is the system default notification template 0=No 1=Yes.
 * `policy_ids` - List of alarm policy IDs bound to the alarm notification template.
 * `updated_at` - Last modified time.

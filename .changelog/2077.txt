@@ -1,0 +1,47 @@
+```release-note:new-resource
+tencentcloud_api_gateway_api_app_attachment
+```
+
+```release-note:new-resource
+tencentcloud_api_gateway_upstream
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_plugins
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_upstreams
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_api_usage_plans
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_api_app_service
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api: Support Some new fields
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api_app: Support `tag`
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api_key: Support input `access_key_id`, `access_key_secret`
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_plugin_attachment: Optimization binding failure blocking issue
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_usage_plan_attachment: Support input `access_key_ids``
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_service: Support input `uniq_vpc_id``
+```

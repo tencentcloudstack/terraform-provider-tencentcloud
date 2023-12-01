@@ -3,11 +3,26 @@ Provides a resource to create security group.
 
 Example Usage
 
+Create a basic security group
+
 ```hcl
-resource "tencentcloud_security_group" "sglab" {
-  name        = "mysg"
-  description = "favourite sg"
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example-sg"
+  description = "sg test"
+}
+```
+
+Create a complete security group
+
+```hcl
+resource "tencentcloud_security_group" "example" {
+  name        = "tf-example-sg"
+  description = "sg test"
   project_id  = 0
+
+  tags = {
+    "example" = "test"
+  }
 }
 ```
 
@@ -27,8 +42,8 @@ import (
 	"log"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -193,9 +208,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 
-		for _, attr := range attrUpdate {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("tags") {
@@ -207,7 +219,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

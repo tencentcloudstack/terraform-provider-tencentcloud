@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_lighthouse_disk_backup
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_apply_disk_backup
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_disk_attachment
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_key_pair
+```

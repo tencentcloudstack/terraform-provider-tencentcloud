@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cfw_edge_policy: Update code logic
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfw_nat_policy: Update code logic
+```

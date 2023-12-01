@@ -14,17 +14,63 @@ Provides a SQL Server instance resource to create read-only database instances.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_readonly_instance" "foo" {
-  name                = "tf_sqlserver_instance_ro"
-  availability_zone   = "ap-guangzhou-4"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_readonly_instance" "example" {
+  name                = "tf_example"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type         = "POSTPAID_BY_HOUR"
-  vpc_id              = "vpc-xxxxxxxx"
-  subnet_id           = "subnet-xxxxxxxx"
-  memory              = 2
-  storage             = 10
-  master_instance_id  = tencentcloud_sqlserver_instance.test.id
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  memory              = 4
+  storage             = 20
+  master_instance_id  = tencentcloud_sqlserver_basic_instance.example.id
   readonly_group_type = 1
   force_upgrade       = true
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 
@@ -43,11 +89,16 @@ The following arguments are supported:
 * `force_upgrade` - (Optional, Bool, ForceNew) Indicate that the master instance upgrade or not. `true` for upgrading the master SQL Server instance to cluster type by force. Default is false. Note: this is not supported with `DUAL`(ha_type), `2017`(engine_version) master SQL Server instance, for it will cause ha_type of the master SQL Server instance change.
 * `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
 * `readonly_group_id` - (Optional, String) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
+* `readonly_group_name` - (Optional, String) Required when `readonly_group_type`=2, the name of the newly created read-only group.
+* `readonly_groups_is_offline_delay` - (Optional, Int) Required when `readonly_group_type`=2, whether the newly created read-only group has delay elimination enabled, 1-enabled, 0-disabled. When the delay between the read-only copy and the primary instance exceeds the threshold, it is automatically removed.
+* `readonly_groups_max_delay_time` - (Optional, Int) Required when `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, the threshold for delayed elimination of newly created read-only groups.
+* `readonly_groups_min_in_group` - (Optional, Int) When `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, it is required. After the newly created read-only group is delayed and removed, at least the number of read-only copies should be retained.
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
-* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
-* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
+* `vpc_id` - (Optional, String) ID of VPC.
+* `wait_switch` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.2. The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
 
 ## Attributes Reference
 
@@ -66,6 +117,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_readonly_instance.foo mssqlro-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_readonly_instance.example mssqlro-3cdq7kx5
 ```
 

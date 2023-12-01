@@ -10,8 +10,9 @@ const (
 	SCF_FUNCTION_STATUS_UPDATE_FAILED  = "UpdateFailed"
 	SCF_FUNCTION_STATUS_PUBLISH_FAILED = "PublishFailed"
 
-	SCF_SERVICE           = "scf"
-	SCF_FUNCTION_RESOURCE = "lam"
+	SCF_SERVICE                  = "scf"
+	SCF_FUNCTION_RESOURCE        = "lam"
+	SCF_FUNCTION_RESOURCE_PREFIX = "namespace"
 
 	SCF_TRIGGER_TYPE_COS         = "cos"
 	SCF_TRIGGER_TYPE_CMQ         = "cmq"
@@ -37,6 +38,9 @@ const (
 
 	SCF_FUNCTION_DESCRIBE_LIMIT  = 20
 	SCF_NAMESPACE_DESCRIBE_LIMIT = 20
+
+	SCF_FUNCTION_OPEN  = "TRUE"
+	SCF_FUNCTION_CLOSE = "FALSE"
 )
 
 var (

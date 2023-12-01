@@ -7,20 +7,74 @@ Provides a mysql instance resource to create read-only database instances.
 Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_readonly_instance" "default" {
-  master_instance_id = "cdb-dnqksd9f"
-  instance_name      = "myTestMysql"
-  mem_size           = 128000
-  volume_size        = 255
-  vpc_id             = "vpc-12mt3l31"
-  subnet_id          = "subnet-9uivyb1g"
-  intranet_port      = 3306
-  security_groups    = ["sg-ot8eclwz"]
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  name              = "subnet-mysql"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-mysql"
+  description = "mysql test"
+}
+
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 0
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
 
   tags = {
     name = "test"
   }
+
+  parameters = {
+    character_set_server = "UTF8"
+    max_connections      = "1000"
+  }
 }
+
+resource "tencentcloud_mysql_readonly_instance" "example" {
+  master_instance_id = tencentcloud_mysql_instance.example.id
+  instance_name      = "tf-example"
+  mem_size           = 128000
+  volume_size        = 255
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+  intranet_port      = 3306
+  security_groups    = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    createBy = "terraform"
+  }
+}
+```
+Import
+
+mysql read-only database instances can be imported using the id, e.g.
+```
+terraform import tencentcloud_mysql_readonly_instance.default cdb-dnqksd9f
 ```
 */
 package tencentcloud
@@ -30,8 +84,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -70,6 +124,12 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 		Update: resourceTencentCloudMysqlReadonlyInstanceUpdate,
 		Delete: resourceTencentCloudMysqlReadonlyInstanceDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"prepaid_period": 1,
+				"force_delete":   false,
+			}),
+		},
 		Schema: readonlyInstanceInfo,
 	}
 }
@@ -219,10 +279,10 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		if len(backups) < 1 {
 			return resource.RetryableError(fmt.Errorf("waiting backup creating"))
 		}
-		return resource.NonRetryableError(err)
+		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -309,6 +369,81 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if err != nil {
 		return fmt.Errorf("Fail to get basic info from mysql, reaseon %s", err.Error())
 	}
+
+	mysqlInfo, errRet := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+	if errRet != nil {
+		return fmt.Errorf("Describe mysql instance fails, reaseon %v", errRet.Error())
+	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
+	}
+	if MysqlDelStates[*mysqlInfo.Status] {
+		mysqlInfo = nil
+		d.SetId("")
+		return nil
+	}
+
+	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
+
+	_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+	_ = d.Set("pay_type", -1)
+	_ = d.Set("period", -1)
+	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
+		tempInt, _ := d.Get("prepaid_period").(int)
+		if tempInt == 0 {
+			_ = d.Set("prepaid_period", 1)
+		}
+	}
+
+	if *mysqlInfo.AutoRenew == MYSQL_RENEW_CLOSE {
+		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
+	}
+	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
+	_ = d.Set("mem_size", mysqlInfo.Memory)
+	_ = d.Set("cpu", mysqlInfo.Cpu)
+	_ = d.Set("volume_size", mysqlInfo.Volume)
+	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
+	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
+	_ = d.Set("device_type", mysqlInfo.DeviceType)
+
+	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
+	if err != nil {
+		sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
+		if ok {
+			if sdkErr.Code == MysqlInstanceIdNotFound3 {
+				mysqlInfo = nil
+				d.SetId("")
+				return nil
+			}
+		}
+		return err
+	}
+	_ = d.Set("security_groups", securityGroups)
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cdb", "instanceId", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return nil
+	}
+
+	_ = d.Set("intranet_ip", mysqlInfo.Vip)
+	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
+
+	if *mysqlInfo.CdbError != 0 {
+		_ = d.Set("locked", 1)
+	} else {
+		_ = d.Set("locked", 0)
+	}
+	_ = d.Set("status", mysqlInfo.Status)
+	_ = d.Set("task_status", mysqlInfo.TaskStatus)
+
 	return nil
 }
 
@@ -329,10 +464,10 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
 				return err
 			}
-			d.SetPartial("auto_renew_flag")
+
 		}
 	}
-	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)
+	err := mysqlAllInstanceRoleUpdate(ctx, d, meta, true)
 	if err != nil {
 		return err
 	}

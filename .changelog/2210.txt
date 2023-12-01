@@ -1,0 +1,3 @@
+```release-note:enhancement
+tencentcloud_tse_cngw_gateway: Add computed `instance_port` and `public_ip_addresses`
+```

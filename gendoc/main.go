@@ -15,7 +15,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/hashicorp/hcl/v2/hclwrite"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cloud "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 )
 
@@ -28,12 +28,13 @@ const (
 )
 
 var (
-	hclMatch  = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
-	bigSymbol = regexp.MustCompile("([\u007F-\uffff])")
+	hclMatch   = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	usageMatch = regexp.MustCompile(`(?s)(?m)^([^ \n].*?)(?:\n{2}|$)(.*)`)
+	bigSymbol  = regexp.MustCompile("([\u007F-\uffff])")
 )
 
 func main() {
-	provider := cloud.Provider().(*schema.Provider)
+	provider := cloud.Provider()
 	vProvider := runtime.FuncForPC(reflect.ValueOf(cloud.Provider).Pointer())
 
 	filename, _ := vProvider.FileLine(0)
@@ -407,14 +408,30 @@ func formatHCL(s string) string {
 		for _, v := range m {
 			p := strings.TrimSpace(v[1])
 			if p != "" {
-				p = fmt.Sprintf("\n%s\n\n", p)
+				p = formatUsageDesc(p)
 			}
 			b := hclwrite.Format([]byte(strings.TrimSpace(v[3])))
-			rr = append(rr, fmt.Sprintf("%s```hcl\n%s\n```", p, string(b)))
+			rr = append(rr, fmt.Sprintf("\n%s\n\n```hcl\n%s\n```", p, string(b)))
 		}
 	}
 
 	return strings.TrimSpace(strings.Join(rr, "\n"))
+}
+
+func formatUsageDesc(s string) string {
+	var rr []string
+	s = strings.TrimSpace(s)
+	m := usageMatch.FindAllStringSubmatch(s, -1)
+
+	for _, v := range m {
+		title := strings.TrimSpace(v[1])
+		descp := strings.TrimSpace(v[2])
+
+		rr = append(rr, fmt.Sprintf("### %s\n\n%s", title, descp))
+	}
+
+	ret := strings.TrimSpace(strings.Join(rr, "\n\n"))
+	return ret
 }
 
 // checkDescription check description format

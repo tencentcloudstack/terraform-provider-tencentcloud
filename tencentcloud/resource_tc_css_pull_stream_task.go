@@ -31,8 +31,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -50,7 +50,7 @@ func resourceTencentCloudCssPullStreamTask() *schema.Resource {
 			"source_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "&amp;#39;PullLivePushLive&amp;#39;: SourceUrls live type, &amp;#39;PullVodPushLive&amp;#39;: SourceUrls vod type.",
+				Description: "`PullLivePushLive`: SourceUrls live type, `PullVodPushLive`: SourceUrls vod type.",
 			},
 
 			"source_urls": {
@@ -125,7 +125,7 @@ func resourceTencentCloudCssPullStreamTask() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "vod refresh method. &amp;#39;ImmediateNewSource&amp;#39;: switch to new source at once, &amp;#39;ContinueBreakPoint&amp;#39;: switch to new source while old source finish.",
+				Description: "vod refresh method. `ImmediateNewSource`: switch to new source at once, `ContinueBreakPoint`: switch to new source while old source finish.",
 			},
 
 			"callback_url": {

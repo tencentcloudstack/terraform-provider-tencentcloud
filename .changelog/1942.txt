@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_sqlserver_general_cloud_ro_instance
+```

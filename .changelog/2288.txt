@@ -1,0 +1,3 @@
+```release-note:bug
+tencentcloud_dnspod_record: Fix modify dnspod record remark
+```

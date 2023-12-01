@@ -1,0 +1,6 @@
+```release-note:new-resource
+tencentcloud_cam_mfa_flag
+```
+```release-note:enhancement
+resource/tencentcloud_ssl_pay_certificate: Supports `csr_type` modification
+```

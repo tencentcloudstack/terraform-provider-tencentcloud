@@ -13,6 +13,8 @@ Provide a resource to increase instance to cluster
 
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 
+~> **NOTE:** Import Node: Currently, only one node can be imported at a time.
+
 ## Example Usage
 
 ```hcl
@@ -59,7 +61,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 }
 ```
 
-Use Kubelet
+### Use Kubelet
 
 ```hcl
 variable "availability_zone" {
@@ -120,6 +122,7 @@ The following arguments are supported:
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
@@ -143,6 +146,14 @@ The `data_disk` object supports the following:
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
+
+The `gpu_args` object supports the following:
+
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `worker_config` object supports the following:
 

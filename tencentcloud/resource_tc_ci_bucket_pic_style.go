@@ -26,9 +26,10 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	ci "github.com/tencentyun/cos-go-sdk-v5"
 )
@@ -99,6 +100,7 @@ func resourceTencentCloudCiBucketPicStyleCreate(d *schema.ResourceData, meta int
 			StyleBody: styleBody,
 		})
 		if e != nil {
+			time.Sleep(5 * time.Second)
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, response status [%s]\n", logId, "AddStyle", result.Status)

@@ -1,8 +1,8 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
@@ -140,9 +140,9 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 				Type: schema.TypeString,
 			},
 			Set: func(v interface{}) int {
-				return hashcode.String(v.(string))
+				return helper.HashString(v.(string))
 			},
-			Description: "ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.",
+			Description: "ID of the security group.",
 		},
 		"password": {
 			Type:        schema.TypeString,
@@ -165,7 +165,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			Computed:    true,
-			Description: "Mongos memory size.",
+			Description: "Mongos memory size in GB.",
 		},
 		"mongos_node_num": {
 			Type:        schema.TypeInt,

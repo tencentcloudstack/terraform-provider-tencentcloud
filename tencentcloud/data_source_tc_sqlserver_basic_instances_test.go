@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 var testDataSqlserverBasicInstancesName = "data.tencentcloud_sqlserver_basic_instances.id_test"
 
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverBasicInstances -v
 func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{

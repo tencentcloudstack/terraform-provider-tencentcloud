@@ -33,8 +33,8 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 )
 
@@ -154,13 +154,15 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, "")
+	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
 	if err != nil {
 		return err
 	}
 
 	if len(records) < 1 {
-		return fmt.Errorf("private dns record not exists.")
+		d.SetId("")
+		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		return nil
 	}
 
 	var record *privatedns.PrivateZoneRecord
@@ -169,6 +171,13 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 			record = item
 		}
 	}
+
+	if record == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		return nil
+	}
+
 	_ = d.Set("zone_id", record.ZoneId)
 	_ = d.Set("record_type", record.RecordType)
 	_ = d.Set("sub_domain", record.SubDomain)

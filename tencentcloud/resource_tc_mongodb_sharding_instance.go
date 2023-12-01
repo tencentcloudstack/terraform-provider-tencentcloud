@@ -23,6 +23,13 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 ```
 
+Import
+
+Mongodb sharding instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
+```
 */
 package tencentcloud
 
@@ -34,8 +41,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -57,6 +64,27 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			ValidateFunc: validateIntegerInRange(3, 5),
 			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
 		},
+		"availability_zone_list": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			RequiredWith: []string{"hidden_zone"},
+			Description: `A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
+			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
+			- Version 4.2 and above are not supported.
+			- Read-only disaster recovery instances are not supported.
+			- Basic network cannot be selected.`,
+		},
+		"hidden_zone": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Computed:     true,
+			RequiredWith: []string{"availability_zone_list"},
+			Description:  "The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.",
+		},
 	}
 	basic := TencentMongodbBasicInfo()
 	for k, v := range basic {
@@ -68,6 +96,9 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 		Read:   resourceMongodbShardingInstanceRead,
 		Update: resourceMongodbShardingInstanceUpdate,
 		Delete: resourceMongodbShardingInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: mongodbShardingInstanceInfo,
 	}
@@ -156,6 +187,13 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 	if v, ok := d.GetOk("mongos_node_num"); ok {
 		value.FieldByName("MongosNodeNum").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
 	}
+	if v, ok := d.GetOk("availability_zone_list"); ok {
+		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
+		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
+	}
+	if v, ok := d.GetOk("hidden_zone"); ok {
+		value.FieldByName("HiddenZone").Set(reflect.ValueOf(helper.String(v.(string))))
+	}
 	return nil
 }
 
@@ -231,13 +269,6 @@ func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interfac
 	mongodbService := MongodbService{client: client}
 	tagService := TagService{client: client}
 	region := client.Region
-
-	// check security group info
-	if d.Get("engine_version").(string) == MONGODB_ENGINE_VERSION_4_WT {
-		if _, ok := d.GetOk("security_groups"); ok {
-			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
-		}
-	}
 
 	chargeType := d.Get("charge_type")
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
@@ -360,7 +391,39 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
+	_ = d.Set("mongos_cpu", instance.MongosCpuNum)
+	_ = d.Set("mongos_memory", *instance.MongosMemory/1024)
+	_ = d.Set("mongos_node_num", instance.MongosNodeNum)
+	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
+	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	if len(replicateSets) > 1 {
+		var hiddenZone string
+		availabilityZoneList := make([]string, 0, 3)
+		for _, replicate := range replicateSets[0].Nodes {
+			itemZone := *replicate.Zone
+			if *replicate.Hidden {
+				hiddenZone = itemZone
+			}
+			availabilityZoneList = append(availabilityZoneList, itemZone)
+		}
+		_ = d.Set("hidden_zone", hiddenZone)
+		_ = d.Set("availability_zone_list", availabilityZoneList)
+	}
 	tags := make(map[string]string, len(instance.Tags))
 	for _, tag := range instance.Tags {
 		if tag.TagKey == nil {
@@ -394,8 +457,11 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	region := client.Region
 
 	d.Partial(true)
+	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
+	}
 	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
-		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_numZ] does not support update")
+		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_num] does not support update")
 	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
@@ -426,8 +492,6 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -436,7 +500,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -445,7 +509,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("password") {
@@ -455,7 +519,6 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	if d.HasChange("tags") {
@@ -467,7 +530,6 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -481,7 +543,7 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
 	}
 
 	d.Partial(false)

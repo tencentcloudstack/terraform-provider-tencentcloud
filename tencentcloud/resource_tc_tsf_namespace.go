@@ -16,13 +16,6 @@ resource "tencentcloud_tsf_namespace" "namespace" {
 }
 ```
 
-Import
-
-tsf namespace can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_namespace.namespace namespace_id
-```
 */
 package tencentcloud
 
@@ -31,8 +24,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -43,9 +36,9 @@ func resourceTencentCloudTsfNamespace() *schema.Resource {
 		Read:   resourceTencentCloudTsfNamespaceRead,
 		Update: resourceTencentCloudTsfNamespaceUpdate,
 		Delete: resourceTencentCloudTsfNamespaceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"namespace_name": {
 				Required:    true,

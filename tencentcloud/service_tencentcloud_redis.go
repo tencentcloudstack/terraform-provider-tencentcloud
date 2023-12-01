@@ -7,7 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -367,7 +368,7 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	var response *redis.DescribeInstancesResponse
-	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(retryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstances(request)
 		if e != nil {
@@ -844,12 +845,13 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 	return
 }
 
-func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string) (taskId int64, errRet error) {
+func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string, noAuth bool) (taskId int64, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewResetPasswordRequest()
 	request.InstanceId = &redisId
 	request.Password = &newPassword
+	request.NoAuth = &noAuth
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
@@ -1198,4 +1200,727 @@ func (me *RedisService) RedisAccountStateRefreshFunc(instanceId, accountName str
 
 		return object, helper.PString(helper.String(strconv.FormatInt(*object.Status, 10))), nil
 	}
+}
+
+func (me *RedisService) DescribeRedisInstanceById(ctx context.Context, instanceId string) (param *redis.InstanceSet, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	param = response.Response.InstanceSet[0]
+	return
+}
+
+func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId string) (params map[string]interface{}, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstanceParamsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	param := response.Response
+	instanceParams := make(map[string]interface{})
+	if param.InstanceEnumParam != nil {
+		for _, v := range param.InstanceEnumParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceIntegerParam != nil {
+		for _, v := range param.InstanceIntegerParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceMultiParam != nil {
+		for _, v := range param.InstanceMultiParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceTextParam != nil {
+		for _, v := range param.InstanceTextParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	params = instanceParams
+	return
+}
+
+func (me *RedisService) DescribeRedisSslById(ctx context.Context, instanceId string) (ssl *redis.DescribeSSLStatusResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeSSLStatusRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeSSLStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ssl = response.Response
+	return
+}
+
+func (me *RedisService) DescribeRedisMaintenanceWindowById(ctx context.Context, instanceId string) (maintenanceWindow *redis.DescribeMaintenanceWindowResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeMaintenanceWindowRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeMaintenanceWindow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	maintenanceWindow = response.Response
+	return
+}
+
+func (me *RedisService) DescribeRedisBackupDownloadInfoByFilter(ctx context.Context, param map[string]interface{}) (backup []*redis.BackupDownloadInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeBackupUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "backup_id" {
+			request.BackupId = v.(*string)
+		}
+		if k == "limit_type" {
+			request.LimitType = v.(*string)
+		}
+		if k == "vpc_comparison_symbol" {
+			request.VpcComparisonSymbol = v.(*string)
+		}
+		if k == "ip_comparison_symbol" {
+			request.IpComparisonSymbol = v.(*string)
+		}
+		if k == "limit_vpc" {
+			request.LimitVpc = v.([]*redis.BackupLimitVpcItem)
+		}
+		if k == "limit_ip" {
+			request.LimitIp = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeBackupUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	backup = response.Response.BackupInfos
+
+	return
+}
+
+func (me *RedisService) DescribeRedisBackupByFilter(ctx context.Context, param map[string]interface{}) (backup []*redis.RedisBackupSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "begin_time" {
+			request.BeginTime = v.(*string)
+		}
+		if k == "end_time" {
+			request.EndTime = v.(*string)
+		}
+		if k == "status" {
+			request.Status = v.([]*int64)
+		}
+		if k == "instance_name" {
+			request.InstanceName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRedisClient().DescribeInstanceBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BackupSet) < 1 {
+			break
+		}
+		backup = append(backup, response.Response.BackupSet...)
+		if len(response.Response.BackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RedisService) DescribeRedisParamRecordsByFilter(ctx context.Context, param map[string]interface{}) (params []*redis.InstanceParamHistory, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceParamRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    uint64 = 0
+		limit     uint64 = 20
+		instances        = make([]*redis.InstanceParamHistory, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRedisClient().DescribeInstanceParamRecords(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InstanceParamHistory) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.InstanceParamHistory...)
+		if len(response.Response.InstanceParamHistory) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+	if len(instances) < 1 {
+		return
+	}
+	params = instances
+
+	return
+}
+
+func (me *RedisService) DescribeRedisInstanceShardsByFilter(ctx context.Context, param map[string]interface{}) (instanceShards []*redis.InstanceClusterShard, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceShardsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "FilterSlave" {
+			request.FilterSlave = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeInstanceShards(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.InstanceShards) < 1 {
+		return
+	}
+	instanceShards = response.Response.InstanceShards
+
+	return
+}
+
+func (me *RedisService) DescribeRedisInstanceZoneInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceZoneInfo []*redis.ReplicaGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceZoneInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeInstanceZoneInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ReplicaGroups) < 1 {
+		return
+	}
+	instanceZoneInfo = response.Response.ReplicaGroups
+
+	return
+}
+
+func (me *RedisService) DescribeRedisInstanceTaskListByFilter(ctx context.Context, param map[string]interface{}) (instanceTaskList []*redis.TaskInfoDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeTaskListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "InstanceName" {
+			request.InstanceName = v.(*string)
+		}
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*int64)
+		}
+		if k == "TaskTypes" {
+			request.TaskTypes = v.([]*string)
+		}
+		if k == "BeginTime" {
+			request.BeginTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "TaskStatus" {
+			request.TaskStatus = v.([]*int64)
+		}
+		if k == "Result" {
+			request.Result = v.([]*int64)
+		}
+		if k == "OperateUin" {
+			request.OperateUin = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRedisClient().DescribeTaskList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Tasks) < 1 {
+			break
+		}
+		instanceTaskList = append(instanceTaskList, response.Response.Tasks...)
+		if len(response.Response.Tasks) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RedisService) AddReplicationInstance(ctx context.Context, groupId, instanceId, instanceRole string) error {
+	logId := getLogId(ctx)
+	var (
+		request  = redis.NewAddReplicationInstanceRequest()
+		response = redis.NewAddReplicationInstanceResponse()
+	)
+
+	request.GroupId = &groupId
+	request.InstanceId = &instanceId
+	request.InstanceRole = &instanceRole
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseRedisClient().AddReplicationInstance(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create redis replicateAttachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	taskId := *response.Response.TaskId
+
+	if taskId > 0 {
+		err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+			ok, err := me.DescribeTaskInfo(ctx, instanceId, taskId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("Add replication is processing"))
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis add replication fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, groupId string) (replicateGroup *redis.Groups, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeReplicationGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	request.Offset = &offset
+	request.Limit = &limit
+	response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Groups) < 1 {
+		return
+	}
+
+	replicateGroup = response.Response.Groups[0]
+
+	return
+}
+
+func (me *RedisService) DescribeRedisBackupDownloadRestrictionById(ctx context.Context) (backupDownloadRestriction *redis.DescribeBackupDownloadRestrictionResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeBackupDownloadRestrictionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeBackupDownloadRestriction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	backupDownloadRestriction = response.Response
+	return
+}
+
+func (me *RedisService) DescribeRedisInstanceNodeInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceNodeInfo *redis.DescribeInstanceNodeInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceNodeInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeInstanceNodeInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceNodeInfo = response.Response
+	return
+}
+
+func (me *RedisService) DescribeBandwidthRangeById(ctx context.Context, instanceId string) (connectionConfig *redis.DescribeBandwidthRangeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeBandwidthRangeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeBandwidthRange(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	connectionConfig = response.Response
+	return
+}
+
+func (me *RedisService) DeleteRedisReplicateAttachmentById(ctx context.Context, instanceId string, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewRemoveReplicationInstanceRequest()
+	request.InstanceId = &instanceId
+	request.GroupId = &groupId
+	request.SyncType = helper.Bool(false)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().RemoveReplicationInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	taskId := *response.Response.TaskId
+
+	if taskId > 0 {
+		err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+			ok, err := me.DescribeTaskInfo(ctx, instanceId, taskId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("remove replication is processing"))
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis remove replication fail, reason:%s\n", logId, err.Error())
+			errRet = err
+			return
+		}
+	}
+
+	return
+}
+
+func (me *RedisService) DescribeRedisSecurityGroupAttachmentById(ctx context.Context, product string, instanceId string, securityGroupId string) (securityGroupAttachment *redis.SecurityGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeDBSecurityGroupsRequest()
+	request.Product = &product
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Groups) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Groups {
+		if *v.SecurityGroupId == securityGroupId {
+			securityGroupAttachment = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *RedisService) DeleteRedisSecurityGroupAttachmentById(ctx context.Context, product string, instanceId string, securityGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDisassociateSecurityGroupsRequest()
+	request.Product = &product
+	request.SecurityGroupId = &securityGroupId
+	request.InstanceIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }

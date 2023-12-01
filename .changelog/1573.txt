@@ -1,0 +1,11 @@
+```release-note:bug
+resource/tencentcloud_mongodb_instance: clean mongos params
+```
+
+```release-note:bug
+resource/tencentcloud_mongodb_sharding_instance: fix mongos_memory unit
+```
+
+```release-note:bug
+resource/tencentcloud_mongodb_standby_instance: clean mongos params
+```

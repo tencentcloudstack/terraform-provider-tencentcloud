@@ -12,7 +12,10 @@ description: |-
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  We recommend the usage of one cluster with essential worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
-~> **NOTE:**  In order to ensure the integrity of customer data, if you destroy nodepool instance, it will keep the cvm instance associate with nodepool by default. If you want destroy together, please set `delete_keep_instance` to `false`.
+
+~> **NOTE:**  In order to ensure the integrity of customer data, if you destroy nodepool instance, it will keep the cvm instance associate with nodepool by default. If you want to destroy together, please set `delete_keep_instance` to `false`.
+
+~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
 ## Example Usage
 
@@ -60,10 +63,10 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = var.default_instance_type
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-24vswocp"]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -105,7 +108,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 }
 ```
 
-Using Spot CVM Instance
+### Using Spot CVM Instance
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
@@ -121,13 +124,13 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type        = var.default_instance_type
-    system_disk_type     = "CLOUD_PREMIUM"
-    system_disk_size     = "50"
-    security_group_ids   = ["sg-24vswocp"]
-    instance_charge_type = "SPOTPAID"
-    spot_instance_type   = "one-time"
-    spot_max_price       = "1000"
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-24vswocp", "sg-3qntci2v", "sg-7y1t2wax"]
+    instance_charge_type       = "SPOTPAID"
+    spot_instance_type         = "one-time"
+    spot_max_price             = "1000"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -162,13 +165,14 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional, Int) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional, Bool) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
-* `desired_capacity` - (Optional, Int) Desired capacity ot the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
+* `deletion_protection` - (Optional, Bool) Indicates whether the node pool deletion protection is enabled.
+* `desired_capacity` - (Optional, Int) Desired capacity of the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
 * `enable_auto_scale` - (Optional, Bool) Indicate whether to enable auto scaling or not.
 * `labels` - (Optional, Map) Labels of kubernetes node pool created nodes. The label key name does not exceed 63 characters, only supports English, numbers,'/','-', and does not allow beginning with ('/').
 * `multi_zone_subnet_policy` - (Optional, String) Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.
 * `node_config` - (Optional, List) Node config.
 * `node_os_type` - (Optional, String) The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.
-* `node_os` - (Optional, String) Operating system of the cluster, the available values include: `tlinux2.4x86_64`, `ubuntu18.04.1x86_64`, `ubuntu16.04.1 LTSx86_64`, `centos7.6.0_x64` and `centos7.2x86_64`. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.
+* `node_os` - (Optional, String) Operating system of the cluster. Please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.
 * `retry_policy` - (Optional, String, ForceNew) Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.
 * `scaling_group_name` - (Optional, String) Name of relative scaling group.
 * `scaling_group_project_id` - (Optional, Int) Project ID the scaling group belongs to.
@@ -195,12 +199,13 @@ The `auto_scaling_config` object supports the following:
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name` - (Optional, String) Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
-* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, List, ForceNew) ID list of keys.
+* `orderly_security_group_ids` - (Optional, List) Ordered security groups to which a CVM instance belongs.
 * `password` - (Optional, String, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids` - (Optional, Set) Security groups to which a CVM instance belongs.
+* `security_group_ids` - (Optional, Set) (**Deprecated**) The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead. Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
@@ -217,12 +222,20 @@ The `data_disk` object supports the following:
 
 The `data_disk` object supports the following:
 
-* `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated.
+* `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated. Default is `false`.
 * `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String) Types of disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`.
 * `encrypt` - (Optional, Bool) Specify whether to encrypt data disk, default: false. NOTE: Make sure the instance type is offering and the cam role `QcloudKMSAccessForCVMRole` was provided.
 * `snapshot_id` - (Optional, String, ForceNew) Data disk snapshot ID.
 * `throughput_performance` - (Optional, Int) Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD` and `data_size` > 460GB.
+
+The `gpu_args` object supports the following:
+
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `node_config` object supports the following:
 
@@ -230,6 +243,7 @@ The `node_config` object supports the following:
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.

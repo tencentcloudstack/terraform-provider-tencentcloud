@@ -8,11 +8,18 @@ import (
 	"strconv"
 	"time"
 
-	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
 
-	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
+	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
 
-	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
+	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
+	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
+
+	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
+	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
+	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
@@ -21,17 +28,24 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
+	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
+	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+	cdwpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg/v20201230"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
@@ -48,6 +62,7 @@ import (
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
+	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -57,6 +72,7 @@ import (
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
@@ -64,6 +80,7 @@ import (
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -72,12 +89,15 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
+	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
+	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -157,15 +177,50 @@ type TencentCloudClient struct {
 	dbbrainConn        *dbbrain.Client
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
+	cosBatchConn       *cos.Client
 	billingConn        *billing.Client
 	tsfConn            *tsf.Client
 	mpsConn            *mps.Client
 	cwpConn            *cwp.Client
+	chdfsConn          *chdfs.Client
+	mdlConn            *mdl.Client
+	apmConn            *apm.Client
+	ciamConn           *ciam.Client
+	tseConn            *tse.Client
+	cdwchConn          *cdwch.Client
+	ebConn             *eb.Client
+	dlcConn            *dlc.Client
+	wedataConn         *wedata.Client
+	wafConn            *waf.Client
+	cfwConn            *cfw.Client
+	oceanusConn        *oceanus.Client
+	dasbConn           *dasb.Client
+	trocketConn        *trocket.Client
+	biConn             *bi.Client
+	cdwpgConn          *cdwpg.Client
 }
 
 // NewClientProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfile {
 	cpf := profile.NewClientProfile()
+
+	// all request use method POST
+	cpf.HttpProfile.ReqMethod = "POST"
+	// request timeout
+	cpf.HttpProfile.ReqTimeout = timeout
+	// request protocol
+	cpf.HttpProfile.Scheme = me.Protocol
+	// request domain
+	cpf.HttpProfile.RootDomain = me.Domain
+	// default language
+	cpf.Language = "en-US"
+
+	return cpf
+}
+
+// NewClientIntlProfile returns a new ClientProfile
+func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.ClientProfile {
+	cpf := intlProfile.NewClientProfile()
 
 	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
@@ -741,7 +796,7 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 
 // UsePrivateDnsClient return PrivateDns client for service
 func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
-	if me.dnsPodConn != nil {
+	if me.privateDnsConn != nil {
 		return me.privateDnsConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -753,7 +808,7 @@ func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
 
 // UseDomainClient return Domain client for service
 func (me *TencentCloudClient) UseDomainClient() *domain.Client {
-	if me.dnsPodConn != nil {
+	if me.domainConn != nil {
 		return me.domainConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -985,6 +1040,30 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 	return me.dtsConn
 }
 
+// UseCosBatchClient returns ci client for service
+func (me *TencentCloudClient) UseCosBatchClient(uin string) *cos.Client {
+	u, _ := url.Parse(fmt.Sprintf("https://%s.cos-control.%s.myqcloud.com", uin, me.Region))
+
+	if me.cosBatchConn != nil && me.cosBatchConn.BaseURL.BatchURL == u {
+		return me.cosBatchConn
+	}
+
+	baseUrl := &cos.BaseURL{
+		BatchURL: u,
+	}
+
+	me.cosBatchConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
+		Transport: &cos.AuthorizationTransport{
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
+		},
+	})
+
+	return me.cosBatchConn
+}
+
 // UseCiClient returns ci client for service
 func (me *TencentCloudClient) UseCiClient(bucket string) *cos.Client {
 	u, _ := url.Parse(fmt.Sprintf("https://%s.ci.%s.myqcloud.com", bucket, me.Region))
@@ -1074,7 +1153,7 @@ func (me *TencentCloudClient) UseMpsClient() *mps.Client {
 	return me.mpsConn
 }
 
-// UseTkeClient returns tke client for service
+// UseCwpClient returns tke client for service
 func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
 	if me.cwpConn != nil {
 		return me.cwpConn
@@ -1087,14 +1166,234 @@ func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
 	return me.cwpConn
 }
 
+// UseChdfsClient returns chdfs client for service
+func (me *TencentCloudClient) UseChdfsClient() *chdfs.Client {
+	if me.chdfsConn != nil {
+		return me.chdfsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.chdfsConn, _ = chdfs.NewClient(me.Credential, me.Region, cpf)
+	me.chdfsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.chdfsConn
+}
+
+// UseMdlClient returns mdl client for service
+func (me *TencentCloudClient) UseMdlClient() *mdl.Client {
+	if me.mdlConn != nil {
+		return me.mdlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	cpf.Language = "zh-CN"
+	me.mdlConn, _ = mdl.NewClient(me.Credential, me.Region, cpf)
+	me.mdlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mdlConn
+}
+
+// UseApmClient returns apm client for service
+func (me *TencentCloudClient) UseApmClient() *apm.Client {
+	if me.apmConn != nil {
+		return me.apmConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.apmConn, _ = apm.NewClient(me.Credential, me.Region, cpf)
+	me.apmConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.apmConn
+}
+
+// UseCiamClient returns ciam client for service
+func (me *TencentCloudClient) UseCiamClient() *ciam.Client {
+	if me.ciamConn != nil {
+		return me.ciamConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ciamConn, _ = ciam.NewClient(me.Credential, me.Region, cpf)
+	me.ciamConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ciamConn
+}
+
+// UseTseClient returns tse client for service
+func (me *TencentCloudClient) UseTseClient() *tse.Client {
+	if me.tseConn != nil {
+		return me.tseConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.tseConn, _ = tse.NewClient(me.Credential, me.Region, cpf)
+	me.tseConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tseConn
+}
+
+// UseCdwchClient returns cdwch client for service
+func (me *TencentCloudClient) UseCdwchClient() *cdwch.Client {
+	if me.cdwchConn != nil {
+		return me.cdwchConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdwchConn, _ = cdwch.NewClient(me.Credential, me.Region, cpf)
+	me.cdwchConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwchConn
+}
+
+// UseEbClient returns eb client for service
+func (me *TencentCloudClient) UseEbClient() *eb.Client {
+	if me.ebConn != nil {
+		return me.ebConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ebConn, _ = eb.NewClient(me.Credential, me.Region, cpf)
+	me.ebConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ebConn
+}
+
+// UseDlcClient returns eb client for service
+func (me *TencentCloudClient) UseDlcClient() *dlc.Client {
+	if me.dlcConn != nil {
+		return me.dlcConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dlcConn, _ = dlc.NewClient(me.Credential, me.Region, cpf)
+	me.dlcConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dlcConn
+}
+
+// UseWedataClient returns eb client for service
+func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
+	if me.wedataConn != nil {
+		return me.wedataConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.wedataConn, _ = wedata.NewClient(me.Credential, me.Region, cpf)
+	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wedataConn
+}
+
+func (me *TencentCloudClient) UseWafClient() *waf.Client {
+	if me.wafConn != nil {
+		return me.wafConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.wafConn, _ = waf.NewClient(me.Credential, me.Region, cpf)
+	me.wafConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wafConn
+}
+
+func (me *TencentCloudClient) UseCfwClient() *cfw.Client {
+	if me.cfwConn != nil {
+		return me.cfwConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cfwConn, _ = cfw.NewClient(me.Credential, me.Region, cpf)
+	me.cfwConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cfwConn
+}
+
+func (me *TencentCloudClient) UseOceanusClient() *oceanus.Client {
+	if me.oceanusConn != nil {
+		return me.oceanusConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.oceanusConn, _ = oceanus.NewClient(me.Credential, me.Region, cpf)
+	me.oceanusConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.oceanusConn
+}
+
+func (me *TencentCloudClient) UseDasbClient() *dasb.Client {
+	if me.dasbConn != nil {
+		return me.dasbConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dasbConn, _ = dasb.NewClient(me.Credential, me.Region, cpf)
+	me.dasbConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dasbConn
+}
+
+// UseTrocketClient returns trocket client for service
+func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
+	if me.trocketConn != nil {
+		return me.trocketConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.trocketConn, _ = trocket.NewClient(me.Credential, me.Region, cpf)
+	me.trocketConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.trocketConn
+}
+
+// UseBiClient returns bi client for service
+func (me *TencentCloudClient) UseBiClient() *bi.Client {
+	if me.biConn != nil {
+		return me.biConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.biConn, _ = bi.NewClient(me.Credential, me.Region, cpf)
+	me.biConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.biConn
+}
+
+// UseCdwpgClient returns cdwpg client for service
+func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
+	if me.cdwpgConn != nil {
+		return me.cdwpgConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdwpgConn, _ = cdwpg.NewClient(me.Credential, me.Region, cpf)
+	me.cdwpgConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwpgConn
+}
+
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)
 	if !ex {
 		return defVal
 	}
-	int, err := strconv.Atoi(val)
+	timeOut, err := strconv.Atoi(val)
 	if err != nil {
 		panic("TENCENTCLOUD_XXX_REQUEST_TIMEOUT must be int.")
 	}
-	return int
+	return timeOut
 }

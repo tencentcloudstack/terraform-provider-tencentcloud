@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
@@ -13,7 +13,8 @@ func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbZoneConfigDataSource,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbZoneConfigDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", defaultAZone),

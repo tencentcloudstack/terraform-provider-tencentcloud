@@ -1,123 +1,96 @@
-resource "tencentcloud_teo_zone" "example" {
-  zone_name = "example.com"
-  plan_type = "<your-plan-type>"
+terraform {
+  required_providers {
+    tencentcloud = {
+      source = "tencentcloudstack/tencentcloud"
+      # 通过version指定版本
+      # version = "1.79.10"
+    }
+  }
+}
 
+# TEO
+provider "tencentcloud" {
+  region = "ap-guangzhou"
+
+  secret_id  = ""
+  secret_key = ""
+
+}
+
+# Domain
+provider "tencentcloud" {
+  alias      = "tfdomain"
+  region     = "ap-guangzhou"
+  secret_id  = ""
+  secret_key = ""
+}
+
+
+variable "zone_name" {
+  default = "tf-teo.com"
+}
+
+# cname
+resource "tencentcloud_teo_zone" "zone" {
+  area            = "overseas"
+  alias_zone_name = "tftest"
+  paused          = false
+  plan_id         = "edgeone-2kfv1h391n6w"
   tags = {
     "createdBy" = "terraform"
   }
+  type      = "partial"
+  zone_name = var.zone_name
 }
 
-resource "tencentcloud_teo_zone_setting" "example" {
-  zone_id = tencentcloud_teo_zone.example.id
+resource "tencentcloud_dnspod_record" "demo" {
+  provider = tencentcloud.tfdomain
 
-  # Cache Configuration
-  cache {
-    follow_origin {
-      switch = "on"
-    }
-  }
-  # CacheKey Configuration
-  cache_key {
-    full_url_cache = "off"
-    ignore_case    = "on"
-    query_string {
-      switch = "on"
-      action = "includeCustom" # use specific parameters from URL
-      value  = ["param0", "param1"]
-    }
-  }
-  # HTTPS Configuration
-  https {
-    http2         = "on"
-    ocsp_stapling = "on"
-    tls_version   = ["TLSv1.2", "TLSv1.3"]
-    hsts {
-      include_sub_domains = "off"
-      max_age             = 0
-      preload             = "off"
-      switch              = "off"
-    }
-  }
-  # Smart Compression Configuration
-  compression {
-    switch     = "on"
-    algorithms = ["brotli", "gzip"]
-  }
-  # Carry client IP to origin site
-  client_ip_header {
-    switch      = "on"
-    header_name = "EO-Client-IPCountry"
-  }
+  domain      = var.zone_name
+  record_type = tencentcloud_teo_zone.zone.ownership_verification.0.dns_verification.0.record_type
+  record_line = "默认"
+  value       = tencentcloud_teo_zone.zone.ownership_verification.0.dns_verification.0.record_value
+  sub_domain  = tencentcloud_teo_zone.zone.ownership_verification.0.dns_verification.0.subdomain
+
 }
 
-resource "tencentcloud_teo_dns_record" "rule_record" {
-  zone_id = tencentcloud_teo_zone.example.id
-  type    = "A"
-  name    = "rule.example.com"
-  content = "1.1.1.1"
-  mode    = "proxied"
-  ttl     = 300
+resource "tencentcloud_teo_ownership_verify" "ownership_verify" {
+  domain = var.zone_name
+
+  depends_on = [tencentcloud_dnspod_record.demo]
 }
 
-# subdomain specific configuration
-resource "tencentcloud_teo_rule_engine" "rule_example" {
-  zone_id   = tencentcloud_teo_zone.example.id
-  rule_name = "example_rule"
-  status    = "enable"
+variable "sub_domain" {
+  default = "aaa"
+}
 
-  rules {
-    # when request host is rule.example.com and file suffix is mp3 or mp4
-    or {
-      and {
-        target   = "host"
-        operator = "equal"
-        values   = [tencentcloud_teo_dns_record.rule_record.name]
-      }
-      and {
-        target   = "extension"
-        operator = "equal"
-        values   = ["mp4", "mp3"]
-      }
-    }
+resource "tencentcloud_teo_acceleration_domain" "acceleration_domain" {
+  zone_id     = tencentcloud_teo_zone.zone.id
+  domain_name = "${var.sub_domain}.${var.zone_name}"
 
-    actions {
-      normal_action {
-        action = "CacheKey"
-        # CacheKey is ignore case
-        parameters {
-          name   = "Type"
-          values = ["IgnoreCase"]
-        }
-        parameters {
-          name   = "Switch"
-          values = ["off"]
-        }
-        # CacheKey should use User-Agent Header
-        parameters {
-          name   = "Type"
-          values = ["Header"]
-        }
-        parameters {
-          name   = "Switch"
-          values = ["on"]
-        }
-        parameters {
-          name   = "Value"
-          values = ["User-Agent"]
-        }
-      }
-    }
-
-    # Add a HTTP header to response
-    actions {
-      rewrite_action {
-        action = "ResponseHeader"
-        parameters {
-          action = "add"
-          name   = "Added-Header"
-          values = ["Added-Value"]
-        }
-      }
-    }
+  origin_info {
+    origin      = "150.109.8.1"
+    origin_type = "IP_DOMAIN"
   }
+
+  depends_on = [tencentcloud_teo_ownership_verify.ownership_verify]
+}
+
+resource "tencentcloud_dnspod_record" "acceleration_domain_record" {
+  provider = tencentcloud.tfdomain
+
+  domain      = var.zone_name
+  record_type = "CNAME"
+  record_line = "默认"
+  value       = "${tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name}.eo.dnse0.com."
+  sub_domain  = var.sub_domain
+
+}
+
+resource "tencentcloud_teo_certificate_config" "certificate" {
+  host    = tencentcloud_teo_acceleration_domain.acceleration_domain.domain_name
+  mode    = "eofreecert"
+  zone_id = tencentcloud_teo_zone.zone.id
+
+  depends_on = [tencentcloud_dnspod_record.acceleration_domain_record]
 }

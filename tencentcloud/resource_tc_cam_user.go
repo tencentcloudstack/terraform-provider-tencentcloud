@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_user" "foo" {
-  name                = "cam-user-test"
-  remark              = "test"
+  name                = "tf_cam_user"
+  remark              = "tf_user_test"
   console_login       = true
   use_api             = true
   need_reset_password = true
@@ -16,7 +16,7 @@ resource "tencentcloud_cam_user" "foo" {
   country_code        = "86"
   force_delete        = true
   tags = {
-    test  = "tf-cam-user",
+    test  = "tf_cam_user",
   }
 }
 ```
@@ -38,8 +38,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -355,6 +355,12 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		updateAttrs = append(updateAttrs, "console_login")
 	}
 
+	if d.HasChange("password") {
+		password := d.Get("password").(string)
+		request.Password = helper.String(password)
+		updateAttrs = append(updateAttrs, "password")
+	}
+
 	if d.HasChange("need_reset_password") {
 		resetBool := d.Get("need_reset_password").(bool)
 		resetBool64 := uint64(0)
@@ -432,7 +438,7 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	return nil

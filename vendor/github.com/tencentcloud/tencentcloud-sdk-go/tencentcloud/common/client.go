@@ -2,13 +2,13 @@ package common
 
 import (
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -16,6 +16,7 @@ import (
 
 	tcerr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
@@ -40,6 +41,26 @@ type Client struct {
 }
 
 func (c *Client) Send(request tchttp.Request, response tchttp.Response) (err error) {
+	c.completeRequest(request)
+
+	tchttp.CompleteCommonParams(request, c.GetRegion(), c.requestClient)
+
+	// reflect to inject client if field ClientToken exists and retry feature is enabled
+	if c.profile.NetworkFailureMaxRetries > 0 || c.profile.RateLimitExceededMaxRetries > 0 {
+		safeInjectClientToken(request)
+	}
+
+	if request.GetSkipSign() {
+		// Some APIs can skip signature.
+		return c.sendWithoutSignature(request, response)
+	} else if c.profile.DisableRegionBreaker == true || c.rb == nil {
+		return c.sendWithSignature(request, response)
+	} else {
+		return c.sendWithRegionBreaker(request, response)
+	}
+}
+
+func (c *Client) completeRequest(request tchttp.Request) {
 	if request.GetScheme() == "" {
 		request.SetScheme(c.httpProfile.Scheme)
 	}
@@ -58,22 +79,6 @@ func (c *Client) Send(request tchttp.Request, response tchttp.Response) (err err
 
 	if request.GetHttpMethod() == "" {
 		request.SetHttpMethod(c.httpProfile.ReqMethod)
-	}
-
-	tchttp.CompleteCommonParams(request, c.GetRegion(), c.requestClient)
-
-	// reflect to inject client if field ClientToken exists and retry feature is enabled
-	if c.profile.NetworkFailureMaxRetries > 0 || c.profile.RateLimitExceededMaxRetries > 0 {
-		safeInjectClientToken(request)
-	}
-
-	if request.GetSkipSign() {
-		// Some APIs can skip signature.
-		return c.sendWithoutSignature(request, response)
-	} else if c.profile.DisableRegionBreaker == true || c.rb == nil {
-		return c.sendWithSignature(request, response)
-	} else {
-		return c.sendWithRegionBreaker(request, response)
 	}
 }
 
@@ -215,10 +220,11 @@ func (c *Client) sendWithoutSignature(request tchttp.Request, response tchttp.Re
 	if canonicalQueryString != "" {
 		url = url + "?" + canonicalQueryString
 	}
-	httpRequest, err := http.NewRequestWithContext(request.GetContext(), httpRequestMethod, url, strings.NewReader(requestPayload))
+	httpRequest, err := http.NewRequest(httpRequestMethod, url, strings.NewReader(requestPayload))
 	if err != nil {
 		return err
 	}
+	httpRequest = httpRequest.WithContext(request.GetContext())
 	for k, v := range headers {
 		httpRequest.Header[k] = []string{v}
 	}
@@ -241,10 +247,11 @@ func (c *Client) sendWithSignatureV1(request tchttp.Request, response tchttp.Res
 	if err != nil {
 		return err
 	}
-	httpRequest, err := http.NewRequestWithContext(request.GetContext(), request.GetHttpMethod(), request.GetUrl(), request.GetBodyReader())
+	httpRequest, err := http.NewRequest(request.GetHttpMethod(), request.GetUrl(), request.GetBodyReader())
 	if err != nil {
 		return err
 	}
+	httpRequest = httpRequest.WithContext(request.GetContext())
 	if request.GetHttpMethod() == "POST" {
 		httpRequest.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	}
@@ -411,10 +418,11 @@ func (c *Client) sendWithSignatureV3(request tchttp.Request, response tchttp.Res
 	if canonicalQueryString != "" {
 		url = url + "?" + canonicalQueryString
 	}
-	httpRequest, err := http.NewRequestWithContext(request.GetContext(), httpRequestMethod, url, strings.NewReader(requestPayload))
+	httpRequest, err := http.NewRequest(httpRequestMethod, url, strings.NewReader(requestPayload))
 	if err != nil {
 		return err
 	}
+	httpRequest = httpRequest.WithContext(request.GetContext())
 	for k, v := range headers {
 		httpRequest.Header[k] = []string{v}
 	}
@@ -428,6 +436,11 @@ func (c *Client) sendWithSignatureV3(request tchttp.Request, response tchttp.Res
 
 // send http request
 func (c *Client) sendHttp(request *http.Request) (response *http.Response, err error) {
+	if len(c.httpProfile.ApigwEndpoint) > 0 {
+		request.URL.Host = c.httpProfile.ApigwEndpoint
+		request.Host = c.httpProfile.ApigwEndpoint
+	}
+
 	if c.debug && request != nil {
 		outBytes, err := httputil.DumpRequest(request, true)
 		if err != nil {
@@ -440,7 +453,13 @@ func (c *Client) sendHttp(request *http.Request) (response *http.Response, err e
 	response, err = c.httpClient.Do(request)
 
 	if c.debug && response != nil {
-		out, err := httputil.DumpResponse(response, true)
+		dumpBody := true
+		switch response.Header.Get("Content-Type") {
+		case "text/event-stream", "application/octet-stream":
+			dumpBody = false
+		}
+
+		out, err := httputil.DumpResponse(response, dumpBody)
 		if err != nil {
 			c.logger.Printf("[ERROR] dump response failed: %s", err)
 		} else {
@@ -461,8 +480,11 @@ func (c *Client) Init(region string) *Client {
 		// try not to modify http.DefaultTransport if possible
 		// since we could possibly modify Transport.Proxy
 		transport := http.DefaultTransport
-		if ht, ok := transport.(*http.Transport); ok {
-			transport = ht.Clone()
+		if _, ok := transport.(*http.Transport); ok {
+			// http.Transport.Clone is only available after go1.12
+			if cloneMethod, hasClone := reflect.TypeOf(transport).MethodByName("Clone"); hasClone {
+				transport = cloneMethod.Func.Call([]reflect.Value{reflect.ValueOf(transport)})[0].Interface().(http.RoundTripper)
+			}
 		}
 
 		c.httpClient = &http.Client{Transport: transport}

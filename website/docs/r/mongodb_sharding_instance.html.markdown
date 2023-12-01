@@ -46,14 +46,20 @@ The following arguments are supported:
 * `shard_quantity` - (Required, Int, ForceNew) Number of sharding.
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
+* `availability_zone_list` - (Optional, List: [`String`]) A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
+			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
+			- Version 4.2 and above are not supported.
+			- Read-only disaster recovery instances are not supported.
+			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.
 * `mongos_cpu` - (Optional, Int) Number of mongos cpu.
-* `mongos_memory` - (Optional, Int) Mongos memory size.
+* `mongos_memory` - (Optional, Int) Mongos memory size in GB.
 * `mongos_node_num` - (Optional, Int) Number of mongos.
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.
-* `security_groups` - (Optional, Set: [`String`], ForceNew) ID of the security group. NOTE: for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported.
+* `security_groups` - (Optional, Set: [`String`], ForceNew) ID of the security group.
 * `subnet_id` - (Optional, String, ForceNew) ID of the subnet within this VPC. The value is required if `vpc_id` is set.
 * `tags` - (Optional, Map) The tags of the Mongodb. Key name `project` is system reserved and can't be used.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC.
@@ -68,4 +74,12 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
+
+## Import
+
+Mongodb sharding instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
+```
 

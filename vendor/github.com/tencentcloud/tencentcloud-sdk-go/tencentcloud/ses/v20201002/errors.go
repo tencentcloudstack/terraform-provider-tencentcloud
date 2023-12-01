@@ -53,7 +53,7 @@ const (
 	// 套餐包额度不足。
 	FAILEDOPERATION_INSUFFICIENTQUOTA = "FailedOperation.InsufficientQuota"
 
-	// 不支持的附件名称，请检查附件名称是否含有特殊字符，详情请参考附录附件说明。
+	// 不支持的附件名称，请检查附件名称是否含有特殊字符，详情请参考[附录附件说明](https://cloud.tencent.com/document/product/1288/51951)。
 	FAILEDOPERATION_INVALIDATTACHNAME = "FailedOperation.InvalidAttachName"
 
 	// 超过查询限制，Limit最大支持100。
@@ -92,7 +92,7 @@ const (
 	// 模板内容太大，请减少模板内容。
 	FAILEDOPERATION_TEMPLATECONTENTTOOLARGE = "FailedOperation.TemplateContentToolarge"
 
-	// 因触发了某些规则导致临时Block。
+	// 因触发了对应的收件服务商限制，邮件推送平台会对该服务商发信暂停10分钟，10分钟后自动解除。
 	FAILEDOPERATION_TEMPORARYBLOCKED = "FailedOperation.TemporaryBlocked"
 
 	// 附件数量太多，单封邮件最多支持10个附件。
@@ -145,6 +145,9 @@ const (
 
 	// 域名取值错误。
 	INVALIDPARAMETERVALUE_INVALIDEMAILIDENTITY = "InvalidParameterValue.InvalidEmailIdentity"
+
+	// 密码长度为10~20位，且必须至少包含2位不重复的数字、小写字母、大写字母。
+	INVALIDPARAMETERVALUE_INVALIDSMTPPASSWORD = "InvalidParameterValue.InvalidSmtpPassWord"
 
 	// 您没有这个发件地址，请检查是否存在。
 	INVALIDPARAMETERVALUE_NOSUCHSENDER = "InvalidParameterValue.NoSuchSender"
@@ -253,6 +256,9 @@ const (
 
 	// 收件人列表空或状态不是上传完成。
 	OPERATIONDENIED_RECEIVERSTATUSERROR = "OperationDenied.ReceiverStatusError"
+
+	// 不能与上一次设置密码相同。
+	OPERATIONDENIED_REPEATPASSWORD = "OperationDenied.RepeatPassWord"
 
 	// 发信地址不存在或者状态不是通过状态。
 	OPERATIONDENIED_SENDADDRESSSTATUSERROR = "OperationDenied.SendAddressStatusError"

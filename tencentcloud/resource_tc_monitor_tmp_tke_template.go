@@ -4,14 +4,81 @@ Provides a resource to create a tmp tke template
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_tke_template" "template" {
+resource "tencentcloud_monitor_tmp_tke_template" "foo" {
   template {
-    name = "test"
-    level = "cluster"
+    name     = "tf-template"
+    level    = "cluster"
     describe = "template"
     service_monitors {
-      name = "test"
-      config = "xxxxx"
+      name   = "tf-ServiceMonitor"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: example-service-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-service
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+      EOT
+    }
+
+    pod_monitors {
+      name   = "tf-PodMonitors"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: example-pod-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-pod
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-pod
+  namespaceSelector:
+    matchNames:
+      - default
+  podMetricsEndpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+EOT
+    }
+
+    pod_monitors {
+      name   = "tf-RawJobs"
+      config = <<-EOT
+scrape_configs:
+  - job_name: 'example-job'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['example-service.default.svc.cluster.local:8080']
+    metrics_path: /metrics
+    scheme: http
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tls_config:
+      insecure_skip_verify: true
+EOT
     }
   }
 }
@@ -24,9 +91,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -60,11 +127,13 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"describe": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Template description.",
 						},
 						"record_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is instance, A list of aggregation rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -89,6 +158,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"service_monitors": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of ServiceMonitor rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -113,6 +183,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"pod_monitors": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of PodMonitors rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -137,6 +208,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"raw_jobs": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of RawJobs rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -192,12 +264,12 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tke.NewCreatePrometheusTempRequest()
-		response *tke.CreatePrometheusTempResponse
+		request  = monitor.NewCreatePrometheusTempRequest()
+		response *monitor.CreatePrometheusTempResponse
 	)
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "template"); ok {
-		prometheusTemp := tke.PrometheusTemp{}
+		prometheusTemp := monitor.PrometheusTemp{}
 		if v, ok := dMap["name"]; ok {
 			prometheusTemp.Name = helper.String(v.(string))
 		}
@@ -209,10 +281,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 		}
 		if v, ok := d.GetOk("record_rules"); ok {
 			resList := v.([]interface{})
-			prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+			prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 			for _, res := range resList {
 				vv := res.(map[string]interface{})
-				var item tke.PrometheusConfigItem
+				var item monitor.PrometheusConfigItem
 				if v, ok := vv["name"]; ok {
 					item.Name = helper.String(v.(string))
 				}
@@ -229,10 +301,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 		}
 		if v, ok := d.GetOk("service_monitors"); ok {
 			resList := v.([]interface{})
-			prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+			prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 			for _, res := range resList {
 				vv := res.(map[string]interface{})
-				var item tke.PrometheusConfigItem
+				var item monitor.PrometheusConfigItem
 				if v, ok := vv["name"]; ok {
 					item.Name = helper.String(v.(string))
 				}
@@ -248,10 +320,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 		}
 		if v, ok := d.GetOk("pod_monitors"); ok {
 			resList := v.([]interface{})
-			prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+			prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 			for _, res := range resList {
 				vv := res.(map[string]interface{})
-				var item tke.PrometheusConfigItem
+				var item monitor.PrometheusConfigItem
 				if v, ok := vv["name"]; ok {
 					item.Name = helper.String(v.(string))
 				}
@@ -267,10 +339,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 		}
 		if v, ok := d.GetOk("raw_jobs"); ok {
 			resList := v.([]interface{})
-			prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+			prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 			for _, res := range resList {
 				vv := res.(map[string]interface{})
-				var item tke.PrometheusConfigItem
+				var item monitor.PrometheusConfigItem
 				if v, ok := vv["name"]; ok {
 					item.Name = helper.String(v.(string))
 				}
@@ -301,7 +373,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateCreate(d *schema.ResourceData, met
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().CreatePrometheusTemp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusTemp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -330,7 +402,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateRead(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	templateId := d.Id()
 
@@ -362,13 +434,13 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewModifyPrometheusTempRequest()
+	request := monitor.NewModifyPrometheusTempRequest()
 
 	request.TemplateId = helper.String(d.Id())
 
 	if d.HasChange("template") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "template"); ok {
-			prometheusTemp := tke.PrometheusTempModify{}
+			prometheusTemp := monitor.PrometheusTempModify{}
 			if v, ok := dMap["name"]; ok {
 				prometheusTemp.Name = helper.String(v.(string))
 			}
@@ -377,10 +449,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 			}
 			if v, ok := d.GetOk("record_rules"); ok {
 				resList := v.([]interface{})
-				prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+				prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 				for _, res := range resList {
 					vv := res.(map[string]interface{})
-					var item tke.PrometheusConfigItem
+					var item monitor.PrometheusConfigItem
 					if v, ok := vv["name"]; ok {
 						item.Name = helper.String(v.(string))
 					}
@@ -397,10 +469,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 			}
 			if v, ok := d.GetOk("service_monitors"); ok {
 				resList := v.([]interface{})
-				prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+				prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 				for _, res := range resList {
 					vv := res.(map[string]interface{})
-					var item tke.PrometheusConfigItem
+					var item monitor.PrometheusConfigItem
 					if v, ok := vv["name"]; ok {
 						item.Name = helper.String(v.(string))
 					}
@@ -416,10 +488,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 			}
 			if v, ok := d.GetOk("pod_monitors"); ok {
 				resList := v.([]interface{})
-				prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+				prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 				for _, res := range resList {
 					vv := res.(map[string]interface{})
-					var item tke.PrometheusConfigItem
+					var item monitor.PrometheusConfigItem
 					if v, ok := vv["name"]; ok {
 						item.Name = helper.String(v.(string))
 					}
@@ -435,10 +507,10 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 			}
 			if v, ok := d.GetOk("raw_jobs"); ok {
 				resList := v.([]interface{})
-				prometheusConfigItem := make([]*tke.PrometheusConfigItem, 0, len(resList))
+				prometheusConfigItem := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 				for _, res := range resList {
 					vv := res.(map[string]interface{})
-					var item tke.PrometheusConfigItem
+					var item monitor.PrometheusConfigItem
 					if v, ok := vv["name"]; ok {
 						item.Name = helper.String(v.(string))
 					}
@@ -456,7 +528,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateUpdate(d *schema.ResourceData, met
 		}
 	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusTemp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyPrometheusTemp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -480,7 +552,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateDelete(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
 
 	if err := service.DeleteTmpTkeTemplate(ctx, id); err != nil {

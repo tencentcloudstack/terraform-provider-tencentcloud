@@ -5,6 +5,49 @@ Provides a resource to create a VPN gateway.
 
 Example Usage
 
+VPC SSL VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL"
+  vpc_id    = "vpc-86v957zb"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+CCN IPEC VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "CCN"
+
+  tags      = {
+    test = "test"
+  }
+}
+```
+
+CCN SSL VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL_CCN"
+
+  tags      = {
+    test = "test"
+  }
+}
+```
+
 POSTPAID_BY_HOUR VPN gateway
 ```hcl
 resource "tencentcloud_vpn_gateway" "my_cgw" {
@@ -51,8 +94,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -80,12 +123,12 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					if v, ok := d.GetOk("type"); ok && v.(string) == "CCN" {
+					if v, ok := d.GetOk("type"); ok && (v.(string) == "CCN" || v.(string) == "SSL_CCN") {
 						return true
 					}
 					return old == new
 				},
-				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` or `SSL_CCN` type, and doesn't make sense for `CCN` or `SSL_CCN` vpn gateway.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
@@ -102,7 +145,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
-				Description: "Type of gateway instance. Valid value: `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.",
+				Description: "Type of gateway instance, Default is `IPSEC`. Valid value: `IPSEC`, `SSL`, `CCN` and `SSL_CCN`.",
 			},
 			"state": {
 				Type:        schema.TypeString,
@@ -120,7 +163,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be changed on `IPSEC` vpn gateway.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
@@ -162,8 +205,9 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			},
 			"zone": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Zone of the VPN gateway.",
 			},
 			"tags": {
@@ -191,8 +235,12 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	bandwidth := d.Get("bandwidth").(int)
 	bandwidth64 := uint64(bandwidth)
 	request.InternetMaxBandwidthOut = &bandwidth64
-	request.Zone = helper.String(d.Get("zone").(string))
 	chargeType := d.Get("charge_type").(string)
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
+
 	//only support change renew_flag when charge type is pre-paid
 	if chargeType == VPN_CHARGE_TYPE_PREPAID {
 		var preChargePara vpc.InstanceChargePrepaid
@@ -203,7 +251,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	request.InstanceChargeType = &chargeType
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
-		if v.(string) != "CCN" {
+		if v.(string) != "CCN" && v.(string) != "SSL_CCN" {
 			if _, ok := d.GetOk("vpc_id"); !ok {
 				return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
 			}
@@ -216,7 +264,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		}
 	} else {
 		if _, ok := d.GetOk("vpc_id"); !ok {
-			return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
+			return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", "IPSEC")
 		}
 		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	}
@@ -351,12 +399,38 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	gatewayId := d.Id()
 
 	unsupportedUpdateFields := []string{
-		"prepaid_period",
 		"type",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("Template resource_tc_vpn_gateway update on %s is not supportted yet. Please renew it on controller web page.", field)
+		}
+	}
+
+	if d.HasChange("prepaid_period") {
+		chargeType := d.Get("charge_type").(string)
+		period := d.Get("prepaid_period").(int)
+		if chargeType != VPN_CHARGE_TYPE_PREPAID {
+			return fmt.Errorf("Invalid renew flag change. Only support pre-paid vpn.")
+		}
+		request := vpc.NewRenewVpnGatewayRequest()
+		request.VpnGatewayId = &gatewayId
+		var preChargePara vpc.InstanceChargePrepaid
+		preChargePara.Period = helper.IntUint64(period)
+		request.InstanceChargePrepaid = &preChargePara
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().RenewVpnGateway(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify VPN gateway prepaid period failed, reason:%s\n", logId, err.Error())
+			return err
 		}
 	}
 
@@ -416,12 +490,6 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify VPN gateway name failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		if d.HasChange("name") {
-			d.SetPartial("name")
-		}
-		if d.HasChange("charge_type") {
-			d.SetPartial("charge_type")
-		}
 	}
 
 	//bandwidth
@@ -444,7 +512,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify VPN gateway bandwidth failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("bandwidth")
+
 	}
 
 	//tag
@@ -460,7 +528,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("cdc_id") || d.HasChange("max_connection") {

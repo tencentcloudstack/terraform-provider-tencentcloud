@@ -3,14 +3,16 @@ Provides a resource to create a sms sign
 
 Example Usage
 
+Create a sms sign instance
+
 ```hcl
-resource "tencentcloud_sms_sign" "sign" {
-  sign_name     = "terraform"
-  sign_type     = 1
-  document_type = 4
-  international = 0
-  sign_purpose  = 0
-  proof_image = "dGhpcyBpcyBhIGV4YW1wbGU="
+resource "tencentcloud_sms_sign" "example" {
+  sign_name     = "tf_example_sms_sign"
+  sign_type     = 1 # 1：APP,  DocumentType can be chosen（0，1，2，3，4）
+  document_type = 4 # Screenshot of application background management (personally developed APP)
+  international = 0 # Mainland China SMS
+  sign_purpose  = 0 # personal use
+  proof_image   = "your_proof_image"
 }
 ```
 
@@ -24,8 +26,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/acctest"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccTencentCloudCosBucketObjectResource_source(t *testing.T) {
@@ -254,10 +254,11 @@ resource "tencentcloud_cos_bucket" "object_bucket" {
 }
 
 resource "tencentcloud_cos_bucket_object" "object_acl" {
-  bucket  = tencentcloud_cos_bucket.object_bucket.bucket
-  key     = "tf-object-acl"
+  bucket = tencentcloud_cos_bucket.object_bucket.bucket
+  key = "acl.txt"
   content = "aaaaaaaaaaaaaaaa"
   acl     = "%s"
+  
 }
 `, appid, acl)
 }

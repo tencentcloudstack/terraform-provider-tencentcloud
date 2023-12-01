@@ -4,25 +4,47 @@ Provides a SQL Server instance resource to create basic database instances.
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_basic_instance" "foo" {
-	name                    = "example"
-	availability_zone       = var.availability_zone
-	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = "vpc-26w7r56z"
-	subnet_id               = "subnet-lvlr6eeu"
-	project_id              = 0
-	memory                  = 2
-	storage                 = 20
-	cpu                     = 1
-	machine_type            = "CLOUD_PREMIUM"
-	maintenance_week_set    = [1,2,3]
-	maintenance_start_time  = "09:00"
-	maintenance_time_span   = 3
-	security_groups         = ["sg-nltpbqg1"]
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
-	tags = {
-		"test"  = "test"
-	}
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 Import
@@ -30,7 +52,7 @@ Import
 SQL Server basic instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_basic_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_basic_instance.example mssql-3cdq7kx5
 ```
 */
 package tencentcloud
@@ -39,8 +61,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -80,8 +102,8 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 			"machine_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{CLOUD_PREMIUM, CLOUD_SSD}),
-				Description:  "The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk.",
+				ValidateFunc: validateAllowedStringValue([]string{CLOUD_PREMIUM, CLOUD_SSD, CLOUD_HSSD, CLOUD_BSSD}),
+				Description:  "The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk, `CLOUD_HSSD` for virtual machine enhanced cloud disk, `CLOUD_BSSD` for virtual machine general purpose SSD cloud disk.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
@@ -280,7 +302,7 @@ func resourceTencentCloudSqlserverBasicInstanceCreate(d *schema.ResourceData, me
 
 	var instanceId string
 	var outErr, inErr error
-	outErr = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(12*writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = sqlserverService.CreateSqlserverBasicInstance(ctx, paramMap, weekSet, voucherIds, securityGroups)
 		if inErr != nil {
 			return retryError(inErr)
@@ -426,7 +448,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
+
 	}
 	//upgrade storage and memory size
 	if d.HasChange("memory") || d.HasChange("storage") ||
@@ -442,7 +464,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 				voucherIds = append(voucherIds, id.(string))
 			}
 		}
-		outErr = resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(12*writeRetryTimeout, func() *resource.RetryError {
 			inErr = sqlserverService.UpgradeSqlserverBasicInstance(ctx, instanceId, memory, storage, cpu, autoVoucher, voucherIds)
 			if inErr != nil {
 				return retryError(inErr)
@@ -453,10 +475,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("storage")
-		d.SetPartial("cpu")
-		d.SetPartial("auto_voucher")
 	}
 
 	if d.HasChange("security_groups") {
@@ -493,7 +511,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			}
 		}
 
-		d.SetPartial("security_groups")
 	}
 	//update project id
 	if d.HasChange("project_id") {
@@ -509,7 +526,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("maintenance_week_set") || d.HasChange("maintenance_start_time") || d.HasChange("maintenance_time_span") {
@@ -533,9 +549,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("maintenance_week_set")
-		d.SetPartial("maintenance_start_time")
-		d.SetPartial("maintenance_time_span")
 	}
 
 	if payType == COMMON_PAYTYPE_PREPAID {
@@ -554,7 +567,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 				return outErr
 			}
 
-			d.SetPartial("auto_renew")
 		}
 	}
 	if d.HasChange("tags") {
@@ -566,7 +578,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 	d.Partial(false)
 	return resourceTencentCloudSqlserverBasicInstanceRead(d, meta)
@@ -625,11 +636,6 @@ func resourceTencentCLoudSqlserverBasicInstanceDelete(d *schema.ResourceData, me
 		return nil
 	})
 
-	if outErr != nil {
-		return outErr
-	}
-
-	outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
 	if outErr != nil {
 		return outErr
 	}

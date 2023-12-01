@@ -3,24 +3,24 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** You can launch an CVM instance for a VPC network via specifying parameter `vpc_id`. One instance can only belong to one VPC.
 
-~> **NOTE:** At present, 'PREPAID' instance cannot be deleted and must wait it to be outdated and released automatically.
+~> **NOTE:** At present, 'PREPAID' instance cannot be deleted directly and must wait it to be outdated and released automatically.
 
 Example Usage
 
 ```hcl
 data "tencentcloud_images" "my_favorite_image" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "Tencent Linux release 3.2 (Final)"
+  image_name_regex = "Final"
 }
 
 data "tencentcloud_instance_types" "my_favorite_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S3"]
+    values = ["S1", "S2", "S3", "S4", "S5"]
   }
 
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count = 2
+  exclude_sold_out = true
 }
 
 data "tencentcloud_availability_zones" "my_favorite_zones" {
@@ -39,9 +39,9 @@ resource "tencentcloud_subnet" "app" {
   cidr_block        = "10.0.1.0/24"
 }
 
-// Create 2 CVM instances to host awesome_app
-resource "tencentcloud_instance" "my_awesome_app" {
-  instance_name              = "awesome_app"
+// Create a POSTPAID_BY_HOUR CVM instance
+resource "tencentcloud_instance" "cvm_postpaid" {
+  instance_name              = "cvm_postpaid"
   availability_zone          = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
   instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
@@ -51,7 +51,6 @@ resource "tencentcloud_instance" "my_awesome_app" {
   project_id                 = 0
   vpc_id                     = tencentcloud_vpc.app.id
   subnet_id                  = tencentcloud_subnet.app.id
-  count                      = 2
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -63,63 +62,33 @@ resource "tencentcloud_instance" "my_awesome_app" {
     tagKey = "tagValue"
   }
 }
-```
 
-Create CVM instance based on CDH
-```hcl
-variable "availability_zone" {
-  default = "ap-shanghai-4"
-}
-
-resource "tencentcloud_cdh_instance" "foo" {
-  availability_zone = var.availability_zone
-  host_type = "HM50"
-  charge_type = "PREPAID"
-  instance_charge_type_prepaid_period = 1
-  hostname = "test"
-  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
-}
-
-data "tencentcloud_cdh_instances" "list" {
-  availability_zone = var.availability_zone
-  host_id = tencentcloud_cdh_instance.foo.id
-  hostname = "test"
-  host_state = "RUNNING"
-}
-
-resource "tencentcloud_key_pair" "random_key" {
-  key_ids   = ["tf_example_key6"]
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
-}
-
-resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
-}
-
-resource "tencentcloud_instance" "foo" {
-  availability_zone = var.availability_zone
-  instance_name     = "terraform-testing"
-  image_id          = "img-ix05e4px"
-  key_ids           = [tencentcloud_key_pair.random_key.id]
-  placement_group_id = tencentcloud_placement_group.foo.id
-  security_groups               = ["sg-9c3f33xk"]
-  system_disk_type  = "CLOUD_PREMIUM"
-
-  instance_charge_type = "CDHPAID"
-  cdh_instance_type     = "CDH_10C10G"
-  cdh_host_id = tencentcloud_cdh_instance.foo.id
-
-  vpc_id                     = "vpc-31zmeluu"
-  subnet_id                  = "subnet-aujc02np"
-  allocate_public_ip    = true
-  internet_max_bandwidth_out = 2
-  count                      = 3
-
+// Create a PREPAID CVM instance
+resource "tencentcloud_instance" "cvm_prepaid" {
+  timeouts {
+    create = "30m"
+  }
+  instance_name                           = "cvm_prepaid"
+  availability_zone                       = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+  image_id                                = data.tencentcloud_images.my_favorite_image.images.0.image_id
+  instance_type                           = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+  system_disk_type                        = "CLOUD_PREMIUM"
+  system_disk_size                        = 50
+  hostname                                = "user"
+  project_id                              = 0
+  vpc_id                                  = tencentcloud_vpc.app.id
+  subnet_id                               = tencentcloud_subnet.app.id
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
-    encrypt = false
+    encrypt        = false
+  }
+  force_delete = true
+  tags         = {
+    tagKey = "tagValue"
   }
 }
 ```
@@ -139,11 +108,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"sort"
+	"strconv"
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -159,7 +130,9 @@ func resourceTencentCloudInstance() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(15 * time.Minute),
+		},
 		Schema: map[string]*schema.Schema{
 			"image_id": {
 				Type:        schema.TypeString,
@@ -284,7 +257,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 					return old == "" || new == ""
 				},
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
-				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.",
+				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.",
 			},
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
@@ -348,7 +321,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:     true,
 				Default:      CVM_DISK_TYPE_CLOUD_PREMIUM,
 				ValidateFunc: validateAllowedStringValue(CVM_DISK_TYPE),
-				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_SSD`: SSD, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD. NOTE: If modified, the instance may force stop.",
+				Description:  "System disk type. For more information on limits of system disk types, see [Storage Overview](https://intl.cloud.tencent.com/document/product/213/4952). Valid values: `LOCAL_BASIC`: local disk, `LOCAL_SSD`: local SSD disk, `CLOUD_BASIC`: cloud disk, `CLOUD_SSD`: cloud SSD disk, `CLOUD_PREMIUM`: Premium Cloud Storage, `CLOUD_BSSD`: Basic SSD, `CLOUD_HSSD`: Enhanced SSD, `CLOUD_TSSD`: Tremendous SSD. NOTE: If modified, the instance may force stop.",
 			},
 			"system_disk_size": {
 				Type:        schema.TypeInt,
@@ -493,6 +466,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
+			},
+			"disable_api_termination": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.",
 			},
 			// role
 			"cam_role_name": {
@@ -739,6 +718,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
+	if v, ok := d.GetOkExists("disable_api_termination"); ok {
+		request.DisableApiTermination = helper.Bool(v.(bool))
+	}
+
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		tags := make([]*cvm.Tag, 0)
 		for tagKey, tagValue := range v {
@@ -787,7 +770,7 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 	//get system disk ID and data disk ID
 	var systemDiskId string
 	var dataDiskIds []string
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 		instance, errRet := cvmService.DescribeInstanceById(ctx, instanceId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -919,14 +902,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		request := cvm.NewDescribeImagesRequest()
 		response, errRet = client.UseCvmClient().DescribeImages(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
 		if *response.Response.TotalCount > 0 {
 			for i := range response.Response.ImageSet {
 				image := response.Response.ImageSet[i]
 				cvmImages = append(cvmImages, *image.ImageId)
 			}
-		}
-		if errRet != nil {
-			return retryError(errRet, InternalError)
 		}
 		return nil
 	})
@@ -958,6 +941,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
+	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
 		_ = d.Set("cdh_instance_type", instance.InstanceType)
@@ -979,8 +963,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("tags", tags)
 
 	//set data_disks
+	var hasDataDisks, isCombineDataDisks bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
+	diskOrderMap := make(map[string]int)
+
+	if _, ok := d.GetOk("data_disks"); ok {
+		hasDataDisks = true
+	}
 	if len(instance.DataDisks) > 0 {
 		var diskIds []*string
 		for i := range instance.DataDisks {
@@ -1006,6 +996,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
 				}
 				diskSizeMap[*disk.DiskId] = disk.DiskSize
+				if hasDataDisks {
+					items := strings.Split(*disk.DiskName, "_")
+					diskOrder := items[len(items)-1]
+					diskOrderInt, err := strconv.Atoi(diskOrder)
+					if err != nil {
+						isCombineDataDisks = true
+						continue
+					}
+					diskOrderMap[*disk.DiskId] = diskOrderInt
+				}
 			}
 			return nil
 		})
@@ -1028,6 +1028,13 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		dataDisk["throughput_performance"] = disk.ThroughputPerformance
 		dataDiskList = append(dataDiskList, dataDisk)
 	}
+	if hasDataDisks && !isCombineDataDisks {
+		sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
+			dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
+			dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
+			return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
+		})
+	}
 	_ = d.Set("data_disks", dataDiskList)
 
 	if len(instance.PrivateIpAddresses) > 0 {
@@ -1041,7 +1048,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	} else {
 		_ = d.Set("key_name", "")
-		_ = d.Set("key_ids", []*string{helper.String("")})
+		_ = d.Set("key_ids", []*string{})
 	}
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)
@@ -1151,7 +1158,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		time.Sleep(readRetryTimeout)
-		d.SetPartial("instance_charge_type_prepaid_renew_flag")
+
 	}
 
 	if d.HasChange("instance_name") {
@@ -1159,7 +1166,14 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
+	}
+
+	if d.HasChange("disable_api_termination") {
+		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("security_groups") {
@@ -1172,7 +1186,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("orderly_security_groups") {
@@ -1185,7 +1199,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("orderly_security_groups")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -1194,7 +1208,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	// Reset Instance
@@ -1205,24 +1219,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("keep_image_login") {
 
-		var updateAttr []string
-
 		request := cvm.NewResetInstanceRequest()
 		request.InstanceId = helper.String(d.Id())
 
 		if v, ok := d.GetOk("image_id"); ok {
-			updateAttr = append(updateAttr, "image_id")
 			request.ImageId = helper.String(v.(string))
 		}
 		if v, ok := d.GetOk("hostname"); ok {
-			updateAttr = append(updateAttr, "hostname")
 			request.HostName = helper.String(v.(string))
 		}
 
 		// enhanced service
 		request.EnhancedService = &cvm.EnhancedService{}
 		if d.HasChange("disable_security_service") {
-			updateAttr = append(updateAttr, "disable_security_service")
 			v := d.Get("disable_security_service")
 			securityService := v.(bool)
 			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
@@ -1231,7 +1240,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		if d.HasChange("disable_monitor_service") {
-			updateAttr = append(updateAttr, "disable_monitor_service")
 			v := d.Get("disable_monitor_service")
 			monitorService := !(v.(bool))
 			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
@@ -1243,20 +1251,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		request.LoginSettings = &cvm.LoginSettings{}
 
 		if v, ok := d.GetOk("password"); ok {
-			updateAttr = append(updateAttr, "password")
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("key_ids"); ok {
-			updateAttr = append(updateAttr, "key_ids")
 			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 		} else if v, ok := d.GetOk("key_name"); ok {
-			updateAttr = append(updateAttr, "key_name")
 			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
-		}
-
-		if d.HasChange("keep_image_login") {
-			updateAttr = append(updateAttr, "keep_image_login")
 		}
 
 		if v := d.Get("keep_image_login").(bool); v {
@@ -1267,10 +1268,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAttr {
-			d.SetPartial(attr)
 		}
 
 		// Modify Login Info Directly
@@ -1323,6 +1320,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 			adds := nv.Difference(ov)
 			removes := ov.Difference(nv)
+			adds.Remove("")
+			removes.Remove("")
 
 			if removes.Len() > 0 {
 				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
@@ -1374,7 +1373,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
 			}
-			d.SetPartial(sizeKey)
+
 		}
 	}
 
@@ -1384,7 +1383,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := switchInstance(&cvmService, ctx, d, flag); err != nil {
 			return err
 		}
-		d.SetPartial("running_flag")
+
 	}
 
 	if d.HasChange("system_disk_size") || d.HasChange("system_disk_type") {
@@ -1431,9 +1430,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		d.SetPartial("system_disk_size")
-		d.SetPartial("system_disk_type")
-
 	}
 
 	if d.HasChange("instance_type") {
@@ -1441,7 +1437,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_type")
 
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
@@ -1454,7 +1449,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cdh_instance_type")
 
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
@@ -1469,15 +1463,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err := cvmService.ModifyVpc(ctx, instanceId, vpcId, subnetId, privateIp)
 		if err != nil {
 			return err
-		}
-		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
-		}
-		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
-		}
-		if d.HasChange("private_ip") {
-			d.SetPartial("private_ip")
 		}
 	}
 
@@ -1516,7 +1501,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				}
 			}
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -1530,7 +1515,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("internet_max_bandwidth_out")
+
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err

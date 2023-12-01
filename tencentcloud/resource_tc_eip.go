@@ -3,12 +3,40 @@ Provides an EIP resource.
 
 Example Usage
 
+Paid by the bandwidth package
 ```hcl
 resource "tencentcloud_eip" "foo" {
   name                 = "awesome_gateway_ip"
   bandwidth_package_id = "bwp-jtvzuky6"
   internet_charge_type = "BANDWIDTH_PACKAGE"
   type                 = "EIP"
+}
+```
+
+AntiDDos Eip
+```
+resource "tencentcloud_eip" "foo" {
+  name                 = "awesome_gateway_ip"
+  bandwidth_package_id = "bwp-4ocyia9s"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  type                 = "AntiDDoSEIP"
+  anti_ddos_package_id = "xxxxxxxx"
+
+  tags = {
+    "test" = "test"
+  }
+}
+```
+
+Eip With Network Egress
+```
+resource "tencentcloud_eip" "foo" {
+  name                       = "egress_eip"
+  egress                     = "center_egress2"
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  internet_service_provider  = "CMCC"
+  internet_max_bandwidth_out = 1
+  type                       = "EIP"
 }
 ```
 
@@ -27,8 +55,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -46,18 +74,17 @@ func resourceTencentCloudEip() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validateStringLengthInRange(1, 20),
-				Description:  "The name of eip.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The name of eip.",
 			},
 			"type": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     EIP_TYPE_EIP,
 				ForceNew:    true,
-				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.",
+				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP` and `AntiDDoSEIP`. Default is `EIP`.",
 			},
 			"anycast_zone": {
 				Type:        schema.TypeString,
@@ -81,12 +108,26 @@ func resourceTencentCloudEip() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
+			"prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(EIP_AVAILABLE_PERIOD),
+				Description:  "Period of instance. Default value: `1`. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. NOTES: must set when `internet_charge_type` is `BANDWIDTH_PREPAID_BY_MONTH`.",
+			},
+
+			"auto_renew_flag": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
+				Description:  "Auto renew flag.  0 - default state (manual renew); 1 - automatic renew; 2 - explicit no automatic renew. NOTES: Only supported prepaid EIP.",
+			},
+
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "The bandwidth limit of EIP, unit is Mbps.",
 			},
 			"tags": {
@@ -97,7 +138,20 @@ func resourceTencentCloudEip() *schema.Resource {
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.",
+			},
+			"egress": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Network egress. It defaults to `center_egress1`. If you want to try the egress feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
+			},
+			"anti_ddos_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of anti DDos package, it must set when `type` is `AntiDDoSEIP`.",
 			},
 			// computed
 			"public_ip": {
@@ -125,6 +179,8 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	tagService := TagService{client: client}
 	region := client.Region
 
+	var internetChargeType string
+
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
 		request.AddressType = helper.String(v.(string))
@@ -136,11 +192,22 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		request.InternetServiceProvider = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
+		internetChargeType = v.(string)
 		request.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		request.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
 	}
+
+	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
+		addressChargePrepaid := vpc.AddressChargePrepaid{}
+		period := d.Get("prepaid_period")
+		renewFlag := d.Get("auto_renew_flag")
+		addressChargePrepaid.Period = helper.IntInt64(period.(int))
+		addressChargePrepaid.AutoRenewFlag = helper.IntInt64(renewFlag.(int))
+		request.AddressChargePrepaid = &addressChargePrepaid
+	}
+
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		for tagKey, tagValue := range v {
 			tag := vpc.Tag{
@@ -152,6 +219,15 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
 		request.BandwidthPackageId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("name"); ok {
+		request.AddressName = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("egress"); ok {
+		request.Egress = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
+		request.AntiDDoSPackageId = helper.String(v.(string))
 	}
 
 	eipId := ""
@@ -198,20 +274,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	})
 	if err != nil {
 		return err
-	}
-
-	if v, ok := d.GetOk("name"); ok {
-		name := v.(string)
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := vpcService.ModifyEipName(ctx, eipId, name)
-			if errRet != nil {
-				return retryError(errRet)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudEipRead(d, meta)
@@ -264,6 +326,19 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("status", eip.AddressStatus)
 	_ = d.Set("internet_charge_type", eip.InternetChargeType)
 	_ = d.Set("tags", tags)
+
+	if eip.Bandwidth != nil {
+		_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
+	}
+
+	if eip.Egress != nil {
+		_ = d.Set("egress", eip.Egress)
+	}
+
+	if eip.AntiDDoSPackageId != nil {
+		_ = d.Set("anti_ddos_package_id", eip.AntiDDoSPackageId)
+	}
+
 	if bgp != nil {
 		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
 	}
@@ -287,6 +362,8 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	unsupportedUpdateFields := []string{
 		"bandwidth_package_id",
+		"anti_ddos_package_id",
+		"egress",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
@@ -300,8 +377,30 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
+	}
 
-		d.SetPartial("name")
+	if d.HasChange("internet_charge_type") {
+		var (
+			chargeType   string
+			bandWidthOut int
+		)
+
+		if v, ok := d.GetOk("internet_charge_type"); ok {
+			chargeType = v.(string)
+		}
+		if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+			bandWidthOut = v.(int)
+		}
+
+		period := d.Get("prepaid_period").(int)
+		renewFlag := d.Get("auto_renew_flag").(int)
+
+		if chargeType != "" && bandWidthOut != 0 {
+			err := vpcService.ModifyEipInternetChargeType(ctx, eipId, chargeType, bandWidthOut, period, renewFlag)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -311,7 +410,16 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			if err != nil {
 				return err
 			}
-			d.SetPartial("internet_max_bandwidth_out")
+
+		}
+	}
+
+	if d.HasChange("prepaid_period") || d.HasChange("auto_renew_flag") {
+		period := d.Get("prepaid_period").(int)
+		renewFlag := d.Get("auto_renew_flag").(int)
+		err := vpcService.RenewAddress(ctx, eipId, period, renewFlag)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -324,7 +432,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)
@@ -355,12 +463,46 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := vpcService.DeleteEip(ctx, eipId)
 		if errRet != nil {
-			return retryError(errRet, "DesOperation.MutexTaskRunning")
+			return retryError(errRet, "DesOperation.MutexTaskRunning", "OperationDenied.MutexTaskRunning")
 		}
 		return nil
 	})
 	if err != nil {
 		return err
+	}
+
+	var internetChargeType string
+	if v, ok := d.GetOk("internet_charge_type"); ok {
+		internetChargeType = v.(string)
+	}
+
+	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
+		// isolated
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			if !*eip.IsArrears {
+				return resource.RetryableError(fmt.Errorf("eip is still isolate"))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		// release
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := vpcService.DeleteEip(ctx, eipId)
+			if errRet != nil {
+				return retryError(errRet, "DesOperation.MutexTaskRunning", "OperationDenied.MutexTaskRunning")
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

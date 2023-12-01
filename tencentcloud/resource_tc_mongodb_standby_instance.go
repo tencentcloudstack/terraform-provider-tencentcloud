@@ -62,8 +62,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -102,7 +102,7 @@ func resourceTencentCloudMongodbStandbyInstance() *schema.Resource {
 		},
 	}
 	basic := TencentMongodbBasicInfo()
-	conflictList := []string{"engine_version", "machine_type", "password", "available_zone"}
+	conflictList := []string{"engine_version", "machine_type", "password", "available_zone", "mongos_cpu", "mongos_memory", "mongos_node_num"}
 	for _, item := range conflictList {
 		delete(basic, item)
 	}
@@ -290,13 +290,6 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 		return fmt.Errorf("[CRITAL] standBy instance zoneId must not same with father instance's")
 	}
 
-	// check security group info
-	if *masterInfo.MongoVersion == MONGODB_ENGINE_VERSION_4_WT {
-		if _, ok := d.GetOk("security_groups"); ok {
-			return fmt.Errorf("[CRITAL] for instance which `engine_version` is `MONGO_40_WT`, `security_groups` is not supported")
-		}
-	}
-
 	chargeType := d.Get("charge_type").(string)
 
 	if chargeType == MONGODB_CHARGE_TYPE_POSTPAID {
@@ -395,6 +388,17 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	_ = d.Set("machine_type", *instance.MachineType)
 	_ = d.Set("available_zone", instance.Zone)
 	_ = d.Set("vpc_id", instance.VpcId)
@@ -474,8 +478,6 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -484,7 +486,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -493,7 +495,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -505,7 +507,6 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -519,7 +520,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
 	}
 
 	d.Partial(false)

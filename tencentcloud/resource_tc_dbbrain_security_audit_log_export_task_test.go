@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -28,6 +28,7 @@ func testSweepDbbrainSecurityAuditLogExportTask(r string) error {
 	sagId := helper.String(defaultDbBrainsagId)
 	param := map[string]interface{}{
 		"sec_audit_group_id": sagId,
+		"product":            helper.String("mysql"),
 	}
 
 	ret, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTasksByFilter(ctx, param)

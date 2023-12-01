@@ -4,16 +4,46 @@ Provides a resource to create a vpc bandwidth_package
 Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
-  network_type            = "BGP"
-  charge_type             = "TOP5_POSTPAID_BY_MONTH"
-  bandwidth_package_name  = "test-001"
-  tags = {
+resource "tencentcloud_vpc_bandwidth_package" "example" {
+  network_type           = "BGP"
+  charge_type            = "TOP5_POSTPAID_BY_MONTH"
+  bandwidth_package_name = "tf-example"
+  tags                   = {
     "createdBy" = "terraform"
   }
 }
-
 ```
+
+PrePaid Bandwidth Package
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
+  network_type           = "BGP"
+  charge_type            = "FIXED_PREPAID_BY_MONTH"
+  bandwidth_package_name = "test-001"
+  time_span              = 3
+  internet_max_bandwidth = 100
+  tags                   = {
+    "createdBy" = "terraform"
+  }
+}
+````
+
+Bandwidth Package With Egress
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "example" {
+  network_type           = "SINGLEISP_CMCC"
+  charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
+  bandwidth_package_name = "tf-example"
+  internet_max_bandwidth = 400
+  egress                 = "center_egress2"
+  tags                   = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 Import
 
 vpc bandwidth_package can be imported using the id, e.g.
@@ -28,8 +58,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -45,15 +75,20 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"network_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Bandwidth packet type, default:BGP, optional:- `BGP`: common BGP shared bandwidth package- `HIGH_QUALITY_BGP`: Quality BGP Shared Bandwidth Package.",
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: "Bandwidth packet type, default: `BGP`. " +
+					"Optional value: `BGP`: common BGP shared bandwidth package; `HIGH_QUALITY_BGP`: High Quality BGP Shared Bandwidth Package; " +
+					"`SINGLEISP_CMCC`: CMCC shared bandwidth package; `SINGLEISP_CTCC:`: CTCC shared bandwidth package; `SINGLEISP_CUCC`: CUCC shared bandwidth package.",
 			},
 
 			"charge_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Bandwidth package billing type, default: TOP5_POSTPAID_BY_MONTH, optional value:- `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid- `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid- `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing (Type FIXED_PREPAID_BY_MONTH product API capability is under construction).",
+				Type:     schema.TypeString,
+				Optional: true,
+				Description: "Bandwidth package billing type, default: `TOP5_POSTPAID_BY_MONTH`." +
+					" Optional value: `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid; `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid;" +
+					" `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing (Type FIXED_PREPAID_BY_MONTH product API capability is under construction);" +
+					" `BANDWIDTH_POSTPAID_BY_DAY`: bandwidth billed by daily postpaid; `ENHANCED95_POSTPAID_BY_MONTH`: enhanced 95 billed monthly postpaid.",
 			},
 
 			"bandwidth_package_name": {
@@ -72,6 +107,20 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag description list.",
+			},
+
+			"time_span": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The purchase duration of the prepaid monthly bandwidth package, unit: month, value range: 1~60.",
+			},
+
+			"egress": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Network egress. It defaults to `center_egress1`. If you want to try the egress feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
 			},
 		},
 	}
@@ -112,6 +161,14 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOkExists("time_span"); ok {
+		request.TimeSpan = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("egress"); ok {
+		request.Egress = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -208,6 +265,10 @@ func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta in
 		_ = d.Set("internet_max_bandwidth", bandwidthPackage.Bandwidth)
 	}
 
+	if bandwidthPackage.Egress != nil {
+		_ = d.Set("egress", bandwidthPackage.Egress)
+	}
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "bandwidthPackage", tcClient.Region, d.Id())
@@ -226,40 +287,31 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := vpc.NewModifyBandwidthPackageAttributeRequest()
-
 	bandwidthPackageId := d.Id()
 
+	immutableArgs := []string{
+		"network_type",
+		"internet_max_bandwidth",
+		"egress",
+	}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	request := vpc.NewModifyBandwidthPackageAttributeRequest()
 	request.BandwidthPackageId = &bandwidthPackageId
 
-	if d.HasChange("network_type") {
-		return fmt.Errorf("`network_type` do not support change now.")
-	}
-
-	if d.HasChange("bandwidth_package_count") {
-		return fmt.Errorf("`bandwidth_package_count` do not support change now.")
-	}
-
-	if d.HasChange("internet_max_bandwidth") {
-		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
-	}
-
-	if d.HasChange("protocol") {
-		return fmt.Errorf("`protocol` do not support change now.")
-	}
-
-	if d.HasChange("internet_max_bandwidth") {
-		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
+	if v, ok := d.GetOk("bandwidth_package_name"); ok {
+		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
 	if d.HasChange("charge_type") {
 		if v, ok := d.GetOk("charge_type"); ok {
 			request.ChargeType = helper.String(v.(string))
 		}
-	}
-
-	if v, ok := d.GetOk("bandwidth_package_name"); ok {
-		request.BandwidthPackageName = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

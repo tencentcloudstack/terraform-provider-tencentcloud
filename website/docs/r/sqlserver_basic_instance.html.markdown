@@ -14,21 +14,43 @@ Provides a SQL Server instance resource to create basic database instances.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_basic_instance" "foo" {
-  name                   = "example"
-  availability_zone      = var.availability_zone
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = "vpc-26w7r56z"
-  subnet_id              = "subnet-lvlr6eeu"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
   project_id             = 0
-  memory                 = 2
-  storage                = 20
-  cpu                    = 1
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
   machine_type           = "CLOUD_PREMIUM"
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  security_groups        = ["sg-nltpbqg1"]
+  security_groups        = [tencentcloud_security_group.security_group.id]
 
   tags = {
     "test" = "test"
@@ -41,7 +63,7 @@ resource "tencentcloud_sqlserver_basic_instance" "foo" {
 The following arguments are supported:
 
 * `cpu` - (Required, Int) The CPU number of the SQL Server basic instance.
-* `machine_type` - (Required, String) The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk.
+* `machine_type` - (Required, String) The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk, `CLOUD_HSSD` for virtual machine enhanced cloud disk, `CLOUD_BSSD` for virtual machine general purpose SSD cloud disk.
 * `memory` - (Required, Int) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
 * `name` - (Required, String) Name of the SQL Server basic instance.
 * `storage` - (Required, Int) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.
@@ -77,6 +99,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server basic instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_basic_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_basic_instance.example mssql-3cdq7kx5
 ```
 

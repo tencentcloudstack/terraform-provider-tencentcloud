@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_group" "foo" {
-  name   = "cam-group-test"
-  remark = "test"
+  name   = "tf_cam_group"
+  remark = "tf_group_remark"
 }
 ```
 
@@ -28,8 +28,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -184,17 +184,21 @@ func resourceTencentCloudCamGroupUpdate(d *schema.ResourceData, meta interface{}
 	request.GroupId = &groupIdInt64
 	changeFlag := false
 
-	if d.HasChange("remark") {
-		request.Remark = helper.String(d.Get("remark").(string))
-		changeFlag = true
+	mutableArgs := []string{"name", "remark"}
 
-	}
-	if d.HasChange("name") {
-		request.GroupName = helper.String(d.Get("name").(string))
-		changeFlag = true
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			changeFlag = true
+			break
+		}
 	}
 
 	if changeFlag {
+		request.GroupName = helper.String(d.Get("name").(string))
+		if v, ok := d.GetOk("remark"); ok {
+			request.Remark = helper.String(v.(string))
+		}
+
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			response, e := meta.(*TencentCloudClient).apiV3Conn.UseCamClient().UpdateGroup(request)
 

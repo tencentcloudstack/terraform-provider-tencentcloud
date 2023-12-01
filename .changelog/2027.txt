@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_ssm_products
+```
+
+```release-note:new-resource
+tencentcloud_ssm_product_secret
+```

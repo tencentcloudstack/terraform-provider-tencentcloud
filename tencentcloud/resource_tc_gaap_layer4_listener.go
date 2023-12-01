@@ -59,8 +59,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -148,7 +147,7 @@ func resourceTencentCloudGaapLayer4Listener() *schema.Resource {
 				Optional: true,
 				Set: func(v interface{}) int {
 					m := v.(map[string]interface{})
-					return hashcode.String(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
+					return helper.HashString(fmt.Sprintf("%s-%s-%d-%d", m["id"].(string), m["ip"].(string), m["port"].(int), m["weight"].(int)))
 				},
 				Description: "An information list of GAAP realserver.",
 				Elem: &schema.Resource{
@@ -483,10 +482,6 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 				return err
 			}
 		}
-
-		for _, attr := range attrChange {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("realserver_bind_set") {
@@ -505,7 +500,7 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		if err := service.BindLayer4ListenerRealservers(ctx, id, protocol, proxyId, realservers); err != nil {
 			return err
 		}
-		d.SetPartial("realserver_bind_set")
+
 	}
 
 	d.Partial(false)

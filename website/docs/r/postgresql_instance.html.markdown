@@ -11,6 +11,8 @@ description: |-
 
 Use this resource to create postgresql instance.
 
+-> **Note:** To update the charge type, please update the `charge_type` and specify the `period` for the charging period. It only supports updating from `POSTPAID_BY_HOUR` to `PREPAID`, and the `period` field only valid in that upgrading case.
+
 ## Example Usage
 
 ```hcl
@@ -54,7 +56,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
-Create a multi available zone bucket
+### Create a multi available zone bucket
 
 ```hcl
 variable "availability_zone" {
@@ -109,7 +111,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
-create pgsql with kms key
+### create pgsql with kms key
 
 ```hcl
 resource "tencentcloud_postgresql_instance" "pg" {
@@ -143,21 +145,55 @@ resource "tencentcloud_postgresql_instance" "pg" {
 }
 ```
 
+### upgrade kernel version
+
+```hcl
+resource "tencentcloud_postgresql_instance" "test" {
+  name                 = "tf_postsql_instance_update"
+  availability_zone    = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type          = "POSTPAID_BY_HOUR"
+  vpc_id               = local.vpc_id
+  subnet_id            = local.subnet_id
+  engine_version       = "13.3"
+  root_password        = "*"
+  charset              = "LATIN1"
+  project_id           = 0
+  public_access_switch = false
+  security_groups      = [local.sg_id]
+  memory               = 4
+  storage              = 250
+  backup_plan {
+    min_backup_start_time        = "01:10:11"
+    max_backup_start_time        = "02:10:11"
+    base_backup_retention_period = 5
+    backup_period                = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
+
+  tags = {
+    tf = "teest"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, String, ForceNew) Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.
+* `availability_zone` - (Required, String) Availability zone. NOTE: This field could not be modified, please use `db_node_set` instead of modification. The changes on this field will be suppressed when using the `db_node_set`.
 * `memory` - (Required, Int) Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
 * `name` - (Required, String) Name of the postgresql instance.
 * `root_password` - (Required, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `storage` - (Required, Int) Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
+* `subnet_id` - (Required, String) ID of subnet.
+* `vpc_id` - (Required, String) ID of VPC.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `backup_plan` - (Optional, List) Specify DB backup plan.
-* `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.
+* `charge_type` - (Optional, String) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It only support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
+* `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_major_vesion` - (Optional, String, **Deprecated**) `db_major_vesion` will be deprecated, use `db_major_version` instead. PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_node_set` - (Optional, Set) Specify instance node info for disaster migration.
@@ -167,15 +203,13 @@ The following arguments are supported:
 * `max_standby_archive_delay` - (Optional, Int) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
 * `max_standby_streaming_delay` - (Optional, Int) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
 * `need_support_tde` - (Optional, Int) Whether to support data transparent encryption, 1: yes, 0: no (default).
-* `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. This field is valid only when creating a `PREPAID` type instance, or updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `project_id` - (Optional, Int) Project id, default value is `0`.
 * `public_access_switch` - (Optional, Bool) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, String, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
 * `security_groups` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
-* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
 * `tags` - (Optional, Map) The available tags within this postgresql.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
-* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 The `backup_plan` object supports the following:
 

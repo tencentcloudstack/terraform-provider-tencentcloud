@@ -2,6 +2,7 @@
 
 # Check gofmt
 echo "==> Checking that code complies with gofmt requirements..."
+echo $(go version)
 gofmt_files=$(gofmt -l `find tencentcloud -name '*.go' | grep -v vendor`)
 if [[ -n ${gofmt_files} ]]; then
     echo 'gofmt needs running on the following files:'

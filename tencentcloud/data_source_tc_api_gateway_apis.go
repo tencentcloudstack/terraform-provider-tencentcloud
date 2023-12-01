@@ -49,8 +49,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 )
 
@@ -297,7 +297,7 @@ func dataSourceTencentCloudAPIGatewayAPIsRead(d *schema.ResourceData, meta inter
 		apiName           = d.Get("api_name").(string)
 		apiId             = d.Get("api_id").(string)
 		serviceId         = d.Get("service_id").(string)
-		apiSet            []*apigateway.DesApisStatus
+		apiSet            []*apigateway.DescribeApisStatusResultApiIdStatusSetInfo
 		err               error
 	)
 

@@ -365,6 +365,66 @@ func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
+func NewCreateCustomAccountRequest() (request *CreateCustomAccountRequest) {
+    request = &CreateCustomAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateCustomAccount")
+    
+    
+    return
+}
+
+func NewCreateCustomAccountResponse() (response *CreateCustomAccountResponse) {
+    response = &CreateCustomAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateCustomAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCustomAccount(request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
+    return c.CreateCustomAccountWithContext(context.Background(), request)
+}
+
+// CreateCustomAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCustomAccountWithContext(ctx context.Context, request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
+    if request == nil {
+        request = NewCreateCustomAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateCustomAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateCustomAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateImageAccelerationServiceRequest() (request *CreateImageAccelerationServiceRequest) {
     request = &CreateImageAccelerationServiceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -427,60 +487,6 @@ func (c *Client) CreateImageAccelerationServiceWithContext(ctx context.Context, 
     return
 }
 
-func NewCreateImageLifecyclePersonalRequest() (request *CreateImageLifecyclePersonalRequest) {
-    request = &CreateImageLifecyclePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateImageLifecyclePersonal")
-    
-    
-    return
-}
-
-func NewCreateImageLifecyclePersonalResponse() (response *CreateImageLifecyclePersonalResponse) {
-    response = &CreateImageLifecyclePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateImageLifecyclePersonal
-// 用于在个人版中创建清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ERRUNAUTHORIZED = "InternalError.ErrUnauthorized"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) CreateImageLifecyclePersonal(request *CreateImageLifecyclePersonalRequest) (response *CreateImageLifecyclePersonalResponse, err error) {
-    return c.CreateImageLifecyclePersonalWithContext(context.Background(), request)
-}
-
-// CreateImageLifecyclePersonal
-// 用于在个人版中创建清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ERRUNAUTHORIZED = "InternalError.ErrUnauthorized"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) CreateImageLifecyclePersonalWithContext(ctx context.Context, request *CreateImageLifecyclePersonalRequest) (response *CreateImageLifecyclePersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateImageLifecyclePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateImageLifecyclePersonal require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateImageLifecyclePersonalResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewCreateImmutableTagRulesRequest() (request *CreateImmutableTagRulesRequest) {
     request = &CreateImmutableTagRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -506,6 +512,7 @@ func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResp
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
@@ -520,6 +527,7 @@ func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
@@ -872,6 +880,7 @@ func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurity
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
 //  FAILEDOPERATION_GETTCRCLIENT = "FailedOperation.GetTcrClient"
 //  INTERNALERROR = "InternalError"
@@ -891,6 +900,7 @@ func (c *Client) CreateMultipleSecurityPolicy(request *CreateMultipleSecurityPol
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
 //  FAILEDOPERATION_GETTCRCLIENT = "FailedOperation.GetTcrClient"
 //  INTERNALERROR = "InternalError"
@@ -1021,6 +1031,7 @@ func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResp
 // 创建个人版镜像仓库命名空间，此命名空间全局唯一
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ERRNAMESPACEEXIST = "InvalidParameter.ErrNamespaceExist"
 //  INVALIDPARAMETER_ERRNAMESPACERESERVED = "InvalidParameter.ErrNamespaceReserved"
@@ -1036,6 +1047,7 @@ func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest
 // 创建个人版镜像仓库命名空间，此命名空间全局唯一
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ERRNAMESPACEEXIST = "InvalidParameter.ErrNamespaceExist"
 //  INVALIDPARAMETER_ERRNAMESPACERESERVED = "InvalidParameter.ErrNamespaceReserved"
@@ -1321,6 +1333,66 @@ func (c *Client) CreateSecurityPolicyWithContext(ctx context.Context, request *C
     return
 }
 
+func NewCreateServiceAccountRequest() (request *CreateServiceAccountRequest) {
+    request = &CreateServiceAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "CreateServiceAccount")
+    
+    
+    return
+}
+
+func NewCreateServiceAccountResponse() (response *CreateServiceAccountResponse) {
+    response = &CreateServiceAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateServiceAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateServiceAccount(request *CreateServiceAccountRequest) (response *CreateServiceAccountResponse, err error) {
+    return c.CreateServiceAccountWithContext(context.Background(), request)
+}
+
+// CreateServiceAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateServiceAccountWithContext(ctx context.Context, request *CreateServiceAccountRequest) (response *CreateServiceAccountResponse, err error) {
+    if request == nil {
+        request = NewCreateServiceAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateServiceAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateServiceAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateSignatureRequest() (request *CreateSignatureRequest) {
     request = &CreateSignatureRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1413,6 +1485,7 @@ func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
@@ -1423,6 +1496,7 @@ func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (r
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicyWithContext(ctx context.Context, request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
@@ -1747,6 +1821,62 @@ func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
+func NewDeleteCustomAccountRequest() (request *DeleteCustomAccountRequest) {
+    request = &DeleteCustomAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteCustomAccount")
+    
+    
+    return
+}
+
+func NewDeleteCustomAccountResponse() (response *DeleteCustomAccountResponse) {
+    response = &DeleteCustomAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteCustomAccount
+// 删除自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteCustomAccount(request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
+    return c.DeleteCustomAccountWithContext(context.Background(), request)
+}
+
+// DeleteCustomAccount
+// 删除自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteCustomAccountWithContext(ctx context.Context, request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
+    if request == nil {
+        request = NewDeleteCustomAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteCustomAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteCustomAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteImageRequest() (request *DeleteImageRequest) {
     request = &DeleteImageRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1919,58 +2049,6 @@ func (c *Client) DeleteImageLifecycleGlobalPersonalWithContext(ctx context.Conte
     request.SetContext(ctx)
     
     response = NewDeleteImageLifecycleGlobalPersonalResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDeleteImageLifecyclePersonalRequest() (request *DeleteImageLifecyclePersonalRequest) {
-    request = &DeleteImageLifecyclePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageLifecyclePersonal")
-    
-    
-    return
-}
-
-func NewDeleteImageLifecyclePersonalResponse() (response *DeleteImageLifecyclePersonalResponse) {
-    response = &DeleteImageLifecyclePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteImageLifecyclePersonal
-// 用于在个人版镜像仓库中删除仓库Tag自动清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) DeleteImageLifecyclePersonal(request *DeleteImageLifecyclePersonalRequest) (response *DeleteImageLifecyclePersonalResponse, err error) {
-    return c.DeleteImageLifecyclePersonalWithContext(context.Background(), request)
-}
-
-// DeleteImageLifecyclePersonal
-// 用于在个人版镜像仓库中删除仓库Tag自动清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) DeleteImageLifecyclePersonalWithContext(ctx context.Context, request *DeleteImageLifecyclePersonalRequest) (response *DeleteImageLifecyclePersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteImageLifecyclePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImageLifecyclePersonal require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteImageLifecyclePersonalResponse()
     err = c.Send(request, response)
     return
 }
@@ -2826,6 +2904,10 @@ func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
 //
+// 
+//
+// 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
+//
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -2841,6 +2923,10 @@ func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (res
 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
+//
+// 
+//
+// 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -2863,6 +2949,62 @@ func (c *Client) DeleteSecurityPolicyWithContext(ctx context.Context, request *D
     request.SetContext(ctx)
     
     response = NewDeleteSecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteServiceAccountRequest() (request *DeleteServiceAccountRequest) {
+    request = &DeleteServiceAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DeleteServiceAccount")
+    
+    
+    return
+}
+
+func NewDeleteServiceAccountResponse() (response *DeleteServiceAccountResponse) {
+    response = &DeleteServiceAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteServiceAccount
+// 删除服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteServiceAccount(request *DeleteServiceAccountRequest) (response *DeleteServiceAccountResponse, err error) {
+    return c.DeleteServiceAccountWithContext(context.Background(), request)
+}
+
+// DeleteServiceAccount
+// 删除服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteServiceAccountWithContext(ctx context.Context, request *DeleteServiceAccountRequest) (response *DeleteServiceAccountResponse, err error) {
+    if request == nil {
+        request = NewDeleteServiceAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteServiceAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteServiceAccountResponse()
     err = c.Send(request, response)
     return
 }
@@ -3231,6 +3373,64 @@ func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeChartDownloadInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeCustomAccountsRequest() (request *DescribeCustomAccountsRequest) {
+    request = &DescribeCustomAccountsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeCustomAccounts")
+    
+    
+    return
+}
+
+func NewDescribeCustomAccountsResponse() (response *DescribeCustomAccountsResponse) {
+    response = &DescribeCustomAccountsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeCustomAccounts
+// 查询自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCustomAccounts(request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
+    return c.DescribeCustomAccountsWithContext(context.Background(), request)
+}
+
+// DescribeCustomAccounts
+// 查询自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCustomAccountsWithContext(ctx context.Context, request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
+    if request == nil {
+        request = NewDescribeCustomAccountsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeCustomAccounts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeCustomAccountsResponse()
     err = c.Send(request, response)
     return
 }
@@ -3881,70 +4081,6 @@ func (c *Client) DescribeImmutableTagRulesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeInstanceAllRequest() (request *DescribeInstanceAllRequest) {
-    request = &DescribeInstanceAllRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceAll")
-    
-    
-    return
-}
-
-func NewDescribeInstanceAllResponse() (response *DescribeInstanceAllResponse) {
-    response = &DescribeInstanceAllResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeInstanceAll
-// 查询全部实例信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT_ERRORINSTANCENOTRUNNING = "ResourceInsufficient.ErrorInstanceNotRunning"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeInstanceAll(request *DescribeInstanceAllRequest) (response *DescribeInstanceAllResponse, err error) {
-    return c.DescribeInstanceAllWithContext(context.Background(), request)
-}
-
-// DescribeInstanceAll
-// 查询全部实例信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT_ERRORINSTANCENOTRUNNING = "ResourceInsufficient.ErrorInstanceNotRunning"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeInstanceAllWithContext(ctx context.Context, request *DescribeInstanceAllRequest) (response *DescribeInstanceAllResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceAllRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceAll require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceAllResponse()
     err = c.Send(request, response)
     return
 }
@@ -5087,6 +5223,64 @@ func (c *Client) DescribeSecurityPoliciesWithContext(ctx context.Context, reques
     return
 }
 
+func NewDescribeServiceAccountsRequest() (request *DescribeServiceAccountsRequest) {
+    request = &DescribeServiceAccountsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "DescribeServiceAccounts")
+    
+    
+    return
+}
+
+func NewDescribeServiceAccountsResponse() (response *DescribeServiceAccountsResponse) {
+    response = &DescribeServiceAccountsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeServiceAccounts
+// 查询服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServiceAccounts(request *DescribeServiceAccountsRequest) (response *DescribeServiceAccountsResponse, err error) {
+    return c.DescribeServiceAccountsWithContext(context.Background(), request)
+}
+
+// DescribeServiceAccounts
+// 查询服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeServiceAccountsWithContext(ctx context.Context, request *DescribeServiceAccountsRequest) (response *DescribeServiceAccountsResponse, err error) {
+    if request == nil {
+        request = NewDescribeServiceAccountsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeServiceAccounts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeServiceAccountsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeTagRetentionExecutionRequest() (request *DescribeTagRetentionExecutionRequest) {
     request = &DescribeTagRetentionExecutionRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5249,6 +5443,7 @@ func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRules
 // 查询版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5256,6 +5451,7 @@ func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRules
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5270,6 +5466,7 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 // 查询版本保留规则
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -5277,6 +5474,7 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5887,6 +6085,62 @@ func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context
     return
 }
 
+func NewModifyCustomAccountRequest() (request *ModifyCustomAccountRequest) {
+    request = &ModifyCustomAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyCustomAccount")
+    
+    
+    return
+}
+
+func NewModifyCustomAccountResponse() (response *ModifyCustomAccountResponse) {
+    response = &ModifyCustomAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyCustomAccount
+// 更新自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyCustomAccount(request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
+    return c.ModifyCustomAccountWithContext(context.Background(), request)
+}
+
+// ModifyCustomAccount
+// 更新自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyCustomAccountWithContext(ctx context.Context, request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
+    if request == nil {
+        request = NewModifyCustomAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyCustomAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyCustomAccountResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesRequest) {
     request = &ModifyImmutableTagRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -6090,7 +6344,7 @@ func NewModifyNamespaceResponse() (response *ModifyNamespaceResponse) {
 }
 
 // ModifyNamespace
-// 更新命名空间信息，当前仅支持修改命名空间访问级别
+// 更新命名空间信息
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6110,7 +6364,7 @@ func (c *Client) ModifyNamespace(request *ModifyNamespaceRequest) (response *Mod
 }
 
 // ModifyNamespace
-// 更新命名空间信息，当前仅支持修改命名空间访问级别
+// 更新命名空间信息
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -6371,6 +6625,62 @@ func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifySecurityPolicyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyServiceAccountRequest() (request *ModifyServiceAccountRequest) {
+    request = &ModifyServiceAccountRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcr", APIVersion, "ModifyServiceAccount")
+    
+    
+    return
+}
+
+func NewModifyServiceAccountResponse() (response *ModifyServiceAccountResponse) {
+    response = &ModifyServiceAccountResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyServiceAccount
+// 更新服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccount(request *ModifyServiceAccountRequest) (response *ModifyServiceAccountResponse, err error) {
+    return c.ModifyServiceAccountWithContext(context.Background(), request)
+}
+
+// ModifyServiceAccount
+// 更新服务级账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyServiceAccountWithContext(ctx context.Context, request *ModifyServiceAccountRequest) (response *ModifyServiceAccountResponse, err error) {
+    if request == nil {
+        request = NewModifyServiceAccountRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyServiceAccount require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyServiceAccountResponse()
     err = c.Send(request, response)
     return
 }

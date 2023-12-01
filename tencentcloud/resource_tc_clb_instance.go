@@ -19,6 +19,23 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 }
 ```
 
+LCU-supported CLB
+
+```hcl
+resource "tencentcloud_clb_instance" "internal_clb" {
+  network_type = "INTERNAL"
+  clb_name     = "myclb"
+  project_id   = 0
+  sla_type     = "clb.c3.medium"
+  vpc_id       = "vpc-2hfyray3"
+  subnet_id    = "subnet-o3a5nt20"
+
+  tags = {
+    test = "tf"
+  }
+}
+```
+
 OPEN CLB
 
 ```hcl
@@ -34,6 +51,69 @@ resource "tencentcloud_clb_instance" "open_clb" {
   tags = {
     test = "tf"
   }
+}
+```
+
+OPNE CLB with VipIsp
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "example" {
+  network_type           = "SINGLEISP_CMCC"
+  charge_type            = "ENHANCED95_POSTPAID_BY_MONTH"
+  bandwidth_package_name = "tf-example"
+  internet_max_bandwidth = 300
+  egress                 = "center_egress1"
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_clb_instance" "open_clb" {
+  network_type         = "OPEN"
+  clb_name             = "my-open-clb"
+  project_id           = 0
+  vpc_id               = "vpc-4owdpnwr"
+  vip_isp              = "CMCC"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  bandwidth_package_id = tencentcloud_vpc_bandwidth_package.example.id
+
+  tags = {
+    test = "open"
+  }
+}
+```
+
+Dynamic Vip Instance
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "clb-instance-open-sg"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-open-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_clb_instance" "clb_open" {
+  network_type              = "OPEN"
+  clb_name                  = "clb-instance-open"
+  project_id                = 0
+  vpc_id                    = tencentcloud_vpc.foo.id
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc_id = tencentcloud_vpc.foo.id
+  security_groups           = [tencentcloud_security_group.foo.id]
+
+  dynamic_vip = true
+
+  tags = {
+    test = "tf"
+  }
+}
+
+output "domain" {
+  value = tencentcloud_clb_instance.clb_open.domain
 }
 ```
 
@@ -152,8 +232,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -224,6 +304,11 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
+			"delete_protect": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to enable delete protection.",
+			},
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -282,8 +367,25 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Description: "The available tags within this CLB.",
 			},
+			"sla_type": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+				Description: "This parameter is required to create LCU-supported instances. Values:" +
+					"`SLA`: Super Large 4. When you have activated Super Large models, `SLA` refers to Super Large 4; " +
+					"`clb.c2.medium`: Standard; " +
+					"`clb.c3.small`: Advanced 1; " +
+					"`clb.c3.medium`: Advanced 1; " +
+					"`clb.c4.small`: Super Large 1; " +
+					"`clb.c4.medium`: Super Large 2; " +
+					"`clb.c4.large`: Super Large 3; " +
+					"`clb.c4.xlarge`: Super Large 4. " +
+					"For more details, see [Instance Specifications](https://intl.cloud.tencent.com/document/product/214/84689?from_cn_redirect=1).",
+			},
 			"vip_isp": {
 				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
 				Computed:    true,
 				Description: "Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).",
 			},
@@ -317,6 +419,16 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The id of log topic.",
+			},
+			"dynamic_vip": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "If create dynamic vip CLB instance, `true` or `false`.",
+			},
+			"domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Domain name of the CLB instance.",
 			},
 		},
 	}
@@ -382,6 +494,11 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		request.VipIsp = helper.String(v.(string))
 	}
 
+	//SlaType
+	if v, ok := d.GetOk("sla_type"); ok {
+		request.SlaType = helper.String(v.(string))
+	}
+
 	//ip version
 	if v, ok := d.GetOk("address_ip_version"); ok {
 		if networkType == CLB_NETWORK_TYPE_INTERNAL {
@@ -427,12 +544,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			request.InternetAccessible.InternetMaxBandwidthOut = helper.IntInt64(bv.(int))
 		}
 		if pok {
-			if pok && chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
+			if chargeType != INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
 				return fmt.Errorf("[CHECK][CLB instance][Create] check: internet_charge_type must `BANDWIDTH_PACKAGE` when bandwidth_package_id was set")
 			}
 			request.BandwidthPackageId = helper.String(pv.(string))
-		} else if chargeType == INTERNET_CHARGE_TYPE_BANDWIDTH_PACKAGE {
-			return fmt.Errorf("[CHECK][CLB instance][Create] check: the `bandwidth_package_id` must be specified if internet_charge_type was `BANDWIDTH_PACKAGE`")
 		}
 	}
 
@@ -459,6 +574,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("dynamic_vip"); ok {
+		request.DynamicVip = helper.Bool(v.(bool))
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -506,8 +625,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		securityGroups := v.([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			if securityGroups[i] != nil {
+				securityGroup := securityGroups[i].(string)
+				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			}
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			sgResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
@@ -593,7 +714,33 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-
+	if v, ok := d.GetOkExists("delete_protect"); ok {
+		isDeleteProect := v.(bool)
+		if isDeleteProect {
+			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
+			mRequest.LoadBalancerId = helper.String(clbId)
+			mRequest.DeleteProtect = &isDeleteProect
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				mResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(mRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+					requestId := *mResponse.Response.RequestId
+					retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+					if retryErr != nil {
+						return retryError(errors.WithStack(retryErr))
+					}
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
 	return resourceTencentCloudClbInstanceRead(d, meta)
 }
 
@@ -636,7 +783,11 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
+	_ = d.Set("domain", instance.LoadBalancerDomain)
 
+	if instance.SlaType != nil {
+		_ = d.Set("sla_type", instance.SlaType)
+	}
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
 	}
@@ -649,9 +800,9 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
-	_ = d.Set("master_zone_id", instance.MasterZone)
-	_ = d.Set("zone_id", instance.MasterZone)
-	_ = d.Set("slave_zone_id", instance.MasterZone)
+	//_ = d.Set("master_zone_id", instance.MasterZone.ZoneId)
+	//_ = d.Set("zone_id", instance.Zones)
+	//_ = d.Set("slave_zone_id", instance.MasterZone)
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 
@@ -689,6 +840,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	internet := clb.InternetAccessible{}
 	changed := false
 	isLoadBalancerPassToTgt := false
+	isDeleteProtect := false
 	snatPro := d.Get("snat_pro").(bool)
 
 	if d.HasChange("clb_name") {
@@ -744,9 +896,18 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		request.SnatPro = &snatPro
 	}
+	if d.HasChange("delete_protect") {
+		changed = true
+		isDeleteProtect = d.Get("delete_protect").(bool)
+		request.DeleteProtect = &isDeleteProtect
+	}
 
-	if d.HasChange("snat_ips") {
-		return fmt.Errorf("`snat_ips`")
+	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "project_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "zone_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if changed {
@@ -768,6 +929,36 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			log.Printf("[CRITAL]%s update CLB instance failed, reason:%+v", logId, err)
 			return err
+		}
+	}
+
+	if d.HasChange("sla_type") {
+		slaRequest := clb.NewModifyLoadBalancerSlaRequest()
+		param := clb.SlaUpdateParam{}
+		param.LoadBalancerId = &clbId
+		param.SlaType = helper.String(d.Get("sla_type").(string))
+
+		slaRequest.LoadBalancerSla = []*clb.SlaUpdateParam{&param}
+
+		var taskId string
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerSla(slaRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			taskId = *result.Response.RequestId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update clb instanceSlaConfig failed, reason:%+v", logId, err)
+			return err
+		}
+
+		retryErr := waitForTaskFinish(taskId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+		if retryErr != nil {
+			return retryErr
 		}
 	}
 
@@ -800,7 +991,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -844,7 +1035,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	d.Partial(false)
 

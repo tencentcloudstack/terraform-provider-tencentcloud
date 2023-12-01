@@ -4,9 +4,9 @@ Use this resource to create API gateway usage plan.
 Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_usage_plan" "plan" {
-  usage_plan_name         = "my_plan"
-  usage_plan_desc         = "nice plan"
+resource "tencentcloud_api_gateway_usage_plan" "example" {
+  usage_plan_name         = "tf_example"
+  usage_plan_desc         = "desc."
   max_request_num         = 100
   max_request_num_pre_sec = 10
 }
@@ -26,8 +26,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

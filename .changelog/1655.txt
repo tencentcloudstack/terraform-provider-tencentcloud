@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_elasticsearch_instance: set `basic_security_type` default 1 when import instance
+```

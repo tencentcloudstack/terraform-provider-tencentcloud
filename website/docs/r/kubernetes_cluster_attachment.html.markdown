@@ -127,12 +127,21 @@ The `data_disk` object supports the following:
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
+The `gpu_args` object supports the following:
+
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
+
 The `worker_config_overrides` object supports the following:
 
 * `data_disk` - (Optional, List, ForceNew) Configurations of data disk.
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.
@@ -143,6 +152,7 @@ The `worker_config` object supports the following:
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in node. valid when the cluster is podCIDR.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List, ForceNew) Custom parameter information related to the node. This is a white-list parameter.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `is_schedule` - (Optional, Bool, ForceNew) Indicate to schedule the adding node or not. Default is true.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `user_data` - (Optional, String, ForceNew) Base64-encoded User Data text, the length limit is 16KB.

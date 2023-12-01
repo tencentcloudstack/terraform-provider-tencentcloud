@@ -360,3 +360,75 @@ func (me *PtsService) DeletePtsCronJobById(ctx context.Context, cronJobId, proje
 
 	return
 }
+
+func (me *PtsService) DescribePtsScenarioWithJobsByFilter(ctx context.Context, param map[string]interface{}) (scenarioWithJobs []*pts.ScenarioWithJobs, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = pts.NewDescribeScenarioWithJobsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectIds" {
+			request.ProjectIds = v.([]*string)
+		}
+		if k == "ScenarioIds" {
+			request.ScenarioIds = v.([]*string)
+		}
+		if k == "ScenarioName" {
+			request.ScenarioName = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Ascend" {
+			request.Ascend = v.(*bool)
+		}
+		if k == "IgnoreScript" {
+			request.IgnoreScript = v.(*bool)
+		}
+		if k == "IgnoreDataset" {
+			request.IgnoreDataset = v.(*bool)
+		}
+		if k == "ScenarioType" {
+			request.ScenarioType = v.(*string)
+		}
+		if k == "Owner" {
+			request.Owner = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePtsClient().DescribeScenarioWithJobs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ScenarioWithJobsSet) < 1 {
+			break
+		}
+		scenarioWithJobs = append(scenarioWithJobs, response.Response.ScenarioWithJobsSet...)
+		if len(response.Response.ScenarioWithJobsSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
