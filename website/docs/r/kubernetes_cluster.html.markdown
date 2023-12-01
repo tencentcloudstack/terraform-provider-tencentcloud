@@ -846,6 +846,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) The tags of the cluster.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 * `upgrade_instances_follow_cluster` - (Optional, Bool) Indicates whether upgrade all instances when cluster_version change. Default is false.
+* `vpc_cni_type` - (Optional, String) Distinguish between shared network card multi-IP mode and independent network card mode. Fill in `tke-route-eni` for shared network card multi-IP mode and `tke-direct-eni` for independent network card mode. The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty.
 * `worker_config` - (Optional, List, ForceNew) Deploy the machine configuration information of the 'WORKER' service, and create <=20 units for common users. The other 'WORK' service are added by 'tencentcloud_kubernetes_worker'.
 
 The `auth_options` object supports the following:

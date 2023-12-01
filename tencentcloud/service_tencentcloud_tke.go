@@ -53,6 +53,7 @@ type ClusterAdvancedSettings struct {
 	KubeProxyMode           string
 	Property                string
 	OsCustomizeType         string
+	VpcCniType              string
 }
 
 type ClusterExtraArgs struct {
@@ -356,11 +357,22 @@ func (me *TkeService) DescribeClusters(ctx context.Context, id string, name stri
 		clusterInfo.IgnoreClusterCidrConflict = *cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict
 		clusterInfo.ClusterCidr = *cluster.ClusterNetworkSettings.ClusterCIDR
 		clusterInfo.MaxClusterServiceNum = int64(*cluster.ClusterNetworkSettings.MaxClusterServiceNum)
+		clusterInfo.EniSubnetIds = common.StringValues(cluster.ClusterNetworkSettings.Subnets)
 
 		clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
 		clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
 		clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
 		clusterInfo.CreatedTime = *cluster.CreatedTime
+
+		projectMap, err := helper.JsonToMap(*cluster.Property)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if projectMap["VpcCniType"] != nil {
+			vpcCniType := projectMap["VpcCniType"].(string)
+			clusterInfo.VpcCniType = vpcCniType
+		}
 
 		if len(cluster.TagSpecification) > 0 {
 			clusterInfo.Tags = make(map[string]string)
@@ -434,6 +446,22 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 		clusterInfo.MaxNodePodNum = int64(helper.PUint64(cluster.ClusterNetworkSettings.MaxNodePodNum))
 		clusterInfo.ServiceCIDR = helper.PString(cluster.ClusterNetworkSettings.ServiceCIDR)
 	}
+	clusterInfo.EniSubnetIds = common.StringValues(cluster.ClusterNetworkSettings.Subnets)
+
+	projectMap, err := helper.JsonToMap(*cluster.Property)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if projectMap["VpcCniType"] != nil {
+		vpcCniType := projectMap["VpcCniType"].(string)
+		clusterInfo.VpcCniType = vpcCniType
+	}
+	if projectMap["NetworkType"] != nil {
+		networkType := projectMap["NetworkType"].(string)
+		clusterInfo.NetworkType = networkType
+	}
+
 	if len(cluster.TagSpecification) > 0 {
 		clusterInfo.Tags = make(map[string]string)
 		for _, tag := range cluster.TagSpecification[0].Tags {
@@ -656,6 +684,7 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 	request.ClusterAdvancedSettings.IsNonStaticIpMode = &advanced.IsNonStaticIpMode
 	request.ClusterAdvancedSettings.DeletionProtection = &advanced.DeletionProtection
 	request.ClusterAdvancedSettings.KubeProxyMode = &advanced.KubeProxyMode
+	request.ClusterAdvancedSettings.VpcCniType = &advanced.VpcCniType
 
 	request.InstanceAdvancedSettings = &tke.InstanceAdvancedSettings{}
 	request.InstanceAdvancedSettings.MountTarget = &iAdvanced.MountTarget
@@ -1116,6 +1145,96 @@ func (me *TkeService) ModifyClusterAttribute(ctx context.Context, id string, pro
 	ratelimit.Check(request.GetAction())
 
 	_, err := me.client.UseTkeClient().ModifyClusterAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) EnableVpcCniNetworkType(ctx context.Context, id string, vpcCniType string, enableStaticIp bool, subnets []string, expiredSeconds uint64) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewEnableVpcCniNetworkTypeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+	request.VpcCniType = &vpcCniType
+	request.EnableStaticIp = &enableStaticIp
+	request.Subnets = common.StringPtrs(subnets)
+	request.ExpiredSeconds = &expiredSeconds
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().EnableVpcCniNetworkType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) DescribeEnableVpcCniProgress(ctx context.Context, id string) (status, message string, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeEnableVpcCniProgressRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeEnableVpcCniProgress(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	status = *response.Response.Status
+	message = *response.Response.ErrorMessage
+	return
+}
+
+func (me *TkeService) DisableVpcCniNetworkType(ctx context.Context, id string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDisableVpcCniNetworkTypeRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().DisableVpcCniNetworkType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *TkeService) AddVpcCniSubnets(ctx context.Context, id string, subnets []string, vpcId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewAddVpcCniSubnetsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	request.SubnetIds = common.StringPtrs(subnets)
+	request.VpcId = &vpcId
+
+	ratelimit.Check(request.GetAction())
+
+	_, err := me.client.UseTkeClient().AddVpcCniSubnets(request)
 	if err != nil {
 		errRet = err
 		return
@@ -2582,5 +2701,43 @@ func (me *TkeService) DescribeKubernetesClusterInstancesByFilter(ctx context.Con
 	}
 
 	clusterInstances = response.Response.InstanceSet
+	return
+}
+
+func (me *TkeService) DescribeKubernetesClusterNodePoolsByFilter(ctx context.Context, param map[string]interface{}) (clusterNodePools []*tke.NodePool, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribeClusterNodePoolsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tke.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeClusterNodePools(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NodePoolSet) < 1 {
+		return
+	}
+
+	clusterNodePools = response.Response.NodePoolSet
 	return
 }
