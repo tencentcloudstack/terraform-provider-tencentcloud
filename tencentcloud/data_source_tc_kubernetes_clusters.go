@@ -149,6 +149,11 @@ func tkeClusterInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "Cluster kube-proxy mode.",
 		},
+		"vpc_cni_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Distinguish between shared network card multi-IP mode and independent network card mode.",
+		},
 
 		"service_cidr": {
 			Type:        schema.TypeString,
@@ -338,6 +343,7 @@ LOOP:
 		infoMap["claim_expired_seconds"] = info.ClaimExpiredSeconds
 		infoMap["cluster_node_num"] = info.ClusterNodeNum
 		infoMap["tags"] = info.Tags
+		infoMap["vpc_cni_type"] = info.VpcCniType
 
 		_, workers, err := service.DescribeClusterInstances(ctx, info.ClusterId)
 		if err != nil {

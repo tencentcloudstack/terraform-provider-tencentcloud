@@ -74,6 +74,7 @@ In addition to all arguments above, the following attributes are exported:
   * `service_cidr` - The network address block of the cluster.
   * `tags` - Tags of the cluster.
   * `user_name` - User name of account.
+  * `vpc_cni_type` - Distinguish between shared network card multi-IP mode and independent network card mode.
   * `vpc_id` - Vpc ID of the cluster.
   * `worker_instances_list` - An information list of cvm within the WORKER clusters. Each element contains the following attributes.
     * `failed_reason` - Information of the cvm when it is failed.
