@@ -1,3 +1,19 @@
+## 1.81.53 (December 1, 2023)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+* resource/tencentcloud_dayu_ddos_policy_v2: Support param water_print_config ([#2367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2367))
+* resource/tencentcloud_kubernetes_cluster: set up the cluster and import it into Terraform ([#2339](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2339))
+* resource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+* tencentcloud_kubernetes_cluster: Support `eni_subnet_ids` updates. ([#2346](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2346))
+
+BUG FIXES:
+
+* resource/tencentcloud_organization_org_member: Fix parameter types and update logic ([#2366](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2366))
+* resource/tencentcloud_organization_org_member_email: Fix parameter types ([#2366](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2366))
+* resource/tencentcloud_scf_function: fix the issue where only one of multiple tag key updates takes effect ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+
 ## 1.81.52 (November 29, 2023)
 
 FEATURES:
