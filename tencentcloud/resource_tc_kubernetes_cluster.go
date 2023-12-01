@@ -3376,7 +3376,11 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	//update VPC-CNI container network capability
-	if d.HasChange("vpc_cni_type") || d.HasChange("is_non_static_ip_mode") || d.HasChange("eni_subnet_ids") || d.HasChange("claim_expired_seconds") {
+	if !d.HasChange("eni_subnet_ids") && (d.HasChange("vpc_cni_type") || d.HasChange("claim_expired_seconds")) {
+		err := fmt.Errorf("changing only `vpc_cni_type` or `claim_expired_seconds` is not supported, when turning on or off the vpc-cni container network capability, `eni_subnet_ids` must be changed")
+		return err
+	}
+	if d.HasChange("eni_subnet_ids") {
 		eniSubnetIdList := d.Get("eni_subnet_ids").([]interface{})
 		if len(eniSubnetIdList) == 0 {
 			err := tkeService.DisableVpcCniNetworkType(ctx, id)
@@ -3429,19 +3433,30 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 						"and then fill in the latest subnet ID", oldSubnets)
 					return err
 				}
-				vpcId := d.Get("vpc_id").(string)
-				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					inErr := tkeService.AddVpcCniSubnets(ctx, id, addSubnets, vpcId)
-					if inErr != nil {
-						return resource.NonRetryableError(inErr)
-					}
-					return nil
-				})
-				if err != nil {
+				if d.HasChange("vpc_cni_type") || d.HasChange("claim_expired_seconds") {
+					err = fmt.Errorf("modifying `vpc_cni_type` and `claim_expired_seconds` is not supported when adding a cluster subnet")
 					return err
 				}
+				if len(addSubnets) > 0 {
+					vpcId := d.Get("vpc_id").(string)
+					err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						inErr := tkeService.AddVpcCniSubnets(ctx, id, addSubnets, vpcId)
+						if inErr != nil {
+							return resource.NonRetryableError(inErr)
+						}
+						return nil
+					})
+					if err != nil {
+						return err
+					}
+				}
 			} else {
-				vpcCniType := d.Get("vpc_cni_type").(string)
+				var vpcCniType string
+				if v, ok := d.GetOk("vpc_cni_type"); ok {
+					vpcCniType = v.(string)
+				} else {
+					vpcCniType = "tke-route-eni"
+				}
 				enableStaticIp := !d.Get("is_non_static_ip_mode").(bool)
 				expiredSeconds := uint64(d.Get("claim_expired_seconds").(int))
 
