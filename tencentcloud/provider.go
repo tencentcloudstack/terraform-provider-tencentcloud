@@ -1613,6 +1613,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
+	tencentcloud_organization_members
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -2955,6 +2956,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
+			"tencentcloud_organization_members":                         dataSourceTencentCloudOrganizationMembers(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
