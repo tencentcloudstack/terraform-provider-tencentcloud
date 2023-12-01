@@ -1418,6 +1418,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"vpc_cni_type": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validateAllowedStringValue([]string{"tke-route-eni", "tke-direct-eni"}),
 			Description: "Distinguish between shared network card multi-IP mode and independent network card mode. " +
 				"Fill in 'tke-route-eni' for shared network card multi-IP mode and 'tke-direct-eni' for independent network card mode. " +
