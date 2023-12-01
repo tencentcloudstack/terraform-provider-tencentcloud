@@ -100,10 +100,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		tagService     = TagService{client: client}
 		billingService = BillingService{client: client}
 		region         = client.Region
-
-		request = cynosdb.NewCreateClustersRequest()
+		request        = cynosdb.NewCreateClustersRequest()
 	)
-
+	var resourceId string
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -176,7 +175,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	var chargeType int64 = 0
+	var chargeTypeStr string
 	if v, ok := d.GetOk("charge_type"); ok {
+		chargeTypeStr = v.(string)
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
 			chargeType = 1
 			if vv, ok := d.GetOk("prepaid_period"); ok {
@@ -205,7 +206,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
 
-			if chargeType == CYNOSDB_CHARGE_TYPE_PREPAID {
+			if chargeTypeStr == CYNOSDB_CHARGE_TYPE_PREPAID {
 				regx := "\"dealNames\":\\[\"(.*)\"\\]"
 				// query deal by bpass
 				id, billErr := billingService.QueryDealByBpass(ctx, regx, err)
@@ -256,24 +257,27 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
 
-	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
-	d.SetId(id)
+	// normal user
+	if !billingService.isYunTiAccount() {
+		resourceId = *dealRes.Response.BillingResourceInfos[0].ClusterId
+	}
+	d.SetId(resourceId)
 
 	// set tag before query the instance
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("cynosdb", "cluster", region, d.Id())
+		resourceName := BuildTagResourceName("cynosdb", "cluster", region, resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 
 		// Wait the tags enabled
-		err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, tags)
+		err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", resourceId, region, tags)
 		if err != nil {
 			return err
 		}
 	}
 
-	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
+	_, _, has, err := cynosdbService.DescribeClusterById(ctx, resourceId)
 	if err != nil {
 		return err
 	}
@@ -282,7 +286,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	// set maintenance info
-	_, cluster, _, err := cynosdbService.DescribeClusterById(ctx, id)
+	_, cluster, _, err := cynosdbService.DescribeClusterById(ctx, resourceId)
 	if err != nil {
 		return err
 	}
@@ -319,7 +323,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	// set sg
-	insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, id)
+	insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, resourceId)
 	if err != nil {
 		return err
 	}
@@ -358,7 +362,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	// serverless status
 	if v, ok := d.GetOk("serverless_status_flag"); ok {
 		resume := v.(string) == "resume"
-		err := cynosdbService.SwitchServerlessCluster(ctx, id, resume)
+		err := cynosdbService.SwitchServerlessCluster(ctx, resourceId, resume)
 		if err != nil {
 			return err
 		}

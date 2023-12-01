@@ -489,6 +489,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		name           = d.Get("name").(string)
 		dbVersion      = d.Get("engine_version").(string)
 		payType        = d.Get("charge_type").(string)
+		chargeType     = d.Get("charge_type").(string)
 		projectId      = d.Get("project_id").(int)
 		subnetId       = d.Get("subnet_id").(string)
 		vpcId          = d.Get("vpc_id").(string)
@@ -1261,9 +1262,6 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
@@ -1276,7 +1274,6 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	paramEntrys := make(map[string]string)

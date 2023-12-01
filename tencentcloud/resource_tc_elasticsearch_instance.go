@@ -410,15 +410,20 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 
 func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-		client               := meta.(*TencentCloudClient).apiV3Conn
-		elasticsearchService := ElasticsearchService{client: client}
-		billingService       := BillingService{client: client}
-		tagService           := TagService{client: client}
-		region               := client.Region
-	request := es.NewCreateInstanceRequest()
+	var (
+		client               = meta.(*TencentCloudClient).apiV3Conn
+		elasticsearchService = ElasticsearchService{client: client}
+		billingService       = BillingService{client: client}
+		tagService           = TagService{client: client}
+		region               = client.Region
+		chargeType           string
+
+		request = es.NewCreateInstanceRequest()
+	)
+
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -428,7 +433,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		chargeType := v.(string)
+		chargeType = v.(string)
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
