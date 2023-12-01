@@ -1421,8 +1421,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Computed:     true,
 			ValidateFunc: validateAllowedStringValue([]string{"tke-route-eni", "tke-direct-eni"}),
 			Description: "Distinguish between shared network card multi-IP mode and independent network card mode. " +
-				"Fill in 'tke-route-eni' for shared network card multi-IP mode and 'tke-direct-eni' for independent network card mode. " +
-				"The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both eni_subnet_ids and vpc_cni_type must be set to empty.",
+				"Fill in `tke-route-eni` for shared network card multi-IP mode and `tke-direct-eni` for independent network card mode. " +
+				"The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty.",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
@@ -3377,13 +3377,8 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	//update VPC-CNI container network capability
 	if d.HasChange("vpc_cni_type") || d.HasChange("is_non_static_ip_mode") || d.HasChange("eni_subnet_ids") || d.HasChange("claim_expired_seconds") {
-		vpcCniType := d.Get("vpc_cni_type").(string)
 		eniSubnetIdList := d.Get("eni_subnet_ids").([]interface{})
 		if len(eniSubnetIdList) == 0 {
-			if len(vpcCniType) > 0 {
-				err := fmt.Errorf("when it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty")
-				return err
-			}
 			err := tkeService.DisableVpcCniNetworkType(ctx, id)
 			if err != nil {
 				return err
@@ -3446,6 +3441,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 					return err
 				}
 			} else {
+				vpcCniType := d.Get("vpc_cni_type").(string)
 				enableStaticIp := !d.Get("is_non_static_ip_mode").(bool)
 				expiredSeconds := uint64(d.Get("claim_expired_seconds").(int))
 
