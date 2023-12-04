@@ -558,7 +558,7 @@ Elasticsearch Service(ES)
     tencentcloud_elasticsearch_views
     tencentcloud_elasticsearch_diagnose
     tencentcloud_elasticsearch_instance_plugin_list
-	tencentcloud_elasticsearch_describe_index_list
+    tencentcloud_elasticsearch_describe_index_list
 
   Resource
     tencentcloud_elasticsearch_instance
