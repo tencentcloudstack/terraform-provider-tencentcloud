@@ -652,6 +652,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_authentication_options
     tencentcloud_kubernetes_cluster_node_pools
     tencentcloud_kubernetes_cluster_instances
+    tencentcloud_kubernetes_cluster_node_pools
 
   Resource
     tencentcloud_kubernetes_cluster
