@@ -324,6 +324,77 @@ func (c *Client) AlterDMSTableWithContext(ctx context.Context, request *AlterDMS
     return
 }
 
+func NewAssignMangedTablePropertiesRequest() (request *AssignMangedTablePropertiesRequest) {
+    request = &AssignMangedTablePropertiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dlc", APIVersion, "AssignMangedTableProperties")
+    
+    
+    return
+}
+
+func NewAssignMangedTablePropertiesResponse() (response *AssignMangedTablePropertiesResponse) {
+    response = &AssignMangedTablePropertiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// AssignMangedTableProperties
+// 分配原生表表属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCOLUMNNAMELENGTH = "InvalidParameter.InvalidColumnNameLength"
+//  INVALIDPARAMETER_INVALIDCOLUMNNUMBER = "InvalidParameter.InvalidColumnNumber"
+//  INVALIDPARAMETER_INVALIDDECIMALTYPE = "InvalidParameter.InvalidDecimalType"
+//  INVALIDPARAMETER_INVALIDTABLENAMELENGTH = "InvalidParameter.InvalidTableNameLength"
+//  INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssignMangedTableProperties(request *AssignMangedTablePropertiesRequest) (response *AssignMangedTablePropertiesResponse, err error) {
+    return c.AssignMangedTablePropertiesWithContext(context.Background(), request)
+}
+
+// AssignMangedTableProperties
+// 分配原生表表属性
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_INTERNALSYSTEMEXCEPTION = "InternalError.InternalSystemException"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCOLUMNNAMELENGTH = "InvalidParameter.InvalidColumnNameLength"
+//  INVALIDPARAMETER_INVALIDCOLUMNNUMBER = "InvalidParameter.InvalidColumnNumber"
+//  INVALIDPARAMETER_INVALIDDECIMALTYPE = "InvalidParameter.InvalidDecimalType"
+//  INVALIDPARAMETER_INVALIDTABLENAMELENGTH = "InvalidParameter.InvalidTableNameLength"
+//  INVALIDPARAMETER_PARAMETERNOTFOUNDORBENONE = "InvalidParameter.ParameterNotFoundOrBeNone"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) AssignMangedTablePropertiesWithContext(ctx context.Context, request *AssignMangedTablePropertiesRequest) (response *AssignMangedTablePropertiesResponse, err error) {
+    if request == nil {
+        request = NewAssignMangedTablePropertiesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AssignMangedTableProperties require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAssignMangedTablePropertiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewAttachUserPolicyRequest() (request *AttachUserPolicyRequest) {
     request = &AttachUserPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4914,6 +4985,7 @@ func NewDescribeSparkSessionBatchSQLResponse() (response *DescribeSparkSessionBa
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BATCHSQLTASKNOTFOUND = "ResourceNotFound.BatchSQLTaskNotFound"
 func (c *Client) DescribeSparkSessionBatchSQL(request *DescribeSparkSessionBatchSQLRequest) (response *DescribeSparkSessionBatchSQLResponse, err error) {
     return c.DescribeSparkSessionBatchSQLWithContext(context.Background(), request)
 }
@@ -4927,6 +4999,7 @@ func (c *Client) DescribeSparkSessionBatchSQL(request *DescribeSparkSessionBatch
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDSQL = "InvalidParameter.InvalidSQL"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BATCHSQLTASKNOTFOUND = "ResourceNotFound.BatchSQLTaskNotFound"
 func (c *Client) DescribeSparkSessionBatchSQLWithContext(ctx context.Context, request *DescribeSparkSessionBatchSQLRequest) (response *DescribeSparkSessionBatchSQLResponse, err error) {
     if request == nil {
         request = NewDescribeSparkSessionBatchSQLRequest()
@@ -5547,6 +5620,7 @@ func NewDescribeUserInfoResponse() (response *DescribeUserInfoResponse) {
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
 //  INVALIDPARAMETER_INVALIDUSERNAME = "InvalidParameter.InvalidUserName"
 //  INVALIDPARAMETER_INVALIDUSERTYPE = "InvalidParameter.InvalidUserType"
+//  UNAUTHORIZEDOPERATION_USERNOTEXIST = "UnauthorizedOperation.UserNotExist"
 func (c *Client) DescribeUserInfo(request *DescribeUserInfoRequest) (response *DescribeUserInfoResponse, err error) {
     return c.DescribeUserInfoWithContext(context.Background(), request)
 }
@@ -5567,6 +5641,7 @@ func (c *Client) DescribeUserInfo(request *DescribeUserInfoRequest) (response *D
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
 //  INVALIDPARAMETER_INVALIDUSERNAME = "InvalidParameter.InvalidUserName"
 //  INVALIDPARAMETER_INVALIDUSERTYPE = "InvalidParameter.InvalidUserType"
+//  UNAUTHORIZEDOPERATION_USERNOTEXIST = "UnauthorizedOperation.UserNotExist"
 func (c *Client) DescribeUserInfoWithContext(ctx context.Context, request *DescribeUserInfoRequest) (response *DescribeUserInfoResponse, err error) {
     if request == nil {
         request = NewDescribeUserInfoRequest()
@@ -5907,6 +5982,7 @@ func NewDescribeWorkGroupsResponse() (response *DescribeWorkGroupsResponse) {
 //  INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
+//  INVALIDPARAMETER_INVALIDSORTING = "InvalidParameter.InvalidSorting"
 func (c *Client) DescribeWorkGroups(request *DescribeWorkGroupsRequest) (response *DescribeWorkGroupsResponse, err error) {
     return c.DescribeWorkGroupsWithContext(context.Background(), request)
 }
@@ -5923,6 +5999,7 @@ func (c *Client) DescribeWorkGroups(request *DescribeWorkGroupsRequest) (respons
 //  INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
 //  INVALIDPARAMETER_INVALIDOFFSET = "InvalidParameter.InvalidOffset"
 //  INVALIDPARAMETER_INVALIDSORTBYTYPE = "InvalidParameter.InvalidSortByType"
+//  INVALIDPARAMETER_INVALIDSORTING = "InvalidParameter.InvalidSorting"
 func (c *Client) DescribeWorkGroupsWithContext(ctx context.Context, request *DescribeWorkGroupsRequest) (response *DescribeWorkGroupsResponse, err error) {
     if request == nil {
         request = NewDescribeWorkGroupsRequest()

@@ -2961,6 +2961,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
+			"tencentcloud_dlc_describe_data_engine_events":              dataSourceTencentCloudDlcDescribeDataEngineEvents(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
