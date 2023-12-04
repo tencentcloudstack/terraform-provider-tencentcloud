@@ -709,3 +709,60 @@ func (me *OrganizationService) DeleteOrganizationOrgMemberPolicyAttachmentById(c
 
 	return
 }
+
+func (me *OrganizationService) DescribeOrganizationMembersByFilter(ctx context.Context, param map[string]interface{}) (members []*organization.OrgMember, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = organization.NewDescribeOrganizationMembersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Lang" {
+			request.Lang = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+		if k == "AuthName" {
+			request.AuthName = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseOrganizationClient().DescribeOrganizationMembers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		members = append(members, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

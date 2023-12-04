@@ -651,6 +651,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_available_cluster_versions
     tencentcloud_kubernetes_cluster_authentication_options
     tencentcloud_kubernetes_cluster_instances
+    tencentcloud_kubernetes_cluster_node_pools
 
   Resource
     tencentcloud_kubernetes_cluster
@@ -1613,6 +1614,7 @@ Tencent Cloud Organization (TCO)
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
+	tencentcloud_organization_members
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -2931,6 +2933,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_financial_by_month":          dataSourceTencentCloudOrganizationOrgFinancialByMonth(),
 			"tencentcloud_organization_org_financial_by_product":        dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
 			"tencentcloud_organization_org_auth_node":                   dataSourceTencentCloudOrganizationOrgAuthNode(),
+			"tencentcloud_organization_members":                         dataSourceTencentCloudOrganizationMembers(),
 			"tencentcloud_pts_scenario_with_jobs":                       dataSourceTencentCloudPtsScenarioWithJobs(),
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    dataSourceTencentCloudCamSecretLastUsedTime(),
@@ -2955,6 +2958,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
 			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
+			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
