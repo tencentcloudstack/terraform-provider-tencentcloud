@@ -704,7 +704,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-
+		// normal user
+		instanceId = *response.Response.InstanceIds[0]
 		return nil
 	})
 
@@ -716,7 +717,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
-	d.SetId(*response.Response.InstanceIds[0])
+	d.SetId(instanceId)
 	return nil
 }
 
@@ -1318,8 +1319,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("tags")
 
 	}
 
