@@ -1,3 +1,11 @@
+## 1.81.54 (December 4, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_elasticsearch_describe_index_list` ([#2371](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2371))
+* **New Data Source:** `tencentcloud_organization_members` ([#2370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2370))
+* **New Resource:** `tencentcloud_oceanus_folder` ([#2372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2372))
+
 ## 1.81.53 (December 1, 2023)
 
 ENHANCEMENTS:
