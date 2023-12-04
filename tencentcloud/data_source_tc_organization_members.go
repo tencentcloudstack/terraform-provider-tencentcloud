@@ -262,7 +262,7 @@ func dataSourceTencentCloudOrganizationMembersRead(d *schema.ResourceData, meta 
 					orgPermissionList = append(orgPermissionList, orgPermissionMap)
 				}
 
-				orgMemberMap["org_permission"] = []interface{}{orgPermissionList}
+				orgMemberMap["org_permission"] = orgPermissionList
 			}
 
 			if orgMember.NodeId != nil {
@@ -313,7 +313,7 @@ func dataSourceTencentCloudOrganizationMembersRead(d *schema.ResourceData, meta 
 					orgIdentityList = append(orgIdentityList, orgIdentityMap)
 				}
 
-				orgMemberMap["org_identity"] = []interface{}{orgIdentityList}
+				orgMemberMap["org_identity"] = orgIdentityList
 			}
 
 			if orgMember.BindStatus != nil {
