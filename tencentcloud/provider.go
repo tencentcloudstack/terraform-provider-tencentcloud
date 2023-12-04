@@ -558,6 +558,7 @@ Elasticsearch Service(ES)
     tencentcloud_elasticsearch_views
     tencentcloud_elasticsearch_diagnose
     tencentcloud_elasticsearch_instance_plugin_list
+    tencentcloud_elasticsearch_describe_index_list
 
   Resource
     tencentcloud_elasticsearch_instance
@@ -2410,6 +2411,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_views":                          dataSourceTencentCloudElasticsearchViews(),
 			"tencentcloud_elasticsearch_diagnose":                       dataSourceTencentCloudElasticsearchDiagnose(),
 			"tencentcloud_elasticsearch_instance_plugin_list":           dataSourceTencentCloudElasticsearchInstancePluginList(),
+			"tencentcloud_elasticsearch_describe_index_list":            dataSourceTencentCloudElasticsearchDescribeIndexList(),
 			"tencentcloud_mongodb_zone_config":                          dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                            dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_mongodb_instance_backups":                     dataSourceTencentCloudMongodbInstanceBackups(),
