@@ -1134,6 +1134,7 @@ Oceanus
     tencentcloud_oceanus_resource
     tencentcloud_oceanus_resource_config
     tencentcloud_oceanus_work_space
+    tencentcloud_oceanus_folder
 
 Virtual Private Cloud(VPC)
   Data Source
@@ -3019,6 +3020,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_resource":                                    resourceTencentCloudOceanusResource(),
 			"tencentcloud_oceanus_resource_config":                             resourceTencentCloudOceanusResourceConfig(),
 			"tencentcloud_oceanus_work_space":                                  resourceTencentCloudOceanusWorkSpace(),
+			"tencentcloud_oceanus_folder":                                      resourceTencentCloudOceanusFolder(),
 			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
 			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),
