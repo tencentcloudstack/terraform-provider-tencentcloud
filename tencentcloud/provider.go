@@ -1261,6 +1261,7 @@ MapReduce(EMR)
     tencentcloud_emr
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
+	tencentcloud_emr_auto_scale_records
 
   Resource
     tencentcloud_emr_cluster
@@ -2237,6 +2238,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
+			"tencentcloud_emr_auto_scale_records":                       dataSourceTencentCloudEmrAutoScaleRecords(),
 			"tencentcloud_availability_zones":                           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
