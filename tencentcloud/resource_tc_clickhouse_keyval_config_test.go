@@ -3,11 +3,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
-	"strings"
-	"testing"
 )
 
 func TestAccTencentCloudClickhouseKeyvalConfigResource_basic(t *testing.T) {
