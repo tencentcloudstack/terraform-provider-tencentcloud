@@ -1922,6 +1922,8 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_delete_backup_data
     tencentcloud_clickhouse_account
     tencentcloud_clickhouse_account_permission
+    tencentcloud_clickhouse_keyval_config 
+    tencentcloud_clickhouse_xml_config
 
 Tag
   Resource

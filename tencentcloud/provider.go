@@ -1826,6 +1826,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
+			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
+			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,
