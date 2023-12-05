@@ -36,7 +36,6 @@ The `modify_conf_context` object supports the following:
 
 * `file_name` - (Required, String) Configuration file name.
 * `new_conf_value` - (Required, String) New content of configuration file, base64 encoded.
-* `old_conf_value` - (Required, String) Configuration file old content, base64 encoded.
 * `file_path` - (Optional, String) Path to save configuration file.
 
 ## Attributes Reference

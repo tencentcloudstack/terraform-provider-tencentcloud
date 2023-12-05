@@ -18,6 +18,9 @@ func resourceTencentCloudClickhouseXmlConfig() *schema.Resource {
 		Read:   resourceTencentCloudClickhouseXmlConfigRead,
 		Update: resourceTencentCloudClickhouseXmlConfigUpdate,
 		Delete: resourceTencentCloudClickhouseXmlConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -37,11 +40,6 @@ func resourceTencentCloudClickhouseXmlConfig() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Configuration file name.",
-						},
-						"old_conf_value": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Configuration file old content, base64 encoded.",
 						},
 						"new_conf_value": {
 							Type:        schema.TypeString,
@@ -101,6 +99,7 @@ func resourceTencentCloudClickhouseXmlConfigRead(d *schema.ResourceData, meta in
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId := idSplit[0]
+	fileName := idSplit[1]
 
 	xmlConfig, err := service.DescribeClickhouseXmlConfigById(ctx, instanceId)
 	if err != nil {
@@ -114,6 +113,28 @@ func resourceTencentCloudClickhouseXmlConfigRead(d *schema.ResourceData, meta in
 	}
 
 	_ = d.Set("instance_id", instanceId)
+
+	var modifyConfContextList []interface{}
+	for _, modifyConfContext := range xmlConfig {
+		if fileName == *modifyConfContext.FileName {
+			modifyConfContextMap := map[string]interface{}{}
+
+			if modifyConfContext.FileName != nil {
+				modifyConfContextMap["file_name"] = modifyConfContext.FileName
+			}
+
+			if modifyConfContext.OriParam != nil {
+				modifyConfContextMap["new_conf_value"] = modifyConfContext.OriParam
+			}
+
+			if modifyConfContext.FilePath != nil {
+				modifyConfContextMap["file_path"] = modifyConfContext.FilePath
+			}
+
+			modifyConfContextList = append(modifyConfContextList, modifyConfContextMap)
+		}
+	}
+	_ = d.Set("modify_conf_context", modifyConfContextList)
 
 	return nil
 }
@@ -141,13 +162,11 @@ func resourceTencentCloudClickhouseXmlConfigUpdate(d *schema.ResourceData, meta 
 			for _, v := range configContexts {
 				value := v.(map[string]interface{})
 				fileName := value["file_name"].(string)
-				oldConfValue := value["old_conf_value"].(string)
 				newConfValue := value["new_conf_value"].(string)
 				filePath := value["file_path"].(string)
 
 				modifyConfContexts = append(modifyConfContexts, &cdwch.ConfigSubmitContext{
 					FileName:     &fileName,
-					OldConfValue: &oldConfValue,
 					NewConfValue: &newConfValue,
 					FilePath:     &filePath,
 				})
