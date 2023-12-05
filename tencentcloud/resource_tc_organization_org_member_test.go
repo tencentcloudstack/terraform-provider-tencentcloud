@@ -17,7 +17,7 @@ func TestAccTencentCloudOrganizationOrgMemberResource_basic(t *testing.T) {
 			{
 				Config: testAccOrganizationOrgMember,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member.org_member", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "name", "terraform_test"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "name", "tf_example"),
 					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "node_id", "59849"),
 					resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member.org_member", "permission_ids.#"),
 					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "policy_type", "Financial"),
@@ -27,7 +27,7 @@ func TestAccTencentCloudOrganizationOrgMemberResource_basic(t *testing.T) {
 			{
 				Config: testAccOrganizationOrgMemberUpdate,
 				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member.org_member", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "name", "terraform_test_1"),
+					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "name", "tf_example_1"),
 					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "node_id", "59849"),
 					resource.TestCheckResourceAttrSet("tencentcloud_organization_org_member.org_member", "permission_ids.#"),
 					resource.TestCheckResourceAttr("tencentcloud_organization_org_member.org_member", "policy_type", "Financial"),
@@ -46,7 +46,7 @@ func TestAccTencentCloudOrganizationOrgMemberResource_basic(t *testing.T) {
 const testAccOrganizationOrgMember = `
 
 resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test"
+  name            = "tf_example"
   node_id         = 59849
   permission_ids  = [
     1,
@@ -61,7 +61,7 @@ resource "tencentcloud_organization_org_member" "org_member" {
 const testAccOrganizationOrgMemberUpdate = `
 
 resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test_1"
+  name            = "tf_example_1"
   node_id         = 59849
   permission_ids  = [
     1,
