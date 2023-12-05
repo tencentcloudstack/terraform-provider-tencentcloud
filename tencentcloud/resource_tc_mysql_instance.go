@@ -809,6 +809,8 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
+		// wait for describe enable
+		time.Sleep(3 * time.Second)
 	}
 
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {

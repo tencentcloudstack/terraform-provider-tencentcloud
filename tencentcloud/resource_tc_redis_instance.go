@@ -241,6 +241,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -710,6 +711,8 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
+		// wait for describe enable
+		time.Sleep(3 * time.Second)
 	}
 
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*readRetryTimeout)
