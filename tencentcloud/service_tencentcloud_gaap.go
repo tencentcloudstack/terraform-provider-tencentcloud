@@ -3433,6 +3433,31 @@ func (me *GaapService) DescribeGaapCustomHeader(ctx context.Context, ruleId stri
 	return
 }
 
+func (me *GaapService) CreateCustomHeader(ctx context.Context, ruleId string, headers []*gaap.HttpHeaderParam) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewCreateCustomHeaderRequest()
+	request.RuleId = &ruleId
+	request.Headers = headers
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().CreateCustomHeader(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *GaapService) DescribeGaapDestRegions(ctx context.Context) (destRegions []*gaap.RegionDetail, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -4268,6 +4293,30 @@ func (me *GaapService) DisableGlobalDomain(ctx context.Context, domainId string)
 	return
 }
 
+func (me *GaapService) EnableGlobalDomain(ctx context.Context, domainId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewEnableGlobalDomainRequest()
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().EnableGlobalDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *GaapService) DeleteGaapGlobalDomainById(ctx context.Context, domainId string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -4390,6 +4439,34 @@ func (me *GaapService) DeleteGaapGlobalDomainDnsById(ctx context.Context, dnsRec
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseGaapClient().DeleteGlobalDomainDns(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *GaapService) ModifyDomain(ctx context.Context, listenerId, oldDomain, newDomain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := gaap.NewModifyDomainRequest()
+	request.ListenerId = &listenerId
+	request.OldDomain = &oldDomain
+	request.NewDomain = &newDomain
+	request.CertificateId = helper.String("default")
+	request.PolyClientCertificateIds = helper.Strings([]string{"default"})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseGaapClient().ModifyDomain(request)
 	if err != nil {
 		errRet = err
 		return
