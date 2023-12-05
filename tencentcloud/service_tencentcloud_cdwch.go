@@ -531,3 +531,79 @@ func (me *CdwchService) DescribeClickhouseBackupTablesByFilter(ctx context.Conte
 
 	return
 }
+
+func (me *CdwchService) DescribeClickhouseKeyvalConfigById(ctx context.Context, instanceId string) (config *cdwch.DescribeInstanceKeyValConfigsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeInstanceKeyValConfigsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeInstanceKeyValConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	config = response.Response
+	return
+}
+
+func (me *CdwchService) DescribeClickhouseXmlConfigById(ctx context.Context, instanceId string) (xmlConfig []*cdwch.ClusterConfigsInfoFromEMR, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeClusterConfigsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeClusterConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ClusterConfList) < 1 {
+		return
+	}
+
+	xmlConfig = response.Response.ClusterConfList
+	return
+}
+
+func (me *CdwchService) InstanceStateRefreshFunc(instanceId string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := cdwch.NewDescribeInstanceStateRequest()
+		request.InstanceId = &instanceId
+		ratelimit.Check(request.GetAction())
+		object, err := me.client.UseCdwchClient().DescribeInstanceState(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil || object.Response == nil || object.Response.InstanceState == nil {
+			return nil, "", nil
+		}
+
+		return object, *object.Response.InstanceState, nil
+	}
+}
