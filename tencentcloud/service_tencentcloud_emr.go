@@ -437,3 +437,54 @@ func (me *EMRService) DescribeEmrCvmQuotaByFilter(ctx context.Context, param map
 	cvmQuota = response.Response
 	return
 }
+
+func (me *EMRService) DescribeEmrAutoScaleRecordsByFilter(ctx context.Context, param map[string]interface{}) (autoScaleRecords []*emr.AutoScaleRecord, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = emr.NewDescribeAutoScaleRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*emr.KeyValue)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEmrClient().DescribeAutoScaleRecords(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RecordList) < 1 {
+			break
+		}
+		autoScaleRecords = append(autoScaleRecords, response.Response.RecordList...)
+		if len(response.Response.RecordList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
