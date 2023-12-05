@@ -1,25 +1,3 @@
-/*
-Provides a resource to create a oceanus folder
-
-Example Usage
-
-```hcl
-resource "tencentcloud_oceanus_folder" "example" {
-  folder_name   = "tf_example"
-  parent_id     = "folder-lfqkt11s"
-  folder_type   = 0
-  work_space_id = "space-125703345ap-shenzhen-fsi"
-}
-```
-
-Import
-
-oceanus folder can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_oceanus_folder.example space-125703345ap-shenzhen-fsi#folder-f40fq79g#0
-```
-*/
 package tencentcloud
 
 import (
@@ -32,6 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	oceanus "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/oceanus/v20190422"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 

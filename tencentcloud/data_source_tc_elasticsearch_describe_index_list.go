@@ -1,15 +1,3 @@
-/*
-Use this data source to query detailed information of elasticsearch index list
-
-Example Usage
-
-```hcl
-data "tencentcloud_elasticsearch_describe_index_list" "describe_index_list" {
-  index_type  = "normal"
-  instance_id = "es-nni6pm4s"
-}
-```
-*/
 package tencentcloud
 
 import (
@@ -18,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	elasticsearch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
