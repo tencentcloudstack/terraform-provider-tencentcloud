@@ -611,6 +611,7 @@ Global Application Acceleration(GAAP)
 
   Resource
     tencentcloud_gaap_proxy
+    tencentcloud_gaap_proxy_group
     tencentcloud_gaap_realserver
     tencentcloud_gaap_layer4_listener
     tencentcloud_gaap_layer7_listener

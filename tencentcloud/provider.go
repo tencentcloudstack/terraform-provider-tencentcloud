@@ -1121,6 +1121,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_global_domain_dns":                              resourceTencentCloudGaapGlobalDomainDns(),
 			"tencentcloud_gaap_global_domain":                                  resourceTencentCloudGaapGlobalDomain(),
 			"tencentcloud_gaap_custom_header":                                  resourceTencentCloudGaapCustomHeader(),
+			"tencentcloud_gaap_proxy_group":                                    resourceTencentCloudGaapProxyGroup(),
 			"tencentcloud_ssl_certificate":                                     resourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                 resourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                resourceTencentCloudSSLFreeCertificate(),
