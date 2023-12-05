@@ -25,7 +25,7 @@ func TestAccTencentCloudEmrAutoScaleRecordsDataSource_basic(t *testing.T) {
 const testAccEmrAutoScaleRecordsDataSource = `
 
 data "tencentcloud_emr_auto_scale_records" "auto_scale_records" {
-  instance_id = "emr-bpum4pad"
+  instance_id = "emr-8j38bip0"
   filters {
     key   = "StartTime"
     value = "2006-01-02 15:04:05"
