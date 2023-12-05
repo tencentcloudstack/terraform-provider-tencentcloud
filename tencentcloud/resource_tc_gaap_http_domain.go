@@ -373,16 +373,36 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	listenerId, protocol, domain = split[0], split[1], split[2]
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	switch protocol {
 	case "HTTP":
-		// when protocol is http, nothing can be updated
-		return errors.New("http listener can't set auth")
+		immutableArgs := []string{"certificate_id", "client_certificate_id", "client_certificate_ids", "basic_auth", "basic_auth_id", "realserver_auth", "realserver_certificate_id", "realserver_certificate_ids", "realserver_certificate_domain", "gaap_auth", "gaap_auth_id"}
+
+		for _, v := range immutableArgs {
+			if d.HasChange(v) {
+				return fmt.Errorf("argument `%s` cannot be changed for http", v)
+			}
+		}
+		if d.HasChange("domain") {
+			oldDomain, newDomain := d.GetChange("domain")
+			err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+			if err != nil {
+				return err
+			}
+		}
+		return resourceTencentCloudGaapHttpDomainRead(d, m)
 
 	case "HTTPS":
 	}
 
-	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+	if d.HasChange("domain") {
+		oldDomain, newDomain := d.GetChange("domain")
+		err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+		if err != nil {
+			return err
+		}
+	}
 
 	listeners, err := service.DescribeHTTPSListeners(ctx, nil, &listenerId, nil, nil)
 	if err != nil {

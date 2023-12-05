@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_gaap_custom_header
+```
+
+```release-note:enhancement
+resource/tencentcloud_gaap_global_domain: Support param status
+```
+
+```release-note:enhancement
+resource/tencentcloud_gaap_http_domain: Support update param domain 
+```

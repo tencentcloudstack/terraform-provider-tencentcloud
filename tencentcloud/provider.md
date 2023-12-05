@@ -623,6 +623,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_domain_error_page
     tencentcloud_gaap_global_domain_dns
     tencentcloud_gaap_global_domain
+    tencentcloud_gaap_custom_header
 
 Key Management Service(KMS)
   Data Source
