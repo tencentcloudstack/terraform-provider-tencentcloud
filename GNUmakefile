@@ -1,7 +1,7 @@
 TEST?=./...
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=tencentcloud
-CHANGED_FILES=$$(git diff --name-only master -- $(PKG_NAME))
+CHANGED_FILES=$$(git diff --name-only master -- $(PKG_NAME) | grep '.go$$')
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PLATFORMS=darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm openbsd/amd64 openbsd/386 solaris/amd64 windows/386 windows/amd64
 GO_VER ?= go
