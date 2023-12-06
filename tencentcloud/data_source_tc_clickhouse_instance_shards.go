@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/go-uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
@@ -67,11 +66,7 @@ func dataSourceTencentCloudClickhouseInstanceShardsRead(d *schema.ResourceData, 
 		_ = d.Set("instance_shards_list", instanceShards.InstanceShardsList)
 	}
 
-	id, err := uuid.GenerateUUID()
-	if err != nil {
-		return err
-	}
-	d.SetId(id)
+	d.SetId(helper.BuildToken())
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

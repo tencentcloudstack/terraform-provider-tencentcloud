@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/go-uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
@@ -595,11 +594,7 @@ func dataSourceTencentCloudClickhouseSpecRead(d *schema.ResourceData, meta inter
 		_ = d.Set("attach_cbs_spec", attachCBSSpecTmpList)
 	}
 
-	id, err := uuid.GenerateUUID()
-	if err != nil {
-		return err
-	}
-	d.SetId(id)
+	d.SetId(helper.BuildToken())
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

@@ -276,7 +276,10 @@ func dataSourceTencentCloudAntiddosListListenerRead(d *schema.ResourceData, meta
 	tmpList := make([]map[string]interface{}, 0)
 
 	if listListener.Layer4Listeners != nil {
-		for _, layer4Rule := range listListener.Layer4Listeners {
+		layer4Listeners := listListener.Layer4Listeners
+		layer4ListenersTmpList := make([]map[string]interface{}, 0, len(layer4Listeners))
+
+		for _, layer4Rule := range layer4Listeners {
 			layer4RuleMap := map[string]interface{}{}
 
 			if layer4Rule.BackendPort != nil {
@@ -360,14 +363,17 @@ func dataSourceTencentCloudAntiddosListListenerRead(d *schema.ResourceData, meta
 				layer4RuleMap["instance_detail_rule"] = instanceDetailRuleList
 			}
 
-			tmpList = append(tmpList, layer4RuleMap)
+			layer4ListenersTmpList = append(layer4ListenersTmpList, layer4RuleMap)
 		}
-
-		_ = d.Set("layer4_listeners", tmpList)
+		tmpList = append(tmpList, layer4ListenersTmpList...)
+		_ = d.Set("layer4_listeners", layer4ListenersTmpList)
 	}
 
 	if listListener.Layer7Listeners != nil {
-		for _, layer7Rule := range listListener.Layer7Listeners {
+		layer7Listeners := listListener.Layer7Listeners
+		layer7ListenersTmpList := make([]map[string]interface{}, 0, len(layer7Listeners))
+
+		for _, layer7Rule := range layer7Listeners {
 			layer7RuleMap := map[string]interface{}{}
 
 			if layer7Rule.Domain != nil {
@@ -470,10 +476,10 @@ func dataSourceTencentCloudAntiddosListListenerRead(d *schema.ResourceData, meta
 				layer7RuleMap["vport"] = layer7Rule.Vport
 			}
 
-			tmpList = append(tmpList, layer7RuleMap)
+			layer7ListenersTmpList = append(layer7ListenersTmpList, layer7RuleMap)
 		}
-
-		_ = d.Set("layer7_listeners", tmpList)
+		tmpList = append(tmpList, layer7ListenersTmpList...)
+		_ = d.Set("layer7_listeners", layer7ListenersTmpList)
 	}
 
 	d.SetId(helper.BuildToken())
