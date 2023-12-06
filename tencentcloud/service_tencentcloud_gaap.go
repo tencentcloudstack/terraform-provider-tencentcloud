@@ -4476,6 +4476,36 @@ func (me *GaapService) ModifyDomain(ctx context.Context, listenerId, oldDomain, 
 	return
 }
 
+func (me *GaapService) SwitchProxyGroup(ctx context.Context, groupId, status string) (errRet error) {
+	logId := getLogId(ctx)
+
+	if status == "open" {
+		request := gaap.NewOpenProxyGroupRequest()
+		request.GroupId = helper.String(groupId)
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseGaapClient().OpenProxyGroup(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	} else if status == "close" {
+		request := gaap.NewCloseProxyGroupRequest()
+		request.GroupId = helper.String(groupId)
+		ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseGaapClient().CloseProxyGroup(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	}
+
+	return
+}
+
 func ListEqual(a, b []string) bool {
 	if len(a) != len(b) {
 		return false
