@@ -1913,6 +1913,8 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_backup_jobs
     tencentcloud_clickhouse_backup_job_detail
     tencentcloud_clickhouse_backup_tables
+    tencentcloud_clickhouse_spec
+    tencentcloud_clickhouse_instance_shards
 
   Resource
     tencentcloud_clickhouse_instance
