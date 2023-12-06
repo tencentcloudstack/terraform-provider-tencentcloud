@@ -389,14 +389,22 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2016SP1
 		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201602 {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201602
+		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201603 {
+			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201603
 		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2017 {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2017
 		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201702 {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201702
+		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201703 {
+			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201703
 		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2019 {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2019
 		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201902 {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201902
+		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201903 {
+			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201903
+		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2022 {
+			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2022
 		} else {
 			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2008R2
 		}
