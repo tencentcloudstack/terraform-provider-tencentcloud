@@ -48,7 +48,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"type_id": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ForceNew:     true,
 				ValidateFunc: validateIntegerMin(2),
 				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.",
 			},
