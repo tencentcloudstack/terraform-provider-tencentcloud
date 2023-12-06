@@ -1,3 +1,25 @@
+## 1.81.55 (December 6, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_clickhouse_instance_shards` ([#2382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2382))
+* **New Data Source:** `tencentcloud_clickhouse_spec` ([#2382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2382))
+* **New Data Source:** `tencentcloud_emr_auto_scale_records` ([#2375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2375))
+* **New Resource:** `tencentcloud_clickhouse_keyval_config` ([#2377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2377))
+* **New Resource:** `tencentcloud_clickhouse_xml_config` ([#2377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2377))
+* **New Resource:** `tencentcloud_gaap_custom_header` ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* **New Resource:** `tencentcloud_gaap_proxy_group` ([#2376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2376))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_global_domain: Support param status ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* resource/tencentcloud_gaap_http_domain: Support update param domain ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* resource/tencentcloud_redis_instance: Support upgrade version ([#2380](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2380))
+
+BUG FIXES:
+
+* resource/tencentcloud_vpc: Fix modify `assistant_cidrs` request ([#2356](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2356))
+
 ## 1.81.54 (December 4, 2023)
 
 FEATURES:
