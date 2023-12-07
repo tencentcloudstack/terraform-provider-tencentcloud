@@ -261,12 +261,12 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	//yunti mark begin
+	//yunti mark move begin
 	elasticsearchService := ElasticsearchService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	request := es.NewCreateInstanceRequest()
-	//yunti mark end
+	//yunti mark move end
 	//yunti mark var
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))

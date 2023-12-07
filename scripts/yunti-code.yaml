@@ -293,6 +293,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
 
 
 tencentcloud/service_tencentcloud_tag.go:
+  tagFmt: "import \"fmt\""
   waitTag: |
     func (me *TagService) waitTagsEnable(ctx context.Context, serviceType, resType, resId, region string, tags map[string]string) (retErr error) {
     billingService := BillingService{client: me.client}
