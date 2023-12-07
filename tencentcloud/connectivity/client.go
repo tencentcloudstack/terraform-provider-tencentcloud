@@ -1372,18 +1372,6 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 	return me.cdwpgConn
 }
 
-func (me *TencentCloudClient) UseBillingClient() *billing.Client {
-	if me.billingConn != nil {
-		return me.billingConn
-	}
-
-	cpf := me.NewClientProfile(300)
-	me.billingConn, _ = billing.NewClient(me.Credential, me.Region, cpf)
-	me.billingConn.WithHttpTransport(&LogRoundTripper{})
-
-	return me.billingConn
-}
-
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)
 	if !ex {
