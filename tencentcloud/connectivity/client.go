@@ -103,6 +103,8 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
+//yunti mark import
+
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
 	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
@@ -198,8 +200,6 @@ type TencentCloudClient struct {
 	cdwpgConn          *cdwpg.Client
 	//yunti mark client
 }
-
-//yunti mark import
 
 // NewClientProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfile {
