@@ -71,10 +71,11 @@ def run():
     # 将JSON转换为字典
     dictionary = json.loads(json_data)
 
-    # 替换
-    # replace(dictionary)
-
     # Move
     move(dictionary)
+    # 替换
+    replace(dictionary)
+
+
 
 run()

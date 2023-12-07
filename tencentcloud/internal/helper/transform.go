@@ -271,6 +271,8 @@ func StrToBool(s string) (i bool) {
 	return
 }
 
+//yunti mark boolStr
+
 func StrListToStr(strList []*string) string {
 	res := ""
 	for i, v := range strList {

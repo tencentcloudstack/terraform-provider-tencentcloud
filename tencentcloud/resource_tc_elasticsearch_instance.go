@@ -264,11 +264,13 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	//yunti mark begin
 	elasticsearchService := ElasticsearchService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
-	//yunti mark a
 	request := es.NewCreateInstanceRequest()
+	//yunti mark end
+	//yunti mark var
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -278,7 +280,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		chargeType := v.(string) //yunti mark b
+		chargeType := v.(string) //yunti mark strCharge
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
@@ -358,7 +360,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			request.NodeInfoList = append(request.NodeInfoList, &info)
 		}
 	}
-	//yunti mark c
+	//yunti mark reqTag
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -366,7 +368,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			//yunti mark d
+			//yunti mark bypass
 			return retryError(err)
 		}
 		instanceId = *response.Response.InstanceId
@@ -377,7 +379,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	d.SetId(instanceId)
 
-	//yunti mark e
+	//yunti mark setTag
 
 	instanceEmptyRetries := 5
 	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
@@ -721,10 +723,12 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 
-		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId) //yunti mark move
-		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)       //yunti mark move
+		//yunti mark move begin
+		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
+		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		//yunti mark move end
 
-		//yunti mark f
+		//yunti mark waitTag
 		if err != nil {
 			return err
 		}

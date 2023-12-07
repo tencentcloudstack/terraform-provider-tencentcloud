@@ -1,5 +1,5 @@
 tencentcloud/connectivity/client.go:
-  import: "billing \"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709\""
+  import: "import billing \"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709\""
   client: "billingConn        *billing.Client"
   useClient: |
     func (me *TencentCloudClient) UseBillingClient() *billing.Client {
@@ -30,7 +30,7 @@ tencentcloud/extension_billing.go:
     var DEAL_TERMINATE_STATUS_CODE = []int64{4, 5, 6, 7, 8, 9, 10, 11}
 
 tencentcloud/internal/helper/transform.go:
-  a: |
+  boolStr: |
     func BoolToStr(b bool) (s string) {
       s = "false"
       if b {
@@ -39,8 +39,8 @@ tencentcloud/internal/helper/transform.go:
       return
     }
 tencentcloud/provider.go:
-  a: "	PROVIDER_ENABLE_YUNTI                 = \"TENCENTCLOUD_ENABLE_YUNTI\""
-  b: |
+  envYunti: "	PROVIDER_ENABLE_YUNTI                 = \"TENCENTCLOUD_ENABLE_YUNTI\""
+  enableBpass: |
     "enable_bpass": {
     Type:        schema.TypeBool,
     Optional:    true,
@@ -49,12 +49,12 @@ tencentcloud/provider.go:
     Description: "Use the yunti account or not, Default is `false`.",
     },
 tencentcloud/resource_tc_cynosdb_cluster.go:
-  a: |
+  client: |
     billingService = BillingService{client: client}
-  b: "	var id string"
-  c: "	var chargeTypeStr string"
-  d: "		chargeTypeStr = v.(string)"
-  e: |
+  varId: "	var id string"
+  varCharge: "	var chargeTypeStr string"
+  strCharge: "		chargeTypeStr = v.(string)"
+  byPass: |
     if chargeTypeStr == CYNOSDB_CHARGE_TYPE_PREPAID {
     	regx := "\"dealNames\":\\[\"(.*)\"\\]"
     	// query deal by bpass
@@ -69,12 +69,12 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
     		return nil
     	}
     }
-  f: |
+  normal: |
     // normal user
     if !billingService.isYunTiAccount() {
     	id = *dealRes.Response.BillingResourceInfos[0].ClusterId
     }
-  g: |
+  setTag: |
     // set tag before query the instance
     	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
     		resourceName := BuildTagResourceName("cynosdb", "cluster", region, id)
@@ -88,7 +88,7 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
     			return err
     		}
     	}
-  h: |
+  waitTag: |
     // Wait the tags enabled
     err := tagService.waitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, replaceTags)
     if err != nil {
@@ -96,7 +96,7 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
     }
 
 tencentcloud/resource_tc_elasticsearch_instance.go:
-  a: |
+  var: |
     var (
     	client               = meta.(*TencentCloudClient).apiV3Conn
     	elasticsearchService = ElasticsearchService{client: client}
@@ -107,8 +107,8 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
 
     	request = es.NewCreateInstanceRequest()
     )
-  b: "chargeType = v.(string)"
-  c: |
+  strCharge: "chargeType = v.(string)"
+  reqTag: |
     var tags map[string]string
     	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
     		if billingService.isYunTiAccount() {
@@ -122,7 +122,7 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     			}
     		}
     	}
-  d: |
+  bypass: |
     if chargeType == ES_CHARGE_TYPE_PREPAID {
     	regx := "\"dealNames\":\\[\"(.*)\"\\]"
     	// query deal by bpass
@@ -137,7 +137,7 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     		return nil
     	}
     }
-  e: |
+  setTag: |
     // set tag before query the instance
     	if len(tags) > 0 {
     		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
@@ -152,7 +152,7 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     			return err
     		}
     	}
-  f: |
+  waitTag: |
     // resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
     resourceName := BuildTagResourceName("es", "instance", region, d.Id())
     if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
@@ -163,7 +163,7 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     err := tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, replaceTags)
 
 tencentcloud/resource_tc_mongodb_instance.go:
-  import: "	sdkErrors \"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors\""
+  import: "import	sdkErrors \"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors\""
   bpass: |
     // query deal by bpass
     e, ok := err.(*sdkErrors.TencentCloudSDKError)
@@ -281,7 +281,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
     }
     }
   clientUpdate: |
-    cClient := meta.(*TencentCloudClient).apiV3Conn
+    tcClient := meta.(*TencentCloudClient).apiV3Conn
     tagService := &TagService{client: tcClient}
     postgresqlService := PostgresqlService{client: tcClient}
   waitTag: |

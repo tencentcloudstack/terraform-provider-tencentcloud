@@ -39,10 +39,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		cynosdbService = CynosdbService{client: client}
 		tagService     = TagService{client: client}
 		region         = client.Region
-		//yunti mark a
+		//yunti mark client
 		request = cynosdb.NewCreateClustersRequest()
 	)
-	//yunti mark b
+	//yunti mark varId
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -115,9 +115,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	var chargeType int64 = 0
-	//yunti mark c
+	//yunti mark varCharge
 	if v, ok := d.GetOk("charge_type"); ok {
-		//yunti mark d
+		//yunti mark strCharge
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
 			chargeType = 1
 			if vv, ok := d.GetOk("prepaid_period"); ok {
@@ -145,7 +145,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 				}
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//yunti mark e
+			//yunti mark byPass
 			return retryError(err)
 		}
 		return nil
@@ -183,10 +183,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
 
-	id := *dealRes.Response.BillingResourceInfos[0].ClusterId //yunti mark f
+	id := *dealRes.Response.BillingResourceInfos[0].ClusterId //yunti mark normal
 	d.SetId(id)
 
-	//yunti mark g
+	//yunti mark setTag
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
@@ -642,7 +642,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		//yunti mark h
+		//yunti mark waitTag
 	}
 
 	// update sg

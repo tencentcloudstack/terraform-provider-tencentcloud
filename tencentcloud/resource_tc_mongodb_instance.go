@@ -289,7 +289,14 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
-
+	//yunti mark begin
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+	//yunti mark end
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 
