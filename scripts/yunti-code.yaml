@@ -290,3 +290,8 @@ tencentcloud/resource_tc_postgresql_instance.go:
     		if err != nil {
     			return err
     		}
+go.mod: |
+  require (
+  github.com/hashicorp/terraform-plugin-sdk v1.7.0
+  github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.809
+  )

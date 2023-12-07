@@ -30,6 +30,8 @@ def replace(dictionary):
         # 写入修改后的文件内容
         with open("../"+file_name, "w") as f:
             f.writelines(new_file_content)
+    print("success replace")
+
 
 def move(dictionary):
     start_marker = "//yunti mark move begin"
@@ -57,7 +59,7 @@ def move(dictionary):
         with open("../"+file_name, "w") as file:
             file.writelines(modified_lines)
 
-    print("代码已成功删除。")
+    print("success clear")
 
 def run():
     # 读取YAML文件
