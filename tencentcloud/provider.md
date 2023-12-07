@@ -1963,6 +1963,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_check_data_engine_image_can_be_upgrade
     tencentcloud_dlc_check_data_engine_config_pairs_validity
     tencentcloud_dlc_describe_updatable_data_engines
+    tencentcloud_dlc_describe_data_engine_events
 
   Resource
     tencentcloud_dlc_work_group

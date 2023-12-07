@@ -861,6 +861,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_work_group_info":                 dataSourceTencentCloudDlcDescribeWorkGroupInfo(),
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
+			"tencentcloud_dlc_describe_data_engine_events":              dataSourceTencentCloudDlcDescribeDataEngineEvents(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
 			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
