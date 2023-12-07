@@ -263,7 +263,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	// set sg
-	insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, resourceId)
+	insGrps, err := cynosdbService.DescribeClusterInstanceGrps(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -302,7 +302,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	// serverless status
 	if v, ok := d.GetOk("serverless_status_flag"); ok {
 		resume := v.(string) == "resume"
-		err := cynosdbService.SwitchServerlessCluster(ctx, resourceId, resume)
+		err := cynosdbService.SwitchServerlessCluster(ctx, id, resume)
 		if err != nil {
 			return err
 		}
