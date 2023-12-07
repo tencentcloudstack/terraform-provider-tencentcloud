@@ -103,6 +103,8 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
+//yunti mark import
+
 const (
 	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
 	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
@@ -196,6 +198,7 @@ type TencentCloudClient struct {
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
+	//yunti mark client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1370,6 +1373,8 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 
 	return me.cdwpgConn
 }
+
+//yunti mark useClient
 
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)

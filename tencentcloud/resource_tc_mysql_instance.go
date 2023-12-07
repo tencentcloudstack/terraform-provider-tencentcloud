@@ -520,6 +520,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
+	//yunti mark var
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -548,6 +549,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
+			//yunti mark bpass
 			return retryError(inErr)
 		}
 
@@ -556,7 +558,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-
+		//yunti mark instanceId
 		return nil
 	})
 
@@ -568,7 +570,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
-	d.SetId(*response.Response.InstanceIds[0])
+	d.SetId(*response.Response.InstanceIds[0]) //yunti mark setId
 	return nil
 }
 
@@ -626,7 +628,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark mysqlServer
 
 	payType := getPayType(d).(int)
 
@@ -646,15 +648,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-
+	//yunti mark setTag
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
@@ -1158,7 +1152,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-
+		//yunti mark waitTag
 	}
 
 	if d.HasChange("param_template_id") {
