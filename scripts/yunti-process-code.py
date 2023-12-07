@@ -38,7 +38,7 @@ def move(dictionary):
     end_marker = "//yunti mark move end"
 
     for file_name, _ in dictionary.items():
-        if file_name=="tencentcloud/extension_billing.go":
+        if file_name=="tencentcloud/extension_billing.go" or "tencentcloud/service_tencentcloud_billing.go'":
             continue
         # 打开文件并读取内容
         with open("../"+file_name, "r") as file:
