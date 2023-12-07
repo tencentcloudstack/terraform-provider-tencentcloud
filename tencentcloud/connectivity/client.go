@@ -196,7 +196,6 @@ type TencentCloudClient struct {
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
-	billingConn        *billing.Client
 }
 
 // NewClientProfile returns a new ClientProfile
