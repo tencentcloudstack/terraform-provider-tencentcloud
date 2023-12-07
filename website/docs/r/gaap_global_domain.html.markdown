@@ -31,6 +31,7 @@ The following arguments are supported:
 * `default_value` - (Required, String) Domain name default entry.
 * `project_id` - (Required, Int) Domain Name Project ID.
 * `alias` - (Optional, String) alias.
+* `status` - (Optional, String) Global domain statue. Available values: open and close, default is open.
 * `tags` - (Optional, Map) Instance tags.
 
 ## Attributes Reference

@@ -1,30 +1,3 @@
-/*
-Provides a resource to create a organization org_member
-
-Example Usage
-
-```hcl
-resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test"
-  node_id         = 2003721
-  permission_ids  = [
-    1,
-    2,
-    3,
-    4,
-  ]
-  policy_type     = "Financial"
-  remark          = "for terraform test"
-}
-
-```
-Import
-
-organization org_member can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_organization_org_member.org_member orgMember_id
-```
-*/
 package tencentcloud
 
 import (
@@ -375,15 +348,25 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 		if v, _ := d.GetOk("policy_type"); v != nil {
 			updateRequest.PolicyType = helper.String(v.(string))
 		}
+		if v, _ := d.GetOk("permission_ids"); v != nil {
+			ids := v.(*schema.Set).List()
+			for i := range ids {
+				id := ids[i].(int)
+				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
+			}
+		}
 	}
 
 	if d.HasChange("permission_ids") {
 		if v, _ := d.GetOk("permission_ids"); v != nil {
 			ids := v.(*schema.Set).List()
 			for i := range ids {
-				id := ids[i].(uint64)
-				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.Uint64(id))
+				id := ids[i].(int)
+				updateRequest.PermissionIds = append(updateRequest.PermissionIds, helper.IntUint64(id))
 			}
+		}
+		if v, _ := d.GetOk("policy_type"); v != nil {
+			updateRequest.PolicyType = helper.String(v.(string))
 		}
 	}
 

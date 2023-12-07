@@ -103,8 +103,11 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "host", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "vip", ""),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.example", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "trigger_info.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "DISABLE"),
 				),
 			},
 			{
@@ -126,6 +129,9 @@ func TestAccTencentCloudScfFunction_basic(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_scf_function.foo", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "tags.abc", "abc"),
 					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "async_run_enable", "FALSE"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "dns_cache", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_scf_function.foo", "intranet_config.0.ip_fixed", "ENABLE"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_function.foo", "intranet_config.0.ip_address.#"),
 				),
 			},
 			{
@@ -537,16 +543,22 @@ func scfFunctionRandomName() string {
 
 const testAccScfFunctionBasic = `
 resource "tencentcloud_scf_function" "foo" {
-  name      = "%s"
-  handler   = "first.do_it_first"
-  runtime   = "Python3.6"
+  name              = "%s"
+  handler           = "first.do_it_first"
+  runtime           = "Python3.6"
   enable_public_net = true
-  async_run_enable = "FALSE"
+  async_run_enable  = "FALSE"
+
+  dns_cache = false
+  intranet_config {
+    ip_fixed = "DISABLE"
+  }
 
   zip_file = "%s"
 
   tags = {
-    "test" = "test"
+    "test"    = "test"
+    "example" = "test"
   }
 }
 `
@@ -558,6 +570,11 @@ resource "tencentcloud_scf_function" "foo" {
   runtime   = "Python3.6"
   enable_public_net = true
   async_run_enable = "FALSE"
+
+  dns_cache = true
+  intranet_config {
+    ip_fixed = "ENABLE"
+  }
 
   description = "test"
   mem_size    = 1536

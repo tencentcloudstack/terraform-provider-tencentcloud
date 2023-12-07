@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"go/parser"
-	"go/token"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -16,6 +14,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/hashicorp/hcl/v2/hclwrite"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	cloud "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
 )
 
@@ -28,9 +27,10 @@ const (
 )
 
 var (
-	hclMatch   = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
-	usageMatch = regexp.MustCompile(`(?s)(?m)^([^ \n].*?)(?:\n{2}|$)(.*)`)
-	bigSymbol  = regexp.MustCompile("([\u007F-\uffff])")
+	hclMatch          = regexp.MustCompile("(?si)([^`]+)?```(hcl)?(.*?)```")
+	usageMatch        = regexp.MustCompile(`(?s)(?m)^([^ \n].*?)(?:\n{2}|$)(.*)`)
+	bigSymbol         = regexp.MustCompile("([\u007F-\uffff])")
+	productNameRegexp = regexp.MustCompile(`^.*\((.*)\)$`)
 )
 
 func main() {
@@ -59,15 +59,16 @@ func main() {
 
 // genIdx generating index for resource
 func genIdx(filePath string) (prods []Product) {
-	filename := "provider.go"
+	filename := "provider.md"
 
 	message("[START]get description from file: %s\n", filename)
 
-	description, err := getFileDescription(filepath.Join(filePath, filename))
+	raw, err := os.ReadFile(filepath.Join(filePath, filename))
 	if err != nil {
 		message("[SKIP!]get description failed, skip: %s", err)
 		return
 	}
+	description := string(raw)
 
 	description = strings.TrimSpace(description)
 	if description == "" {
@@ -132,14 +133,24 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		"import":            "",
 	}
 
-	filename := fmt.Sprintf("%s_%s_%s.go", dtype, cloudMarkShort, data["resource"])
+	productDir := strings.ToLower(product)
+	groups := productNameRegexp.FindStringSubmatch(productDir)
+	if groups != nil {
+		productDir = groups[1]
+	}
+	if productDir == "provider data sources" {
+		productDir = "common"
+	}
+
+	filename := fmt.Sprintf("%s/%s_%s_%s.md", productDir, dtype, cloudMarkShort, data["resource"])
 	message("[START]get description from file: %s\n", filename)
 
-	description, err := getFileDescription(filepath.Join(fpath, filename))
+	raw, err := os.ReadFile(filepath.Join(fpath, filename))
 	if err != nil {
 		message("[FAIL!]get description failed: %s", err)
 		os.Exit(1)
 	}
+	description := string(raw)
 
 	description = strings.TrimSpace(description)
 	if description == "" {
@@ -332,18 +343,6 @@ func getAttributes(step int, k string, v *schema.Schema) []string {
 	}
 
 	return attributes
-}
-
-// getFileDescription get description from go file
-func getFileDescription(fname string) (string, error) {
-	fset := token.NewFileSet()
-
-	parsedAst, err := parser.ParseFile(fset, fname, nil, parser.ParseComments)
-	if err != nil {
-		return "", err
-	}
-
-	return parsedAst.Doc.Text(), nil
 }
 
 // getSubStruct get sub structure from go file

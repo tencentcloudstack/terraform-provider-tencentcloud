@@ -23,6 +23,9 @@ const (
 	// 操作失败。
 	FAILEDOPERATION_CHECKIFSUPPORTPODSTRETCH = "FailedOperation.CheckIfSupportPodStretch"
 
+	// 拉取资源标签失败
+	FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
+
 	// 重复的订单，请检查emr控制台。
 	FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
 
@@ -79,6 +82,9 @@ const (
 
 	// 内部服务调用异常。
 	INTERNALERROR_CVMERROR = "InternalError.CvmError"
+
+	// DB查询异常。
+	INTERNALERROR_DBQUERYEXCEPTION = "InternalError.DBQueryException"
 
 	// 调用EKS报错。
 	INTERNALERROR_EKSERROR = "InternalError.EKSError"
@@ -161,6 +167,9 @@ const (
 	// Core节点数量无效。
 	INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
+
 	// CosFileUri参数值无效。
 	INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
 
@@ -176,6 +185,9 @@ const (
 	// DependService和EnableKerberos参数冲突。
 	INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
 
+	// 无效的磁盘数量。
+	INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
+
 	// 无效的磁盘大小。
 	INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
 
@@ -187,6 +199,9 @@ const (
 
 	// 无效的任务失败处理策略。
 	INVALIDPARAMETER_INVALIDFAILUREPOLICY = "InvalidParameter.InvalidFailurePolicy"
+
+	// 无效过滤参数。
+	INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
 
 	// 无效参数，EMR实例不符合要求。
 	INVALIDPARAMETER_INVALIDINSTANCE = "InvalidParameter.InvalidInstance"
@@ -289,6 +304,9 @@ const (
 
 	// 软件版本无效。
 	INVALIDPARAMETER_INVALIDSOFTWAREVERSION = "InvalidParameter.InvalidSoftWareVersion"
+
+	// invalid Parameter StartTime or EndTime.参数无效
+	INVALIDPARAMETER_INVALIDSTARTTIMEORENDTIME = "InvalidParameter.InvalidStartTimeOrEndTime"
 
 	// 无效的子网ID。
 	INVALIDPARAMETER_INVALIDSUBNETID = "InvalidParameter.InvalidSubnetId"

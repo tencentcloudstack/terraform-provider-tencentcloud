@@ -106,6 +106,51 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudKubernetesClusterResourceVpcCni(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTkeDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeCluster,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test"),
+				),
+			},
+			{
+				Config: testAccTkeClusterEnableVpcCni,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "vpc_cni_type", "tke-route-eni"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "is_non_static_ip_mode", "false"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "eni_subnet_ids.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "claim_expired_seconds", "300"),
+				),
+			},
+			{
+				Config: testAccTkeClusterUpdateVpcCni,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "vpc_cni_type", "tke-route-eni"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "is_non_static_ip_mode", "false"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "eni_subnet_ids.#", "2"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "claim_expired_seconds", "300"),
+				),
+			},
+			{
+				Config: testAccTkeClusterCloseVpcCni,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeExists(testTkeClusterResourceKey),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "eni_subnet_ids.#", "0"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -666,3 +711,226 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     delete_audit_log_and_topic = true
   }
 }`
+
+const testAccTkeClusterEnableVpcCni = TkeDeps + `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = local.vpc_id
+  cluster_cidr                               = var.tke_cidr_a.0
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  cluster_internet_domain                    = "tf.cluster-internet.com"
+  cluster_intranet                           = true
+  cluster_intranet_domain                    = "tf.cluster-intranet.com"
+  cluster_version                            = "1.22.5"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level								 = "L5"
+  auto_upgrade_cluster_level				 = true
+  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_internet_security_group               = local.sg_id
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  
+  vpc_cni_type								 = "tke-route-eni"
+  is_non_static_ip_mode                      = false
+  eni_subnet_ids							 = ["subnet-ljyn7h30"]
+  claim_expired_seconds                      = 300
+  
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      file_system = "ext3"
+	  auto_format_and_mount = "true"
+	  mount_target = "/var/lib/docker"
+      disk_partition = "/dev/sdb1"
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "test" = "test"
+  }
+
+  unschedulable = 0
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
+}
+`
+
+const testAccTkeClusterUpdateVpcCni = TkeDeps + `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = local.vpc_id
+  cluster_cidr                               = var.tke_cidr_a.0
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  cluster_internet_domain                    = "tf.cluster-internet.com"
+  cluster_intranet                           = true
+  cluster_intranet_domain                    = "tf.cluster-intranet.com"
+  cluster_version                            = "1.22.5"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level								 = "L5"
+  auto_upgrade_cluster_level				 = true
+  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_internet_security_group               = local.sg_id
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+  
+  vpc_cni_type								 = "tke-route-eni"
+  is_non_static_ip_mode                      = false
+  eni_subnet_ids							 = ["subnet-ljyn7h30", "subnet-domfffi4"]
+  claim_expired_seconds                      = 300
+  
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      file_system = "ext3"
+	  auto_format_and_mount = "true"
+	  mount_target = "/var/lib/docker"
+      disk_partition = "/dev/sdb1"
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "test" = "test"
+  }
+
+  unschedulable = 0
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
+}
+`
+
+const testAccTkeClusterCloseVpcCni = TkeDeps + `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                                     = local.vpc_id
+  cluster_cidr                               = var.tke_cidr_a.0
+  cluster_max_pod_num                        = 32
+  cluster_name                               = "test"
+  cluster_desc                               = "test cluster desc"
+  cluster_max_service_num                    = 32
+  cluster_internet                           = true
+  cluster_internet_domain                    = "tf.cluster-internet.com"
+  cluster_intranet                           = true
+  cluster_intranet_domain                    = "tf.cluster-intranet.com"
+  cluster_version                            = "1.22.5"
+  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_level								 = "L5"
+  auto_upgrade_cluster_level				 = true
+  cluster_intranet_subnet_id                 = local.subnet_id
+  cluster_internet_security_group               = local.sg_id
+  managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+
+  is_non_static_ip_mode                      = false
+  claim_expired_seconds                      = 300
+  
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      file_system = "ext3"
+	  auto_format_and_mount = "true"
+	  mount_target = "/var/lib/docker"
+      disk_partition = "/dev/sdb1"
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+
+  tags = {
+    "test" = "test"
+  }
+
+  unschedulable = 0
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]
+}
+`

@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_vpc: Fix modify `assistant_cidrs` request
+```

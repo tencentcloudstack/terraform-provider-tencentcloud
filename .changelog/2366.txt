@@ -1,0 +1,7 @@
+```release-note:bug
+resource/tencentcloud_organization_org_member: Fix parameter types and update logic
+```
+
+```release-note:bug
+resource/tencentcloud_organization_org_member_email: Fix parameter types
+```

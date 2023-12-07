@@ -1,5 +1,5 @@
 ---
-subcategory: "TDMQ for CMQ"
+subcategory: "TDMQ for CMQ(tcmq)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcmq_queue"
 sidebar_current: "docs-tencentcloud-resource-tcmq_queue"

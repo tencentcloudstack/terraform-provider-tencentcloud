@@ -1,17 +1,3 @@
-/*
-Use this data source to query detailed information of dbbrain diag_history
-
-Example Usage
-
-```hcl
-data "tencentcloud_dbbrain_diag_history" "diag_history" {
-  instance_id = "%s"
-  start_time = "%s"
-  end_time = "%s"
-  product = "mysql"
-}
-```
-*/
 package tencentcloud
 
 import (

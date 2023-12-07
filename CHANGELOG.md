@@ -1,3 +1,49 @@
+## 1.81.55 (December 6, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_clickhouse_instance_shards` ([#2382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2382))
+* **New Data Source:** `tencentcloud_clickhouse_spec` ([#2382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2382))
+* **New Data Source:** `tencentcloud_emr_auto_scale_records` ([#2375](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2375))
+* **New Resource:** `tencentcloud_clickhouse_keyval_config` ([#2377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2377))
+* **New Resource:** `tencentcloud_clickhouse_xml_config` ([#2377](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2377))
+* **New Resource:** `tencentcloud_gaap_custom_header` ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* **New Resource:** `tencentcloud_gaap_proxy_group` ([#2376](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2376))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_global_domain: Support param status ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* resource/tencentcloud_gaap_http_domain: Support update param domain ([#2378](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2378))
+* resource/tencentcloud_redis_instance: Support upgrade version ([#2380](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2380))
+
+BUG FIXES:
+
+* resource/tencentcloud_vpc: Fix modify `assistant_cidrs` request ([#2356](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2356))
+
+## 1.81.54 (December 4, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_elasticsearch_describe_index_list` ([#2371](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2371))
+* **New Data Source:** `tencentcloud_organization_members` ([#2370](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2370))
+* **New Resource:** `tencentcloud_oceanus_folder` ([#2372](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2372))
+
+## 1.81.53 (December 1, 2023)
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+* resource/tencentcloud_dayu_ddos_policy_v2: Support param water_print_config ([#2367](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2367))
+* resource/tencentcloud_kubernetes_cluster: set up the cluster and import it into Terraform ([#2339](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2339))
+* resource/tencentcloud_scf_function: add container_image_accelerate, image_port, dns_cache and intranet_config parameters ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+* tencentcloud_kubernetes_cluster: Support `eni_subnet_ids` updates. ([#2346](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2346))
+
+BUG FIXES:
+
+* resource/tencentcloud_organization_org_member: Fix parameter types and update logic ([#2366](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2366))
+* resource/tencentcloud_organization_org_member_email: Fix parameter types ([#2366](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2366))
+* resource/tencentcloud_scf_function: fix the issue where only one of multiple tag key updates takes effect ([#2308](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2308))
+
 ## 1.81.52 (November 29, 2023)
 
 FEATURES:

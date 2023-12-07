@@ -1,793 +1,8 @@
-/*
-Provide a resource to create a kubernetes cluster.
-
-~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
-
-~> **NOTE:** We recommend this usage that uses the `tencentcloud_kubernetes_cluster` resource to create a cluster without any `worker_config`, then adds nodes by the `tencentcloud_kubernetes_node_pool` resource.
-It's more flexible than managing worker config directly with `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_scale_worker`, or existing node management of `tencentcloud_kubernetes_attachment`. The reason is that `worker_config` is unchangeable and may cause the whole cluster resource to `ForceNew`.
-
-Example Usage
-
-Create a basic cluster with two worker nodes
-
-```hcl
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
-
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
-
-variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-locals {
-  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
-  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
-  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
-  sg_id            = tencentcloud_security_group.sg.id
-  image_id         = data.tencentcloud_images.default.image_id
-}
-
-data "tencentcloud_vpc_subnets" "vpc_one" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-data "tencentcloud_vpc_subnets" "vpc_two" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
-
-resource "tencentcloud_security_group" "sg" {
-  name = "tf-example-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
-  security_group_id = tencentcloud_security_group.sg.id
-
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
-
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
-}
-
-data "tencentcloud_images" "default" {
-  image_type       = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
-}
-
-resource "tencentcloud_kubernetes_cluster" "example" {
-  vpc_id                          = local.first_vpc_id
-  cluster_cidr                    = var.example_cluster_cidr
-  cluster_max_pod_num             = 32
-  cluster_name                    = "tf_example_cluster"
-  cluster_desc                    = "example for tke cluster"
-  cluster_max_service_num         = 32
-  cluster_internet                = false
-  cluster_internet_security_group = local.sg_id
-  cluster_version                 = "1.22.5"
-  cluster_deploy_type             = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # key_ids                   = ["skey-11112222"]
-    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.second_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    key_ids                   = ["skey-11112222"]
-    cam_role_name             = "CVM_QcsRole"
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
-
-```
-
-Create an empty cluster with a node pool
-
-The cluster does not have any nodes, nodes will be added through node pool.
-
-```hcl
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
-
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
-
-variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-locals {
-  first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
-  first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  sg_id    = tencentcloud_security_group.sg.id
-}
-
-data "tencentcloud_vpc_subnets" "vpc_one" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-data "tencentcloud_vpc_subnets" "vpc_two" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
-
-resource "tencentcloud_security_group" "sg" {
-  name = "tf-example-np-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
-  security_group_id = tencentcloud_security_group.sg.id
-
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
-
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
-}
-
-resource "tencentcloud_kubernetes_cluster" "example" {
-  vpc_id                  = local.first_vpc_id
-  cluster_cidr            = var.example_cluster_cidr
-  cluster_max_pod_num     = 32
-  cluster_name            = "tf_example_cluster_np"
-  cluster_desc            = "example for tke cluster"
-  cluster_max_service_num = 32
-  cluster_version         = "1.22.5"
-  cluster_deploy_type     = "MANAGED_CLUSTER"
-  # without any worker config
-}
-
-resource "tencentcloud_kubernetes_node_pool" "example" {
-  name                     = "tf_example_node_pool"
-  cluster_id               = tencentcloud_kubernetes_cluster.example.id
-  max_size                 = 6 # set the node scaling range [1,6]
-  min_size                 = 1
-  vpc_id                   = local.first_vpc_id
-  subnet_ids               = [local.first_subnet_id]
-  retry_policy             = "INCREMENTAL_INTERVALS"
-  desired_capacity         = 4
-  enable_auto_scale        = true
-  multi_zone_subnet_policy = "EQUALITY"
-
-  auto_scaling_config {
-    instance_type      = var.default_instance_type
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    orderly_security_group_ids = [local.sg_id]
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
-    public_ip_assigned         = true
-    password                   = "test123#"
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    host_name                  = "12.123.0.0"
-    host_name_style            = "ORIGINAL"
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-
-  taints {
-    key    = "test_taint"
-    value  = "taint_value"
-    effect = "PreferNoSchedule"
-  }
-
-  taints {
-    key    = "test_taint2"
-    value  = "taint_value2"
-    effect = "PreferNoSchedule"
-  }
-
-  node_config {
-    extra_args = [
-      "root-dir=/var/lib/kubelet"
-    ]
-  }
-}
-
-````
-
-Create a cluster with a node pool and open the network access with cluster endpoint
-
-The cluster's internet and intranet access will be opened after nodes are added through node pool.
-
-```hcl
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
-
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
-
-variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-locals {
-  first_vpc_id    = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
-  first_subnet_id = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  sg_id    = tencentcloud_security_group.sg.id
-}
-
-data "tencentcloud_vpc_subnets" "vpc_one" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-data "tencentcloud_vpc_subnets" "vpc_two" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
-
-resource "tencentcloud_security_group" "sg" {
-  name = "tf-example-np-ep-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
-  security_group_id = tencentcloud_security_group.sg.id
-
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
-
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
-}
-
-resource "tencentcloud_kubernetes_cluster" "example" {
-  vpc_id                  = local.first_vpc_id
-  cluster_cidr            = var.example_cluster_cidr
-  cluster_max_pod_num     = 32
-  cluster_name            = "tf_example_cluster"
-  cluster_desc            = "example for tke cluster"
-  cluster_max_service_num = 32
-  cluster_internet        = false # (can be ignored) open it after the nodes added
-  cluster_version         = "1.22.5"
-  cluster_deploy_type     = "MANAGED_CLUSTER"
-  # without any worker config
-}
-
-resource "tencentcloud_kubernetes_node_pool" "example" {
-  name                     = "tf_example_node_pool"
-  cluster_id               = tencentcloud_kubernetes_cluster.example.id
-  max_size                 = 6 # set the node scaling range [1,6]
-  min_size                 = 1
-  vpc_id                   = local.first_vpc_id
-  subnet_ids               = [local.first_subnet_id]
-  retry_policy             = "INCREMENTAL_INTERVALS"
-  desired_capacity         = 4
-  enable_auto_scale        = true
-  multi_zone_subnet_policy = "EQUALITY"
-
-  auto_scaling_config {
-    instance_type      = var.default_instance_type
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    orderly_security_group_ids = [local.sg_id]
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
-    public_ip_assigned         = true
-    password                   = "test123#"
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    host_name                  = "12.123.0.0"
-    host_name_style            = "ORIGINAL"
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-
-  taints {
-    key    = "test_taint"
-    value  = "taint_value"
-    effect = "PreferNoSchedule"
-  }
-
-  taints {
-    key    = "test_taint2"
-    value  = "taint_value2"
-    effect = "PreferNoSchedule"
-  }
-
-  node_config {
-    extra_args = [
-      "root-dir=/var/lib/kubelet"
-    ]
-  }
-}
-
-resource "tencentcloud_kubernetes_cluster_endpoint" "example" {
-  cluster_id                      = tencentcloud_kubernetes_cluster.example.id
-  cluster_internet                = true # open the internet here
-  cluster_intranet                = true
-  cluster_internet_security_group = local.sg_id
-  cluster_intranet_subnet_id      = local.first_subnet_id
-  depends_on = [ # wait for the node pool ready
-    tencentcloud_kubernetes_node_pool.example
-  ]
-}
-
-
-````
-
-Use Kubelet
-
-```hcl
-# Create a baisc kubernetes cluster with two nodes.
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
-
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
-
-variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-locals {
-  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
-  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
-  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
-  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
-  sg_id            = tencentcloud_security_group.sg.id
-  image_id         = data.tencentcloud_images.default.image_id
-}
-
-
-
-data "tencentcloud_vpc_subnets" "vpc_one" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-data "tencentcloud_vpc_subnets" "vpc_two" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
-
-resource "tencentcloud_security_group" "sg" {
-  name = "tf-example-sg"
-}
-
-resource "tencentcloud_security_group_lite_rule" "sg_rule" {
-  security_group_id = tencentcloud_security_group.sg.id
-
-  ingress = [
-    "ACCEPT#10.0.0.0/16#ALL#ALL",
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-    "DROP#0.0.0.0/0#ALL#ALL",
-  ]
-
-  egress = [
-    "ACCEPT#172.16.0.0/22#ALL#ALL",
-  ]
-}
-
-
-data "tencentcloud_images" "default" {
-  image_type       = ["PUBLIC_IMAGE"]
-  image_name_regex = "Final"
-}
-
-resource "tencentcloud_kubernetes_cluster" "example" {
-  vpc_id                          = local.first_vpc_id
-  cluster_cidr                    = var.example_cluster_cidr
-  cluster_max_pod_num             = 32
-  cluster_name                    = "tf_example_cluster"
-  cluster_desc                    = "example for tke cluster"
-  cluster_max_service_num         = 32
-  cluster_internet                = false
-  cluster_internet_security_group = local.sg_id
-  cluster_version                 = "1.22.5"
-  cluster_deploy_type             = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.first_subnet_id
-    img_id                     = local.image_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-      encrypt   = false
-    }
-
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
-    disaster_recover_group_ids = []
-    security_group_ids         = []
-    key_ids                    = []
-    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = local.second_subnet_id
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-    user_data                  = "dGVzdA=="
-    disaster_recover_group_ids = []
-    security_group_ids         = []
-    key_ids                    = []
-    cam_role_name              = "CVM_QcsRole"
-    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-
-  extra_args = [
-    "root-dir=/var/lib/kubelet"
-  ]
-}
-```
-
-Use extension addons
-
-```hcl
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
-
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
-
-variable "default_instance_type" {
-  default = "S5.SMALL1"
-}
-
-data "tencentcloud_vpc_subnets" "vpc_first" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
-
-# fetch latest addon(chart) versions
-data "tencentcloud_kubernetes_charts" "charts" {}
-
-locals {
-  chartNames = data.tencentcloud_kubernetes_charts.charts.chart_list.*.name
-  chartVersions = data.tencentcloud_kubernetes_charts.charts.chart_list.*.latest_version
-  chartMap = zipmap(local.chartNames, local.chartVersions)
-}
-
-resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    img_id                     = "img-rkiynh11"
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
-  }
-
-  extension_addon {
-    name  = "COS"
-    param = jsonencode({
-      "kind" : "App", "spec" : {
-        "chart" : { "chartName" : "cos", "chartVersion" : local.chartMap["cos"] },
-        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
-      }
-    })
-  }
-  extension_addon {
-    name  = "SecurityGroupPolicy"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
-    })
-  }
-  extension_addon {
-    name  = "OOMGuard"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
-    })
-  }
-  extension_addon {
-    name  = "OLM"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : local.chartMap["olm"] } }
-    })
-  }
-}
-```
-
-Use node pool global config
-
-```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "vpc" {
-  default = "vpc-dk8zmwuf"
-}
-
-variable "subnet" {
-  default = "subnet-pqfek0t8"
-}
-
-variable "default_instance_type" {
-  default = "SA1.LARGE8"
-}
-
-resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
-  vpc_id                                     = var.vpc
-  cluster_cidr                               = "10.1.0.0/16"
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = var.subnet
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
-  }
-
-  node_pool_global_config {
-    is_scale_in_enabled = true
-    expander = "random"
-    ignore_daemon_sets_utilization = true
-    max_concurrent_scale_in = 5
-    scale_in_delay = 15
-    scale_in_unneeded_time = 15
-    scale_in_utilization_threshold = 30
-    skip_nodes_with_local_storage = false
-    skip_nodes_with_system_pods = true
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
-```
-
-Using VPC-CNI network type
-```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-1"
-}
-
-variable "vpc" {
-  default = "vpc-r1m1fyx5"
-}
-
-variable "default_instance_type" {
-  default = "SA2.SMALL2"
-}
-
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = var.vpc
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 256
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-  network_type								 = "VPC-CNI"
-  eni_subnet_ids							 = ["subnet-bk1etlyu"]
-  service_cidr								 = "10.1.0.0/24"
-
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_PREMIUM"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = "subnet-t5dv27rs"
-
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
-
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
-  }
-
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
-```
-
-Using ops options
-```
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  # ...your basic fields
-
-  log_agent {
-    enabled = true
-    kubelet_root_dir = "" # optional
-  }
-
-  event_persistence {
-    enabled = true
-	log_set_id = "" # optional
-    topic_id = "" # optional
-  }
-
-  cluster_audit {
-    enabled = true
-	log_set_id = "" # optional
-    topic_id = "" # optional
-  }
-}
-```
-*/
 package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -803,6 +18,8 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+var importClsFlag = false
 
 func tkeCvmState() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -948,7 +165,7 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Optional:     true,
 			Default:      50,
-			ValidateFunc: validateIntegerInRange(50, 500),
+			ValidateFunc: validateIntegerInRange(20, 1024),
 			Description:  "Volume of system disk in GB. Default is `50`.",
 		},
 		"data_disk": {
@@ -1302,9 +519,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		},
 		"cluster_as_enabled": {
 			Type:        schema.TypeBool,
-			ForceNew:    true,
-			Optional:    true,
-			Default:     false,
+			Computed:    true,
 			Deprecated:  "This argument is deprecated because the TKE auto-scaling group was no longer available.",
 			Description: "Indicates whether to enable cluster node auto scaling. Default is false.",
 		},
@@ -1413,6 +628,15 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Default:  "",
 			Description: "Cluster kube-proxy mode, the available values include: 'kube-proxy-bpf'. Default is not set." +
 				"When set to kube-proxy-bpf, cluster version greater than 1.14 and with Tencent Linux 2.4 is required.",
+		},
+		"vpc_cni_type": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Computed:     true,
+			ValidateFunc: validateAllowedStringValue([]string{"tke-route-eni", "tke-direct-eni"}),
+			Description: "Distinguish between shared network card multi-IP mode and independent network card mode. " +
+				"Fill in `tke-route-eni` for shared network card multi-IP mode and `tke-direct-eni` for independent network card mode. " +
+				"The default is shared network card mode. When it is necessary to turn off the vpc-cni container network capability, both `eni_subnet_ids` and `vpc_cni_type` must be set to empty.",
 		},
 		"vpc_id": {
 			Type:         schema.TypeString,
@@ -1584,7 +808,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"claim_expired_seconds": {
 			Type:     schema.TypeInt,
 			Optional: true,
-			Default:  300,
+			Computed: true,
 			Description: "Claim expired seconds to recycle ENI." +
 				" This field can only set when field `network_type` is 'VPC-CNI'." +
 				" `claim_expired_seconds` must greater or equal than 300 and less than 15768000.",
@@ -1858,6 +1082,18 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		Read:   resourceTencentCloudTkeClusterRead,
 		Update: resourceTencentCloudTkeClusterUpdate,
 		Delete: resourceTencentCloudTkeClusterDelete,
+		Importer: &schema.ResourceImporter{
+			//State: schema.ImportStatePassthrough,
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importClsFlag = true
+				err := resourceTencentCloudTkeClusterRead(d, m)
+				if err != nil {
+					return nil, fmt.Errorf("failed to import resource")
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: schemaBody,
 	}
 }
@@ -2344,6 +1580,14 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	advanced.DeletionProtection = d.Get("deletion_protection").(bool)
 	advanced.KubeProxyMode = d.Get("kube_proxy_mode").(string)
 	advanced.EnableCustomizedPodCIDR = d.Get("enable_customized_pod_cidr").(bool)
+
+	if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
+		if v, ok := d.GetOk("vpc_cni_type"); ok {
+			advanced.VpcCniType = v.(string)
+		} else {
+			advanced.VpcCniType = "tke-route-eni"
+		}
+	}
 	if v, ok := d.GetOk("base_pod_num"); ok {
 		advanced.BasePodNumber = int64(v.(int))
 	}
@@ -2377,7 +1621,16 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	cidrSet.MaxClusterServiceNum = int64(d.Get("cluster_max_service_num").(int))
 	cidrSet.MaxNodePodNum = int64(d.Get("cluster_max_pod_num").(int))
 	cidrSet.ServiceCIDR = d.Get("service_cidr").(string)
-	cidrSet.ClaimExpiredSeconds = int64(d.Get("claim_expired_seconds").(int))
+
+	if ClaimExpiredSeconds, ok := d.GetOk("claim_expired_seconds"); ok {
+		cidrSet.ClaimExpiredSeconds = int64(ClaimExpiredSeconds.(int))
+	} else {
+		cidrSet.ClaimExpiredSeconds = int64(300)
+
+		if err := d.Set("claim_expired_seconds", 300); err != nil {
+			return fmt.Errorf("error setting claim_expired_seconds: %s", err)
+		}
+	}
 
 	if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
 		// VPC-CNI cluster need to set eni subnet and service cidr.
@@ -2751,6 +2004,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeCluster(ctx, d.Id())
 	if err != nil {
@@ -2771,7 +2025,6 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		d.SetId("")
 		return nil
 	}
-
 	// 兼容旧的 cluster_os 的 key, 由于 cluster_os有默认值，所以不大可能为空
 	oldOs := d.Get("cluster_os").(string)
 	newOs := tkeToShowClusterOs(info.ClusterOs)
@@ -2795,48 +2048,302 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_max_service_num", info.MaxClusterServiceNum)
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
 	_ = d.Set("tags", info.Tags)
+	_ = d.Set("deletion_protection", info.DeletionProtection)
+	_ = d.Set("cluster_level", info.ClusterLevel)
+	_ = d.Set("vpc_cni_type", info.VpcCniType)
+	_ = d.Set("eni_subnet_ids", info.EniSubnetIds)
 
-	if _, ok := d.GetOk("cluster_level"); ok {
-		_ = d.Set("cluster_level", info.ClusterLevel)
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(info.Property), &data)
+	if err != nil {
+		return fmt.Errorf("error:%v", err)
+	}
+
+	if importClsFlag && info.DeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+		var masters []InstanceInfo
+		var errRet error
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			masters, _, errRet = service.DescribeClusterInstancesByRole(ctx, d.Id(), "MASTER_OR_ETCD")
+			if e, ok := errRet.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+			if errRet != nil {
+				return resource.RetryableError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		var instances []*cvm.Instance
+		instanceIds := make([]*string, 0)
+		for _, instance := range masters {
+			instanceIds = append(instanceIds, helper.String(instance.InstanceId))
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		instanceList := make([]interface{}, 0, len(instances))
+		for _, instance := range instances {
+			mapping := map[string]interface{}{
+				"count":                               1,
+				"instance_charge_type_prepaid_period": 1,
+				"instance_type":                       helper.PString(instance.InstanceType),
+				"subnet_id":                           helper.PString(instance.VirtualPrivateCloud.SubnetId),
+				"availability_zone":                   helper.PString(instance.Placement.Zone),
+				"instance_name":                       helper.PString(instance.InstanceName),
+				"instance_charge_type":                helper.PString(instance.InstanceChargeType),
+				"system_disk_type":                    helper.PString(instance.SystemDisk.DiskType),
+				"system_disk_size":                    helper.PInt64(instance.SystemDisk.DiskSize),
+				"internet_charge_type":                helper.PString(instance.InternetAccessible.InternetChargeType),
+				"bandwidth_package_id":                helper.PString(instance.InternetAccessible.BandwidthPackageId),
+				"internet_max_bandwidth_out":          helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
+				"security_group_ids":                  helper.StringsInterfaces(instance.SecurityGroupIds),
+				"img_id":                              helper.PString(instance.ImageId),
+			}
+
+			if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
+				mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
+			} else {
+				mapping["instance_charge_type_prepaid_renew_flag"] = ""
+			}
+			if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
+				mapping["public_ip_assigned"] = true
+			}
+
+			if instance.CamRoleName != nil {
+				mapping["cam_role_name"] = instance.CamRoleName
+			}
+			if instance.LoginSettings != nil {
+				if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
+					mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
+				}
+				if instance.LoginSettings.Password != nil {
+					mapping["password"] = helper.PString(instance.LoginSettings.Password)
+				}
+			}
+			if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
+				mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
+			}
+			if instance.HpcClusterId != nil {
+				mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
+			}
+
+			dataDisks := make([]interface{}, 0, len(instance.DataDisks))
+			for _, v := range instance.DataDisks {
+				dataDisk := map[string]interface{}{
+					"disk_type":   helper.PString(v.DiskType),
+					"disk_size":   helper.PInt64(v.DiskSize),
+					"snapshot_id": helper.PString(v.DiskId),
+					"encrypt":     helper.PBool(v.Encrypt),
+					"kms_key_id":  helper.PString(v.KmsKeyId),
+				}
+				dataDisks = append(dataDisks, dataDisk)
+			}
+
+			mapping["data_disk"] = dataDisks
+			instanceList = append(instanceList, mapping)
+		}
+
+		_ = d.Set("master_config", instanceList)
+	}
+
+	if importClsFlag {
+		networkType, _ := data["NetworkType"].(string)
+		_ = d.Set("network_type", networkType)
+
+		nodeNameType, _ := data["NodeNameType"].(string)
+		_ = d.Set("node_name_type", nodeNameType)
+
+		enableCustomizedPodCIDR, _ := data["EnableCustomizedPodCIDR"].(bool)
+		_ = d.Set("enable_customized_pod_cidr", enableCustomizedPodCIDR)
+
+		basePodNumber, _ := data["BasePodNumber"].(int)
+		_ = d.Set("base_pod_num", basePodNumber)
+
+		isNonStaticIpMode, _ := data["IsNonStaticIpMode"].(bool)
+		_ = d.Set("is_non_static_ip_mode", isNonStaticIpMode)
+
+		_ = d.Set("runtime_version", info.RuntimeVersion)
+		_ = d.Set("cluster_os_type", info.OsCustomizeType)
+		_ = d.Set("container_runtime", info.ContainerRuntime)
+		_ = d.Set("kube_proxy_mode", info.KubeProxyMode)
+		_ = d.Set("service_cidr", info.ServiceCIDR)
+		_ = d.Set("upgrade_instances_follow_cluster", false)
+
+		switchSet, err := service.DescribeLogSwitches(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		logAgents := make([]map[string]interface{}, 0)
+		events := make([]map[string]interface{}, 0)
+		audits := make([]map[string]interface{}, 0)
+		for _, switchItem := range switchSet {
+			if switchItem.Log != nil && switchItem.Log.Enable != nil && helper.PBool(switchItem.Log.Enable) {
+				logAgent := map[string]interface{}{
+					"enabled": helper.PBool(switchItem.Log.Enable),
+				}
+				logAgents = append(logAgents, logAgent)
+			}
+			if switchItem.Event != nil && switchItem.Event.Enable != nil && helper.PBool(switchItem.Event.Enable) {
+				event := map[string]interface{}{
+					"enabled":    helper.PBool(switchItem.Event.Enable),
+					"log_set_id": helper.PString(switchItem.Event.LogsetId),
+					"topic_id":   helper.PString(switchItem.Event.TopicId),
+				}
+				events = append(events, event)
+			}
+			if switchItem.Audit != nil && switchItem.Audit.Enable != nil && helper.PBool(switchItem.Audit.Enable) {
+				audit := map[string]interface{}{
+					"enabled":    helper.PBool(switchItem.Audit.Enable),
+					"log_set_id": helper.PString(switchItem.Audit.LogsetId),
+					"topic_id":   helper.PString(switchItem.Audit.TopicId),
+				}
+				audits = append(audits, audit)
+			}
+		}
+		if len(logAgents) > 0 {
+			_ = d.Set("log_agent", logAgents)
+		}
+		if len(events) > 0 {
+			_ = d.Set("event_persistence", events)
+		}
+		if len(audits) > 0 {
+			_ = d.Set("cluster_audit", audits)
+		}
+
+		applist, err := service.DescribeExtensionAddonList(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		addons := make([]map[string]interface{}, 0)
+		for _, item := range applist.Items {
+			if item.Status.Phase == "Succeeded" && item.Labels["application.tkestack.io/type"] == "internal-addon" {
+				addonParam := AddonRequestBody{
+					Kind: helper.String("App"),
+					Spec: &AddonSpec{
+						Chart: &AddonSpecChart{
+							ChartName:    item.Spec.Chart.ChartName,
+							ChartVersion: item.Spec.Chart.ChartVersion,
+						},
+						Values: &AddonSpecValues{
+							Values:        item.Spec.Values.Values,
+							RawValues:     item.Spec.Values.RawValues,
+							RawValuesType: item.Spec.Values.RawValuesType,
+						},
+					},
+				}
+				result, err := json.Marshal(addonParam)
+				if err != nil {
+					return err
+				}
+
+				addon := map[string]interface{}{
+					"name":  item.Name,
+					"param": string(result),
+				}
+				addons = append(addons, addon)
+			}
+		}
+		if len(addons) > 0 {
+			_ = d.Set("extension_addon", addons)
+		}
+
+		resp, err := service.DescribeClusterExtraArgs(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+		fmt.Println(&resp)
+		flag := false
+		extraArgs := make(map[string]interface{}, 0)
+		if len(resp.KubeAPIServer) > 0 {
+			flag = true
+			extraArgs["kube_apiserver"] = resp.KubeAPIServer
+		}
+		if len(resp.KubeControllerManager) > 0 {
+			flag = true
+			extraArgs["kube_controller_manager"] = resp.KubeControllerManager
+		}
+		if len(resp.KubeScheduler) > 0 {
+			flag = true
+			extraArgs["kube_scheduler"] = resp.KubeScheduler
+		}
+
+		if flag {
+			_ = d.Set("cluster_extra_args", []map[string]interface{}{extraArgs})
+		}
+
+		if networkType == TKE_CLUSTER_NETWORK_TYPE_CILIUM_OVERLAY {
+			resp, err := service.DescribeExternalNodeSupportConfig(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			_ = d.Set("cluster_subnet_id", resp.SubnetId)
+		}
+		if networkType == TKE_CLUSTER_NETWORK_TYPE_VPC_CNI {
+			resp, err := service.DescribeIPAMD(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			_ = d.Set("eni_subnet_ids", helper.PStrings(resp.SubnetIds))
+
+			duration, err := time.ParseDuration(helper.PString(resp.ClaimExpiredDuration))
+			if err != nil {
+				return err
+			}
+			seconds := int(duration.Seconds())
+			if seconds > 0 {
+				_ = d.Set("claim_expired_seconds", seconds)
+			}
+		}
+
+		if info.DeployType == TKE_DEPLOY_TYPE_MANAGED {
+			options, state, _, err := service.DescribeClusterAuthenticationOptions(ctx, d.Id())
+			if err != nil {
+				return err
+			}
+			if state == "Success" {
+				authOptions := make(map[string]interface{}, 0)
+				if helper.PBool(options.UseTKEDefault) {
+					authOptions["use_tke_default"] = helper.PBool(options.UseTKEDefault)
+				} else {
+					authOptions["jwks_uri"] = helper.PString(options.JWKSURI)
+					authOptions["issuer"] = helper.PString(options.Issuer)
+				}
+				authOptions["auto_create_discovery_anonymous_auth"] = helper.PBool(options.AutoCreateDiscoveryAnonymousAuth)
+				_ = d.Set("auth_options", []map[string]interface{}{authOptions})
+			}
+		}
 	}
 
 	if _, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+	} else if importClsFlag {
+		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+		importClsFlag = false
 	}
 
-	config, err := service.DescribeClusterConfig(ctx, d.Id(), true)
+	err = checkClusterEndpointStatus(ctx, &service, d, false)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
+		return fmt.Errorf("get internet failed, %s", err.Error())
 	}
 
+	err = checkClusterEndpointStatus(ctx, &service, d, true)
 	if err != nil {
-		return nil
+		return fmt.Errorf("get intranet failed, %s\n", err.Error())
 	}
-
-	_ = d.Set("kube_config", config)
-
-	intranetConfig, err := service.DescribeClusterConfig(ctx, d.Id(), false)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			intranetConfig, err = service.DescribeClusterConfig(ctx, d.Id(), false)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
-
-	if err != nil {
-		return nil
-	}
-
-	_ = d.Set("kube_config_intranet", intranetConfig)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
@@ -2855,7 +2362,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		})
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("get worker instances failed, %s", err.Error())
 	}
 
 	workerInstancesList := make([]map[string]interface{}, 0, len(workers))
@@ -2956,6 +2463,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 		_ = d.Set("node_pool_global_config", []map[string]interface{}{temp})
 	}
+
 	return nil
 }
 
@@ -3081,6 +2589,118 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	//update VPC-CNI container network capability
+	if !d.HasChange("eni_subnet_ids") && (d.HasChange("vpc_cni_type") || d.HasChange("claim_expired_seconds")) {
+		err := fmt.Errorf("changing only `vpc_cni_type` or `claim_expired_seconds` is not supported, when turning on or off the vpc-cni container network capability, `eni_subnet_ids` must be changed")
+		return err
+	}
+	if d.HasChange("eni_subnet_ids") {
+		eniSubnetIdList := d.Get("eni_subnet_ids").([]interface{})
+		if len(eniSubnetIdList) == 0 {
+			err := tkeService.DisableVpcCniNetworkType(ctx, id)
+			if err != nil {
+				return err
+			}
+			time.Sleep(3 * time.Second)
+			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+				ipamdResp, inErr := tkeService.DescribeIPAMD(ctx, id)
+				enableIPAMD := *ipamdResp.EnableIPAMD
+				disableVpcCniMode := *ipamdResp.DisableVpcCniMode
+				phase := *ipamdResp.Phase
+				if inErr != nil {
+					return resource.NonRetryableError(inErr)
+				}
+				if !enableIPAMD || (disableVpcCniMode && phase != "upgrading") {
+					return nil
+				}
+				return resource.RetryableError(fmt.Errorf("%s close vpc cni network type task is in progress and waiting to be completed", id))
+			})
+			if err != nil {
+				return err
+			}
+		} else {
+			info, _, err := tkeService.DescribeCluster(ctx, id)
+			if err != nil {
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					newInfo, _, inErr := tkeService.DescribeCluster(ctx, id)
+					if inErr != nil {
+						return retryError(inErr)
+					}
+					info = newInfo
+					return nil
+				})
+				if err != nil {
+					return err
+				}
+			}
+			oldSubnets := info.EniSubnetIds
+			var subnets []string
+			for index := range eniSubnetIdList {
+				subnetId := eniSubnetIdList[index].(string)
+				subnets = append(subnets, subnetId)
+			}
+			if len(oldSubnets) > 0 {
+				exist, addSubnets := helper.CheckElementsExist(oldSubnets, subnets)
+				if !exist {
+					err = fmt.Errorf("the `eni_subnet_ids` parameter does not allow modification of existing subnet ID data %v. "+
+						"if you want to modify the existing subnet ID, please first set eni_subnet_ids to empty to turn off the VPC-CNI network capability, "+
+						"and then fill in the latest subnet ID", oldSubnets)
+					return err
+				}
+				if d.HasChange("vpc_cni_type") || d.HasChange("claim_expired_seconds") {
+					err = fmt.Errorf("modifying `vpc_cni_type` and `claim_expired_seconds` is not supported when adding a cluster subnet")
+					return err
+				}
+				if len(addSubnets) > 0 {
+					vpcId := d.Get("vpc_id").(string)
+					err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						inErr := tkeService.AddVpcCniSubnets(ctx, id, addSubnets, vpcId)
+						if inErr != nil {
+							return resource.NonRetryableError(inErr)
+						}
+						return nil
+					})
+					if err != nil {
+						return err
+					}
+				}
+			} else {
+				var vpcCniType string
+				if v, ok := d.GetOk("vpc_cni_type"); ok {
+					vpcCniType = v.(string)
+				} else {
+					vpcCniType = "tke-route-eni"
+				}
+				enableStaticIp := !d.Get("is_non_static_ip_mode").(bool)
+				expiredSeconds := uint64(d.Get("claim_expired_seconds").(int))
+
+				err = tkeService.EnableVpcCniNetworkType(ctx, id, vpcCniType, enableStaticIp, subnets, expiredSeconds)
+				if err != nil {
+					return err
+				}
+				time.Sleep(3 * time.Second)
+				err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+					ipamdResp, inErr := tkeService.DescribeIPAMD(ctx, id)
+					disableVpcCniMode := *ipamdResp.DisableVpcCniMode
+					phase := *ipamdResp.Phase
+					if inErr != nil {
+						return resource.NonRetryableError(inErr)
+					}
+					if !disableVpcCniMode && phase == "running" {
+						return nil
+					}
+					if !disableVpcCniMode && phase == "initializing" {
+						return resource.RetryableError(fmt.Errorf("%s enable vpc cni network type task is in progress and waiting to be completed", id))
+					}
+					return resource.NonRetryableError(fmt.Errorf("%s enable vpc cni network type task disableVpcCniMode is %v and phase is %s,we won't wait for it finish", id, disableVpcCniMode, phase))
+				})
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+
 	//upgrade k8s cluster version
 	if d.HasChange("cluster_version") {
 		newVersion := d.Get("cluster_version").(string)
@@ -3155,17 +2775,20 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("auth_options") {
 		request := tkeGetAuthOptions(d)
-		err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			inErr := tkeService.ModifyClusterAuthenticationOptions(ctx, request)
 			if inErr != nil {
-				return retryError(inErr)
+				return retryError(inErr, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
 			}
 			return nil
 		})
 		if err != nil {
 			return err
 		}
-
+		_, _, err = tkeService.WaitForAuthenticationOptionsUpdateSuccess(ctx, id)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("deletion_protection") {
@@ -3397,4 +3020,78 @@ func resourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []int
 
 	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
 	return
+}
+
+func checkClusterEndpointStatus(ctx context.Context, service *TkeService, d *schema.ResourceData, isInternet bool) (err error) {
+	var status, config string
+	var response tke.DescribeClusterEndpointsResponseParams
+	var isOpened bool
+	var errRet error
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		status, _, errRet = service.DescribeClusterEndpointStatus(ctx, d.Id(), isInternet)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if status == TkeInternetStatusCreating || status == TkeInternetStatusDeleting {
+			return resource.RetryableError(
+				fmt.Errorf("%s create cluster internet endpoint status still is %s", d.Id(), status))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+		isOpened = false
+	}
+	if status == TkeInternetStatusCreated {
+		isOpened = true
+	}
+	if isInternet {
+		_ = d.Set("cluster_internet", isOpened)
+	} else {
+		_ = d.Set("cluster_intranet", isOpened)
+	}
+
+	if isOpened {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			config, errRet = service.DescribeClusterConfig(ctx, d.Id(), isInternet)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, errRet = service.DescribeClusterEndpoints(ctx, d.Id())
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		if isInternet {
+			_ = d.Set("kube_config", config)
+			_ = d.Set("cluster_internet_domain", helper.PString(response.ClusterExternalDomain))
+			_ = d.Set("cluster_internet_security_group", helper.PString(response.SecurityGroup))
+		} else {
+			_ = d.Set("kube_config_intranet", config)
+			_ = d.Set("cluster_intranet_domain", helper.PString(response.ClusterIntranetDomain))
+			_ = d.Set("cluster_intranet_subnet_id", helper.PString(response.ClusterIntranetSubnetId))
+		}
+
+	} else {
+		if isInternet {
+			_ = d.Set("kube_config", "")
+		} else {
+			_ = d.Set("kube_config_intranet", "")
+		}
+	}
+	return nil
 }

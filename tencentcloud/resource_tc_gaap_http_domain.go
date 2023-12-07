@@ -1,40 +1,3 @@
-/*
-Provides a resource to create a forward domain of layer7 listener.
-
-Example Usage
-
-```hcl
-resource "tencentcloud_gaap_proxy" "foo" {
-  name              = "ci-test-gaap-proxy"
-  bandwidth         = 10
-  concurrent        = 2
-  access_region     = "SouthChina"
-  realserver_region = "NorthChina"
-}
-
-resource "tencentcloud_gaap_layer7_listener" "foo" {
-  protocol = "HTTP"
-  name     = "ci-test-gaap-l7-listener"
-  port     = 80
-  proxy_id = tencentcloud_gaap_proxy.foo.id
-}
-
-resource "tencentcloud_gaap_http_domain" "foo" {
-  listener_id = tencentcloud_gaap_layer7_listener.foo.id
-  domain      = "www.qq.com"
-}
-```
-
-Import
-
-GAAP http domain can be imported using the id, e.g.
-
--> **NOTE:** The format of tencentcloud_gaap_http_domain id is `[listener-id]+[protocol]+[domain]`.
-
-```
-  $ terraform import tencentcloud_gaap_http_domain.foo listener-11112222+HTTP+www.qq.com
-```
-*/
 package tencentcloud
 
 import (
@@ -410,16 +373,36 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 	}
 
 	listenerId, protocol, domain = split[0], split[1], split[2]
+	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
 	switch protocol {
 	case "HTTP":
-		// when protocol is http, nothing can be updated
-		return errors.New("http listener can't set auth")
+		immutableArgs := []string{"certificate_id", "client_certificate_id", "client_certificate_ids", "basic_auth", "basic_auth_id", "realserver_auth", "realserver_certificate_id", "realserver_certificate_ids", "realserver_certificate_domain", "gaap_auth", "gaap_auth_id"}
+
+		for _, v := range immutableArgs {
+			if d.HasChange(v) {
+				return fmt.Errorf("argument `%s` cannot be changed for http", v)
+			}
+		}
+		if d.HasChange("domain") {
+			oldDomain, newDomain := d.GetChange("domain")
+			err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+			if err != nil {
+				return err
+			}
+		}
+		return resourceTencentCloudGaapHttpDomainRead(d, m)
 
 	case "HTTPS":
 	}
 
-	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
+	if d.HasChange("domain") {
+		oldDomain, newDomain := d.GetChange("domain")
+		err := service.ModifyDomain(ctx, listenerId, oldDomain.(string), newDomain.(string))
+		if err != nil {
+			return err
+		}
+	}
 
 	listeners, err := service.DescribeHTTPSListeners(ctx, nil, &listenerId, nil, nil)
 	if err != nil {

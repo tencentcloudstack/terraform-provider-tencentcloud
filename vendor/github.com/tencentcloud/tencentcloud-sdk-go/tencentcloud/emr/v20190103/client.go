@@ -59,8 +59,9 @@ func NewAddUsersForUserManagerRequest() (request *AddUsersForUserManagerRequest)
 func NewAddUsersForUserManagerResponse() (response *AddUsersForUserManagerResponse) {
     response = &AddUsersForUserManagerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // AddUsersForUserManager
@@ -119,8 +120,9 @@ func NewCreateClusterRequest() (request *CreateClusterRequest) {
 func NewCreateClusterResponse() (response *CreateClusterResponse) {
     response = &CreateClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCluster
@@ -129,6 +131,7 @@ func NewCreateClusterResponse() (response *CreateClusterResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_CVMERROR = "InternalError.CvmError"
 //  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
 //  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
@@ -136,9 +139,12 @@ func NewCreateClusterResponse() (response *CreateClusterResponse) {
 //  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
 //  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
 //  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
 //  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
+//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
 //  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
 //  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
 //  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
@@ -160,6 +166,7 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
+//  INTERNALERROR_CDBERROR = "InternalError.CdbError"
 //  INTERNALERROR_CVMERROR = "InternalError.CvmError"
 //  INTERNALERROR_TRADECGWERROR = "InternalError.TradeCgwError"
 //  INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
@@ -167,9 +174,12 @@ func (c *Client) CreateCluster(request *CreateClusterRequest) (response *CreateC
 //  INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
 //  INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
 //  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+//  INVALIDPARAMETER_INVALIDCOREDISKTYPE = "InvalidParameter.InvalidCoreDiskType"
 //  INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
+//  INVALIDPARAMETER_INVALIDDISKNUM = "InvalidParameter.InvalidDiskNum"
 //  INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
 //  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
+//  INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
 //  INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
 //  INVALIDPARAMETER_INVALIDPASSWORD = "InvalidParameter.InvalidPassword"
 //  INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
@@ -211,8 +221,9 @@ func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
 func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
     response = &CreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateInstance
@@ -409,8 +420,9 @@ func NewDeleteUserManagerUserListRequest() (request *DeleteUserManagerUserListRe
 func NewDeleteUserManagerUserListResponse() (response *DeleteUserManagerUserListResponse) {
     response = &DeleteUserManagerUserListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteUserManagerUserList
@@ -449,6 +461,59 @@ func (c *Client) DeleteUserManagerUserListWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeAutoScaleRecordsRequest() (request *DescribeAutoScaleRecordsRequest) {
+    request = &DescribeAutoScaleRecordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("emr", APIVersion, "DescribeAutoScaleRecords")
+    
+    
+    return
+}
+
+func NewDescribeAutoScaleRecordsResponse() (response *DescribeAutoScaleRecordsResponse) {
+    response = &DescribeAutoScaleRecordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    } 
+    return
+
+}
+
+// DescribeAutoScaleRecords
+// 获取集群的自动扩缩容的详细记录
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
+//  INVALIDPARAMETER_INVALIDSTARTTIMEORENDTIME = "InvalidParameter.InvalidStartTimeOrEndTime"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeAutoScaleRecords(request *DescribeAutoScaleRecordsRequest) (response *DescribeAutoScaleRecordsResponse, err error) {
+    return c.DescribeAutoScaleRecordsWithContext(context.Background(), request)
+}
+
+// DescribeAutoScaleRecords
+// 获取集群的自动扩缩容的详细记录
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_INVALIDFILTERKEY = "InvalidParameter.InvalidFilterKey"
+//  INVALIDPARAMETER_INVALIDSTARTTIMEORENDTIME = "InvalidParameter.InvalidStartTimeOrEndTime"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+func (c *Client) DescribeAutoScaleRecordsWithContext(ctx context.Context, request *DescribeAutoScaleRecordsRequest) (response *DescribeAutoScaleRecordsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAutoScaleRecordsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAutoScaleRecords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAutoScaleRecordsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeClusterNodesRequest() (request *DescribeClusterNodesRequest) {
     request = &DescribeClusterNodesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -463,8 +528,9 @@ func NewDescribeClusterNodesRequest() (request *DescribeClusterNodesRequest) {
 func NewDescribeClusterNodesResponse() (response *DescribeClusterNodesResponse) {
     response = &DescribeClusterNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterNodes
@@ -565,8 +631,9 @@ func NewDescribeCvmQuotaRequest() (request *DescribeCvmQuotaRequest) {
 func NewDescribeCvmQuotaResponse() (response *DescribeCvmQuotaResponse) {
     response = &DescribeCvmQuotaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCvmQuota
@@ -617,8 +684,9 @@ func NewDescribeEmrApplicationStaticsRequest() (request *DescribeEmrApplicationS
 func NewDescribeEmrApplicationStaticsResponse() (response *DescribeEmrApplicationStaticsResponse) {
     response = &DescribeEmrApplicationStaticsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeEmrApplicationStatics
@@ -669,14 +737,16 @@ func NewDescribeHiveQueriesRequest() (request *DescribeHiveQueriesRequest) {
 func NewDescribeHiveQueriesResponse() (response *DescribeHiveQueriesResponse) {
     response = &DescribeHiveQueriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHiveQueries
 // 获取hive查询信息
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DBQUERYEXCEPTION = "InternalError.DBQueryException"
 //  INVALIDPARAMETER_IMPALAQUERYEXCEPTION = "InvalidParameter.ImpalaQueryException"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
@@ -688,6 +758,7 @@ func (c *Client) DescribeHiveQueries(request *DescribeHiveQueriesRequest) (respo
 // 获取hive查询信息
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DBQUERYEXCEPTION = "InternalError.DBQueryException"
 //  INVALIDPARAMETER_IMPALAQUERYEXCEPTION = "InvalidParameter.ImpalaQueryException"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  UNAUTHORIZEDOPERATION_APPIDMISMATCHED = "UnauthorizedOperation.AppIdMismatched"
@@ -721,8 +792,9 @@ func NewDescribeImpalaQueriesRequest() (request *DescribeImpalaQueriesRequest) {
 func NewDescribeImpalaQueriesResponse() (response *DescribeImpalaQueriesResponse) {
     response = &DescribeImpalaQueriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeImpalaQueries
@@ -769,8 +841,9 @@ func NewDescribeInstanceRenewNodesRequest() (request *DescribeInstanceRenewNodes
 func NewDescribeInstanceRenewNodesResponse() (response *DescribeInstanceRenewNodesResponse) {
     response = &DescribeInstanceRenewNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstanceRenewNodes
@@ -865,8 +938,9 @@ func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
     response = &DescribeInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstances
@@ -874,6 +948,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
 //  FAILEDOPERATION_GETCAMROLEFAILED = "FailedOperation.GetCamRoleFailed"
 //  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  INTERNALERROR = "InternalError"
@@ -912,6 +987,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
 //  FAILEDOPERATION_GETCAMROLEFAILED = "FailedOperation.GetCamRoleFailed"
 //  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  INTERNALERROR = "InternalError"
@@ -971,8 +1047,9 @@ func NewDescribeInstancesListRequest() (request *DescribeInstancesListRequest) {
 func NewDescribeInstancesListResponse() (response *DescribeInstancesListResponse) {
     response = &DescribeInstancesListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstancesList
@@ -980,6 +1057,7 @@ func NewDescribeInstancesListResponse() (response *DescribeInstancesListResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
 //  FAILEDOPERATION_GETCAMROLEFAILED = "FailedOperation.GetCamRoleFailed"
 //  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  INTERNALERROR = "InternalError"
@@ -1016,6 +1094,7 @@ func (c *Client) DescribeInstancesList(request *DescribeInstancesListRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DESCRIBERESOURCETAGSFAILED = "FailedOperation.DescribeResourceTagsFailed"
 //  FAILEDOPERATION_GETCAMROLEFAILED = "FailedOperation.GetCamRoleFailed"
 //  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  INTERNALERROR = "InternalError"
@@ -1073,8 +1152,9 @@ func NewDescribeJobFlowRequest() (request *DescribeJobFlowRequest) {
 func NewDescribeJobFlowResponse() (response *DescribeJobFlowResponse) {
     response = &DescribeJobFlowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeJobFlow
@@ -1123,8 +1203,9 @@ func NewDescribeResourceScheduleRequest() (request *DescribeResourceScheduleRequ
 func NewDescribeResourceScheduleResponse() (response *DescribeResourceScheduleResponse) {
     response = &DescribeResourceScheduleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeResourceSchedule
@@ -1181,8 +1262,9 @@ func NewDescribeUsersForUserManagerRequest() (request *DescribeUsersForUserManag
 func NewDescribeUsersForUserManagerResponse() (response *DescribeUsersForUserManagerResponse) {
     response = &DescribeUsersForUserManagerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeUsersForUserManager
@@ -1195,6 +1277,7 @@ func NewDescribeUsersForUserManagerResponse() (response *DescribeUsersForUserMan
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
 func (c *Client) DescribeUsersForUserManager(request *DescribeUsersForUserManagerRequest) (response *DescribeUsersForUserManagerResponse, err error) {
     return c.DescribeUsersForUserManagerWithContext(context.Background(), request)
 }
@@ -1209,6 +1292,7 @@ func (c *Client) DescribeUsersForUserManager(request *DescribeUsersForUserManage
 //  INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
 func (c *Client) DescribeUsersForUserManagerWithContext(ctx context.Context, request *DescribeUsersForUserManagerRequest) (response *DescribeUsersForUserManagerResponse, err error) {
     if request == nil {
         request = NewDescribeUsersForUserManagerRequest()
@@ -1239,8 +1323,9 @@ func NewDescribeYarnApplicationsRequest() (request *DescribeYarnApplicationsRequ
 func NewDescribeYarnApplicationsResponse() (response *DescribeYarnApplicationsResponse) {
     response = &DescribeYarnApplicationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeYarnApplications
@@ -1289,8 +1374,9 @@ func NewInquirePriceRenewEmrRequest() (request *InquirePriceRenewEmrRequest) {
 func NewInquirePriceRenewEmrResponse() (response *InquirePriceRenewEmrResponse) {
     response = &InquirePriceRenewEmrResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquirePriceRenewEmr
@@ -1391,8 +1477,9 @@ func NewInquiryPriceCreateInstanceRequest() (request *InquiryPriceCreateInstance
 func NewInquiryPriceCreateInstanceResponse() (response *InquiryPriceCreateInstanceResponse) {
     response = &InquiryPriceCreateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceCreateInstance
@@ -1400,6 +1487,7 @@ func NewInquiryPriceCreateInstanceResponse() (response *InquiryPriceCreateInstan
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  FAILEDOPERATION_GETTRADESERVERFAILED = "FailedOperation.GetTradeServerFailed"
 //  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
@@ -1451,6 +1539,7 @@ func (c *Client) InquiryPriceCreateInstance(request *InquiryPriceCreateInstanceR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
 //  FAILEDOPERATION_GETTRADESERVERFAILED = "FailedOperation.GetTradeServerFailed"
 //  INTERNALERROR_ACCOUNTCGWERROR = "InternalError.AccountCgwError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
@@ -1523,8 +1612,9 @@ func NewInquiryPriceRenewInstanceRequest() (request *InquiryPriceRenewInstanceRe
 func NewInquiryPriceRenewInstanceResponse() (response *InquiryPriceRenewInstanceResponse) {
     response = &InquiryPriceRenewInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceRenewInstance
@@ -1627,8 +1717,9 @@ func NewInquiryPriceScaleOutInstanceRequest() (request *InquiryPriceScaleOutInst
 func NewInquiryPriceScaleOutInstanceResponse() (response *InquiryPriceScaleOutInstanceResponse) {
     response = &InquiryPriceScaleOutInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceScaleOutInstance
@@ -1656,6 +1747,7 @@ func NewInquiryPriceScaleOutInstanceResponse() (response *InquiryPriceScaleOutIn
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
 //  INVALIDPARAMETER_INVALIDCOUNTNUM = "InvalidParameter.InvalidCountNum"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
 //  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
 //  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
 //  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
@@ -1696,6 +1788,7 @@ func (c *Client) InquiryPriceScaleOutInstance(request *InquiryPriceScaleOutInsta
 //  INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
 //  INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
 //  INVALIDPARAMETER_INVALIDCOUNTNUM = "InvalidParameter.InvalidCountNum"
+//  INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
 //  INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
 //  INVALIDPARAMETER_INVALIDPAYMODE = "InvalidParameter.InvalidPaymode"
 //  INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
@@ -1737,8 +1830,9 @@ func NewInquiryPriceUpdateInstanceRequest() (request *InquiryPriceUpdateInstance
 func NewInquiryPriceUpdateInstanceResponse() (response *InquiryPriceUpdateInstanceResponse) {
     response = &InquiryPriceUpdateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InquiryPriceUpdateInstance
@@ -1841,8 +1935,9 @@ func NewModifyResourcePoolsRequest() (request *ModifyResourcePoolsRequest) {
 func NewModifyResourcePoolsResponse() (response *ModifyResourcePoolsResponse) {
     response = &ModifyResourcePoolsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourcePools
@@ -1855,6 +1950,7 @@ func NewModifyResourcePoolsResponse() (response *ModifyResourcePoolsResponse) {
 //  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
 func (c *Client) ModifyResourcePools(request *ModifyResourcePoolsRequest) (response *ModifyResourcePoolsResponse, err error) {
     return c.ModifyResourcePoolsWithContext(context.Background(), request)
 }
@@ -1869,6 +1965,7 @@ func (c *Client) ModifyResourcePools(request *ModifyResourcePoolsRequest) (respo
 //  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
 func (c *Client) ModifyResourcePoolsWithContext(ctx context.Context, request *ModifyResourcePoolsRequest) (response *ModifyResourcePoolsResponse, err error) {
     if request == nil {
         request = NewModifyResourcePoolsRequest()
@@ -1899,14 +1996,16 @@ func NewModifyResourceScheduleConfigRequest() (request *ModifyResourceScheduleCo
 func NewModifyResourceScheduleConfigResponse() (response *ModifyResourceScheduleConfigResponse) {
     response = &ModifyResourceScheduleConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourceScheduleConfig
 // 修改YARN资源调度的资源配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
 //  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
@@ -1921,6 +2020,7 @@ func (c *Client) ModifyResourceScheduleConfig(request *ModifyResourceScheduleCon
 // 修改YARN资源调度的资源配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CAMCGWERROR = "InternalError.CamCgwError"
 //  INTERNALERROR_WOODSERVERERROR = "InternalError.WoodServerError"
@@ -1957,8 +2057,9 @@ func NewModifyResourceSchedulerRequest() (request *ModifyResourceSchedulerReques
 func NewModifyResourceSchedulerResponse() (response *ModifyResourceSchedulerResponse) {
     response = &ModifyResourceSchedulerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourceScheduler
@@ -2011,8 +2112,9 @@ func NewModifyResourcesTagsRequest() (request *ModifyResourcesTagsRequest) {
 func NewModifyResourcesTagsResponse() (response *ModifyResourcesTagsResponse) {
     response = &ModifyResourcesTagsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyResourcesTags
@@ -2065,8 +2167,9 @@ func NewModifyUserManagerPwdRequest() (request *ModifyUserManagerPwdRequest) {
 func NewModifyUserManagerPwdResponse() (response *ModifyUserManagerPwdResponse) {
     response = &ModifyUserManagerPwdResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyUserManagerPwd
@@ -2121,8 +2224,9 @@ func NewRunJobFlowRequest() (request *RunJobFlowRequest) {
 func NewRunJobFlowResponse() (response *RunJobFlowResponse) {
     response = &RunJobFlowResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunJobFlow
@@ -2249,8 +2353,9 @@ func NewScaleOutClusterRequest() (request *ScaleOutClusterRequest) {
 func NewScaleOutClusterResponse() (response *ScaleOutClusterResponse) {
     response = &ScaleOutClusterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleOutCluster
@@ -2317,8 +2422,9 @@ func NewScaleOutInstanceRequest() (request *ScaleOutInstanceRequest) {
 func NewScaleOutInstanceResponse() (response *ScaleOutInstanceResponse) {
     response = &ScaleOutInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ScaleOutInstance
@@ -2483,8 +2589,9 @@ func NewStartStopServiceOrMonitorRequest() (request *StartStopServiceOrMonitorRe
 func NewStartStopServiceOrMonitorResponse() (response *StartStopServiceOrMonitorResponse) {
     response = &StartStopServiceOrMonitorResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // StartStopServiceOrMonitor
@@ -2547,8 +2654,9 @@ func NewSyncPodStateRequest() (request *SyncPodStateRequest) {
 func NewSyncPodStateResponse() (response *SyncPodStateResponse) {
     response = &SyncPodStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPodState
@@ -2723,8 +2831,9 @@ func NewTerminateClusterNodesRequest() (request *TerminateClusterNodesRequest) {
 func NewTerminateClusterNodesResponse() (response *TerminateClusterNodesResponse) {
     response = &TerminateClusterNodesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateClusterNodes
@@ -2779,8 +2888,9 @@ func NewTerminateInstanceRequest() (request *TerminateInstanceRequest) {
 func NewTerminateInstanceResponse() (response *TerminateInstanceResponse) {
     response = &TerminateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateInstance
@@ -2853,8 +2963,9 @@ func NewTerminateTasksRequest() (request *TerminateTasksRequest) {
 func NewTerminateTasksResponse() (response *TerminateTasksResponse) {
     response = &TerminateTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminateTasks

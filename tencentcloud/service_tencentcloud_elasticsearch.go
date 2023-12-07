@@ -894,3 +894,72 @@ func (me *ElasticsearchService) DescribeElasticsearchInstancePluginListByFilter(
 
 	return
 }
+
+func (me *ElasticsearchService) DescribeElasticsearchDescribeIndexListByFilter(ctx context.Context, param map[string]interface{}) (DescribeIndexList []*elasticsearch.IndexMetaField, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = elasticsearch.NewDescribeIndexListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IndexType" {
+			request.IndexType = v.(*string)
+		}
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "IndexName" {
+			request.IndexName = v.(*string)
+		}
+		if k == "Username" {
+			request.Username = v.(*string)
+		}
+		if k == "Password" {
+			request.Password = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "IndexStatusList" {
+			request.IndexStatusList = v.([]*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEsClient().DescribeIndexList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.IndexMetaFields) < 1 {
+			break
+		}
+		DescribeIndexList = append(DescribeIndexList, response.Response.IndexMetaFields...)
+		if len(response.Response.IndexMetaFields) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

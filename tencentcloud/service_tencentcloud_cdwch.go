@@ -531,3 +531,155 @@ func (me *CdwchService) DescribeClickhouseBackupTablesByFilter(ctx context.Conte
 
 	return
 }
+
+func (me *CdwchService) DescribeClickhouseKeyvalConfigById(ctx context.Context, instanceId string) (config []*cdwch.InstanceConfigInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeInstanceKeyValConfigsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeInstanceKeyValConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ConfigItems) < 1 {
+		return
+	}
+
+	config = response.Response.ConfigItems
+	return
+}
+
+func (me *CdwchService) DescribeClickhouseXmlConfigById(ctx context.Context, instanceId string) (xmlConfig []*cdwch.ClusterConfigsInfoFromEMR, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeClusterConfigsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeClusterConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ClusterConfList) < 1 {
+		return
+	}
+
+	xmlConfig = response.Response.ClusterConfList
+	return
+}
+
+func (me *CdwchService) InstanceStateRefreshFunc(instanceId string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := cdwch.NewDescribeInstanceStateRequest()
+		request.InstanceId = &instanceId
+		ratelimit.Check(request.GetAction())
+		object, err := me.client.UseCdwchClient().DescribeInstanceState(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil || object.Response == nil || object.Response.InstanceState == nil {
+			return nil, "", nil
+		}
+
+		return object, *object.Response.InstanceState, nil
+	}
+}
+
+func (me *CdwchService) DescribeClickhouseSpecByFilter(ctx context.Context, param map[string]interface{}) (spec *cdwch.DescribeSpecResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdwch.NewDescribeSpecRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Zone" {
+			request.Zone = v.(*string)
+		}
+		if k == "PayMode" {
+			request.PayMode = v.(*string)
+		}
+		if k == "IsElastic" {
+			request.IsElastic = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeSpec(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	spec = response.Response
+	return
+}
+
+func (me *CdwchService) DescribeClickhouseInstanceShardsByFilter(ctx context.Context, param map[string]interface{}) (instanceShards *cdwch.DescribeInstanceShardsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdwch.NewDescribeInstanceShardsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeInstanceShards(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	instanceShards = response.Response
+	return
+}
