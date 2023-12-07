@@ -304,12 +304,13 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark client
 
 	var (
-		name           = d.Get("name").(string)
-		dbVersion      = d.Get("engine_version").(string)
-		payType        = d.Get("charge_type").(string)
+		name      = d.Get("name").(string)
+		dbVersion = d.Get("engine_version").(string)
+		payType   = d.Get("charge_type").(string)
+		//yunti mark var
 		projectId      = d.Get("project_id").(int)
 		subnetId       = d.Get("subnet_id").(string)
 		vpcId          = d.Get("vpc_id").(string)
@@ -465,6 +466,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			voucherIds,
 		)
 		if inErr != nil {
+			//yunti mark bypass
 			return retryError(inErr)
 		}
 		return nil
@@ -474,6 +476,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	d.SetId(instanceId)
+
+	//yunti mark setTag
 
 	// check creation done
 	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
@@ -544,6 +548,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return checkErr
 	}
 
+	//yunti mark move begin
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
@@ -552,6 +557,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			return err
 		}
 	}
+	//yunti mark move end
 
 	// set pg params
 	paramEntrys := make(map[string]string)
@@ -615,7 +621,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark clientUpdate
 	instanceId := d.Id()
 	d.Partial(true)
 
@@ -1060,14 +1066,16 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
+		//yunti mark move begin
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
+		//yunti mark move end
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}
-
+		//yunti mark waitTag
 	}
 	paramEntrys := make(map[string]string)
 	if d.HasChange("max_standby_archive_delay") {
