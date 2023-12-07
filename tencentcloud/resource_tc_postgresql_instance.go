@@ -304,7 +304,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark client
+	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark clientCreate
 
 	var (
 		name      = d.Get("name").(string)
