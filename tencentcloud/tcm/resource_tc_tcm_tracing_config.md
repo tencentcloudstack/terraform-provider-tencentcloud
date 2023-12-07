@@ -1,0 +1,42 @@
+Provides a resource to create a tcm tracing_config
+
+~> **NOTE:** If you use the config attribute tracing in tencentcloud_tcm_mesh, do not use tencentcloud_tcm_tracing_config
+
+Example Usage
+
+```hcl
+resource "tencentcloud_tcm_tracing_config" "tracing_config" {
+  mesh_id = "mesh-xxxxxxxx"
+  enable = true
+  apm {
+	enable = true
+	region = "ap-guangzhou"
+	instance_id = "apm-xxx"
+  }
+  sampling =
+  zipkin {
+	address = "10.10.10.10:9411"
+  }
+}
+
+resource "tencentcloud_tcm_tracing_config" "delete_config" {
+  mesh_id = "mesh-rofjmxxx"
+  enable = true
+  apm {
+    enable = false
+    # region = "ap-guangzhou"
+    # instance_id = "apm-xxx"
+  }
+  sampling = 0
+  zipkin {
+    address = ""
+  }
+}
+
+```
+Import
+
+tcm tracing_config can be imported using the mesh_id, e.g.
+```
+$ terraform import tencentcloud_tcm_tracing_config.tracing_config mesh-rofjmxxx
+```
