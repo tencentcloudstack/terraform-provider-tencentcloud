@@ -102,6 +102,8 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 	return
 }
 
+//yunti mark waitTag
+
 func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {
 	replaceTags = make(map[string]string)
 	deleteTags = make([]string, 0)

@@ -7,7 +7,7 @@ import re
 def replace(dictionary):
     for file_name, content in dictionary.items():
         # 读取文件内容
-        if file_name=="tencentcloud/extension_billing.go":
+        if file_name=="tencentcloud/extension_billing.go" or "tencentcloud/service_tencentcloud_billing.go":
             with open("../"+file_name, "w") as f:
                 f.write(content["all"])
             continue
