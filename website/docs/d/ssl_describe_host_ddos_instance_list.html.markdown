@@ -1,5 +1,5 @@
 ---
-subcategory: "SSL Certificates"
+subcategory: "SSL Certificates(ssl)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssl_describe_host_ddos_instance_list"
 sidebar_current: "docs-tencentcloud-datasource-ssl_describe_host_ddos_instance_list"

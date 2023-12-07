@@ -127,7 +127,10 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 	tmpList := make([]map[string]interface{}, 0)
 
 	if basicDeviceStatus.Data != nil {
-		for _, keyValue := range basicDeviceStatus.Data {
+		data := basicDeviceStatus.Data
+		dataTmpList := make([]map[string]interface{}, 0, len(data))
+
+		for _, keyValue := range data {
 			keyValueMap := map[string]interface{}{}
 			if keyValue.Key != nil {
 				keyValueMap["key"] = keyValue.Key
@@ -135,13 +138,17 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 			if keyValue.Value != nil {
 				keyValueMap["value"] = keyValue.Value
 			}
-			tmpList = append(tmpList, keyValueMap)
+			dataTmpList = append(dataTmpList, keyValueMap)
 		}
-		_ = d.Set("data", tmpList)
+		tmpList = append(tmpList, dataTmpList...)
+		_ = d.Set("data", dataTmpList)
 	}
 
 	if basicDeviceStatus.CLBData != nil {
-		for _, keyValue := range basicDeviceStatus.CLBData {
+		clbData := basicDeviceStatus.CLBData
+		clbDataTmpList := make([]map[string]interface{}, 0, len(clbData))
+
+		for _, keyValue := range clbData {
 			keyValueMap := map[string]interface{}{}
 			if keyValue.Key != nil {
 				keyValueMap["key"] = keyValue.Key
@@ -149,9 +156,10 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 			if keyValue.Value != nil {
 				keyValueMap["value"] = keyValue.Value
 			}
-			tmpList = append(tmpList, keyValueMap)
+			clbDataTmpList = append(clbDataTmpList, keyValueMap)
 		}
-		_ = d.Set("clb_data", tmpList)
+		tmpList = append(tmpList, clbDataTmpList...)
+		_ = d.Set("clb_data", clbDataTmpList)
 	}
 
 	d.SetId(helper.BuildToken())

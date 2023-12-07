@@ -785,3 +785,64 @@ func (me *OceanusService) DeleteOceanusJobConfigById(ctx context.Context, jobId,
 
 	return
 }
+
+func (me *OceanusService) DescribeOceanusFolderById(ctx context.Context, workSpaceId, folderId, folderType string) (Folder *oceanus.DescribeFolderResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDescribeFolderRequest()
+	request.FolderId = common.StringPtr(folderId)
+	folderTypeInt, _ := strconv.ParseInt(folderType, 10, 64)
+	request.FolderType = common.Int64Ptr(folderTypeInt)
+	request.WorkSpaceId = common.StringPtr(workSpaceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DescribeFolder(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	Folder = response.Response
+	return
+}
+
+func (me *OceanusService) DeleteOceanusFolderById(ctx context.Context, workSpaceId, folderId, folderType string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := oceanus.NewDeleteFoldersRequest()
+	request.FolderIds = common.StringPtrs([]string{folderId})
+	folderTypeInt, _ := strconv.ParseInt(folderType, 10, 64)
+	request.FolderType = common.Int64Ptr(folderTypeInt)
+	request.WorkSpaceId = common.StringPtr(workSpaceId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseOceanusClient().DeleteFolders(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

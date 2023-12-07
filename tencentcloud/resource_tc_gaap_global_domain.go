@@ -47,6 +47,13 @@ func resourceTencentCloudGaapGlobalDomain() *schema.Resource {
 				Optional:    true,
 				Description: "Instance tags.",
 			},
+			"status": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{GLOBAL_DOMAIN_STATUS_OPEN, GLOBAL_DOMAIN_STATUS_CLOSE}),
+				Description:  "Global domain statue. Available values: open and close, default is open.",
+			},
 		},
 	}
 }
@@ -166,6 +173,15 @@ func resourceTencentCloudGaapGlobalDomainRead(d *schema.ResourceData, meta inter
 		_ = d.Set("alias", globalDomain.Alias)
 	}
 
+	if globalDomain.Status != nil {
+		statusInt := int(*globalDomain.Status)
+		if statusInt == 0 {
+			_ = d.Set("status", GLOBAL_DOMAIN_STATUS_OPEN)
+		} else if statusInt == 1 {
+			_ = d.Set("status", GLOBAL_DOMAIN_STATUS_CLOSE)
+		}
+	}
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "gaap", "domain", tcClient.Region, d.Id())
@@ -208,34 +224,37 @@ func resourceTencentCloudGaapGlobalDomainUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
+	isAttributeChange := false
 	if d.HasChange("default_value") {
 		if v, ok := d.GetOk("default_value"); ok {
 			request.DefaultValue = helper.String(v.(string))
+			isAttributeChange = true
 		}
 	}
 
 	if d.HasChange("alias") {
 		if v, ok := d.GetOk("alias"); ok {
 			request.Alias = helper.String(v.(string))
+			isAttributeChange = true
 		}
 	}
-
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseGaapClient().ModifyGlobalDomainAttribute(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if isAttributeChange {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseGaapClient().ModifyGlobalDomainAttribute(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update gaap globalDomain failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update gaap globalDomain failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
-
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
@@ -246,7 +265,33 @@ func resourceTencentCloudGaapGlobalDomainUpdate(d *schema.ResourceData, meta int
 		if err != nil {
 			return err
 		}
+	}
 
+	if d.HasChange("status") {
+		if v, ok := d.GetOk("status"); ok {
+			status := v.(string)
+			service := GaapService{client: meta.(*TencentCloudClient).apiV3Conn}
+			if status == GLOBAL_DOMAIN_STATUS_OPEN {
+				if err := service.EnableGlobalDomain(ctx, domainId); err != nil {
+					return err
+				}
+
+				conf := BuildStateChangeConf([]string{}, []string{"0"}, 1*readRetryTimeout, time.Second, service.DomainInstanceStateRefreshFunc(domainId, projectId, []string{}))
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
+			}
+			if status == GLOBAL_DOMAIN_STATUS_CLOSE {
+				if err := service.DisableGlobalDomain(ctx, domainId); err != nil {
+					return err
+				}
+
+				conf := BuildStateChangeConf([]string{}, []string{"1"}, 1*readRetryTimeout, time.Second, service.DomainInstanceStateRefreshFunc(domainId, projectId, []string{}))
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
+			}
+		}
 	}
 
 	return resourceTencentCloudGaapGlobalDomainRead(d, meta)
@@ -270,14 +315,21 @@ func resourceTencentCloudGaapGlobalDomainDelete(d *schema.ResourceData, meta int
 	}
 	domainId := idSplit[1]
 
-	if err := service.DisableGlobalDomain(ctx, domainId); err != nil {
+	globalDomain, err := service.DescribeGaapGlobalDomainById(ctx, domainId, projectId)
+	if err != nil {
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"1"}, 1*readRetryTimeout, time.Second, service.DomainInstanceStateRefreshFunc(domainId, projectId, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+	if globalDomain != nil && globalDomain.Status != nil && int(*globalDomain.Status) == 0 {
+		if err := service.DisableGlobalDomain(ctx, domainId); err != nil {
+			return err
+		}
+		conf := BuildStateChangeConf([]string{}, []string{"1"}, 1*readRetryTimeout, time.Second, service.DomainInstanceStateRefreshFunc(domainId, projectId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
+
 	if err := service.DeleteGaapGlobalDomainById(ctx, domainId); err != nil {
 		return err
 	}

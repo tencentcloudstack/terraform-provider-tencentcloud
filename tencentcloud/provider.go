@@ -152,6 +152,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
+			"tencentcloud_emr_auto_scale_records":                       dataSourceTencentCloudEmrAutoScaleRecords(),
 			"tencentcloud_availability_zones":                           dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                dataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
@@ -877,6 +878,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
+			"tencentcloud_clickhouse_spec":                              dataSourceTencentCloudClickhouseSpec(),
+			"tencentcloud_clickhouse_instance_shards":                   dataSourceTencentCloudClickhouseInstanceShards(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -935,6 +938,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_oceanus_resource":                                    resourceTencentCloudOceanusResource(),
 			"tencentcloud_oceanus_resource_config":                             resourceTencentCloudOceanusResourceConfig(),
 			"tencentcloud_oceanus_work_space":                                  resourceTencentCloudOceanusWorkSpace(),
+			"tencentcloud_oceanus_folder":                                      resourceTencentCloudOceanusFolder(),
 			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
 			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),
@@ -1127,6 +1131,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_domain_error_page":                              resourceTencentCloudGaapDomainErrorPageInfo(),
 			"tencentcloud_gaap_global_domain_dns":                              resourceTencentCloudGaapGlobalDomainDns(),
 			"tencentcloud_gaap_global_domain":                                  resourceTencentCloudGaapGlobalDomain(),
+			"tencentcloud_gaap_custom_header":                                  resourceTencentCloudGaapCustomHeader(),
+			"tencentcloud_gaap_proxy_group":                                    resourceTencentCloudGaapProxyGroup(),
 			"tencentcloud_ssl_certificate":                                     resourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                 resourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                resourceTencentCloudSSLFreeCertificate(),
@@ -1831,6 +1837,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
+			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
+			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,

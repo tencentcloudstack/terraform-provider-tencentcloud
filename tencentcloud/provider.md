@@ -549,6 +549,7 @@ Domain
 
 Elasticsearch Service(ES)
   Data Source
+    tencentcloud_elasticsearch_describe_index_list
     tencentcloud_elasticsearch_instances
     tencentcloud_elasticsearch_instance_logs
     tencentcloud_elasticsearch_instance_operations
@@ -557,7 +558,6 @@ Elasticsearch Service(ES)
     tencentcloud_elasticsearch_views
     tencentcloud_elasticsearch_diagnose
     tencentcloud_elasticsearch_instance_plugin_list
-    tencentcloud_elasticsearch_describe_index_list
 
   Resource
     tencentcloud_elasticsearch_instance
@@ -611,6 +611,7 @@ Global Application Acceleration(GAAP)
 
   Resource
     tencentcloud_gaap_proxy
+    tencentcloud_gaap_proxy_group
     tencentcloud_gaap_realserver
     tencentcloud_gaap_layer4_listener
     tencentcloud_gaap_layer7_listener
@@ -622,6 +623,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_domain_error_page
     tencentcloud_gaap_global_domain_dns
     tencentcloud_gaap_global_domain
+    tencentcloud_gaap_custom_header
 
 Key Management Service(KMS)
   Data Source
@@ -650,6 +652,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_common_names
     tencentcloud_kubernetes_available_cluster_versions
     tencentcloud_kubernetes_cluster_authentication_options
+    tencentcloud_kubernetes_cluster_node_pools
     tencentcloud_kubernetes_cluster_instances
     tencentcloud_kubernetes_cluster_node_pools
 
@@ -1124,6 +1127,7 @@ Oceanus
     tencentcloud_oceanus_check_savepoint
 
   Resource
+    tencentcloud_oceanus_folder
     tencentcloud_oceanus_job
     tencentcloud_oceanus_job_config
     tencentcloud_oceanus_job_copy
@@ -1257,6 +1261,7 @@ VPN Connections(VPN)
 MapReduce(EMR)
   Data Source
     tencentcloud_emr
+    tencentcloud_emr_auto_scale_records
     tencentcloud_emr_nodes
     tencentcloud_emr_cvm_quota
 
@@ -1610,11 +1615,11 @@ TencentCloud Automation Tools(TAT)
 
 Tencent Cloud Organization (TCO)
   Data Source
+    tencentcloud_organization_members
     tencentcloud_organization_org_auth_node
     tencentcloud_organization_org_financial_by_member
     tencentcloud_organization_org_financial_by_month
     tencentcloud_organization_org_financial_by_product
-	tencentcloud_organization_members
   Resource
     tencentcloud_organization_instance
     tencentcloud_organization_org_node
@@ -1908,6 +1913,8 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_backup_jobs
     tencentcloud_clickhouse_backup_job_detail
     tencentcloud_clickhouse_backup_tables
+    tencentcloud_clickhouse_spec
+    tencentcloud_clickhouse_instance_shards
 
   Resource
     tencentcloud_clickhouse_instance
@@ -1917,6 +1924,8 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_delete_backup_data
     tencentcloud_clickhouse_account
     tencentcloud_clickhouse_account_permission
+    tencentcloud_clickhouse_keyval_config 
+    tencentcloud_clickhouse_xml_config
 
 Tag
   Resource

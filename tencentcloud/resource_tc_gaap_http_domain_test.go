@@ -12,8 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -36,6 +35,13 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccGaapHttpDomainBasicUpdateDomain,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "t.qq.com"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_gaap_http_domain.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -44,8 +50,7 @@ func TestAccTencentCloudGaapHttpDomain_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_https_basic(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_https_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -68,6 +73,13 @@ func TestAccTencentCloudGaapHttpDomain_https_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccGaapHttpDomainHttpsUpdateDomain,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckGaapHttpDomainExists("tencentcloud_gaap_http_domain.foo", id),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_http_domain.foo", "domain", "zhyu-9.elementtest.org"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_gaap_http_domain.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -76,8 +88,7 @@ func TestAccTencentCloudGaapHttpDomain_https_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_httpsMutualAuthentication(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -118,8 +129,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsMutualAuthentication(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_httpsPolyClientCertificateIds(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -153,8 +163,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsPolyClientCertificateIds(t *testing.
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_httpsCCIdToPolyIds(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -189,8 +198,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsCCIdToPolyIds(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_httpsRealserverCertificateIdOldToNew(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -232,8 +240,7 @@ func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIdOldToNew(t *t
 	})
 }
 
-func TestAccTencentCloudGaapHttpDomain_httpsRealserverCertificateIds(t *testing.T) {
-	t.Parallel()
+func TestAccTencentCloudGaapHttpDomainResource_httpsRealserverCertificateIds(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -345,6 +352,20 @@ resource tencentcloud_gaap_http_domain "foo" {
 }
 `, defaultGaapProxyId)
 
+var testAccGaapHttpDomainBasicUpdateDomain = fmt.Sprintf(`
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol = "HTTP"
+  name     = "ci-test-gaap-l7-listener"
+  port     = 7170
+  proxy_id = "%s"
+}
+
+resource tencentcloud_gaap_http_domain "foo" {
+  listener_id = tencentcloud_gaap_layer7_listener.foo.id
+  domain      = "t.qq.com"
+}
+`, defaultGaapProxyId)
+
 var testAccGaapHttpDomainHttps = fmt.Sprintf(`
 resource tencentcloud_gaap_layer7_listener "foo" {
   protocol         = "HTTPS"
@@ -359,6 +380,24 @@ resource tencentcloud_gaap_layer7_listener "foo" {
 resource tencentcloud_gaap_http_domain "foo" {
   listener_id    = tencentcloud_gaap_layer7_listener.foo.id
   domain         = "zhyu-10.elementtest.org"
+}
+
+`, defaultGaapProxyId, defaultHttpsDomainCertificateId)
+
+var testAccGaapHttpDomainHttpsUpdateDomain = fmt.Sprintf(`
+resource tencentcloud_gaap_layer7_listener "foo" {
+  protocol         = "HTTPS"
+  name             = "ci-test-gaap-l7-listener"
+  port             = 7171
+  proxy_id         = "%s"
+  certificate_id   = "%s"
+  forward_protocol = "HTTP"
+  auth_type        = 0
+}
+
+resource tencentcloud_gaap_http_domain "foo" {
+  listener_id    = tencentcloud_gaap_layer7_listener.foo.id
+  domain         = "zhyu-9.elementtest.org"
 }
 
 `, defaultGaapProxyId, defaultHttpsDomainCertificateId)
