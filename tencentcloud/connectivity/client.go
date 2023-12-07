@@ -196,7 +196,10 @@ type TencentCloudClient struct {
 	trocketConn        *trocket.Client
 	biConn             *bi.Client
 	cdwpgConn          *cdwpg.Client
+	//yunti mark client
 }
+
+//yunti mark import
 
 // NewClientProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfile {
@@ -1370,6 +1373,8 @@ func (me *TencentCloudClient) UseCdwpgClient() *cdwpg.Client {
 
 	return me.cdwpgConn
 }
+
+//yunti mark useClient
 
 func getEnvDefault(key string, defVal int) int {
 	val, ex := os.LookupEnv(key)
