@@ -198,3 +198,10 @@ changelog:
 	./scripts/generate-changelog.sh
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
+
+internal-build:
+	python ./scripts/yunti-process-code.py
+	yq eval 'keys' ./scripts/yunti-code.yaml | awk '{print $2}' |grep -v 'go.mod'| xargs -I {} goimports -w {}
+	yq eval 'keys' ./scripts/yunti-code.yaml | awk '{print $2}' |grep -v 'go.mod'| xargs -I {} go fmt {}
+	go mod vendor
+	goimports -w
