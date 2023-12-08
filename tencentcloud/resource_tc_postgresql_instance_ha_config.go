@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -124,23 +125,13 @@ func resourceTencentCloudPostgresqlInstanceHAConfigUpdate(d *schema.ResourceData
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId                 = getLogId(contextNil)
-		request               = postgresql.NewModifyDBInstanceHAConfigRequest()
-		instanceId            = d.Id()
-		syncMode              = d.Get("sync_mode").(string)
-		maxStandbyLatency     = d.Get("max_standby_latency").(int)
-		maxStandbyLag         = d.Get("max_standby_lag").(int)
-		maxSyncStandbyLatency int
-		maxSyncStandbyLag     int
+		logId             = getLogId(contextNil)
+		request           = postgresql.NewModifyDBInstanceHAConfigRequest()
+		instanceId        = d.Id()
+		syncMode          = d.Get("sync_mode").(string)
+		maxStandbyLatency = d.Get("max_standby_latency").(int)
+		maxStandbyLag     = d.Get("max_standby_lag").(int)
 	)
-
-	if v, ok := d.GetOkExists("max_sync_standby_latency"); ok {
-		maxSyncStandbyLatency = v.(int)
-	}
-
-	if v, ok := d.GetOkExists("max_sync_standby_lag"); ok {
-		maxSyncStandbyLag = v.(int)
-	}
 
 	request.DBInstanceId = &instanceId
 	request.SyncMode = &syncMode
@@ -148,11 +139,12 @@ func resourceTencentCloudPostgresqlInstanceHAConfigUpdate(d *schema.ResourceData
 	maxStandbyLagUint := uint64(maxStandbyLag)
 	request.MaxStandbyLatency = &maxStandbyLatencyUint
 	request.MaxStandbyLag = &maxStandbyLagUint
-	if syncMode == SYNC_MODE_SEMI {
-		maxSyncStandbyLatencyUint := uint64(maxSyncStandbyLatency)
-		maxSyncStandbyLagUint := uint64(maxSyncStandbyLag)
-		request.MaxSyncStandbyLatency = &maxSyncStandbyLatencyUint
-		request.MaxSyncStandbyLag = &maxSyncStandbyLagUint
+	if v, ok := d.GetOkExists("max_sync_standby_latency"); ok {
+		request.MaxSyncStandbyLatency = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("max_sync_standby_lag"); ok {
+		request.MaxSyncStandbyLag = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
