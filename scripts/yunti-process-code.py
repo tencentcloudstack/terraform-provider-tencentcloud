@@ -37,22 +37,22 @@ def replace_code(dictionary, code):
 def replace(dictionary):
     for file_name, content in dictionary.items():
         if file_name in "tencentcloud/extension_billing.go" or file_name in "tencentcloud/service_tencentcloud_billing.go":
-            with open("../" + file_name, "w") as file:
+            with open(file_name, "w") as file:
                 file.write(content["all"])
             continue
 
         if file_name in "go.mod":
-            with open("../" + file_name, "a") as file:
+            with open(file_name, "a") as file:
                 file.write(content)
         # 打开文件并读取内容
-        with open("../" + file_name, "r") as file:
+        with open(file_name, "r") as file:
             code = file.read()
 
         # 替换代码
         replaced_code = replace_code(content, code)
 
         # 将修改后的内容写回文件
-        with open("../" + file_name, "w") as file:
+        with open(file_name, "w") as file:
             file.write(replaced_code)
 
     print("Success replace")
@@ -62,18 +62,18 @@ def replace(dictionary):
 #     for file_name, content in dictionary.items():
 #         if file_name in "tencentcloud/extension_billing.go" or file_name in "tencentcloud/service_tencentcloud_billing.go":
 #             continue
-#         with open("../" + file_name, "r") as file:
+#         with open( + file_name, "r") as file:
 #             code = file.read()
 #         # 替换代码
 #         replaced_code = mark_replace_code(content, code)
 #
 #         # 将修改后的内容写回文件
-#         with open("../" + file_name, "w") as file:
+#         with open( + file_name, "w") as file:
 #             file.write(replaced_code)
 
 def run():
     # 读取YAML文件
-    yaml_file = "yunti-code.yaml"
+    yaml_file = "scripts/yunti-code.yaml"
 
     # 将YAML文件转换为JSON
     with open(yaml_file, "r") as f:
