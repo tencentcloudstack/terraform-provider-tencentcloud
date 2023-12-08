@@ -124,11 +124,11 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     	}
   bypass: |
     if chargeType == ES_CHARGE_TYPE_PREPAID {
-    	regx := "\"dealNames\":\\[\"(.*)\"\\]"
+    	regx := "\"dealNames\":\\\[\"(.*)\"\\\]"
     	// query deal by bpass
     	id, billErr := billingService.QueryDealByBpass(ctx, regx, err)
     	if billErr != nil {
-    		log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+    		log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\\n", logId, billErr.Error())
     		return resource.NonRetryableError(billErr)
     	}
     	// yunti prepaid user
@@ -251,7 +251,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
   var: "chargeType     = d.Get(\"charge_type\").(string)"
   bypass: |
     log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, "CreatePostgresqlInstance", inErr.Error())
-    
+
     if chargeType == COMMON_PAYTYPE_PREPAID {
     regx := "\"dealNames\":\\[\"(.*)\"\\]"
     // query deal by bpass
@@ -273,7 +273,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
     if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
     return err
     }
-    
+
     // Wait the tags enabled
     err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), region, tags)
     if err != nil {
@@ -315,7 +315,7 @@ tencentcloud/service_tencentcloud_tag.go:
         })
       return retErr
     }
-    
+
     func tagEqual(dst, orig map[string]string) bool {
       for k := range orig {
         if dst[k] == "" {
@@ -327,7 +327,7 @@ tencentcloud/service_tencentcloud_tag.go:
       }
       return true
     }
-
+#
 tencentcloud/service_tencentcloud_billing.go:
   all: |
     package tencentcloud
@@ -340,20 +340,20 @@ tencentcloud/service_tencentcloud_billing.go:
     "regexp"
     "strings"
     "time"
-    
+
     "github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-    
+
     billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
     sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
     "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
     )
-      
+
       type BillingService struct {
       client *connectivity.TencentCloudClient
     }
-      
+
       func (me *BillingService) DescribeDeals(ctx context.Context, dealId string) (deal *billing.Deal, errRet error) {
       var (
       logId    = getLogId(ctx)
@@ -361,14 +361,14 @@ tencentcloud/service_tencentcloud_billing.go:
       response = billing.NewDescribeDealsByCondResponse()
       dealList []*billing.Deal
       )
-      
+
       defer func() {
       if errRet != nil {
       log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
       logId, "query object", request.ToJsonString(), errRet.Error())
     }
     }()
-      
+
       request.OrderId = helper.String(dealId)
       request.Limit = helper.IntInt64(20)
       baseTime := time.Now().Local()
@@ -376,7 +376,7 @@ tencentcloud/service_tencentcloud_billing.go:
       endTime := baseTime.Format("2006-01-02 15:04:05")
       request.StartTime = helper.String(startTime)
       request.EndTime = helper.String(endTime)
-      
+
       ratelimit.Check(request.GetAction())
       err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
       for _, dealState := range DEAL_STATUS_CODE {
@@ -404,14 +404,14 @@ tencentcloud/service_tencentcloud_billing.go:
       time.Sleep(3 * time.Second)
     return resource.RetryableError(fmt.Errorf("deal status is not ready..., current is: %v", deal.Status))
     })
-      
+
       if err != nil {
       errRet = err
       return
     }
       return
     }
-      
+
       func (me *BillingService) isYunTiAccount() bool {
       val, ok := os.LookupEnv(PROVIDER_ENABLE_YUNTI)
       if ok && strings.ToLower(val) == "true" {
@@ -419,21 +419,21 @@ tencentcloud/service_tencentcloud_billing.go:
     }
       return false
     }
-      
+
       //query deal by bpass
       func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
       logId := getLogId(ctx)
-      
+
       if !me.isYunTiAccount() {
       return
     }
-      
+
       e, ok := msg.(*sdkErrors.TencentCloudSDKError)
       log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
-      
+
       if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
       errStr := msg.Error()
-      
+
       re := regexp.MustCompile(dealRegx)
       result := re.FindStringSubmatch(errStr)
       for i, str := range result {
@@ -451,7 +451,7 @@ tencentcloud/service_tencentcloud_billing.go:
     }
       return
     }
-      
+
       func in(target int64, intArr []int64) bool {
       for _, element := range intArr {
       if target == element {
