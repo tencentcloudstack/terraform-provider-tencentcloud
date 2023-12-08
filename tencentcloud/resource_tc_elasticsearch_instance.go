@@ -267,8 +267,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	request := es.NewCreateInstanceRequest()
 	//internal version: replace null end
-	//internal version: replace ver begin
-	//internal version: replace ver end
+	//internal version: replace var begin
+	//internal version: replace var end
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
