@@ -60,7 +60,7 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
     	// query deal by bpass
     	resourceId, billErr := billingService.QueryDealByBpass(ctx, regx, err)
     	if billErr != nil {
-    		log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+    		log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\\n", logId, billErr.Error())
     		return resource.NonRetryableError(billErr)
     	}
     	// yunti prepaid user
@@ -167,7 +167,7 @@ tencentcloud/resource_tc_mongodb_instance.go:
   bpass: |
     // query deal by bpass
     e, ok := err.(*sdkErrors.TencentCloudSDKError)
-    log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
+    log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
 
     if ok && IsContains("InvalidParameterValue.InvalidTradeOperation", e.Code) {
     	// yunti prepaid user
@@ -204,7 +204,7 @@ tencentcloud/resource_tc_mysql_instance.go:
     regx := "dealNames:\\[\"(.*)\"\\]\\],"
     id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
     if billErr != nil {
-    log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+    log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\\n", logId, billErr.Error())
     return resource.NonRetryableError(billErr)
     }
     // yunti prepaid user
@@ -257,7 +257,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
     // query deal by bpass
     id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
     if billErr != nil {
-    	log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+    	log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\\n", logId, billErr.Error())
     	return resource.NonRetryableError(billErr)
     }
     // yunti prepaid user
@@ -364,7 +364,7 @@ tencentcloud/service_tencentcloud_billing.go:
 
       defer func() {
       if errRet != nil {
-      log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+      log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\\n",
       logId, "query object", request.ToJsonString(), errRet.Error())
     }
     }()
@@ -391,13 +391,13 @@ tencentcloud/service_tencentcloud_billing.go:
       }
     }
       if len(dealList) != 1 {
-      log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+      log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\\n",
       logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
       return nil
     }
       deal = dealList[0]
       if in(*deal.Status, DEAL_TERMINATE_STATUS_CODE) {
-      log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+      log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\\n",
       logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
       return nil
     }
@@ -429,7 +429,7 @@ tencentcloud/service_tencentcloud_billing.go:
     }
 
       e, ok := msg.(*sdkErrors.TencentCloudSDKError)
-      log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
+      log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \\n", logId, e.Error())
 
       if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
       errStr := msg.Error()
@@ -437,16 +437,16 @@ tencentcloud/service_tencentcloud_billing.go:
       re := regexp.MustCompile(dealRegx)
       result := re.FindStringSubmatch(errStr)
       for i, str := range result {
-      log.Printf("[DEBUG] FindStringSubmatch sub[%v]:%s,\n", i, str)
+      log.Printf("[DEBUG] FindStringSubmatch sub[%v]:%s,\\n", i, str)
     }
       dealId := re.FindStringSubmatch(errStr)[1]
       deal, billErr := me.DescribeDeals(ctx, dealId)
       if billErr != nil {
-      log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+      log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\\n", logId, billErr.Error())
       return nil, billErr
     }
       resourceId = deal.ResourceId[0]
-      log.Printf("[DEBUG]%s query deal for PREPAID user succeed, dealId:[%s] resourceId:[%s]\n", logId, dealId, *resourceId)
+      log.Printf("[DEBUG]%s query deal for PREPAID user succeed, dealId:[%s] resourceId:[%s]\\n", logId, dealId, *resourceId)
       return resourceId, nil
     }
       return
@@ -475,7 +475,7 @@ tencentcloud/resource_tc_redis_instance.go:
   redisServer: "		masterZoneId, err := redisService.getZoneId(availabilityZone)"
   varId: "var resourceId string"
   bpass: |
-    log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n", logId, err.Error())
+    log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\\n", logId, err.Error())
 
     if chargeType == REDIS_CHARGE_TYPE_PREPAID {
         regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
@@ -499,13 +499,13 @@ tencentcloud/resource_tc_redis_instance.go:
   setTag: |
     // set tag before query the instance
     	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-    		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\n", logId, len(tags), tags)
+    		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\\n", logId, len(tags), tags)
     		for k, v := range tags {
     			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
     		}
     		resourceName := BuildTagResourceName("redis", "instance", region, resourceId)
     		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-    			log.Printf("[CRITAL]%s modify tags failed, reason:%s\n", logId, err.Error())
+    			log.Printf("[CRITAL]%s modify tags failed, reason:%s\\n", logId, err.Error())
     			return err
     		}
 
