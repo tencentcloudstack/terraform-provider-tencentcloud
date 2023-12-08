@@ -261,13 +261,14 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	//yunti mark move begin
+	//internal version: replace null begin
 	elasticsearchService := ElasticsearchService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	request := es.NewCreateInstanceRequest()
-	//yunti mark move end
-	//yunti mark var
+	//internal version: replace null end
+	//internal version: replace ver begin
+	//internal version: replace ver end
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -357,7 +358,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			request.NodeInfoList = append(request.NodeInfoList, &info)
 		}
 	}
-	//yunti mark reqTag
+	//internal version: replace reqTag begin
+	//internal version: replace reqTag end
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -365,7 +367,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			//yunti mark bypass
+			//internal version: replace bypass begin
+			//internal version: replace bypass end
 			return retryError(err)
 		}
 		instanceId = *response.Response.InstanceId
@@ -376,8 +379,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	d.SetId(instanceId)
 
-	//yunti mark setTag
-
+	//internal version: replace setTag begin
+	//internal version: replace setTag end
 	instanceEmptyRetries := 5
 	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
@@ -720,10 +723,10 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 
-		//internal version: replace begin
+		//internal version: replace null begin
 		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
-		//internal version: replace end
+		//internal version: replace null end
 
 		//internal version: replace waitTag begin
 		//internal version: replace waitTag end
