@@ -572,7 +572,7 @@ tencentcloud/resource_tc_tdmq_instance.go:
     		region     = client.Region
     		id         = d.Id()
     	)
-  setTag:
+  setTag: |
     oldTags, newTags := d.GetChange("tags")
     replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
     resourceName := BuildTagResourceName("tdmq", "cluster", region, d.Id())
