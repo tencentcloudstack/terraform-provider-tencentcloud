@@ -536,6 +536,15 @@ tencentcloud/resource_tc_redis_instance.go:
     if err != nil {
     	return err
     }
+  queryAndSetId: |
+    _, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*readRetryTimeout)
+  
+    if err != nil {
+    log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
+      return err
+    }
+  
+    d.SetId(resourceId)
 
 tencentcloud/resource_tc_tdmq_instance.go:
   client: |
