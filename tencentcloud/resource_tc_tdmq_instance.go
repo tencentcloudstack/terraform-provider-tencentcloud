@@ -182,7 +182,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("tags") {
-		//internal version: replace tag begin
+		//internal version: replace setTag begin
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
@@ -191,7 +191,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		//internal version: replace tag end
+		//internal version: replace setTag end
 	}
 	return resourceTencentCloudTdmqRead(d, meta)
 }
