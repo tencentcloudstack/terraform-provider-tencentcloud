@@ -12,7 +12,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-//yunti mark tagFmt
+//internal version: replace tagFmt begin
+//internal version: replace tagFmt end
 
 type TagService struct {
 	client *connectivity.TencentCloudClient
@@ -104,7 +105,8 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 	return
 }
 
-//yunti mark waitTag
+//internal version: replace waitTag begin
+//internal version: replace waitTag end
 
 func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {
 	replaceTags = make(map[string]string)

@@ -39,10 +39,12 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		cynosdbService = CynosdbService{client: client}
 		tagService     = TagService{client: client}
 		region         = client.Region
-		//yunti mark client
+		//internal version: replace client begin
+		//internal version: replace client end
 		request = cynosdb.NewCreateClustersRequest()
 	)
-	//yunti mark varId
+	//internal version: replace varId begin
+	//internal version: replace varId end
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -115,9 +117,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	var chargeType int64 = 0
-	//yunti mark varCharge
+	//internal version: replace varCharge begin
+	//internal version: replace varCharge end
 	if v, ok := d.GetOk("charge_type"); ok {
-		//yunti mark strCharge
+		//internal version: replace strCharge begin
+		//internal version: replace strCharge end
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
 			chargeType = 1
 			if vv, ok := d.GetOk("prepaid_period"); ok {
@@ -145,7 +149,8 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 				}
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//yunti mark byPass
+			//internal version: replace bpass begin
+			//internal version: replace bpass end
 			return retryError(err)
 		}
 		return nil
@@ -182,11 +187,13 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
-
-	id := *dealRes.Response.BillingResourceInfos[0].ClusterId //yunti mark normal
+	//internal version: replace normal begin
+	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
+	//internal version: replace normal end
 	d.SetId(id)
 
-	//yunti mark setTag
+	//internal version: replace setTag begin
+	//internal version: replace setTag end
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
@@ -642,7 +649,8 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		//yunti mark waitTag
+		//internal version: replace waitTag begin
+		//internal version: replace waitTag end
 	}
 
 	// update sg

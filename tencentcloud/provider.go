@@ -27,7 +27,8 @@ const (
 	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
 	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
 	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
-	//yunti mark envYunti
+	//internal version: replace envYunti begin
+	//internal version: replace envYunti end
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
@@ -86,7 +87,8 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
-			//yunti mark enableBpass
+			//internal version: replace enableBpass begin
+			//internal version: replace enableBpass end
 			"assume_role": {
 				Type:        schema.TypeSet,
 				Optional:    true,

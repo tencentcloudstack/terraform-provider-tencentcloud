@@ -14,7 +14,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-//yunti mark import
+//internal version: replace import begin
+//internal version: replace import end
 
 func resourceTencentCloudMongodbInstance() *schema.Resource {
 	mongodbInstanceInfo := map[string]*schema.Schema{
@@ -220,7 +221,8 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//yunti mark bpass
+			//internal version: replace bpass begin
+			//internal version: replace bpass end
 			return retryError(err)
 		}
 		return nil
@@ -266,7 +268,8 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 
 	instanceId := d.Id()
 
-	//yunti mark setTag
+	//internal version: replace setTag begin
+	//internal version: replace setTag end
 	_, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -289,14 +292,16 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
-	//yunti mark begin
+	//internal version: replace begin begin
+	//internal version: replace begin end
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
-	//yunti mark end
+	//internal version: replace end begin
+	//internal version: replace end end
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
 }
 

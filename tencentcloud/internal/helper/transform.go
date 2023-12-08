@@ -271,7 +271,8 @@ func StrToBool(s string) (i bool) {
 	return
 }
 
-//yunti mark boolStr
+//internal version: replace boolStr begin
+//internal version: replace boolStr end
 
 func StrListToStr(strList []*string) string {
 	res := ""

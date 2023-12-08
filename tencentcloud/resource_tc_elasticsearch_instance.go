@@ -278,7 +278,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		chargeType := v.(string) //yunti mark strCharge
+		//internal version: replace strCharge begin
+		chargeType := v.(string)
+		//internal version: replace strCharge end
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
@@ -367,8 +369,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			//internal version: replace bypass begin
-			//internal version: replace bypass end
+			//internal version: replace bpass begin
+			//internal version: replace bpass end
 			return retryError(err)
 		}
 		instanceId = *response.Response.InstanceId

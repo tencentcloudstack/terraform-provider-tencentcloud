@@ -520,7 +520,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
-	//yunti mark var
+	//internal version: replace var begin
+	//internal version: replace var end
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -549,7 +550,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
-			//yunti mark bpass
+			//internal version: replace bpass begin
+			//internal version: replace bpass end
 			return retryError(inErr)
 		}
 
@@ -558,7 +560,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-		//yunti mark instanceId
+		//internal version: replace instanceId begin
+		//internal version: replace instanceId end
 		return nil
 	})
 
@@ -570,7 +573,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
-	d.SetId(*response.Response.InstanceIds[0]) //yunti mark setId
+	d.SetId(*response.Response.InstanceIds[0]) //internal version: replace setId begin
+	//internal version: replace setId end
 	return nil
 }
 
@@ -628,7 +632,8 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn} //yunti mark mysqlServer
+	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn} //internal version: replace mysqlServer begin
+	//internal version: replace mysqlServer end
 
 	payType := getPayType(d).(int)
 
@@ -648,7 +653,8 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	//yunti mark setTag
+	//internal version: replace setTag begin
+	//internal version: replace setTag end
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
@@ -1152,7 +1158,8 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		//yunti mark waitTag
+		//internal version: replace waitTag begin
+		//internal version: replace waitTag end
 	}
 
 	if d.HasChange("param_template_id") {
