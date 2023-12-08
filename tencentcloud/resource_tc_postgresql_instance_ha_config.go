@@ -135,10 +135,8 @@ func resourceTencentCloudPostgresqlInstanceHAConfigUpdate(d *schema.ResourceData
 
 	request.DBInstanceId = &instanceId
 	request.SyncMode = &syncMode
-	maxStandbyLatencyUint := uint64(maxStandbyLatency)
-	maxStandbyLagUint := uint64(maxStandbyLag)
-	request.MaxStandbyLatency = &maxStandbyLatencyUint
-	request.MaxStandbyLag = &maxStandbyLagUint
+	request.MaxStandbyLatency = helper.IntUint64(maxStandbyLatency)
+	request.MaxStandbyLag = helper.IntUint64(maxStandbyLag)
 	if v, ok := d.GetOkExists("max_sync_standby_latency"); ok {
 		request.MaxSyncStandbyLatency = helper.IntUint64(v.(int))
 	}
