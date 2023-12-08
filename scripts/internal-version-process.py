@@ -1,31 +1,38 @@
 import yaml
 import re
+import json
 
 YAML_FILE = "scripts/internal-version-code.yaml"
 EXTENSION_BILLING_FILE = "tencentcloud/extension_billing.go"
 SERVICE_TENCENTCLOUD_BILLING_FILE = "tencentcloud/service_tencentcloud_billing.go"
 GO_MOD_FILE = "go.mod"
-MARK_BEGIN = "//internal version: replace {} begin.*?//internal version: replace {} end"
+MARK_MATCH = "//internal version: replace (\w+) begin.*?//internal version: replace \w+ end"
+MARK_REPLACE = "//internal version: replace %s begin.*?//internal version: replace %s end"
 
 def replace_code(dictionary, code):
-    for key, value in dictionary.items():
-        mark_str = MARK_BEGIN.format(key, key)
-        if key in code:
-            code = re.sub(mark_str, value, code, flags=re.DOTALL)
+
+    matches = re.finditer(r"%s"%MARK_MATCH, code, flags=re.DOTALL)
+
+    for match in matches:
+        key = match.group(1)
+        if key in dictionary:
+            replacement_code = dictionary[key]
+        else:
+            replacement_code=""
+        mark_str=MARK_REPLACE%(key,key)
+        code = re.sub(r"%s"%mark_str, replacement_code, code, flags=re.DOTALL)
     return code
 
 def replace(dictionary):
     for file_name, content in dictionary.items():
-        if file_name in [EXTENSION_BILLING_FILE, SERVICE_TENCENTCLOUD_BILLING_FILE]:
+        if file_name in [SERVICE_TENCENTCLOUD_BILLING_FILE,EXTENSION_BILLING_FILE]:
             with open(file_name, "w") as file:
                 file.write(content["all"])
             continue
 
-        if file_name == GO_MOD_FILE:
+        if file_name in GO_MOD_FILE:
             with open(file_name, "a") as file:
                 file.write(content)
-            continue
-
         with open(file_name, "r") as file:
             code = file.read()
 
@@ -37,10 +44,13 @@ def replace(dictionary):
     print("Success replace")
 
 def run():
-    with open(YAML_FILE, "r") as f:
-        yaml_data = yaml.safe_load(f)
 
-    dictionary = yaml_data
+    yaml_file = YAML_FILE
+    with open(yaml_file, "r") as f:
+        yaml_data = yaml.safe_load(f)
+    json_data = json.dumps(yaml_data)
+
+    dictionary = json.loads(json_data)
 
     replace(dictionary)
 
