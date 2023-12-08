@@ -1,3 +1,15 @@
+## 1.81.56 (December 8, 2023)
+
+FEATURES:
+
+* **New Data Source:** `resource/tencentcloud_dlc_describe_data_engine_events` ([#2387](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2387))
+* **New Resource:** `tencentcloud_postgresql_instance_ha_config` ([#2388](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2388))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_sqlserver_basic_instance: Support set `collect` param. ([#2383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2383))
+* resource/tencentcloud_sqlserver_general_cloud_instance: Support more db version. ([#2383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2383))
+
 ## 1.81.55 (December 6, 2023)
 
 FEATURES:
