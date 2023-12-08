@@ -54,8 +54,8 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = local.vpc_id
-  vpc_id               = local.subnet_id
+  subnet_id            = local.subnet_id
+  vpc_id               = local.vpc_id
   db_version           = "2008R2"
   security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
@@ -84,8 +84,8 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = local.vpc_id
-  vpc_id               = local.subnet_id
+  subnet_id            = local.subnet_id
+  vpc_id               = local.vpc_id
   db_version           = "2008R2"
   security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
