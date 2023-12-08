@@ -327,7 +327,6 @@ tencentcloud/service_tencentcloud_tag.go:
       }
       return true
     }
-#
 tencentcloud/service_tencentcloud_billing.go:
   all: |
     package tencentcloud
