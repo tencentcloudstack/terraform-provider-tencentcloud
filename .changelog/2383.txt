@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_sqlserver_basic_instance: Support set `collect` param.
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_general_cloud_instance: Support more db version.
+```

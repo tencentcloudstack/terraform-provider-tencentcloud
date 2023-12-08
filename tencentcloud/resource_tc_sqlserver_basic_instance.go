@@ -141,6 +141,12 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Availability zone.",
 			},
+			"collation": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "Chinese_PRC_CI_AS",
+				Description: "System character set sorting rule, default: Chinese_PRC_CI_AS.",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -208,6 +214,7 @@ func resourceTencentCloudSqlserverBasicInstanceCreate(d *schema.ResourceData, me
 	paramMap["period"] = d.Get("period").(int)
 	paramMap["autoVoucher"] = d.Get("auto_voucher").(int)
 	paramMap["availabilityZone"] = d.Get("availability_zone").(string)
+	paramMap["collation"] = d.Get("collation").(string)
 
 	if v, ok := d.GetOk("project_id"); ok {
 		paramMap["projectId"] = v.(int)
@@ -374,6 +381,14 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 	tagService := TagService{client: client}
 	region := client.Region
 	payType := d.Get("charge_type").(string)
+
+	immutableArgs := []string{"collation"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	var outErr, inErr error
 	instanceId := d.Id()
