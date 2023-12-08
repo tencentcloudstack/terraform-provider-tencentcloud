@@ -450,6 +450,32 @@ func (me *PostgresqlService) DescribePostgresqlInstanceById(ctx context.Context,
 	return
 }
 
+func (me *PostgresqlService) DescribePostgresqlInstanceHAConfigById(ctx context.Context, instanceId string) (haConfig *postgresql.DescribeDBInstanceHAConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewDescribeDBInstanceHAConfigRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.DBInstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceHAConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+		return
+	}
+
+	haConfig = response.Response
+	return
+}
+
 func (me *PostgresqlService) DescribePostgresqlInstances(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.DBInstance, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeDBInstancesRequest()

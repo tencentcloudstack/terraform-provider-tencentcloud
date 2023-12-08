@@ -922,6 +922,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.807/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.810/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.811 h1:h2IyLDwqrgyN31RwRXVX99ZhwPZYMXEzvW+MGlRXH44=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.811/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.814 h1:U1BAjbwmFNg5d9K5syyZh/ELL/70yTNPYQgTuCEmuxk=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.814/go.mod h1:r5r4xbfxSaeR04b166HGsBa/R4U3SueirEUpXGuw+Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.762 h1:2egy69SP/wPsmnfozcQVZ6tUY6F6N/TpEe/7xtXrc/8=
@@ -974,8 +976,12 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.770 h
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.770/go.mod h1:Ew8jug2Kq03q9Kkjzov7IMYgugGLEw3FGYPofuRqzKw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676 h1:KDt87M2b8j/Xo/9o+kaVtJ46fOtPctCpMDa1CJpSlkY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676/go.mod h1:mXbqv53QFAhvyYqainXSAMdoCui5GudorFhKufJxITc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.814 h1:1XlGrQHRBJv419m64yWRNRWVUTvqBi3Go4ahndnZz9w=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.814/go.mod h1:ch9ZDGEWZXIpzOffmFMgCDKX5uL6x2NLJBiSG94WWEE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.751 h1:D2tcvMV9G8dWIoTybLeZoO3Xwz3tFa0A/cN1+glbMG4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.751/go.mod h1:PsIFaoUYRjgVGiG9fUFgs1x/ewUsvBtPeIXDHjh8ABw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.814 h1:9bK2bKOy6FAs+GwtL273zrtSJ/T+nuTdhbLmoGx07LU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.814/go.mod h1:PeiIuM/rMyPi7P95qKO4W535VOnnV4XOfsMBQO3jPgA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762 h1:rZDKucVVtTnmnbZFDyh6t47dHswkb2oSuOxOHTTkygA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.762/go.mod h1:QB/XcdVZ8mhRgk90XuXd+2Smfo8emTo0wHIUsygEaKs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657 h1:9p/4/qXtnBIYkz5b5mYAhp1XhnIn5jUkxxfllF8hMMM=

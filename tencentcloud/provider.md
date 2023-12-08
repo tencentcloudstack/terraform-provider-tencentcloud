@@ -869,6 +869,7 @@ TencentDB for PostgreSQL(PostgreSQL)
     tencentcloud_postgresql_modify_account_remark_operation
     tencentcloud_postgresql_modify_switch_time_period_operation
     tencentcloud_postgresql_base_backup
+    tencentcloud_postgresql_instance_ha_config
 
 TencentDB for Redis(crs)
   Data Source
