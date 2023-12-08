@@ -49,8 +49,10 @@ func resourceTencentCloudTdmqInstance() *schema.Resource {
 func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_instance.create")()
 
+	//internal version: replace client begin
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	//internal version: replace client end
 
 	var (
 		request  = tdmq.NewCreateClusterRequest()
@@ -88,12 +90,18 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	clusterId := *response.Response.ClusterId
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		//internal version: replace buildName begin
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
+		//internal version: replace buildName end
+
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
+
+		//internal version: replace waitTag begin
+		//internal version: replace waitTag end
 	}
 
 	d.SetId(clusterId)
@@ -143,14 +151,14 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 
 func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_instance.update")()
-
+	//internal version: replace var begin
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	id := d.Id()
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
-
+	//internal version: replace var end
 	var (
 		clusterName string
 		remark      string
@@ -174,6 +182,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("tags") {
+		//internal version: replace tag begin
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
@@ -182,6 +191,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+		//internal version: replace tag end
 	}
 	return resourceTencentCloudTdmqRead(d, meta)
 }

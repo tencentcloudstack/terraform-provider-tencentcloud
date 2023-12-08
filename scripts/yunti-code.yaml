@@ -466,3 +466,114 @@ go.mod: |
   github.com/hashicorp/terraform-plugin-sdk v1.7.0
   github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing v1.0.809
   )
+
+
+tencentcloud/resource_tc_redis_instance.go:
+  import: "	\"time\""
+  tagComputed: "				Computed:    true,"
+  clientCreate: "	billingService := BillingService{client: client}"
+  redisServer: "		masterZoneId, err := redisService.getZoneId(availabilityZone)"
+  varId: "var resourceId string"
+  bpass: |
+    log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n", logId, err.Error())
+
+    if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+        regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
+        // query deal by bpass
+        id, inErr := billingService.QueryDealByBpass(ctx, regx, err)
+        if inErr != nil {
+            return inErr
+        }
+        // yunti prepaid user
+        if id != nil {
+            resourceId = *id
+        }
+    } else {
+        return err
+    }
+  getId: |
+    // normal user
+    if !billingService.isYunTiAccount() || chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+    resourceId = *instanceIds[0]
+    }
+  setTag: |
+    // set tag before query the instance
+    	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+    		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\n", logId, len(tags), tags)
+    		for k, v := range tags {
+    			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
+    		}
+    		resourceName := BuildTagResourceName("redis", "instance", region, resourceId)
+    		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+    			log.Printf("[CRITAL]%s modify tags failed, reason:%s\n", logId, err.Error())
+    			return err
+    		}
+
+    		// Wait the tags enabled
+    		err = tagService.waitTagsEnable(ctx, "redis", "instance", resourceId, region, tags)
+    		if err != nil {
+    			return err
+    		}
+    		// wait for describe enable
+    		time.Sleep(3 * time.Second)
+    	}
+  clientRead: |
+    tcClient := meta.(*TencentCloudClient).apiV3Conn
+    service := RedisService{client: tcClient}
+    tagService := &TagService{client: tcClient}
+
+    instanceId := d.Id()
+  redisFail: |
+    log.Printf("[WARN]%s resource `tencentcloud_redis_instance` [%s] not found, please check if it has been deleted.", logId, instanceId)
+    return nil
+  resourceTag:
+    var tags map[string]string
+    tags, err = tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, instanceId)
+  setTagUpdate: "resourceName := BuildTagResourceName(\"redis\", \"instance\", region, d.Id())"
+  waitTag: |
+    // Wait the tags enabled
+    err := tagService.waitTagsEnable(ctx, "redis", "instance", d.Id(), region, replaceTags)
+    if err != nil {
+    	return err
+    }
+
+tencentcloud/resource_tc_tdmq_instance.go:
+  client: |
+    var (
+    	logId      = getLogId(contextNil)
+    	ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+    	client     = meta.(*TencentCloudClient).apiV3Conn
+    	tagService = TagService{client: client}
+    	region     = client.Region
+    )
+  buildName: "resourceName := BuildTagResourceName(\"tdmq\", \"cluster\", region, clusterId)"
+  waitTag: |
+    // Wait the tags enabled
+    		err = tagService.waitTagsEnable(ctx, "tdmq", "cluster", clusterId, region, tags)
+    		if err != nil {
+    			return err
+    		}
+  var: |
+    var (
+    		logId      = getLogId(contextNil)
+    		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+    		client     = meta.(*TencentCloudClient).apiV3Conn
+    		service    = TdmqService{client: client}
+    		tagService = TagService{client: client}
+    		region     = client.Region
+    		id         = d.Id()
+    	)
+  setTag:
+    oldTags, newTags := d.GetChange("tags")
+    replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+    resourceName := BuildTagResourceName("tdmq", "cluster", region, d.Id())
+    if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+      return err
+    }
+    
+    
+    // Wait the tags enabled
+    err := tagService.waitTagsEnable(ctx, "tdmq", "cluster", d.Id(), region, replaceTags)
+    if err != nil {
+      return err
+    }

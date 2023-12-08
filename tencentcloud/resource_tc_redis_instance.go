@@ -3,17 +3,19 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"sort"
-	"strconv"
-	"strings"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"sort"
+	"strconv"
+	"strings"
 )
+
+//internal version: replace import begin
+//internal version: replace import end
 
 func resourceTencentCloudRedisInstance() *schema.Resource {
 	types := []string{}
@@ -176,8 +178,10 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			},
 
 			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
+				Type:     schema.TypeMap,
+				Optional: true,
+				//internal version: replace tagComputed begin
+				//internal version: replace tagComputed end
 				Description: "Instance tags.",
 			},
 
@@ -257,6 +261,8 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	client := meta.(*TencentCloudClient).apiV3Conn
 	redisService := RedisService{client: client}
 	tagService := TagService{client: client}
+	//internal version: replace clientCreate begin
+	//internal version: replace clientCreate end
 	region := client.Region
 
 	availabilityZone := d.Get("availability_zone").(string)
@@ -381,13 +387,17 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
+	//internal version: replace null begin
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	//internal version: replace null end
 
 	nodeInfo := make([]*redis.RedisNodeInfo, 0)
 	if raw, ok := d.GetOk("replica_zone_ids"); ok {
 		zoneIds := raw.([]interface{})
-
+		//internal version: replace redisServer begin
 		masterZoneId, err := service.getZoneId(availabilityZone)
+		//internal version: replace redisServer end
+
 		if err != nil {
 			return err
 		}
@@ -428,15 +438,25 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		replicasReadonly,
 		paramsTemplateId,
 	)
-
+	//internal version: replace varId begin
+	//internal version: replace varId end
 	if err != nil {
+		//internal version: replace bpass begin
 		return err
+		//internal version: replace bpass end
 	}
 
 	if len(instanceIds) == 0 {
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
+
+	//internal version: replace getId begin
 	var redisId = *instanceIds[0]
+	//internal version: replace getId end
+
+	//internal version: replace setTag begin
+	//internal version: replace setTag begin
+
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 
 	if err != nil {
@@ -445,12 +465,14 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 	d.SetId(redisId)
 
+	//internal version: replace null begin
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("redis", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
+	//internal version: replace null end
 
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
@@ -461,8 +483,10 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
+	//internal version: replace clientRead begin
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	//internal version: replace clientRead end
+
 	var onlineHas = true
 	var (
 		has  bool
@@ -489,7 +513,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		return nil
 	})
 	if err != nil {
+		//internal version: replace redisFail begin
 		return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
+		//internal version: replace redisFail end
 	}
 	if !onlineHas {
 		return nil
@@ -586,10 +612,12 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 			_ = d.Set("replica_zone_ids", zoneIds)
 		}
 	}
-
+	//internal version: replace resourceTag begin
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, d.Id())
+	//internal version: replace resourceTag end
+
 	if err != nil {
 		return err
 	}
@@ -892,11 +920,15 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-
+		//internal version: replace setTagUpdate begin
 		resourceName := BuildTagResourceName("redis", "instance", region, id)
+		//internal version: replace setTagUpdate end
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+
+		//internal version: replace waitTag begin
+		//internal version: replace waitTag end
 	}
 
 	d.Partial(false)
