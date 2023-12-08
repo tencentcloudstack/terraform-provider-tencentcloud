@@ -2,55 +2,6 @@ import yaml
 import json
 import re
 
-
-
-#
-# def move(dictionary):
-#     for file_name, content in dictionary.items():
-#
-#         if file_name=="tencentcloud/extension_billing.go":
-#             continue
-#         # 打开文件并读取内容
-#         print(file_name)
-#         with open("../"+file_name, "r") as file:
-#             lines = file.readlines()
-#
-#         modified_lines = []
-#         inside_code_block = False
-#         replacement_start=""
-#         replacement_end=""
-#         # 遍历文件内容的每一行
-#         for line in lines:
-#
-#             start_match = re.search(r"//internal version: replace (\w+) begin", line)
-#             end_match = re.search(r"//internal version: replace (\w+) end", line)
-#             if start_match:
-#                 inside_code_block = True
-#                 replacement_start = start_match.group(1)
-#                 continue
-#             elif end_match:
-#                 inside_code_block = False
-#                 replacement_end = end_match.group(1)
-#                 continue
-#             elif not inside_code_block:
-#                 if replacement_start ==replacement_end:
-#                     if replacement_start in content:
-#                         line=content[replacement_start]
-#                     else:
-#                         line=""
-#                 modified_lines.append(line)
-#
-#             # modified_lines.append(line)
-#
-#         # 将修改后的内容写回文件
-#         with open("../"+file_name, "w") as file:
-#             file.writelines(modified_lines)
-#
-#     print("success replace")
-#
-
-
-
 def replace_code(dictionary, code):
 
     matches = re.finditer(r"//internal version: replace (\w+) begin.*?//internal version: replace \w+ end", code, flags=re.DOTALL)
@@ -67,6 +18,20 @@ def replace_code(dictionary, code):
         # print(testKey,replacement_code)
         mark_str="//internal version: replace %s begin.*?//internal version: replace %s end"%(key,key)
         code = re.sub(r"%s"%mark_str, replacement_code, code, flags=re.DOTALL)
+    return code
+
+def mark_replace_code(dictionary, code):
+    str="//yunti mark (\w+)"
+    strDe="//yunti mark %s"
+
+    strRe="//internal version: replace %s begin\n//internal version: replace %s end"
+    matches = re.finditer(r"%s"%str, code, flags=re.DOTALL)
+
+    for match in matches:
+        key = match.group(1)
+        print(key)
+        print("%s"%strDe)
+        code = re.sub(strDe%key, strRe%(key,key), code, flags=re.DOTALL)
     return code
 
 def replace(dictionary):
@@ -93,6 +58,19 @@ def replace(dictionary):
     print("Success replace")
 
 
+def mark(dictionary):
+    for file_name, content in dictionary.items():
+        if file_name in "tencentcloud/extension_billing.go" or file_name in "tencentcloud/service_tencentcloud_billing.go":
+            continue
+        with open("../" + file_name, "r") as file:
+            code = file.read()
+        # 替换代码
+        replaced_code = mark_replace_code(content, code)
+
+        # 将修改后的内容写回文件
+        with open("../" + file_name, "w") as file:
+            file.write(replaced_code)
+
 def run():
     # 读取YAML文件
     yaml_file = "yunti-code.yaml"
@@ -105,8 +83,8 @@ def run():
     # 将JSON转换为字典
     dictionary = json.loads(json_data)
 
-    replace(dictionary)
-
+    # replace(dictionary)
+    mark(dictionary)
 
 
 

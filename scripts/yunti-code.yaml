@@ -122,7 +122,7 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
     			}
     		}
     	}
-  bypass: |
+  bpass: |
     if chargeType == ES_CHARGE_TYPE_PREPAID {
     	regx := "\"dealNames\":\\\[\"(.*)\"\\\]"
     	// query deal by bpass
@@ -249,7 +249,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
     billingService := BillingService{client: client}
     region := client.Region
   var: "chargeType     = d.Get(\"charge_type\").(string)"
-  bypass: |
+  bpass: |
     log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, "CreatePostgresqlInstance", inErr.Error())
 
     if chargeType == COMMON_PAYTYPE_PREPAID {
