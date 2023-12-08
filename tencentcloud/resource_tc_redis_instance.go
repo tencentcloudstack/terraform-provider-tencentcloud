@@ -455,7 +455,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	//internal version: replace getId end
 
 	//internal version: replace setTag begin
-	//internal version: replace setTag begin
+	//internal version: replace setTag end
 
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 

@@ -552,8 +552,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return checkErr
 	}
 
-	//internal version: replace move begin
-	//internal version: replace move end begin
+	//internal version: replace null begin
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
@@ -562,8 +561,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			return err
 		}
 	}
-	//internal version: replace move begin
-	//internal version: replace move end end
+	//internal version: replace null end
 
 	// set pg params
 	paramEntrys := make(map[string]string)
@@ -1073,12 +1071,10 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		//internal version: replace move begin
-		//internal version: replace move end begin
+		//internal version: replace null begin
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
-		//internal version: replace move begin
-		//internal version: replace move end end
+		//internal version: replace null end
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
