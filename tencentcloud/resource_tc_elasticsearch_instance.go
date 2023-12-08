@@ -720,12 +720,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 
-		//yunti mark move begin
+		//internal version: replace begin
 		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
-		//yunti mark move end
+		//internal version: replace end
 
-		//yunti mark waitTag
+		//internal version: replace waitTag begin
+		//internal version: replace waitTag end
+
 		if err != nil {
 			return err
 		}
