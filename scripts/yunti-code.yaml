@@ -201,7 +201,7 @@ tencentcloud/resource_tc_mysql_instance.go:
     var instanceId string
   bpass: |
     // query deal by bpass
-    regx := "dealNames:\\\[\"(.*)\"\\\]\\],"
+    regx := "dealNames:\\\[\"(.*)\"\\\]\\\],"
     id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
     if billErr != nil {
     log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\\n", logId, billErr.Error())

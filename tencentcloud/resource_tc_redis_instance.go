@@ -457,6 +457,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	//internal version: replace setTag begin
 	//internal version: replace setTag end
 
+	//internal version: replace queryAndSetId begin
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 
 	if err != nil {
@@ -464,6 +465,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 	d.SetId(redisId)
+	//internal version: replace queryAndSetId end
 
 	//internal version: replace null begin
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
