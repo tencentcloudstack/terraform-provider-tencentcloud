@@ -1239,6 +1239,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_delete_log_backup_operation":              resourceTencentCloudPostgresqlDeleteLogBackupOperation(),
 			"tencentcloud_postgresql_modify_account_remark_operation":          resourceTencentCloudPostgresqlModifyAccountRemarkOperation(),
 			"tencentcloud_postgresql_modify_switch_time_period_operation":      resourceTencentCloudPostgresqlModifySwitchTimePeriodOperation(),
+			"tencentcloud_postgresql_instance_ha_config":                       resourceTencentCloudPostgresqlInstanceHAConfig(),
 			"tencentcloud_sqlserver_instance":                                  resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                        resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                   resourceTencentCloudSqlserverAccount(),

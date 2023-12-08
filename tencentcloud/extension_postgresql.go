@@ -45,3 +45,13 @@ var POSTGRESQL_RETRYABLE_STATUS = []string{
 	// deployment changing not exposed at response struct but actually exists
 	"deployment changing",
 }
+
+const (
+	SYNC_MODE_SEMI  = "Semi-sync"
+	SYNC_MODE_ASYNC = "Async"
+)
+
+var SYNC_MODE = []string{
+	SYNC_MODE_SEMI,
+	SYNC_MODE_ASYNC,
+}
