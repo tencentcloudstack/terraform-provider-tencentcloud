@@ -54,7 +54,7 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
   varId: "	var id string"
   varCharge: "	var chargeTypeStr string"
   strCharge: "		chargeTypeStr = v.(string)"
-  byPass: |
+  bpass: |
     if chargeTypeStr == CYNOSDB_CHARGE_TYPE_PREPAID {
     	regx := "\"dealNames\":\\\[\"(.*)\"\\\]"
     	// query deal by bpass
