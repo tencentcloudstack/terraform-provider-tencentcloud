@@ -469,7 +469,7 @@ go.mod: |
 
 
 tencentcloud/resource_tc_redis_instance.go:
-  import: "	\"time\""
+  import: "import	\"time\""
   tagComputed: "				Computed:    true,"
   clientCreate: "	billingService := BillingService{client: client}"
   redisServer: "		masterZoneId, err := redisService.getZoneId(availabilityZone)"
