@@ -56,7 +56,7 @@ tencentcloud/resource_tc_cynosdb_cluster.go:
   strCharge: "		chargeTypeStr = v.(string)"
   byPass: |
     if chargeTypeStr == CYNOSDB_CHARGE_TYPE_PREPAID {
-    	regx := "\"dealNames\":\\[\"(.*)\"\\]"
+    	regx := "\"dealNames\":\\\[\"(.*)\"\\\]"
     	// query deal by bpass
     	resourceId, billErr := billingService.QueryDealByBpass(ctx, regx, err)
     	if billErr != nil {
@@ -253,7 +253,7 @@ tencentcloud/resource_tc_postgresql_instance.go:
     log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, "CreatePostgresqlInstance", inErr.Error())
 
     if chargeType == COMMON_PAYTYPE_PREPAID {
-    regx := "\"dealNames\":\\[\"(.*)\"\\]"
+    regx := "\"dealNames\":\\\[\"(.*)\"\\\]"
     // query deal by bpass
     id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
     if billErr != nil {
@@ -478,7 +478,7 @@ tencentcloud/resource_tc_redis_instance.go:
     log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\\n", logId, err.Error())
 
     if chargeType == REDIS_CHARGE_TYPE_PREPAID {
-        regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
+        regx := "\"dealNames\":\\\[\"(.*)\"\\\]" // dealNames:\["(.*)"\]
         // query deal by bpass
         id, inErr := billingService.QueryDealByBpass(ctx, regx, err)
         if inErr != nil {
