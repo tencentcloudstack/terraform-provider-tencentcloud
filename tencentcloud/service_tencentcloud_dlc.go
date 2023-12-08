@@ -782,3 +782,50 @@ func (me *DlcService) DescribeDlcDescribeUpdatableDataEnginesByFilter(ctx contex
 
 	return
 }
+func (me *DlcService) DescribeDlcDescribeDataEngineEventsByFilter(ctx context.Context, param map[string]interface{}) (describeDataEngineEvents []*dlc.HouseEventsInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dlc.NewDescribeDataEngineEventsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DataEngineName" {
+			request.DataEngineName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDlcClient().DescribeDataEngineEvents(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Events) < 1 {
+			break
+		}
+
+		describeDataEngineEvents = append(describeDataEngineEvents, response.Response.Events...)
+		if len(response.Response.Events) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	return
+}

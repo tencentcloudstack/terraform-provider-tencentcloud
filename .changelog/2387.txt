@@ -1,0 +1,3 @@
+```release-note:new-data-source
+resource/tencentcloud_dlc_describe_data_engine_events
+```
