@@ -24,7 +24,7 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_basic(t *testing.T
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance",
+				ResourceName:            "tencentcloud_sqlserver_general_cloud_instance.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"period"},
