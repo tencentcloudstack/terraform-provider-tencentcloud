@@ -31,6 +31,16 @@ func TestAccTencentCloudClickhouseKeyvalConfigResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccClickhouseKeyvalConfigUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_clickhouse_keyval_config.keyval_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_clickhouse_keyval_config.keyval_config", "instance_id", "cdwch-pcap78rz"),
+					resource.TestCheckResourceAttr("tencentcloud_clickhouse_keyval_config.keyval_config", "items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clickhouse_keyval_config.keyval_config", "items.0.conf_key", "max_open_files"),
+					resource.TestCheckResourceAttr("tencentcloud_clickhouse_keyval_config.keyval_config", "items.0.conf_value", "60000"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_clickhouse_keyval_config.keyval_config",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -58,27 +68,14 @@ func testAccCheckClickhouseKeyvalConfigDestroy(s *terraform.State) error {
 		instanceId := idSplit[0]
 		configKey := idSplit[1]
 
-		config, err := service.DescribeClickhouseKeyvalConfigById(ctx, instanceId)
+		configItems, err := service.DescribeClickhouseKeyvalConfigById(ctx, instanceId)
 		if err != nil {
 			return err
 		}
 
-		configItems := config.ConfigItems
-		unConfigItems := config.ConfigItems
-
-		if len(configItems) == 0 && len(unConfigItems) == 0 {
-			return nil
-		}
-
-		var items []*cdwch.InstanceConfigInfo
-		items = append(items, configItems...)
-		items = append(items, unConfigItems...)
-
 		resultMap := make(map[string]*cdwch.InstanceConfigInfo)
-		for _, item := range items {
-			if item.ConfKey != nil {
-				resultMap[*item.ConfKey] = item
-			}
+		for _, item := range configItems {
+			resultMap[*item.ConfKey] = item
 		}
 
 		item := resultMap[configKey]
@@ -95,6 +92,16 @@ resource "tencentcloud_clickhouse_keyval_config" "keyval_config" {
   items {
     conf_key   = "max_open_files"
     conf_value = "50000"
+  }
+}
+`
+
+const testAccClickhouseKeyvalConfigUpdate = `
+resource "tencentcloud_clickhouse_keyval_config" "keyval_config" {
+  instance_id = "cdwch-pcap78rz"
+  items {
+    conf_key   = "max_open_files"
+    conf_value = "60000"
   }
 }
 `

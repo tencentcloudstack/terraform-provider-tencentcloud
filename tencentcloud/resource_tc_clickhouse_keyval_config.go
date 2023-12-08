@@ -132,25 +132,19 @@ func resourceTencentCloudClickhouseKeyvalConfigRead(d *schema.ResourceData, meta
 
 	_ = d.Set("instance_id", instanceId)
 
-	config, err := service.DescribeClickhouseKeyvalConfigById(ctx, instanceId)
+	configItems, err := service.DescribeClickhouseKeyvalConfigById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
-	if config == nil {
+	if configItems == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ClickhouseKeyvalConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	var items []*cdwch.InstanceConfigInfo
-	items = append(items, config.ConfigItems...)
-	items = append(items, config.UnConfigItems...)
-
 	resultMap := make(map[string]*cdwch.InstanceConfigInfo)
-	for _, item := range items {
-		if item.ConfKey != nil {
-			resultMap[*item.ConfKey] = item
-		}
+	for _, item := range configItems {
+		resultMap[*item.ConfKey] = item
 	}
 
 	var itemsList []interface{}

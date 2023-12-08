@@ -1913,6 +1913,8 @@ ClickHouse(CDWCH)
     tencentcloud_clickhouse_backup_jobs
     tencentcloud_clickhouse_backup_job_detail
     tencentcloud_clickhouse_backup_tables
+    tencentcloud_clickhouse_spec
+    tencentcloud_clickhouse_instance_shards
 
   Resource
     tencentcloud_clickhouse_instance
@@ -1961,6 +1963,7 @@ Data Lake Compute(DLC)
     tencentcloud_dlc_check_data_engine_image_can_be_upgrade
     tencentcloud_dlc_check_data_engine_config_pairs_validity
     tencentcloud_dlc_describe_updatable_data_engines
+    tencentcloud_dlc_describe_data_engine_events
 
   Resource
     tencentcloud_dlc_work_group
