@@ -76,7 +76,7 @@ def replace(dictionary):
                 file.write(content["all"])
             continue
 
-        if file_name in "go.sum":
+        if file_name in "go.mod":
             with open("../" + file_name, "a") as file:
                 file.write(content)
         # 打开文件并读取内容
