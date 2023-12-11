@@ -199,5 +199,3 @@ changelog:
 
 .PHONY: build sweep test testacc fmt fmtcheck lint tools test-compile doc hooks website website-lint website-test
 
-internal-version-build:
-	./scripts/internal-version-build.sh
