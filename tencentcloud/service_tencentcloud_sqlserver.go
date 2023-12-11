@@ -1360,6 +1360,7 @@ func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, pa
 		autoRenew   = paramMap["autoRenew"].(int)
 		autoVoucher = paramMap["autoVoucher"].(int)
 		zone        = paramMap["availabilityZone"].(string)
+		collation   = paramMap["collation"].(string)
 	)
 	request.Cpu = helper.IntUint64(cpu)
 	request.Memory = helper.IntUint64(memory)
@@ -1375,6 +1376,7 @@ func (me *SqlserverService) CreateSqlserverBasicInstance(ctx context.Context, pa
 
 	request.AutoVoucher = helper.IntInt64(autoVoucher)
 	request.Zone = &zone
+	request.Collation = &collation
 	if v, ok := paramMap["projectId"]; ok {
 		projectId := v.(int)
 		request.ProjectId = helper.IntUint64(projectId)

@@ -374,34 +374,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 	}
 
 	if generalCloudInstance.Version != nil {
-		var dbVersion string
-		if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2008R2 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2008R2
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2012SP3 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2012SP3
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201202 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201202
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2014SP2 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2014SP2
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201402 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201402
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2016SP1 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2016SP1
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201602 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201602
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2017 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2017
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201702 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201702
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_2019 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2019
-		} else if *generalCloudInstance.VersionName == SQLSERVER_CLOUD_DB_VERSION_NAME_201902 {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_201902
-		} else {
-			dbVersion = SQLSERVER_CLOUD_DB_VERSION_2008R2
-		}
-
-		_ = d.Set("db_version", dbVersion)
+		_ = d.Set("db_version", generalCloudInstance.Version)
 	}
 
 	if generalCloudInstance.RenewFlag != nil {

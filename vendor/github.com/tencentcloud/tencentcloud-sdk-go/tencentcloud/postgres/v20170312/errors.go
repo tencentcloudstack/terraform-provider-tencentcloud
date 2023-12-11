@@ -122,6 +122,9 @@ const (
 	// 不符合资源所拥有的网络数量要求。
 	FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
 
+	// 实例无可用备机
+	FAILEDOPERATION_NOAVAILABLESTANDBY = "FailedOperation.NoAvailableStandby"
+
 	// 操作超过频率限制，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_OPERATEFREQUENCYLIMITEDERROR = "FailedOperation.OperateFrequencyLimitedError"
 
@@ -136,6 +139,9 @@ const (
 
 	// 按量计费实例账户解冻结失败，请稍后重试。如果持续不成功，请联系客服进行处理。
 	FAILEDOPERATION_POSTPAIDUNBLOCKERROR = "FailedOperation.PostPaidUnblockError"
+
+	// 操作预检查失败。
+	FAILEDOPERATION_PRECHECKERROR = "FailedOperation.PreCheckError"
 
 	// 获取预签名授权URL错误。
 	FAILEDOPERATION_PRESIGNEDURLGETERROR = "FailedOperation.PresignedURLGetError"
@@ -287,6 +293,9 @@ const (
 	// 参数检查失败。
 	INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 
+	// 参数不可全部不设置
+	INVALIDPARAMETER_PARAMETERSNOTSET = "InvalidParameter.ParametersNotSet"
+
 	// pid错误。
 	INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
 
@@ -401,6 +410,9 @@ const (
 	// 参数长度超过限制。
 	INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
 
+	// 参数超出可设置范围
+	INVALIDPARAMETERVALUE_PARAMETEROUTOFRANGE = "InvalidParameterValue.ParameterOutOfRange"
+
 	// 存在无效的参数值。
 	INVALIDPARAMETERVALUE_PARAMETEROUTRANGEERROR = "InvalidParameterValue.ParameterOutRangeError"
 
@@ -451,6 +463,9 @@ const (
 
 	// 实例状态限制当前操作。
 	OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+
+	// 实例类型错误
+	OPERATIONDENIED_INSTANCETYPEDENIED = "OperationDenied.InstanceTypeDenied"
 
 	// Serverless不支持当前可用区。
 	OPERATIONDENIED_NOTSUPPORTZONEERROR = "OperationDenied.NotSupportZoneError"
