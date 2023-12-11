@@ -261,14 +261,13 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	//internal version: replace null begin
 	elasticsearchService := ElasticsearchService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 	request := es.NewCreateInstanceRequest()
-	//internal version: replace null end
-	//internal version: replace var begin
-	//internal version: replace var end
+
+	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -278,9 +277,9 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		//internal version: replace strCharge begin
+		//internal version: replace strCharge begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		chargeType := v.(string)
-		//internal version: replace strCharge end
+		//internal version: replace strCharge end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
@@ -360,8 +359,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			request.NodeInfoList = append(request.NodeInfoList, &info)
 		}
 	}
-	//internal version: replace reqTag begin
-	//internal version: replace reqTag end
+	//internal version: replace reqTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace reqTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -369,8 +368,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			//internal version: replace bpass begin
-			//internal version: replace bpass end
+			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			return retryError(err)
 		}
 		instanceId = *response.Response.InstanceId
@@ -381,8 +380,8 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	}
 	d.SetId(instanceId)
 
-	//internal version: replace setTag begin
-	//internal version: replace setTag end
+	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	instanceEmptyRetries := 5
 	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
 		instance, errRet := elasticsearchService.DescribeInstanceById(ctx, instanceId)
@@ -725,13 +724,13 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 
-		//internal version: replace null begin
+		//internal version: replace null begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
-		//internal version: replace null end
+		//internal version: replace null end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
-		//internal version: replace waitTag begin
-		//internal version: replace waitTag end
+		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 		if err != nil {
 			return err
