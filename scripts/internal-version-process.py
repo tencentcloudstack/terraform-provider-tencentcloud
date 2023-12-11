@@ -8,7 +8,7 @@ SERVICE_TENCENTCLOUD_BILLING_FILE = "tencentcloud/service_tencentcloud_billing.g
 GO_MOD_FILE = "go.mod"
 MARK_MATCH = "//internal version: replace (\w+) begin.*?//internal version: replace \w+ end"
 MARK_REPLACE = "//internal version: replace %s begin.*?//internal version: replace %s end"
-
+ANNOTATION_TAIL=", please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation."
 def replace_code(dictionary, code):
 
     matches = re.finditer(r"%s"%MARK_MATCH, code, flags=re.DOTALL)
@@ -20,7 +20,7 @@ def replace_code(dictionary, code):
         else:
             replacement_code=""
         mark_str=MARK_REPLACE%(key,key)
-        code = re.sub(r"%s"%mark_str, replacement_code, code, flags=re.DOTALL)
+        code = re.sub(r"%s"%mark_str+ANNOTATION_TAIL, replacement_code, code, flags=re.DOTALL)
     return code
 
 def replace(dictionary):

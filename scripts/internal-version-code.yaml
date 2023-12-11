@@ -99,13 +99,10 @@ tencentcloud/resource_tc_elasticsearch_instance.go:
   var: |
     var (
     	client               = meta.(*TencentCloudClient).apiV3Conn
-    	elasticsearchService = ElasticsearchService{client: client}
     	billingService       = BillingService{client: client}
     	tagService           = TagService{client: client}
     	region               = client.Region
     	chargeType           string
-
-    	request = es.NewCreateInstanceRequest()
     )
   strCharge: "chargeType = v.(string)"
   reqTag: |
@@ -547,13 +544,9 @@ tencentcloud/resource_tc_redis_instance.go:
 
 tencentcloud/resource_tc_tdmq_instance.go:
   client: |
-    var (
-    	logId      = getLogId(contextNil)
-    	ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-    	client     = meta.(*TencentCloudClient).apiV3Conn
-    	tagService = TagService{client: client}
-    	region     = client.Region
-    )
+    client := meta.(*TencentCloudClient).apiV3Conn
+    tagService := TagService{client: client}
+    region := client.Region
   buildName: "resourceName := BuildTagResourceName(\"tdmq\", \"cluster\", region, clusterId)"
   waitTag: |
     // Wait the tags enabled
@@ -562,15 +555,8 @@ tencentcloud/resource_tc_tdmq_instance.go:
     			return err
     		}
   var: |
-    var (
-    		logId      = getLogId(contextNil)
-    		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-    		client     = meta.(*TencentCloudClient).apiV3Conn
-    		service    = TdmqService{client: client}
-    		tagService = TagService{client: client}
-    		region     = client.Region
-    		id         = d.Id()
-    	)
+    tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+    region := meta.(*TencentCloudClient).apiV3Conn.Region
   setTag: |
     oldTags, newTags := d.GetChange("tags")
     replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
