@@ -119,6 +119,7 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 
 	request := privatedns.NewDeleteSpecifyPrivateZoneVpcRequest()
 	request.ZoneId = &zoneId
+	request.Sync = common.BoolPtr(false)
 	if uin == "" {
 		request.VpcSet = []*privatedns.VpcInfo{
 			{

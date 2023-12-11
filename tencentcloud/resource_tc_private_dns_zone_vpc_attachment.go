@@ -141,6 +141,7 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 		}
 	}
 
+	request.Sync = helper.Bool(false)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().AddSpecifyPrivateZoneVpc(request)
 		if e != nil {
