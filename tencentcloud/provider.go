@@ -21,12 +21,14 @@ import (
 )
 
 const (
-	PROVIDER_SECRET_ID                    = "TENCENTCLOUD_SECRET_ID"
-	PROVIDER_SECRET_KEY                   = "TENCENTCLOUD_SECRET_KEY"
-	PROVIDER_SECURITY_TOKEN               = "TENCENTCLOUD_SECURITY_TOKEN"
-	PROVIDER_REGION                       = "TENCENTCLOUD_REGION"
-	PROVIDER_PROTOCOL                     = "TENCENTCLOUD_PROTOCOL"
-	PROVIDER_DOMAIN                       = "TENCENTCLOUD_DOMAIN"
+	PROVIDER_SECRET_ID      = "TENCENTCLOUD_SECRET_ID"
+	PROVIDER_SECRET_KEY     = "TENCENTCLOUD_SECRET_KEY"
+	PROVIDER_SECURITY_TOKEN = "TENCENTCLOUD_SECURITY_TOKEN"
+	PROVIDER_REGION         = "TENCENTCLOUD_REGION"
+	PROVIDER_PROTOCOL       = "TENCENTCLOUD_PROTOCOL"
+	PROVIDER_DOMAIN         = "TENCENTCLOUD_DOMAIN"
+	//internal version: replace envYunti begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace envYunti end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	PROVIDER_ASSUME_ROLE_ARN              = "TENCENTCLOUD_ASSUME_ROLE_ARN"
 	PROVIDER_ASSUME_ROLE_SESSION_NAME     = "TENCENTCLOUD_ASSUME_ROLE_SESSION_NAME"
 	PROVIDER_ASSUME_ROLE_SESSION_DURATION = "TENCENTCLOUD_ASSUME_ROLE_SESSION_DURATION"
@@ -85,6 +87,8 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_DOMAIN, nil),
 				Description: "The root domain of the API request, Default is `tencentcloudapi.com`.",
 			},
+			//internal version: replace enableBpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			//internal version: replace enableBpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			"assume_role": {
 				Type:        schema.TypeSet,
 				Optional:    true,

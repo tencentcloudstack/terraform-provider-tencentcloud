@@ -52,6 +52,9 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	var (
 		request  = tdmq.NewCreateClusterRequest()
 		response *tdmq.CreateClusterResponse
@@ -88,12 +91,18 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	clusterId := *response.Response.ClusterId
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		//internal version: replace buildName begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
+		//internal version: replace buildName end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
+
+		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
 
 	d.SetId(clusterId)
@@ -151,6 +160,9 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
+	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	var (
 		clusterName string
 		remark      string
@@ -174,6 +186,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("tags") {
+		//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
@@ -182,6 +195,7 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+		//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
 	return resourceTencentCloudTdmqRead(d, meta)
 }
