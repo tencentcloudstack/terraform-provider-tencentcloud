@@ -1,3 +1,10 @@
+## 1.81.57 (December 11, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_monitor_alarm_policy: Support `filter`, `group_by` field. ([#2390](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2390))
+* resource/tencentcloud_private_dns_zone_vpc_attachment: Asynchronous operation adaptation. ([#2391](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2391))
+
 ## 1.81.56 (December 8, 2023)
 
 FEATURES:
