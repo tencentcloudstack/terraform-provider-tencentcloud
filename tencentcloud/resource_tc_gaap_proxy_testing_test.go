@@ -19,12 +19,12 @@ func TestAccTencentCloudTestingGaapProxyResource_basic(t *testing.T) {
 				Config: testAccTestingGaapProxyUpdateBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapProxyExists("tencentcloud_gaap_proxy.foo", id),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy-basic"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "name", "ci-test-gaap-proxy"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "bandwidth", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "concurrent", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Beijing"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Beijing"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "access_region", "Shanghai"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "realserver_region", "Shanghai"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_proxy.foo", "enable", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_gaap_proxy.foo", "tags"),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_proxy.foo", "create_time"),
@@ -56,11 +56,11 @@ func TestAccTencentCloudTestingGaapProxyResource_basic(t *testing.T) {
 
 const testAccTestingGaapProxyUpdateBasic = `
 resource tencentcloud_gaap_proxy "foo" {
-  name              = "ci-test-gaap-proxy-basic"
+  name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Beijing"
-  realserver_region = "Beijing"
+  access_region     = "Shanghai"
+  realserver_region = "Shanghai"
 }
 `
 
@@ -69,8 +69,8 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 10
   concurrent        = 2
-  access_region     = "Beijing"
-  realserver_region = "Beijing"
+  access_region     = "Shanghai"
+  realserver_region = "Shanghai"
 }
 `
 
@@ -79,7 +79,7 @@ resource tencentcloud_gaap_proxy "foo" {
   name              = "ci-test-gaap-proxy-new"
   bandwidth         = 20
   concurrent        = 2
-  access_region     = "Beijing"
-  realserver_region = "Beijing"
+  access_region     = "Shanghai"
+  realserver_region = "Shanghai"
 }
 `
