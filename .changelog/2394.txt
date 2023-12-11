@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_sqlserver_instance_ha
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_instance_ssl
+```
