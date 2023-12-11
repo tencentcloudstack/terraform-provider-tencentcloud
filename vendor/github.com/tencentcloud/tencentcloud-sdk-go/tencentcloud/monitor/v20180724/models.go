@@ -20,6 +20,20 @@ import (
     "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/json"
 )
 
+type AlarmConditionFilter struct {
+	// 类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil" name:"Type"`
+
+	// 表达式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Expression *string `json:"Expression,omitnil" name:"Expression"`
+
+	// 过滤条件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Dimensions *string `json:"Dimensions,omitnil" name:"Dimensions"`
+}
+
 type AlarmEvent struct {
 	// 事件名
 	EventName *string `json:"EventName,omitnil" name:"EventName"`
@@ -29,6 +43,16 @@ type AlarmEvent struct {
 
 	// 告警策略类型
 	Namespace *string `json:"Namespace,omitnil" name:"Namespace"`
+}
+
+type AlarmGroupByItem struct {
+	// Item Id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Id *string `json:"Id,omitnil" name:"Id"`
+
+	// 名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil" name:"Name"`
 }
 
 type AlarmHierarchicalNotice struct {
@@ -133,6 +157,38 @@ type AlarmHistory struct {
 	// 告警等级
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AlarmLevel *string `json:"AlarmLevel,omitnil" name:"AlarmLevel"`
+
+	// 是否有配置告警屏蔽规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ShieldFlag *int64 `json:"ShieldFlag,omitnil" name:"ShieldFlag"`
+
+	// 屏蔽类型（英文）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AlarmShieldingType *string `json:"AlarmShieldingType,omitnil" name:"AlarmShieldingType"`
+
+	// 屏蔽时间（英文）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AlarmShieldingTime *string `json:"AlarmShieldingTime,omitnil" name:"AlarmShieldingTime"`
+
+	// 屏蔽类型（中文）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AlarmShieldingShowType *string `json:"AlarmShieldingShowType,omitnil" name:"AlarmShieldingShowType"`
+
+	// 屏蔽时间（中文）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AlarmShieldingShowTime *string `json:"AlarmShieldingShowTime,omitnil" name:"AlarmShieldingShowTime"`
+
+	// 屏蔽原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AlarmShieldReason *string `json:"AlarmShieldReason,omitnil" name:"AlarmShieldReason"`
+
+	// 告警实例的维度信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternalDimensions *string `json:"InternalDimensions,omitnil" name:"InternalDimensions"`
+
+	// 指标名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricName *string `json:"MetricName,omitnil" name:"MetricName"`
 }
 
 type AlarmHistoryMetric struct {
@@ -326,6 +382,14 @@ type AlarmPolicy struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TagInstances []*TagInstance `json:"TagInstances,omitnil" name:"TagInstances"`
 
+	// 过滤条件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Filter *AlarmConditionFilter `json:"Filter,omitnil" name:"Filter"`
+
+	// 聚合条件
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GroupBy []*AlarmGroupByItem `json:"GroupBy,omitnil" name:"GroupBy"`
+
 	// 策略关联的过滤维度信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FilterDimensionsParam *string `json:"FilterDimensionsParam,omitnil" name:"FilterDimensionsParam"`
@@ -349,6 +413,10 @@ type AlarmPolicy struct {
 	// 策略标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitnil" name:"Tags"`
+
+	// 是否支持告警标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsSupportAlarmTag *int64 `json:"IsSupportAlarmTag,omitnil" name:"IsSupportAlarmTag"`
 }
 
 type AlarmPolicyCondition struct {
@@ -1657,11 +1725,11 @@ type CreateGrafanaNotificationChannelRequestParams struct {
 	// 告警通道名称，例如：test
 	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
 
-	// 默认为1，建议使用 OrganizationIds
-	OrgId *int64 `json:"OrgId,omitnil" name:"OrgId"`
-
 	// 接受告警通道 ID 数组，值为告警管理/基础配置/通知模板中的模板 ID 
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
+
+	// 默认为1，建议使用 OrganizationIds
+	OrgId *int64 `json:"OrgId,omitnil" name:"OrgId"`
 
 	// 额外组织 ID 数组，已废弃，请使用 OrganizationIds
 	ExtraOrgIds []*string `json:"ExtraOrgIds,omitnil" name:"ExtraOrgIds"`
@@ -1679,11 +1747,11 @@ type CreateGrafanaNotificationChannelRequest struct {
 	// 告警通道名称，例如：test
 	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
 
-	// 默认为1，建议使用 OrganizationIds
-	OrgId *int64 `json:"OrgId,omitnil" name:"OrgId"`
-
 	// 接受告警通道 ID 数组，值为告警管理/基础配置/通知模板中的模板 ID 
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
+
+	// 默认为1，建议使用 OrganizationIds
+	OrgId *int64 `json:"OrgId,omitnil" name:"OrgId"`
 
 	// 额外组织 ID 数组，已废弃，请使用 OrganizationIds
 	ExtraOrgIds []*string `json:"ExtraOrgIds,omitnil" name:"ExtraOrgIds"`
@@ -1706,8 +1774,8 @@ func (r *CreateGrafanaNotificationChannelRequest) FromJsonString(s string) error
 	}
 	delete(f, "InstanceId")
 	delete(f, "ChannelName")
-	delete(f, "OrgId")
 	delete(f, "Receivers")
+	delete(f, "OrgId")
 	delete(f, "ExtraOrgIds")
 	delete(f, "OrganizationIds")
 	if len(f) > 0 {
@@ -3282,7 +3350,7 @@ type DeletePolicyGroupRequestParams struct {
 	// 固定值，为"monitor"
 	Module *string `json:"Module,omitnil" name:"Module"`
 
-	// 策略组id
+	// 策略组id,即1.0的告警策略id,可以从策略详情获取
 	GroupId []*int64 `json:"GroupId,omitnil" name:"GroupId"`
 }
 
@@ -3292,7 +3360,7 @@ type DeletePolicyGroupRequest struct {
 	// 固定值，为"monitor"
 	Module *string `json:"Module,omitnil" name:"Module"`
 
-	// 策略组id
+	// 策略组id,即1.0的告警策略id,可以从策略详情获取
 	GroupId []*int64 `json:"GroupId,omitnil" name:"GroupId"`
 }
 
@@ -3802,7 +3870,7 @@ func (r *DeletePrometheusTempSyncResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteRecordingRulesRequestParams struct {
-	// 规则 ID 列表
+	// 规则 ID 列表(规则 ID 可通过 DescribeRecordingRules 接口获取)
 	RuleIds []*string `json:"RuleIds,omitnil" name:"RuleIds"`
 
 	// Prometheus 实例 ID
@@ -3812,7 +3880,7 @@ type DeleteRecordingRulesRequestParams struct {
 type DeleteRecordingRulesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 规则 ID 列表
+	// 规则 ID 列表(规则 ID 可通过 DescribeRecordingRules 接口获取)
 	RuleIds []*string `json:"RuleIds,omitnil" name:"RuleIds"`
 
 	// Prometheus 实例 ID
@@ -4276,7 +4344,7 @@ type DescribeAlarmHistoriesRequestParams struct {
 	// 结束时间，默认当前时间戳。对应 `FirstOccurTime` 告警首次出现时间，告警历史的 `FirstOccurTime` 早于 `EndTime` 才可能被搜索到。
 	EndTime *int64 `json:"EndTime,omitnil" name:"EndTime"`
 
-	// 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能观测；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测
+	// 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能监控；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测
 	MonitorTypes []*string `json:"MonitorTypes,omitnil" name:"MonitorTypes"`
 
 	// 根据告警对象过滤 字符串模糊搜索
@@ -4339,7 +4407,7 @@ type DescribeAlarmHistoriesRequest struct {
 	// 结束时间，默认当前时间戳。对应 `FirstOccurTime` 告警首次出现时间，告警历史的 `FirstOccurTime` 早于 `EndTime` 才可能被搜索到。
 	EndTime *int64 `json:"EndTime,omitnil" name:"EndTime"`
 
-	// 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能观测；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测
+	// 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能监控；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测
 	MonitorTypes []*string `json:"MonitorTypes,omitnil" name:"MonitorTypes"`
 
 	// 根据告警对象过滤 字符串模糊搜索
@@ -5975,16 +6043,16 @@ type DescribeExporterIntegrationsRequestParams struct {
 	// 实例 ID
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Kubernetes 集群类型，取值如下：
+	// Kubernetes 集群类型，可不填。取值如下：
 	// <li> 1= 容器集群(TKE) </li>
-	// <li> 2=弹性集群<EKS> </li>
-	// <li> 3= Prometheus管理的弹性集群<MEKS> </li>
+	// <li> 2=弹性集群(EKS) </li>
+	// <li> 3= Prometheus管理的弹性集群(MEKS) </li>
 	KubeType *int64 `json:"KubeType,omitnil" name:"KubeType"`
 
-	// 集群 ID
+	// 集群 ID，可不填
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
 
-	// 类型
+	// 类型(不填返回全部集成。可通过 DescribePrometheusIntegrations 接口获取，取每一项中的 ExporterType 字段)
 	Kind *string `json:"Kind,omitnil" name:"Kind"`
 
 	// 名字
@@ -5997,16 +6065,16 @@ type DescribeExporterIntegrationsRequest struct {
 	// 实例 ID
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Kubernetes 集群类型，取值如下：
+	// Kubernetes 集群类型，可不填。取值如下：
 	// <li> 1= 容器集群(TKE) </li>
-	// <li> 2=弹性集群<EKS> </li>
-	// <li> 3= Prometheus管理的弹性集群<MEKS> </li>
+	// <li> 2=弹性集群(EKS) </li>
+	// <li> 3= Prometheus管理的弹性集群(MEKS) </li>
 	KubeType *int64 `json:"KubeType,omitnil" name:"KubeType"`
 
-	// 集群 ID
+	// 集群 ID，可不填
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
 
-	// 类型
+	// 类型(不填返回全部集成。可通过 DescribePrometheusIntegrations 接口获取，取每一项中的 ExporterType 字段)
 	Kind *string `json:"Kind,omitnil" name:"Kind"`
 
 	// 名字
@@ -9783,13 +9851,14 @@ type DescribeStatisticDataRequestParams struct {
 	// 所属模块，固定值，为monitor
 	Module *string `json:"Module,omitnil" name:"Module"`
 
-	// 命名空间，目前只支持QCE/TKE2
+	// 命名空间，目前支持QCE/TKE2(Conditions必填),QCE/KEEWIDB,QCE/CAMP
 	Namespace *string `json:"Namespace,omitnil" name:"Namespace"`
 
 	// 指标名列表
 	MetricNames []*string `json:"MetricNames,omitnil" name:"MetricNames"`
 
 	// 维度条件，操作符支持=、in
+	// 配置文档参考：https://cloud.tencent.com/document/product/248/53821
 	Conditions []*MidQueryCondition `json:"Conditions,omitnil" name:"Conditions"`
 
 	// 统计粒度。默认取值为300，单位为s；可选的值为60、300、3600、86400
@@ -9816,13 +9885,14 @@ type DescribeStatisticDataRequest struct {
 	// 所属模块，固定值，为monitor
 	Module *string `json:"Module,omitnil" name:"Module"`
 
-	// 命名空间，目前只支持QCE/TKE2
+	// 命名空间，目前支持QCE/TKE2(Conditions必填),QCE/KEEWIDB,QCE/CAMP
 	Namespace *string `json:"Namespace,omitnil" name:"Namespace"`
 
 	// 指标名列表
 	MetricNames []*string `json:"MetricNames,omitnil" name:"MetricNames"`
 
 	// 维度条件，操作符支持=、in
+	// 配置文档参考：https://cloud.tencent.com/document/product/248/53821
 	Conditions []*MidQueryCondition `json:"Conditions,omitnil" name:"Conditions"`
 
 	// 统计粒度。默认取值为300，单位为s；可选的值为60、300、3600、86400
@@ -12350,13 +12420,13 @@ type PrometheusAgent struct {
 }
 
 type PrometheusAgentInfo struct {
-	// 集群类型
+	// 集群类型。可填入tke、eks、tkeedge、tdcc，分别代表标准集群、弹性集群、边缘集群、注册集群
 	ClusterType *string `json:"ClusterType,omitnil" name:"ClusterType"`
 
-	// 集群id
+	// 集成容器服务中关联的集群ID
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
 
-	// 备注
+	// 该参数未使用，不需要填写
 	Describe *string `json:"Describe,omitnil" name:"Describe"`
 }
 
@@ -14138,7 +14208,7 @@ func (r *UninstallGrafanaPluginsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdateAlertRuleRequestParams struct {
-	// Prometheus 报警规则 ID
+	// Prometheus 高警规则 ID
 	RuleId *string `json:"RuleId,omitnil" name:"RuleId"`
 
 	// Prometheus 实例 ID
@@ -14151,16 +14221,16 @@ type UpdateAlertRuleRequestParams struct {
 	// 默认状态码为 2 启用。
 	RuleState *int64 `json:"RuleState,omitnil" name:"RuleState"`
 
-	// 报警规则名称
+	// 告警规则名称
 	RuleName *string `json:"RuleName,omitnil" name:"RuleName"`
 
-	// 报警规则表达式
+	// 告警规则表达式
 	Expr *string `json:"Expr,omitnil" name:"Expr"`
 
-	// 报警规则持续时间
+	// 告警规则持续时间
 	Duration *string `json:"Duration,omitnil" name:"Duration"`
 
-	// 报警规则接收组列表
+	// 告警规则接收组列表(当前规则绑定的接收组列表可通过 DescribeAlertRules 接口获取；用户已有的接收组列表可通过 DescribeAlarmNotices 接口获取)
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
 
 	// 报警规则标签列表
@@ -14171,14 +14241,14 @@ type UpdateAlertRuleRequestParams struct {
 	// 告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description。
 	Annotations []*PrometheusRuleKV `json:"Annotations,omitnil" name:"Annotations"`
 
-	// 报警策略模板分类
+	// 报警策略模板分类(自定义，可不填)
 	Type *string `json:"Type,omitnil" name:"Type"`
 }
 
 type UpdateAlertRuleRequest struct {
 	*tchttp.BaseRequest
 	
-	// Prometheus 报警规则 ID
+	// Prometheus 高警规则 ID
 	RuleId *string `json:"RuleId,omitnil" name:"RuleId"`
 
 	// Prometheus 实例 ID
@@ -14191,16 +14261,16 @@ type UpdateAlertRuleRequest struct {
 	// 默认状态码为 2 启用。
 	RuleState *int64 `json:"RuleState,omitnil" name:"RuleState"`
 
-	// 报警规则名称
+	// 告警规则名称
 	RuleName *string `json:"RuleName,omitnil" name:"RuleName"`
 
-	// 报警规则表达式
+	// 告警规则表达式
 	Expr *string `json:"Expr,omitnil" name:"Expr"`
 
-	// 报警规则持续时间
+	// 告警规则持续时间
 	Duration *string `json:"Duration,omitnil" name:"Duration"`
 
-	// 报警规则接收组列表
+	// 告警规则接收组列表(当前规则绑定的接收组列表可通过 DescribeAlertRules 接口获取；用户已有的接收组列表可通过 DescribeAlarmNotices 接口获取)
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
 
 	// 报警规则标签列表
@@ -14211,7 +14281,7 @@ type UpdateAlertRuleRequest struct {
 	// 告警对象和告警消息是 Prometheus Rule Annotations 的特殊字段，需要通过 annotations 来传递，对应的 Key 分别为summary/description。
 	Annotations []*PrometheusRuleKV `json:"Annotations,omitnil" name:"Annotations"`
 
-	// 报警策略模板分类
+	// 报警策略模板分类(自定义，可不填)
 	Type *string `json:"Type,omitnil" name:"Type"`
 }
 
@@ -14405,44 +14475,44 @@ func (r *UpdateDNSConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdateExporterIntegrationRequestParams struct {
-	// 实例 ID
+	// Prometheus 实例 ID
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// 类型
+	// 类型(可通过 DescribeExporterIntegrations 获取对应集成的 Kind)
 	Kind *string `json:"Kind,omitnil" name:"Kind"`
 
-	// 配置内容
+	// 配置内容(可通过 DescribeExporterIntegrations 接口获取对应集成的 Content，并在此基础上做修改)
 	Content *string `json:"Content,omitnil" name:"Content"`
 
-	// Kubernetes 集群类型，取值如下：
+	// Kubernetes 集群类型，可不填。取值如下：
 	// <li> 1= 容器集群(TKE) </li>
-	// <li> 2=弹性集群<EKS> </li>
-	// <li> 3= Prometheus管理的弹性集群<MEKS> </li>
+	// <li> 2=弹性集群(EKS) </li>
+	// <li> 3= Prometheus管理的弹性集群(MEKS) </li>
 	KubeType *int64 `json:"KubeType,omitnil" name:"KubeType"`
 
-	// 集群 ID
+	// 集群 ID，可不填
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
 }
 
 type UpdateExporterIntegrationRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID
+	// Prometheus 实例 ID
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// 类型
+	// 类型(可通过 DescribeExporterIntegrations 获取对应集成的 Kind)
 	Kind *string `json:"Kind,omitnil" name:"Kind"`
 
-	// 配置内容
+	// 配置内容(可通过 DescribeExporterIntegrations 接口获取对应集成的 Content，并在此基础上做修改)
 	Content *string `json:"Content,omitnil" name:"Content"`
 
-	// Kubernetes 集群类型，取值如下：
+	// Kubernetes 集群类型，可不填。取值如下：
 	// <li> 1= 容器集群(TKE) </li>
-	// <li> 2=弹性集群<EKS> </li>
-	// <li> 3= Prometheus管理的弹性集群<MEKS> </li>
+	// <li> 2=弹性集群(EKS) </li>
+	// <li> 3= Prometheus管理的弹性集群(MEKS) </li>
 	KubeType *int64 `json:"KubeType,omitnil" name:"KubeType"`
 
-	// 集群 ID
+	// 集群 ID，可不填
 	ClusterId *string `json:"ClusterId,omitnil" name:"ClusterId"`
 }
 
@@ -14696,11 +14766,11 @@ type UpdateGrafanaNotificationChannelRequestParams struct {
 	// Grafana 实例 ID，例如：grafana-12345678
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// 告警通道名称，例如：test
-	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
-
 	// 接受告警通道 ID 数组
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
+
+	// 告警通道名称，已废弃，名称不可修改。
+	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
 
 	// 已废弃，请使用 OrganizationIds
 	ExtraOrgIds []*string `json:"ExtraOrgIds,omitnil" name:"ExtraOrgIds"`
@@ -14718,11 +14788,11 @@ type UpdateGrafanaNotificationChannelRequest struct {
 	// Grafana 实例 ID，例如：grafana-12345678
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// 告警通道名称，例如：test
-	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
-
 	// 接受告警通道 ID 数组
 	Receivers []*string `json:"Receivers,omitnil" name:"Receivers"`
+
+	// 告警通道名称，已废弃，名称不可修改。
+	ChannelName *string `json:"ChannelName,omitnil" name:"ChannelName"`
 
 	// 已废弃，请使用 OrganizationIds
 	ExtraOrgIds []*string `json:"ExtraOrgIds,omitnil" name:"ExtraOrgIds"`
@@ -14745,8 +14815,8 @@ func (r *UpdateGrafanaNotificationChannelRequest) FromJsonString(s string) error
 	}
 	delete(f, "ChannelId")
 	delete(f, "InstanceId")
-	delete(f, "ChannelName")
 	delete(f, "Receivers")
+	delete(f, "ChannelName")
 	delete(f, "ExtraOrgIds")
 	delete(f, "OrganizationIds")
 	if len(f) > 0 {
@@ -14914,32 +14984,32 @@ func (r *UpdatePrometheusAgentStatusResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpdatePrometheusScrapeJobRequestParams struct {
-	// Prometheus 实例 ID，例如：prom-abcd1234
+	// Prometheus 实例 ID(可通过 DescribePrometheusInstances 接口获取)
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Agent ID，例如：agent-abcd1234，可在控制台 Agent 管理中获取
+	// Agent ID(可通过DescribePrometheusAgents 接口获取)
 	AgentId *string `json:"AgentId,omitnil" name:"AgentId"`
 
-	// 抓取任务 ID，例如：job-abcd1234，可在控制台 Agent 管理-抓取任务配置中获取
+	// 抓取任务 ID(可通过 DescribePrometheusScrapeJobs 接口获取)
 	JobId *string `json:"JobId,omitnil" name:"JobId"`
 
-	// 抓取任务配置，格式：job_name:xx
+	// 抓取任务配置
 	Config *string `json:"Config,omitnil" name:"Config"`
 }
 
 type UpdatePrometheusScrapeJobRequest struct {
 	*tchttp.BaseRequest
 	
-	// Prometheus 实例 ID，例如：prom-abcd1234
+	// Prometheus 实例 ID(可通过 DescribePrometheusInstances 接口获取)
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Agent ID，例如：agent-abcd1234，可在控制台 Agent 管理中获取
+	// Agent ID(可通过DescribePrometheusAgents 接口获取)
 	AgentId *string `json:"AgentId,omitnil" name:"AgentId"`
 
-	// 抓取任务 ID，例如：job-abcd1234，可在控制台 Agent 管理-抓取任务配置中获取
+	// 抓取任务 ID(可通过 DescribePrometheusScrapeJobs 接口获取)
 	JobId *string `json:"JobId,omitnil" name:"JobId"`
 
-	// 抓取任务配置，格式：job_name:xx
+	// 抓取任务配置
 	Config *string `json:"Config,omitnil" name:"Config"`
 }
 
@@ -14995,10 +15065,10 @@ type UpdateRecordingRuleRequestParams struct {
 	// 聚合规则组内容，格式为 yaml，通过 base64 进行编码。
 	Group *string `json:"Group,omitnil" name:"Group"`
 
-	// Prometheus 实例 ID
+	// Prometheus 实例 ID(可通过 DescribePrometheusInstances 接口获取)
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Prometheus 聚合规则 ID
+	// Prometheus 聚合规则 ID(可通过 DescribeRecordingRules 接口获取)
 	RuleId *string `json:"RuleId,omitnil" name:"RuleId"`
 
 	// 规则状态码，取值如下：
@@ -15018,10 +15088,10 @@ type UpdateRecordingRuleRequest struct {
 	// 聚合规则组内容，格式为 yaml，通过 base64 进行编码。
 	Group *string `json:"Group,omitnil" name:"Group"`
 
-	// Prometheus 实例 ID
+	// Prometheus 实例 ID(可通过 DescribePrometheusInstances 接口获取)
 	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
 
-	// Prometheus 聚合规则 ID
+	// Prometheus 聚合规则 ID(可通过 DescribeRecordingRules 接口获取)
 	RuleId *string `json:"RuleId,omitnil" name:"RuleId"`
 
 	// 规则状态码，取值如下：
