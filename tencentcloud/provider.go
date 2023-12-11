@@ -1334,6 +1334,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_instance_tde":                              resourceTencentCloudSqlserverInstanceTDE(),
 			"tencentcloud_sqlserver_database_tde":                              resourceTencentCloudSqlserverDatabaseTDE(),
 			"tencentcloud_sqlserver_general_cloud_ro_instance":                 resourceTencentCloudSqlserverGeneralCloudRoInstance(),
+			"tencentcloud_sqlserver_instance_ha":                               resourceTencentCloudSqlserverInstanceHa(),
 			"tencentcloud_tcr_instance":                                        resourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                       resourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                      resourceTencentCloudTcrRepository(),

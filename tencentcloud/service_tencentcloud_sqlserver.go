@@ -3301,3 +3301,33 @@ func (me *SqlserverService) DescribeSqlserverDatabaseTDEById(ctx context.Context
 
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverInstanceHaById(ctx context.Context, instanceId string) (instanceHa *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.DBInstances) < 1 {
+		return
+	}
+
+	instanceHa = response.Response.DBInstances[0]
+	return
+}
