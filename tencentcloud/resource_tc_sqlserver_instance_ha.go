@@ -25,12 +25,6 @@ func resourceTencentCloudSqlserverInstanceHa() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
-			"wait_switch": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Default:     0,
-				Description: "Switch the execution mode, 0-execute immediately, 1-execute within the time window, the default value is 0.",
-			},
 		},
 	}
 }
@@ -75,10 +69,6 @@ func resourceTencentCloudSqlserverInstanceHaRead(d *schema.ResourceData, meta in
 		_ = d.Set("instance_id", instanceHa.InstanceId)
 	}
 
-	if instanceHa.WaitSwitch != nil {
-		_ = d.Set("wait_switch", instanceHa.WaitSwitch)
-	}
-
 	return nil
 }
 
@@ -93,10 +83,7 @@ func resourceTencentCloudSqlserverInstanceHaUpdate(d *schema.ResourceData, meta 
 	)
 
 	request.InstanceId = &instanceId
-
-	if v, ok := d.GetOkExists("wait_switch"); ok {
-		request.WaitSwitch = helper.IntUint64(v.(int))
-	}
+	request.WaitSwitch = helper.IntUint64(0)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().SwitchCloudInstanceHA(request)
