@@ -137,6 +137,8 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 				accountVpcInfo.Uin = helper.String(v.(string))
 			}
 
+			accountVpcInfo.VpcName = helper.String("")
+
 			request.AccountVpcSet = append(request.AccountVpcSet, accountVpcInfo)
 		}
 	}
