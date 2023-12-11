@@ -133,6 +133,7 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 				UniqVpcId: common.StringPtr(uniqVpcId),
 				Region:    common.StringPtr(region),
 				Uin:       common.StringPtr(uin),
+				VpcName:   common.StringPtr(""),
 			},
 		}
 	}
