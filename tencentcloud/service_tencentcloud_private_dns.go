@@ -161,7 +161,7 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 	// wait
 	asyncRequest.UniqId = &uniqId
 	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
+		result, e := me.client.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
 		if e != nil {
 			return retryError(e)
 		} else {
