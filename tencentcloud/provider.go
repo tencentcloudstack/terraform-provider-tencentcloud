@@ -10,14 +10,19 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mitchellh/go-homedir"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+
+	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 )
 
 const (
@@ -43,6 +48,13 @@ const (
 
 type TencentCloudClient struct {
 	apiV3Conn *connectivity.TencentCloudClient
+}
+
+var _ providercommon.ProviderMeta = &TencentCloudClient{}
+
+// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return meta.apiV3Conn
 }
 
 func Provider() *schema.Provider {
@@ -867,12 +879,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_dlc_describe_data_engine_events":              dataSourceTencentCloudDlcDescribeDataEngineEvents(),
-			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
-			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
-			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
-			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
-			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
-			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
+			"tencentcloud_bi_project":                                   bi.DataSourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_project":                              bi.DataSourceTencentCloudBiUserProject(),
+			"tencentcloud_antiddos_basic_device_status":                 antiddos.DataSourceTencentCloudAntiddosBasicDeviceStatus(),
+			"tencentcloud_antiddos_bgp_biz_trend":                       antiddos.DataSourceTencentCloudAntiddosBgpBizTrend(),
+			"tencentcloud_antiddos_list_listener":                       antiddos.DataSourceTencentCloudAntiddosListListener(),
+			"tencentcloud_antiddos_overview_attack_trend":               antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
 			"tencentcloud_clickhouse_spec":                              dataSourceTencentCloudClickhouseSpec(),
@@ -1683,7 +1695,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mdl_stream_live_input":                               resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                                resourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_cvm_launch_template_version":                         resourceTencentCloudCvmLaunchTemplateVersion(),
-			"tencentcloud_apm_instance":                                        resourceTencentCloudApmInstance(),
+			"tencentcloud_apm_instance":                                        apm.ResourceTencentCloudApmInstance(),
 			"tencentcloud_cvm_launch_template_default_version":                 resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
 			"tencentcloud_lighthouse_firewall_rule":                            resourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_cvm_security_group_attachment":                       resourceTencentCloudCvmSecurityGroupAttachment(),
@@ -1800,20 +1812,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
-			"tencentcloud_dasb_acl":                                            resourceTencentCloudDasbAcl(),
-			"tencentcloud_dasb_cmd_template":                                   resourceTencentCloudDasbCmdTemplate(),
-			"tencentcloud_dasb_device_group":                                   resourceTencentCloudDasbDeviceGroup(),
-			"tencentcloud_dasb_user":                                           resourceTencentCloudDasbUser(),
-			"tencentcloud_dasb_device_account":                                 resourceTencentCloudDasbDeviceAccount(),
-			"tencentcloud_dasb_device_group_members":                           resourceTencentCloudDasbDeviceGroupMembers(),
-			"tencentcloud_dasb_user_group_members":                             resourceTencentCloudDasbUserGroupMembers(),
-			"tencentcloud_dasb_bind_device_resource":                           resourceTencentCloudDasbBindDeviceResource(),
-			"tencentcloud_dasb_resource":                                       resourceTencentCloudDasbResource(),
-			"tencentcloud_dasb_device":                                         resourceTencentCloudDasbDevice(),
-			"tencentcloud_dasb_user_group":                                     resourceTencentCloudDasbUserGroup(),
-			"tencentcloud_dasb_reset_user":                                     resourceTencentCloudDasbResetUser(),
-			"tencentcloud_dasb_bind_device_account_private_key":                resourceTencentCloudDasbBindDeviceAccountPrivateKey(),
-			"tencentcloud_dasb_bind_device_account_password":                   resourceTencentCloudDasbBindDeviceAccountPassword(),
+			"tencentcloud_dasb_acl":                                            bh.ResourceTencentCloudDasbAcl(),
+			"tencentcloud_dasb_cmd_template":                                   bh.ResourceTencentCloudDasbCmdTemplate(),
+			"tencentcloud_dasb_device_group":                                   bh.ResourceTencentCloudDasbDeviceGroup(),
+			"tencentcloud_dasb_user":                                           bh.ResourceTencentCloudDasbUser(),
+			"tencentcloud_dasb_device_account":                                 bh.ResourceTencentCloudDasbDeviceAccount(),
+			"tencentcloud_dasb_device_group_members":                           bh.ResourceTencentCloudDasbDeviceGroupMembers(),
+			"tencentcloud_dasb_user_group_members":                             bh.ResourceTencentCloudDasbUserGroupMembers(),
+			"tencentcloud_dasb_bind_device_resource":                           bh.ResourceTencentCloudDasbBindDeviceResource(),
+			"tencentcloud_dasb_resource":                                       bh.ResourceTencentCloudDasbResource(),
+			"tencentcloud_dasb_device":                                         bh.ResourceTencentCloudDasbDevice(),
+			"tencentcloud_dasb_user_group":                                     bh.ResourceTencentCloudDasbUserGroup(),
+			"tencentcloud_dasb_reset_user":                                     bh.ResourceTencentCloudDasbResetUser(),
+			"tencentcloud_dasb_bind_device_account_private_key":                bh.ResourceTencentCloudDasbBindDeviceAccountPrivateKey(),
+			"tencentcloud_dasb_bind_device_account_password":                   bh.ResourceTencentCloudDasbBindDeviceAccountPassword(),
 			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),
@@ -1828,13 +1840,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
-			"tencentcloud_bi_project":                                          resourceTencentCloudBiProject(),
-			"tencentcloud_bi_user_role":                                        resourceTencentCloudBiUserRole(),
-			"tencentcloud_bi_project_user_role":                                resourceTencentCloudBiProjectUserRole(),
-			"tencentcloud_bi_datasource":                                       resourceTencentCloudBiDatasource(),
-			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
-			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
-			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
+			"tencentcloud_bi_project":                                          bi.ResourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_role":                                        bi.ResourceTencentCloudBiUserRole(),
+			"tencentcloud_bi_project_user_role":                                bi.ResourceTencentCloudBiProjectUserRole(),
+			"tencentcloud_bi_datasource":                                       bi.ResourceTencentCloudBiDatasource(),
+			"tencentcloud_bi_datasource_cloud":                                 bi.ResourceTencentCloudBiDatasourceCloud(),
+			"tencentcloud_bi_embed_token_apply":                                bi.ResourceTencentCloudBiEmbedTokenApply(),
+			"tencentcloud_bi_embed_interval_apply":                             bi.ResourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
 			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
 			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),
