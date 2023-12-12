@@ -1,17 +1,20 @@
-package tencentcloud
+package apm
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudApmInstance() *schema.Resource {
+func ResourceTencentCloudApmInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudApmInstanceCreate,
 		Read:   resourceTencentCloudApmInstanceRead,
@@ -55,10 +58,10 @@ func resourceTencentCloudApmInstance() *schema.Resource {
 }
 
 func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_apm_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = apm.NewCreateApmInstanceRequest()
@@ -81,10 +84,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 		request.SpanDailyCounters = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseApmClient().CreateApmInstance(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().CreateApmInstance(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -99,10 +102,10 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 	instanceId = *response.Response.InstanceId
 	d.SetId(instanceId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::apm:%s:uin/:apm-instance/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -113,14 +116,14 @@ func resourceTencentCloudApmInstanceCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_apm_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ApmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -151,7 +154,7 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("span_daily_counters", instance.SpanDailyCounters)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "apm", "apm-instance", tcClient.Region, d.Id())
 	if err != nil {
@@ -163,10 +166,10 @@ func resourceTencentCloudApmInstanceRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_apm_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := apm.NewModifyApmInstanceRequest()
 
@@ -203,10 +206,10 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 			request.SpanDailyCounters = helper.IntUint64(v.(int))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseApmClient().ModifyApmInstance(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseApmClient().ModifyApmInstance(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -220,12 +223,12 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("apm", "apm-instance", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("apm", "apm-instance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -235,13 +238,13 @@ func resourceTencentCloudApmInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudApmInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_apm_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_apm_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ApmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ApmService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instanceId := d.Id()
 
 	if err := service.DeleteApmInstanceById(ctx, instanceId); err != nil {

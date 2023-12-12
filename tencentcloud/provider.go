@@ -20,6 +20,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 )
 
 const (
@@ -1690,7 +1691,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mdl_stream_live_input":                               resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                                resourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_cvm_launch_template_version":                         resourceTencentCloudCvmLaunchTemplateVersion(),
-			"tencentcloud_apm_instance":                                        resourceTencentCloudApmInstance(),
+			"tencentcloud_apm_instance":                                        apm.ResourceTencentCloudApmInstance(),
 			"tencentcloud_cvm_launch_template_default_version":                 resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
 			"tencentcloud_lighthouse_firewall_rule":                            resourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_cvm_security_group_attachment":                       resourceTencentCloudCvmSecurityGroupAttachment(),
