@@ -2254,3 +2254,63 @@ func (me *ClbService) SetClbSecurityGroup(ctx context.Context, securityGroup str
 
 	return
 }
+func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context, targetGroups []string, associationsSet map[string]struct{}) (targetGroupAttachments []string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := clb.NewDescribeTargetGroupsRequest()
+	request.TargetGroupIds = helper.Strings(targetGroups)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeTargetGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TargetGroupSet) < 1 {
+		return
+	}
+
+	var result []string
+	for _, item := range response.Response.TargetGroupSet {
+		groupId := *item.TargetGroupId
+		for _, associations := range item.AssociatedRule {
+			info := make([]string, 0)
+
+			if associations.LoadBalancerId != nil {
+				info = append(info, *associations.LoadBalancerId)
+			} else {
+				info = append(info, "null")
+			}
+
+			if associations.ListenerId != nil {
+				info = append(info, *associations.ListenerId)
+			} else {
+				info = append(info, "null")
+			}
+
+			info = append(info, groupId)
+
+			if associations.LocationId != nil {
+				info = append(info, *associations.LocationId)
+			} else {
+				info = append(info, "null")
+			}
+
+			key := strings.Join(info, FILED_SP)
+			if _, ok := associationsSet[key]; ok {
+				result = append(result, key)
+			}
+		}
+	}
+	targetGroupAttachments = result
+	return
+}
