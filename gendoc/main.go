@@ -142,7 +142,7 @@ func genDoc(product, dtype, fpath, name string, resource *schema.Resource) {
 		productDir = "common"
 	}
 
-	filename := fmt.Sprintf("%s/%s_%s_%s.md", productDir, dtype, cloudMarkShort, data["resource"])
+	filename := fmt.Sprintf("services/%s/%s_%s_%s.md", productDir, dtype, cloudMarkShort, data["resource"])
 	message("[START]get description from file: %s\n", filename)
 
 	raw, err := os.ReadFile(filepath.Join(fpath, filename))
