@@ -22,6 +22,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 )
 
 const (
@@ -877,8 +878,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_check_data_engine_config_pairs_validity":  dataSourceTencentCloudDlcCheckDataEngineConfigPairsValidity(),
 			"tencentcloud_dlc_describe_updatable_data_engines":          dataSourceTencentCloudDlcDescribeUpdatableDataEngines(),
 			"tencentcloud_dlc_describe_data_engine_events":              dataSourceTencentCloudDlcDescribeDataEngineEvents(),
-			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
-			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
+			"tencentcloud_bi_project":                                   bi.DataSourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_project":                              bi.DataSourceTencentCloudBiUserProject(),
 			"tencentcloud_antiddos_basic_device_status":                 antiddos.DataSourceTencentCloudAntiddosBasicDeviceStatus(),
 			"tencentcloud_antiddos_bgp_biz_trend":                       antiddos.DataSourceTencentCloudAntiddosBgpBizTrend(),
 			"tencentcloud_antiddos_list_listener":                       antiddos.DataSourceTencentCloudAntiddosListListener(),
@@ -1837,13 +1838,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_update_certificate_record_retry_operation":       resourceTencentCloudSslUpdateCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_update_certificate_record_rollback_operation":    resourceTencentCloudSslUpdateCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_upload_revoke_letter_operation":                  resourceTencentCloudSslUploadRevokeLetterOperation(),
-			"tencentcloud_bi_project":                                          resourceTencentCloudBiProject(),
-			"tencentcloud_bi_user_role":                                        resourceTencentCloudBiUserRole(),
-			"tencentcloud_bi_project_user_role":                                resourceTencentCloudBiProjectUserRole(),
-			"tencentcloud_bi_datasource":                                       resourceTencentCloudBiDatasource(),
-			"tencentcloud_bi_datasource_cloud":                                 resourceTencentCloudBiDatasourceCloud(),
-			"tencentcloud_bi_embed_token_apply":                                resourceTencentCloudBiEmbedTokenApply(),
-			"tencentcloud_bi_embed_interval_apply":                             resourceTencentCloudBiEmbedIntervalApply(),
+			"tencentcloud_bi_project":                                          bi.ResourceTencentCloudBiProject(),
+			"tencentcloud_bi_user_role":                                        bi.ResourceTencentCloudBiUserRole(),
+			"tencentcloud_bi_project_user_role":                                bi.ResourceTencentCloudBiProjectUserRole(),
+			"tencentcloud_bi_datasource":                                       bi.ResourceTencentCloudBiDatasource(),
+			"tencentcloud_bi_datasource_cloud":                                 bi.ResourceTencentCloudBiDatasourceCloud(),
+			"tencentcloud_bi_embed_token_apply":                                bi.ResourceTencentCloudBiEmbedTokenApply(),
+			"tencentcloud_bi_embed_interval_apply":                             bi.ResourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
 			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
 			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),

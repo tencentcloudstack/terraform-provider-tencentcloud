@@ -1,16 +1,19 @@
-package tencentcloud
+package bi
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiUserRole() *schema.Resource {
+func ResourceTencentCloudBiUserRole() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBiUserRoleCreate,
 		Read:   resourceTencentCloudBiUserRoleRead,
@@ -59,10 +62,10 @@ func resourceTencentCloudBiUserRole() *schema.Resource {
 }
 
 func resourceTencentCloudBiUserRoleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_user_role.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_user_role.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = bi.NewCreateUserRoleRequest()
@@ -95,10 +98,10 @@ func resourceTencentCloudBiUserRoleCreate(d *schema.ResourceData, meta interface
 	}
 	request.UserInfoList = append(request.UserInfoList, &userInfo)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().CreateUserRole(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().CreateUserRole(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -115,14 +118,14 @@ func resourceTencentCloudBiUserRoleCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudBiUserRoleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_user_role.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_user_role.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	userId := d.Id()
 	userRole, err := service.DescribeBiUserRoleById(ctx, userId)
@@ -164,10 +167,10 @@ func resourceTencentCloudBiUserRoleRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudBiUserRoleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_user_role.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_user_role.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := bi.NewModifyUserRoleRequest()
 
@@ -206,10 +209,10 @@ func resourceTencentCloudBiUserRoleUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().ModifyUserRole(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().ModifyUserRole(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -224,13 +227,13 @@ func resourceTencentCloudBiUserRoleUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudBiUserRoleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_user_role.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_user_role.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	userId := d.Id()
 
 	if err := service.DeleteBiUserRoleById(ctx, userId); err != nil {

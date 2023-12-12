@@ -1,7 +1,9 @@
-package tencentcloud
+package bi_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,14 +13,14 @@ func TestAccTencentCloudBiProjectDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccBiProjectDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_bi_project.project"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_bi_project.project"),
 					resource.TestCheckResourceAttr("data.tencentcloud_bi_project.project", "list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_bi_project.project", "list.0.apply"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_bi_project.project", "list.0.auth_list.#"),

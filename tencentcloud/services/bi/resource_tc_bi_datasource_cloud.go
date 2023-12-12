@@ -1,4 +1,4 @@
-package tencentcloud
+package bi
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
+func ResourceTencentCloudBiDatasourceCloud() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBiDatasourceCloudCreate,
 		Read:   resourceTencentCloudBiDatasourceCloudRead,
@@ -149,10 +152,10 @@ func resourceTencentCloudBiDatasourceCloud() *schema.Resource {
 }
 
 func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_datasource_cloud.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_datasource_cloud.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = bi.NewCreateDatasourceCloudRequest()
@@ -234,10 +237,10 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 		request.DataOriginDatasourceId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().CreateDatasourceCloud(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().CreateDatasourceCloud(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -250,22 +253,22 @@ func resourceTencentCloudBiDatasourceCloudCreate(d *schema.ResourceData, meta in
 	}
 
 	id = *response.Response.Data.Id
-	d.SetId(strings.Join([]string{projectId, strconv.FormatInt(id, 10)}, FILED_SP))
+	d.SetId(strings.Join([]string{projectId, strconv.FormatInt(id, 10)}, tccommon.FILED_SP))
 
 	return resourceTencentCloudBiDatasourceCloudRead(d, meta)
 }
 
 func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_datasource_cloud.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_datasource_cloud.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -358,14 +361,14 @@ func resourceTencentCloudBiDatasourceCloudRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_datasource_cloud.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_datasource_cloud.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := bi.NewModifyDatasourceCloudRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -455,10 +458,10 @@ func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().ModifyDatasourceCloud(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().ModifyDatasourceCloud(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -473,14 +476,14 @@ func resourceTencentCloudBiDatasourceCloudUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudBiDatasourceCloudDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_datasource_cloud.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_datasource_cloud.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

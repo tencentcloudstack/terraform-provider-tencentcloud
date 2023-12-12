@@ -1,15 +1,18 @@
-package tencentcloud
+package bi
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiEmbedTokenApply() *schema.Resource {
+func ResourceTencentCloudBiEmbedTokenApply() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBiEmbedTokenApplyCreate,
 		Read:   resourceTencentCloudBiEmbedTokenApplyRead,
@@ -80,10 +83,10 @@ func resourceTencentCloudBiEmbedTokenApply() *schema.Resource {
 }
 
 func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_embed_token_apply.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = bi.NewCreateEmbedTokenRequest()
@@ -115,10 +118,10 @@ func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta in
 		request.UserId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().CreateEmbedToken(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().CreateEmbedToken(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -151,15 +154,15 @@ func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudBiEmbedTokenApplyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_embed_token_apply.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudBiEmbedTokenApplyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_embed_token_apply.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_embed_token_apply.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

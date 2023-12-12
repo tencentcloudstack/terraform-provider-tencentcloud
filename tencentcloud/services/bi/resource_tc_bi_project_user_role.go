@@ -1,4 +1,4 @@
-package tencentcloud
+package bi
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudBiProjectUserRole() *schema.Resource {
+func ResourceTencentCloudBiProjectUserRole() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudBiProjectUserRoleCreate,
 		Read:   resourceTencentCloudBiProjectUserRoleRead,
@@ -67,10 +70,10 @@ func resourceTencentCloudBiProjectUserRole() *schema.Resource {
 }
 
 func resourceTencentCloudBiProjectUserRoleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_project_user_role.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_project_user_role.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = bi.NewCreateUserRoleProjectRequest()
@@ -109,10 +112,10 @@ func resourceTencentCloudBiProjectUserRoleCreate(d *schema.ResourceData, meta in
 	}
 	request.UserInfoList = append(request.UserInfoList, &userInfo)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().CreateUserRoleProject(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().CreateUserRoleProject(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -123,22 +126,22 @@ func resourceTencentCloudBiProjectUserRoleCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	d.SetId(strings.Join([]string{strconv.Itoa(projectId), userId}, FILED_SP))
+	d.SetId(strings.Join([]string{strconv.Itoa(projectId), userId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudBiProjectUserRoleRead(d, meta)
 }
 
 func resourceTencentCloudBiProjectUserRoleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_project_user_role.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_project_user_role.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -191,14 +194,14 @@ func resourceTencentCloudBiProjectUserRoleRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudBiProjectUserRoleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_project_user_role.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_project_user_role.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := bi.NewModifyUserRoleProjectRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -236,10 +239,10 @@ func resourceTencentCloudBiProjectUserRoleUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseBiClient().ModifyUserRoleProject(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().ModifyUserRoleProject(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -254,14 +257,14 @@ func resourceTencentCloudBiProjectUserRoleUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudBiProjectUserRoleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_bi_project_user_role.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_bi_project_user_role.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

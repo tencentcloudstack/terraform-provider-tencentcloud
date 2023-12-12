@@ -1,15 +1,18 @@
-package tencentcloud
+package bi
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	bi "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/bi/v20220105"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudBiUserProject() *schema.Resource {
+func DataSourceTencentCloudBiUserProject() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudBiUserProjectRead,
 		Schema: map[string]*schema.Schema{
@@ -120,12 +123,12 @@ func dataSourceTencentCloudBiUserProject() *schema.Resource {
 }
 
 func dataSourceTencentCloudBiUserProjectRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_bi_user_project.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_bi_user_project.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOkExists("project_id"); ok {
@@ -136,13 +139,13 @@ func dataSourceTencentCloudBiUserProjectRead(d *schema.ResourceData, meta interf
 		paramMap["AllPage"] = helper.Bool(v.(bool))
 	}
 
-	service := BiService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := BiService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var data []*bi.UserIdAndUserName
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeBiUserProjectByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		data = result
 		return nil
@@ -225,7 +228,7 @@ func dataSourceTencentCloudBiUserProjectRead(d *schema.ResourceData, meta interf
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), dataList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), dataList); e != nil {
 			return e
 		}
 	}
