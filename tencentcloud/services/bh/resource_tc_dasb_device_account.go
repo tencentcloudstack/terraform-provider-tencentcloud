@@ -1,4 +1,4 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbDeviceAccount() *schema.Resource {
+func ResourceTencentCloudDasbDeviceAccount() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbDeviceAccountCreate,
 		Read:   resourceTencentCloudDasbDeviceAccountRead,
@@ -38,11 +41,11 @@ func resourceTencentCloudDasbDeviceAccount() *schema.Resource {
 }
 
 func resourceTencentCloudDasbDeviceAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_account.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_account.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
 		request         = dasb.NewCreateDeviceAccountRequest()
 		response        = dasb.NewCreateDeviceAccountResponse()
 		deviceAccountId string
@@ -56,10 +59,10 @@ func resourceTencentCloudDasbDeviceAccountCreate(d *schema.ResourceData, meta in
 		request.Account = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().CreateDeviceAccount(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().CreateDeviceAccount(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -86,13 +89,13 @@ func resourceTencentCloudDasbDeviceAccountCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDasbDeviceAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_account.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_account.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceAccountId = d.Id()
 	)
 
@@ -119,13 +122,13 @@ func resourceTencentCloudDasbDeviceAccountRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDasbDeviceAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_account.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_account.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceAccountId = d.Id()
 	)
 

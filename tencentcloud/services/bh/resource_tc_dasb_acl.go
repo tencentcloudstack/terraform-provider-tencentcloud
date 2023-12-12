@@ -1,4 +1,4 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbAcl() *schema.Resource {
+func ResourceTencentCloudDasbAcl() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbAclCreate,
 		Read:   resourceTencentCloudDasbAclRead,
@@ -169,11 +172,11 @@ func resourceTencentCloudDasbAcl() *schema.Resource {
 }
 
 func resourceTencentCloudDasbAclCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_acl.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_acl.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = dasb.NewCreateAclRequest()
 		response = dasb.NewCreateAclResponse()
 		aclId    string
@@ -315,10 +318,10 @@ func resourceTencentCloudDasbAclCreate(d *schema.ResourceData, meta interface{})
 		request.AllowAccessCredential = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().CreateAcl(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().CreateAcl(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -345,13 +348,13 @@ func resourceTencentCloudDasbAclCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudDasbAclRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_acl.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_acl.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		aclId   = d.Id()
 	)
 
@@ -523,11 +526,11 @@ func resourceTencentCloudDasbAclRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudDasbAclUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_acl.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_acl.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = dasb.NewModifyAclRequest()
 		aclId   = d.Id()
 	)
@@ -669,10 +672,10 @@ func resourceTencentCloudDasbAclUpdate(d *schema.ResourceData, meta interface{})
 		request.AllowAccessCredential = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().ModifyAcl(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyAcl(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -689,13 +692,13 @@ func resourceTencentCloudDasbAclUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudDasbAclDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_acl.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_acl.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		aclId   = d.Id()
 	)
 

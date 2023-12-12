@@ -1,4 +1,4 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbDeviceGroup() *schema.Resource {
+func ResourceTencentCloudDasbDeviceGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbDeviceGroupCreate,
 		Read:   resourceTencentCloudDasbDeviceGroupRead,
@@ -37,11 +40,11 @@ func resourceTencentCloudDasbDeviceGroup() *schema.Resource {
 }
 
 func resourceTencentCloudDasbDeviceGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		request       = dasb.NewCreateDeviceGroupRequest()
 		response      = dasb.NewCreateDeviceGroupResponse()
 		deviceGroupId string
@@ -55,10 +58,10 @@ func resourceTencentCloudDasbDeviceGroupCreate(d *schema.ResourceData, meta inte
 		request.DepartmentId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().CreateDeviceGroup(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().CreateDeviceGroup(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -85,13 +88,13 @@ func resourceTencentCloudDasbDeviceGroupCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDasbDeviceGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceGroupId = d.Id()
 	)
 
@@ -121,11 +124,11 @@ func resourceTencentCloudDasbDeviceGroupRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudDasbDeviceGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		request       = dasb.NewModifyDeviceGroupRequest()
 		deviceGroupId = d.Id()
 	)
@@ -140,10 +143,10 @@ func resourceTencentCloudDasbDeviceGroupUpdate(d *schema.ResourceData, meta inte
 		request.DepartmentId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().ModifyDeviceGroup(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyDeviceGroup(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -160,13 +163,13 @@ func resourceTencentCloudDasbDeviceGroupUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDasbDeviceGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		service       = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service       = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceGroupId = d.Id()
 	)
 

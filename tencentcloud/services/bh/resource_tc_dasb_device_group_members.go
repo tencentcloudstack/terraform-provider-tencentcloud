@@ -1,4 +1,4 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbDeviceGroupMembers() *schema.Resource {
+func ResourceTencentCloudDasbDeviceGroupMembers() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbDeviceGroupMembersCreate,
 		Read:   resourceTencentCloudDasbDeviceGroupMembersRead,
@@ -40,11 +43,11 @@ func resourceTencentCloudDasbDeviceGroupMembers() *schema.Resource {
 }
 
 func resourceTencentCloudDasbDeviceGroupMembersCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group_members.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group_members.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = getLogId(contextNil)
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = dasb.NewAddDeviceGroupMembersRequest()
 		deviceGroupId  string
 		memberIdSetStr string
@@ -65,13 +68,13 @@ func resourceTencentCloudDasbDeviceGroupMembersCreate(d *schema.ResourceData, me
 			tmpList = append(tmpList, strconv.Itoa(memberIdSet))
 		}
 
-		memberIdSetStr = strings.Join(tmpList, COMMA_SP)
+		memberIdSetStr = strings.Join(tmpList, tccommon.COMMA_SP)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().AddDeviceGroupMembers(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().AddDeviceGroupMembers(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -89,22 +92,22 @@ func resourceTencentCloudDasbDeviceGroupMembersCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(strings.Join([]string{deviceGroupId, memberIdSetStr}, FILED_SP))
+	d.SetId(strings.Join([]string{deviceGroupId, memberIdSetStr}, tccommon.FILED_SP))
 
 	return resourceTencentCloudDasbDeviceGroupMembersRead(d, meta)
 }
 
 func resourceTencentCloudDasbDeviceGroupMembersRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group_members.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group_members.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -128,16 +131,16 @@ func resourceTencentCloudDasbDeviceGroupMembersRead(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudDasbDeviceGroupMembersDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_device_group_members.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_device_group_members.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

@@ -21,6 +21,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 )
 
 const (
@@ -1808,20 +1809,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
-			"tencentcloud_dasb_acl":                                            resourceTencentCloudDasbAcl(),
-			"tencentcloud_dasb_cmd_template":                                   resourceTencentCloudDasbCmdTemplate(),
-			"tencentcloud_dasb_device_group":                                   resourceTencentCloudDasbDeviceGroup(),
-			"tencentcloud_dasb_user":                                           resourceTencentCloudDasbUser(),
-			"tencentcloud_dasb_device_account":                                 resourceTencentCloudDasbDeviceAccount(),
-			"tencentcloud_dasb_device_group_members":                           resourceTencentCloudDasbDeviceGroupMembers(),
-			"tencentcloud_dasb_user_group_members":                             resourceTencentCloudDasbUserGroupMembers(),
-			"tencentcloud_dasb_bind_device_resource":                           resourceTencentCloudDasbBindDeviceResource(),
-			"tencentcloud_dasb_resource":                                       resourceTencentCloudDasbResource(),
-			"tencentcloud_dasb_device":                                         resourceTencentCloudDasbDevice(),
-			"tencentcloud_dasb_user_group":                                     resourceTencentCloudDasbUserGroup(),
-			"tencentcloud_dasb_reset_user":                                     resourceTencentCloudDasbResetUser(),
-			"tencentcloud_dasb_bind_device_account_private_key":                resourceTencentCloudDasbBindDeviceAccountPrivateKey(),
-			"tencentcloud_dasb_bind_device_account_password":                   resourceTencentCloudDasbBindDeviceAccountPassword(),
+			"tencentcloud_dasb_acl":                                            bh.ResourceTencentCloudDasbAcl(),
+			"tencentcloud_dasb_cmd_template":                                   bh.ResourceTencentCloudDasbCmdTemplate(),
+			"tencentcloud_dasb_device_group":                                   bh.ResourceTencentCloudDasbDeviceGroup(),
+			"tencentcloud_dasb_user":                                           bh.ResourceTencentCloudDasbUser(),
+			"tencentcloud_dasb_device_account":                                 bh.ResourceTencentCloudDasbDeviceAccount(),
+			"tencentcloud_dasb_device_group_members":                           bh.ResourceTencentCloudDasbDeviceGroupMembers(),
+			"tencentcloud_dasb_user_group_members":                             bh.ResourceTencentCloudDasbUserGroupMembers(),
+			"tencentcloud_dasb_bind_device_resource":                           bh.ResourceTencentCloudDasbBindDeviceResource(),
+			"tencentcloud_dasb_resource":                                       bh.ResourceTencentCloudDasbResource(),
+			"tencentcloud_dasb_device":                                         bh.ResourceTencentCloudDasbDevice(),
+			"tencentcloud_dasb_user_group":                                     bh.ResourceTencentCloudDasbUserGroup(),
+			"tencentcloud_dasb_reset_user":                                     bh.ResourceTencentCloudDasbResetUser(),
+			"tencentcloud_dasb_bind_device_account_private_key":                bh.ResourceTencentCloudDasbBindDeviceAccountPrivateKey(),
+			"tencentcloud_dasb_bind_device_account_password":                   bh.ResourceTencentCloudDasbBindDeviceAccountPassword(),
 			"tencentcloud_ssl_check_certificate_chain_operation":               resourceTencentCloudSslCheckCertificateChainOperation(),
 			"tencentcloud_ssl_complete_certificate_operation":                  resourceTencentCloudSslCompleteCertificateOperation(),
 			"tencentcloud_ssl_deploy_certificate_instance_operation":           resourceTencentCloudSslDeployCertificateInstanceOperation(),

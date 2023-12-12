@@ -1,15 +1,18 @@
-package tencentcloud
+package bh
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbBindDeviceResource() *schema.Resource {
+func ResourceTencentCloudDasbBindDeviceResource() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbBindDeviceResourceCreate,
 		Read:   resourceTencentCloudDasbBindDeviceResourceRead,
@@ -34,11 +37,11 @@ func resourceTencentCloudDasbBindDeviceResource() *schema.Resource {
 }
 
 func resourceTencentCloudDasbBindDeviceResourceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_resource.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_resource.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = dasb.NewBindDeviceResourceRequest()
 		resourceId string
 	)
@@ -56,10 +59,10 @@ func resourceTencentCloudDasbBindDeviceResourceCreate(d *schema.ResourceData, me
 		resourceId = v.(string)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().BindDeviceResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().BindDeviceResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -77,15 +80,15 @@ func resourceTencentCloudDasbBindDeviceResourceCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudDasbBindDeviceResourceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_resource.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_resource.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudDasbBindDeviceResourceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_resource.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_resource.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

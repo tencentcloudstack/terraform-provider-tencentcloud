@@ -1,17 +1,20 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbBindDeviceAccountPassword() *schema.Resource {
+func ResourceTencentCloudDasbBindDeviceAccountPassword() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbBindDeviceAccountPasswordCreate,
 		Read:   resourceTencentCloudDasbBindDeviceAccountPasswordRead,
@@ -35,11 +38,11 @@ func resourceTencentCloudDasbBindDeviceAccountPassword() *schema.Resource {
 }
 
 func resourceTencentCloudDasbBindDeviceAccountPasswordCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_account_password.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_account_password.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
 		request         = dasb.NewBindDeviceAccountPasswordRequest()
 		deviceAccountId string
 	)
@@ -53,10 +56,10 @@ func resourceTencentCloudDasbBindDeviceAccountPasswordCreate(d *schema.ResourceD
 		request.Password = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().BindDeviceAccountPassword(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().BindDeviceAccountPassword(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -75,8 +78,8 @@ func resourceTencentCloudDasbBindDeviceAccountPasswordCreate(d *schema.ResourceD
 }
 
 func resourceTencentCloudDasbBindDeviceAccountPasswordRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_account_password.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_account_password.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	if v, ok := d.GetOkExists("device_account_id"); ok {
 		_ = d.Set("device_account_id", v.(int))
@@ -90,13 +93,13 @@ func resourceTencentCloudDasbBindDeviceAccountPasswordRead(d *schema.ResourceDat
 }
 
 func resourceTencentCloudDasbBindDeviceAccountPasswordDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_bind_device_account_password.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_bind_device_account_password.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceAccountId = d.Id()
 	)
 

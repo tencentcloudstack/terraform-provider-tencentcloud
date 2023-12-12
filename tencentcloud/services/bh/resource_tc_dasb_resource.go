@@ -1,4 +1,4 @@
-package tencentcloud
+package bh
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dasb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dasb/v20191018"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDasbResource() *schema.Resource {
+func ResourceTencentCloudDasbResource() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDasbResourceCreate,
 		Read:   resourceTencentCloudDasbResourceRead,
@@ -40,7 +43,7 @@ func resourceTencentCloudDasbResource() *schema.Resource {
 			"resource_edition": {
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(RESOURCE_EDITION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(RESOURCE_EDITION),
 				Description:  "Resource type.Value:standard/pro.",
 			},
 			"resource_node": {
@@ -51,19 +54,19 @@ func resourceTencentCloudDasbResource() *schema.Resource {
 			"time_unit": {
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue([]string{"m"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"m"}),
 				Description:  "Billing cycle, only support m: month.",
 			},
 			"time_span": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
+				ValidateFunc: tccommon.ValidateIntegerMin(1),
 				Description:  "Billing time.",
 			},
 			"auto_renew_flag": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 				Description:  "Automatic renewal. 1 is auto renew flag, 0 is not.",
 			},
 			"deploy_zone": {
@@ -88,11 +91,11 @@ func resourceTencentCloudDasbResource() *schema.Resource {
 }
 
 func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_resource.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_resource.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
 		request         = dasb.NewCreateResourceRequest()
 		response        = dasb.NewCreateResourceResponse()
 		describeRequest = dasb.NewDescribeResourcesRequest()
@@ -138,10 +141,10 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 		request.DeployZone = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().CreateResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().CreateResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -165,10 +168,10 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 
 	// wait
 	describeRequest.ResourceIds = helper.Strings([]string{resourceId})
-	err = resource.Retry(writeRetryTimeout*4, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().DescribeResources(describeRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout*4, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().DescribeResources(describeRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, describeRequest.GetAction(), describeRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -200,10 +203,10 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 
 	if modifyRequest.PackageBandwidth != nil || modifyRequest.PackageNode != nil {
 		modifyRequest.ResourceId = &resourceId
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().ModifyResource(modifyRequest)
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyResource(modifyRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -221,13 +224,13 @@ func resourceTencentCloudDasbResourceCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudDasbResourceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_resource.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_resource.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = DasbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = DasbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		resourceId = d.Id()
 	)
 
@@ -291,11 +294,11 @@ func resourceTencentCloudDasbResourceRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudDasbResourceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_resource.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_resource.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = dasb.NewModifyResourceRequest()
 		resourceId = d.Id()
 	)
@@ -339,10 +342,10 @@ func resourceTencentCloudDasbResourceUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDasbClient().ModifyResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDasbClient().ModifyResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -359,8 +362,8 @@ func resourceTencentCloudDasbResourceUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudDasbResourceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dasb_resource.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dasb_resource.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return fmt.Errorf("tencentcloud dasb resource not supported delete, please contact the work order for processing")
 }
