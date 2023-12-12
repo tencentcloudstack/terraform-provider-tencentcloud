@@ -3301,3 +3301,107 @@ func (me *SqlserverService) DescribeSqlserverDatabaseTDEById(ctx context.Context
 
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverInstanceHaById(ctx context.Context, instanceId string) (instanceHa *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.DBInstances) < 1 {
+		return
+	}
+
+	instanceHa = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverInstanceSslById(ctx context.Context, instanceId string) (instanceSsl *sqlserver.DescribeDBInstancesAttributeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesAttributeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstancesAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceSsl = response.Response
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverDescHaLogByFilter(ctx context.Context, param map[string]interface{}) (descHaLog []*sqlserver.SwitchLog, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeHASwitchLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+
+		if k == "SwitchType" {
+			request.SwitchType = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeHASwitchLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SwitchLog) < 1 {
+		return
+	}
+
+	descHaLog = response.Response.SwitchLog
+	return
+}

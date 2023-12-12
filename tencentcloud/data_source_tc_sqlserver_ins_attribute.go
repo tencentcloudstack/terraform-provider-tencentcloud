@@ -77,6 +77,30 @@ func dataSourceTencentCloudSqlserverInsAttribute() *schema.Resource {
 					},
 				},
 			},
+			"ssl_config": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "SSL encryption.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"encryption": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "SSL encryption status, enable - turned on, disable-not turned on, enable_doing - enabling, disable_doing-closing, renew_doing-updating, wait_doing-wait for execution within maintenance time Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"ssl_validity_period": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "SSL certificate validity period, time format YYYY-MM-DD HH:MM:SS Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+						"ssl_validity": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "SSL certificate validity, 0-invalid, 1-valid Note: This field may return null, indicating that no valid value can be obtained.",
+						},
+					},
+				},
+			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -168,6 +192,26 @@ func dataSourceTencentCloudSqlserverInsAttributeRead(d *schema.ResourceData, met
 		tmpList = append(tmpList, configMap)
 
 		_ = d.Set("tde_config", tmpList)
+	}
+
+	if insAttribute.SSLConfig != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		configMap := map[string]interface{}{}
+		if insAttribute.SSLConfig.Encryption != nil {
+			configMap["encryption"] = insAttribute.SSLConfig.Encryption
+		}
+
+		if insAttribute.SSLConfig.SSLValidityPeriod != nil {
+			configMap["ssl_validity_period"] = insAttribute.SSLConfig.SSLValidityPeriod
+		}
+
+		if insAttribute.SSLConfig.SSLValidity != nil {
+			configMap["ssl_validity"] = insAttribute.SSLConfig.SSLValidity
+		}
+
+		tmpList = append(tmpList, configMap)
+
+		_ = d.Set("ssl_config", tmpList)
 	}
 
 	d.SetId(instanceId)

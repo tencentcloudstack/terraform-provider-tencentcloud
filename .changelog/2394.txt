@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_sqlserver_instance_ssl
+```
+
+```release-note:new-data-source
+tencentcloud_sqlserver_desc_ha_log
+```
+
+```release-note:enhancement
+data_source/tencentcloud_sqlserver_ins_attribute: Support query `ssl_config` param.
+```
