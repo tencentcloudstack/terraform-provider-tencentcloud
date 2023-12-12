@@ -1,12 +1,13 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceSslResource_basic -v
 func TestAccTencentCloudSqlserverInstanceSslResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -14,24 +15,50 @@ func TestAccTencentCloudSqlserverInstanceSslResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSqlserverInstanceSsl,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_instance_ssl.instance_ssl", "id")),
+				Config: testAccSqlserverInstanceSslEnable,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_instance_ssl.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "instance_id", "mssql-qelbzgwf"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "type", "enable"),
+				),
 			},
 			{
-				ResourceName:      "tencentcloud_sqlserver_instance_ssl.instance_ssl",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccSqlserverInstanceSslRenew,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_instance_ssl.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "instance_id", "mssql-qelbzgwf"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "type", "renew"),
+				),
+			},
+			{
+				Config: testAccSqlserverInstanceSslDisable,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_instance_ssl.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "instance_id", "mssql-qelbzgwf"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_instance_ssl.example", "type", "disable"),
+				),
 			},
 		},
 	})
 }
 
-const testAccSqlserverInstanceSsl = `
-
-resource "tencentcloud_sqlserver_instance_ssl" "instance_ssl" {
-  instance_id = "mssql-i1z41iwd"
-  type = "enable"
-  wait_switch = 0
+const testAccSqlserverInstanceSslEnable = `
+resource "tencentcloud_sqlserver_instance_ssl" "example" {
+  instance_id = "mssql-qelbzgwf"
+  type        = "enable"
 }
+`
 
+const testAccSqlserverInstanceSslRenew = `
+resource "tencentcloud_sqlserver_instance_ssl" "example" {
+  instance_id = "mssql-qelbzgwf"
+  type        = "renew"
+}
+`
+
+const testAccSqlserverInstanceSslDisable = `
+resource "tencentcloud_sqlserver_instance_ssl" "example" {
+  instance_id = "mssql-qelbzgwf"
+  type        = "disable"
+}
 `

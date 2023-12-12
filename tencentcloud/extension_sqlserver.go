@@ -210,3 +210,15 @@ const (
 	UpdateDefaultTimeout = 7200
 	DeleteDefaultTimeout = 7200
 )
+
+const (
+	SSL_TYPE_ENABLE  = "enable"
+	SSL_TYPE_DISABLE = "disable"
+	SSL_TYPE_RENEW   = "renew"
+)
+
+var SSL_TYPE = []string{
+	SSL_TYPE_ENABLE,
+	SSL_TYPE_DISABLE,
+	SSL_TYPE_RENEW,
+}

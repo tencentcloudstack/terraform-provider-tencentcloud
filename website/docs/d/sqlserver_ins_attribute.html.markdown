@@ -37,6 +37,10 @@ In addition to all arguments above, the following attributes are exported:
 * `regular_backup_save_days` - Archive backup retention period: [90-3650] days.
 * `regular_backup_start_time` - Archive backup start date in YYYY-MM-DD format, which is the current time by default.
 * `regular_backup_strategy` - Archive backup policy. Valid values: years (yearly); quarters (quarterly);months` (monthly).
+* `ssl_config` - SSL encryption.
+  * `encryption` - SSL encryption status, enable - turned on, disable-not turned on, enable_doing - enabling, disable_doing-closing, renew_doing-updating, wait_doing-wait for execution within maintenance time Note: This field may return null, indicating that no valid value can be obtained.
+  * `ssl_validity_period` - SSL certificate validity period, time format YYYY-MM-DD HH:MM:SS Note: This field may return null, indicating that no valid value can be obtained.
+  * `ssl_validity` - SSL certificate validity, 0-invalid, 1-valid Note: This field may return null, indicating that no valid value can be obtained.
 * `tde_config` - TDE Transparent Data Encryption Configuration.
   * `certificate_attribution` - Certificate ownership. Self - indicates using the account's own certificate, others - indicates referencing certificates from other accounts, and none - indicates no certificate.
   * `encryption` - TDE encryption, 'enable' - enabled, 'disable' - not enabled.
