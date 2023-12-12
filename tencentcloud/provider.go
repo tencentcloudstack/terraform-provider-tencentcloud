@@ -10,11 +10,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mitchellh/go-homedir"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
+
+	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -43,6 +44,13 @@ const (
 
 type TencentCloudClient struct {
 	apiV3Conn *connectivity.TencentCloudClient
+}
+
+var _ providercommon.ProviderMeta = &TencentCloudClient{}
+
+// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return meta.apiV3Conn
 }
 
 func Provider() *schema.Provider {
