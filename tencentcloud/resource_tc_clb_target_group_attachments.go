@@ -167,7 +167,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 		return err
 	}
 
-	if len(targetGroupAttachments) < 0 {
+	if len(targetGroupAttachments) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `ClbTargetGroupAttachments` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
