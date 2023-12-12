@@ -2,6 +2,8 @@ Provides a resource to create a ssm product_secret
 
 Example Usage
 
+Ssm secret for mysql
+
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "cdb"
@@ -76,6 +78,45 @@ resource "tencentcloud_ssm_product_secret" "example" {
   kms_key_id          = tencentcloud_kms_key.example.id
   status              = "Enabled"
   enable_rotation     = true
+  rotation_begin_time = "2023-08-05 20:54:33"
+  rotation_frequency  = 30
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Ssm secret for tdsql-c-mysql
+```hcl
+resource "tencentcloud_ssm_product_secret" "example" {
+  secret_name      = "tf-tdsql-c-example"
+  user_name_prefix = "prefix"
+  product_name     = "Tdsql_C_Mysql"
+  instance_id      = "cynosdbmysql-xxxxxx"
+  domains          = ["%"]
+  privileges_list {
+    privilege_name = "GlobalPrivileges"
+    privileges     = [
+      "ALTER",
+      "CREATE",
+      "DELETE",
+    ]
+  }
+  privileges_list {
+    privilege_name = "DatabasePrivileges"
+    database       = "test"
+    privileges     = [
+      "ALTER",
+      "CREATE",
+      "DELETE",
+      "SELECT",
+    ]
+  }
+  description         = "test tdsql-c"
+  kms_key_id          = null
+  status              = "Enabled"
+  enable_rotation     = false
   rotation_begin_time = "2023-08-05 20:54:33"
   rotation_frequency  = 30
 

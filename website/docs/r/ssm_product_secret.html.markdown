@@ -13,6 +13,8 @@ Provides a resource to create a ssm product_secret
 
 ## Example Usage
 
+### Ssm secret for mysql
+
 ```hcl
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "cdb"
@@ -96,6 +98,46 @@ resource "tencentcloud_ssm_product_secret" "example" {
 }
 ```
 
+### Ssm secret for tdsql-c-mysql
+
+```hcl
+resource "tencentcloud_ssm_product_secret" "example" {
+  secret_name      = "tf-tdsql-c-example"
+  user_name_prefix = "prefix"
+  product_name     = "Tdsql_C_Mysql"
+  instance_id      = "cynosdbmysql-xxxxxx"
+  domains          = ["%"]
+  privileges_list {
+    privilege_name = "GlobalPrivileges"
+    privileges = [
+      "ALTER",
+      "CREATE",
+      "DELETE",
+    ]
+  }
+  privileges_list {
+    privilege_name = "DatabasePrivileges"
+    database       = "test"
+    privileges = [
+      "ALTER",
+      "CREATE",
+      "DELETE",
+      "SELECT",
+    ]
+  }
+  description         = "test tdsql-c"
+  kms_key_id          = null
+  status              = "Enabled"
+  enable_rotation     = false
+  rotation_begin_time = "2023-08-05 20:54:33"
+  rotation_frequency  = 30
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -103,7 +145,7 @@ The following arguments are supported:
 * `domains` - (Required, Set: [`String`]) Domain name of the account in the form of IP. You can enter `%`.
 * `instance_id` - (Required, String) Tencent Cloud service instance ID.
 * `privileges_list` - (Required, List) List of permissions that need to be granted when the credential is bound to a Tencent Cloud service.
-* `product_name` - (Required, String) Name of the Tencent Cloud service bound to the credential, such as `Mysql`, `Tdsql-mysql`. you can use dataSource `tencentcloud_ssm_products` to query supported products.
+* `product_name` - (Required, String) Name of the Tencent Cloud service bound to the credential, such as `Mysql`, `Tdsql-mysql`, `Tdsql_C_Mysql`. you can use dataSource `tencentcloud_ssm_products` to query supported products.
 * `secret_name` - (Required, String, ForceNew) Credential name, which must be unique in the same region. It can contain 128 bytes of letters, digits, hyphens, and underscores and must begin with a letter or digit.
 * `user_name_prefix` - (Required, String) Prefix of the user account name, which is specified by you and can contain up to 8 characters.Supported character sets include:Digits: [0, 9].Lowercase letters: [a, z].Uppercase letters: [A, Z].Special symbols: underscore.The prefix must begin with a letter.
 * `description` - (Optional, String) Description, which is used to describe the purpose in detail and can contain up to 2,048 bytes.
