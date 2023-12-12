@@ -1,15 +1,18 @@
-package tencentcloud
+package antiddos
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAntiddosBasicDeviceStatus() *schema.Resource {
+func DataSourceTencentCloudAntiddosBasicDeviceStatus() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAntiddosBasicDeviceStatusRead,
 		Schema: map[string]*schema.Schema{
@@ -87,12 +90,12 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatus() *schema.Resource {
 }
 
 func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_antiddos_basic_device_status.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_antiddos_basic_device_status.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("ip_list"); ok {
@@ -109,13 +112,13 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 		paramMap["FilterRegion"] = helper.IntUint64(v.(int))
 	}
 
-	service := AntiddosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var basicDeviceStatus *antiddos.DescribeBasicDeviceStatusResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAntiddosBasicDeviceStatusByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		basicDeviceStatus = result
 		return nil
@@ -165,7 +168,7 @@ func dataSourceTencentCloudAntiddosBasicDeviceStatusRead(d *schema.ResourceData,
 	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

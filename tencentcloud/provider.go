@@ -19,6 +19,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
 )
 
 const (
@@ -876,10 +877,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_describe_data_engine_events":              dataSourceTencentCloudDlcDescribeDataEngineEvents(),
 			"tencentcloud_bi_project":                                   dataSourceTencentCloudBiProject(),
 			"tencentcloud_bi_user_project":                              dataSourceTencentCloudBiUserProject(),
-			"tencentcloud_antiddos_basic_device_status":                 dataSourceTencentCloudAntiddosBasicDeviceStatus(),
-			"tencentcloud_antiddos_bgp_biz_trend":                       dataSourceTencentCloudAntiddosBgpBizTrend(),
-			"tencentcloud_antiddos_list_listener":                       dataSourceTencentCloudAntiddosListListener(),
-			"tencentcloud_antiddos_overview_attack_trend":               dataSourceTencentCloudAntiddosOverviewAttackTrend(),
+			"tencentcloud_antiddos_basic_device_status":                 antiddos.DataSourceTencentCloudAntiddosBasicDeviceStatus(),
+			"tencentcloud_antiddos_bgp_biz_trend":                       antiddos.DataSourceTencentCloudAntiddosBgpBizTrend(),
+			"tencentcloud_antiddos_list_listener":                       antiddos.DataSourceTencentCloudAntiddosListListener(),
+			"tencentcloud_antiddos_overview_attack_trend":               antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
 			"tencentcloud_clickhouse_spec":                              dataSourceTencentCloudClickhouseSpec(),

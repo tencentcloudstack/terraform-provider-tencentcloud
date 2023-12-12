@@ -1,15 +1,18 @@
-package tencentcloud
+package antiddos
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAntiddosBgpBizTrend() *schema.Resource {
+func DataSourceTencentCloudAntiddosBgpBizTrend() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAntiddosBgpBizTrendRead,
 		Schema: map[string]*schema.Schema{
@@ -34,7 +37,7 @@ func dataSourceTencentCloudAntiddosBgpBizTrend() *schema.Resource {
 			"metric_name": {
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue([]string{"intraffic", "outtraffic", "inpkg", "outpkg"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"intraffic", "outtraffic", "inpkg", "outpkg"}),
 				Description:  "Statistic metric name, for example: intraffic, outtraffic, inpkg, outpkg.",
 			},
 
@@ -47,7 +50,7 @@ func dataSourceTencentCloudAntiddosBgpBizTrend() *schema.Resource {
 			"flag": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
 				Description:  "0 represents fixed time, 1 represents custom time.",
 			},
 
@@ -82,12 +85,12 @@ func dataSourceTencentCloudAntiddosBgpBizTrend() *schema.Resource {
 }
 
 func dataSourceTencentCloudAntiddosBgpBizTrendRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_antiddos_bgp_biz_trend.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_antiddos_bgp_biz_trend.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("business"); ok {
@@ -116,13 +119,13 @@ func dataSourceTencentCloudAntiddosBgpBizTrendRead(d *schema.ResourceData, meta 
 		paramMap["Flag"] = helper.IntUint64(v.(int))
 	}
 
-	service := AntiddosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var bgpBizTrend *antiddos.DescribeBgpBizTrendResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAntiddosBgpBizTrendByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		bgpBizTrend = result
 		return nil
@@ -159,7 +162,7 @@ func dataSourceTencentCloudAntiddosBgpBizTrendRead(d *schema.ResourceData, meta 
 	d.SetId(instanceId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

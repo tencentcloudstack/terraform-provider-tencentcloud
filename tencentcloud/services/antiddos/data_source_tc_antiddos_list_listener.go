@@ -1,15 +1,18 @@
-package tencentcloud
+package antiddos
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAntiddosListListener() *schema.Resource {
+func DataSourceTencentCloudAntiddosListListener() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAntiddosListListenerRead,
 		Schema: map[string]*schema.Schema{
@@ -251,20 +254,20 @@ func dataSourceTencentCloudAntiddosListListener() *schema.Resource {
 }
 
 func dataSourceTencentCloudAntiddosListListenerRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_antiddos_list_listener.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_antiddos_list_listener.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AntiddosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := AntiddosService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var listListener *antiddos.DescribeListListenerResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeAntiddosListListenerByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		listListener = result
 		return nil
@@ -485,7 +488,7 @@ func dataSourceTencentCloudAntiddosListListenerRead(d *schema.ResourceData, meta
 	d.SetId(helper.BuildToken())
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

@@ -1,7 +1,9 @@
-package tencentcloud
+package antiddos_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,14 +12,14 @@ func TestAccTencentCloudAntiddosBgpBizTrendDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccAntiddosBgpBizTrendDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_antiddos_bgp_biz_trend.bgp_biz_trend"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_antiddos_bgp_biz_trend.bgp_biz_trend"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_antiddos_bgp_biz_trend.bgp_biz_trend", "data_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_antiddos_bgp_biz_trend.bgp_biz_trend", "total"),
 					resource.TestCheckResourceAttr("data.tencentcloud_antiddos_bgp_biz_trend.bgp_biz_trend", "metric_name", "intraffic"),
