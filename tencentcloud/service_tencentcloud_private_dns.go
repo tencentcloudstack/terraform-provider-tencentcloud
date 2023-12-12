@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -110,10 +111,15 @@ func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context
 }
 
 func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId, uniqVpcId, region, uin string) (errRet error) {
-	logId := getLogId(ctx)
+	var (
+		logId        = getLogId(ctx)
+		asyncRequest = privatedns.NewQueryAsyncBindVpcStatusRequest()
+		uniqId       string
+	)
 
 	request := privatedns.NewDeleteSpecifyPrivateZoneVpcRequest()
 	request.ZoneId = &zoneId
+	request.Sync = common.BoolPtr(false)
 	if uin == "" {
 		request.VpcSet = []*privatedns.VpcInfo{
 			{
@@ -127,6 +133,7 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 				UniqVpcId: common.StringPtr(uniqVpcId),
 				Region:    common.StringPtr(region),
 				Uin:       common.StringPtr(uin),
+				VpcName:   common.StringPtr(""),
 			},
 		}
 	}
@@ -146,6 +153,34 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.UniqId == nil {
+		return fmt.Errorf("Delete specify private zone vpc failed.")
+	}
+
+	uniqId = *response.Response.UniqId
+
+	// wait
+	asyncRequest.UniqId = &uniqId
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		result, e := me.client.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asyncRequest.GetAction(), asyncRequest.ToJsonString(), asyncRequest.ToJsonString())
+		}
+
+		if *result.Response.Status == "success" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("query async bind vpc status is %s.", *result.Response.Status))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s query async bind vpc status failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return
 }

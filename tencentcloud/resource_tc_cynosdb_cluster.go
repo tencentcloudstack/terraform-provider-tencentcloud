@@ -39,10 +39,12 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		cynosdbService = CynosdbService{client: client}
 		tagService     = TagService{client: client}
 		region         = client.Region
-
+		//internal version: replace client begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace client end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		request = cynosdb.NewCreateClustersRequest()
 	)
-
+	//internal version: replace varId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace varId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	request.Zone = helper.String(d.Get("available_zone").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -115,7 +117,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	}
 
 	var chargeType int64 = 0
+	//internal version: replace varCharge begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace varCharge end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	if v, ok := d.GetOk("charge_type"); ok {
+		//internal version: replace strCharge begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace strCharge end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
 			chargeType = 1
 			if vv, ok := d.GetOk("prepaid_period"); ok {
@@ -143,6 +149,8 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 				}
 			}
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			return retryError(err)
 		}
 		return nil
@@ -179,10 +187,13 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
-
+	//internal version: replace normal begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	id := *dealRes.Response.BillingResourceInfos[0].ClusterId
+	//internal version: replace normal end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	d.SetId(id)
 
+	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
@@ -638,6 +649,8 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
+		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
 
 	// update sg

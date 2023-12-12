@@ -59,8 +59,9 @@ func NewBindPrometheusManagedGrafanaRequest() (request *BindPrometheusManagedGra
 func NewBindPrometheusManagedGrafanaResponse() (response *BindPrometheusManagedGrafanaResponse) {
     response = &BindPrometheusManagedGrafanaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindPrometheusManagedGrafana
@@ -107,8 +108,9 @@ func NewBindingPolicyObjectRequest() (request *BindingPolicyObjectRequest) {
 func NewBindingPolicyObjectResponse() (response *BindingPolicyObjectResponse) {
     response = &BindingPolicyObjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindingPolicyObject
@@ -159,8 +161,9 @@ func NewBindingPolicyTagRequest() (request *BindingPolicyTagRequest) {
 func NewBindingPolicyTagResponse() (response *BindingPolicyTagResponse) {
     response = &BindingPolicyTagResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // BindingPolicyTag
@@ -211,8 +214,9 @@ func NewCheckIsPrometheusNewUserRequest() (request *CheckIsPrometheusNewUserRequ
 func NewCheckIsPrometheusNewUserResponse() (response *CheckIsPrometheusNewUserResponse) {
     response = &CheckIsPrometheusNewUserResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckIsPrometheusNewUser
@@ -269,8 +273,9 @@ func NewCleanGrafanaInstanceRequest() (request *CleanGrafanaInstanceRequest) {
 func NewCleanGrafanaInstanceResponse() (response *CleanGrafanaInstanceResponse) {
     response = &CleanGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CleanGrafanaInstance
@@ -319,8 +324,9 @@ func NewCreateAlarmNoticeRequest() (request *CreateAlarmNoticeRequest) {
 func NewCreateAlarmNoticeResponse() (response *CreateAlarmNoticeResponse) {
     response = &CreateAlarmNoticeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAlarmNotice
@@ -381,8 +387,9 @@ func NewCreateAlarmPolicyRequest() (request *CreateAlarmPolicyRequest) {
 func NewCreateAlarmPolicyResponse() (response *CreateAlarmPolicyResponse) {
     response = &CreateAlarmPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAlarmPolicy
@@ -443,8 +450,9 @@ func NewCreateAlertRuleRequest() (request *CreateAlertRuleRequest) {
 func NewCreateAlertRuleResponse() (response *CreateAlertRuleResponse) {
     response = &CreateAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateAlertRule
@@ -521,8 +529,9 @@ func NewCreateExporterIntegrationRequest() (request *CreateExporterIntegrationRe
 func NewCreateExporterIntegrationResponse() (response *CreateExporterIntegrationResponse) {
     response = &CreateExporterIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateExporterIntegration
@@ -533,6 +542,7 @@ func NewCreateExporterIntegrationResponse() (response *CreateExporterIntegration
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_INSTANCENOTRUNNING = "FailedOperation.InstanceNotRunning"
 //  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
@@ -552,6 +562,7 @@ func (c *Client) CreateExporterIntegration(request *CreateExporterIntegrationReq
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_INSTANCENOTRUNNING = "FailedOperation.InstanceNotRunning"
 //  FAILEDOPERATION_RESOURCEEXIST = "FailedOperation.ResourceExist"
@@ -589,8 +600,9 @@ func NewCreateGrafanaInstanceRequest() (request *CreateGrafanaInstanceRequest) {
 func NewCreateGrafanaInstanceResponse() (response *CreateGrafanaInstanceResponse) {
     response = &CreateGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateGrafanaInstance
@@ -647,8 +659,9 @@ func NewCreateGrafanaIntegrationRequest() (request *CreateGrafanaIntegrationRequ
 func NewCreateGrafanaIntegrationResponse() (response *CreateGrafanaIntegrationResponse) {
     response = &CreateGrafanaIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateGrafanaIntegration
@@ -695,8 +708,9 @@ func NewCreateGrafanaNotificationChannelRequest() (request *CreateGrafanaNotific
 func NewCreateGrafanaNotificationChannelResponse() (response *CreateGrafanaNotificationChannelResponse) {
     response = &CreateGrafanaNotificationChannelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateGrafanaNotificationChannel
@@ -743,8 +757,9 @@ func NewCreatePolicyGroupRequest() (request *CreatePolicyGroupRequest) {
 func NewCreatePolicyGroupResponse() (response *CreatePolicyGroupResponse) {
     response = &CreatePolicyGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePolicyGroup
@@ -815,8 +830,9 @@ func NewCreatePrometheusAgentRequest() (request *CreatePrometheusAgentRequest) {
 func NewCreatePrometheusAgentResponse() (response *CreatePrometheusAgentResponse) {
     response = &CreatePrometheusAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAgent
@@ -881,8 +897,9 @@ func NewCreatePrometheusAlertPolicyRequest() (request *CreatePrometheusAlertPoli
 func NewCreatePrometheusAlertPolicyResponse() (response *CreatePrometheusAlertPolicyResponse) {
     response = &CreatePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusAlertPolicy
@@ -953,8 +970,9 @@ func NewCreatePrometheusClusterAgentRequest() (request *CreatePrometheusClusterA
 func NewCreatePrometheusClusterAgentResponse() (response *CreatePrometheusClusterAgentResponse) {
     response = &CreatePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusClusterAgent
@@ -1017,14 +1035,16 @@ func NewCreatePrometheusConfigRequest() (request *CreatePrometheusConfigRequest)
 func NewCreatePrometheusConfigResponse() (response *CreatePrometheusConfigResponse) {
     response = &CreatePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusConfig
 // 创建prometheus配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -1045,6 +1065,7 @@ func (c *Client) CreatePrometheusConfig(request *CreatePrometheusConfigRequest) 
 // 创建prometheus配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -1087,14 +1108,16 @@ func NewCreatePrometheusGlobalNotificationRequest() (request *CreatePrometheusGl
 func NewCreatePrometheusGlobalNotificationResponse() (response *CreatePrometheusGlobalNotificationResponse) {
     response = &CreatePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusGlobalNotification
 // 创建全局告警通知渠道
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) CreatePrometheusGlobalNotification(request *CreatePrometheusGlobalNotificationRequest) (response *CreatePrometheusGlobalNotificationResponse, err error) {
@@ -1105,6 +1128,7 @@ func (c *Client) CreatePrometheusGlobalNotification(request *CreatePrometheusGlo
 // 创建全局告警通知渠道
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) CreatePrometheusGlobalNotificationWithContext(ctx context.Context, request *CreatePrometheusGlobalNotificationRequest) (response *CreatePrometheusGlobalNotificationResponse, err error) {
@@ -1137,8 +1161,9 @@ func NewCreatePrometheusMultiTenantInstancePostPayModeRequest() (request *Create
 func NewCreatePrometheusMultiTenantInstancePostPayModeResponse() (response *CreatePrometheusMultiTenantInstancePostPayModeResponse) {
     response = &CreatePrometheusMultiTenantInstancePostPayModeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusMultiTenantInstancePostPayMode
@@ -1209,8 +1234,9 @@ func NewCreatePrometheusRecordRuleYamlRequest() (request *CreatePrometheusRecord
 func NewCreatePrometheusRecordRuleYamlResponse() (response *CreatePrometheusRecordRuleYamlResponse) {
     response = &CreatePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusRecordRuleYaml
@@ -1277,8 +1303,9 @@ func NewCreatePrometheusScrapeJobRequest() (request *CreatePrometheusScrapeJobRe
 func NewCreatePrometheusScrapeJobResponse() (response *CreatePrometheusScrapeJobResponse) {
     response = &CreatePrometheusScrapeJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusScrapeJob
@@ -1347,8 +1374,9 @@ func NewCreatePrometheusTempRequest() (request *CreatePrometheusTempRequest) {
 func NewCreatePrometheusTempResponse() (response *CreatePrometheusTempResponse) {
     response = &CreatePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreatePrometheusTemp
@@ -1401,8 +1429,9 @@ func NewCreateRecordingRuleRequest() (request *CreateRecordingRuleRequest) {
 func NewCreateRecordingRuleResponse() (response *CreateRecordingRuleResponse) {
     response = &CreateRecordingRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateRecordingRule
@@ -1471,8 +1500,9 @@ func NewCreateSSOAccountRequest() (request *CreateSSOAccountRequest) {
 func NewCreateSSOAccountResponse() (response *CreateSSOAccountResponse) {
     response = &CreateSSOAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateSSOAccount
@@ -1519,8 +1549,9 @@ func NewCreateServiceDiscoveryRequest() (request *CreateServiceDiscoveryRequest)
 func NewCreateServiceDiscoveryResponse() (response *CreateServiceDiscoveryResponse) {
     response = &CreateServiceDiscoveryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateServiceDiscovery
@@ -1595,8 +1626,9 @@ func NewDeleteAlarmNoticesRequest() (request *DeleteAlarmNoticesRequest) {
 func NewDeleteAlarmNoticesResponse() (response *DeleteAlarmNoticesResponse) {
     response = &DeleteAlarmNoticesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAlarmNotices
@@ -1655,8 +1687,9 @@ func NewDeleteAlarmPolicyRequest() (request *DeleteAlarmPolicyRequest) {
 func NewDeleteAlarmPolicyResponse() (response *DeleteAlarmPolicyResponse) {
     response = &DeleteAlarmPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAlarmPolicy
@@ -1715,8 +1748,9 @@ func NewDeleteAlertRulesRequest() (request *DeleteAlertRulesRequest) {
 func NewDeleteAlertRulesResponse() (response *DeleteAlertRulesResponse) {
     response = &DeleteAlertRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteAlertRules
@@ -1785,8 +1819,9 @@ func NewDeleteExporterIntegrationRequest() (request *DeleteExporterIntegrationRe
 func NewDeleteExporterIntegrationResponse() (response *DeleteExporterIntegrationResponse) {
     response = &DeleteExporterIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteExporterIntegration
@@ -1796,6 +1831,7 @@ func NewDeleteExporterIntegrationResponse() (response *DeleteExporterIntegration
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 //  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
@@ -1818,6 +1854,7 @@ func (c *Client) DeleteExporterIntegration(request *DeleteExporterIntegrationReq
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_ACCESSTKEFAIL = "FailedOperation.AccessTKEFail"
+//  FAILEDOPERATION_CLUSTERNOTFOUND = "FailedOperation.ClusterNotFound"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
 //  FAILEDOPERATION_DBRECORDCREATEFAILED = "FailedOperation.DbRecordCreateFailed"
 //  FAILEDOPERATION_DBRECORDDELETEFAILED = "FailedOperation.DbRecordDeleteFailed"
@@ -1859,8 +1896,9 @@ func NewDeleteGrafanaInstanceRequest() (request *DeleteGrafanaInstanceRequest) {
 func NewDeleteGrafanaInstanceResponse() (response *DeleteGrafanaInstanceResponse) {
     response = &DeleteGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteGrafanaInstance
@@ -1911,8 +1949,9 @@ func NewDeleteGrafanaIntegrationRequest() (request *DeleteGrafanaIntegrationRequ
 func NewDeleteGrafanaIntegrationResponse() (response *DeleteGrafanaIntegrationResponse) {
     response = &DeleteGrafanaIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteGrafanaIntegration
@@ -1963,8 +2002,9 @@ func NewDeleteGrafanaNotificationChannelRequest() (request *DeleteGrafanaNotific
 func NewDeleteGrafanaNotificationChannelResponse() (response *DeleteGrafanaNotificationChannelResponse) {
     response = &DeleteGrafanaNotificationChannelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteGrafanaNotificationChannel
@@ -2015,8 +2055,9 @@ func NewDeletePolicyGroupRequest() (request *DeletePolicyGroupRequest) {
 func NewDeletePolicyGroupResponse() (response *DeletePolicyGroupResponse) {
     response = &DeletePolicyGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePolicyGroup
@@ -2133,8 +2174,9 @@ func NewDeletePrometheusAlertPolicyRequest() (request *DeletePrometheusAlertPoli
 func NewDeletePrometheusAlertPolicyResponse() (response *DeletePrometheusAlertPolicyResponse) {
     response = &DeletePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusAlertPolicy
@@ -2187,14 +2229,16 @@ func NewDeletePrometheusClusterAgentRequest() (request *DeletePrometheusClusterA
 func NewDeletePrometheusClusterAgentResponse() (response *DeletePrometheusClusterAgentResponse) {
     response = &DeletePrometheusClusterAgentResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusClusterAgent
 // 解除TMP实例的集群关联
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -2215,6 +2259,7 @@ func (c *Client) DeletePrometheusClusterAgent(request *DeletePrometheusClusterAg
 // 解除TMP实例的集群关联
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_DBRECORDNOTFOUND = "FailedOperation.DbRecordNotFound"
 //  FAILEDOPERATION_KUBECLIENTCONF = "FailedOperation.KubeClientConf"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -2257,8 +2302,9 @@ func NewDeletePrometheusConfigRequest() (request *DeletePrometheusConfigRequest)
 func NewDeletePrometheusConfigResponse() (response *DeletePrometheusConfigResponse) {
     response = &DeletePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusConfig
@@ -2317,8 +2363,9 @@ func NewDeletePrometheusRecordRuleYamlRequest() (request *DeletePrometheusRecord
 func NewDeletePrometheusRecordRuleYamlResponse() (response *DeletePrometheusRecordRuleYamlResponse) {
     response = &DeletePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusRecordRuleYaml
@@ -2377,8 +2424,9 @@ func NewDeletePrometheusScrapeJobsRequest() (request *DeletePrometheusScrapeJobs
 func NewDeletePrometheusScrapeJobsResponse() (response *DeletePrometheusScrapeJobsResponse) {
     response = &DeletePrometheusScrapeJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusScrapeJobs
@@ -2447,14 +2495,16 @@ func NewDeletePrometheusTempRequest() (request *DeletePrometheusTempRequest) {
 func NewDeletePrometheusTempResponse() (response *DeletePrometheusTempResponse) {
     response = &DeletePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTemp
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -2469,6 +2519,7 @@ func (c *Client) DeletePrometheusTemp(request *DeletePrometheusTempRequest) (res
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
@@ -2505,8 +2556,9 @@ func NewDeletePrometheusTempSyncRequest() (request *DeletePrometheusTempSyncRequ
 func NewDeletePrometheusTempSyncResponse() (response *DeletePrometheusTempSyncResponse) {
     response = &DeletePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeletePrometheusTempSync
@@ -2573,8 +2625,9 @@ func NewDeleteRecordingRulesRequest() (request *DeleteRecordingRulesRequest) {
 func NewDeleteRecordingRulesResponse() (response *DeleteRecordingRulesResponse) {
     response = &DeleteRecordingRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteRecordingRules
@@ -2643,8 +2696,9 @@ func NewDeleteSSOAccountRequest() (request *DeleteSSOAccountRequest) {
 func NewDeleteSSOAccountResponse() (response *DeleteSSOAccountResponse) {
     response = &DeleteSSOAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteSSOAccount
@@ -2713,8 +2767,9 @@ func NewDeleteServiceDiscoveryRequest() (request *DeleteServiceDiscoveryRequest)
 func NewDeleteServiceDiscoveryResponse() (response *DeleteServiceDiscoveryResponse) {
     response = &DeleteServiceDiscoveryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteServiceDiscovery
@@ -2730,6 +2785,7 @@ func NewDeleteServiceDiscoveryResponse() (response *DeleteServiceDiscoveryRespon
 //  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
 //  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
 //  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
 //  INTERNALERROR = "InternalError"
@@ -2752,6 +2808,7 @@ func (c *Client) DeleteServiceDiscovery(request *DeleteServiceDiscoveryRequest) 
 //  FAILEDOPERATION_AGENTVERSIONNOTSUPPORTED = "FailedOperation.AgentVersionNotSupported"
 //  FAILEDOPERATION_BADYAMLFORMAT = "FailedOperation.BadYamlFormat"
 //  FAILEDOPERATION_DBQUERYFAILED = "FailedOperation.DbQueryFailed"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 //  FAILEDOPERATION_TKEENDPOINTSTATUSERROR = "FailedOperation.TKEEndpointStatusError"
 //  FAILEDOPERATION_TKERESOURCECONFLICT = "FailedOperation.TKEResourceConflict"
 //  INTERNALERROR = "InternalError"
@@ -2787,8 +2844,9 @@ func NewDescribeAccidentEventListRequest() (request *DescribeAccidentEventListRe
 func NewDescribeAccidentEventListResponse() (response *DescribeAccidentEventListResponse) {
     response = &DescribeAccidentEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAccidentEventList
@@ -2843,8 +2901,9 @@ func NewDescribeAlarmEventsRequest() (request *DescribeAlarmEventsRequest) {
 func NewDescribeAlarmEventsResponse() (response *DescribeAlarmEventsResponse) {
     response = &DescribeAlarmEventsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmEvents
@@ -2893,8 +2952,9 @@ func NewDescribeAlarmHistoriesRequest() (request *DescribeAlarmHistoriesRequest)
 func NewDescribeAlarmHistoriesResponse() (response *DescribeAlarmHistoriesResponse) {
     response = &DescribeAlarmHistoriesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmHistories
@@ -2963,8 +3023,9 @@ func NewDescribeAlarmMetricsRequest() (request *DescribeAlarmMetricsRequest) {
 func NewDescribeAlarmMetricsResponse() (response *DescribeAlarmMetricsResponse) {
     response = &DescribeAlarmMetricsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmMetrics
@@ -3015,8 +3076,9 @@ func NewDescribeAlarmNoticeRequest() (request *DescribeAlarmNoticeRequest) {
 func NewDescribeAlarmNoticeResponse() (response *DescribeAlarmNoticeResponse) {
     response = &DescribeAlarmNoticeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmNotice
@@ -3077,8 +3139,9 @@ func NewDescribeAlarmNoticeCallbacksRequest() (request *DescribeAlarmNoticeCallb
 func NewDescribeAlarmNoticeCallbacksResponse() (response *DescribeAlarmNoticeCallbacksResponse) {
     response = &DescribeAlarmNoticeCallbacksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmNoticeCallbacks
@@ -3137,8 +3200,9 @@ func NewDescribeAlarmNoticesRequest() (request *DescribeAlarmNoticesRequest) {
 func NewDescribeAlarmNoticesResponse() (response *DescribeAlarmNoticesResponse) {
     response = &DescribeAlarmNoticesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmNotices
@@ -3199,8 +3263,9 @@ func NewDescribeAlarmPoliciesRequest() (request *DescribeAlarmPoliciesRequest) {
 func NewDescribeAlarmPoliciesResponse() (response *DescribeAlarmPoliciesResponse) {
     response = &DescribeAlarmPoliciesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmPolicies
@@ -3253,8 +3318,9 @@ func NewDescribeAlarmPolicyRequest() (request *DescribeAlarmPolicyRequest) {
 func NewDescribeAlarmPolicyResponse() (response *DescribeAlarmPolicyResponse) {
     response = &DescribeAlarmPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlarmPolicy
@@ -3309,8 +3375,9 @@ func NewDescribeAlertRulesRequest() (request *DescribeAlertRulesRequest) {
 func NewDescribeAlertRulesResponse() (response *DescribeAlertRulesResponse) {
     response = &DescribeAlertRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAlertRules
@@ -3379,8 +3446,9 @@ func NewDescribeAllNamespacesRequest() (request *DescribeAllNamespacesRequest) {
 func NewDescribeAllNamespacesResponse() (response *DescribeAllNamespacesResponse) {
     response = &DescribeAllNamespacesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeAllNamespaces
@@ -3431,8 +3499,9 @@ func NewDescribeBaseMetricsRequest() (request *DescribeBaseMetricsRequest) {
 func NewDescribeBaseMetricsResponse() (response *DescribeBaseMetricsResponse) {
     response = &DescribeBaseMetricsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBaseMetrics
@@ -3479,8 +3548,9 @@ func NewDescribeBasicAlarmListRequest() (request *DescribeBasicAlarmListRequest)
 func NewDescribeBasicAlarmListResponse() (response *DescribeBasicAlarmListResponse) {
     response = &DescribeBasicAlarmListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBasicAlarmList
@@ -3541,8 +3611,9 @@ func NewDescribeBindingPolicyObjectListRequest() (request *DescribeBindingPolicy
 func NewDescribeBindingPolicyObjectListResponse() (response *DescribeBindingPolicyObjectListResponse) {
     response = &DescribeBindingPolicyObjectListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeBindingPolicyObjectList
@@ -3665,14 +3736,16 @@ func NewDescribeClusterAgentCreatingProgressRequest() (request *DescribeClusterA
 func NewDescribeClusterAgentCreatingProgressResponse() (response *DescribeClusterAgentCreatingProgressResponse) {
     response = &DescribeClusterAgentCreatingProgressResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeClusterAgentCreatingProgress
 // 获取prom实例中集群详细的关联状态
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 func (c *Client) DescribeClusterAgentCreatingProgress(request *DescribeClusterAgentCreatingProgressRequest) (response *DescribeClusterAgentCreatingProgressResponse, err error) {
@@ -3683,6 +3756,7 @@ func (c *Client) DescribeClusterAgentCreatingProgress(request *DescribeClusterAg
 // 获取prom实例中集群详细的关联状态
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 func (c *Client) DescribeClusterAgentCreatingProgressWithContext(ctx context.Context, request *DescribeClusterAgentCreatingProgressRequest) (response *DescribeClusterAgentCreatingProgressResponse, err error) {
@@ -3715,8 +3789,9 @@ func NewDescribeConditionsTemplateListRequest() (request *DescribeConditionsTemp
 func NewDescribeConditionsTemplateListResponse() (response *DescribeConditionsTemplateListResponse) {
     response = &DescribeConditionsTemplateListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeConditionsTemplateList
@@ -3835,8 +3910,9 @@ func NewDescribeDNSConfigRequest() (request *DescribeDNSConfigRequest) {
 func NewDescribeDNSConfigResponse() (response *DescribeDNSConfigResponse) {
     response = &DescribeDNSConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDNSConfig
@@ -3883,12 +3959,13 @@ func NewDescribeExporterIntegrationsRequest() (request *DescribeExporterIntegrat
 func NewDescribeExporterIntegrationsResponse() (response *DescribeExporterIntegrationsResponse) {
     response = &DescribeExporterIntegrationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeExporterIntegrations
-// 查询 exporter 集成列表
+// 查询集成中心 exporter 集成列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3908,7 +3985,7 @@ func (c *Client) DescribeExporterIntegrations(request *DescribeExporterIntegrati
 }
 
 // DescribeExporterIntegrations
-// 查询 exporter 集成列表
+// 查询集成中心 exporter 集成列表
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3953,8 +4030,9 @@ func NewDescribeGrafanaChannelsRequest() (request *DescribeGrafanaChannelsReques
 func NewDescribeGrafanaChannelsResponse() (response *DescribeGrafanaChannelsResponse) {
     response = &DescribeGrafanaChannelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaChannels
@@ -4001,8 +4079,9 @@ func NewDescribeGrafanaConfigRequest() (request *DescribeGrafanaConfigRequest) {
 func NewDescribeGrafanaConfigResponse() (response *DescribeGrafanaConfigResponse) {
     response = &DescribeGrafanaConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaConfig
@@ -4049,8 +4128,9 @@ func NewDescribeGrafanaEnvironmentsRequest() (request *DescribeGrafanaEnvironmen
 func NewDescribeGrafanaEnvironmentsResponse() (response *DescribeGrafanaEnvironmentsResponse) {
     response = &DescribeGrafanaEnvironmentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaEnvironments
@@ -4097,8 +4177,9 @@ func NewDescribeGrafanaInstancesRequest() (request *DescribeGrafanaInstancesRequ
 func NewDescribeGrafanaInstancesResponse() (response *DescribeGrafanaInstancesResponse) {
     response = &DescribeGrafanaInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaInstances
@@ -4155,8 +4236,9 @@ func NewDescribeGrafanaIntegrationsRequest() (request *DescribeGrafanaIntegratio
 func NewDescribeGrafanaIntegrationsResponse() (response *DescribeGrafanaIntegrationsResponse) {
     response = &DescribeGrafanaIntegrationsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaIntegrations
@@ -4203,8 +4285,9 @@ func NewDescribeGrafanaNotificationChannelsRequest() (request *DescribeGrafanaNo
 func NewDescribeGrafanaNotificationChannelsResponse() (response *DescribeGrafanaNotificationChannelsResponse) {
     response = &DescribeGrafanaNotificationChannelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaNotificationChannels
@@ -4251,8 +4334,9 @@ func NewDescribeGrafanaWhiteListRequest() (request *DescribeGrafanaWhiteListRequ
 func NewDescribeGrafanaWhiteListResponse() (response *DescribeGrafanaWhiteListResponse) {
     response = &DescribeGrafanaWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeGrafanaWhiteList
@@ -4299,8 +4383,9 @@ func NewDescribeInstalledPluginsRequest() (request *DescribeInstalledPluginsRequ
 func NewDescribeInstalledPluginsResponse() (response *DescribeInstalledPluginsResponse) {
     response = &DescribeInstalledPluginsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeInstalledPlugins
@@ -4347,8 +4432,9 @@ func NewDescribeMonitorTypesRequest() (request *DescribeMonitorTypesRequest) {
 func NewDescribeMonitorTypesResponse() (response *DescribeMonitorTypesResponse) {
     response = &DescribeMonitorTypesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeMonitorTypes
@@ -4397,8 +4483,9 @@ func NewDescribePluginOverviewsRequest() (request *DescribePluginOverviewsReques
 func NewDescribePluginOverviewsResponse() (response *DescribePluginOverviewsResponse) {
     response = &DescribePluginOverviewsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePluginOverviews
@@ -4447,8 +4534,9 @@ func NewDescribePolicyConditionListRequest() (request *DescribePolicyConditionLi
 func NewDescribePolicyConditionListResponse() (response *DescribePolicyConditionListResponse) {
     response = &DescribePolicyConditionListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePolicyConditionList
@@ -4567,8 +4655,9 @@ func NewDescribePolicyGroupInfoRequest() (request *DescribePolicyGroupInfoReques
 func NewDescribePolicyGroupInfoResponse() (response *DescribePolicyGroupInfoResponse) {
     response = &DescribePolicyGroupInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePolicyGroupInfo
@@ -4685,8 +4774,9 @@ func NewDescribePolicyGroupListRequest() (request *DescribePolicyGroupListReques
 func NewDescribePolicyGroupListResponse() (response *DescribePolicyGroupListResponse) {
     response = &DescribePolicyGroupListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePolicyGroupList
@@ -4805,8 +4895,9 @@ func NewDescribeProductEventListRequest() (request *DescribeProductEventListRequ
 func NewDescribeProductEventListResponse() (response *DescribeProductEventListResponse) {
     response = &DescribeProductEventListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProductEventList
@@ -4869,8 +4960,9 @@ func NewDescribeProductListRequest() (request *DescribeProductListRequest) {
 func NewDescribeProductListResponse() (response *DescribeProductListResponse) {
     response = &DescribeProductListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeProductList
@@ -4937,8 +5029,9 @@ func NewDescribePrometheusAgentInstancesRequest() (request *DescribePrometheusAg
 func NewDescribePrometheusAgentInstancesResponse() (response *DescribePrometheusAgentInstancesResponse) {
     response = &DescribePrometheusAgentInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgentInstances
@@ -4991,8 +5084,9 @@ func NewDescribePrometheusAgentsRequest() (request *DescribePrometheusAgentsRequ
 func NewDescribePrometheusAgentsResponse() (response *DescribePrometheusAgentsResponse) {
     response = &DescribePrometheusAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAgents
@@ -5055,8 +5149,9 @@ func NewDescribePrometheusAlertPolicyRequest() (request *DescribePrometheusAlert
 func NewDescribePrometheusAlertPolicyResponse() (response *DescribePrometheusAlertPolicyResponse) {
     response = &DescribePrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusAlertPolicy
@@ -5131,8 +5226,9 @@ func NewDescribePrometheusClusterAgentsRequest() (request *DescribePrometheusClu
 func NewDescribePrometheusClusterAgentsResponse() (response *DescribePrometheusClusterAgentsResponse) {
     response = &DescribePrometheusClusterAgentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusClusterAgents
@@ -5209,14 +5305,16 @@ func NewDescribePrometheusConfigRequest() (request *DescribePrometheusConfigRequ
 func NewDescribePrometheusConfigResponse() (response *DescribePrometheusConfigResponse) {
     response = &DescribePrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusConfig
 // 拉取Prometheus配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
@@ -5240,6 +5338,7 @@ func (c *Client) DescribePrometheusConfig(request *DescribePrometheusConfigReque
 // 拉取Prometheus配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_DB = "FailedOperation.Db"
@@ -5285,14 +5384,16 @@ func NewDescribePrometheusGlobalConfigRequest() (request *DescribePrometheusGlob
 func NewDescribePrometheusGlobalConfigResponse() (response *DescribePrometheusGlobalConfigResponse) {
     response = &DescribePrometheusGlobalConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalConfig
 // 获得实例级别抓取配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -5312,6 +5413,7 @@ func (c *Client) DescribePrometheusGlobalConfig(request *DescribePrometheusGloba
 // 获得实例级别抓取配置
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -5353,8 +5455,9 @@ func NewDescribePrometheusGlobalNotificationRequest() (request *DescribePromethe
 func NewDescribePrometheusGlobalNotificationResponse() (response *DescribePrometheusGlobalNotificationResponse) {
     response = &DescribePrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusGlobalNotification
@@ -5415,14 +5518,16 @@ func NewDescribePrometheusInstanceDetailRequest() (request *DescribePrometheusIn
 func NewDescribePrometheusInstanceDetailResponse() (response *DescribePrometheusInstanceDetailResponse) {
     response = &DescribePrometheusInstanceDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstanceDetail
 // 获取TMP实例详情
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -5436,6 +5541,7 @@ func (c *Client) DescribePrometheusInstanceDetail(request *DescribePrometheusIns
 // 获取TMP实例详情
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
@@ -5471,8 +5577,9 @@ func NewDescribePrometheusInstanceInitStatusRequest() (request *DescribePromethe
 func NewDescribePrometheusInstanceInitStatusResponse() (response *DescribePrometheusInstanceInitStatusResponse) {
     response = &DescribePrometheusInstanceInitStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstanceInitStatus
@@ -5488,6 +5595,7 @@ func NewDescribePrometheusInstanceInitStatusResponse() (response *DescribePromet
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusInstanceInitStatus(request *DescribePrometheusInstanceInitStatusRequest) (response *DescribePrometheusInstanceInitStatusResponse, err error) {
     return c.DescribePrometheusInstanceInitStatusWithContext(context.Background(), request)
 }
@@ -5505,6 +5613,7 @@ func (c *Client) DescribePrometheusInstanceInitStatus(request *DescribePrometheu
 //  INTERNALERROR_TASKNOTFOUND = "InternalError.TaskNotFound"
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) DescribePrometheusInstanceInitStatusWithContext(ctx context.Context, request *DescribePrometheusInstanceInitStatusRequest) (response *DescribePrometheusInstanceInitStatusResponse, err error) {
     if request == nil {
         request = NewDescribePrometheusInstanceInitStatusRequest()
@@ -5535,8 +5644,9 @@ func NewDescribePrometheusInstanceUsageRequest() (request *DescribePrometheusIns
 func NewDescribePrometheusInstanceUsageResponse() (response *DescribePrometheusInstanceUsageResponse) {
     response = &DescribePrometheusInstanceUsageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstanceUsage
@@ -5603,8 +5713,9 @@ func NewDescribePrometheusInstancesRequest() (request *DescribePrometheusInstanc
 func NewDescribePrometheusInstancesResponse() (response *DescribePrometheusInstancesResponse) {
     response = &DescribePrometheusInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstances
@@ -5687,8 +5798,9 @@ func NewDescribePrometheusInstancesOverviewRequest() (request *DescribePrometheu
 func NewDescribePrometheusInstancesOverviewResponse() (response *DescribePrometheusInstancesOverviewResponse) {
     response = &DescribePrometheusInstancesOverviewResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusInstancesOverview
@@ -5747,8 +5859,9 @@ func NewDescribePrometheusRecordRuleYamlRequest() (request *DescribePrometheusRe
 func NewDescribePrometheusRecordRuleYamlResponse() (response *DescribePrometheusRecordRuleYamlResponse) {
     response = &DescribePrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusRecordRuleYaml
@@ -5817,8 +5930,9 @@ func NewDescribePrometheusRecordRulesRequest() (request *DescribePrometheusRecor
 func NewDescribePrometheusRecordRulesResponse() (response *DescribePrometheusRecordRulesResponse) {
     response = &DescribePrometheusRecordRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusRecordRules
@@ -5889,8 +6003,9 @@ func NewDescribePrometheusRegionsRequest() (request *DescribePrometheusRegionsRe
 func NewDescribePrometheusRegionsResponse() (response *DescribePrometheusRegionsResponse) {
     response = &DescribePrometheusRegionsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusRegions
@@ -5943,8 +6058,9 @@ func NewDescribePrometheusScrapeJobsRequest() (request *DescribePrometheusScrape
 func NewDescribePrometheusScrapeJobsResponse() (response *DescribePrometheusScrapeJobsResponse) {
     response = &DescribePrometheusScrapeJobsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusScrapeJobs
@@ -6011,14 +6127,16 @@ func NewDescribePrometheusTargetsTMPRequest() (request *DescribePrometheusTarget
 func NewDescribePrometheusTargetsTMPResponse() (response *DescribePrometheusTargetsTMPResponse) {
     response = &DescribePrometheusTargetsTMPResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTargetsTMP
 // 获取targets信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  INTERNALERROR = "InternalError"
@@ -6038,6 +6156,7 @@ func (c *Client) DescribePrometheusTargetsTMP(request *DescribePrometheusTargets
 // 获取targets信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_DOTRPCTRANSFERFAILED = "FailedOperation.DoTRPCTransferFailed"
 //  INTERNALERROR = "InternalError"
@@ -6079,8 +6198,9 @@ func NewDescribePrometheusTempRequest() (request *DescribePrometheusTempRequest)
 func NewDescribePrometheusTempResponse() (response *DescribePrometheusTempResponse) {
     response = &DescribePrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTemp
@@ -6137,8 +6257,9 @@ func NewDescribePrometheusTempSyncRequest() (request *DescribePrometheusTempSync
 func NewDescribePrometheusTempSyncResponse() (response *DescribePrometheusTempSyncResponse) {
     response = &DescribePrometheusTempSyncResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusTempSync
@@ -6197,8 +6318,9 @@ func NewDescribePrometheusZonesRequest() (request *DescribePrometheusZonesReques
 func NewDescribePrometheusZonesResponse() (response *DescribePrometheusZonesResponse) {
     response = &DescribePrometheusZonesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePrometheusZones
@@ -6253,8 +6375,9 @@ func NewDescribeRecordingRulesRequest() (request *DescribeRecordingRulesRequest)
 func NewDescribeRecordingRulesResponse() (response *DescribeRecordingRulesResponse) {
     response = &DescribeRecordingRulesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeRecordingRules
@@ -6321,8 +6444,9 @@ func NewDescribeSSOAccountRequest() (request *DescribeSSOAccountRequest) {
 func NewDescribeSSOAccountResponse() (response *DescribeSSOAccountResponse) {
     response = &DescribeSSOAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeSSOAccount
@@ -6369,8 +6493,9 @@ func NewDescribeServiceDiscoveryRequest() (request *DescribeServiceDiscoveryRequ
 func NewDescribeServiceDiscoveryResponse() (response *DescribeServiceDiscoveryResponse) {
     response = &DescribeServiceDiscoveryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeServiceDiscovery
@@ -6441,8 +6566,9 @@ func NewDescribeStatisticDataRequest() (request *DescribeStatisticDataRequest) {
 func NewDescribeStatisticDataResponse() (response *DescribeStatisticDataResponse) {
     response = &DescribeStatisticDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeStatisticData
@@ -6577,8 +6703,9 @@ func NewDestroyPrometheusInstanceRequest() (request *DestroyPrometheusInstanceRe
 func NewDestroyPrometheusInstanceResponse() (response *DestroyPrometheusInstanceResponse) {
     response = &DestroyPrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DestroyPrometheusInstance
@@ -6641,8 +6768,9 @@ func NewEnableGrafanaInternetRequest() (request *EnableGrafanaInternetRequest) {
 func NewEnableGrafanaInternetResponse() (response *EnableGrafanaInternetResponse) {
     response = &EnableGrafanaInternetResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableGrafanaInternet
@@ -6689,8 +6817,9 @@ func NewEnableGrafanaSSORequest() (request *EnableGrafanaSSORequest) {
 func NewEnableGrafanaSSOResponse() (response *EnableGrafanaSSOResponse) {
     response = &EnableGrafanaSSOResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableGrafanaSSO
@@ -6737,8 +6866,9 @@ func NewEnableSSOCamCheckRequest() (request *EnableSSOCamCheckRequest) {
 func NewEnableSSOCamCheckResponse() (response *EnableSSOCamCheckResponse) {
     response = &EnableSSOCamCheckResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // EnableSSOCamCheck
@@ -6785,8 +6915,9 @@ func NewGetMonitorDataRequest() (request *GetMonitorDataRequest) {
 func NewGetMonitorDataResponse() (response *GetMonitorDataResponse) {
     response = &GetMonitorDataResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetMonitorData
@@ -6802,7 +6933,7 @@ func NewGetMonitorDataResponse() (response *GetMonitorDataResponse) {
 //
 // >?
 //
-// >- 2022年9月1日起，云监控开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
+// >- 2022年9月1日起，腾讯云可观测平台开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
@@ -6827,7 +6958,7 @@ func (c *Client) GetMonitorData(request *GetMonitorDataRequest) (response *GetMo
 //
 // >?
 //
-// >- 2022年9月1日起，云监控开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
+// >- 2022年9月1日起，腾讯云可观测平台开始对GetMonitorData接口计费。每个主账号每月可获得100万次免费请求额度，超过免费额度后如需继续调用接口需要开通 [API请求按量付费](https://buy.cloud.tencent.com/APIRequestBuy)。计费规则可查看[API计费文档](https://cloud.tencent.com/document/product/248/77914)。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ERRNOTOPEN = "FailedOperation.ErrNotOpen"
@@ -6865,8 +6996,9 @@ func NewGetPrometheusAgentManagementCommandRequest() (request *GetPrometheusAgen
 func NewGetPrometheusAgentManagementCommandResponse() (response *GetPrometheusAgentManagementCommandResponse) {
     response = &GetPrometheusAgentManagementCommandResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // GetPrometheusAgentManagementCommand
@@ -6929,8 +7061,9 @@ func NewInstallPluginsRequest() (request *InstallPluginsRequest) {
 func NewInstallPluginsResponse() (response *InstallPluginsResponse) {
     response = &InstallPluginsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // InstallPlugins
@@ -6977,8 +7110,9 @@ func NewModifyAlarmNoticeRequest() (request *ModifyAlarmNoticeRequest) {
 func NewModifyAlarmNoticeResponse() (response *ModifyAlarmNoticeResponse) {
     response = &ModifyAlarmNoticeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmNotice
@@ -7039,8 +7173,9 @@ func NewModifyAlarmPolicyConditionRequest() (request *ModifyAlarmPolicyCondition
 func NewModifyAlarmPolicyConditionResponse() (response *ModifyAlarmPolicyConditionResponse) {
     response = &ModifyAlarmPolicyConditionResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmPolicyCondition
@@ -7099,8 +7234,9 @@ func NewModifyAlarmPolicyInfoRequest() (request *ModifyAlarmPolicyInfoRequest) {
 func NewModifyAlarmPolicyInfoResponse() (response *ModifyAlarmPolicyInfoResponse) {
     response = &ModifyAlarmPolicyInfoResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmPolicyInfo
@@ -7108,6 +7244,7 @@ func NewModifyAlarmPolicyInfoResponse() (response *ModifyAlarmPolicyInfoResponse
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -7123,6 +7260,7 @@ func (c *Client) ModifyAlarmPolicyInfo(request *ModifyAlarmPolicyInfoRequest) (r
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DOHTTPTRANSFERFAILED = "FailedOperation.DoHTTPTransferFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
@@ -7159,8 +7297,9 @@ func NewModifyAlarmPolicyNoticeRequest() (request *ModifyAlarmPolicyNoticeReques
 func NewModifyAlarmPolicyNoticeResponse() (response *ModifyAlarmPolicyNoticeResponse) {
     response = &ModifyAlarmPolicyNoticeResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmPolicyNotice
@@ -7217,8 +7356,9 @@ func NewModifyAlarmPolicyStatusRequest() (request *ModifyAlarmPolicyStatusReques
 func NewModifyAlarmPolicyStatusResponse() (response *ModifyAlarmPolicyStatusResponse) {
     response = &ModifyAlarmPolicyStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmPolicyStatus
@@ -7277,8 +7417,9 @@ func NewModifyAlarmPolicyTasksRequest() (request *ModifyAlarmPolicyTasksRequest)
 func NewModifyAlarmPolicyTasksResponse() (response *ModifyAlarmPolicyTasksResponse) {
     response = &ModifyAlarmPolicyTasksResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmPolicyTasks
@@ -7333,8 +7474,9 @@ func NewModifyAlarmReceiversRequest() (request *ModifyAlarmReceiversRequest) {
 func NewModifyAlarmReceiversResponse() (response *ModifyAlarmReceiversResponse) {
     response = &ModifyAlarmReceiversResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyAlarmReceivers
@@ -7389,8 +7531,9 @@ func NewModifyGrafanaInstanceRequest() (request *ModifyGrafanaInstanceRequest) {
 func NewModifyGrafanaInstanceResponse() (response *ModifyGrafanaInstanceResponse) {
     response = &ModifyGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyGrafanaInstance
@@ -7437,8 +7580,9 @@ func NewModifyPolicyGroupRequest() (request *ModifyPolicyGroupRequest) {
 func NewModifyPolicyGroupResponse() (response *ModifyPolicyGroupResponse) {
     response = &ModifyPolicyGroupResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPolicyGroup
@@ -7527,14 +7671,16 @@ func NewModifyPrometheusAgentExternalLabelsRequest() (request *ModifyPrometheusA
 func NewModifyPrometheusAgentExternalLabelsResponse() (response *ModifyPrometheusAgentExternalLabelsResponse) {
     response = &ModifyPrometheusAgentExternalLabelsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAgentExternalLabels
 // 修改被关联集群的external labels
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -7551,6 +7697,7 @@ func (c *Client) ModifyPrometheusAgentExternalLabels(request *ModifyPrometheusAg
 // 修改被关联集群的external labels
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DB = "InternalError.Db"
@@ -7589,8 +7736,9 @@ func NewModifyPrometheusAlertPolicyRequest() (request *ModifyPrometheusAlertPoli
 func NewModifyPrometheusAlertPolicyResponse() (response *ModifyPrometheusAlertPolicyResponse) {
     response = &ModifyPrometheusAlertPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusAlertPolicy
@@ -7607,6 +7755,7 @@ func NewModifyPrometheusAlertPolicyResponse() (response *ModifyPrometheusAlertPo
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusAlertPolicy(request *ModifyPrometheusAlertPolicyRequest) (response *ModifyPrometheusAlertPolicyResponse, err error) {
     return c.ModifyPrometheusAlertPolicyWithContext(context.Background(), request)
 }
@@ -7625,6 +7774,7 @@ func (c *Client) ModifyPrometheusAlertPolicy(request *ModifyPrometheusAlertPolic
 //  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
 func (c *Client) ModifyPrometheusAlertPolicyWithContext(ctx context.Context, request *ModifyPrometheusAlertPolicyRequest) (response *ModifyPrometheusAlertPolicyResponse, err error) {
     if request == nil {
         request = NewModifyPrometheusAlertPolicyRequest()
@@ -7655,14 +7805,16 @@ func NewModifyPrometheusConfigRequest() (request *ModifyPrometheusConfigRequest)
 func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigResponse) {
     response = &ModifyPrometheusConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusConfig
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
@@ -7672,6 +7824,7 @@ func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigRespon
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) (response *ModifyPrometheusConfigResponse, err error) {
     return c.ModifyPrometheusConfigWithContext(context.Background(), request)
 }
@@ -7680,6 +7833,7 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
@@ -7689,6 +7843,7 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 //  INVALIDPARAMETER_CLUSTERNOTFOUND = "InvalidParameter.ClusterNotFound"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMCLUSTERNOTFOUND = "InvalidParameter.PromClusterNotFound"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ModifyPrometheusConfigWithContext(ctx context.Context, request *ModifyPrometheusConfigRequest) (response *ModifyPrometheusConfigResponse, err error) {
     if request == nil {
         request = NewModifyPrometheusConfigRequest()
@@ -7719,8 +7874,9 @@ func NewModifyPrometheusGlobalNotificationRequest() (request *ModifyPrometheusGl
 func NewModifyPrometheusGlobalNotificationResponse() (response *ModifyPrometheusGlobalNotificationResponse) {
     response = &ModifyPrometheusGlobalNotificationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusGlobalNotification
@@ -7777,8 +7933,9 @@ func NewModifyPrometheusInstanceAttributesRequest() (request *ModifyPrometheusIn
 func NewModifyPrometheusInstanceAttributesResponse() (response *ModifyPrometheusInstanceAttributesResponse) {
     response = &ModifyPrometheusInstanceAttributesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusInstanceAttributes
@@ -7841,8 +7998,9 @@ func NewModifyPrometheusRecordRuleYamlRequest() (request *ModifyPrometheusRecord
 func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusRecordRuleYamlResponse) {
     response = &ModifyPrometheusRecordRuleYamlResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusRecordRuleYaml
@@ -7901,8 +8059,9 @@ func NewModifyPrometheusTempRequest() (request *ModifyPrometheusTempRequest) {
 func NewModifyPrometheusTempResponse() (response *ModifyPrometheusTempResponse) {
     response = &ModifyPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyPrometheusTemp
@@ -7959,8 +8118,9 @@ func NewResumeGrafanaInstanceRequest() (request *ResumeGrafanaInstanceRequest) {
 func NewResumeGrafanaInstanceResponse() (response *ResumeGrafanaInstanceResponse) {
     response = &ResumeGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ResumeGrafanaInstance
@@ -8017,8 +8177,9 @@ func NewRunPrometheusInstanceRequest() (request *RunPrometheusInstanceRequest) {
 func NewRunPrometheusInstanceResponse() (response *RunPrometheusInstanceResponse) {
     response = &RunPrometheusInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RunPrometheusInstance
@@ -8071,8 +8232,9 @@ func NewSendCustomAlarmMsgRequest() (request *SendCustomAlarmMsgRequest) {
 func NewSendCustomAlarmMsgResponse() (response *SendCustomAlarmMsgResponse) {
     response = &SendCustomAlarmMsgResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SendCustomAlarmMsg
@@ -8135,8 +8297,9 @@ func NewSetDefaultAlarmPolicyRequest() (request *SetDefaultAlarmPolicyRequest) {
 func NewSetDefaultAlarmPolicyResponse() (response *SetDefaultAlarmPolicyResponse) {
     response = &SetDefaultAlarmPolicyResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SetDefaultAlarmPolicy
@@ -8197,8 +8360,9 @@ func NewSyncPrometheusTempRequest() (request *SyncPrometheusTempRequest) {
 func NewSyncPrometheusTempResponse() (response *SyncPrometheusTempResponse) {
     response = &SyncPrometheusTempResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SyncPrometheusTemp
@@ -8269,8 +8433,9 @@ func NewTerminatePrometheusInstancesRequest() (request *TerminatePrometheusInsta
 func NewTerminatePrometheusInstancesResponse() (response *TerminatePrometheusInstancesResponse) {
     response = &TerminatePrometheusInstancesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // TerminatePrometheusInstances
@@ -8333,8 +8498,9 @@ func NewUnBindingAllPolicyObjectRequest() (request *UnBindingAllPolicyObjectRequ
 func NewUnBindingAllPolicyObjectResponse() (response *UnBindingAllPolicyObjectResponse) {
     response = &UnBindingAllPolicyObjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnBindingAllPolicyObject
@@ -8451,8 +8617,9 @@ func NewUnBindingPolicyObjectRequest() (request *UnBindingPolicyObjectRequest) {
 func NewUnBindingPolicyObjectResponse() (response *UnBindingPolicyObjectResponse) {
     response = &UnBindingPolicyObjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnBindingPolicyObject
@@ -8573,8 +8740,9 @@ func NewUnbindPrometheusManagedGrafanaRequest() (request *UnbindPrometheusManage
 func NewUnbindPrometheusManagedGrafanaResponse() (response *UnbindPrometheusManagedGrafanaResponse) {
     response = &UnbindPrometheusManagedGrafanaResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UnbindPrometheusManagedGrafana
@@ -8623,8 +8791,9 @@ func NewUninstallGrafanaDashboardRequest() (request *UninstallGrafanaDashboardRe
 func NewUninstallGrafanaDashboardResponse() (response *UninstallGrafanaDashboardResponse) {
     response = &UninstallGrafanaDashboardResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallGrafanaDashboard
@@ -8673,8 +8842,9 @@ func NewUninstallGrafanaPluginsRequest() (request *UninstallGrafanaPluginsReques
 func NewUninstallGrafanaPluginsResponse() (response *UninstallGrafanaPluginsResponse) {
     response = &UninstallGrafanaPluginsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UninstallGrafanaPlugins
@@ -8682,6 +8852,7 @@ func NewUninstallGrafanaPluginsResponse() (response *UninstallGrafanaPluginsResp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UninstallGrafanaPlugins(request *UninstallGrafanaPluginsRequest) (response *UninstallGrafanaPluginsResponse, err error) {
     return c.UninstallGrafanaPluginsWithContext(context.Background(), request)
 }
@@ -8691,6 +8862,7 @@ func (c *Client) UninstallGrafanaPlugins(request *UninstallGrafanaPluginsRequest
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RESOURCENOTFOUND = "FailedOperation.ResourceNotFound"
 func (c *Client) UninstallGrafanaPluginsWithContext(ctx context.Context, request *UninstallGrafanaPluginsRequest) (response *UninstallGrafanaPluginsResponse, err error) {
     if request == nil {
         request = NewUninstallGrafanaPluginsRequest()
@@ -8721,12 +8893,13 @@ func NewUpdateAlertRuleRequest() (request *UpdateAlertRuleRequest) {
 func NewUpdateAlertRuleResponse() (response *UpdateAlertRuleResponse) {
     response = &UpdateAlertRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAlertRule
-// 更新 Prometheus 的报警规则。
+// 更新 Prometheus 的告警规则。
 //
 // 
 //
@@ -8750,7 +8923,7 @@ func (c *Client) UpdateAlertRule(request *UpdateAlertRuleRequest) (response *Upd
 }
 
 // UpdateAlertRule
-// 更新 Prometheus 的报警规则。
+// 更新 Prometheus 的告警规则。
 //
 // 
 //
@@ -8799,8 +8972,9 @@ func NewUpdateAlertRuleStateRequest() (request *UpdateAlertRuleStateRequest) {
 func NewUpdateAlertRuleStateResponse() (response *UpdateAlertRuleStateResponse) {
     response = &UpdateAlertRuleStateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateAlertRuleState
@@ -8869,8 +9043,9 @@ func NewUpdateDNSConfigRequest() (request *UpdateDNSConfigRequest) {
 func NewUpdateDNSConfigResponse() (response *UpdateDNSConfigResponse) {
     response = &UpdateDNSConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateDNSConfig
@@ -8939,8 +9114,9 @@ func NewUpdateExporterIntegrationRequest() (request *UpdateExporterIntegrationRe
 func NewUpdateExporterIntegrationResponse() (response *UpdateExporterIntegrationResponse) {
     response = &UpdateExporterIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateExporterIntegration
@@ -9021,8 +9197,9 @@ func NewUpdateGrafanaConfigRequest() (request *UpdateGrafanaConfigRequest) {
 func NewUpdateGrafanaConfigResponse() (response *UpdateGrafanaConfigResponse) {
     response = &UpdateGrafanaConfigResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGrafanaConfig
@@ -9069,8 +9246,9 @@ func NewUpdateGrafanaEnvironmentsRequest() (request *UpdateGrafanaEnvironmentsRe
 func NewUpdateGrafanaEnvironmentsResponse() (response *UpdateGrafanaEnvironmentsResponse) {
     response = &UpdateGrafanaEnvironmentsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGrafanaEnvironments
@@ -9117,8 +9295,9 @@ func NewUpdateGrafanaIntegrationRequest() (request *UpdateGrafanaIntegrationRequ
 func NewUpdateGrafanaIntegrationResponse() (response *UpdateGrafanaIntegrationResponse) {
     response = &UpdateGrafanaIntegrationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGrafanaIntegration
@@ -9165,8 +9344,9 @@ func NewUpdateGrafanaNotificationChannelRequest() (request *UpdateGrafanaNotific
 func NewUpdateGrafanaNotificationChannelResponse() (response *UpdateGrafanaNotificationChannelResponse) {
     response = &UpdateGrafanaNotificationChannelResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGrafanaNotificationChannel
@@ -9213,8 +9393,9 @@ func NewUpdateGrafanaWhiteListRequest() (request *UpdateGrafanaWhiteListRequest)
 func NewUpdateGrafanaWhiteListResponse() (response *UpdateGrafanaWhiteListResponse) {
     response = &UpdateGrafanaWhiteListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateGrafanaWhiteList
@@ -9261,8 +9442,9 @@ func NewUpdatePrometheusAgentStatusRequest() (request *UpdatePrometheusAgentStat
 func NewUpdatePrometheusAgentStatusResponse() (response *UpdatePrometheusAgentStatusResponse) {
     response = &UpdatePrometheusAgentStatusResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdatePrometheusAgentStatus
@@ -9321,12 +9503,13 @@ func NewUpdatePrometheusScrapeJobRequest() (request *UpdatePrometheusScrapeJobRe
 func NewUpdatePrometheusScrapeJobResponse() (response *UpdatePrometheusScrapeJobResponse) {
     response = &UpdatePrometheusScrapeJobResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdatePrometheusScrapeJob
-// 更新 Prometheus 抓取任务
+// 更新 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -9345,7 +9528,7 @@ func (c *Client) UpdatePrometheusScrapeJob(request *UpdatePrometheusScrapeJobReq
 }
 
 // UpdatePrometheusScrapeJob
-// 更新 Prometheus 抓取任务
+// 更新 Prometheus Agent 抓取任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -9389,8 +9572,9 @@ func NewUpdateRecordingRuleRequest() (request *UpdateRecordingRuleRequest) {
 func NewUpdateRecordingRuleResponse() (response *UpdateRecordingRuleResponse) {
     response = &UpdateRecordingRuleResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateRecordingRule
@@ -9459,8 +9643,9 @@ func NewUpdateSSOAccountRequest() (request *UpdateSSOAccountRequest) {
 func NewUpdateSSOAccountResponse() (response *UpdateSSOAccountResponse) {
     response = &UpdateSSOAccountResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateSSOAccount
@@ -9507,8 +9692,9 @@ func NewUpdateServiceDiscoveryRequest() (request *UpdateServiceDiscoveryRequest)
 func NewUpdateServiceDiscoveryResponse() (response *UpdateServiceDiscoveryResponse) {
     response = &UpdateServiceDiscoveryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateServiceDiscovery
@@ -9577,8 +9763,9 @@ func NewUpgradeGrafanaDashboardRequest() (request *UpgradeGrafanaDashboardReques
 func NewUpgradeGrafanaDashboardResponse() (response *UpgradeGrafanaDashboardResponse) {
     response = &UpgradeGrafanaDashboardResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeGrafanaDashboard
@@ -9639,8 +9826,9 @@ func NewUpgradeGrafanaInstanceRequest() (request *UpgradeGrafanaInstanceRequest)
 func NewUpgradeGrafanaInstanceResponse() (response *UpgradeGrafanaInstanceResponse) {
     response = &UpgradeGrafanaInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpgradeGrafanaInstance

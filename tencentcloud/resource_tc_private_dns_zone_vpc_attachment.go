@@ -90,10 +90,12 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		request   = privatedns.NewAddSpecifyPrivateZoneVpcRequest()
-		zoneId    string
-		uniqVpcId string
+		logId        = getLogId(contextNil)
+		request      = privatedns.NewAddSpecifyPrivateZoneVpcRequest()
+		asyncRequest = privatedns.NewQueryAsyncBindVpcStatusRequest()
+		zoneId       string
+		uniqVpcId    string
+		uniqId       string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -135,10 +137,13 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 				accountVpcInfo.Uin = helper.String(v.(string))
 			}
 
+			accountVpcInfo.VpcName = helper.String("")
+
 			request.AccountVpcSet = append(request.AccountVpcSet, accountVpcInfo)
 		}
 	}
 
+	request.Sync = helper.Bool(false)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().AddSpecifyPrivateZoneVpc(request)
 		if e != nil {
@@ -147,6 +152,12 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
+		if result == nil || result.Response.UniqId == nil {
+			e = fmt.Errorf("PrivateDns ZoneVpcAttachment not exists")
+			return resource.NonRetryableError(e)
+		}
+
+		uniqId = *result.Response.UniqId
 		return nil
 	})
 
@@ -156,6 +167,28 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	}
 
 	d.SetId(strings.Join([]string{zoneId, uniqVpcId}, FILED_SP))
+
+	// wait
+	asyncRequest.UniqId = &uniqId
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asyncRequest.GetAction(), asyncRequest.ToJsonString(), asyncRequest.ToJsonString())
+		}
+
+		if *result.Response.Status == "success" {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("query async bind vpc status is %s.", *result.Response.Status))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s query async bind vpc status failed, reason:%+v", logId, err)
+		return err
+	}
 
 	return resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d, meta)
 }

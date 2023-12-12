@@ -520,6 +520,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
+	//internal version: replace var begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+	//internal version: replace var end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -548,6 +550,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
+			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 			return retryError(inErr)
 		}
 
@@ -556,7 +560,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-
+		//internal version: replace instanceId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace instanceId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 		return nil
 	})
 
@@ -568,7 +573,9 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
+	//internal version: replace setId begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	d.SetId(*response.Response.InstanceIds[0])
+	//internal version: replace setId end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	return nil
 }
 
@@ -626,7 +633,9 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	//internal version: replace mysqlServer begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	//internal version: replace mysqlServer end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
 	payType := getPayType(d).(int)
 
@@ -646,6 +655,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
+	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
@@ -654,7 +664,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return err
 		}
 	}
-
+	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
@@ -1158,7 +1168,8 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-
+		//internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+		//internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	}
 
 	if d.HasChange("param_template_id") {
