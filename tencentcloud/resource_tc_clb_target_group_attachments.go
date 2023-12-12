@@ -31,7 +31,7 @@ func resourceTencentCloudClbTargetGroupAttachments() *schema.Resource {
 			},
 			"associations": {
 				Required:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Description: "Association array",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -72,7 +72,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 		loadBalancerId = v.(string)
 	}
 	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			targetGroupAssociation.LoadBalancerId = helper.String(loadBalancerId)
@@ -133,7 +133,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 	associationsSet := make(map[string]struct{}, 0)
 	targetGroupList := make([]string, 0)
 	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			ids := make([]string, 0)
 
@@ -179,7 +179,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsRead(d *schema.ResourceData, m
 			return fmt.Errorf("id is broken,%s", info)
 		}
 		associationsMap := map[string]interface{}{}
-		associationsMap["load_balancer_id"] = info[0]
+		_ = d.Set("load_balancer_id", info[0])
 
 		associationsMap["listener_id"] = info[1]
 
@@ -211,7 +211,7 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 
 	loadBalancerId := d.Id()
 	if v, ok := d.GetOk("associations"); ok {
-		for _, item := range v.([]interface{}) {
+		for _, item := range v.(*schema.Set).List() {
 			dMap := item.(map[string]interface{})
 			targetGroupAssociation := clb.TargetGroupAssociation{}
 			targetGroupAssociation.LoadBalancerId = helper.String(loadBalancerId)
