@@ -27,7 +27,7 @@ import (
 const FILED_SP = "#"
 const COMMA_SP = ","
 
-var contextNil context.Context = nil
+var ContextNil context.Context = nil
 
 type contextLogId string
 
