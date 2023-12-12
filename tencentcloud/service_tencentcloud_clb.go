@@ -2311,6 +2311,7 @@ func (me *ClbService) DescribeClbTargetGroupAttachmentsById(ctx context.Context,
 			}
 		}
 	}
+	targetGroupAttachments = result
 	return
 }
 func (me *ClbService) DeleteClbTargetGroupAttachmentsById(ctx context.Context, request *clb.DisassociateTargetGroupsRequest) (errRet error) {
