@@ -30,7 +30,7 @@ const testAccClbTargetGroupAttachments = `
 resource "tencentcloud_clb_instance" "clb_basic" {
   network_type = "OPEN"
   clb_name     = "tf_test_clb_attach"
-  vpc_id = "vpc-fvfezg87"
+  vpc_id = "vpc-5kwngvex"
 }
 
 resource "tencentcloud_clb_listener" "public_listeners" {
@@ -82,22 +82,22 @@ resource "tencentcloud_clb_target_group_attachments" "target_group_attachments" 
   load_balancer_id = tencentcloud_clb_instance.clb_basic.id
   associations  {
     listener_id = tencentcloud_clb_listener.public_listeners.listener_id
-    target_group_id = "lbtg-4ugsd49y"
+    target_group_id = "lbtg-ln4gk8me"
     location_id = tencentcloud_clb_listener_rule.rule_basic.rule_id
   }
   associations  {
     listener_id = tencentcloud_clb_listener.public_listeners.listener_id
-    target_group_id = "lbtg-4ugsd49y"
+    target_group_id = "lbtg-iv3mdrfy"
     location_id = tencentcloud_clb_listener_rule.rule_basic2.rule_id
   }
   associations  {
     listener_id = tencentcloud_clb_listener.public_listeners.listener_id
-    target_group_id = "lbtg-4ugsd49y"
+    target_group_id = "lbtg-ctz951k0"
     location_id = tencentcloud_clb_listener_rule.rule_basic3.rule_id
   }
   associations  {
     listener_id = tencentcloud_clb_listener.public_listeners.listener_id
-    target_group_id = "lbtg-4ugsd49y"
+    target_group_id = "lbtg-kukb1j9c"
     location_id = tencentcloud_clb_listener_rule.rule_basic4.rule_id
   }
   depends_on = [tencentcloud_clb_listener.public_listeners,

@@ -10,7 +10,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -94,11 +93,6 @@ func resourceTencentCloudClbTargetGroupAttachmentsCreate(d *schema.ResourceData,
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().AssociateTargetGroups(request)
 		if e != nil {
-			if err, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
-				if strings.Contains(err.GetMessage(), "Your task is working (AssociateTargetGroups)") {
-					return resource.RetryableError(e)
-				}
-			}
 			return retryError(e, InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -233,11 +227,6 @@ func resourceTencentCloudClbTargetGroupAttachmentsDelete(d *schema.ResourceData,
 		ratelimit.Check(request.GetAction())
 		result, err := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().DisassociateTargetGroups(request)
 		if err != nil {
-			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if strings.Contains(e.GetMessage(), "Your task is working (DisassociateTargetGroups)") {
-					return resource.RetryableError(e)
-				}
-			}
 			return retryError(err, InternalError)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
