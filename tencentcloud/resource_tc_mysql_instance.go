@@ -13,6 +13,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+var importMysqlFlag = false
+
 func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_name": {
@@ -193,6 +195,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"parameters": {
 			Type:        schema.TypeMap,
 			Optional:    true,
+			Computed:    true,
 			Description: "List of parameters to use.",
 		},
 		"internet_service": {
@@ -290,18 +293,26 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		Delete: resourceTencentCloudMysqlInstanceDelete,
 		Schema: specialInfo,
 		Importer: &schema.ResourceImporter{
-			State: helper.ImportWithDefaultValue(map[string]interface{}{
-				"charge_type":       MYSQL_CHARGE_TYPE_POSTPAID,
-				"prepaid_period":    1,
-				"auto_renew_flag":   0,
-				"intranet_port":     3306,
-				"force_delete":      false,
-				"internet_service":  0,
-				"engine_version":    MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-				"slave_deploy_mode": 0,
-				"slave_sync_mode":   0,
-				"project_id":        0,
-			}),
+			State: func(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importMysqlFlag = true
+				defaultValues := map[string]interface{}{
+					"charge_type":       MYSQL_CHARGE_TYPE_POSTPAID,
+					"prepaid_period":    1,
+					"auto_renew_flag":   0,
+					"intranet_port":     3306,
+					"force_delete":      false,
+					"internet_service":  0,
+					"engine_version":    MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
+					"slave_deploy_mode": 0,
+					"slave_sync_mode":   0,
+					"project_id":        0,
+				}
+
+				for k, v := range defaultValues {
+					_ = d.Set(k, v)
+				}
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 	}
 }
@@ -866,10 +877,26 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-	parametersMap, ok := d.Get("parameters").(map[string]interface{})
-	if !ok {
-		log.Printf("[INFO] %v  config error,parameters is not map[string]interface{}\n", logId)
-	} else {
+	if importMysqlFlag {
+		// import logic:
+		log.Printf("[INFO] %v ,begin to import parameter...\n", logId)
+		parameterList, err := mysqlService.DescribeInstanceParameters(ctx, *mysqlInfo.InstanceId)
+		if err != nil {
+			return err
+		}
+
+		parameters := make(map[string]string)
+		for _, v := range parameterList {
+			parameters[*v.Name] = *v.CurrentValue
+		}
+		if e := d.Set("parameters", parameters); e != nil {
+			log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
+			return e
+		}
+		_ = d.Set("availability_zone", mysqlInfo.Zone)
+		importMysqlFlag = false
+	} else if parametersMap, ok := d.Get("parameters").(map[string]interface{}); ok {
+		// read logic:
 		var cares []string
 		for k := range parametersMap {
 			cares = append(cares, k)
