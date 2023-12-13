@@ -318,7 +318,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 }
 
 /*
-   [master] and [dr] and [ro] all need set
+[master] and [dr] and [ro] all need set
 */
 func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
@@ -438,7 +438,7 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 }
 
 /*
- [master] need set
+[master] need set
 */
 func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
@@ -916,7 +916,6 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 				log.Printf("[CRITAL]%s provider set caresParameters fail, reason:%s\n ", logId, e.Error())
 				return resource.NonRetryableError(e)
 			}
-			_ = d.Set("availability_zone", mysqlInfo.Zone)
 			return nil
 		})
 		if err != nil {
@@ -944,6 +943,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
 			_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 		}
+
+		if backConfig.Response.Zone != nil {
+			_ = d.Set("availability_zone", *backConfig.Response.Zone)
+		}
 		return nil
 	})
 	if err != nil {
@@ -953,7 +956,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 }
 
 /*
-   [master] and [dr] and [ro] all need update
+[master] and [dr] and [ro] all need update
 */
 func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}, isReadonly bool) error {
 
@@ -1206,7 +1209,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 }
 
 /*
- [master] need set
+[master] need set
 */
 func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 	logId := getLogId(ctx)
