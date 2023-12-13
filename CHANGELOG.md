@@ -1,3 +1,17 @@
+## 1.81.58 (December 13, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_sqlserver_desc_ha_log` ([#2394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2394))
+* **New Resource:** `tencentcloud_clb_target_group_attachments` ([#2398](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2398))
+* **New Resource:** `tencentcloud_sqlserver_instance_ssl` ([#2394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2394))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_sqlserver_ins_attribute: Support query `ssl_config` param. ([#2394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2394))
+* resource/tencentcloud_mysql_instance: Fix the availability zone problem after active/standby switchover. ([#2401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2401))
+* resource/tencentcloud_ssm_product_secret: Support create ssm secret for tdsql-c-mysql. ([#2399](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2399))
+
 ## 1.81.57 (December 11, 2023)
 
 ENHANCEMENTS:
