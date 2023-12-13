@@ -1850,6 +1850,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
 			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
 			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),
+			"tencentcloud_clb_target_group_attachments":                        resourceTencentCloudClbTargetGroupAttachments(),
 		},
 
 		ConfigureFunc: providerConfigure,
