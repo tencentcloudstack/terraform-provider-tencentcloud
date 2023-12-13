@@ -33,7 +33,7 @@ func resourceTencentCloudSsmProductSecret() *schema.Resource {
 			"product_name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Name of the Tencent Cloud service bound to the credential, such as `Mysql`, `Tdsql-mysql`. you can use dataSource `tencentcloud_ssm_products` to query supported products.",
+				Description: "Name of the Tencent Cloud service bound to the credential, such as `Mysql`, `Tdsql-mysql`, `Tdsql_C_Mysql`. you can use dataSource `tencentcloud_ssm_products` to query supported products.",
 			},
 			"instance_id": {
 				Required:    true,
