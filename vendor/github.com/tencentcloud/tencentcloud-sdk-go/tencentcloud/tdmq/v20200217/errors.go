@@ -50,7 +50,7 @@ const (
 	// 角色创建失败。
 	FAILEDOPERATION_CREATEROLE = "FailedOperation.CreateRole"
 
-	// 创建秘钥失败。
+	// 创建密钥失败。
 	FAILEDOPERATION_CREATESECRETKEY = "FailedOperation.CreateSecretKey"
 
 	// 创建订阅关系失败。
@@ -116,7 +116,7 @@ const (
 	// 必须先清除关联角色数据才能继续操作。
 	FAILEDOPERATION_ROLEINUSE = "FailedOperation.RoleInUse"
 
-	// 保存秘钥失败。
+	// 保存密钥失败。
 	FAILEDOPERATION_SAVESECRETKEY = "FailedOperation.SaveSecretKey"
 
 	// 消息发送超时。
@@ -187,6 +187,9 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 至少需要提供一个参数。
+	INVALIDPARAMETERVALUE_ATLEASTONE = "InvalidParameterValue.AtLeastOne"
 
 	// 与现有集群名称重复。
 	INVALIDPARAMETERVALUE_CLUSTERNAMEDUPLICATION = "InvalidParameterValue.ClusterNameDuplication"
@@ -283,6 +286,12 @@ const (
 
 	// 实例不存在。
 	RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+
+	// 迁移任务不存在。
+	RESOURCENOTFOUND_MIGRATIONTASK = "ResourceNotFound.MigrationTask"
+
+	// 消息生产日志不存在。
+	RESOURCENOTFOUND_MSGPRODUCELOG = "ResourceNotFound.MsgProduceLog"
 
 	// 命名空间不存在。
 	RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
