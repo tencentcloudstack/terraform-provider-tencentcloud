@@ -169,6 +169,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 					"the characters of SendContext and RecvContext can only be selected in `0123456789ABCDEF` " +
 					"and the length must be even digits.",
 			},
+			"health_source_ip_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
+				Description:  "Specifies the type of health check source IP. `0` (default): CLB VIP. `1`: 100.64 IP range.",
+			},
 			"certificate_ssl_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -210,6 +217,19 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
 				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+			},
+			"session_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{CLB_SESSION_TYPE_NORMAL, CLB_SESSION_TYPE_QUIC}),
+				Description:  "Session persistence type. Valid values: `NORMAL`: the default session persistence type; `QUIC_CID`: session persistence by QUIC connection ID. The `QUIC_CID` value can only be configured in UDP listeners. If this field is not specified, the default session persistence type will be used.",
+			},
+			"keepalive_enable": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Optional:    true,
+				Description: "Whether to enable a persistent connection. This parameter is applicable only to HTTP and HTTPS listeners. Valid values: 0 (disable; default value) and 1 (enable).",
 			},
 			"end_port": {
 				Type:        schema.TypeInt,
@@ -313,6 +333,15 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			request.SniSwitch = &vvv
 		}
 	}
+
+	if v, ok := d.GetOk("session_type"); ok {
+		request.SessionType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("keepalive_enable"); ok {
+		request.KeepaliveEnable = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOkExists("end_port"); ok {
 		request.EndPort = helper.IntUint64(v.(int))
 	}
@@ -461,6 +490,9 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		if instance.HealthCheck.RecvContext != nil {
 			_ = d.Set("health_check_recv_context", instance.HealthCheck.RecvContext)
 		}
+		if instance.HealthCheck.SourceIpType != nil {
+			_ = d.Set("health_source_ip_type", instance.HealthCheck.SourceIpType)
+		}
 	}
 
 	if instance.Certificate != nil {
@@ -469,6 +501,13 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		if instance.Certificate.CertCaId != nil {
 			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 		}
+	}
+
+	if instance.SessionType != nil {
+		_ = d.Set("session_type", instance.SessionType)
+	}
+	if instance.KeepaliveEnable != nil {
+		_ = d.Set("keepalive_enable", instance.KeepaliveEnable)
 	}
 
 	if instance.EndPort != nil {
@@ -554,6 +593,18 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 		changed = true
 		targetType := d.Get("target_type").(string)
 		request.TargetType = helper.String(targetType)
+	}
+
+	if d.HasChange("session_type") {
+		changed = true
+		sessionType := d.Get("session_type").(string)
+		request.SessionType = helper.String(sessionType)
+	}
+
+	if d.HasChange("keepalive_enable") {
+		changed = true
+		keepaliveEnable := d.Get("keepalive_enable").(int)
+		request.KeepaliveEnable = helper.IntInt64(keepaliveEnable)
 	}
 
 	if changed {

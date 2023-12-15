@@ -898,6 +898,11 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 		healthCheck.RecvContext = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("health_source_ip_type"); ok {
+		healthSetFlag = true
+		healthCheck.SourceIpType = helper.Int64(int64(v.(int)))
+	}
+
 	if healthSetFlag {
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
 			protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC) &&
