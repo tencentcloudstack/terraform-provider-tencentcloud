@@ -1376,6 +1376,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rabbitmq_virtual_host":                          resourceTencentCloudTdmqRabbitmqVirtualHost(),
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                          resourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_send_rocketmq_message":                          resourceTencentCloudTdmqSendRocketmqMessage(),
+			"tencentcloud_tdmq_professional_cluster":                           resourceTencentCloudTdmqProfessionalCluster(),
 			"tencentcloud_cos_bucket_policy":                                   resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":            resourceTencentCloudCosBucketDomainCertificateAttachment(),
 			"tencentcloud_cos_bucket_inventory":                                resourceTencentCloudCosBucketInventory(),

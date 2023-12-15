@@ -678,6 +678,7 @@ TDMQ for Pulsar(tpulsar)
 
   Resource
     tencentcloud_tdmq_instance
+    tencentcloud_tdmq_professional_cluster
     tencentcloud_tdmq_namespace
     tencentcloud_tdmq_topic
     tencentcloud_tdmq_role

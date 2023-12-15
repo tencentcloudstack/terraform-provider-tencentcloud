@@ -4,6 +4,8 @@ import (
 	"context"
 	"log"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
@@ -617,4 +619,120 @@ func (me *TdmqService) DeleteTdmqNamespaceRoleAttachment(ctx context.Context, en
 		return err
 	}
 	return
+}
+
+func (me *TdmqService) DescribeTdmqProfessionalClusterById(ctx context.Context, clusterId string) (professionalCluster *tdmq.PulsarProClusterInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribePulsarProInstanceDetailRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribePulsarProInstanceDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	professionalCluster = response.Response.ClusterInfo
+	return
+}
+
+func (me *TdmqService) DeleteTdmqProfessionalClusterById(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteProClusterRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteProCluster(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribePulsarProInstances(ctx context.Context, clusterId string) (professionalCluster *tdmq.PulsarProInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribePulsarProInstancesRequest()
+
+	filter := tdmq.Filter{
+		Name:   helper.String("InstanceIds"),
+		Values: []*string{&clusterId},
+	}
+	request.Filters = []*tdmq.Filter{&filter}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*tdmq.PulsarProInstance, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribePulsarProInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Instances) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Instances...)
+		if len(response.Response.Instances) < int(limit) {
+			break
+		}
+
+		offset += limit
+
+		if response == nil || len(response.Response.Instances) < 1 {
+			return
+		}
+	}
+
+	professionalCluster = instances[0]
+	return
+}
+
+func (me *TdmqService) TdmqProfessionalClusterStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribePulsarProInstances(ctx, clusterId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(helper.UInt64ToStrPoint(*object.Status)), nil
+	}
 }
