@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_clb_listener: Add parameters `health_source_ip_type`, `session_type` and `keepalive_enable`.
+```
