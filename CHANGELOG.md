@@ -1,3 +1,14 @@
+## 1.81.59 (December 15, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tdmq_professional_cluster` ([#2403](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2403))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_listener: Add parameters `health_source_ip_type`, `session_type` and `keepalive_enable`. ([#2405](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2405))
+* resource/tencentcloud_clb_listener_rule: Add parameter `quic`. ([#2406](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2406))
+
 ## 1.81.58 (December 13, 2023)
 
 FEATURES:
