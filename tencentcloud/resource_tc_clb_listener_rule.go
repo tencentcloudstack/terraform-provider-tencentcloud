@@ -163,6 +163,12 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
 				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`. The default is `HTTP`.",
 			},
+			"quic": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable QUIC. Note: QUIC can be enabled only for HTTPS domain names.",
+			},
 			//computed
 			"rule_id": {
 				Type:        schema.TypeString,
@@ -262,6 +268,10 @@ func resourceTencentCloudClbListenerRuleCreate(d *schema.ResourceData, meta inte
 			return fmt.Errorf("[CHECK][CLB listener rule][Create] check: certificate para can only be set with rule of linstener with protocol 'HTTPS'")
 		}
 		rule.Certificate = certificateInput
+	}
+
+	if v, ok := d.GetOkExists("quic"); ok {
+		rule.Quic = helper.Bool(v.(bool))
 	}
 
 	request.Rules = []*clb.RuleInput{&rule}
@@ -400,6 +410,14 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 	_ = d.Set("target_type", instance.TargetType)
 	_ = d.Set("forward_type", instance.ForwardType)
 	_ = d.Set("http2_switch", instance.Http2)
+
+	if instance.QuicStatus != nil {
+		if *instance.QuicStatus == "QUIC_ACTIVE" {
+			_ = d.Set("quic", true)
+		} else {
+			_ = d.Set("quic", false)
+		}
+	}
 
 	//health check
 	if instance.HealthCheck != nil {
@@ -573,6 +591,13 @@ func resourceTencentCloudClbListenerRuleUpdate(d *schema.ResourceData, meta inte
 			}
 			domainChanged = true
 			domainRequest.Http2 = helper.Bool(v.(bool))
+		}
+	}
+
+	if d.HasChange("quic") {
+		domainChanged = true
+		if v, ok := d.GetOkExists("quic"); ok {
+			domainRequest.Quic = helper.Bool(v.(bool))
 		}
 	}
 
