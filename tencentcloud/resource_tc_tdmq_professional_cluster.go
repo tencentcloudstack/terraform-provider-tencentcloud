@@ -145,7 +145,7 @@ func resourceTencentCloudTdmqProfessionalClusterCreate(d *schema.ResourceData, m
 	if v, ok := d.GetOkExists("auto_voucher"); ok {
 		request.AutoVoucher = helper.IntInt64(v.(int))
 	} else {
-		request.TimeSpan = helper.Int64(0)
+		request.AutoVoucher = helper.Int64(0)
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "vpc"); ok {
