@@ -135,5 +135,75 @@ func resourceTencentCloudRouteTableAssociationDelete(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_route_table_association.delete")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	subnetId := d.Id()
+
+	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	var (
+		info VpcSubnetBasicInfo
+		has  int
+		e    error
+	)
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		info, has, e = service.DescribeSubnet(ctx, subnetId, nil, "", "")
+		if e != nil {
+			return retryError(e)
+		}
+
+		// deleted
+		if has == 0 {
+			d.SetId("")
+			return nil
+		}
+
+		if has != 1 {
+			errRet := fmt.Errorf("one subnet_id read get %d subnet info", has)
+			log.Printf("[CRITAL]%s %s", logId, errRet.Error())
+			return resource.NonRetryableError(errRet)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if has == 0 {
+		return fmt.Errorf("Unable to find the vpc corresponding to the current subnet:  %s", subnetId)
+	}
+
+	routeTables, err := service.DescribeRouteTables(ctx, "", "", info.vpcId, nil, helper.Bool(true), "")
+
+	if err != nil {
+		log.Printf("[WARN] Describe default Route Table error: %s", err.Error())
+	}
+
+	if len(routeTables) < 1 {
+		return fmt.Errorf("Unable to find the default routetable corresponding to the current vpc:  %s", info.vpcId)
+	}
+
+	defaultRoutetableId := routeTables[0].routeTableId
+
+	request := vpc.NewReplaceRouteTableAssociationRequest()
+
+	request.SubnetId = &subnetId
+	request.RouteTableId = helper.String(defaultRoutetableId)
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ReplaceRouteTableAssociation(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update vpc routeTable failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return nil
 }
