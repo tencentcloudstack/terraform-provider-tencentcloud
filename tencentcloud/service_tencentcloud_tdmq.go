@@ -676,7 +676,7 @@ func (me *TdmqService) DescribePulsarProInstances(ctx context.Context, clusterId
 	request := tdmq.NewDescribePulsarProInstancesRequest()
 
 	filter := tdmq.Filter{
-		Name:   helper.String("ClusterId"),
+		Name:   helper.String("InstanceIds"),
 		Values: []*string{&clusterId},
 	}
 	request.Filters = []*tdmq.Filter{&filter}
