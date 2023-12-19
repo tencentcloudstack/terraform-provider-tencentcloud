@@ -1,0 +1,184 @@
+package cam
+
+import (
+	"context"
+	"log"
+	"strconv"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+)
+
+func DataSourceTencentCloudCamPolicies() *schema.Resource {
+	return &schema.Resource{
+		Read: dataSourceTencentCloudCamPoliciesRead,
+
+		Schema: map[string]*schema.Schema{
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the CAM policy to be queried.",
+			},
+			"policy_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of CAM policy to be queried.",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The description of the CAM policy.",
+			},
+			"type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
+				Description:  "Type of the policy strategy. Valid values: `1`, `2`. `1` means customer strategy and `2` means preset strategy.",
+			},
+			"create_mode": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: tccommon.ValidateAllowedIntValue([]int{1, 2}),
+				Description:  "Mode of creation of policy strategy. Valid values: `1`, `2`. `1` means policy was created with console, and `2` means it was created by strategies.",
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
+			},
+			"policy_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of CAM policies. Each element contains the following attributes:",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of CAM policy.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Description of CAM policy.",
+						},
+						"attachments": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Number of attached users.",
+						},
+						"service_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of attached products.",
+						},
+						"create_time": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Create time of the CAM policy.",
+						},
+						"type": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Type of the policy strategy. `1` means customer strategy and `2` means preset strategy.",
+						},
+						"create_mode": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Mode of creation of policy strategy. `1` means policy was created with console, and `2` means it was created by strategies.",
+						},
+						"policy_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the policy strategy.",
+						},
+					},
+				},
+			},
+		},
+	}
+}
+
+func dataSourceTencentCloudCamPoliciesRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_cam_policies.read")()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	params := make(map[string]interface{})
+	if v, ok := d.GetOk("policy_id"); ok {
+		policyId, e := strconv.Atoi(v.(string))
+		if e != nil {
+			return e
+		} else {
+			params["policy_id"] = policyId
+		}
+	}
+	if v, ok := d.GetOk("name"); ok {
+		params["name"] = v.(string)
+	}
+	if v, ok := d.GetOk("description"); ok {
+		params["description"] = v.(string)
+	}
+	if v, ok := d.GetOk("create_mode"); ok {
+		params["create_mode"] = v.(int)
+	}
+	if v, ok := d.GetOk("type"); ok {
+		params["type"] = v.(int)
+	}
+
+	camService := CamService{
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
+	}
+	var policies []*cam.StrategyInfo
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		results, e := camService.DescribePoliciesByFilter(ctx, params)
+		if e != nil {
+			return tccommon.RetryError(e, tccommon.InternalError)
+		}
+		policies = results
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s read CAM policies failed, reason:%s\n", logId, err.Error())
+		return err
+	}
+	policyList := make([]map[string]interface{}, 0, len(policies))
+	ids := make([]string, 0, len(policies))
+	for _, policy := range policies {
+		mapping := map[string]interface{}{
+			"name":         *policy.PolicyName,
+			"attachments":  int(*policy.Attachments),
+			"create_time":  *policy.AddTime,
+			"service_type": *policy.ServiceType,
+			"create_mode":  int(*policy.CreateMode),
+			"type":         int(*policy.Type),
+			"policy_id":    strconv.Itoa(int(*policy.PolicyId)),
+		}
+		if policy.Description != nil {
+			mapping["description"] = *policy.Description
+		}
+		policyList = append(policyList, mapping)
+		ids = append(ids, strconv.Itoa(int(*policy.PolicyId)))
+	}
+
+	d.SetId(helper.DataResourceIdsHash(ids))
+	if e := d.Set("policy_list", policyList); e != nil {
+		log.Printf("[CRITAL]%s provider set policy list fail, reason:%s\n", logId, e.Error())
+		return e
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := tccommon.WriteToFile(output.(string), policyList); e != nil {
+			return e
+		}
+	}
+
+	return nil
+}

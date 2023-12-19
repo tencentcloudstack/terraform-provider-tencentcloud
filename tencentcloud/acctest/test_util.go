@@ -9,8 +9,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 
 	tcprovider "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud"
+	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
@@ -205,4 +207,47 @@ func AccPreCheckBusiness(t *testing.T, accountType string) {
 	default:
 		AccPreCheck(t)
 	}
+}
+
+type TencentCloudClient struct {
+	apiV3Conn *connectivity.TencentCloudClient
+}
+
+var _ providercommon.ProviderMeta = &TencentCloudClient{}
+
+// GetAPIV3Conn 返回访问云 API 的客户端连接对象
+func (meta *TencentCloudClient) GetAPIV3Conn() *connectivity.TencentCloudClient {
+	return meta.apiV3Conn
+}
+
+func SharedClientForRegion(region string) (interface{}, error) {
+	var secretId string
+	if secretId = os.Getenv(tcprovider.PROVIDER_SECRET_ID); secretId == "" {
+		return nil, fmt.Errorf("%s can not be empty", tcprovider.PROVIDER_SECRET_ID)
+	}
+
+	var secretKey string
+	if secretKey = os.Getenv(tcprovider.PROVIDER_SECRET_KEY); secretKey == "" {
+		return nil, fmt.Errorf("%s can not be empty", tcprovider.PROVIDER_SECRET_KEY)
+	}
+
+	securityToken := os.Getenv(tcprovider.PROVIDER_SECURITY_TOKEN)
+	protocol := os.Getenv(tcprovider.PROVIDER_PROTOCOL)
+	domain := os.Getenv(tcprovider.PROVIDER_DOMAIN)
+
+	client := &connectivity.TencentCloudClient{
+		Credential: common.NewTokenCredential(
+			secretId,
+			secretKey,
+			securityToken,
+		),
+		Region:   region,
+		Protocol: protocol,
+		Domain:   domain,
+	}
+
+	var tcClient TencentCloudClient
+	tcClient.apiV3Conn = client
+
+	return &tcClient, nil
 }
