@@ -1,4 +1,4 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
@@ -6,12 +6,14 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 )
 
-func resourceTencentCloudCbsDiskBackupRollbackOperation() *schema.Resource {
+func ResourceTencentCloudCbsDiskBackupRollbackOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsDiskBackupRollbackOperationCreate,
 		Read:   resourceTencentCloudCbsDiskBackupRollbackOperationRead,
@@ -40,16 +42,16 @@ func resourceTencentCloudCbsDiskBackupRollbackOperation() *schema.Resource {
 }
 
 func resourceTencentCloudCbsDiskBackupRollbackOperationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	diskBackupId := d.Get("disk_backup_id").(string)
 	diskId := d.Get("disk_id").(string)
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := cbsService.ApplyDiskBackup(ctx, diskBackupId, diskId); err != nil {
@@ -57,10 +59,10 @@ func resourceTencentCloudCbsDiskBackupRollbackOperationCreate(d *schema.Resource
 	}
 	// deal with state sync delay
 	time.Sleep(time.Second * 1)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		disk, e := cbsService.DescribeDiskById(ctx, diskId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if *disk.Rollbacking {
 			return resource.RetryableError(errors.New("Disk still rollbacking"))
@@ -71,22 +73,22 @@ func resourceTencentCloudCbsDiskBackupRollbackOperationCreate(d *schema.Resource
 		return err
 	}
 
-	d.SetId(diskBackupId + FILED_SP + diskId)
+	d.SetId(diskBackupId + tccommon.FILED_SP + diskId)
 
 	return resourceTencentCloudCbsDiskBackupRollbackOperationRead(d, meta)
 }
 
 func resourceTencentCloudCbsDiskBackupRollbackOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -101,7 +103,7 @@ func resourceTencentCloudCbsDiskBackupRollbackOperationRead(d *schema.ResourceDa
 }
 
 func resourceTencentCloudCbsDiskBackupRollbackOperationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup_rollback_operation.delete")()
 
 	return nil
 }

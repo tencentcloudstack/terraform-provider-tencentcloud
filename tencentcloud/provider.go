@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 	"encoding/json"
 	"fmt"
@@ -309,10 +310,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_scaling_configs":                           dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                            dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                          dataSourceTencentCloudAsScalingPolicies(),
-			"tencentcloud_cbs_storages":                                 dataSourceTencentCloudCbsStorages(),
-			"tencentcloud_cbs_storages_set":                             dataSourceTencentCloudCbsStoragesSet(),
-			"tencentcloud_cbs_snapshots":                                dataSourceTencentCloudCbsSnapshots(),
-			"tencentcloud_cbs_snapshot_policies":                        dataSourceTencentCloudCbsSnapshotPolicies(),
+			"tencentcloud_cbs_storages":                                 cbs.DataSourceTencentCloudCbsStorages(),
+			"tencentcloud_cbs_storages_set":                             cbs.DataSourceTencentCloudCbsStoragesSet(),
+			"tencentcloud_cbs_snapshots":                                cbs.DataSourceTencentCloudCbsSnapshots(),
+			"tencentcloud_cbs_snapshot_policies":                        cbs.DataSourceTencentCloudCbsSnapshotPolicies(),
 			"tencentcloud_clb_instances":                                dataSourceTencentCloudClbInstances(),
 			"tencentcloud_clb_listeners":                                dataSourceTencentCloudClbListeners(),
 			"tencentcloud_clb_listener_rules":                           dataSourceTencentCloudClbListenerRules(),
@@ -903,13 +904,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_reserved_instance":                                   resourceTencentCloudReservedInstance(),
 			"tencentcloud_key_pair":                                            resourceTencentCloudKeyPair(),
 			"tencentcloud_placement_group":                                     resourceTencentCloudPlacementGroup(),
-			"tencentcloud_cbs_snapshot":                                        resourceTencentCloudCbsSnapshot(),
-			"tencentcloud_cbs_snapshot_policy":                                 resourceTencentCloudCbsSnapshotPolicy(),
-			"tencentcloud_cbs_storage":                                         resourceTencentCloudCbsStorage(),
-			"tencentcloud_cbs_storage_set":                                     resourceTencentCloudCbsStorageSet(),
-			"tencentcloud_cbs_storage_attachment":                              resourceTencentCloudCbsStorageAttachment(),
-			"tencentcloud_cbs_storage_set_attachment":                          resourceTencentCloudCbsStorageSetAttachment(),
-			"tencentcloud_cbs_snapshot_policy_attachment":                      resourceTencentCloudCbsSnapshotPolicyAttachment(),
+			"tencentcloud_cbs_snapshot":                                        cbs.ResourceTencentCloudCbsSnapshot(),
+			"tencentcloud_cbs_snapshot_policy":                                 cbs.ResourceTencentCloudCbsSnapshotPolicy(),
+			"tencentcloud_cbs_storage":                                         cbs.ResourceTencentCloudCbsStorage(),
+			"tencentcloud_cbs_storage_set":                                     cbs.ResourceTencentCloudCbsStorageSet(),
+			"tencentcloud_cbs_storage_attachment":                              cbs.ResourceTencentCloudCbsStorageAttachment(),
+			"tencentcloud_cbs_storage_set_attachment":                          cbs.ResourceTencentCloudCbsStorageSetAttachment(),
+			"tencentcloud_cbs_snapshot_policy_attachment":                      cbs.ResourceTencentCloudCbsSnapshotPolicyAttachment(),
 			"tencentcloud_vpc":                                                 resourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                             resourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":                                  resourceTencentCloudVpcAclAttachment(),
@@ -1687,9 +1688,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_schedule":                                        resourceTencentCloudMpsSchedule(),
 			"tencentcloud_mps_enable_schedule_config":                          resourceTencentCloudMpsEnableScheduleConfig(),
 			"tencentcloud_mps_process_media_operation":                         resourceTencentCloudMpsProcessMediaOperation(),
-			"tencentcloud_cbs_disk_backup":                                     resourceTencentCloudCbsDiskBackup(),
-			"tencentcloud_cbs_snapshot_share_permission":                       resourceTencentCloudCbsSnapshotSharePermission(),
-			"tencentcloud_cbs_disk_backup_rollback_operation":                  resourceTencentCloudCbsDiskBackupRollbackOperation(),
+			"tencentcloud_cbs_disk_backup":                                     cbs.ResourceTencentCloudCbsDiskBackup(),
+			"tencentcloud_cbs_snapshot_share_permission":                       cbs.ResourceTencentCloudCbsSnapshotSharePermission(),
+			"tencentcloud_cbs_disk_backup_rollback_operation":                  cbs.ResourceTencentCloudCbsDiskBackupRollbackOperation(),
 			"tencentcloud_chdfs_access_group":                                  resourceTencentCloudChdfsAccessGroup(),
 			"tencentcloud_chdfs_access_rule":                                   resourceTencentCloudChdfsAccessRule(),
 			"tencentcloud_chdfs_file_system":                                   resourceTencentCloudChdfsFileSystem(),

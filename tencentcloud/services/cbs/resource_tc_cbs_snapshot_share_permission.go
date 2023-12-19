@@ -1,13 +1,16 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCbsSnapshotSharePermission() *schema.Resource {
+func ResourceTencentCloudCbsSnapshotSharePermission() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsSnapshotSharePermissionCreate,
 		Read:   resourceTencentCloudCbsSnapshotSharePermissionRead,
@@ -35,11 +38,11 @@ func resourceTencentCloudCbsSnapshotSharePermission() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotSharePermissionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_share_permission.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_share_permission.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var snapshotId string
 	var accountIdsSet []interface{}
@@ -51,7 +54,7 @@ func resourceTencentCloudCbsSnapshotSharePermissionCreate(d *schema.ResourceData
 		snapshotId = v.(string)
 	}
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := service.ModifySnapshotsSharePermission(ctx, snapshotId, SNAPSHOT_SHARE_PERMISSION_SHARE, helper.InterfacesStrings(accountIdsSet))
 	if err != nil {
 		return err
@@ -62,14 +65,14 @@ func resourceTencentCloudCbsSnapshotSharePermissionCreate(d *schema.ResourceData
 }
 
 func resourceTencentCloudCbsSnapshotSharePermissionRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_share_permission.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_share_permission.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	snapshotId := d.Id()
 
@@ -89,13 +92,13 @@ func resourceTencentCloudCbsSnapshotSharePermissionRead(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudCbsSnapshotSharePermissionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_share_permission.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_share_permission.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	snapshotId := d.Id()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if d.HasChange("account_ids") {
 		old, new := d.GetChange("account_ids")
 		oldSet := old.(*schema.Set)
@@ -120,13 +123,13 @@ func resourceTencentCloudCbsSnapshotSharePermissionUpdate(d *schema.ResourceData
 }
 
 func resourceTencentCloudCbsSnapshotSharePermissionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_share_permission.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_share_permission.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	snapshotId := d.Id()
 	snapshotSharePermissions, err := service.DescribeCbsSnapshotSharePermissionById(ctx, snapshotId)
 	if err != nil {

@@ -1,4 +1,4 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
@@ -6,12 +6,14 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
-func resourceTencentCloudCbsSnapshotPolicyAttachment() *schema.Resource {
+func ResourceTencentCloudCbsSnapshotPolicyAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsSnapshotPolicyAttachmentCreate,
 		Read:   resourceTencentCloudCbsSnapshotPolicyAttachmentRead,
@@ -35,19 +37,19 @@ func resourceTencentCloudCbsSnapshotPolicyAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotPolicyAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	policyId := d.Get("snapshot_policy_id").(string)
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cbsService.AttachSnapshotPolicy(ctx, storageId, policyId)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -56,33 +58,33 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentCreate(d *schema.ResourceDat
 		return err
 	}
 
-	d.SetId(storageId + FILED_SP + policyId)
+	d.SetId(storageId + tccommon.FILED_SP + policyId)
 	return resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
-	idSplit := strings.Split(id, FILED_SP)
+	idSplit := strings.Split(id, tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("tencentcloud_cbs_snapshot_policy_attachment id is illegal: %s", id)
 	}
 	storageId := idSplit[0]
 	policyId := idSplit[1]
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var policy *cbs.AutoSnapshotPolicy
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		policy, errRet = cbsService.DescribeAttachedSnapshotPolicy(ctx, storageId, policyId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -101,24 +103,24 @@ func resourceTencentCloudCbsSnapshotPolicyAttachmentRead(d *schema.ResourceData,
 }
 
 func resourceTencentCloudCbsSnapshotPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy_attachment.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
-	idSplit := strings.Split(id, FILED_SP)
+	idSplit := strings.Split(id, tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("tencentcloud_cbs_snapshot_policy_attachment id is illegal: %s", id)
 	}
 	storageId := idSplit[0]
 	policyId := idSplit[1]
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cbsService.UnattachSnapshotPolicy(ctx, storageId, policyId)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})

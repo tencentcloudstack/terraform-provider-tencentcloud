@@ -1,16 +1,18 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
-func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
+func ResourceTencentCloudCbsStorageAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsStorageAttachmentCreate,
 		Read:   resourceTencentCloudCbsStorageAttachmentRead,
@@ -37,22 +39,22 @@ func resourceTencentCloudCbsStorageAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_attachment.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	instanceId := d.Get("instance_id").(string)
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.AttachDisk(ctx, storageId, instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -63,10 +65,10 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 
 	d.SetId(storageId)
 
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if storage == nil {
 			return resource.NonRetryableError(fmt.Errorf("cbs storage is nil"))
@@ -89,23 +91,23 @@ func resourceTencentCloudCbsStorageAttachmentCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var storage *cbs.Disk
 	var e error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e = cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -125,21 +127,21 @@ func resourceTencentCloudCbsStorageAttachmentRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_attachment.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_attachment.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	instanceId := ""
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if storage == nil || !*storage.Attached {
 			log.Printf("[DEBUG]%s disk id %s is not attached", logId, storageId)
@@ -157,10 +159,10 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		return nil
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DetachDisk(ctx, storageId, instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -169,10 +171,10 @@ func resourceTencentCloudCbsStorageAttachmentDelete(d *schema.ResourceData, meta
 		return err
 	}
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if storage == nil || !*storage.Attached {
 			return nil

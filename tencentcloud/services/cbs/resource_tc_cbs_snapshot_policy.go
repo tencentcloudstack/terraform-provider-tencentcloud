@@ -1,17 +1,20 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
+func ResourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsSnapshotPolicyCreate,
 		Read:   resourceTencentCloudCbsSnapshotPolicyRead,
@@ -25,7 +28,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 			"snapshot_policy_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
 				Description:  "Name of snapshot policy. The maximum length can not exceed 60 bytes.",
 			},
 			"repeat_weekdays": {
@@ -33,7 +36,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 				Required: true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeInt,
-					ValidateFunc: validateIntegerInRange(0, 6),
+					ValidateFunc: tccommon.ValidateIntegerInRange(0, 6),
 				},
 				Description: "Periodic snapshot is enabled. Valid values: [0, 1, 2, 3, 4, 5, 6]. 0 means Sunday, 1-6 means Monday to Saturday.",
 			},
@@ -42,7 +45,7 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 				Required: true,
 				Elem: &schema.Schema{
 					Type:         schema.TypeInt,
-					ValidateFunc: validateIntegerInRange(0, 23),
+					ValidateFunc: tccommon.ValidateIntegerInRange(0, 23),
 				},
 				Description: "Trigger times of periodic snapshot. Valid value ranges: (0~23). The 0 means 00:00, and so on.",
 			},
@@ -57,9 +60,9 @@ func resourceTencentCloudCbsSnapshotPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy.create")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cbs.NewCreateAutoSnapshotPolicyRequest()
 	request.AutoSnapshotPolicyName = helper.String(d.Get("snapshot_policy_name").(string))
@@ -82,12 +85,12 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 		request.RetentionDays = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateAutoSnapshotPolicy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateAutoSnapshotPolicy(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if response.Response.AutoSnapshotPolicyId == nil {
 			return resource.NonRetryableError(fmt.Errorf("snapshot policy id is nil"))
@@ -104,23 +107,23 @@ func resourceTencentCloudCbsSnapshotPolicyCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	policyId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var policy *cbs.AutoSnapshotPolicy
 	var e error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		policy, e = cbsService.DescribeSnapshotPolicyById(ctx, policyId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -144,9 +147,9 @@ func resourceTencentCloudCbsSnapshotPolicyRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy.update")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	policyId := d.Id()
 	request := cbs.NewModifyAutoSnapshotPolicyAttributeRequest()
@@ -173,12 +176,12 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 		request.Policy = append(request.Policy, policy)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().ModifyAutoSnapshotPolicyAttribute(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().ModifyAutoSnapshotPolicyAttribute(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -191,20 +194,20 @@ func resourceTencentCloudCbsSnapshotPolicyUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCbsSnapshotPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_snapshot_policy.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	policyId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DeleteSnapshotPolicy(ctx, policyId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})

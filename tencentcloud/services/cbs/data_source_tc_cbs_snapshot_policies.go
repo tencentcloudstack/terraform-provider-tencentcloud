@@ -1,16 +1,19 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
+func DataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCbsSnapshotPoliciesRead,
 
@@ -87,9 +90,9 @@ func dataSourceTencentCloudCbsSnapshotPolicies() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cbs_snapshot_policies.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_snapshot_policies.read")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var policyId string
 	var policyName string
@@ -100,14 +103,14 @@ func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta 
 		policyName = v.(string)
 	}
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var policies []*cbs.AutoSnapshotPolicy
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		policies, errRet = cbsService.DescribeSnapshotPolicy(ctx, policyId, policyName)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -143,7 +146,7 @@ func dataSourceTencentCloudCbsSnapshotPoliciesRead(d *schema.ResourceData, meta 
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err = writeToFile(output.(string), policyList); err != nil {
+		if err = tccommon.WriteToFile(output.(string), policyList); err != nil {
 			return err
 		}
 	}

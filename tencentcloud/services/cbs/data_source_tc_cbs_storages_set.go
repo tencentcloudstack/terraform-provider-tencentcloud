@@ -1,18 +1,20 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCbsStorages() *schema.Resource {
+func DataSourceTencentCloudCbsStoragesSet() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCbsStoragesRead,
+		Read: dataSourceTencentCloudCbsStoragesSetRead,
 
 		Schema: map[string]*schema.Schema{
 			"storage_id": {
@@ -38,7 +40,7 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 			"storage_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_STORAGE_TYPE),
 				Description:  "Filter by cloud disk media type (`CLOUD_BASIC`: HDD cloud disk | `CLOUD_PREMIUM`: Premium Cloud Storage | `CLOUD_SSD`: SSD cloud disk).",
 			},
 			"storage_usage": {
@@ -185,11 +187,11 @@ func dataSourceTencentCloudCbsStorages() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cbs_storages.read")()
+func dataSourceTencentCloudCbsStoragesSetRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_storages.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	params := make(map[string]interface{})
 	if v, ok := d.GetOk("storage_id"); ok {
@@ -240,64 +242,57 @@ func dataSourceTencentCloudCbsStoragesRead(d *schema.ResourceData, meta interfac
 	}
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		storages, e := cbsService.DescribeDisksByFilter(ctx, params)
-		if e != nil {
-			return retryError(e)
+	storages, e := cbsService.DescribeDisksInParallelByFilter(ctx, params)
+	if e != nil {
+		return e
+	}
+	ids := make([]string, 0, len(storages))
+	storageList := make([]map[string]interface{}, 0, len(storages))
+	for _, storage := range storages {
+		mapping := map[string]interface{}{
+			"storage_id":             storage.DiskId,
+			"storage_name":           storage.DiskName,
+			"storage_usage":          storage.DiskUsage,
+			"storage_type":           storage.DiskType,
+			"availability_zone":      storage.Placement.Zone,
+			"project_id":             storage.Placement.ProjectId,
+			"storage_size":           storage.DiskSize,
+			"attached":               storage.Attached,
+			"instance_id":            storage.InstanceId,
+			"encrypt":                storage.Encrypt,
+			"create_time":            storage.CreateTime,
+			"status":                 storage.DiskState,
+			"prepaid_renew_flag":     storage.RenewFlag,
+			"charge_type":            storage.DiskChargeType,
+			"throughput_performance": storage.ThroughputPerformance,
 		}
-		ids := make([]string, 0, len(storages))
-		storageList := make([]map[string]interface{}, 0, len(storages))
-		for _, storage := range storages {
-			mapping := map[string]interface{}{
-				"storage_id":             storage.DiskId,
-				"storage_name":           storage.DiskName,
-				"storage_usage":          storage.DiskUsage,
-				"storage_type":           storage.DiskType,
-				"availability_zone":      storage.Placement.Zone,
-				"project_id":             storage.Placement.ProjectId,
-				"storage_size":           storage.DiskSize,
-				"attached":               storage.Attached,
-				"instance_id":            storage.InstanceId,
-				"encrypt":                storage.Encrypt,
-				"create_time":            storage.CreateTime,
-				"status":                 storage.DiskState,
-				"prepaid_renew_flag":     storage.RenewFlag,
-				"charge_type":            storage.DiskChargeType,
-				"throughput_performance": storage.ThroughputPerformance,
+		if storage.Tags != nil {
+			tags := make(map[string]interface{}, len(storage.Tags))
+			for _, t := range storage.Tags {
+				tags[*t.Key] = *t.Value
 			}
-			if storage.Tags != nil {
-				tags := make(map[string]interface{}, len(storage.Tags))
-				for _, t := range storage.Tags {
-					tags[*t.Key] = *t.Value
-				}
-				mapping["tags"] = tags
-			}
-			storageList = append(storageList, mapping)
-			ids = append(ids, *storage.DiskId)
+			mapping["tags"] = tags
 		}
+		storageList = append(storageList, mapping)
+		ids = append(ids, *storage.DiskId)
+	}
 
-		d.SetId(helper.DataResourceIdsHash(ids))
-		if e = d.Set("storage_list", storageList); e != nil {
-			log.Printf("[CRITAL]%s provider set storage list fail, reason:%s\n ", logId, e.Error())
-			return resource.NonRetryableError(e)
+	d.SetId(helper.DataResourceIdsHash(ids))
+	if e = d.Set("storage_list", storageList); e != nil {
+		log.Printf("[CRITAL]%s provider set storage list fail, reason:%s\n ", logId, e.Error())
+		return e
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	if ok && output.(string) != "" {
+		if e := tccommon.WriteToFile(output.(string), storageList); e != nil {
+			return e
 		}
-
-		output, ok := d.GetOk("result_output_file")
-		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), storageList); e != nil {
-				return resource.NonRetryableError(e)
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s read cbs storages failed, reason:%s\n ", logId, err.Error())
-		return err
 	}
 
 	return nil
+
 }

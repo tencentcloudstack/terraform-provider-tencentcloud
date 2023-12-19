@@ -1,12 +1,17 @@
-package tencentcloud
+package cbs_test
 
 import (
 	"context"
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+
+	localcbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 )
 
 func init() {
@@ -14,10 +19,10 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_cbs_disk_backup", &resource.Sweeper{
 		Name: "tencentcloud_cbs_disk_backup",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			cli, _ := sharedClientForRegion(r)
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			cli, _ := tcacctest.SharedClientForRegion(r)
 			request := cbs.NewDescribeDiskBackupsRequest()
-			resp, err := cli.(*TencentCloudClient).apiV3Conn.UseCbsClient().DescribeDiskBackups(request)
+			resp, err := cli.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().DescribeDiskBackups(request)
 			if err != nil {
 				return err
 			}
@@ -28,13 +33,13 @@ func init() {
 					created = time.Now()
 				}
 				name := *diskBuckup.DiskBackupName
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
 				buckupId := *diskBuckup.DiskBackupId
-				client := cli.(*TencentCloudClient).apiV3Conn
-				ctx := context.WithValue(context.TODO(), logIdKey, logId)
-				service := CbsService{client}
+				client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+				ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+				service := localcbs.NewCbsService(client)
 				err = service.DeleteCbsDiskBackupById(ctx, buckupId)
 				if err != nil {
 					continue
@@ -50,8 +55,8 @@ func TestAccTencentCloudCbsDiskBackupResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCbsDiskBackup,

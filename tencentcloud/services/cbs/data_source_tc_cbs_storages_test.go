@@ -1,7 +1,9 @@
-package tencentcloud
+package cbs_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,8 +12,8 @@ func TestAccTencentCloudCbsStoragesDataSourceId(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -21,7 +23,7 @@ func TestAccTencentCloudCbsStoragesDataSourceId(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_name", "tf-test-storage"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_type", "tcacctest.CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.storage_size", "50"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.availability_zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cbs_storages.storages", "storage_list.0.project_id", "0"),
@@ -40,8 +42,8 @@ func TestAccTencentCloudCbsStoragesDataSourceNewParams(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -56,7 +58,7 @@ func TestAccTencentCloudCbsStoragesDataSourceNewParams(t *testing.T) {
 
 const testAccCbsStoragesDataSource = `
 resource "tencentcloud_cbs_storage" "storage" {
-  storage_type      = "CLOUD_PREMIUM"
+  storage_type      = "tcacctest.CLOUD_PREMIUM"
   storage_name      = "tf-test-storage"
   storage_size      = 50
   availability_zone = "ap-guangzhou-3"
@@ -72,7 +74,7 @@ data "tencentcloud_cbs_storages" "storages" {
 const testAccCbsStoragesDataSourceNewParams = `
 data "tencentcloud_cbs_storages" "storages" {
   storage_name = "disk-foo"
-  charge_type = ["POSTPAID_BY_HOUR", "PREPAID"]
+  charge_type = ["tcacctest.POSTPAID_BY_HOUR", "PREPAID"]
   portable = true
   storage_state = ["ATTACHED"]
   instance_ips = ["10.0.0.2"]

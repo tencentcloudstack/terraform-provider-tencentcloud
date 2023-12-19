@@ -1,15 +1,18 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCbsSnapshots() *schema.Resource {
+func DataSourceTencentCloudCbsSnapshots() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCbsSnapshotsRead,
 
@@ -32,7 +35,7 @@ func dataSourceTencentCloudCbsSnapshots() *schema.Resource {
 			"storage_usage": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CBS_STORAGE_USAGE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_STORAGE_USAGE),
 				Description:  "Types of CBS which this snapshot created from, and available values include SYSTEM_DISK and DATA_DISK.",
 			},
 			"project_id": {
@@ -114,10 +117,10 @@ func dataSourceTencentCloudCbsSnapshots() *schema.Resource {
 }
 
 func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cbs_snapshots.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cbs_snapshots.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	params := make(map[string]string)
 	if v, ok := d.GetOk("snapshot_id"); ok {
@@ -140,13 +143,13 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 	}
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		snapshots, e := cbsService.DescribeSnapshotsByFilter(ctx, params)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		ids := make([]string, 0, len(snapshots))
 		snapshotList := make([]map[string]interface{}, 0, len(snapshots))
@@ -175,7 +178,7 @@ func dataSourceTencentCloudCbsSnapshotsRead(d *schema.ResourceData, meta interfa
 
 		output, ok := d.GetOk("result_output_file")
 		if ok && output.(string) != "" {
-			if e := writeToFile(output.(string), snapshotList); e != nil {
+			if e := tccommon.WriteToFile(output.(string), snapshotList); e != nil {
 				return resource.NonRetryableError(e)
 			}
 		}

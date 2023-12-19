@@ -1,16 +1,18 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 )
 
-func resourceTencentCloudCbsDiskBackup() *schema.Resource {
+func ResourceTencentCloudCbsDiskBackup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsDiskBackupCreate,
 		Read:   resourceTencentCloudCbsDiskBackupRead,
@@ -37,11 +39,11 @@ func resourceTencentCloudCbsDiskBackup() *schema.Resource {
 }
 
 func resourceTencentCloudCbsDiskBackupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		diskId         string
@@ -55,16 +57,16 @@ func resourceTencentCloudCbsDiskBackupCreate(d *schema.ResourceData, meta interf
 		diskBackupName = v.(string)
 	}
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	diskBackupId, err := service.CreateDiskBackup(ctx, diskId, diskBackupName)
 	if err != nil {
 		return nil
 	}
 	d.SetId(diskBackupId)
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		diskBackup, e := service.DescribeCbsDiskBackupById(ctx, diskBackupId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if *diskBackup.DiskBackupState != "NORMAL" {
 			return resource.RetryableError(fmt.Errorf("DiskBackupState not ready"))
@@ -80,14 +82,14 @@ func resourceTencentCloudCbsDiskBackupCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCbsDiskBackupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	diskBackupId := d.Id()
 
@@ -114,23 +116,23 @@ func resourceTencentCloudCbsDiskBackupRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCbsDiskBackupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_disk_backup.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_disk_backup.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CbsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CbsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	diskBackupId := d.Id()
 
 	if err := service.DeleteCbsDiskBackupById(ctx, diskBackupId); err != nil {
 		return err
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		diskBackup, e := service.DescribeCbsDiskBackupById(ctx, diskBackupId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if diskBackup == nil {
 			return nil

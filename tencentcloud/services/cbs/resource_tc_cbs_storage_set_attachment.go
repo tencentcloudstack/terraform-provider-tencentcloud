@@ -1,10 +1,12 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
 	"fmt"
 	"log"
 	"time"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -13,7 +15,7 @@ import (
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 )
 
-func resourceTencentCloudCbsStorageSetAttachment() *schema.Resource {
+func ResourceTencentCloudCbsStorageSetAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsStorageSetAttachmentCreate,
 		Read:   resourceTencentCloudCbsStorageSetAttachmentRead,
@@ -40,23 +42,23 @@ func resourceTencentCloudCbsStorageSetAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageSetAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set_attachment.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set_attachment.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Get("storage_id").(string)
 	instanceId := d.Get("instance_id").(string)
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.AttachDisk(ctx, storageId, instanceId)
 		if e != nil {
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-			if ok && IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
+			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("cbs attach error: %s, retrying", ee.Error()))
 			}
@@ -75,15 +77,15 @@ func resourceTencentCloudCbsStorageSetAttachmentCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudCbsStorageSetAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var storage *cbs.Disk
@@ -105,25 +107,25 @@ func resourceTencentCloudCbsStorageSetAttachmentRead(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudCbsStorageSetAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set_attachment.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set_attachment.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	storageId := d.Id()
 	instanceId := d.Get("instance_id").(string)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cbsService.DetachDisk(ctx, storageId, instanceId)
 		if errRet != nil {
 			log.Printf("[CRITAL][detach disk]%s api[%s] fail, reason[%s]\n",
 				logId, "detach", errRet.Error())
 			e, ok := errRet.(*sdkErrors.TencentCloudSDKError)
-			if ok && IsContains(CVM_RETRYABLE_ERROR, e.Code) {
+			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, e.Code) {
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("[detach]disk detach error: %s, retrying", e.Error()))
 			}

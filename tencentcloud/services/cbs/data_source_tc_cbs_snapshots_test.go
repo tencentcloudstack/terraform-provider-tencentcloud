@@ -1,7 +1,9 @@
-package tencentcloud
+package cbs_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,8 +12,8 @@ func TestAccTencentCloudCbsSnapshotsDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsSnapshotDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -37,7 +39,7 @@ const testAccCbsSnapshotsDataSource = `
 resource "tencentcloud_cbs_storage" "storage" {
   availability_zone = "ap-guangzhou-3"
   storage_size      = 50
-  storage_type      = "CLOUD_PREMIUM"
+  storage_type      = "tcacctest.CLOUD_PREMIUM"
   storage_name      = "tf-test-storage"
 }
 

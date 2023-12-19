@@ -1,6 +1,10 @@
-package tencentcloud
+package cbs_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localcbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
+
 	"context"
 	"fmt"
 	"testing"
@@ -15,12 +19,12 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_cbs_storage", &resource.Sweeper{
 		Name: "tencentcloud_cbs_storage",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := CbsService{client}
+			service := localcbs.NewCbsService(client)
 
 			disks, err := service.DescribeDisksByFilter(ctx, nil)
 
@@ -39,10 +43,10 @@ func init() {
 				if err != nil {
 					created = time.Now()
 				}
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
-				if *disk.DiskState == CBS_STORAGE_STATUS_ATTACHED {
+				if *disk.DiskState == localcbs.CBS_STORAGE_STATUS_ATTACHED {
 					continue
 				}
 				err = service.DeleteDiskById(ctx, id)
@@ -61,8 +65,8 @@ func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -70,7 +74,7 @@ func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_name", "tf-storage-basic"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_type", "tcacctest.CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "storage_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_basic", "availability_zone", "ap-guangzhou-3"),
 				),
@@ -89,8 +93,8 @@ func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -98,7 +102,7 @@ func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_full"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_name", "tf-storage-full"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_type", "CLOUD_PREMIUM"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_type", "tcacctest.CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "storage_size", "50"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "availability_zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
@@ -127,8 +131,8 @@ func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
 func TestAccTencentCloudCbsStorageResource_prepaid(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -137,7 +141,7 @@ func TestAccTencentCloudCbsStorageResource_prepaid(t *testing.T) {
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "storage_name", "tf-storage-prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "charge_type", "PREPAID"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "NOTIFY_AND_AUTO_RENEW"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "tcacctest.NOTIFY_AND_AUTO_RENEW"),
 				),
 			},
 			{
@@ -146,7 +150,7 @@ func TestAccTencentCloudCbsStorageResource_prepaid(t *testing.T) {
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "storage_name", "tf-storage-prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "charge_type", "PREPAID"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_prepaid", "prepaid_renew_flag", "tcacctest.NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 		},
@@ -156,8 +160,8 @@ func TestAccTencentCloudCbsStorageResource_prepaid(t *testing.T) {
 func TestAccTencentCloudCbsStorageResource_upgrade(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsStorageDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -165,7 +169,7 @@ func TestAccTencentCloudCbsStorageResource_upgrade(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckStorageExists("tencentcloud_cbs_storage.storage_upgrade"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "storage_name", "tf-storage-upgrade"),
-					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_upgrade", "charge_type", "tcacctest.POSTPAID_BY_HOUR"),
 				),
 			},
 			{
@@ -185,12 +189,10 @@ func TestAccTencentCloudCbsStorageResource_upgrade(t *testing.T) {
 }
 
 func testAccCheckCbsStorageDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	cbsService := CbsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cbs_storage" {
 			continue
@@ -209,8 +211,8 @@ func testAccCheckCbsStorageDestroy(s *terraform.State) error {
 
 func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -219,9 +221,7 @@ func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("cbs storage id is not set")
 		}
-		cbsService := CbsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		storage, err := cbsService.DescribeDiskById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -235,7 +235,7 @@ func testAccCheckStorageExists(n string) resource.TestCheckFunc {
 
 const testAccCbsStorage_basic = `
 resource "tencentcloud_cbs_storage" "storage_basic" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-basic"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
@@ -244,7 +244,7 @@ resource "tencentcloud_cbs_storage" "storage_basic" {
 
 const testAccCbsStorage_full = `
 resource "tencentcloud_cbs_storage" "storage_full" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-full"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
@@ -257,7 +257,7 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 `
 const testAccCbsStorage_update = `
 resource "tencentcloud_cbs_storage" "storage_full" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-update"
 	storage_size      = 60
 	availability_zone = "ap-guangzhou-3"
@@ -272,12 +272,12 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 
 const testAccCbsStorage_prepaid = `
 resource "tencentcloud_cbs_storage" "storage_prepaid" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-prepaid"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
 	charge_type			= "PREPAID"
-	prepaid_renew_flag = "NOTIFY_AND_AUTO_RENEW"
+	prepaid_renew_flag = "tcacctest.NOTIFY_AND_AUTO_RENEW"
 	prepaid_period = 1
 	project_id = 0
 	encrypt = false
@@ -289,11 +289,11 @@ resource "tencentcloud_cbs_storage" "storage_prepaid" {
 `
 const testAccCbsStorage_prepaidupdate = `
 resource "tencentcloud_cbs_storage" "storage_prepaid" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-prepaid"
 	storage_size      = 50
 	charge_type			= "PREPAID"
-	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+	prepaid_renew_flag = "tcacctest.NOTIFY_AND_MANUAL_RENEW"
 	prepaid_period = 1
 	availability_zone = "ap-guangzhou-3"
 	project_id = 0
@@ -307,22 +307,22 @@ resource "tencentcloud_cbs_storage" "storage_prepaid" {
 
 const testAccCbsStorage_upgrade = `
 resource "tencentcloud_cbs_storage" "storage_upgrade" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-upgrade"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
-	charge_type       = "POSTPAID_BY_HOUR"
+	charge_type       = "tcacctest.POSTPAID_BY_HOUR"
 }
 `
 
 const testAccCbsStorage_upgradeupdate = `
 resource "tencentcloud_cbs_storage" "storage_upgrade" {
-	storage_type      = "CLOUD_PREMIUM"
+	storage_type      = "tcacctest.CLOUD_PREMIUM"
 	storage_name      = "tf-storage-upgrade"
 	storage_size      = 50
 	availability_zone = "ap-guangzhou-3"
 	charge_type			= "PREPAID"
-	prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+	prepaid_renew_flag = "tcacctest.NOTIFY_AND_MANUAL_RENEW"
 	prepaid_period = 1
 	force_delete = true
 }

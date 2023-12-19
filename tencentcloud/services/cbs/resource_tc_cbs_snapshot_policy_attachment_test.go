@@ -1,6 +1,10 @@
-package tencentcloud
+package cbs_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localcbs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
+
 	"context"
 	"errors"
 	"fmt"
@@ -15,8 +19,8 @@ func TestAccTencentCloudCbsSnapshotPolicyAttachment(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCbsSnapshotPolicyAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -32,18 +36,16 @@ func TestAccTencentCloudCbsSnapshotPolicyAttachment(t *testing.T) {
 }
 
 func testAccCheckCbsSnapshotPolicyAttachmentDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	cbsService := CbsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cbs_snapshot_policy_attachment" {
 			continue
 		}
 		id := rs.Primary.ID
-		idSplit := strings.Split(id, FILED_SP)
+		idSplit := strings.Split(id, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("tencentcloud_cbs_snapshot_policy_attachment id is illegal: %s", id)
 		}
@@ -63,8 +65,8 @@ func testAccCheckCbsSnapshotPolicyAttachmentDestroy(s *terraform.State) error {
 
 func testAccCheckCbsSnapshotPolicyAttachmentExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -74,15 +76,13 @@ func testAccCheckCbsSnapshotPolicyAttachmentExists(n string) resource.TestCheckF
 			return errors.New("cbs snapshot policy attachment id is not set")
 		}
 		id := rs.Primary.ID
-		idSplit := strings.Split(id, FILED_SP)
+		idSplit := strings.Split(id, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("tencentcloud_cbs_snapshot_policy_attachment id is illegal: %s", id)
 		}
 		storageId := idSplit[0]
 		policyId := idSplit[1]
-		cbsService := CbsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cbsService := localcbs.NewCbsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		policy, err := cbsService.DescribeAttachedSnapshotPolicy(ctx, storageId, policyId)
 		if err != nil {
 			return err
@@ -94,11 +94,11 @@ func testAccCheckCbsSnapshotPolicyAttachmentExists(n string) resource.TestCheckF
 	}
 }
 
-const testAccCbsSnapshotPolicyAttachmentConfig = defaultVpcVariable + `
+const testAccCbsSnapshotPolicyAttachmentConfig = tcacctest.DefaultVpcVariable + `
 resource "tencentcloud_cbs_storage" "foo" {
   availability_zone = var.availability_zone
   storage_size      = 100
-  storage_type      = "CLOUD_PREMIUM"
+  storage_type      = "tcacctest.CLOUD_PREMIUM"
   storage_name      = var.instance_name
 }
 

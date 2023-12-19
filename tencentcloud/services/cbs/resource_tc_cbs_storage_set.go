@@ -1,4 +1,4 @@
-package tencentcloud
+package cbs
 
 import (
 	"context"
@@ -7,15 +7,18 @@ import (
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCbsStorageSet() *schema.Resource {
+func ResourceTencentCloudCbsStorageSet() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCbsStorageSetCreate,
 		Read:   resourceTencentCloudCbsStorageSetRead,
@@ -44,7 +47,7 @@ func resourceTencentCloudCbsStorageSet() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CBS_CHARGE_TYPE_POSTPAID,
-				ValidateFunc: validateAllowedStringValue(CBS_CHARGE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CBS_CHARGE_TYPE),
 				Description:  "The charge type of CBS instance. Only support `POSTPAID_BY_HOUR`.",
 			},
 			"availability_zone": {
@@ -56,7 +59,7 @@ func resourceTencentCloudCbsStorageSet() *schema.Resource {
 			"storage_name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(2, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(2, 60),
 				Description:  "Name of CBS. The maximum length can not exceed 60 bytes.",
 			},
 			"snapshot_id": {
@@ -107,9 +110,9 @@ func resourceTencentCloudCbsStorageSet() *schema.Resource {
 }
 
 func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.create")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var diskCount int
 
@@ -143,14 +146,14 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 	request.DiskChargeType = &chargeType
 
 	storageIds := make([]*string, 0)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCbsClient().CreateDisks(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCbsClient().CreateDisks(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), e.Error())
 
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-			if ok && IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
+			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("cbs create error: %s, retrying", e.Error()))
 			}
@@ -177,15 +180,15 @@ func resourceTencentCloudCbsStorageSetCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Id()
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var storageSet []*cbs.Disk
@@ -218,30 +221,30 @@ func resourceTencentCloudCbsStorageSetRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCbsStorageSetUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.update")()
 
 	return fmt.Errorf("`tencentcloud_cbs_storage_set` do not support change now.")
 }
 
 func resourceTencentCloudCbsStorageSetDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cbs_storage_set.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cbs_storage_set.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	storageId := d.Id()
 
 	cbsService := CbsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := cbsService.DeleteDiskSetByIds(ctx, storageId)
 		if e != nil {
 			log.Printf("[CRITAL][first delete]%s api[%s] fail, reason[%s]\n",
 				logId, "delete", e.Error())
 			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
-			if ok && IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
+			if ok && tccommon.IsContains(CVM_RETRYABLE_ERROR, ee.Code) {
 				time.Sleep(1 * time.Second) // 需要重试的话，等待1s进行重试
 				return resource.RetryableError(fmt.Errorf("[first delete]cvm delete error: %s, retrying", ee.Error()))
 			}
