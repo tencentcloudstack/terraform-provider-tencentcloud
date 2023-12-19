@@ -560,3 +560,47 @@ func BuildStateChangeConf(pending, target []string, timeout, delay time.Duration
 		MinTimeout: 3 * time.Second,
 	}
 }
+
+func ShortRegionNameParse(shortRegion string) string {
+	regionMap := map[string]string{
+		"gz":      "ap-guangzhou",
+		"szjr":    "ap-shenzhen-fsi",
+		"gzopen":  "ap-guangzhou-open",
+		"szx":     "ap-shenzhen",
+		"qy":      "ap-qingyuan",
+		"szsycft": "ap-shenzhen-sycft",
+		"sh":      "ap-shanghai",
+		"shjr":    "ap-shanghai-fsi",
+		"jnec":    "ap-jinan-ec",
+		"hzec":    "ap-hangzhou-ec",
+		"nj":      "ap-nanjing",
+		"fzec":    "ap-fuzhou-ec",
+		"hfeec":   "ap-hefei-ec",
+		"bj":      "ap-beijing",
+		"tsn":     "ap-tianjin",
+		"bjjr":    "ap-beijing-fsi",
+		"sjwec":   "ap-shijiazhuang-ec",
+		"whec":    "ap-wuhan-ec",
+		"csec":    "ap-changsha-ec",
+		"cgoec":   "ap-zhengzhou-ec",
+		"cd":      "ap-chengdu",
+		"cq":      "ap-chongqing",
+		"xiyec":   "ap-xian-ec",
+		"sheec":   "ap-shenyang-ec",
+		"hk":      "ap-hongkong",
+		"tpe":     "ap-taipei",
+		"kr":      "ap-seoul",
+		"jp":      "ap-tokyo",
+		"sg":      "ap-singapore",
+		"th":      "ap-bangkok",
+		"jkt":     "ap-jakarta",
+		"usw":     "na-siliconvalley",
+		"de":      "eu-frankfurt",
+		"ru":      "eu-moscow",
+		"in":      "ap-mumbai",
+		"use":     "na-ashburn",
+		"sao":     "sa-saopaulo",
+		"ca":      "na-toronto",
+	}
+	return regionMap[shortRegion]
+}

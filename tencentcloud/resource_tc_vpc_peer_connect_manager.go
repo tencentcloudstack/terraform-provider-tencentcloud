@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 )
@@ -45,8 +46,7 @@ func resourceTencentCloudVpcPeerConnectManager() *schema.Resource {
 			},
 
 			"destination_region": {
-				Optional:    true,
-				Computed:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Peer region.",
 			},
@@ -73,6 +73,7 @@ func resourceTencentCloudVpcPeerConnectManager() *schema.Resource {
 
 			"qos_level": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Service classification PT, AU, AG.",
 			},
@@ -184,7 +185,7 @@ func resourceTencentCloudVpcPeerConnectManagerRead(d *schema.ResourceData, meta 
 	}
 
 	if PeerConnectManager.DestinationRegion != nil {
-		_ = d.Set("destination_region", PeerConnectManager.DestinationRegion)
+		_ = d.Set("destination_region", common.ShortRegionNameParse(*PeerConnectManager.DestinationRegion))
 	}
 
 	if PeerConnectManager.Bandwidth != nil {
