@@ -1,17 +1,20 @@
-package tencentcloud
+package cdh
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCdhInstances() *schema.Resource {
+func DataSourceTencentCloudCdhInstances() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCdhInstancesRead,
 
@@ -169,11 +172,11 @@ func dataSourceTencentCloudCdhInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudCdhInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cdh_instances.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("data_source.tencentcloud_cdh_instances.read")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cdhService := CdhService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	filter := make(map[string]string)
@@ -195,10 +198,10 @@ func dataSourceTencentCloudCdhInstancesRead(d *schema.ResourceData, meta interfa
 
 	var instances []*cvm.HostItem
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instances, errRet = cdhService.DescribeCdhInstanceByFilter(ctx, filter)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -246,7 +249,7 @@ func dataSourceTencentCloudCdhInstancesRead(d *schema.ResourceData, meta interfa
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), instanceList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), instanceList); err != nil {
 			return err
 		}
 	}

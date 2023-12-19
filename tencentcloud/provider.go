@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
@@ -582,7 +583,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_rotation_history":                         dataSourceTencentCloudSsmRotationHistory(),
 			"tencentcloud_ssm_service_status":                           dataSourceTencentCloudSsmServiceStatus(),
 			"tencentcloud_ssm_ssh_key_pair_value":                       dataSourceTencentCloudSsmSshKeyPairValue(),
-			"tencentcloud_cdh_instances":                                dataSourceTencentCloudCdhInstances(),
+			"tencentcloud_cdh_instances":                                cdh.DataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                     dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                     dataSourceTencentCloudTeoZoneAvailablePlans(),
 			"tencentcloud_teo_rule_engine_settings":                     dataSourceTencentCloudTeoRuleEngineSettings(),
@@ -1405,7 +1406,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
 			"tencentcloud_ssm_secret_version":                                  resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_ssm_rotate_product_secret":                           resourceTencentCloudSsmRotateProductSecret(),
-			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
+			"tencentcloud_cdh_instance":                                        cdh.ResourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_domain_alias":                                 resourceTencentCloudDnspodDomainAlias(),
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),

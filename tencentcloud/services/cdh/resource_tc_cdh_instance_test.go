@@ -1,6 +1,10 @@
-package tencentcloud
+package cdh_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
+
 	"context"
 	"fmt"
 	"testing"
@@ -14,8 +18,8 @@ func TestAccTencentCloudCdhInstance_basic(t *testing.T) {
 	resourceName := "tencentcloud_cdh_instance.foo"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCdhInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -27,7 +31,7 @@ func TestAccTencentCloudCdhInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(resourceName, "host_type", "HC20"),
 					resource.TestCheckResourceAttr(resourceName, "host_name", "unit-test"),
 					resource.TestCheckResourceAttr(resourceName, "charge_type", "PREPAID"),
-					resource.TestCheckResourceAttr(resourceName, "prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr(resourceName, "prepaid_renew_flag", "tcacctest.NOTIFY_AND_MANUAL_RENEW"),
 					resource.TestCheckResourceAttr(resourceName, "host_state", "RUNNING"),
 					resource.TestCheckResourceAttr(resourceName, "host_resource.#", "1"),
 					resource.TestCheckResourceAttrSet(resourceName, "create_time"),
@@ -39,7 +43,7 @@ func TestAccTencentCloudCdhInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCdhInstanceExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "host_name", "unit-test-modify"),
-					resource.TestCheckResourceAttr(resourceName, "prepaid_renew_flag", "DISABLE_NOTIFY_AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr(resourceName, "prepaid_renew_flag", "tcacctest.DISABLE_NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 			{
@@ -58,8 +62,8 @@ func testAccCheckCdhInstanceDestroy(s *terraform.State) error {
 
 func testAccCheckCdhInstanceExists(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
@@ -68,9 +72,7 @@ func testAccCheckCdhInstanceExists(name string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][CDH instance][Exists] check:CDH instance id is not set")
 		}
-		cdhService := CdhService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cdhService := cdh.NewCdhService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		instance, err := cdhService.DescribeCdhInstanceById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -93,7 +95,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   charge_type = "PREPAID"
   prepaid_period = 1
   host_name = "unit-test"
-  prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
+  prepaid_renew_flag = "tcacctest.NOTIFY_AND_MANUAL_RENEW"
 }
 `
 
@@ -108,7 +110,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   charge_type = "PREPAID"
   prepaid_period = 1
   host_name = "unit-test-modify"
-  project_id = ` + defaultProjectId + `
-  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
+  project_id = ` + tcacctest.DefaultProjectId + `
+  prepaid_renew_flag = "tcacctest.DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
 `

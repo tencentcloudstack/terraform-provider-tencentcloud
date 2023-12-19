@@ -1,18 +1,21 @@
-package tencentcloud
+package cdh
 
 import (
 	"context"
 	"errors"
 	"fmt"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCdhInstance() *schema.Resource {
+func ResourceTencentCloudCdhInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCdhInstanceCreate,
 		Read:   resourceTencentCloudCdhInstanceRead,
@@ -52,20 +55,20 @@ func resourceTencentCloudCdhInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CDH_CHARGE_TYPE_PREPAID,
-				ValidateFunc: validateAllowedStringValue([]string{CDH_CHARGE_TYPE_PREPAID}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CDH_CHARGE_TYPE_PREPAID}),
 				Description:  "The charge type of instance. Valid values are `PREPAID`. The default is `PREPAID`.",
 			},
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateAllowedIntValue(CDH_PREPAID_PERIOD),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(CDH_PREPAID_PERIOD),
 				Description:  "The tenancy (time unit is month) of the prepaid instance, NOTE: it only works when charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 			},
 			"prepaid_renew_flag": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateAllowedStringValue(CDH_PREPAID_RENEW_FLAG),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDH_PREPAID_RENEW_FLAG),
 				Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when charge_type is set to `PREPAID`.",
 			},
 			//computed
@@ -141,12 +144,12 @@ func resourceTencentCloudCdhInstance() *schema.Resource {
 }
 
 func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdh_instance.create")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cdh_instance.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		ctx                  = context.WithValue(context.TODO(), logIdKey, logId)
-		cdhService           = CdhService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx                  = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cdhService           = CdhService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		hostType, chargeType string
 		placement            cvm.Placement
 		hostChargePrepaid    cvm.ChargePrepaid
@@ -172,13 +175,13 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 		hostChargePrepaid.RenewFlag = helper.String(v.(string))
 	}
 
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		hostId, inErr = cdhService.CreateCdhInstance(ctx, &placement, &hostChargePrepaid, chargeType, hostType)
 		if inErr != nil {
 			if sdkErr, ok := inErr.(*sdkErrors.TencentCloudSDKError); ok && sdkErr.Code == CDH_ZONE_SOLD_OUT_FOR_SPECIFIED_INSTANCE_ERROR {
 				return resource.NonRetryableError(inErr)
 			}
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 		return nil
 	})
@@ -187,10 +190,10 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	d.SetId(hostId)
 
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		hostInstance, inErr = cdhService.DescribeCdhInstanceById(ctx, d.Id())
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 		if *hostInstance.HostState == CDH_HOST_STATE_PENDING {
 			return resource.RetryableError(errors.New("cdh instance is pending"))
@@ -206,10 +209,10 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("host_name"); ok {
 		hostName := v.(string)
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = cdhService.ModifyHostName(ctx, d.Id(), hostName)
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -221,20 +224,20 @@ func resourceTencentCloudCdhInstanceCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCdhInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdh_instance.read")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cdh_instance.read")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		cdhService    = CdhService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cdhService    = CdhService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		hostInstance  *cvm.HostItem
 		outErr, inErr error
 	)
 
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		hostInstance, inErr = cdhService.DescribeCdhInstanceById(ctx, d.Id())
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 		return nil
 	})
@@ -273,12 +276,12 @@ func resourceTencentCloudCdhInstanceRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdh_instance.update")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cdh_instance.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
-		cdhService    = CdhService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		cdhService    = CdhService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		outErr, inErr error
 	)
 
@@ -294,10 +297,10 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("project_id") {
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = cdhService.ModifyProject(ctx, d.Id(), d.Get("project_id").(int))
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -308,10 +311,10 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("host_name") {
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = cdhService.ModifyHostName(ctx, d.Id(), d.Get("host_name").(string))
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -322,10 +325,10 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("prepaid_renew_flag") {
-		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			inErr = cdhService.ModifyPrepaidRenewFlag(ctx, d.Id(), d.Get("prepaid_renew_flag").(string))
 			if inErr != nil {
-				return retryError(inErr)
+				return tccommon.RetryError(inErr)
 			}
 			return nil
 		})
@@ -341,7 +344,7 @@ func resourceTencentCloudCdhInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCdhInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdh_instance.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdh_instance.delete")()
 
 	return fmt.Errorf("PREPAID CDH instance do not support delete operation with terraform")
 }
