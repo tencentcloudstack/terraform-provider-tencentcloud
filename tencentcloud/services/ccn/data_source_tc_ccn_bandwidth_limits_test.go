@@ -1,7 +1,9 @@
-package tencentcloud
+package ccn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,14 +12,14 @@ func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsOuter(t *testing.T) {
 	t.Parallel()
 	keyName := "data.tencentcloud_ccn_bandwidth_limits.limit"
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccDataSourceTencentCloudCcnOuterBandwidthLimits,
 
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID(keyName),
+					tcacctest.AccCheckTencentCloudDataSourceID(keyName),
 					resource.TestCheckResourceAttrSet(keyName, "ccn_id"),
 					resource.TestCheckResourceAttr(keyName, "limits.#", "1"),
 					resource.TestCheckResourceAttr(keyName, "limits.0.region", "ap-shanghai"),
@@ -32,14 +34,14 @@ func TestAccDataSourceTencentCloudCcnV3BandwidthLimitsInter(t *testing.T) {
 	t.Parallel()
 	keyName := "data.tencentcloud_ccn_bandwidth_limits.limit"
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccDataSourceTencentCloudCcnInterBandwidthLimits,
 
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID(keyName),
+					tcacctest.AccCheckTencentCloudDataSourceID(keyName),
 					resource.TestCheckResourceAttrSet(keyName, "ccn_id"),
 					resource.TestCheckResourceAttr(keyName, "limits.#", "1"),
 					resource.TestCheckResourceAttr(keyName, "limits.0.region", "ap-shanghai"),
@@ -86,7 +88,7 @@ resource tencentcloud_ccn main {
   name                 = "ci-temp-test-ccn"
   description          = "ci-temp-test-ccn-des"
   qos                  = "AG"
-  bandwidth_limit_type = "INTER_REGION_LIMIT"
+  bandwidth_limit_type = "tcacctest.INTER_REGION_LIMIT"
 }
 
 resource tencentcloud_ccn_bandwidth_limit limit1 {

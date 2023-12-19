@@ -1,6 +1,10 @@
-package tencentcloud
+package ccn_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localccn "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
+
 	"context"
 	"fmt"
 	"testing"
@@ -14,8 +18,8 @@ const keyNameLimit1 = "tencentcloud_ccn_bandwidth_limit.limit1"
 func TestAccTencentCloudCcnV3BandwidthLimitOuter(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCcnBandwidthLimitDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -43,8 +47,8 @@ func TestAccTencentCloudCcnV3BandwidthLimitOuter(t *testing.T) {
 func TestAccTencentCloudCcnV3BandwidthLimitInter(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCcnBandwidthLimitDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -77,15 +81,15 @@ func testAccCheckCcnBandwidthLimitDestroy(s *terraform.State) error {
 
 func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := localccn.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		ccnID := rs.Primary.Attributes["ccn_id"]
 		info, has, err := service.DescribeCcn(ctx, ccnID)
 		if err != nil {
@@ -98,7 +102,7 @@ func testAccCheckCcnBandwidthLimitExists(r string) resource.TestCheckFunc {
 			ccnID,
 			rs.Primary.Attributes["region"],
 			rs.Primary.Attributes["dst_region"],
-			info.bandWithLimitType)
+			info.BandWithLimitType())
 
 		if err != nil {
 			return err
@@ -147,7 +151,7 @@ resource tencentcloud_ccn main {
   name                 = "ci-temp-test-ccn"
   description          = "ci-temp-test-ccn-des"
   qos                  = "AG"
-  bandwidth_limit_type = "INTER_REGION_LIMIT"
+  bandwidth_limit_type = "tcacctest.INTER_REGION_LIMIT"
 }
 `
 

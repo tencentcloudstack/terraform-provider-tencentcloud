@@ -1,16 +1,19 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
 	"fmt"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCcn() *schema.Resource {
+func ResourceTencentCloudCcn() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCcnCreate,
 		Read:   resourceTencentCloudCcnRead,
@@ -24,13 +27,13 @@ func resourceTencentCloudCcn() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the CCN to be queried, and maximum length does not exceed 60 bytes.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(0, 100),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 100),
 				Description:  "Description of CCN, and maximum length does not exceed 100 bytes.",
 			},
 			"qos": {
@@ -38,7 +41,7 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      CNN_QOS_AU,
-				ValidateFunc: validateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CNN_QOS_PT, CNN_QOS_AU, CNN_QOS_AG}),
 				Description:  "Service quality of CCN. Valid values: `PT`, `AU`, `AG`. The default is `AU`.",
 			},
 			"charge_type": {
@@ -46,7 +49,7 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      POSTPAID,
-				ValidateFunc: validateAllowedStringValue([]string{POSTPAID, PREPAID}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{POSTPAID, PREPAID}),
 				Description: "Billing mode. Valid values: `PREPAID`, `POSTPAID`. " +
 					"`PREPAID` means prepaid, which means annual and monthly subscription, " +
 					"`POSTPAID` means post-payment, which means billing by volume. " +
@@ -57,7 +60,7 @@ func resourceTencentCloudCcn() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      OuterRegionLimit,
-				ValidateFunc: validateAllowedStringValue([]string{OuterRegionLimit, InterRegionLimit}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{OuterRegionLimit, InterRegionLimit}),
 				Description: "The speed limit type. Valid values: `INTER_REGION_LIMIT`, `OUTER_REGION_LIMIT`. " +
 					"`OUTER_REGION_LIMIT` represents the regional export speed limit, " +
 					"`INTER_REGION_LIMIT` is the inter-regional speed limit. " +
@@ -89,12 +92,12 @@ func resourceTencentCloudCcn() *schema.Resource {
 }
 
 func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		name               = d.Get("name").(string)
@@ -113,9 +116,9 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 	d.SetId(info.ccnId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -125,17 +128,17 @@ func resourceTencentCloudCcnCreate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeCcn(ctx, d.Id())
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -157,7 +160,7 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 	if err != nil {
 		return err
 	}
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "ccn", tcClient.Region, d.Id())
 	if err != nil {
@@ -169,12 +172,12 @@ func resourceTencentCloudCcnRead(d *schema.ResourceData, meta interface{}) error
 }
 
 func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		name        = ""
@@ -205,9 +208,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	// modify band width limit type
 	if d.HasChange("bandwidth_limit_type") {
 		_, news := d.GetChange("bandwidth_limit_type")
-		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			if err := service.ModifyCcnRegionBandwidthLimitsType(ctx, d.Id(), news.(string)); err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		}); err != nil {
@@ -220,9 +223,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("vpc", "ccn", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -234,16 +237,16 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 }
 
 func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, d.Id())
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if has == 0 {
 			d.SetId("")
@@ -259,7 +262,7 @@ func resourceTencentCloudCcnDelete(d *schema.ResourceData, meta interface{}) err
 		return err
 	}
 
-	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, err := service.DescribeCcn(ctx, d.Id())
 		if err != nil {
 			return resource.RetryableError(err)

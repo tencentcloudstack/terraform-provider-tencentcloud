@@ -1,7 +1,9 @@
-package tencentcloud
+package ccn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,15 +13,15 @@ func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
 	keyName := "data.tencentcloud_ccn_instances.name_instances"
 	keyId := "data.tencentcloud_ccn_instances.id_instances"
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccDataSourceTencentCloudCcnInstances,
 
 				Check: resource.ComposeTestCheckFunc(
 					//id filter
-					testAccCheckTencentCloudDataSourceID(keyId),
+					tcacctest.AccCheckTencentCloudDataSourceID(keyId),
 					resource.TestCheckResourceAttr(keyId, "instance_list.#", "1"),
 					resource.TestCheckResourceAttr(keyId, "instance_list.0.name", "ci-temp-test-ccn"),
 					resource.TestCheckResourceAttr(keyId, "instance_list.0.description", "ci-temp-test-ccn-des"),
@@ -32,7 +34,7 @@ func TestAccDataSourceTencentCloudCcnV3InstancesBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyId, "instance_list.0.create_time"),
 
 					//name filter ,Every VPC with a "guagua_vpc_instance_test" name will be found
-					testAccCheckTencentCloudDataSourceID(keyName),
+					tcacctest.AccCheckTencentCloudDataSourceID(keyName),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.#"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.name"),
 					resource.TestCheckResourceAttrSet(keyName, "instance_list.0.description"),

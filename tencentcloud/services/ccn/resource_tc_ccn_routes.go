@@ -1,4 +1,4 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
@@ -6,12 +6,14 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-func resourceTencentCloudCcnRoutes() *schema.Resource {
+func ResourceTencentCloudCcnRoutes() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCcnRoutesCreate,
 		Read:   resourceTencentCloudCcnRoutesRead,
@@ -45,28 +47,28 @@ func resourceTencentCloudCcnRoutes() *schema.Resource {
 }
 
 func resourceTencentCloudCcnRoutesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_routes.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	ccnId := d.Get("ccn_id").(string)
 	routeId := d.Get("route_id").(string)
 
-	d.SetId(ccnId + FILED_SP + routeId)
+	d.SetId(ccnId + tccommon.FILED_SP + routeId)
 
 	return resourceTencentCloudCcnRoutesUpdate(d, meta)
 }
 
 func resourceTencentCloudCcnRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_routes.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -99,12 +101,12 @@ func resourceTencentCloudCcnRoutesRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_routes.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -121,10 +123,10 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 		request.CcnId = &ccnId
 		request.RouteIds = []*string{&routeId}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().EnableCcnRoutes(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().EnableCcnRoutes(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -142,10 +144,10 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 		request.CcnId = &ccnId
 		request.RouteIds = []*string{&routeId}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisableCcnRoutes(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisableCcnRoutes(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -162,8 +164,8 @@ func resourceTencentCloudCcnRoutesUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCcnRoutesDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_routes.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_routes.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

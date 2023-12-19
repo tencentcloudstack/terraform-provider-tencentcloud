@@ -1,7 +1,9 @@
-package tencentcloud
+package ccn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,13 +12,13 @@ func TestAccTencentCloudNeedFixCcnTenantInstancesDataSource_basic(t *testing.T) 
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCcnTenantInstancesDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("tencentcloud_ccn_tenant_instances.tenant_ccn")),
+				Check:  resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("tencentcloud_ccn_tenant_instances.tenant_ccn")),
 			},
 		},
 	})

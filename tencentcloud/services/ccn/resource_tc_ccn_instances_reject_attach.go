@@ -1,20 +1,23 @@
-package tencentcloud
+package ccn
 
 import (
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCcnInstancesAcceptAttach() *schema.Resource {
+func ResourceTencentCloudCcnInstancesRejectAttach() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCcnInstancesAcceptAttachCreate,
-		Read:   resourceTencentCloudCcnInstancesAcceptAttachRead,
-		Delete: resourceTencentCloudCcnInstancesAcceptAttachDelete,
+		Create: resourceTencentCloudCcnInstancesRejectAttachCreate,
+		Read:   resourceTencentCloudCcnInstancesRejectAttachRead,
+		Delete: resourceTencentCloudCcnInstancesRejectAttachDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -30,7 +33,7 @@ func resourceTencentCloudCcnInstancesAcceptAttach() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
-				Description: "Accept List Of Attachment Instances.",
+				Description: "Reject List Of Attachment Instances.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"instance_id": {
@@ -65,14 +68,14 @@ func resourceTencentCloudCcnInstancesAcceptAttach() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCcnInstancesAcceptAttachCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_instances_accept_attach.read")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudCcnInstancesRejectAttachCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_instances_reject_attach.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
-		request = vpc.NewAcceptAttachCcnInstancesRequest()
+		request = vpc.NewRejectAttachCcnInstancesRequest()
 		ccnId   string
 	)
 	if v, ok := d.GetOk("ccn_id"); ok {
@@ -106,34 +109,34 @@ func resourceTencentCloudCcnInstancesAcceptAttachCreate(d *schema.ResourceData, 
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AcceptAttachCcnInstances(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().RejectAttachCcnInstances(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("[CRITAL]%s operate vpc ccnInstancesAcceptAttach failed, reason:%+v", logId, err)
+		return fmt.Errorf("[CRITAL]%s operate vpc ccnInstancesRejectAttach failed, reason:%+v", logId, err)
 	}
 
 	d.SetId(ccnId)
 
-	return resourceTencentCloudCcnInstancesAcceptAttachRead(d, meta)
+	return resourceTencentCloudCcnInstancesRejectAttachRead(d, meta)
 }
 
-func resourceTencentCloudCcnInstancesAcceptAttachRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_instances_accept_attach.read")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudCcnInstancesRejectAttachRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_instances_reject_attach.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudCcnInstancesAcceptAttachDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_instances_accept_attach.delete")()
-	defer inconsistentCheck(d, meta)()
+func resourceTencentCloudCcnInstancesRejectAttachDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_instances_reject_attach.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

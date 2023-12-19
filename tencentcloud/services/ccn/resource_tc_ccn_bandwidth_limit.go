@@ -1,14 +1,16 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
 	"fmt"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudCcnBandwidthLimit() *schema.Resource {
+func ResourceTencentCloudCcnBandwidthLimit() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCcnBandwidthLimitCreate,
 		Read:   resourceTencentCloudCcnBandwidthLimitRead,
@@ -46,12 +48,12 @@ func resourceTencentCloudCcnBandwidthLimit() *schema.Resource {
 }
 
 func resourceTencentCloudCcnBandwidthLimitCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_bandwidth_limit.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId  = d.Get("ccn_id").(string)
@@ -85,12 +87,12 @@ func resourceTencentCloudCcnBandwidthLimitCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCcnBandwidthLimitUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_bandwidth_limit.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId  = d.Get("ccn_id").(string)
@@ -117,13 +119,13 @@ func resourceTencentCloudCcnBandwidthLimitUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_bandwidth_limit.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId     = d.Get("ccn_id").(string)
@@ -132,10 +134,10 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 		onlineHas = true
 		info      CcnBasicInfo
 	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		infoTmp, has, e := service.DescribeCcn(ctx, ccnId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -152,10 +154,10 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 	if !onlineHas {
 		return nil
 	}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		bandwidth, e := service.GetCcnRegionBandwidthLimit(ctx, ccnId, region, dstRegion, info.bandWithLimitType)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		_ = d.Set("bandwidth_limit", bandwidth)
 		_ = d.Set("dst_region", dstRegion)
@@ -168,7 +170,7 @@ func resourceTencentCloudCcnBandwidthLimitRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudCcnBandwidthLimitDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_bandwidth_limit.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_bandwidth_limit.delete")()
 
 	var (
 		ccnId     = d.Get("ccn_id").(string)
@@ -177,10 +179,10 @@ func resourceTencentCloudCcnBandwidthLimitDelete(d *schema.ResourceData, meta in
 		limit     int64
 	)
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	if v, ok := d.GetOk("dst_region"); ok {
 		dstRegion = v.(string)

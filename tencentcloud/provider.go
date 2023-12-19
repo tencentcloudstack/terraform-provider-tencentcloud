@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 	"encoding/json"
@@ -233,12 +234,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpn_default_health_check_ip":                  dataSourceTencentCloudVpnDefaultHealthCheckIp(),
 			"tencentcloud_ha_vips":                                      dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                       dataSourceTencentCloudHaVipEipAttachments(),
-			"tencentcloud_ccn_instances":                                dataSourceTencentCloudCcnInstances(),
-			"tencentcloud_ccn_bandwidth_limits":                         dataSourceTencentCloudCcnBandwidthLimits(),
-			"tencentcloud_ccn_cross_border_compliance":                  dataSourceTencentCloudCcnCrossBorderCompliance(),
-			"tencentcloud_ccn_tenant_instances":                         dataSourceTencentCloudCcnTenantInstance(),
-			"tencentcloud_ccn_cross_border_flow_monitor":                dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
-			"tencentcloud_ccn_cross_border_region_bandwidth_limits":     dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
+			"tencentcloud_ccn_instances":                                ccn.DataSourceTencentCloudCcnInstances(),
+			"tencentcloud_ccn_bandwidth_limits":                         ccn.DataSourceTencentCloudCcnBandwidthLimits(),
+			"tencentcloud_ccn_cross_border_compliance":                  ccn.DataSourceTencentCloudCcnCrossBorderCompliance(),
+			"tencentcloud_ccn_tenant_instances":                         ccn.DataSourceTencentCloudCcnTenantInstance(),
+			"tencentcloud_ccn_cross_border_flow_monitor":                ccn.DataSourceTencentCloudCcnCrossBorderFlowMonitor(),
+			"tencentcloud_ccn_cross_border_region_bandwidth_limits":     ccn.DataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                                 dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dc_access_points":                             dataSourceTencentCloudDcAccessPoints(),
 			"tencentcloud_dc_internet_address_quota":                    dataSourceTencentCloudDcInternetAddressQuota(),
@@ -962,13 +963,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_eni":                                                 resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                                      resourceTencentCloudEniAttachment(),
 			"tencentcloud_eni_sg_attachment":                                   resourceTencentCloudEniSgAttachment(),
-			"tencentcloud_ccn":                                                 resourceTencentCloudCcn(),
-			"tencentcloud_ccn_attachment":                                      resourceTencentCloudCcnAttachment(),
-			"tencentcloud_ccn_bandwidth_limit":                                 resourceTencentCloudCcnBandwidthLimit(),
-			"tencentcloud_ccn_routes":                                          resourceTencentCloudCcnRoutes(),
-			"tencentcloud_ccn_instances_accept_attach":                         resourceTencentCloudCcnInstancesAcceptAttach(),
-			"tencentcloud_ccn_instances_reject_attach":                         resourceTencentCloudCcnInstancesRejectAttach(),
-			"tencentcloud_ccn_instances_reset_attach":                          resourceTencentCloudCcnInstancesResetAttach(),
+			"tencentcloud_ccn":                                                 ccn.ResourceTencentCloudCcn(),
+			"tencentcloud_ccn_attachment":                                      ccn.ResourceTencentCloudCcnAttachment(),
+			"tencentcloud_ccn_bandwidth_limit":                                 ccn.ResourceTencentCloudCcnBandwidthLimit(),
+			"tencentcloud_ccn_routes":                                          ccn.ResourceTencentCloudCcnRoutes(),
+			"tencentcloud_ccn_instances_accept_attach":                         ccn.ResourceTencentCloudCcnInstancesAcceptAttach(),
+			"tencentcloud_ccn_instances_reject_attach":                         ccn.ResourceTencentCloudCcnInstancesRejectAttach(),
+			"tencentcloud_ccn_instances_reset_attach":                          ccn.ResourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dc_instance":                                         resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                                 resourceTencentCloudDcxInstance(),
 			"tencentcloud_dcx_extra_config":                                    resourceTencentCloudDcxExtraConfig(),

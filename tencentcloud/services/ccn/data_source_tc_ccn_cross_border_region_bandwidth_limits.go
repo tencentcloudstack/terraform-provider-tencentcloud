@@ -1,15 +1,18 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits() *schema.Resource {
+func DataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimitsRead,
 		Schema: map[string]*schema.Schema{
@@ -135,12 +138,12 @@ func dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits() *schema.Resourc
 }
 
 func dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimitsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ccn_cross_border_region_bandwidth_limits.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ccn_cross_border_region_bandwidth_limits.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("filters"); ok {
@@ -163,14 +166,14 @@ func dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimitsRead(d *schema.Res
 		paramMap["filters"] = tmpSet
 	}
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var ccnBandwidthSet []*vpc.CcnBandwidth
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeVpcCcnRegionBandwidthLimitsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		ccnBandwidthSet = result
 		return nil
@@ -258,7 +261,7 @@ func dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimitsRead(d *schema.Res
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

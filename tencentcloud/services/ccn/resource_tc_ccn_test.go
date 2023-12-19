@@ -1,4 +1,4 @@
-package tencentcloud
+package ccn_test
 
 import (
 	"context"
@@ -8,8 +8,13 @@ import (
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	localccn "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
 )
 
 func init() {
@@ -20,18 +25,16 @@ func init() {
 }
 
 func testSweepCcnInstance(region string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	sharedClient, err := sharedClientForRegion(region)
+	sharedClient, err := tcacctest.SharedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(*TencentCloudClient)
+	client := sharedClient.(tccommon.ProviderMeta)
 
-	vpcService := VpcService{
-		client: client.apiV3Conn,
-	}
+	vpcService := localccn.NewVpcService(client.GetAPIV3Conn())
 
 	instances, err := vpcService.DescribeCcns(ctx, "", "")
 	if err != nil {
@@ -39,21 +42,21 @@ func testSweepCcnInstance(region string) error {
 	}
 
 	for _, v := range instances {
-		instanceId := v.ccnId
-		instanceName := v.name
+		instanceId := v.CcnId()
+		instanceName := v.Name()
 
 		now := time.Now()
 
-		createTime := stringTotime(v.createTime)
+		createTime := tccommon.StringToTime(v.CreateTime())
 		interval := now.Sub(createTime).Minutes()
 		if instanceName != "" {
-			if strings.HasPrefix(instanceName, keepResource) || strings.HasPrefix(instanceName, defaultResource) {
+			if strings.HasPrefix(instanceName, tcacctest.KeepResource) || strings.HasPrefix(instanceName, tcacctest.DefaultResource) {
 				continue
 			}
 		}
 
 		// less than 30 minute, not delete
-		if needProtect == 1 && int64(interval) < 30 {
+		if tccommon.NeedProtect == 1 && int64(interval) < 30 {
 			continue
 		}
 
@@ -68,8 +71,8 @@ func TestAccTencentCloudCcnV3Basic(t *testing.T) {
 	t.Parallel()
 	keyName := "tencentcloud_ccn.main"
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCcnDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -122,8 +125,8 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 	keyName := "tencentcloud_ccn.main"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCcnDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -156,15 +159,15 @@ func TestAccTencentCloudCcnV3Update(t *testing.T) {
 
 func testAccCheckCcnExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := localccn.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeCcn(ctx, rs.Primary.ID)
 		if err != nil {
@@ -178,10 +181,10 @@ func testAccCheckCcnExists(r string) resource.TestCheckFunc {
 }
 
 func testAccCheckCcnDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := localccn.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_ccn" {
 			continue

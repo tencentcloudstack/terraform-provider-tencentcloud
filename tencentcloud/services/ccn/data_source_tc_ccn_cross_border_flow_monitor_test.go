@@ -1,7 +1,9 @@
-package tencentcloud
+package ccn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,13 +12,13 @@ func TestAccTencentCloudNeedFixCcnCrossBorderFlowMonitorDataSource_basic(t *test
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCcnCrossBorderFlowMonitorDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_cross_border_flow_monitor.cross_border_flow_monitor")),
+				Check:  resource.ComposeTestCheckFunc(tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_cross_border_flow_monitor.cross_border_flow_monitor")),
 			},
 		},
 	})

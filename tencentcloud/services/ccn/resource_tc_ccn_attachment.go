@@ -1,4 +1,4 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
@@ -7,14 +7,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudCcnAttachment() *schema.Resource {
+func ResourceTencentCloudCcnAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCcnAttachmentCreate,
 		Read:   resourceTencentCloudCcnAttachmentRead,
@@ -31,7 +34,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 			"instance_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC, CNN_INSTANCE_TYPE_VPNGW}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{CNN_INSTANCE_TYPE_VPC, CNN_INSTANCE_TYPE_DIRECTCONNECT, CNN_INSTANCE_TYPE_BMVPC, CNN_INSTANCE_TYPE_VPNGW}),
 				ForceNew:     true,
 				Description:  "Type of attached instance network, and available values include `VPC`, `DIRECTCONNECT`, `BMVPC` and `VPNGW`. Note: `VPNGW` type is only for whitelist customer now.",
 			},
@@ -91,12 +94,12 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId          = d.Get("ccn_id").(string)
@@ -145,13 +148,13 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	if v, ok := d.GetOk("ccn_uin"); ok {
 		ccnUin := v.(string)
@@ -160,10 +163,10 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		instanceRegion := d.Get("instance_region").(string)
 		instanceId := d.Get("instance_id").(string)
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			infos, e := service.DescribeCcnAttachmentsByInstance(ctx, instanceType, instanceId, instanceRegion)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 
 			if len(infos) == 0 {
@@ -200,10 +203,10 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		instanceId     = d.Get("instance_id").(string)
 		onlineHas      = true
 	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -219,10 +222,10 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	if !onlineHas {
 		return nil
 	}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if has == 0 {
 			d.SetId("")
@@ -239,13 +242,13 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		request := vpc.NewDescribeCcnRoutesRequest()
 		request.CcnId = &ccnId
 
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCcnRoutes(request)
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DescribeCcnRoutes(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		routeIds := make([]string, 0)
 		if response != nil && response.Response != nil && len(response.Response.RouteSet) > 0 {
@@ -266,8 +269,8 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	if d.HasChange("description") {
 		var (
@@ -289,13 +292,13 @@ func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interf
 
 		request.Instances = []*vpc.CcnInstance{&ccnInstance}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			response, err := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyCcnAttachedInstancesAttribute(request)
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyCcnAttachedInstancesAttribute(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 					logId, request.GetAction(), request.ToJsonString(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -309,12 +312,12 @@ func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ccn_attachment.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_ccn_attachment.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId          = d.Get("ccn_id").(string)
@@ -322,10 +325,10 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
 	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeCcn(ctx, ccnId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if has == 0 {
 			return nil
@@ -339,7 +342,7 @@ func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	return resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, err := service.DescribeCcnAttachedInstance(ctx, ccnId, instanceRegion, instanceType, instanceId)
 		if err != nil {
 			return resource.RetryableError(err)

@@ -1,6 +1,10 @@
-package tencentcloud
+package ccn_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localccn "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
+
 	"context"
 	"fmt"
 	"testing"
@@ -15,8 +19,8 @@ func TestAccTencentCloudCcnAttachmentResource(t *testing.T) {
 	keyName := "tencentcloud_ccn_attachment.attachment"
 	keyNameVpngw := "tencentcloud_ccn_attachment.vpngw_ccn_attachment"
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCcnAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -52,15 +56,15 @@ func TestAccTencentCloudCcnAttachmentResource(t *testing.T) {
 
 func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := localccn.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeCcnAttachedInstance(ctx,
 			rs.Primary.Attributes["ccn_id"],
@@ -80,10 +84,10 @@ func testAccCheckCcnAttachmentExists(r string) resource.TestCheckFunc {
 
 func testAccCheckCcnAttachmentDestroy(s *terraform.State) error {
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := localccn.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_ccn_attachment" {
 			continue

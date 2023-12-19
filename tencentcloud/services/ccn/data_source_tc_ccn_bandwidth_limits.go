@@ -1,13 +1,15 @@
-package tencentcloud
+package ccn
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
+func DataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCcnBandwidthLimitsRead,
 
@@ -52,12 +54,12 @@ func dataSourceTencentCloudCcnBandwidthLimits() *schema.Resource {
 }
 
 func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ccn_bandwidth_limit.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_ccn_bandwidth_limit.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		ccnId = d.Get("ccn_id").(string)
@@ -85,7 +87,7 @@ func dataSourceTencentCloudCcnBandwidthLimitsRead(d *schema.ResourceData, meta i
 	d.SetId(ccnId)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), infoList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), infoList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId, output.(string), err.Error())
 			return err
