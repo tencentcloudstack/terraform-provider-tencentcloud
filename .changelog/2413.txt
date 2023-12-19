@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_dnspod_record: Fix `mx` parameter passing problem.
+```
