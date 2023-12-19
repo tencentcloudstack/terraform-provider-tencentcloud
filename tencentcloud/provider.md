@@ -1205,6 +1205,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc_local_gateway
     tencentcloud_vpc_resume_snapshot_instance 
     tencentcloud_vpc_peer_connect_manager
+    tencentcloud_vpc_peer_connect_accecpt_or_reject
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule

@@ -8117,3 +8117,27 @@ func (me *VpcService) DeleteVpcPeerConnectManagerById(ctx context.Context, peeri
 
 	return
 }
+
+func (me *VpcService) DeleteVpcPeerConnectAccecptOrRejectById(ctx context.Context, peeringConnectionId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewRejectVpcPeeringConnectionRequest()
+	request.PeeringConnectionId = &peeringConnectionId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().RejectVpcPeeringConnection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

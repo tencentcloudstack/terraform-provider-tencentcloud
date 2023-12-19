@@ -1880,6 +1880,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_xml_config":                               cdwch.ResourceTencentCloudClickhouseXmlConfig(),
 			"tencentcloud_clb_target_group_attachments":                        clb.ResourceTencentCloudClbTargetGroupAttachments(),
 			"tencentcloud_vpc_peer_connect_manager":                            resourceTencentCloudVpcPeerConnectManager(),
+			"tencentcloud_vpc_peer_connect_accecpt_or_reject":                  resourceTencentCloudVpcPeerConnectAccecptOrReject(),
 		},
 
 		ConfigureFunc: providerConfigure,
