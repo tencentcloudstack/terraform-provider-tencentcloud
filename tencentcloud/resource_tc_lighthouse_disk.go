@@ -342,7 +342,7 @@ func resourceTencentCloudLighthouseDiskDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskLatestOperationRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskIsolateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

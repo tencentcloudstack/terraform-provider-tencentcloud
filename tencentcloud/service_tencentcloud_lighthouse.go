@@ -428,6 +428,23 @@ func (me *LightHouseService) LighthouseDiskLatestOperationRefreshFunc(diskId str
 	}
 }
 
+func (me *LightHouseService) LighthouseDiskIsolateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseDiskById(ctx, diskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if helper.PString(object.LatestOperationState) != "OPERATING" && helper.PString(object.DiskState) == "SHUTDOWN" {
+			return object, "SUCCESS", nil
+		}
+		return object, "FAILED", nil
+	}
+}
+
 func (me *LightHouseService) LighthouseDiskTerminateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil

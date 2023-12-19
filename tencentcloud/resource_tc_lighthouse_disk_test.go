@@ -14,7 +14,13 @@ func TestAccTencentCloudLighthouseDiskResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccLighthouseDisk,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_lighthouse_disk.disk", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_lighthouse_disk.disk", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_lighthouse_disk.disk", "disk_name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_lighthouse_disk.disk", "disk_size", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_lighthouse_disk.disk", "disk_type", "CLOUD_SSD"),
+					resource.TestCheckResourceAttr("tencentcloud_lighthouse_disk.disk", "zone", "ap-guangzhou-3"),
+				),
 			},
 		},
 	})
