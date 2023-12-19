@@ -93,7 +93,7 @@ const testAccCbsSnapshot = `
 resource "tencentcloud_cbs_storage" "storage" {
 	availability_zone = "ap-guangzhou-3"
 	storage_size      = 50
-	storage_type      = "tcacctest.CLOUD_PREMIUM"
+	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-test-storage"
 }
 
@@ -107,7 +107,7 @@ const testAccCbsSnapshot_update = `
 resource "tencentcloud_cbs_storage" "storage" {
 	availability_zone = "ap-guangzhou-3"
 	storage_size      = 50
-	storage_type      = "tcacctest.CLOUD_PREMIUM"
+	storage_type      = "CLOUD_PREMIUM"
 	storage_name      = "tf-test-storage"
 }
 

@@ -98,7 +98,7 @@ const testAccCbsSnapshotPolicyAttachmentConfig = tcacctest.DefaultVpcVariable + 
 resource "tencentcloud_cbs_storage" "foo" {
   availability_zone = var.availability_zone
   storage_size      = 100
-  storage_type      = "tcacctest.CLOUD_PREMIUM"
+  storage_type      = "CLOUD_PREMIUM"
   storage_name      = var.instance_name
 }
 

@@ -151,7 +151,7 @@ resource tencentcloud_ccn main {
   name                 = "ci-temp-test-ccn"
   description          = "ci-temp-test-ccn-des"
   qos                  = "AG"
-  bandwidth_limit_type = "tcacctest.INTER_REGION_LIMIT"
+  bandwidth_limit_type = "INTER_REGION_LIMIT"
 }
 `
 

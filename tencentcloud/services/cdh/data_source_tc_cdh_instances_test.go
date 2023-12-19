@@ -30,7 +30,7 @@ func TestAccTencentCloudCdhInstancesDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.availability_zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.project_id", "0"),
-					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.prepaid_renew_flag", "tcacctest.DISABLE_NOTIFY_AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.prepaid_renew_flag", "DISABLE_NOTIFY_AND_MANUAL_RENEW"),
 					resource.TestCheckResourceAttr(dataSourceName, "cdh_instance_list.0.host_resource.#", "1"),
 				),
 			},
@@ -48,7 +48,7 @@ resource "tencentcloud_cdh_instance" "foo" {
   host_type = "HC20"
   charge_type = "PREPAID"
   host_name = "unit-test"
-  prepaid_renew_flag = "tcacctest.DISABLE_NOTIFY_AND_MANUAL_RENEW"
+  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
 }
 
 data "tencentcloud_cdh_instances" "list" {

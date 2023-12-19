@@ -92,16 +92,16 @@ resource "tencentcloud_instance" "test_cbs_attach" {
   instance_name     = "test-cbs-attach-cvm"
   availability_zone = var.default_az
   image_id          = data.tencentcloud_images.default.images.0.image_id
-  system_disk_type  = "tcacctest.CLOUD_PREMIUM"
+  system_disk_type  = "CLOUD_PREMIUM"
   instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 }
 
 resource "tencentcloud_cbs_storage" "foo" {
   availability_zone = var.default_az
   storage_size      = 100
-  storage_type      = "tcacctest.CLOUD_PREMIUM"
+  storage_type      = "CLOUD_PREMIUM"
   storage_name      = "test-cbs-attachment"
-  charge_type       = "tcacctest.POSTPAID_BY_HOUR"
+  charge_type       = "POSTPAID_BY_HOUR"
 }
 
 resource "tencentcloud_cbs_storage_attachment" "foo" {
