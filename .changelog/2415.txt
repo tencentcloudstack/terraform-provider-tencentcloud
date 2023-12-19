@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_vpc_peer_connect_manager
+```
+
+```release-note:new-resource
+tencentcloud_vpc_peer_connect_accecpt_or_reject
+```
