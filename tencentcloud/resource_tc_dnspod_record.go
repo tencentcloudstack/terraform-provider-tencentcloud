@@ -236,10 +236,8 @@ func resourceTencentCloudDnspodRecordUpdate(d *schema.ResourceData, meta interfa
 		status := d.Get("status").(string)
 		request.Status = &status
 	}
-	if d.HasChange("mx") {
-		if v, ok := d.GetOk("mx"); ok {
-			request.MX = helper.IntUint64(v.(int))
-		}
+	if v, ok := d.GetOk("mx"); ok {
+		request.MX = helper.IntUint64(v.(int))
 	}
 	if d.HasChange("ttl") {
 		ttl := d.Get("ttl").(int)
