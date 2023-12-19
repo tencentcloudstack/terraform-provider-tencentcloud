@@ -1,16 +1,19 @@
-package tencentcloud
+package cat
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCatNode() *schema.Resource {
+func DataSourceTencentCloudCatNode() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCatNodeRead,
 		Schema: map[string]*schema.Schema{
@@ -120,11 +123,11 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 }
 
 func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cat_node.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cat_node.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("node_type"); v != nil {
@@ -147,13 +150,13 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 		paramMap["pay_mode"] = helper.IntInt64(v.(int))
 	}
 
-	catService := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	catService := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var nodeSets []*cat.NodeDefine
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := catService.DescribeCatProbeNodeByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		nodeSets = results
 		return nil
@@ -164,10 +167,10 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 	}
 
 	var nodeSetExt []*cat.NodeDefineExt
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := catService.DescribeCatNodeByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		nodeSetExt = results
 		return nil
@@ -234,7 +237,7 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), nodeSetList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), nodeSetList); e != nil {
 			return e
 		}
 	}

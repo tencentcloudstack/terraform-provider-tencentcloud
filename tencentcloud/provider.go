@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -630,9 +631,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mps_media_meta_data":                          dataSourceTencentCloudMpsMediaMetaData(),
 			"tencentcloud_tdcpg_clusters":                               dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                              dataSourceTencentCloudTdcpgInstances(),
-			"tencentcloud_cat_probe_data":                               dataSourceTencentCloudCatProbeData(),
-			"tencentcloud_cat_node":                                     dataSourceTencentCloudCatNode(),
-			"tencentcloud_cat_metric_data":                              dataSourceTencentCloudCatMetricData(),
+			"tencentcloud_cat_probe_data":                               cat.DataSourceTencentCloudCatProbeData(),
+			"tencentcloud_cat_node":                                     cat.DataSourceTencentCloudCatNode(),
+			"tencentcloud_cat_metric_data":                              cat.DataSourceTencentCloudCatMetricData(),
 			"tencentcloud_rum_project":                                  dataSourceTencentCloudRumProject(),
 			"tencentcloud_rum_offline_log_config":                       dataSourceTencentCloudRumOfflineLogConfig(),
 			"tencentcloud_rum_whitelist":                                dataSourceTencentCloudRumWhitelist(),
@@ -1478,7 +1479,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_cancel_dcn_job_operation":                       resourceTencentCloudDcdbCancelDcnJobOperation(),
 			"tencentcloud_dcdb_flush_binlog_operation":                         resourceTencentCloudDcdbFlushBinlogOperation(),
 			"tencentcloud_dcdb_switch_db_instance_ha_operation":                resourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
-			"tencentcloud_cat_task_set":                                        resourceTencentCloudCatTaskSet(),
+			"tencentcloud_cat_task_set":                                        cat.ResourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":                resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                                    resourceTencentCloudMariadbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                            resourceTencentCloudMariadbHourDbInstance(),

@@ -1,16 +1,19 @@
-package tencentcloud
+package cat
 
 import (
 	"context"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCatMetricData() *schema.Resource {
+func DataSourceTencentCloudCatMetricData() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCatMetricDataRead,
 		Schema: map[string]*schema.Schema{
@@ -69,12 +72,12 @@ func dataSourceTencentCloudCatMetricData() *schema.Resource {
 }
 
 func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cat_metric_data.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cat_metric_data.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("analyze_task_type"); ok {
@@ -102,10 +105,10 @@ func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interf
 		paramMap["Filters"] = helper.InterfacesStringsPoint(filtersSet)
 	}
 
-	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var metric *cat.DescribeProbeMetricDataResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCatMetricDataByFilter(ctx, paramMap)
 		if e != nil {
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
@@ -113,7 +116,7 @@ func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interf
 					return resource.NonRetryableError(e)
 				}
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		metric = result
 		return nil
@@ -131,7 +134,7 @@ func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interf
 	d.SetId(helper.DataResourceIdsHash([]string{metricSet}))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), metricSet); e != nil {
+		if e := tccommon.WriteToFile(output.(string), metricSet); e != nil {
 			return e
 		}
 	}

@@ -1,16 +1,19 @@
-package tencentcloud
+package cat
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCatProbeData() *schema.Resource {
+func DataSourceTencentCloudCatProbeData() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCatProbedataRead,
 		Schema: map[string]*schema.Schema{
@@ -192,11 +195,11 @@ func dataSourceTencentCloudCatProbeData() *schema.Resource {
 }
 
 func dataSourceTencentCloudCatProbedataRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cat_probedata.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cat_probedata.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("begin_time"); v != nil {
@@ -281,13 +284,13 @@ func dataSourceTencentCloudCatProbedataRead(d *schema.ResourceData, meta interfa
 		paramMap["city"] = city
 	}
 
-	catService := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	catService := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var dataSets []*cat.DetailedSingleDataDefine
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := catService.DescribeCatProbeDataByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		dataSets = results
 		return nil
@@ -352,7 +355,7 @@ func dataSourceTencentCloudCatProbedataRead(d *schema.ResourceData, meta interfa
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), dataSetList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), dataSetList); e != nil {
 			return e
 		}
 	}

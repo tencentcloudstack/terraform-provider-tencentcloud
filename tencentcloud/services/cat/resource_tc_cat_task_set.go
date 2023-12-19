@@ -1,17 +1,20 @@
-package tencentcloud
+package cat
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCatTaskSet() *schema.Resource {
+func ResourceTencentCloudCatTaskSet() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudCatTaskSetRead,
 		Create: resourceTencentCloudCatTaskSetCreate,
@@ -109,10 +112,10 @@ func resourceTencentCloudCatTaskSet() *schema.Resource {
 }
 
 func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cat_task_set.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cat_task_set.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = cat.NewCreateProbeTasksRequest()
@@ -162,10 +165,10 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 		request.Cron = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().CreateProbeTasks(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCatClient().CreateProbeTasks(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -181,22 +184,22 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 
 	taskId = *response.Response.TaskIDs[0]
 
-	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cat:%s:uin/:TaskId/%s", region, taskId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
 
-	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(1*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeCatTaskSet(ctx, taskId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *instance.Status == 2 || *instance.Status == 10 {
 			return nil
@@ -216,13 +219,13 @@ func resourceTencentCloudCatTaskSetCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCatTaskSetRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cat_task_set.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cat_task_set.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	taskId := d.Id()
 
@@ -284,7 +287,7 @@ func resourceTencentCloudCatTaskSetRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("status", taskSet.Status)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "cat", "TaskId", tcClient.Region, d.Id())
 	if err != nil {
@@ -296,11 +299,11 @@ func resourceTencentCloudCatTaskSetRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cat_task_set.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cat_task_set.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := cat.NewUpdateProbeTaskConfigurationListRequest()
 
@@ -358,10 +361,10 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 			requestTaskAttributes := cat.NewUpdateProbeTaskAttributesRequest()
 			requestTaskAttributes.TaskId = &taskId
 			requestTaskAttributes.Name = &v
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().UpdateProbeTaskAttributes(requestTaskAttributes)
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCatClient().UpdateProbeTaskAttributes(requestTaskAttributes)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
@@ -374,10 +377,10 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().UpdateProbeTaskConfigurationList(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCatClient().UpdateProbeTaskConfigurationList(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -396,10 +399,10 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 			if operate == "suspend" {
 				requestSuspend := cat.NewSuspendProbeTaskRequest()
 				requestSuspend.TaskIds = append(requestSuspend.TaskIds, &taskId)
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().SuspendProbeTask(requestSuspend)
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCatClient().SuspendProbeTask(requestSuspend)
 					if e != nil {
-						return retryError(e)
+						return tccommon.RetryError(e)
 					} else {
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
@@ -412,10 +415,10 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 			} else if operate == "resume" {
 				requestResume := cat.NewResumeProbeTaskRequest()
 				requestResume.TaskIds = append(requestResume.TaskIds, &taskId)
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().ResumeProbeTask(requestResume)
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCatClient().ResumeProbeTask(requestResume)
 					if e != nil {
-						return retryError(e)
+						return tccommon.RetryError(e)
 					} else {
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 					}
@@ -432,11 +435,11 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cat", "TaskId", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cat", "TaskId", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -446,13 +449,13 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCatTaskSetDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cat_task_set.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cat_task_set.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CatService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	taskId := d.Id()
 
@@ -460,10 +463,10 @@ func resourceTencentCloudCatTaskSetDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(7*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeCatTaskSet(ctx, taskId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if instance == nil {
 			return nil
