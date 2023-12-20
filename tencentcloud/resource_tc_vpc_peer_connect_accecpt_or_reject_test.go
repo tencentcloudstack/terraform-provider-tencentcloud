@@ -24,7 +24,7 @@ func TestAccTencentCloudVpcPeerConnectAccecptOrRejectResource_basic(t *testing.T
 const testAccVpcPeerConnectAccecptOrReject = `
 
 resource "tencentcloud_vpc_peer_connect_accecpt_or_reject" "peer_connect_accecpt_or_reject" {
-  peering_connection_id = "pcx-799hlfkg"
+  peering_connection_id = "pcx-k74fvy2e"
 }
 
 `
