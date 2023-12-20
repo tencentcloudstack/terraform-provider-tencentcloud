@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_scf_function: Update `runtime` description and add example with triggers.
+```
