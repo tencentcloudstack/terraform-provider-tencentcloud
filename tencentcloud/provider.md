@@ -1203,7 +1203,10 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc_ipv6_subnet_cidr_block
     tencentcloud_vpc_ipv6_eni_address
     tencentcloud_vpc_local_gateway
-    tencentcloud_vpc_resume_snapshot_instance
+    tencentcloud_vpc_resume_snapshot_instance 
+    tencentcloud_vpc_peer_connect_manager
+    tencentcloud_vpc_peer_connect_accept_operation
+    tencentcloud_vpc_peer_connect_reject_operation
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
