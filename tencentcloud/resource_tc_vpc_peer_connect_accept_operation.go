@@ -13,9 +13,6 @@ func resourceTencentCloudVpcPeerConnectAcceptOperation() *schema.Resource {
 		Create: resourceTencentCloudVpcPeerConnectAcceptOperationCreate,
 		Read:   resourceTencentCloudVpcPeerConnectAcceptOperationRead,
 		Delete: resourceTencentCloudVpcPeerConnectAcceptOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"peering_connection_id": {
 				Required:    true,
