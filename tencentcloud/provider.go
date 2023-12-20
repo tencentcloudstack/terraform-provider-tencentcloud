@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +9,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcdb"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -613,26 +615,26 @@ func Provider() *schema.Provider {
 			"tencentcloud_teo_zone_available_plans":                     dataSourceTencentCloudTeoZoneAvailablePlans(),
 			"tencentcloud_teo_rule_engine_settings":                     dataSourceTencentCloudTeoRuleEngineSettings(),
 			"tencentcloud_sts_caller_identity":                          dataSourceTencentCloudStsCallerIdentity(),
-			"tencentcloud_dcdb_instances":                               dataSourceTencentCloudDcdbInstances(),
-			"tencentcloud_dcdb_accounts":                                dataSourceTencentCloudDcdbAccounts(),
-			"tencentcloud_dcdb_databases":                               dataSourceTencentCloudDcdbDatabases(),
-			"tencentcloud_dcdb_parameters":                              dataSourceTencentCloudDcdbParameters(),
-			"tencentcloud_dcdb_shards":                                  dataSourceTencentCloudDcdbShards(),
-			"tencentcloud_dcdb_security_groups":                         dataSourceTencentCloudDcdbSecurityGroups(),
-			"tencentcloud_dcdb_database_objects":                        dataSourceTencentCloudDcdbDatabaseObjects(),
-			"tencentcloud_dcdb_database_tables":                         dataSourceTencentCloudDcdbDatabaseTables(),
-			"tencentcloud_dcdb_file_download_url":                       dataSourceTencentCloudDcdbFileDownloadUrl(),
-			"tencentcloud_dcdb_log_files":                               dataSourceTencentCloudDcdbLogFiles(),
-			"tencentcloud_dcdb_instance_node_info":                      dataSourceTencentCloudDcdbInstanceNodeInfo(),
-			"tencentcloud_dcdb_orders":                                  dataSourceTencentCloudDcdbOrders(),
-			"tencentcloud_dcdb_price":                                   dataSourceTencentCloudDcdbPrice(),
-			"tencentcloud_dcdb_project_security_groups":                 dataSourceTencentCloudDcdbProjectSecurityGroups(),
-			"tencentcloud_dcdb_projects":                                dataSourceTencentCloudDcdbProjects(),
-			"tencentcloud_dcdb_renewal_price":                           dataSourceTencentCloudDcdbRenewalPrice(),
-			"tencentcloud_dcdb_sale_info":                               dataSourceTencentCloudDcdbSaleInfo(),
-			"tencentcloud_dcdb_shard_spec":                              dataSourceTencentCloudDcdbShardSpec(),
-			"tencentcloud_dcdb_slow_logs":                               dataSourceTencentCloudDcdbSlowLogs(),
-			"tencentcloud_dcdb_upgrade_price":                           dataSourceTencentCloudDcdbUpgradePrice(),
+			"tencentcloud_dcdb_instances":                               dcdb.DataSourceTencentCloudDcdbInstances(),
+			"tencentcloud_dcdb_accounts":                                dcdb.DataSourceTencentCloudDcdbAccounts(),
+			"tencentcloud_dcdb_databases":                               dcdb.DataSourceTencentCloudDcdbDatabases(),
+			"tencentcloud_dcdb_parameters":                              dcdb.DataSourceTencentCloudDcdbParameters(),
+			"tencentcloud_dcdb_shards":                                  dcdb.DataSourceTencentCloudDcdbShards(),
+			"tencentcloud_dcdb_security_groups":                         dcdb.DataSourceTencentCloudDcdbSecurityGroups(),
+			"tencentcloud_dcdb_database_objects":                        dcdb.DataSourceTencentCloudDcdbDatabaseObjects(),
+			"tencentcloud_dcdb_database_tables":                         dcdb.DataSourceTencentCloudDcdbDatabaseTables(),
+			"tencentcloud_dcdb_file_download_url":                       dcdb.DataSourceTencentCloudDcdbFileDownloadUrl(),
+			"tencentcloud_dcdb_log_files":                               dcdb.DataSourceTencentCloudDcdbLogFiles(),
+			"tencentcloud_dcdb_instance_node_info":                      dcdb.DataSourceTencentCloudDcdbInstanceNodeInfo(),
+			"tencentcloud_dcdb_orders":                                  dcdb.DataSourceTencentCloudDcdbOrders(),
+			"tencentcloud_dcdb_price":                                   dcdb.DataSourceTencentCloudDcdbPrice(),
+			"tencentcloud_dcdb_project_security_groups":                 dcdb.DataSourceTencentCloudDcdbProjectSecurityGroups(),
+			"tencentcloud_dcdb_projects":                                dcdb.DataSourceTencentCloudDcdbProjects(),
+			"tencentcloud_dcdb_renewal_price":                           dcdb.DataSourceTencentCloudDcdbRenewalPrice(),
+			"tencentcloud_dcdb_sale_info":                               dcdb.DataSourceTencentCloudDcdbSaleInfo(),
+			"tencentcloud_dcdb_shard_spec":                              dcdb.DataSourceTencentCloudDcdbShardSpec(),
+			"tencentcloud_dcdb_slow_logs":                               dcdb.DataSourceTencentCloudDcdbSlowLogs(),
+			"tencentcloud_dcdb_upgrade_price":                           dcdb.DataSourceTencentCloudDcdbUpgradePrice(),
 			"tencentcloud_mariadb_db_instances":                         dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                             dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                      dataSourceTencentCloudMariadbSecurityGroups(),
@@ -1493,20 +1495,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_black_list_delete":                               resourceTencentCloudSesBlackListDelete(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
-			"tencentcloud_dcdb_account":                                        resourceTencentCloudDcdbAccount(),
-			"tencentcloud_dcdb_hourdb_instance":                                resourceTencentCloudDcdbHourdbInstance(),
-			"tencentcloud_dcdb_security_group_attachment":                      resourceTencentCloudDcdbSecurityGroupAttachment(),
-			"tencentcloud_dcdb_db_instance":                                    resourceTencentCloudDcdbDbInstance(),
-			"tencentcloud_dcdb_account_privileges":                             resourceTencentCloudDcdbAccountPrivileges(),
-			"tencentcloud_dcdb_db_parameters":                                  resourceTencentCloudDcdbDbParameters(),
-			"tencentcloud_dcdb_encrypt_attributes_config":                      resourceTencentCloudDcdbEncryptAttributesConfig(),
-			"tencentcloud_dcdb_db_sync_mode_config":                            resourceTencentCloudDcdbDbSyncModeConfig(),
-			"tencentcloud_dcdb_instance_config":                                resourceTencentCloudDcdbInstanceConfig(),
-			"tencentcloud_dcdb_activate_hour_instance_operation":               resourceTencentCloudDcdbActivateHourInstanceOperation(),
-			"tencentcloud_dcdb_isolate_hour_instance_operation":                resourceTencentCloudDcdbIsolateHourInstanceOperation(),
-			"tencentcloud_dcdb_cancel_dcn_job_operation":                       resourceTencentCloudDcdbCancelDcnJobOperation(),
-			"tencentcloud_dcdb_flush_binlog_operation":                         resourceTencentCloudDcdbFlushBinlogOperation(),
-			"tencentcloud_dcdb_switch_db_instance_ha_operation":                resourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
+			"tencentcloud_dcdb_account":                                        dcdb.ResourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":                                dcdb.ResourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment":                      dcdb.ResourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_dcdb_db_instance":                                    dcdb.ResourceTencentCloudDcdbDbInstance(),
+			"tencentcloud_dcdb_account_privileges":                             dcdb.ResourceTencentCloudDcdbAccountPrivileges(),
+			"tencentcloud_dcdb_db_parameters":                                  dcdb.ResourceTencentCloudDcdbDbParameters(),
+			"tencentcloud_dcdb_encrypt_attributes_config":                      dcdb.ResourceTencentCloudDcdbEncryptAttributesConfig(),
+			"tencentcloud_dcdb_db_sync_mode_config":                            dcdb.ResourceTencentCloudDcdbDbSyncModeConfig(),
+			"tencentcloud_dcdb_instance_config":                                dcdb.ResourceTencentCloudDcdbInstanceConfig(),
+			"tencentcloud_dcdb_activate_hour_instance_operation":               dcdb.ResourceTencentCloudDcdbActivateHourInstanceOperation(),
+			"tencentcloud_dcdb_isolate_hour_instance_operation":                dcdb.ResourceTencentCloudDcdbIsolateHourInstanceOperation(),
+			"tencentcloud_dcdb_cancel_dcn_job_operation":                       dcdb.ResourceTencentCloudDcdbCancelDcnJobOperation(),
+			"tencentcloud_dcdb_flush_binlog_operation":                         dcdb.ResourceTencentCloudDcdbFlushBinlogOperation(),
+			"tencentcloud_dcdb_switch_db_instance_ha_operation":                dcdb.ResourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
 			"tencentcloud_cat_task_set":                                        cat.ResourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":                resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                                    resourceTencentCloudMariadbInstance(),
