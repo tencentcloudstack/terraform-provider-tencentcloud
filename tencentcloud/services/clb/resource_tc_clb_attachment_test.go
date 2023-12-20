@@ -1,0 +1,452 @@
+package clb_test
+
+import (
+	"context"
+	"fmt"
+	"strings"
+	"testing"
+	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	localclb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
+)
+
+func TestAccTencentCloudClbAttachmentResource_tcp(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbServerAttachment_tcp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.clb_attachment_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "targets.#", "1"),
+				),
+			}, {
+				Config: testAccClbServerAttachment_tcp_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.clb_attachment_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "protocol_type", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "targets.#", "1"),
+				),
+			}, {
+				Config: testAccClbServerAttachment_tcp_update_ssl,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.clb_attachment_tcp"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_tcp", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "protocol_type", "TCP_SSL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_tcp", "targets.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudClbAttachmentResource_http(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testAccClbServerAttachment_http, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.clb_attachment_http"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_http", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_http", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_http", "protocol_type", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_http", "targets.#", "2"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccClbServerAttachment_httpUpdate, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.clb_attachment_http"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_http", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.clb_attachment_http", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_http", "protocol_type", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.clb_attachment_http", "targets.#", "1"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_attachment.clb_attachment_http",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	clbService := localclb.NewClbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_clb_attachment" {
+			continue
+		}
+		time.Sleep(5 * time.Second)
+		items := strings.Split(rs.Primary.ID, "#")
+		if len(items) != 3 {
+			return fmt.Errorf("[CHECK][CLB attachment][Destroy] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
+		}
+		locationId := items[0]
+		listenerId := items[1]
+		clbId := items[2]
+		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		if (instance != nil && !(len(instance.Targets) == 0 && locationId == "") && !(len(instance.Rules) == 0 && locationId != "")) && err == nil {
+			return fmt.Errorf("[CHECK][CLB attachment][Destroy] check: CLB Attachment still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func TestAccTencentCloudClbAttachmentResource_argetGroups(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			tcacctest.AccPreCheck(t)
+		},
+		Providers:    tcacctest.AccProviders,
+		CheckDestroy: testAccCheckClbServerAttachmentDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: fmt.Sprintf(testAccClbServerAttachment_multiple, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "2"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccClbServerAttachment_multiple_update, tcacctest.DefaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "1"),
+				),
+			},
+		},
+	})
+}
+
+func testAccCheckClbServerAttachmentExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: CLB Attachment %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: CLB Attachment id is not set")
+		}
+		clbService := localclb.NewClbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
+		items := strings.Split(rs.Primary.ID, "#")
+		if len(items) != 3 {
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] check: id %s of resource.tencentcloud_clb_attachment is not match loc-xxx#lbl-xxx#lb-xxx", rs.Primary.ID)
+		}
+		locationId := items[0]
+		listenerId := items[1]
+		clbId := items[2]
+		instance, err := clbService.DescribeAttachmentByPara(ctx, clbId, listenerId, locationId)
+		if err != nil {
+			return err
+		}
+		if instance == nil || (len(instance.Targets) == 0 && locationId == "") || (len(instance.Rules) == 0 && locationId != "") {
+			return fmt.Errorf("[CHECK][CLB attachment][Exists] id %s is not exist", rs.Primary.ID)
+		}
+		return nil
+	}
+}
+
+const testAccClbServerAttachment_tcp = tcacctest.ClbTargetEniTestCase + `
+resource "tencentcloud_clb_instance" "clb_instance_tcp" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-tcp-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "clb_listener_tcp" {
+  clb_id                     = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_name              = "tf-clb-attach-tcp-test"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "clb_attachment_tcp" {
+  clb_id      = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_id = tencentcloud_clb_listener.clb_listener_tcp.listener_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_tcp_update = tcacctest.ClbTargetEniTestCase + tcacctest.PresetCVM + `
+resource "tencentcloud_clb_instance" "clb_instance_tcp" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-tcp-test"
+  vpc_id       = var.cvm_vpc_id
+  snat_pro     = true
+}
+
+resource "tencentcloud_clb_listener" "clb_listener_tcp" {
+  clb_id                     = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_name              = "tf-clb-attach-tcp-test"
+  port                       = 44
+  protocol                   = "TCP"
+  health_check_switch        = true
+  health_check_time_out      = 30
+  health_check_interval_time = 100
+  health_check_health_num    = 2
+  health_check_unhealth_num  = 2
+  session_expire_time        = 30
+  scheduler                  = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "clb_attachment_tcp" {
+  clb_id      = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_id = tencentcloud_clb_listener.clb_listener_tcp.listener_id
+
+  targets {
+    eni_ip      = tencentcloud_eni.clb_eni_target.ipv4_info.0.ip
+    port        = 23
+    weight      = 50
+  }
+}
+`
+
+const testAccClbServerAttachment_tcp_update_ssl = tcacctest.ClbTargetEniTestCase + tcacctest.PresetCVM + `
+data "tencentcloud_ssl_certificates" "foo" {
+  name = "keep-svr-ca"
+}
+
+resource "tencentcloud_clb_instance" "clb_instance_tcp" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-tcp-ssl"
+  vpc_id       = var.cvm_vpc_id
+  snat_pro     = true
+}
+
+# This is will force new as expected
+resource "tencentcloud_clb_listener" "clb_listener_tcp" {
+  clb_id                     = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_name              = "tf-clb-attach-tcp-ssl"
+  port                       = 44
+  protocol                   = "TCP_SSL"
+  health_check_switch        = true
+  scheduler                  = "WRR"
+  certificate_ssl_mode       = "UNIDIRECTIONAL"
+  certificate_id             = data.tencentcloud_ssl_certificates.foo.certificates.0.id
+}
+
+resource "tencentcloud_clb_attachment" "clb_attachment_tcp" {
+  clb_id      = tencentcloud_clb_instance.clb_instance_tcp.id
+  listener_id = tencentcloud_clb_listener.clb_listener_tcp.listener_id
+
+  # cross network target
+  targets {
+    eni_ip      = tencentcloud_eni.clb_eni_target.ipv4_info.0.ip
+    port        = 23
+    weight      = 50
+  }
+}
+`
+
+const testAccClbServerAttachment_http = tcacctest.InstanceCommonTestCase + tcacctest.PresetCVM + `
+resource "tencentcloud_clb_instance" "clb_instance_http" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-http-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "clb_listener_http" {
+  clb_id               = tencentcloud_clb_instance.clb_instance_http.id
+  listener_name        = "tf-clb-attach-http-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "clb_listener_rule_http" {
+  clb_id              = tencentcloud_clb_instance.clb_instance_http.id
+  listener_id         = tencentcloud_clb_listener.clb_listener_http.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "clb_attachment_http" {
+  clb_id      = tencentcloud_clb_instance.clb_instance_http.id
+  listener_id = tencentcloud_clb_listener.clb_listener_http.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.clb_listener_rule_http.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 22
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_httpUpdate = tcacctest.InstanceCommonTestCase + tcacctest.PresetCVM + `
+resource "tencentcloud_clb_instance" "clb_instance_http" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-http-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "clb_listener_http" {
+  clb_id               = tencentcloud_clb_instance.clb_instance_http.id
+  listener_name        = "tf-clb-attach-http-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "clb_listener_rule_http" {
+  clb_id              = tencentcloud_clb_instance.clb_instance_http.id
+  listener_id         = tencentcloud_clb_listener.clb_listener_http.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "clb_attachment_http" {
+  clb_id      = tencentcloud_clb_instance.clb_instance_http.id
+  listener_id = tencentcloud_clb_listener.clb_listener_http.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.clb_listener_rule_http.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 24
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_multiple = tcacctest.InstanceCommonTestCase + `
+resource "tencentcloud_instance" "update" {
+  instance_name              = var.instance_name_update
+  availability_zone          = var.availability_cvm_zone
+  image_id                   = data.tencentcloud_images.default.images.0.image_id
+  instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  system_disk_type           = "CLOUD_PREMIUM"
+  system_disk_size           = 50
+  allocate_public_ip         = true
+  internet_max_bandwidth_out = 10
+  vpc_id                     = var.cvm_vpc_id
+  subnet_id                  = var.cvm_subnet_id
+}
+
+resource "tencentcloud_clb_instance" "foo" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-multi-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id               = tencentcloud_clb_instance.foo.id
+  listener_name        = "tf-clb-attach-multi-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "foo" {
+  clb_id              = tencentcloud_clb_instance.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+  targets {
+    instance_id = tencentcloud_instance.update.id
+    port        = 24
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_multiple_update = tcacctest.InstanceCommonTestCase + `
+
+resource "tencentcloud_clb_instance" "foo" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-multi-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id               = tencentcloud_clb_instance.foo.id
+  listener_name        = "tf-clb-attach-multi-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "foo" {
+  clb_id              = tencentcloud_clb_instance.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+}
+`

@@ -1,0 +1,196 @@
+package ciam
+
+import (
+	"context"
+	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+)
+
+func ResourceTencentCloudCiamUserStore() *schema.Resource {
+	return &schema.Resource{
+		Create: resourceTencentCloudCiamUserStoreCreate,
+		Read:   resourceTencentCloudCiamUserStoreRead,
+		Update: resourceTencentCloudCiamUserStoreUpdate,
+		Delete: resourceTencentCloudCiamUserStoreDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
+		Schema: map[string]*schema.Schema{
+			"user_pool_name": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "User Store Name.",
+			},
+
+			"user_pool_desc": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "User Store Description.",
+			},
+
+			"user_pool_logo": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "User Store Logo.",
+			},
+		},
+	}
+}
+
+func resourceTencentCloudCiamUserStoreCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	var (
+		request     = ciam.NewCreateUserStoreRequest()
+		response    = ciam.NewCreateUserStoreResponse()
+		UserStoreId string
+	)
+	if v, ok := d.GetOk("user_pool_name"); ok {
+		request.UserPoolName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("user_pool_desc"); ok {
+		request.UserPoolDesc = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("user_pool_logo"); ok {
+		request.UserPoolLogo = helper.String(v.(string))
+	}
+
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCiamClient().CreateUserStore(request)
+		if e != nil {
+			return tccommon.RetryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create ciam userStore failed, reason:%+v", logId, err)
+		return err
+	}
+
+	UserStoreId = *response.Response.UserStoreId
+	d.SetId(UserStoreId)
+
+	return resourceTencentCloudCiamUserStoreRead(d, meta)
+}
+
+func resourceTencentCloudCiamUserStoreRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	service := CiamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+
+	userStoreId := d.Id()
+
+	userStore, err := service.DescribeCiamUserStoreById(ctx, userStoreId)
+	if err != nil {
+		return err
+	}
+
+	if userStore == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `CiamUserStore` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if userStore.UserStoreName != nil {
+		_ = d.Set("user_pool_name", userStore.UserStoreName)
+	}
+
+	if userStore.UserStoreDesc != nil {
+		_ = d.Set("user_pool_desc", userStore.UserStoreDesc)
+	}
+
+	if userStore.UserStoreLogo != nil {
+		_ = d.Set("user_pool_logo", userStore.UserStoreLogo)
+	}
+
+	return nil
+}
+
+func resourceTencentCloudCiamUserStoreUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+
+	needChange := false
+	mutableArgs := []string{"user_pool_name", "user_pool_desc", "user_pool_logo"}
+
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	userStoreId := d.Id()
+
+	if needChange {
+		request := ciam.NewUpdateUserStoreRequest()
+		request.UserPoolId = &userStoreId
+
+		if v, ok := d.GetOk("user_pool_name"); ok {
+			request.UserPoolName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("user_pool_desc"); ok {
+			request.UserPoolDesc = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("user_pool_logo"); ok {
+			request.UserPoolLogo = helper.String(v.(string))
+		}
+
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCiamClient().UpdateUserStore(request)
+			if e != nil {
+				return tccommon.RetryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update ciam userStore failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
+	return resourceTencentCloudCiamUserStoreRead(d, meta)
+}
+
+func resourceTencentCloudCiamUserStoreDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
+
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+
+	service := CiamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	userStoreId := d.Id()
+
+	if err := service.DeleteCiamUserStoreById(ctx, userStoreId); err != nil {
+		return err
+	}
+
+	return nil
+}

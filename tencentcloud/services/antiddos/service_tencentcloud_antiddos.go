@@ -43,7 +43,7 @@ func (me *AntiddosService) DescribeListBGPIPInstances(ctx context.Context, insta
 		response, err = me.client.UseAntiddosClient().DescribeListBGPIPInstances(request)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
-			if e.GetCode() == "tccommon.InternalError.ClusterNotFound" {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
 		}
@@ -74,7 +74,7 @@ func (me *AntiddosService) AssociateDDoSEipAddress(ctx context.Context, instance
 		_, err := me.client.UseAntiddosClient().AssociateDDoSEipAddress(request)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
-			if e.GetCode() == "tccommon.InternalError.ClusterNotFound" {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
 		}
@@ -105,7 +105,7 @@ func (me *AntiddosService) AssociateDDoSEipLoadBalancer(ctx context.Context, ins
 		_, err := me.client.UseAntiddosClient().AssociateDDoSEipLoadBalancer(request)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
-			if e.GetCode() == "tccommon.InternalError.ClusterNotFound" {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
 		}
@@ -134,7 +134,7 @@ func (me *AntiddosService) DisassociateDDoSEipAddress(ctx context.Context, insta
 		_, err := me.client.UseAntiddosClient().DisassociateDDoSEipAddress(request)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
-			if e.GetCode() == "tccommon.InternalError.ClusterNotFound" {
+			if e.GetCode() == "InternalError.ClusterNotFound" {
 				return nil
 			}
 		}

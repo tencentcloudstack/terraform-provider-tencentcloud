@@ -1,0 +1,3 @@
+package ccn
+
+const DESCRIBE_SECURITY_GROUP_LIMIT = 50
