@@ -1,7 +1,6 @@
 package cos
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -11,6 +10,8 @@ import (
 	"log"
 	"strings"
 	"time"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 

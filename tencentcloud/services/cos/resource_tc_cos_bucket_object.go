@@ -1,7 +1,6 @@
 package cos
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"bytes"
 	"context"
 	"fmt"
@@ -9,6 +8,8 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"

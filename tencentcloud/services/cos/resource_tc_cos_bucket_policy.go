@@ -1,12 +1,13 @@
 package cos
 
 import (
-	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"encoding/json"
 	"log"
 	"reflect"
 	"time"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -172,7 +173,7 @@ func resourceTencentCloudCosBucketPolicyDelete(d *schema.ResourceData, meta inte
 	return nil
 }
 
-//In the returned JSON, the SDK automatically adds the Sid, which needs to be removed
+// In the returned JSON, the SDK automatically adds the Sid, which needs to be removed
 func removeSid(v string) (result string, err error) {
 	m := make(map[string]interface{})
 	err = json.Unmarshal([]byte(v), &m)
