@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ciam"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ci"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/chdfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
@@ -1184,8 +1185,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_user_permission_boundary_attachment":             cam.ResourceTencentCloudCamUserPermissionBoundaryAttachment(),
 			"tencentcloud_cam_role_permission_boundary_attachment":             cam.ResourceTencentCloudCamRolePermissionBoundaryAttachment(),
 			"tencentcloud_organization_quit_organization_operation":            resourceTencentCloudOrganizationQuitOrganizationOperation(),
-			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
-			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
+			"tencentcloud_ciam_user_group":                                     ciam.ResourceTencentCloudCiamUserGroup(),
+			"tencentcloud_ciam_user_store":                                     ciam.ResourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_function_version":                                resourceTencentCloudScfFunctionVersion(),
 			"tencentcloud_scf_function_event_invoke_config":                    resourceTencentCloudScfFunctionEventInvokeConfig(),

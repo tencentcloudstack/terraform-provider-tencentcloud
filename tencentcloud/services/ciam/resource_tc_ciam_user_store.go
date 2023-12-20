@@ -1,16 +1,19 @@
-package tencentcloud
+package ciam
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCiamUserStore() *schema.Resource {
+func ResourceTencentCloudCiamUserStore() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCiamUserStoreCreate,
 		Read:   resourceTencentCloudCiamUserStoreRead,
@@ -42,10 +45,10 @@ func resourceTencentCloudCiamUserStore() *schema.Resource {
 }
 
 func resourceTencentCloudCiamUserStoreCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ciam_user_store.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request     = ciam.NewCreateUserStoreRequest()
@@ -64,10 +67,10 @@ func resourceTencentCloudCiamUserStoreCreate(d *schema.ResourceData, meta interf
 		request.UserPoolLogo = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiamClient().CreateUserStore(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCiamClient().CreateUserStore(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -86,14 +89,14 @@ func resourceTencentCloudCiamUserStoreCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCiamUserStoreRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ciam_user_store.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CiamService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CiamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	userStoreId := d.Id()
 
@@ -124,10 +127,10 @@ func resourceTencentCloudCiamUserStoreRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCiamUserStoreUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ciam_user_store.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	needChange := false
 	mutableArgs := []string{"user_pool_name", "user_pool_desc", "user_pool_logo"}
@@ -157,10 +160,10 @@ func resourceTencentCloudCiamUserStoreUpdate(d *schema.ResourceData, meta interf
 			request.UserPoolLogo = helper.String(v.(string))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCiamClient().UpdateUserStore(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCiamClient().UpdateUserStore(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -176,13 +179,13 @@ func resourceTencentCloudCiamUserStoreUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCiamUserStoreDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ciam_user_store.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_ciam_user_store.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CiamService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CiamService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	userStoreId := d.Id()
 
 	if err := service.DeleteCiamUserStoreById(ctx, userStoreId); err != nil {
