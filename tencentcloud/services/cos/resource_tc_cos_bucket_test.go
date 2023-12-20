@@ -94,10 +94,8 @@ func TestAccTencentCloudCosBucketResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_basic",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_clean"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_basic",
+				ImportState:  true,
 			},
 		},
 	})
@@ -129,10 +127,8 @@ func TestAccTencentCloudCosBucketResource_ACL(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_acl",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl_body"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_acl",
+				ImportState:  true,
 			},
 		},
 	})
@@ -212,10 +208,8 @@ func TestAccTencentCloudCosBucketResource_cors(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_cors",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_cors",
+				ImportState:  true,
 			},
 		},
 	})
@@ -282,10 +276,8 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_lifecycle",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_lifecycle",
+				ImportState:  true,
 			},
 		},
 	})
@@ -321,10 +313,8 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_website",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_website",
+				ImportState:  true,
 			},
 		},
 	})
@@ -346,10 +336,8 @@ func TestAccTencentCloudCosBucketResource_MAZ(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_maz",
+				ImportState:  true,
 			},
 		},
 	})
@@ -398,10 +386,8 @@ func TestAccTencentCloudCosBucketResource_originPull(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.with_origin",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.with_origin",
+				ImportState:  true,
 			},
 		},
 	})
@@ -485,10 +471,8 @@ func TestAccTencentCloudCosBucketResource_replication(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.with_replication",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "replica_role"},
+				ResourceName: "tencentcloud_cos_bucket.with_replication",
+				ImportState:  true,
 			},
 		},
 	})
@@ -570,8 +554,8 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
   acl_body 	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+        <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
@@ -582,15 +566,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
 		<Grant>
 			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-				<ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+				<ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
 			</Grantee>
 			<Permission>FULL_CONTROL</Permission>
 		</Grant>
@@ -611,8 +595,8 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
   acl_body	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+        <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
@@ -623,15 +607,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>FULL_CONTROL</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>WRITE_ACP</Permission>
         </Grant>
@@ -643,15 +627,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>WRITE</Permission>
         </Grant>
