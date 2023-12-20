@@ -164,7 +164,7 @@ func dataSourceTencentCloudSslDescribeCertificate() *schema.Resource {
 									"company_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Type of company\\nNote: This field may return NULL, indicating that the valid value cannot be obtained.",
+										Description: "Type of company. Note: This field may return NULL, indicating that the valid value cannot be obtained.",
 									},
 								},
 							},
