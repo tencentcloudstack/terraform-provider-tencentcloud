@@ -1,6 +1,10 @@
-package tencentcloud
+package dcg_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcdcg "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
+
 	"context"
 	"fmt"
 	"testing"
@@ -16,8 +20,8 @@ func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
 	var rKey = "tencentcloud_dc_gateway.ccn_main"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudCdgInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -63,15 +67,15 @@ func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
 
 func testAccTencentCloudCdgInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcdcg.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		_, has, err := service.DescribeDirectConnectGateway(ctx, rs.Primary.ID)
 
@@ -88,10 +92,10 @@ func testAccTencentCloudCdgInstanceExists(r string) resource.TestCheckFunc {
 
 func testAccTencentCloudCdgInstanceDestroy(s *terraform.State) error {
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := svcdcg.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_dc_gateway" {
 			continue

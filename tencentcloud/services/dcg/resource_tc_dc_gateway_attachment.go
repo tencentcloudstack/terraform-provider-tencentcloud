@@ -1,4 +1,4 @@
-package tencentcloud
+package dcg
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDcGatewayAttachment() *schema.Resource {
+func ResourceTencentCloudDcGatewayAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcGatewayAttachmentCreate,
 		Read:   resourceTencentCloudDcGatewayAttachmentRead,
@@ -46,10 +49,10 @@ func resourceTencentCloudDcGatewayAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudDcGatewayAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request                = vpc.NewAssociateDirectConnectGatewayNatGatewayRequest()
@@ -72,10 +75,10 @@ func resourceTencentCloudDcGatewayAttachmentCreate(d *schema.ResourceData, meta 
 		request.DirectConnectGatewayId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateDirectConnectGatewayNatGateway(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().AssociateDirectConnectGatewayNatGateway(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -86,22 +89,22 @@ func resourceTencentCloudDcGatewayAttachmentCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	d.SetId(vpcId + FILED_SP + directConnectGatewayId + FILED_SP + natGatewayId)
+	d.SetId(vpcId + tccommon.FILED_SP + directConnectGatewayId + tccommon.FILED_SP + natGatewayId)
 
 	return resourceTencentCloudDcGatewayAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudDcGatewayAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_dc_gateway_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_dc_gateway_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -136,14 +139,14 @@ func resourceTencentCloudDcGatewayAttachmentRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDcGatewayAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_dc_gateway_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_dc_gateway_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

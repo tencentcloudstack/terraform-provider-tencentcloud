@@ -1,4 +1,4 @@
-package tencentcloud
+package dcg
 
 import (
 	"context"
@@ -6,11 +6,13 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudDcGatewayInstance() *schema.Resource {
+func ResourceTencentCloudDcGatewayInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcGatewayCreate,
 		Read:   resourceTencentCloudDcGatewayRead,
@@ -24,14 +26,14 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the DCG.",
 			},
 			"network_type": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(DCG_NETWORK_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(DCG_NETWORK_TYPES),
 				Description:  "Type of associated network. Valid value: `VPC` and `CCN`.",
 			},
 			"network_instance_id": {
@@ -45,7 +47,7 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      DCG_GATEWAY_TYPE_NORMAL,
-				ValidateFunc: validateAllowedStringValue(DCG_GATEWAY_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(DCG_GATEWAY_TYPES),
 				Description:  "Type of the gateway. Valid value: `NORMAL` and `NAT`. Default is `NORMAL`. NOTES: CCN only supports `NORMAL` and a VPC can create two DCGs, the one is NAT type and the other is non-NAT type.",
 			},
 
@@ -70,12 +72,12 @@ func resourceTencentCloudDcGatewayInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		name              = d.Get("name").(string)
@@ -119,16 +121,16 @@ func resourceTencentCloudDcGatewayCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway.read")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeDirectConnectGateway(ctx, d.Id())
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -152,12 +154,12 @@ func resourceTencentCloudDcGatewayRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	if d.HasChange("name") {
 		var name = d.Get("name").(string)
 		return service.ModifyDirectConnectGatewayAttribute(ctx, d.Id(), name)
@@ -167,16 +169,16 @@ func resourceTencentCloudDcGatewayUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudDcGatewayDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, has, e := service.DescribeDirectConnectGateway(ctx, d.Id())
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {

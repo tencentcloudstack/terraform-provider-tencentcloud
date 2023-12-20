@@ -1,4 +1,4 @@
-package tencentcloud
+package dcg
 
 import (
 	"context"
@@ -7,6 +7,8 @@ import (
 
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -23,7 +25,7 @@ type DcgInstanceInfo struct {
 	enableBGP         bool
 }
 
-//info for direct connect gateway[ ccn type] route.
+// info for direct connect gateway[ ccn type] route.
 type DcgRouteInfo struct {
 	dcgId     string
 	routeId   string
@@ -55,7 +57,7 @@ func (me *VpcService) DescribeDirectConnectGateway(ctx context.Context, dcgId st
 func (me *VpcService) DescribeDirectConnectGateways(ctx context.Context, dcgId, name string) (
 	infos []DcgInstanceInfo, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeDirectConnectGatewaysRequest()
 
 	defer func() {
@@ -231,7 +233,7 @@ func (me *VpcService) DescribeDirectConnectGatewayCcnRoute(ctx context.Context, 
 }
 
 func (me *VpcService) DescribeDirectConnectGatewayCcnRoutes(ctx context.Context, dcgId string) (infos []DcgRouteInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDescribeDirectConnectGatewayCcnRoutesRequest()
 
 	defer func() {
@@ -318,7 +320,7 @@ getMoreData:
 func (me *VpcService) CreateDirectConnectGateway(ctx context.Context, name, networkType, networkInstanceId, gatewayType string) (
 	dcgId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewCreateDirectConnectGatewayRequest()
 
@@ -363,7 +365,7 @@ func (me *VpcService) ModifyDirectConnectGatewayAttribute(ctx context.Context, d
 		return
 	}
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewModifyDirectConnectGatewayAttributeRequest()
 	request.DirectConnectGatewayId = &dcgId
@@ -392,7 +394,7 @@ func (me *VpcService) ModifyDirectConnectGatewayAttribute(ctx context.Context, d
 
 func (me *VpcService) DeleteDirectConnectGateway(ctx context.Context, dcgId string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vpc.NewDeleteDirectConnectGatewayRequest()
 	request.DirectConnectGatewayId = &dcgId
 	ratelimit.Check(request.GetAction())
@@ -419,7 +421,7 @@ func (me *VpcService) DeleteDirectConnectGateway(ctx context.Context, dcgId stri
 
 func (me *VpcService) CreateDirectConnectGatewayCcnRoute(ctx context.Context, dcgId, cidr string, asPaths []string) (routeId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewCreateDirectConnectGatewayCcnRoutesRequest()
 	request.DirectConnectGatewayId = &dcgId
@@ -474,7 +476,7 @@ func (me *VpcService) CreateDirectConnectGatewayCcnRoute(ctx context.Context, dc
 // not used, because if support, it will cause resource destroyed
 func (me *VpcService) ReplaceDirectConnectGatewayCcnRoute(ctx context.Context, dcgId, cidr string, asPaths []string) (routeId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewReplaceDirectConnectGatewayCcnRoutesRequest()
 	request.DirectConnectGatewayId = &dcgId
@@ -528,7 +530,7 @@ func (me *VpcService) ReplaceDirectConnectGatewayCcnRoute(ctx context.Context, d
 
 func (me *VpcService) DeleteDirectConnectGatewayCcnRoute(ctx context.Context, dcgId, routeId string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDeleteDirectConnectGatewayCcnRoutesRequest()
 	request.DirectConnectGatewayId = &dcgId
@@ -556,7 +558,7 @@ func (me *VpcService) DeleteDirectConnectGatewayCcnRoute(ctx context.Context, dc
 }
 
 func (me *VpcService) DescribeDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (dcGateway *vpc.DirectConnectGateway, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDescribeDirectConnectGatewaysRequest()
 	request.DirectConnectGatewayIds = []*string{&directConnectGatewayId}
@@ -586,7 +588,7 @@ func (me *VpcService) DescribeDcGatewayAttachmentById(ctx context.Context, vpcId
 }
 
 func (me *VpcService) DeleteDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := vpc.NewDisassociateDirectConnectGatewayNatGatewayRequest()
 	request.VpcId = &vpcId

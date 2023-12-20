@@ -1,4 +1,4 @@
-package tencentcloud
+package dcg
 
 import (
 	"context"
@@ -6,11 +6,13 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
+func ResourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcGatewayCcnRouteCreate,
 		Read:   resourceTencentCloudDcGatewayCcnRouteRead,
@@ -26,7 +28,7 @@ func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateCIDRNetworkAddress,
+				ValidateFunc: tccommon.ValidateCIDRNetworkAddress,
 				Description:  "A network address segment of IDC.",
 			},
 
@@ -44,12 +46,12 @@ func resourceTencentCloudDcGatewayCcnRouteInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcGatewayCcnRouteCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway_ccn_route.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		dcgId     = d.Get("dcg_id").(string)
@@ -72,13 +74,13 @@ func resourceTencentCloudDcGatewayCcnRouteCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway_ccn_route.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {
@@ -86,10 +88,10 @@ func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta inte
 	}
 
 	dcgId, routeId := items[0], items[1]
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		info, has, e := service.DescribeDirectConnectGatewayCcnRoute(ctx, dcgId, routeId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -109,12 +111,12 @@ func resourceTencentCloudDcGatewayCcnRouteRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDcGatewayCcnRouteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_gateway_ccn_route.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_gateway_ccn_route.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	items := strings.Split(d.Id(), "#")
 	if len(items) != 2 {

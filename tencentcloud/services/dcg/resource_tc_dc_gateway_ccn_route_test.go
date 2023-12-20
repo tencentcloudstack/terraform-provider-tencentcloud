@@ -1,4 +1,4 @@
-package tencentcloud
+package dcg_test
 
 import (
 	"context"
@@ -7,8 +7,13 @@ import (
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svcdcg "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
 )
 
 func TestAccTencentCloudDcgV3RouteBasic(t *testing.T) {
@@ -17,8 +22,8 @@ func TestAccTencentCloudDcgV3RouteBasic(t *testing.T) {
 	var rKey = "tencentcloud_dc_gateway_ccn_route.route"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccTencentCloudCdgRouteDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -38,14 +43,14 @@ func TestAccTencentCloudDcgV3RouteBasic(t *testing.T) {
 
 func testAccTencentCloudCdgRouteExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
-		service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcdcg.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		items := strings.Split(rs.Primary.ID, "#")
 
@@ -80,10 +85,10 @@ func testAccTencentCloudCdgRouteExists(r string) resource.TestCheckFunc {
 
 func testAccTencentCloudCdgRouteDestroy(s *terraform.State) error {
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := svcdcg.NewVpcService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_dc_gateway_ccn_route" {
 			continue

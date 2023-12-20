@@ -1,13 +1,15 @@
-package tencentcloud
+package dcg
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
+func DataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcGatewayCCNRoutesRead,
 		Schema: map[string]*schema.Schema{
@@ -59,12 +61,12 @@ func dataSourceTencentCloudDcGatewayCCNRoutes() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dc_gateway_ccn_routes.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_dc_gateway_ccn_routes.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		id = d.Get("dcg_id").(string)
@@ -95,7 +97,7 @@ func dataSourceTencentCloudDcGatewayCCNRoutesRead(d *schema.ResourceData, meta i
 	d.SetId(id)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), infoList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), infoList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId,
 				output.(string),

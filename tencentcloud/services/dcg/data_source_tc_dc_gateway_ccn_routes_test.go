@@ -1,7 +1,9 @@
-package tencentcloud
+package dcg_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -12,14 +14,14 @@ func TestAccDataSourceTencentCloudDcgV3CcnRoutesInstancesBasic(t *testing.T) {
 	var rKey = "data.tencentcloud_dc_gateway_ccn_routes.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: TestAccDataSourceTencentCloudDcgCcnRoutesInstances,
 				Check: resource.ComposeTestCheckFunc(
 
-					testAccCheckTencentCloudDataSourceID(rKey),
+					tcacctest.AccCheckTencentCloudDataSourceID(rKey),
 					resource.TestCheckResourceAttrSet(rKey, "instance_list.#"),
 				),
 			},
