@@ -66,9 +66,10 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description: "Pre-shared key of the VPN connection.",
 			},
 			"security_group_policy": {
-				Type:        schema.TypeSet,
-				Required:    true,
-				Description: "Security group policy of the VPN connection.",
+				Type:     schema.TypeSet,
+				Optional: true,
+				Description: "SPD policy group, for example: {\"10.0.0.5/24\":[\"172.123.10.5/16\"]}, 10.0.0.5/24 is the vpc intranet segment, and 172.123.10.5/16 is the IDC network segment. " +
+					"Users specify which network segments in the VPC can communicate with which network segments in your IDC.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"local_cidr_block": {
@@ -232,9 +233,12 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description: "Encrypt proto of the VPN connection.",
 			},
 			"route_type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Route type of the VPN connection.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(VPN_CONNECTION_ROUTE_TYPE),
+				Description:  "Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.",
 			},
 			"state": {
 				Type:        schema.TypeString,
@@ -313,26 +317,28 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("dpd_timeout"); ok {
 		request.DpdTimeout = helper.String(strconv.Itoa(v.(int)))
 	}
-	//set up  SecurityPolicyDatabases
 
-	sgps := d.Get("security_group_policy").(*schema.Set).List()
-	if len(sgps) < 1 {
-		return fmt.Errorf("Para `security_group_policy` should be set at least one.")
+	if v, ok := d.GetOk("route_type"); ok {
+		request.RouteType = helper.String(v.(string))
 	}
 
-	request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
-	for _, v := range sgps {
-		m := v.(map[string]interface{})
-		var sgp vpc.SecurityPolicyDatabase
-		local := m["local_cidr_block"].(string)
-		sgp.LocalCidrBlock = &local
-		// list
-		remoteCidrBlocks := m["remote_cidr_block"].(*schema.Set).List()
-		for _, vv := range remoteCidrBlocks {
-			remoteCidrBlock := vv.(string)
-			sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &remoteCidrBlock)
+	//set up  SecurityPolicyDatabases
+	if v, ok := d.GetOk("security_group_policy"); ok {
+		sgps := v.(*schema.Set).List()
+		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
+		for _, v := range sgps {
+			m := v.(map[string]interface{})
+			var sgp vpc.SecurityPolicyDatabase
+			local := m["local_cidr_block"].(string)
+			sgp.LocalCidrBlock = &local
+			// list
+			remoteCidrBlocks := m["remote_cidr_block"].(*schema.Set).List()
+			for _, vv := range remoteCidrBlocks {
+				remoteCidrBlock := vv.(string)
+				sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &remoteCidrBlock)
+			}
+			request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
 		}
-		request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
 	}
 
 	//set up IKEOptionsSpecification
@@ -397,6 +403,7 @@ func resourceTencentCloudVpnConnectionCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("health_check_remote_ip"); ok {
 		request.HealthCheckRemoteIp = helper.String(v.(string))
 	}
+
 	var response *vpc.CreateVpnConnectionResponse
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpnConnection(request)
@@ -573,7 +580,9 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("customer_gateway_id", *connection.CustomerGatewayId)
 	_ = d.Set("pre_share_key", *connection.PreShareKey)
 	//set up SPD
-	_ = d.Set("security_group_policy", flattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
+	if *connection.RouteType != ROUTE_TYPE_STATIC_ROUTE {
+		_ = d.Set("security_group_policy", flattenVpnSPDList(connection.SecurityPolicyDatabaseSet))
+	}
 
 	//set up IKE
 	_ = d.Set("ike_proto_encry_algorithm", *connection.IKEOptionsSpecification.PropoEncryAlgorithm)
@@ -673,25 +682,24 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 
 	//set up  SecurityPolicyDatabases
 	if d.HasChange("security_group_policy") {
-		sgps := d.Get("security_group_policy").(*schema.Set).List()
-		if len(sgps) < 1 {
-			return fmt.Errorf("Para `security_group_policy` should be set at least one.")
-		}
-		request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
-		for _, v := range sgps {
-			m := v.(map[string]interface{})
-			var sgp vpc.SecurityPolicyDatabase
-			local := m["local_cidr_block"].(string)
-			sgp.LocalCidrBlock = &local
-			// list
-			remoteCidrBlocks := m["remote_cidr_block"].(*schema.Set).List()
-			for _, vv := range remoteCidrBlocks {
-				remoteCidrBlock := vv.(string)
-				sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &remoteCidrBlock)
+		if v, ok := d.GetOk("security_group_policy"); ok {
+			sgps := v.(*schema.Set).List()
+			request.SecurityPolicyDatabases = make([]*vpc.SecurityPolicyDatabase, 0, len(sgps))
+			for _, v := range sgps {
+				m := v.(map[string]interface{})
+				var sgp vpc.SecurityPolicyDatabase
+				local := m["local_cidr_block"].(string)
+				sgp.LocalCidrBlock = &local
+				// list
+				remoteCidrBlocks := m["remote_cidr_block"].(*schema.Set).List()
+				for _, vv := range remoteCidrBlocks {
+					remoteCidrBlock := vv.(string)
+					sgp.RemoteCidrBlock = append(sgp.RemoteCidrBlock, &remoteCidrBlock)
+				}
+				request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
 			}
-			request.SecurityPolicyDatabases = append(request.SecurityPolicyDatabases, &sgp)
+			changeFlag = true
 		}
-		changeFlag = true
 	}
 
 	if d.HasChange("dpd_enable") {

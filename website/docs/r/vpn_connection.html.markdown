@@ -52,7 +52,6 @@ The following arguments are supported:
 * `customer_gateway_id` - (Required, String, ForceNew) ID of the customer gateway.
 * `name` - (Required, String) Name of the VPN connection. The length of character is limited to 1-60.
 * `pre_share_key` - (Required, String) Pre-shared key of the VPN connection.
-* `security_group_policy` - (Required, Set) Security group policy of the VPN connection.
 * `vpn_gateway_id` - (Required, String, ForceNew) ID of the VPN gateway.
 * `dpd_action` - (Optional, String) The action after DPD timeout. Valid values: clear (disconnect) and restart (try again). It is valid when DpdEnable is 1.
 * `dpd_enable` - (Optional, Int) Specifies whether to enable DPD. Valid values: 0 (disable) and 1 (enable).
@@ -77,6 +76,8 @@ The following arguments are supported:
 * `ipsec_pfs_dh_group` - (Optional, String) PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.
 * `ipsec_sa_lifetime_seconds` - (Optional, Int) SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.
 * `ipsec_sa_lifetime_traffic` - (Optional, Int) SA lifetime of the IPSEC operation specification, unit is KB. The value should not be less then 2560. Default value is 1843200.
+* `route_type` - (Optional, String, ForceNew) Route type of the VPN connection. Valid value: `STATIC`, `StaticRoute`, `Policy`.
+* `security_group_policy` - (Optional, Set) SPD policy group, for example: {"10.0.0.5/24":["172.123.10.5/16"]}, 10.0.0.5/24 is the vpc intranet segment, and 172.123.10.5/16 is the IDC network segment. Users specify which network segments in the VPC can communicate with which network segments in your IDC.
 * `tags` - (Optional, Map) A list of tags used to associate different resources.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.
 
@@ -94,7 +95,6 @@ In addition to all arguments above, the following attributes are exported:
 * `encrypt_proto` - Encrypt proto of the VPN connection.
 * `is_ccn_type` - Indicate whether is ccn type. Modification of this field only impacts force new logic of `vpc_id`. If `is_ccn_type` is true, modification of `vpc_id` will be ignored.
 * `net_status` - Net status of the VPN connection. Valid value: `AVAILABLE`.
-* `route_type` - Route type of the VPN connection.
 * `state` - State of the connection. Valid value: `PENDING`, `AVAILABLE`, `DELETING`.
 * `vpn_proto` - Vpn proto of the VPN connection.
 
