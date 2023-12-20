@@ -33,11 +33,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-vpc peer_connect_reject_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_vpc_peer_connect_reject_operation.peer_connect_reject_operation peer_connect_reject_operation_id
-```
-
