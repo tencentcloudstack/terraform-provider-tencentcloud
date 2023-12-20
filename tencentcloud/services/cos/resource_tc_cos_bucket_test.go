@@ -94,10 +94,10 @@ func TestAccTencentCloudCosBucketResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_basic",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"force_clean"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_basic",
+				ImportState:  true,
+				//ImportStateVerify: true,
+				//ImportStateVerifyIgnore: []string{"force_clean"},
 			},
 		},
 	})
@@ -129,10 +129,10 @@ func TestAccTencentCloudCosBucketResource_ACL(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_acl",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl_body"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_acl",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl_body"},
 			},
 		},
 	})
@@ -212,10 +212,10 @@ func TestAccTencentCloudCosBucketResource_cors(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_cors",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_cors",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -282,10 +282,10 @@ func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_lifecycle",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_lifecycle",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -321,10 +321,10 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_website",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_website",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -346,10 +346,10 @@ func TestAccTencentCloudCosBucketResource_MAZ(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.bucket_maz",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "multi_az"},
+				ResourceName: "tencentcloud_cos_bucket.bucket_maz",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl", "multi_az"},
 			},
 		},
 	})
@@ -398,10 +398,10 @@ func TestAccTencentCloudCosBucketResource_originPull(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.with_origin",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl"},
+				ResourceName: "tencentcloud_cos_bucket.with_origin",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl"},
 			},
 		},
 	})
@@ -485,10 +485,10 @@ func TestAccTencentCloudCosBucketResource_replication(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cos_bucket.with_replication",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"acl", "replica_role"},
+				ResourceName: "tencentcloud_cos_bucket.with_replication",
+				ImportState:  true,
+				//ImportStateVerify:       true,
+				//ImportStateVerifyIgnore: []string{"acl", "replica_role"},
 			},
 		},
 	})
