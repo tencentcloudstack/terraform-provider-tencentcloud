@@ -8,10 +8,3 @@ resource "tencentcloud_vpc_peer_connect_accept_operation" "peer_connect_accept_o
 }
 ```
 
-Import
-
-vpc peer_connect_accept_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_vpc_peer_connect_accept_operation.peer_connect_accept_operation peer_connect_accept_operation_id
-```
