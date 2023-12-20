@@ -1,12 +1,15 @@
-package tencentcloud
+package cwp
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -16,7 +19,7 @@ type CwpService struct {
 }
 
 func (me *CwpService) DescribeCwpLicenseOrderById(ctx context.Context, resourceId string) (licenseOrder *cwp.LicenseDetail, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := cwp.NewDescribeLicenseListRequest()
 	request.Filters = []*cwp.Filters{
@@ -52,7 +55,7 @@ func (me *CwpService) DescribeCwpLicenseOrderById(ctx context.Context, resourceI
 }
 
 func (me *CwpService) DeleteCwpLicenseOrderById(ctx context.Context, resourceId string, licenseType *uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := cwp.NewDestroyOrderRequest()
 	request.ResourceId = &resourceId
@@ -78,7 +81,7 @@ func (me *CwpService) DeleteCwpLicenseOrderById(ctx context.Context, resourceId 
 }
 
 func (me *CwpService) DescribeCwpLicenseBindAttachmentById(ctx context.Context, resourceId, quuid string, licenseId, licenseType uint64) (licenseBindAttachment *cwp.LicenseBindDetail, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := cwp.NewDescribeLicenseBindListRequest()
 	request.ResourceId = &resourceId
@@ -116,7 +119,7 @@ func (me *CwpService) DescribeCwpLicenseBindAttachmentById(ctx context.Context, 
 }
 
 func (me *CwpService) DeleteCwpLicenseBindAttachmentById(ctx context.Context, resourceId, quuid, licenseType string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	licenseTypeInt, _ := strconv.ParseUint(licenseType, 10, 64)
 
@@ -146,7 +149,7 @@ func (me *CwpService) DeleteCwpLicenseBindAttachmentById(ctx context.Context, re
 
 func (me *CwpService) DescribeCwpMachinesSimpleByFilter(ctx context.Context, param map[string]interface{}) (machinesSimple []*cwp.MachineSimple, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = cwp.NewDescribeMachinesSimpleRequest()
 	)
 

@@ -1,7 +1,9 @@
-package tencentcloud
+package cwp_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,14 +13,14 @@ func TestAccTencentCloudNeedFixCwpMachinesSimpleDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCwpMachinesSimpleDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cwp_machines_simple.example"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_cwp_machines_simple.example"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cwp_machines_simple.example", "machine_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cwp_machines_simple.example", "machine_region"),
 				),

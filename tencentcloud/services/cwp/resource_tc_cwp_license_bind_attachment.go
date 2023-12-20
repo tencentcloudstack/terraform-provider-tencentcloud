@@ -1,4 +1,4 @@
-package tencentcloud
+package cwp
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCwpLicenseBindAttachment() *schema.Resource {
+func ResourceTencentCloudCwpLicenseBindAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCwpLicenseBindAttachmentCreate,
 		Read:   resourceTencentCloudCwpLicenseBindAttachmentRead,
@@ -38,7 +41,7 @@ func resourceTencentCloudCwpLicenseBindAttachment() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(LICENSE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(LICENSE_TYPE),
 				Description:  "LicenseType, 0 CWP Pro - Pay as you go, 1 CWP Pro - Monthly subscription, 2 CWP Ultimate - Monthly subscription. Default is 0.",
 			},
 			"quuid": {
@@ -87,11 +90,11 @@ func resourceTencentCloudCwpLicenseBindAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cwp_license_bind_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cwp_license_bind_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId       = getLogId(contextNil)
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
 		request     = cwp.NewModifyLicenseBindsRequest()
 		response    = cwp.NewModifyLicenseBindsResponse()
 		taskRequest = cwp.NewDescribeLicenseBindScheduleRequest()
@@ -122,10 +125,10 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 		request.QuuidList = append(request.QuuidList, &quuid)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCwpClient().ModifyLicenseBinds(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCwpClient().ModifyLicenseBinds(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -144,14 +147,14 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	d.SetId(strings.Join([]string{resourceId, licenseId, quuid, licenseType}, FILED_SP))
+	d.SetId(strings.Join([]string{resourceId, licenseId, quuid, licenseType}, tccommon.FILED_SP))
 
 	// wait
 	taskRequest.TaskId = response.Response.TaskId
-	err = resource.Retry(writeRetryTimeout*6, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCwpClient().DescribeLicenseBindSchedule(taskRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout*6, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCwpClient().DescribeLicenseBindSchedule(taskRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if result == nil {
@@ -175,16 +178,16 @@ func resourceTencentCloudCwpLicenseBindAttachmentCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudCwpLicenseBindAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cwp_license_bind_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cwp_license_bind_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CwpService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -244,16 +247,16 @@ func resourceTencentCloudCwpLicenseBindAttachmentRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudCwpLicenseBindAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cwp_license_bind_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cwp_license_bind_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CwpService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

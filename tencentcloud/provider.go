@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cwp"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -872,7 +873,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_fw_switches":                          cfw.DataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          cfw.DataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         cfw.DataSourceTencentCloudCfwEdgeFwSwitches(),
-			"tencentcloud_cwp_machines_simple":                          dataSourceTencentCloudCwpMachinesSimple(),
+			"tencentcloud_cwp_machines_simple":                          cwp.DataSourceTencentCloudCwpMachinesSimple(),
 			"tencentcloud_ses_receivers":                                dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                               dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                         dataSourceTencentCloudSesEmailIdentities(),
@@ -1856,8 +1857,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_deploy_certificate_record_retry_operation":       resourceTencentCloudSslDeployCertificateRecordRetryOperation(),
 			"tencentcloud_ssl_deploy_certificate_record_rollback_operation":    resourceTencentCloudSslDeployCertificateRecordRollbackOperation(),
 			"tencentcloud_ssl_download_certificate_operation":                  resourceTencentCloudSslDownloadCertificateOperation(),
-			"tencentcloud_cwp_license_order":                                   resourceTencentCloudCwpLicenseOrder(),
-			"tencentcloud_cwp_license_bind_attachment":                         resourceTencentCloudCwpLicenseBindAttachment(),
+			"tencentcloud_cwp_license_order":                                   cwp.ResourceTencentCloudCwpLicenseOrder(),
+			"tencentcloud_cwp_license_bind_attachment":                         cwp.ResourceTencentCloudCwpLicenseBindAttachment(),
 			"tencentcloud_ssl_replace_certificate_operation":                   resourceTencentCloudSslReplaceCertificateOperation(),
 			"tencentcloud_ssl_revoke_certificate_operation":                    resourceTencentCloudSslRevokeCertificateOperation(),
 			"tencentcloud_ssl_update_certificate_instance_operation":           resourceTencentCloudSslUpdateCertificateInstanceOperation(),

@@ -1,15 +1,18 @@
-package tencentcloud
+package cwp
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCwpMachinesSimple() *schema.Resource {
+func DataSourceTencentCloudCwpMachinesSimple() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCwpMachinesSimpleRead,
 		Schema: map[string]*schema.Schema{
@@ -254,13 +257,13 @@ func dataSourceTencentCloudCwpMachinesSimple() *schema.Resource {
 }
 
 func dataSourceTencentCloudCwpMachinesSimpleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cwp_machines_simple.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cwp_machines_simple.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = CwpService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = CwpService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		machines []*cwp.MachineSimple
 	)
 
@@ -305,10 +308,10 @@ func dataSourceTencentCloudCwpMachinesSimpleRead(d *schema.ResourceData, meta in
 		paramMap["ProjectIds"] = helper.InterfacesIntUInt64Point(projectIdsSet)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCwpMachinesSimpleByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		machines = result
@@ -486,7 +489,7 @@ func dataSourceTencentCloudCwpMachinesSimpleRead(d *schema.ResourceData, meta in
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
