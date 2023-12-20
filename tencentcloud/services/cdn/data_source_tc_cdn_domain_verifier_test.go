@@ -1,7 +1,9 @@
-package tencentcloud
+package cdn_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,8 +12,8 @@ func TestAccTencentCloudCdnDomainVerifyRecord_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCdnDomainVerifyRecord,
@@ -31,7 +33,17 @@ func TestAccTencentCloudCdnDomainVerifyRecord_basic(t *testing.T) {
 	})
 }
 
-const testAccCdnDomainVerifyRecord = testAccDomainsDataSourceBasic + `
+const testAccCdnDomainVerifyRecord = `
+data "tencentcloud_domains" "domains" {}
+
+locals {
+  domain1 = data.tencentcloud_domains.domains.list.0.domain_name
+}
+
+output "domain" {
+  value = local.domain1
+}
+
 resource "tencentcloud_dnspod_record" "demo" {
   domain = local.domain1
   record_type = "A"

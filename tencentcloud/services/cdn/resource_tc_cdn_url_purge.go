@@ -1,19 +1,22 @@
-package tencentcloud
+package cdn
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudUrlPurge() *schema.Resource {
+func ResourceTencentCloudUrlPurge() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudUrlPurgeRead,
 		Create: resourceTencentCloudUrlPurgeCreate,
@@ -91,12 +94,12 @@ func resourceTencentCloudUrlPurge() *schema.Resource {
 }
 
 func resourceTencentCloudUrlPurgeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_url_purge.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_url_purge.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := CdnService{client}
 
 	taskId, ok := d.Get("task_id").(string)
@@ -113,10 +116,10 @@ func resourceTencentCloudUrlPurgeRead(d *schema.ResourceData, meta interface{}) 
 		err  error
 	)
 
-	err = resource.Retry(readRetryTimeout*2, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*2, func() *resource.RetryError {
 		logs, err = service.DescribePurgeTasks(ctx, request)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if len(logs) == 0 {
 			return resource.RetryableError(fmt.Errorf("task %s returns nil logs, retrying", taskId))
@@ -169,7 +172,7 @@ func resourceTencentCloudUrlPurgeRead(d *schema.ResourceData, meta interface{}) 
 }
 
 func resourceTencentCloudUrlPurgeCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_url_purge.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_url_purge.create")()
 
 	taskId, err := tencentcloudCdnUrlPurge(d, meta)
 
@@ -186,7 +189,7 @@ func resourceTencentCloudUrlPurgeCreate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudUrlPurgeUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_url_purge.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_url_purge.update")()
 
 	redo, ok := d.GetOk("redo")
 
@@ -206,16 +209,16 @@ func resourceTencentCloudUrlPurgeUpdate(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudUrlPurgeDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_url_purge.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_url_purge.delete")()
 	log.Printf("noop deleting resoruce %s", "tencentcloud_cdn_url_purge")
 	return nil
 }
 
 func tencentcloudCdnUrlPurge(d *schema.ResourceData, meta interface{}) (string, error) {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := CdnService{client}
 
 	urls := d.Get("urls").([]interface{})

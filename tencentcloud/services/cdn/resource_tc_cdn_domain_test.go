@@ -1,4 +1,4 @@
-package tencentcloud
+package cdn_test
 
 import (
 	"context"
@@ -6,6 +6,9 @@ import (
 	"log"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -18,6 +21,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	localcdn "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 )
 
 func init() {
@@ -25,12 +30,12 @@ func init() {
 	resource.AddTestSweepers("cdn_domain", &resource.Sweeper{
 		Name: "cdn_domain",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := CdnService{client}
+			service := localcdn.NewCdnService(client)
 			domains, err := service.DescribeDomainsConfigByFilters(ctx, nil)
 			if err != nil {
 				return err
@@ -40,7 +45,7 @@ func init() {
 				item := domains[i]
 				name := *item.Domain
 
-				if isResourcePersist(name, nil) {
+				if tcacctest.IsResourcePersist(name, nil) {
 					continue
 				}
 
@@ -48,10 +53,10 @@ func init() {
 					_ = service.StopDomain(ctx, name)
 				}
 
-				err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 					inErr := service.DeleteDomain(ctx, name)
 					if inErr != nil {
-						retryError(err, cdn.RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE)
+						tccommon.RetryError(err, cdn.RESOURCEUNAVAILABLE_CDNHOSTISNOTOFFLINE)
 					}
 					return nil
 				})
@@ -70,13 +75,13 @@ func TestAccTencentCloudCdnDomainResource_basic(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
 			if err := testAccCdnDomainVerify("www2"); err != nil {
 				log.Printf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
 				t.Fatalf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
 			}
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -172,9 +177,9 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -236,13 +241,13 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 func TestAccTencentCloudCdnDomainResource_HTTPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
 			if err := testAccCdnDomainVerify("c"); err != nil {
 				log.Printf("[TestAccCentcentCloudCdnDomainWithHTTPs] Domain Verify failed: %s", err)
 				t.Fatalf("[TestAccCentcentCloudCdnDomainWithHTTPs] Domain Verify failed: %s", err)
 			}
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCdnDomainDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -344,11 +349,11 @@ func TestAccTencentCloudCdnDomainResource_HTTPs(t *testing.T) {
 }
 
 func testAccGetTestingDomain() (string, error) {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion("ap-guangzhou")
-	client := cli.(*TencentCloudClient).apiV3Conn
-	service := DomainService{client}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cli, _ := tcacctest.SharedClientForRegion("ap-guangzhou")
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := localcdn.NewDomainService(client)
 	request := domain.NewDescribeDomainNameListRequest()
 	domains, err := service.DescribeDomainNameList(ctx, request)
 	if err != nil {
@@ -367,11 +372,11 @@ func testAccGetTestingDomain() (string, error) {
 }
 
 func testAccCdnDomainVerify(domainPrefix string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion("ap-guangzhou")
-	client := cli.(*TencentCloudClient).apiV3Conn
-	service := CdnService{client}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cli, _ := tcacctest.SharedClientForRegion("ap-guangzhou")
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
+	service := localcdn.NewCdnService(client)
 	continueCode := []string{
 		// no record
 		cdn.UNAUTHORIZEDOPERATION_CDNDOMAINRECORDNOTVERIFIED,
@@ -392,7 +397,7 @@ func testAccCdnDomainVerify(domainPrefix string) error {
 
 		code := err.(*sdkErrors.TencentCloudSDKError).Code
 
-		if !IsContains(continueCode, code) {
+		if !tccommon.IsContains(continueCode, code) {
 			return err
 		}
 	}
@@ -416,10 +421,10 @@ func testAccCdnDomainVerify(domainPrefix string) error {
 		return err
 	}
 
-	err = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*3, func() *resource.RetryError {
 		result, err = service.VerifyDomainRecord(ctx, l3domain)
 		if err != nil {
-			return retryError(err, continueCode...)
+			return tccommon.RetryError(err, continueCode...)
 		}
 		if result {
 			return nil
@@ -431,8 +436,8 @@ func testAccCdnDomainVerify(domainPrefix string) error {
 }
 
 func testAccSetDnsPodRecord(domainName, recordType, record string) error {
-	cli, _ := sharedClientForRegion("ap-guangzhou")
-	client := cli.(*TencentCloudClient).apiV3Conn
+	cli, _ := tcacctest.SharedClientForRegion("ap-guangzhou")
+	client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 	recordLine := "默认"
 	subDomain := "_cdnauth"
 
@@ -471,11 +476,9 @@ func testAccSetDnsPodRecord(domainName, recordType, record string) error {
 }
 
 func testAccCheckCdnDomainDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cdnService := CdnService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cdnService := localcdn.NewCdnService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cdn_domain" {
 			continue
@@ -483,10 +486,10 @@ func testAccCheckCdnDomainDestroy(s *terraform.State) error {
 
 		domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, rs.Primary.ID)
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				domainConfig, err = cdnService.DescribeDomainsConfigByDomain(ctx, rs.Primary.ID)
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -503,8 +506,8 @@ func testAccCheckCdnDomainDestroy(s *terraform.State) error {
 
 func testAccCheckCdnDomainExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -513,15 +516,13 @@ func testAccCheckCdnDomainExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("cdn domain id is not set")
 		}
-		cdnService := CdnService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cdnService := localcdn.NewCdnService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, rs.Primary.ID)
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				domainConfig, err = cdnService.DescribeDomainsConfigByDomain(ctx, rs.Primary.ID)
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})

@@ -1,8 +1,10 @@
-package tencentcloud
+package cdn
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/go-multierror"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -11,7 +13,7 @@ import (
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 )
 
-func dataSourceTencentCloudCdnDomainVerifyRecord() *schema.Resource {
+func DataSourceTencentCloudCdnDomainVerifyRecord() *schema.Resource {
 	return &schema.Resource{
 		Read: resourceTencentCloudCdnDomainVerifyRecordRead,
 		Schema: map[string]*schema.Schema{
@@ -86,13 +88,13 @@ func dataSourceTencentCloudCdnDomainVerifyRecord() *schema.Resource {
 }
 
 func resourceTencentCloudCdnDomainVerifyRecordRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_domain_verifier.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_domain_verifier.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdnService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdnService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	domainName := d.Get("domain").(string)
 	freezeRecord := d.Get("freeze_record").(bool)
@@ -151,7 +153,7 @@ func resourceTencentCloudCdnDomainVerifyRecordRead(d *schema.ResourceData, meta 
 			"file_verify_domains": response.FileVerifyDomains,
 			"file_verify_name":    response.FileVerifyName,
 		}
-		if err := writeToFile(output.(string), result); err != nil {
+		if err := tccommon.WriteToFile(output.(string), result); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%v]",
 				logId, output.(string), err)
 			return err

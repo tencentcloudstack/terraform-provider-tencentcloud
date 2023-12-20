@@ -1,15 +1,18 @@
-package tencentcloud
+package cdn
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCdnDomains() *schema.Resource {
+func DataSourceTencentCloudCdnDomains() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCdnDomainsRead,
 		Schema: map[string]*schema.Schema{
@@ -21,7 +24,7 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 			"service_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SERVICE_TYPE),
 				Description:  "Service type of acceleration domain name. The available value include `web`, `download` and `media`.",
 			},
 			"full_url_cache": {
@@ -32,13 +35,13 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 			"origin_pull_protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
 				Description:  "Origin-pull protocol configuration. Valid values: `http`, `https` and `follow`.",
 			},
 			"https_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CDN_HTTPS_SWITCH),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_HTTPS_SWITCH),
 				Description:  "HTTPS configuration. Valid values: `on`, `off` and `processing`.",
 			},
 			"result_output_file": {
@@ -316,14 +319,14 @@ func dataSourceTencentCloudCdnDomains() *schema.Resource {
 }
 
 func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cdn_domain.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cdn_domain.read")()
 	var (
-		logId         = getLogId(contextNil)
-		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
+		ctx           = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		domainConfigs []*cdn.DetailDomain
 		err           error
 
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		region     = client.Region
 		cdnService = CdnService{client: client}
 		tagService = TagService{client: client}
@@ -461,7 +464,7 @@ func dataSourceTencentCloudCdnDomainsRead(d *schema.ResourceData, meta interface
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), cdnDomainList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), cdnDomainList); err != nil {
 			return err
 		}
 	}

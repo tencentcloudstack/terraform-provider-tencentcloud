@@ -1,4 +1,4 @@
-package tencentcloud
+package cdn
 
 import (
 	"context"
@@ -6,15 +6,18 @@ import (
 	"fmt"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudCdnDomain() *schema.Resource {
+func ResourceTencentCloudCdnDomain() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCdnDomainCreate,
 		Read:   resourceTencentCloudCdnDomainRead,
@@ -51,7 +54,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(CDN_SERVICE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SERVICE_TYPE),
 				Description:  "Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration, `hybrid`: hybrid acceleration, `dynamic`: dynamic acceleration.",
 			},
 			"project_id": {
@@ -63,7 +66,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 			"area": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(CDN_AREA),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_AREA),
 				Description:  "Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.",
 			},
 			"full_url_cache": {
@@ -84,7 +87,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 						"origin_type": {
 							Type:         schema.TypeString,
 							Required:     true,
-							ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_TYPE),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_ORIGIN_TYPE),
 							Description:  "Master origin server type. The following types are supported: `domain`: domain name type, `cos`: COS origin, `ip`: IP list used as origin server, `ipv6`: origin server list is a single IPv6 address, `ip_ipv6`: origin server list is multiple IPv4 addresses and an IPv6 address.",
 						},
 						"origin_list": {
@@ -109,13 +112,13 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
-							ValidateFunc: validateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_ORIGIN_PULL_PROTOCOL),
 							Description:  "Origin-pull protocol configuration. `http`: forced HTTP origin-pull, `follow`: protocol follow origin-pull, `https`: forced HTTPS origin-pull. This only supports origin server port 443 for origin-pull.",
 						},
 						"backup_origin_type": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ValidateFunc: validateAllowedStringValue(CDN_BACKUP_ORIGIN_TYPE),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_BACKUP_ORIGIN_TYPE),
 							Description:  "Backup origin server type, which supports the following types: `domain`: domain name type, `ip`: IP list used as origin server.",
 						},
 						"backup_origin_list": {
@@ -143,35 +146,35 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 						"https_switch": {
 							Type:         schema.TypeString,
 							Required:     true,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "HTTPS configuration switch. Valid values are `on` and `off`.",
 						},
 						"http2_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "HTTP2 configuration switch. Valid values are `on` and `off`. and default value is `off`.",
 						},
 						"ocsp_stapling_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "OCSP configuration switch. Valid values are `on` and `off`. and default value is `off`.",
 						},
 						"spdy_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Spdy configuration switch. Valid values are `on` and `off`. and default value is `off`. This parameter is for white-list customer.",
 						},
 						"verify_client": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Client certificate authentication feature. Valid values are `on` and `off`. and default value is `off`.",
 						},
 						"server_certificate_config": {
@@ -261,14 +264,14 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      CDN_SWITCH_OFF,
-										ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 										Description:  "Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.",
 									},
 									"redirect_type": {
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      CDN_ORIGIN_PULL_PROTOCOL_HTTP,
-										ValidateFunc: validateAllowedStringValue(CDN_FORCE_REDIRECT_TYPE),
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_FORCE_REDIRECT_TYPE),
 										Description: "Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. " +
 											"When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.",
 									},
@@ -276,7 +279,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Type:         schema.TypeInt,
 										Optional:     true,
 										Default:      302,
-										ValidateFunc: validateAllowedIntValue([]int{301, 302}),
+										ValidateFunc: tccommon.ValidateAllowedIntValue([]int{301, 302}),
 										Description: "Forced redirect status code. Valid values are `301` and `302`. " +
 											"When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.",
 									},
@@ -303,21 +306,21 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CDN_SWITCH_ON,
-				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 				Description:  "Sharding back to source configuration switch. Valid values are `on` and `off`. Default value is `on`.",
 			},
 			"ipv6_access_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CDN_SWITCH_OFF,
-				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 				Description:  "ipv6 access configuration switch. Only available when area set to `mainland`. Valid values are `on` and `off`. Default value is `off`.",
 			},
 			"follow_redirect_switch": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CDN_SWITCH_OFF,
-				ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 				Description:  "301/302 redirect following switch, available values: `on`, `off` (default).",
 			},
 			"authentication": {
@@ -331,7 +334,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Description:  "Authentication switching, available values: `on`, `off`.",
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 						},
 						"type_a": {
 							Type:        schema.TypeList,
@@ -520,7 +523,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_RULE_TYPE_DEFAULT,
-							ValidateFunc: validateAllowedStringValue(CDN_RULE_TYPE),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_RULE_TYPE),
 							Description: "Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, " +
 								"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.",
 						},
@@ -528,7 +531,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Cache configuration switch. Valid values are `on` and `off`.",
 						},
 						"cache_time": {
@@ -540,7 +543,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description: "Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, " +
 								"and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.",
 						},
@@ -548,7 +551,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description: "Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules " +
 								"rules. Valid values are `on` and `off`. Default value is `off`.",
 						},
@@ -556,35 +559,35 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.",
 						},
 						"no_cache_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Cache configuration switch. Valid values are `on` and `off`.",
 						},
 						"re_validate": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Always check back to origin. Valid values are `on` and `off`. Default value is `off`.",
 						},
 						"follow_origin_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Follow the source station configuration switch. Valid values are `on` and `off`.",
 						},
 						"heuristic_cache_switch": {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Specify whether to enable heuristic cache, only available while `follow_origin_switch` enabled, values: `on`, `off` (Default).",
 						},
 						"heuristic_cache_time": {
@@ -607,7 +610,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CDN_SWITCH_OFF,
-							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_SWITCH),
 							Description:  "Custom request header configuration switch. Valid values are `on` and `off`. and default value is `off`.",
 						},
 						"header_rules": {
@@ -624,19 +627,19 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 									"header_name": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateStringLengthInRange(1, 100),
+										ValidateFunc: tccommon.ValidateStringLengthInRange(1, 100),
 										Description:  "Http header name.",
 									},
 									"header_value": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateStringLengthInRange(1, 1000),
+										ValidateFunc: tccommon.ValidateStringLengthInRange(1, 1000),
 										Description:  "Http header value, optional when Mode is `del`, Required when Mode is `add`/`set`.",
 									},
 									"rule_type": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateAllowedStringValue(CDN_HEADER_RULE),
+										ValidateFunc: tccommon.ValidateAllowedStringValue(CDN_HEADER_RULE),
 										Description: "Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, " +
 											"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect.",
 									},
@@ -1555,11 +1558,11 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 }
 
 func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_domain.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_domain.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cdnService := CdnService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	request := cdn.NewAddCdnDomainRequest()
@@ -2388,16 +2391,16 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 		return nil
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().AddCdnDomain(request)
+		_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdnClient().AddCdnDomain(request)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROR || sdkErr.Code == CDN_HOST_EXISTS {
 					return resource.NonRetryableError(err)
 				}
 			}
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -2407,10 +2410,10 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	d.SetId(domain)
 
 	time.Sleep(1 * time.Second)
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 		if err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		if *domainConfig.Status == CDN_DOMAIN_STATUS_PROCESSING {
 			return resource.RetryableError(fmt.Errorf("domain status is still processing, retry..."))
@@ -2427,10 +2430,10 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 
 	// tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		client := meta.(*TencentCloudClient).apiV3Conn
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := TagService{client: client}
 		region := client.Region
-		resourceName := BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
+		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
 		if err != nil {
 			return err
@@ -2441,12 +2444,12 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_domain.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_domain.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	region := client.Region
 	cdnService := CdnService{client: client}
 	tagService := TagService{client: client}
@@ -2460,10 +2463,10 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 
 	var domainConfig *cdn.DetailDomain
 	var errRet error
-	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		domainConfig, errRet = cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -3030,10 +3033,10 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_domain.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_domain.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	cdnService := CdnService{client: client}
 
 	d.Partial(true)
@@ -3882,16 +3885,16 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	if len(updateAttrs) > 0 {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err := meta.(*TencentCloudClient).apiV3Conn.UseCdnClient().UpdateDomainConfig(request)
+			_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdnClient().UpdateDomainConfig(request)
 			if err != nil {
 				if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 					if sdkErr.Code == CDN_DOMAIN_CONFIG_ERROR {
 						return resource.NonRetryableError(err)
 					}
 				}
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -3899,10 +3902,10 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
-				return retryError(err, InternalError)
+				return tccommon.RetryError(err, tccommon.InternalError)
 			}
 			if *domainConfig.Status == CDN_DOMAIN_STATUS_PROCESSING {
 				return resource.RetryableError(fmt.Errorf("domain status is still processing, retry..."))
@@ -3920,7 +3923,7 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 
 		tagService := TagService{client: client}
 		region := client.Region
-		resourceName := BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
+		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -3934,10 +3937,10 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdn_domain.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
+	defer tccommon.LogElapsed("resource.tencentcloud_cdn_domain.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	cdnService := CdnService{client: client}
 
 	domain := d.Id()
@@ -3950,7 +3953,7 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: client}
 		region := client.Region
-		resourceName := BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
+		resourceName := tccommon.BuildTagResourceName(CDN_SERVICE_NAME, CDN_RESOURCE_NAME_DOMAIN, region, domain)
 		deleteTags := make([]string, 0, len(tags))
 		for key := range tags {
 			deleteTags = append(deleteTags, key)
@@ -3963,10 +3966,10 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 
 	var domainConfig *cdn.DetailDomain
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		domainConfig, errRet = cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -3978,10 +3981,10 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 	}
 
 	if *domainConfig.Status == CDN_DOMAIN_STATUS_ONLINE {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			errRet = cdnService.StopDomain(ctx, domain)
 			if errRet != nil {
-				return retryError(errRet)
+				return tccommon.RetryError(errRet)
 			}
 			return nil
 		})
@@ -3989,10 +3992,10 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(5*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			domainConfig, err := cdnService.DescribeDomainsConfigByDomain(ctx, domain)
 			if err != nil {
-				return retryError(err, InternalError)
+				return tccommon.RetryError(err, tccommon.InternalError)
 			}
 			if *domainConfig.Status == CDN_DOMAIN_STATUS_PROCESSING {
 				return resource.RetryableError(fmt.Errorf("domain status is still processing, retry..."))
@@ -4004,10 +4007,10 @@ func resourceTencentCloudCdnDomainDelete(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet = cdnService.DeleteDomain(ctx, domain)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -4023,7 +4026,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 	}
 
 	domain := d.Id()
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := CdnService{client}
 	request := cdn.NewUpdateDomainConfigRequest()
 	request.Domain = &domain
@@ -4039,7 +4042,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		err := service.UpdateDomainConfig(ctx, request)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
@@ -4047,7 +4050,7 @@ func updateCdnModifyOnlyParams(d *schema.ResourceData, meta interface{}, ctx con
 					return resource.NonRetryableError(err)
 				}
 			}
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})

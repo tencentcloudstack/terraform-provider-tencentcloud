@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -429,8 +430,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_account_summary":                          cam.DataSourceTencentCloudCamAccountSummary(),
 			"tencentcloud_cam_oidc_config":                              cam.DataSourceTencentCloudCamOidcConfig(),
 			"tencentcloud_user_info":                                    cam.DataSourceTencentCloudUserInfo(),
-			"tencentcloud_cdn_domains":                                  dataSourceTencentCloudCdnDomains(),
-			"tencentcloud_cdn_domain_verifier":                          dataSourceTencentCloudCdnDomainVerifyRecord(),
+			"tencentcloud_cdn_domains":                                  cdn.DataSourceTencentCloudCdnDomains(),
+			"tencentcloud_cdn_domain_verifier":                          cdn.DataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                                dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                               dataSourceTencentCloudScfNamespaces(),
 			"tencentcloud_scf_account_info":                             dataSourceTencentCloudScfAccountInfo(),
@@ -1195,9 +1196,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcaplus_tablegroup":                                  resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                                         resourceTencentCloudTcaplusIdl(),
 			"tencentcloud_tcaplus_table":                                       resourceTencentCloudTcaplusTable(),
-			"tencentcloud_cdn_domain":                                          resourceTencentCloudCdnDomain(),
-			"tencentcloud_cdn_url_push":                                        resourceTencentCloudUrlPush(),
-			"tencentcloud_cdn_url_purge":                                       resourceTencentCloudUrlPurge(),
+			"tencentcloud_cdn_domain":                                          cdn.ResourceTencentCloudCdnDomain(),
+			"tencentcloud_cdn_url_push":                                        cdn.ResourceTencentCloudUrlPush(),
+			"tencentcloud_cdn_url_purge":                                       cdn.ResourceTencentCloudUrlPurge(),
 			"tencentcloud_monitor_policy_group":                                resourceTencentCloudMonitorPolicyGroup(),
 			"tencentcloud_monitor_binding_object":                              resourceTencentCloudMonitorBindingObject(),
 			"tencentcloud_monitor_policy_binding_object":                       resourceTencentCloudMonitorPolicyBindingObject(),
