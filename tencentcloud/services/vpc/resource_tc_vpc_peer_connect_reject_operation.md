@@ -8,10 +8,3 @@ resource "tencentcloud_vpc_peer_connect_reject_operation" "peer_connect_reject_o
 }
 ```
 
-Import
-
-vpc peer_connect_reject_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_vpc_peer_connect_reject_operation.peer_connect_reject_operation peer_connect_reject_operation_id
-```
