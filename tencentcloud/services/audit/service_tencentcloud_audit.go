@@ -1,25 +1,32 @@
-package tencentcloud
+package audit
 
 import (
 	"context"
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewAuditService(client *connectivity.TencentCloudClient) AuditService {
+	return AuditService{client: client}
+}
 
 type AuditService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *AuditService) DescribeAuditById(ctx context.Context, name string) (auditInfo *audit.DescribeAuditResponse, has bool, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := audit.NewDescribeAuditRequest()
 	request.AuditName = &name
 
@@ -31,7 +38,7 @@ func (me *AuditService) DescribeAuditById(ctx context.Context, name string) (aud
 	}()
 
 	var response *audit.DescribeAuditResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseAuditClient().DescribeAudit(request)
 		if e != nil {
@@ -43,7 +50,7 @@ func (me *AuditService) DescribeAuditById(ctx context.Context, name string) (aud
 					return nil
 				}
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -60,7 +67,7 @@ func (me *AuditService) DescribeAuditById(ctx context.Context, name string) (aud
 }
 
 func (me *AuditService) DescribeAuditCosRegions(ctx context.Context) (regions []*audit.CosRegionInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := audit.NewListCosEnableRegionRequest()
 
 	ratelimit.Check(request.GetAction())
@@ -79,7 +86,7 @@ func (me *AuditService) DescribeAuditCosRegions(ctx context.Context) (regions []
 }
 
 func (me *AuditService) DescribeAuditCmqRegions(ctx context.Context) (regions []*audit.CmqRegionInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := audit.NewListCmqEnableRegionRequest()
 
 	ratelimit.Check(request.GetAction())
@@ -98,7 +105,7 @@ func (me *AuditService) DescribeAuditCmqRegions(ctx context.Context) (regions []
 }
 
 func (me *AuditService) DescribeKeyAlias(ctx context.Context, region string) (keyMetadatas []*audit.KeyMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := audit.NewListKeyAliasByRegionRequest()
 	request.KmsRegion = &region
 	ratelimit.Check(request.GetAction())
@@ -118,7 +125,7 @@ func (me *AuditService) DescribeKeyAlias(ctx context.Context, region string) (ke
 
 func (me *AuditService) DescribeAuditTrackById(ctx context.Context, trackId string) (track *audit.DescribeAuditTrackResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = audit.NewDescribeAuditTrackRequest()
 	)
 
@@ -144,7 +151,7 @@ func (me *AuditService) DescribeAuditTrackById(ctx context.Context, trackId stri
 }
 
 func (me *AuditService) DeleteAuditTrackById(ctx context.Context, trackId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := audit.NewDeleteAuditTrackRequest()
 

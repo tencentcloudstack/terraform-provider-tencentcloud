@@ -1,17 +1,20 @@
-package tencentcloud
+package audit
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudAuditTrack() *schema.Resource {
+func ResourceTencentCloudAuditTrack() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudAuditTrackRead,
 		Create: resourceTencentCloudAuditTrackCreate,
@@ -101,10 +104,10 @@ func resourceTencentCloudAuditTrack() *schema.Resource {
 }
 
 func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_audit_track.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit_track.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = audit.NewCreateAuditTrackRequest()
@@ -157,10 +160,10 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 		request.TrackForAllMembers = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().CreateAuditTrack(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().CreateAuditTrack(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -181,13 +184,13 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAuditTrackRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_audit_track.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit_track.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AuditService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := AuditService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	trackId := d.Id()
 
@@ -251,10 +254,10 @@ func resourceTencentCloudAuditTrackRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_audit_track.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit_track.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := audit.NewModifyAuditTrackRequest()
 
@@ -321,10 +324,10 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().ModifyAuditTrack(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().ModifyAuditTrack(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -341,13 +344,13 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudAuditTrackDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_audit_track.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit_track.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := AuditService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := AuditService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	trackId := d.Id()
 

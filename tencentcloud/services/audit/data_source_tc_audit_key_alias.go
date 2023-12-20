@@ -1,16 +1,19 @@
-package tencentcloud
+package audit
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAuditKeyAlias() *schema.Resource {
+func DataSourceTencentCloudAuditKeyAlias() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAuditKeyAliasRead,
 
@@ -49,21 +52,21 @@ func dataSourceTencentCloudAuditKeyAlias() *schema.Resource {
 }
 
 func dataSourceTencentCloudAuditKeyAliasRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_audit_cmq_regions.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_audit_cmq_regions.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	auditService := AuditService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	region := d.Get("region").(string)
 	var keyAlias []*audit.KeyMetadata
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		keyAlias, errRet = auditService.DescribeKeyAlias(ctx, region)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -90,7 +93,7 @@ func dataSourceTencentCloudAuditKeyAliasRead(d *schema.ResourceData, meta interf
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), keyList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), keyList); e != nil {
 			return e
 		}
 	}

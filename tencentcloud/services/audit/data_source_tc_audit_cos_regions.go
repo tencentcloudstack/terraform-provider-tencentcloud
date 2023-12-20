@@ -1,16 +1,19 @@
-package tencentcloud
+package audit
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
+func DataSourceTencentCloudAuditCosRegions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAuditCosRegionsRead,
 
@@ -44,20 +47,20 @@ func dataSourceTencentCloudAuditCosRegions() *schema.Resource {
 }
 
 func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_audit_cos_regions.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_audit_cos_regions.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	auditService := AuditService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var regions []*audit.CosRegionInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		regions, errRet = auditService.DescribeAuditCosRegions(ctx)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -84,7 +87,7 @@ func dataSourceTencentCloudAuditCosRegionsRead(d *schema.ResourceData, meta inte
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), regionList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), regionList); e != nil {
 			return e
 		}
 	}

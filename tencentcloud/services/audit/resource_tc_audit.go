@@ -1,17 +1,20 @@
-package tencentcloud
+package audit
 
 import (
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudAudit() *schema.Resource {
+func ResourceTencentCloudAudit() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.78.16. Please use 'tencentcloud_audit_track' instead.",
 		Create:             resourceTencentCloudAuditCreate,
@@ -71,7 +74,7 @@ func resourceTencentCloudAudit() *schema.Resource {
 }
 
 func resourceTencentCloudAuditCreate(d *schema.ResourceData, meta interface{}) (errRet error) {
-	defer logElapsed("resource.tencentcloud_audit.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit.create")()
 	request := audit.NewCreateAuditRequest()
 
 	name := d.Get("name").(string)
@@ -108,11 +111,11 @@ func resourceTencentCloudAuditCreate(d *schema.ResourceData, meta interface{}) (
 	request.ReadWriteAttribute = helper.IntInt64(readWriteAttribute)
 	request.LogFilePrefix = &logFilePrefix
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().CreateAudit(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().CreateAudit(request)
 		if err != nil {
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
 			d.SetId(name)
@@ -138,9 +141,9 @@ func resourceTencentCloudAuditCreate(d *schema.ResourceData, meta interface{}) (
 }
 
 func resourceTencentCloudAuditRead(d *schema.ResourceData, meta interface{}) (errRet error) {
-	defer logElapsed("resource.tencentcloud_audit.read")()
-	defer inconsistentCheck(d, meta)()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_audit.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := audit.NewDescribeAuditRequest()
 
 	auditId := d.Id()
@@ -149,12 +152,12 @@ func resourceTencentCloudAuditRead(d *schema.ResourceData, meta interface{}) (er
 
 	ratelimit.Check(request.GetAction())
 	var response *audit.DescribeAuditResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().DescribeAudit(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().DescribeAudit(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -184,9 +187,9 @@ func resourceTencentCloudAuditRead(d *schema.ResourceData, meta interface{}) (er
 }
 
 func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (errRet error) {
-	defer logElapsed("resource.tencentcloud_audit.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit.update")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := audit.NewUpdateAuditRequest()
 
 	defer func() {
@@ -239,11 +242,11 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 		request.ReadWriteAttribute = helper.IntInt64(readWriteAttribute)
 		request.LogFilePrefix = &logFilePrefix
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().UpdateAudit(request)
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().UpdateAudit(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
 				return nil
@@ -271,19 +274,19 @@ func resourceTencentCloudAuditUpdate(d *schema.ResourceData, meta interface{}) (
 }
 
 func resourceTencentCloudAuditDelete(d *schema.ResourceData, meta interface{}) (errRet error) {
-	defer logElapsed("resource.tencentcloud_audit.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_audit.delete")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	request := audit.NewDeleteAuditRequest()
 
 	auditId := d.Id()
 
 	request.AuditName = &auditId
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().DeleteAudit(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().DeleteAudit(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s reason[%s]\n", logId, e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -298,11 +301,11 @@ func modifyAuditSwitch(auditname string, auditSwitch bool, meta interface{}) (er
 	if auditSwitch {
 		request := audit.NewStartLoggingRequest()
 		request.AuditName = &auditname
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StartLogging(request)
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().StartLogging(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
 				return nil
@@ -316,11 +319,11 @@ func modifyAuditSwitch(auditname string, auditSwitch bool, meta interface{}) (er
 	} else {
 		request := audit.NewStopLoggingRequest()
 		request.AuditName = &auditname
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			response, err := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().StopLogging(request)
+			response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().StopLogging(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			if response != nil && response.Response != nil && int(*response.Response.IsSuccess) > 0 {
 				return nil

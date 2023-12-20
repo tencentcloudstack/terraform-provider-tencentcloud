@@ -1,8 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,16 +9,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cynosdb"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cwp"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/css"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -32,7 +20,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/antiddos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apigateway"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/as"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/audit"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
@@ -53,6 +44,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/common"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/css"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cvm"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cwp"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cynosdb"
 )
 
 const (
@@ -533,9 +530,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic_subscribe_group":                 ckafka.DataSourceTencentCloudCkafkaTopicSubscribeGroup(),
 			"tencentcloud_ckafka_topic_sync_replica":                    ckafka.DataSourceTencentCloudCkafkaTopicSyncReplica(),
 			"tencentcloud_ckafka_zone":                                  ckafka.DataSourceTencentCloudCkafkaZone(),
-			"tencentcloud_audit_cos_regions":                            dataSourceTencentCloudAuditCosRegions(),
-			"tencentcloud_audit_key_alias":                              dataSourceTencentCloudAuditKeyAlias(),
-			"tencentcloud_audits":                                       dataSourceTencentCloudAudits(),
+			"tencentcloud_audit_cos_regions":                            audit.DataSourceTencentCloudAuditCosRegions(),
+			"tencentcloud_audit_key_alias":                              audit.DataSourceTencentCloudAuditKeyAlias(),
+			"tencentcloud_audits":                                       audit.DataSourceTencentCloudAudits(),
 			"tencentcloud_cynosdb_clusters":                             cynosdb.DataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                            cynosdb.DataSourceTencentCloudCynosdbInstances(),
 			"tencentcloud_cynosdb_zone_config":                          cynosdb.DataSourceTencentCloudCynosdbZoneConfig(),
@@ -1330,8 +1327,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_consumer_group_modify_offset":                 ckafka.ResourceTencentCloudCkafkaConsumerGroupModifyOffset(),
 			"tencentcloud_ckafka_datahub_task":                                 ckafka.ResourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_ckafka_route":                                        ckafka.ResourceTencentCloudCkafkaRoute(),
-			"tencentcloud_audit":                                               resourceTencentCloudAudit(),
-			"tencentcloud_audit_track":                                         resourceTencentCloudAuditTrack(),
+			"tencentcloud_audit":                                               audit.ResourceTencentCloudAudit(),
+			"tencentcloud_audit_track":                                         audit.ResourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                               cvm.ResourceTencentCloudImage(),
 			"tencentcloud_cynosdb_proxy":                                       cynosdb.ResourceTencentCloudCynosdbProxy(),
 			"tencentcloud_cynosdb_reload_proxy_node":                           cynosdb.ResourceTencentCloudCynosdbReloadProxyNode(),

@@ -1,16 +1,19 @@
-package tencentcloud
+package audit
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func dataSourceTencentCloudAudits() *schema.Resource {
+func DataSourceTencentCloudAudits() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAuditsRead,
 
@@ -66,20 +69,20 @@ func dataSourceTencentCloudAudits() *schema.Resource {
 }
 
 func dataSourceTencentCloudAuditsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_audits.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_audits.read")()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	name := d.Get("name").(string)
 	request := audit.NewListAuditsRequest()
 
 	var response *audit.ListAuditsResponse
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAuditClient().ListAudits(request)
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseAuditClient().ListAudits(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s %s fail, reason:%s\n", logId, request.GetAction(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -114,7 +117,7 @@ func dataSourceTencentCloudAuditsRead(d *schema.ResourceData, meta interface{}) 
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), auditList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), auditList); e != nil {
 			return e
 		}
 	}

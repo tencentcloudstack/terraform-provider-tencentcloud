@@ -1,4 +1,4 @@
-package tencentcloud
+package audit_test
 
 import (
 	"context"
@@ -6,15 +6,20 @@ import (
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svcaudit "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/audit"
 )
 
 func TestAccTencentCloudNeedFixAudit_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckAuditDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -53,8 +58,8 @@ func TestAccTencentCloudNeedFixAudit_basic(t *testing.T) {
 func TestAccTencentCloudNeedFixAudit_kms(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckAuditDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -94,12 +99,10 @@ func TestAccTencentCloudNeedFixAudit_kms(t *testing.T) {
 }
 
 func testAccCheckAuditDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	auditService := AuditService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	auditService := svcaudit.NewAuditService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_audit" {
 			continue
@@ -118,8 +121,8 @@ func testAccCheckAuditDestroy(s *terraform.State) error {
 
 func testAccCheckAuditExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -128,9 +131,7 @@ func testAccCheckAuditExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][Audit][Create] check: Audit id is not set")
 		}
-		auditService := AuditService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		auditService := svcaudit.NewAuditService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		_, has, err := auditService.DescribeAuditById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
