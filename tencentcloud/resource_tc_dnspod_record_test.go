@@ -55,6 +55,51 @@ func TestAccTencentCloudDnspodRecordResource_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudDnspodRecordResource_MX(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckDnspodRecordDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTencentCloudDnspodRecordMx,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "MX"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9."),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "@"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "mx", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "ttl", "86400"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
+				),
+			},
+			{
+				Config: testAccTencentCloudDnspodRecordMxUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_type", "MX"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "record_line", "默认"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.19."),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "@"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "mx", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "ttl", "86400"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "remark", "terraform-test"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_dnspod_record.demo",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func testAccCheckDnspodRecordExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -151,4 +196,31 @@ const testAccTencentCloudDnspodRecordRemarkUp = `
 	sub_domain="demo"
 	remark="terraform-test1"
 	}
+`
+
+const testAccTencentCloudDnspodRecordMx = `
+resource "tencentcloud_dnspod_record" "demo" {
+  domain      = "iac-tf.cloud"
+  record_type = "MX"
+  record_line = "默认"
+  value       = "1.2.3.9."
+  sub_domain  = "@"
+  mx          = 10
+  ttl         = 86400
+  status      = "ENABLE"
+  remark      = "terraform-test"
+}
+`
+const testAccTencentCloudDnspodRecordMxUpdate = `
+resource "tencentcloud_dnspod_record" "demo" {
+  domain      = "iac-tf.cloud"
+  record_type = "MX"
+  record_line = "默认"
+  value       = "1.2.3.19."
+  sub_domain  = "@"
+  mx          = 10
+  ttl         = 86400
+  status      = "ENABLE"
+  remark      = "terraform-test"
+}
 `
