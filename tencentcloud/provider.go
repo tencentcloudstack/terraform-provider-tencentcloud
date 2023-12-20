@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +9,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cos"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/crs"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
@@ -313,15 +315,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfs_mount_targets":                            cfs.DataSourceTencentCloudCfsMountTargets(),
 			"tencentcloud_cfs_file_system_clients":                      cfs.DataSourceTencentCloudCfsFileSystemClients(),
 			"tencentcloud_cfs_available_zone":                           cfs.DataSourceTencentCloudCfsAvailableZone(),
-			"tencentcloud_redis_zone_config":                            dataSourceTencentRedisZoneConfig(),
-			"tencentcloud_redis_instances":                              dataSourceTencentRedisInstances(),
-			"tencentcloud_redis_backup":                                 dataSourceTencentCloudRedisBackup(),
-			"tencentcloud_redis_backup_download_info":                   dataSourceTencentCloudRedisBackupDownloadInfo(),
-			"tencentcloud_redis_param_records":                          dataSourceTencentCloudRedisRecordsParam(),
-			"tencentcloud_redis_instance_shards":                        dataSourceTencentCloudRedisInstanceShards(),
-			"tencentcloud_redis_instance_zone_info":                     dataSourceTencentCloudRedisInstanceZoneInfo(),
-			"tencentcloud_redis_instance_task_list":                     dataSourceTencentCloudRedisInstanceTaskList(),
-			"tencentcloud_redis_instance_node_info":                     dataSourceTencentCloudRedisInstanceNodeInfo(),
+			"tencentcloud_redis_zone_config":                            crs.DataSourceTencentCloudRedisZoneConfig(),
+			"tencentcloud_redis_instances":                              crs.DataSourceTencentCloudRedisInstances(),
+			"tencentcloud_redis_backup":                                 crs.DataSourceTencentCloudRedisBackup(),
+			"tencentcloud_redis_backup_download_info":                   crs.DataSourceTencentCloudRedisBackupDownloadInfo(),
+			"tencentcloud_redis_param_records":                          crs.DataSourceTencentCloudRedisRecordsParam(),
+			"tencentcloud_redis_instance_shards":                        crs.DataSourceTencentCloudRedisInstanceShards(),
+			"tencentcloud_redis_instance_zone_info":                     crs.DataSourceTencentCloudRedisInstanceZoneInfo(),
+			"tencentcloud_redis_instance_task_list":                     crs.DataSourceTencentCloudRedisInstanceTaskList(),
+			"tencentcloud_redis_instance_node_info":                     crs.DataSourceTencentCloudRedisInstanceNodeInfo(),
 			"tencentcloud_as_scaling_configs":                           dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                            dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                          dataSourceTencentCloudAsScalingPolicies(),
@@ -1092,27 +1094,27 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfs_snapshot":                                        cfs.ResourceTencentCloudCfsSnapshot(),
 			"tencentcloud_cfs_user_quota":                                      resourceTencentCloudCfsUserQuota(),
 			"tencentcloud_cfs_sign_up_cfs_service":                             cfs.ResourceTencentCloudCfsSignUpCfsService(),
-			"tencentcloud_redis_instance":                                      resourceTencentCloudRedisInstance(),
-			"tencentcloud_redis_backup_config":                                 resourceTencentCloudRedisBackupConfig(),
-			"tencentcloud_redis_account":                                       resourceTencentCloudRedisAccount(),
-			"tencentcloud_redis_param_template":                                resourceTencentCloudRedisParamTemplate(),
-			"tencentcloud_redis_connection_config":                             resourceTencentCloudRedisConnectionConfig(),
+			"tencentcloud_redis_instance":                                      crs.ResourceTencentCloudRedisInstance(),
+			"tencentcloud_redis_backup_config":                                 crs.ResourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_account":                                       crs.ResourceTencentCloudRedisAccount(),
+			"tencentcloud_redis_param_template":                                crs.ResourceTencentCloudRedisParamTemplate(),
+			"tencentcloud_redis_connection_config":                             crs.ResourceTencentCloudRedisConnectionConfig(),
 			"tencentcloud_redis_param":                                         resourceTencentCloudRedisParam(),
-			"tencentcloud_redis_read_only":                                     resourceTencentCloudRedisReadOnly(),
-			"tencentcloud_redis_ssl":                                           resourceTencentCloudRedisSsl(),
-			"tencentcloud_redis_backup_download_restriction":                   resourceTencentCloudRedisBackupDownloadRestriction(),
-			"tencentcloud_redis_clear_instance_operation":                      resourceTencentCloudRedisClearInstanceOperation(),
-			"tencentcloud_redis_renew_instance_operation":                      resourceTencentCloudRedisRenewInstanceOperation(),
-			"tencentcloud_redis_startup_instance_operation":                    resourceTencentCloudRedisStartupInstanceOperation(),
-			"tencentcloud_redis_upgrade_cache_version_operation":               resourceTencentCloudRedisUpgradeCacheVersionOperation(),
-			"tencentcloud_redis_upgrade_multi_zone_operation":                  resourceTencentCloudRedisUpgradeMultiZoneOperation(),
-			"tencentcloud_redis_upgrade_proxy_version_operation":               resourceTencentCloudRedisUpgradeProxyVersionOperation(),
-			"tencentcloud_redis_maintenance_window":                            resourceTencentCloudRedisMaintenanceWindow(),
-			"tencentcloud_redis_replica_readonly":                              resourceTencentCloudRedisReplicaReadonly(),
-			"tencentcloud_redis_switch_master":                                 resourceTencentCloudRedisSwitchMaster(),
-			"tencentcloud_redis_replicate_attachment":                          resourceTencentCloudRedisReplicateAttachment(),
-			"tencentcloud_redis_backup_operation":                              resourceTencentCloudRedisBackupOperation(),
-			"tencentcloud_redis_security_group_attachment":                     resourceTencentCloudRedisSecurityGroupAttachment(),
+			"tencentcloud_redis_read_only":                                     crs.ResourceTencentCloudRedisReadOnly(),
+			"tencentcloud_redis_ssl":                                           crs.ResourceTencentCloudRedisSsl(),
+			"tencentcloud_redis_backup_download_restriction":                   crs.ResourceTencentCloudRedisBackupDownloadRestriction(),
+			"tencentcloud_redis_clear_instance_operation":                      crs.ResourceTencentCloudRedisClearInstanceOperation(),
+			"tencentcloud_redis_renew_instance_operation":                      crs.ResourceTencentCloudRedisRenewInstanceOperation(),
+			"tencentcloud_redis_startup_instance_operation":                    crs.ResourceTencentCloudRedisStartupInstanceOperation(),
+			"tencentcloud_redis_upgrade_cache_version_operation":               crs.ResourceTencentCloudRedisUpgradeCacheVersionOperation(),
+			"tencentcloud_redis_upgrade_multi_zone_operation":                  crs.ResourceTencentCloudRedisUpgradeMultiZoneOperation(),
+			"tencentcloud_redis_upgrade_proxy_version_operation":               crs.ResourceTencentCloudRedisUpgradeProxyVersionOperation(),
+			"tencentcloud_redis_maintenance_window":                            crs.ResourceTencentCloudRedisMaintenanceWindow(),
+			"tencentcloud_redis_replica_readonly":                              crs.ResourceTencentCloudRedisReplicaReadonly(),
+			"tencentcloud_redis_switch_master":                                 crs.ResourceTencentCloudRedisSwitchMaster(),
+			"tencentcloud_redis_replicate_attachment":                          crs.ResourceTencentCloudRedisReplicateAttachment(),
+			"tencentcloud_redis_backup_operation":                              crs.ResourceTencentCloudRedisBackupOperation(),
+			"tencentcloud_redis_security_group_attachment":                     crs.ResourceTencentCloudRedisSecurityGroupAttachment(),
 			"tencentcloud_as_load_balancer":                                    resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                                   resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                                    resourceTencentCloudAsScalingGroup(),
