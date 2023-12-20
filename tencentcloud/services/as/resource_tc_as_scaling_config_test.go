@@ -129,7 +129,7 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "data_disk.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "data_disk.0.disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "data_disk.0.disk_size", "50"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "internet_charge_type", "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "internet_charge_type", "TRAFFIC_POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "internet_max_bandwidth_out", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "public_ip_assigned", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "false"),
@@ -199,7 +199,7 @@ func TestAccTencentCloudAsScalingConfig_charge(t *testing.T) {
 					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.launch_configuration"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type_prepaid_period", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type_prepaid_renew_flag", "NOTIFY_tcacctest.AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 		},
@@ -276,7 +276,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
     disk_size = 50
   }
   
-  internet_charge_type       = "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 10
   public_ip_assigned         = true
   password                   = "test123#"
@@ -312,7 +312,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
     disk_size = 100
   }
   
-  internet_charge_type       = "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 20
   public_ip_assigned         = true
   password                   = "test123#"
@@ -366,7 +366,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	instance_types = ["SA1.SMALL1"]
 	instance_charge_type = "PREPAID"
 	instance_charge_type_prepaid_period = 1
-	instance_charge_type_prepaid_renew_flag = "NOTIFY_tcacctest.AND_MANUAL_RENEW"
+	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 	`
 }

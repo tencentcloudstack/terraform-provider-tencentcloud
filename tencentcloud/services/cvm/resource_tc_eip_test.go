@@ -201,7 +201,7 @@ func TestAccTencentCloudEipResource_chargetype(t *testing.T) {
 				Config: testAccEipChargeType,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipExists("tencentcloud_eip.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "TRAFFIC_POSTPAID_BY_HOUR"),
 				),
 			},
 			{
@@ -224,7 +224,7 @@ func TestAccTencentCloudEipResource_prepaid(t *testing.T) {
 				Config: testAccEipPrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipExists("tencentcloud_eip.foo"),
-					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "BANDWIDTH_tcacctest.PREPAID_BY_MONTH"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "BANDWIDTH_PREPAID_BY_MONTH"),
 				),
 			},
 			{
@@ -357,7 +357,7 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipBandwidth = `
 resource "tencentcloud_eip" "foo" {
 	name = "eip_bandwidth"
-	internet_charge_type = "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"
+	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
 	internet_max_bandwidth_out = 2
   }
 `
@@ -365,14 +365,14 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipChargeType = `
 resource "tencentcloud_eip" "foo" {
 	name = "eip_charge_type"
-	internet_charge_type = "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"
+	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   }
 `
 
 const testAccEipPrepaid = `
 resource "tencentcloud_eip" "foo" {
   name = "eip_prepaid"
-  internet_charge_type = "BANDWIDTH_tcacctest.PREPAID_BY_MONTH"
+  internet_charge_type = "BANDWIDTH_PREPAID_BY_MONTH"
   prepaid_period = 6
   auto_renew_flag = 1
   internet_max_bandwidth_out = 2

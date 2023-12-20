@@ -45,7 +45,7 @@ func TestAccTencentCloudAsScalingPolicy(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_as_scaling_policy.scaling_policy", "scaling_group_id"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "adjustment_type", "CHANGE_IN_CAPACITY"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "adjustment_value", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "comparison_operator", "GREATER_tcacctest.THAN_OR_EQUAL_TO"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "comparison_operator", "GREATER_THAN_OR_EQUAL_TO"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "metric_name", "MEM_UTILIZATION"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "threshold", "85"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_policy.scaling_policy", "period", "60"),
@@ -182,7 +182,7 @@ resource "tencentcloud_as_scaling_policy" "scaling_policy" {
   policy_name         = "tf-as-scaling-policy"
   adjustment_type     = "CHANGE_IN_CAPACITY"
   adjustment_value    = 1
-  comparison_operator = "GREATER_tcacctest.THAN_OR_EQUAL_TO"
+  comparison_operator = "GREATER_THAN_OR_EQUAL_TO"
   metric_name         = "MEM_UTILIZATION"
   threshold           = 85
   period              = 60

@@ -122,7 +122,7 @@ func TestAccTencentCloudAsScalingGroup_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "termination_policies.0", "OLDEST_INSTANCE"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "retry_policy", "IMMEDIATE_RETRY"),
-					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "scaling_mode", "WAKE_tcacctest.UP_STOPPED_SCALING"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "scaling_mode", "WAKE_UP_STOPPED_SCALING"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_monitor_unhealthy", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_group.scaling_group", "replace_load_balancer_unhealthy", "true"),
 					resource.TestCheckNoResourceAttr("tencentcloud_as_scaling_group.scaling_group", "tags.test"),
@@ -257,7 +257,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   desired_capacity     = 0
   termination_policies = ["OLDEST_INSTANCE"]
   retry_policy         = "IMMEDIATE_RETRY"
-  scaling_mode		   = "WAKE_tcacctest.UP_STOPPED_SCALING"
+  scaling_mode		   = "WAKE_UP_STOPPED_SCALING"
   replace_monitor_unhealthy       = true
   replace_load_balancer_unhealthy = true
 

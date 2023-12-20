@@ -592,7 +592,7 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
 				<ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
 				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
 			</Grantee>
-			<Permission>tcacctest.FULL_CONTROL</Permission>
+			<Permission>FULL_CONTROL</Permission>
 		</Grant>
     </AccessControlList>
 </AccessControlPolicy>
@@ -626,20 +626,20 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
                 <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
 				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
             </Grantee>
-            <Permission>tcacctest.FULL_CONTROL</Permission>
+            <Permission>FULL_CONTROL</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
 				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
             </Grantee>
-            <Permission>tcacctest.WRITE_ACP</Permission>
+            <Permission>WRITE_ACP</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
                 <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
             </Grantee>
-            <Permission>tcacctest.READ_ACP</Permission>
+            <Permission>READ_ACP</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">

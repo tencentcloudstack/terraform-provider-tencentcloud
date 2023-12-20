@@ -639,7 +639,7 @@ func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_period", "1"),
-					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_tcacctest.AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 		},
@@ -663,7 +663,7 @@ func TestAccTencentCloudInstanceResource_PrepaidFallbackToPostpaid(t *testing.T)
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_charge_type", "PREPAID"),
 					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_period", "1"),
-					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_tcacctest.AND_MANUAL_RENEW"),
+					resource.TestCheckResourceAttr(id, "instance_charge_type_prepaid_renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
 			{
@@ -890,7 +890,7 @@ resource "tencentcloud_instance" "foo" {
   system_disk_type  = "CLOUD_PREMIUM"
   instance_charge_type       = "PREPAID"
   instance_charge_type_prepaid_period = 1
-  instance_charge_type_prepaid_renew_flag = "NOTIFY_tcacctest.AND_MANUAL_RENEW"
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   force_delete = true
 }
 `

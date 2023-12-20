@@ -694,7 +694,7 @@ resource "tencentcloud_cynosdb_param_template" "param_template" {
     }
     param_list {
         current_value = "OFF"
-        param_name    = "explicit_tcacctest.Defaults_for_timestamp"
+        param_name    = "explicit_Defaults_for_timestamp"
     }
     param_list {
         current_value = "OFF"
@@ -885,7 +885,7 @@ resource "tencentcloud_cynosdb_param_template" "param_template" {
         param_name    = "slow_query_log"
     }
     param_list {
-        current_value = "ONLY_tcacctest.FULL_GROUP_BY,STRICT_tcacctest.TRANS_TABLES,NO_tcacctest.ZERO_IN_DATE,NO_tcacctest.ZERO_DATE,ERROR_tcacctest.FOR_DIVISION_BY_ZERO,NO_tcacctest.AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+        current_value = "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
         param_name    = "sql_mode"
     }
     param_list {

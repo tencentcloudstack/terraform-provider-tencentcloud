@@ -65,7 +65,7 @@ func TestAccTencentCloudAsScalingConfigsDataSource_full(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.data_disk.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.data_disk.0.disk_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.data_disk.0.disk_size", "50"),
-					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.internet_charge_type", "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.internet_charge_type", "TRAFFIC_POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.internet_max_bandwidth_out", "10"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.public_ip_assigned", "true"),
 					resource.TestCheckResourceAttr("data.tencentcloud_as_scaling_configs.scaling_configs", "configuration_list.0.enhanced_security_service", "false"),
@@ -111,7 +111,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
     disk_size = 50
   }
   
-  internet_charge_type       = "TRAFFIC_tcacctest.POSTPAID_BY_HOUR"
+  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 10
   public_ip_assigned         = true
   password                   = "test123#"
