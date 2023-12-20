@@ -44,6 +44,9 @@ const (
 	// 获取订单信息失败，请稍后重试。
 	FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
 
+	// 温馨提示：上传的证书内容不符合CA证书的标准格式，请您核对证书类型是否有误
+	FAILEDOPERATION_CERTIFICATECAERROR = "FailedOperation.CertificateCaError"
+
 	// 记录状态必须完结才可以执行该操作。
 	FAILEDOPERATION_CERTIFICATEDEPLOYDETAILROLLBACKSTATUSINVALID = "FailedOperation.CertificateDeployDetailRollbackStatusInvalid"
 
@@ -61,6 +64,9 @@ const (
 
 	// 必须有部署成功的记录才可以回滚。
 	FAILEDOPERATION_CERTIFICATEDEPLOYROLLBACKSTATUSINVALID = "FailedOperation.CertificateDeployRollbackStatusInvalid"
+
+	// 证书内容疑似国密证书，与所选证书标准不符，请您核对选择的证书标准和证书内容是否有误
+	FAILEDOPERATION_CERTIFICATEENCRYPTINVALID = "FailedOperation.CertificateEncryptInvalid"
 
 	// 证书已存在。
 	FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
@@ -86,6 +92,9 @@ const (
 	// 证书不符合标准。
 	FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
 
+	// 温馨提示：证书内容和私钥不匹配，请您核对（请留意是否有多余的空格）
+	FAILEDOPERATION_CERTIFICATEMATCHERROR = "FailedOperation.CertificateMatchError"
+
 	// 证书与私钥不对应。
 	FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 
@@ -100,6 +109,9 @@ const (
 
 	// 该证书不存在或不可取消。
 	FAILEDOPERATION_CERTIFICATENOTFOUNDORCANTCANCEL = "FailedOperation.CertificateNotFoundOrCantCancel"
+
+	// 解析失败，请检查证书是否符合标准，请留意是否有多余的空格
+	FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 
 	// 证书状态不允许重新申请。
 	FAILEDOPERATION_CERTIFICATESTATUSNOTALLOWRESUBMIT = "FailedOperation.CertificateStatusNotAllowResubmit"
@@ -173,6 +185,9 @@ const (
 	// 权益包已过期。
 	FAILEDOPERATION_PACKAGEEXPIRED = "FailedOperation.PackageExpired"
 
+	// 权益包不存在。
+	FAILEDOPERATION_PACKAGENOTFOUND = "FailedOperation.PackageNotFound"
+
 	// 证书吊销失败。
 	FAILEDOPERATION_REVOKEFAILED = "FailedOperation.RevokeFailed"
 
@@ -217,6 +232,9 @@ const (
 
 	// 域名无效，请重新输入。
 	INVALIDPARAMETER_DOMAININVALID = "InvalidParameter.DomainInvalid"
+
+	// 没有匹配的私钥。
+	INVALIDPARAMETER_MISSMATCHPRIVATEKEY = "InvalidParameter.MissMatchPrivateKey"
 
 	// 权益点ID列表无效。
 	INVALIDPARAMETER_PACKAGEIDSINVALID = "InvalidParameter.PackageIdsInvalid"
