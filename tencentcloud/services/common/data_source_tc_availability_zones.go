@@ -1,16 +1,19 @@
-package tencentcloud
+package common
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
+func DataSourceTencentCloudAvailabilityZones() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This data source will been deprecated in Terraform TencentCloud provider later version. Please use `tencentcloud_availability_zones_by_product` instead.",
 
@@ -68,12 +71,12 @@ func dataSourceTencentCloudAvailabilityZones() *schema.Resource {
 }
 
 func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_availability_zones.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cvmService := CvmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var name string
@@ -87,10 +90,10 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 
 	var zones []*cvm.ZoneInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		zones, errRet = cvmService.DescribeZones(ctx)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -126,7 +129,7 @@ func dataSourceTencentCloudAvailabilityZonesRead(d *schema.ResourceData, meta in
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), zoneList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), zoneList); err != nil {
 			return err
 		}
 	}

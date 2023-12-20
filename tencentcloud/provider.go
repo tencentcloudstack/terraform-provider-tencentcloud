@@ -1,17 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ckafka"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ciam"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ci"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/chdfs"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -21,17 +10,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	sdkcommon "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 
 	providercommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
@@ -42,6 +23,24 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/apm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bh"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/bi"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cam"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cat"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cbs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ccn"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdh"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/chdfs"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ci"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ciam"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/ckafka"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/clb"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cls"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/common"
 )
 
 const (
@@ -174,13 +173,13 @@ func Provider() *schema.Provider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"tencentcloud_availability_regions":                         dataSourceTencentCloudAvailabilityRegions(),
+			"tencentcloud_availability_regions":                         common.DataSourceTencentCloudAvailabilityRegions(),
 			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
 			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
 			"tencentcloud_emr_auto_scale_records":                       dataSourceTencentCloudEmrAutoScaleRecords(),
-			"tencentcloud_availability_zones":                           dataSourceTencentCloudAvailabilityZones(),
-			"tencentcloud_availability_zones_by_product":                dataSourceTencentCloudAvailabilityZonesByProduct(),
+			"tencentcloud_availability_zones":                           common.DataSourceTencentCloudAvailabilityZones(),
+			"tencentcloud_availability_zones_by_product":                common.DataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
 			"tencentcloud_instances":                                    dataSourceTencentCloudInstances(),
 			"tencentcloud_instances_set":                                dataSourceTencentCloudInstancesSet(),
@@ -1944,7 +1943,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	// standard client
 	var tcClient TencentCloudClient
 	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
-		Credential: common.NewTokenCredential(
+		Credential: sdkcommon.NewTokenCredential(
 			secretId,
 			secretKey,
 			securityToken,
@@ -2034,7 +2033,7 @@ func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSes
 	}
 
 	// using STS credentials
-	tcClient.apiV3Conn.Credential = common.NewTokenCredential(
+	tcClient.apiV3Conn.Credential = sdkcommon.NewTokenCredential(
 		*response.Response.Credentials.TmpSecretId,
 		*response.Response.Credentials.TmpSecretKey,
 		*response.Response.Credentials.Token,

@@ -1,16 +1,19 @@
-package tencentcloud
+package common
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
+func DataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAvailabilityZonesByProductRead,
 
@@ -71,12 +74,12 @@ func dataSourceTencentCloudAvailabilityZonesByProduct() *schema.Resource {
 }
 
 func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_availability_zones.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_availability_zones.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	apiService := APIService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var name string
@@ -94,10 +97,10 @@ func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData
 
 	var zones []*api.ZoneInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		zones, errRet = apiService.DescribeZonesWithProduct(ctx, product)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -133,7 +136,7 @@ func dataSourceTencentCloudAvailabilityZonesByProductRead(d *schema.ResourceData
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), zoneList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), zoneList); err != nil {
 			return err
 		}
 	}

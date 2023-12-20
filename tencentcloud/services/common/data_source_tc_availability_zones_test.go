@@ -1,7 +1,9 @@
-package tencentcloud
+package common_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,28 +12,28 @@ func TestAccTencentCloudAvailabilityZonesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudAvailabilityZonesDataSourceConfigBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.all"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.all"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones.all", "zones.#"),
 				),
 			},
 			{
 				Config: testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.filter"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.filter"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones.filter", "zones.#"),
 				),
 			},
 			{
 				Config: testAccTencentCloudAvailabilityZonesDataSourceConfigIncludeUnavailable,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.unavailable"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones.unavailable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones.unavailable", "zones.#"),
 				),
 			},
@@ -44,7 +46,7 @@ data "tencentcloud_availability_zones" "all" {
 }
 `
 
-const testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName = defaultVpcVariable + `
+const testAccTencentCloudAvailabilityZonesDataSourceConfigFilterWithName = tcacctest.DefaultVpcVariable + `
 data "tencentcloud_availability_zones" "filter" {
   name = var.availability_zone
 }

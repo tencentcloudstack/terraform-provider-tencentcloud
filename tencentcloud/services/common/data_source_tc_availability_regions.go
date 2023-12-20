@@ -1,16 +1,19 @@
-package tencentcloud
+package common
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudAvailabilityRegions() *schema.Resource {
+func DataSourceTencentCloudAvailabilityRegions() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudAvailabilityRegionsRead,
 
@@ -61,12 +64,12 @@ func dataSourceTencentCloudAvailabilityRegions() *schema.Resource {
 }
 
 func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_availability_regions.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_availability_regions.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cvmService := CvmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var name string
@@ -75,7 +78,7 @@ func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta 
 		name = v.(string)
 	}
 	if name == "default" {
-		name = meta.(*TencentCloudClient).apiV3Conn.Region
+		name = meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	}
 	if v, ok := d.GetOkExists("include_unavailable"); ok {
 		includeUnavailable = v.(bool)
@@ -83,10 +86,10 @@ func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta 
 
 	var regions []*cvm.RegionInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		regions, errRet = cvmService.DescribeRegions(ctx)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -121,7 +124,7 @@ func dataSourceTencentCloudAvailabilityRegionsRead(d *schema.ResourceData, meta 
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), regionList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), regionList); err != nil {
 			return err
 		}
 	}

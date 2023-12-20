@@ -1,7 +1,9 @@
-package tencentcloud
+package common_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,35 +12,35 @@ func TestAccTencentCloudAvailabilityZonesByProductDataSource_basic(t *testing.T)
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigBasic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.all"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.all"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones_by_product.all", "zones.#"),
 				),
 			},
 			{
 				Config: testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigFilterWithName,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.filter"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.filter"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones_by_product.filter", "zones.#"),
 				),
 			},
 			{
 				Config: testAccTencentCloudAvailabilityZonesByProductDataSourceConfigIncludeUnavailable,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.unavailable"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.unavailable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones_by_product.unavailable", "zones.#"),
 				),
 			},
 			{
 				Config: testAccTencentCloudAvailabilityZonesByProductDataSourceConfigIncludeUnavailable,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.unavailable"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_availability_zones_by_product.unavailable"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_availability_zones_by_product.unavailable", "zones.#"),
 				),
 			},
@@ -52,7 +54,7 @@ data "tencentcloud_availability_zones_by_product" "basic" {
 }
 `
 
-const testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigFilterWithName = defaultVpcVariable + `
+const testAccTencentCloudAvailabilityZonesByProductByProductDataSourceConfigFilterWithName = tcacctest.DefaultVpcVariable + `
 data "tencentcloud_availability_zones_by_product" "filter" {
 	product = var.cvm_product
   	name = var.availability_zone

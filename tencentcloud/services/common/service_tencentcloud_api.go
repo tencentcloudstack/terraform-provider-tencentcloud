@@ -1,11 +1,14 @@
-package tencentcloud
+package common
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -15,7 +18,7 @@ type APIService struct {
 }
 
 func (me *APIService) DescribeZonesWithProduct(ctx context.Context, product string) (zones []*api.ZoneInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := api.NewDescribeZonesRequest()
 	request.Product = common.StringPtr(product)
 
