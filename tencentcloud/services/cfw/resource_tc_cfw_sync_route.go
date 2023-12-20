@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"fmt"
@@ -6,13 +6,16 @@ import (
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwSyncRoute() *schema.Resource {
+func ResourceTencentCloudCfwSyncRoute() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwSyncRouteCreate,
 		Read:   resourceTencentCloudCfwSyncRouteRead,
@@ -29,7 +32,7 @@ func resourceTencentCloudCfwSyncRoute() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(FW_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(FW_TYPE),
 				Description:  "Firewall type; nat: nat firewall; ew: inter-vpc firewall.",
 			},
 		},
@@ -37,11 +40,11 @@ func resourceTencentCloudCfwSyncRoute() *schema.Resource {
 }
 
 func resourceTencentCloudCfwSyncRouteCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_sync_route.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_sync_route.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		request       = cfw.NewSyncFwOperateRequest()
 		statusRequest = cfw.NewDescribeFwSyncStatusRequest()
 	)
@@ -54,10 +57,10 @@ func resourceTencentCloudCfwSyncRouteCreate(d *schema.ResourceData, meta interfa
 		request.FwType = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().SyncFwOperate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().SyncFwOperate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -71,10 +74,10 @@ func resourceTencentCloudCfwSyncRouteCreate(d *schema.ResourceData, meta interfa
 	}
 
 	// wait
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().DescribeFwSyncStatus(statusRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().DescribeFwSyncStatus(statusRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if *result.Response.SyncStatus == 0 {
@@ -95,15 +98,15 @@ func resourceTencentCloudCfwSyncRouteCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwSyncRouteRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_sync_route.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_sync_route.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudCfwSyncRouteDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_sync_route.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_sync_route.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

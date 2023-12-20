@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
@@ -858,9 +859,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
 			"tencentcloud_waf_user_clb_regions":                         dataSourceTencentCloudWafUserClbRegions(),
-			"tencentcloud_cfw_nat_fw_switches":                          dataSourceTencentCloudCfwNatFwSwitches(),
-			"tencentcloud_cfw_vpc_fw_switches":                          dataSourceTencentCloudCfwVpcFwSwitches(),
-			"tencentcloud_cfw_edge_fw_switches":                         dataSourceTencentCloudCfwEdgeFwSwitches(),
+			"tencentcloud_cfw_nat_fw_switches":                          cfw.DataSourceTencentCloudCfwNatFwSwitches(),
+			"tencentcloud_cfw_vpc_fw_switches":                          cfw.DataSourceTencentCloudCfwVpcFwSwitches(),
+			"tencentcloud_cfw_edge_fw_switches":                         cfw.DataSourceTencentCloudCfwEdgeFwSwitches(),
 			"tencentcloud_cwp_machines_simple":                          dataSourceTencentCloudCwpMachinesSimple(),
 			"tencentcloud_ses_receivers":                                dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                               dataSourceTencentCloudSesSendTasks(),
@@ -1813,18 +1814,18 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_integration_offline_task":                     resourceTencentCloudWedataIntegrationOfflineTask(),
 			"tencentcloud_wedata_integration_realtime_task":                    resourceTencentCloudWedataIntegrationRealtimeTask(),
 			"tencentcloud_wedata_integration_task_node":                        resourceTencentCloudWedataIntegrationTaskNode(),
-			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
-			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
-			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
-			"tencentcloud_cfw_nat_instance":                                    resourceTencentCloudCfwNatInstance(),
-			"tencentcloud_cfw_nat_policy":                                      resourceTencentCloudCfwNatPolicy(),
-			"tencentcloud_cfw_vpc_instance":                                    resourceTencentCloudCfwVpcInstance(),
-			"tencentcloud_cfw_vpc_policy":                                      resourceTencentCloudCfwVpcPolicy(),
-			"tencentcloud_cfw_sync_asset":                                      resourceTencentCloudCfwSyncAsset(),
-			"tencentcloud_cfw_sync_route":                                      resourceTencentCloudCfwSyncRoute(),
-			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
-			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
-			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_cfw_address_template":                                cfw.ResourceTencentCloudCfwAddressTemplate(),
+			"tencentcloud_cfw_block_ignore":                                    cfw.ResourceTencentCloudCfwBlockIgnore(),
+			"tencentcloud_cfw_edge_policy":                                     cfw.ResourceTencentCloudCfwEdgePolicy(),
+			"tencentcloud_cfw_nat_instance":                                    cfw.ResourceTencentCloudCfwNatInstance(),
+			"tencentcloud_cfw_nat_policy":                                      cfw.ResourceTencentCloudCfwNatPolicy(),
+			"tencentcloud_cfw_vpc_instance":                                    cfw.ResourceTencentCloudCfwVpcInstance(),
+			"tencentcloud_cfw_vpc_policy":                                      cfw.ResourceTencentCloudCfwVpcPolicy(),
+			"tencentcloud_cfw_sync_asset":                                      cfw.ResourceTencentCloudCfwSyncAsset(),
+			"tencentcloud_cfw_sync_route":                                      cfw.ResourceTencentCloudCfwSyncRoute(),
+			"tencentcloud_cfw_nat_firewall_switch":                             cfw.ResourceTencentCloudCfwNatFirewallSwitch(),
+			"tencentcloud_cfw_vpc_firewall_switch":                             cfw.ResourceTencentCloudCfwVpcFirewallSwitch(),
+			"tencentcloud_cfw_edge_firewall_switch":                            cfw.ResourceTencentCloudCfwEdgeFirewallSwitch(),
 			"tencentcloud_dasb_acl":                                            bh.ResourceTencentCloudDasbAcl(),
 			"tencentcloud_dasb_cmd_template":                                   bh.ResourceTencentCloudDasbCmdTemplate(),
 			"tencentcloud_dasb_device_group":                                   bh.ResourceTencentCloudDasbDeviceGroup(),

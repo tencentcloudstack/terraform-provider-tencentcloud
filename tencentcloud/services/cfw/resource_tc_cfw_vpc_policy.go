@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
+func ResourceTencentCloudCfwVpcPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwVpcPolicyCreate,
 		Read:   resourceTencentCloudCfwVpcPolicyRead,
@@ -50,7 +53,7 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 			"rule_action": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue(POLICY_RULE_ACTION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_RULE_ACTION),
 				Description:  "How traffic set in the access control policy passes through the cloud firewall. Value: accept:accept, drop:drop, log:log.",
 			},
 			"port": {
@@ -67,7 +70,7 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      POLICY_ENABLE_TRUE,
-				ValidateFunc: validateAllowedStringValue(POLICY_ENABLE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_ENABLE),
 				Description:  "Rule status, true means enabled, false means disabled. Default is true.",
 			},
 			"fw_group_id": {
@@ -96,11 +99,11 @@ func resourceTencentCloudCfwVpcPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_policy.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_policy.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId       = getLogId(contextNil)
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
 		request     = cfw.NewAddVpcAcRuleRequest()
 		response    = cfw.NewAddVpcAcRuleResponse()
 		vpcRuleItem = cfw.VpcRuleItem{}
@@ -151,10 +154,10 @@ func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interfa
 
 	request.Rules = append(request.Rules, &vpcRuleItem)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().AddVpcAcRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().AddVpcAcRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -181,13 +184,13 @@ func resourceTencentCloudCfwVpcPolicyCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_policy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_policy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		uuid    = d.Id()
 	)
 
@@ -258,11 +261,11 @@ func resourceTencentCloudCfwVpcPolicyRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_policy.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_policy.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId       = getLogId(contextNil)
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
 		request     = cfw.NewModifyVpcAcRuleRequest()
 		vpcRuleItem = cfw.VpcRuleItem{}
 		uuid        = d.Id()
@@ -315,10 +318,10 @@ func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interfa
 
 	request.Rules = append(request.Rules, &vpcRuleItem)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyVpcAcRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyVpcAcRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -335,13 +338,13 @@ func resourceTencentCloudCfwVpcPolicyUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwVpcPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_policy.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_policy.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		uuid    = d.Id()
 	)
 

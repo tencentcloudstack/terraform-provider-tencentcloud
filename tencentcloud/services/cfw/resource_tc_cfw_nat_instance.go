@@ -1,17 +1,20 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwNatInstance() *schema.Resource {
+func ResourceTencentCloudCfwNatInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwNatInstanceCreate,
 		Read:   resourceTencentCloudCfwNatInstanceRead,
@@ -29,13 +32,13 @@ func resourceTencentCloudCfwNatInstance() *schema.Resource {
 			"width": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(BAND_WIDTH),
+				ValidateFunc: tccommon.ValidateIntegerMin(BAND_WIDTH),
 				Description:  "Bandwidth.",
 			},
 			"mode": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(MODE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(MODE),
 				Description:  "Mode 1: access mode; 0: new mode.",
 			},
 			"new_mode_items": {
@@ -80,7 +83,7 @@ func resourceTencentCloudCfwNatInstance() *schema.Resource {
 				Optional:     true,
 				Type:         schema.TypeInt,
 				Default:      CROSS_A_ZONE_0,
-				ValidateFunc: validateAllowedIntValue(CROSS_A_ZONE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(CROSS_A_ZONE),
 				Description:  "Off-site disaster recovery 1: use off-site disaster recovery; 0: do not use off-site disaster recovery; if empty, the default is not to use off-site disaster recovery.",
 			},
 			//"domain": {
@@ -132,13 +135,13 @@ func resourceTencentCloudCfwNatInstance() *schema.Resource {
 }
 
 func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = cfw.NewCreateNatFwInstanceWithDomainRequest()
 		response   = cfw.NewCreateNatFwInstanceWithDomainResponse()
 		instanceId string
@@ -277,10 +280,10 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 	fwCidrInfo.ComFwCidr = helper.String("")
 	request.FwCidrInfo = &fwCidrInfo
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().CreateNatFwInstanceWithDomain(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().CreateNatFwInstanceWithDomain(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -298,10 +301,10 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 	d.SetId(instanceId)
 
 	// wait
-	err = resource.Retry(writeRetryTimeout*3, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout*3, func() *resource.RetryError {
 		natInstance, e := service.DescribeCfwNatInstanceById(ctx, instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if natInstance == nil {
@@ -325,13 +328,13 @@ func resourceTencentCloudCfwNatInstanceCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		instanceId = d.Id()
 		zone       string
 		zoneBak    string
@@ -467,11 +470,11 @@ func resourceTencentCloudCfwNatInstanceRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwNatInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = cfw.NewModifyNatInstanceRequest()
 		instanceId = d.Id()
 	)
@@ -490,10 +493,10 @@ func resourceTencentCloudCfwNatInstanceUpdate(d *schema.ResourceData, meta inter
 		request.InstanceName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyNatInstance(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatInstance(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -510,13 +513,13 @@ func resourceTencentCloudCfwNatInstanceUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfwNatInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		instanceId = d.Id()
 	)
 

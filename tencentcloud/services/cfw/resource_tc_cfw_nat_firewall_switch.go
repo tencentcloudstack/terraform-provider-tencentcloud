@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
@@ -6,14 +6,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwNatFirewallSwitch() *schema.Resource {
+func ResourceTencentCloudCfwNatFirewallSwitch() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwNatFirewallSwitchCreate,
 		Read:   resourceTencentCloudCfwNatFirewallSwitchRead,
@@ -45,28 +48,28 @@ func resourceTencentCloudCfwNatFirewallSwitch() *schema.Resource {
 }
 
 func resourceTencentCloudCfwNatFirewallSwitchCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_firewall_switch.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_firewall_switch.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	natInsId := d.Get("nat_ins_id").(string)
 	subnetId := d.Get("subnet_id").(string)
 
-	d.SetId(strings.Join([]string{natInsId, subnetId}, FILED_SP))
+	d.SetId(strings.Join([]string{natInsId, subnetId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCfwNatFirewallSwitchUpdate(d, meta)
 }
 
 func resourceTencentCloudCfwNatFirewallSwitchRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_firewall_switch.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_firewall_switch.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -92,17 +95,17 @@ func resourceTencentCloudCfwNatFirewallSwitchRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_firewall_switch.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_firewall_switch.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request = cfw.NewModifyNatFwSwitchRequest()
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -115,10 +118,10 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 
 	request.SubnetIdList = common.StringPtrs([]string{subnetId})
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyNatFwSwitch(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatFwSwitch(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -132,10 +135,10 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 	}
 
 	// wait
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		switchDetail, e := service.DescribeCfwNatFirewallSwitchById(ctx, natInsId, subnetId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if *switchDetail.Status == 0 {
@@ -153,8 +156,8 @@ func resourceTencentCloudCfwNatFirewallSwitchUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudCfwNatFirewallSwitchDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_firewall_switch.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_firewall_switch.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

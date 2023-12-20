@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwBlockIgnore() *schema.Resource {
+func ResourceTencentCloudCfwBlockIgnore() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwBlockIgnoreCreate,
 		Read:   resourceTencentCloudCfwBlockIgnoreRead,
@@ -38,7 +41,7 @@ func resourceTencentCloudCfwBlockIgnore() *schema.Resource {
 			"direction": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue(DIRECTION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(DIRECTION),
 				Description:  "Rule direction, 0 outbound, 1 inbound, 3 intranet.",
 			},
 			"end_time": {
@@ -60,7 +63,7 @@ func resourceTencentCloudCfwBlockIgnore() *schema.Resource {
 			"rule_type": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(RULE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(RULE_TYPE),
 				Description:  "Rule type, 1 block, 2 ignore, domain block is not supported.",
 			},
 		},
@@ -68,11 +71,11 @@ func resourceTencentCloudCfwBlockIgnore() *schema.Resource {
 }
 
 func resourceTencentCloudCfwBlockIgnoreCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_block_ignore.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_block_ignore.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                = getLogId(contextNil)
+		logId                = tccommon.GetLogId(tccommon.ContextNil)
 		request              = cfw.NewCreateBlockIgnoreRuleListRequest()
 		intrusionDefenseRule = cfw.IntrusionDefenseRule{}
 		iP                   string
@@ -116,10 +119,10 @@ func resourceTencentCloudCfwBlockIgnoreCreate(d *schema.ResourceData, meta inter
 		ruleType = strconv.Itoa(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().CreateBlockIgnoreRuleList(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().CreateBlockIgnoreRuleList(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -132,22 +135,22 @@ func resourceTencentCloudCfwBlockIgnoreCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	d.SetId(strings.Join([]string{iP, domain, direction, ruleType}, FILED_SP))
+	d.SetId(strings.Join([]string{iP, domain, direction, ruleType}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCfwBlockIgnoreRead(d, meta)
 }
 
 func resourceTencentCloudCfwBlockIgnoreRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_block_ignore.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_block_ignore.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -201,11 +204,11 @@ func resourceTencentCloudCfwBlockIgnoreRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwBlockIgnoreUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_block_ignore.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_block_ignore.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                = getLogId(contextNil)
+		logId                = tccommon.GetLogId(tccommon.ContextNil)
 		request              = cfw.NewModifyBlockIgnoreRuleRequest()
 		intrusionDefenseRule = cfw.IntrusionDefenseRule{}
 	)
@@ -218,7 +221,7 @@ func resourceTencentCloudCfwBlockIgnoreUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -253,10 +256,10 @@ func resourceTencentCloudCfwBlockIgnoreUpdate(d *schema.ResourceData, meta inter
 
 	request.Rule = &intrusionDefenseRule
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyBlockIgnoreRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyBlockIgnoreRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -272,16 +275,16 @@ func resourceTencentCloudCfwBlockIgnoreUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfwBlockIgnoreDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_block_ignore.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_block_ignore.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

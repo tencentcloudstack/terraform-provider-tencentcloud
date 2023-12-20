@@ -1,17 +1,20 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwVpcInstance() *schema.Resource {
+func ResourceTencentCloudCfwVpcInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwVpcInstanceCreate,
 		Read:   resourceTencentCloudCfwVpcInstanceRead,
@@ -29,7 +32,7 @@ func resourceTencentCloudCfwVpcInstance() *schema.Resource {
 			"mode": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(MODE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(MODE),
 				Description:  "Mode 0: private network mode; 1: CCN cloud networking mode.",
 			},
 			"vpc_fw_instances": {
@@ -69,13 +72,13 @@ func resourceTencentCloudCfwVpcInstance() *schema.Resource {
 									"width": {
 										Type:         schema.TypeInt,
 										Required:     true,
-										ValidateFunc: validateIntegerMin(1024),
+										ValidateFunc: tccommon.ValidateIntegerMin(1024),
 										Description:  "Bandwidth, unit: Mbps.",
 									},
 									"cross_a_zone": {
 										Type:         schema.TypeInt,
 										Optional:     true,
-										ValidateFunc: validateAllowedIntValue(CROSS_A_ZONE),
+										ValidateFunc: tccommon.ValidateAllowedIntValue(CROSS_A_ZONE),
 										Description:  "Off-site disaster recovery 1: use off-site disaster recovery; 0: do not use off-site disaster recovery; if it is empty, off-site disaster recovery will not be used by default.",
 									},
 									"zone_set": {
@@ -95,7 +98,7 @@ func resourceTencentCloudCfwVpcInstance() *schema.Resource {
 			"switch_mode": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(SWITCH_MODE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(SWITCH_MODE),
 				Description:  "Switch mode of firewall instance. 1: Single point intercommunication; 2: Multi-point communication; 4: Custom Routing.",
 			},
 			"fw_vpc_cidr": {
@@ -114,13 +117,13 @@ func resourceTencentCloudCfwVpcInstance() *schema.Resource {
 }
 
 func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request   = cfw.NewCreateVpcFwGroupRequest()
 		response  = cfw.NewCreateVpcFwGroupResponse()
 		fwGroupId string
@@ -293,10 +296,10 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 		request.FwVpcCidr = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().CreateVpcFwGroup(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().CreateVpcFwGroup(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -314,10 +317,10 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 	d.SetId(fwGroupId)
 
 	// wait
-	err = resource.Retry(writeRetryTimeout*3, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout*3, func() *resource.RetryError {
 		vpcFwGroupInfo, e := service.DescribeFwGroupInstanceInfoById(ctx, fwGroupId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if vpcFwGroupInfo == nil {
@@ -341,13 +344,13 @@ func resourceTencentCloudCfwVpcInstanceCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		fwGroupId = d.Id()
 		mode      int64
 	)
@@ -454,11 +457,11 @@ func resourceTencentCloudCfwVpcInstanceRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwVpcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
 		request   = cfw.NewModifyVpcFwGroupRequest()
 		fwGroupId = d.Id()
 	)
@@ -479,10 +482,10 @@ func resourceTencentCloudCfwVpcInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyVpcFwGroup(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyVpcFwGroup(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -499,13 +502,13 @@ func resourceTencentCloudCfwVpcInstanceUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfwVpcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		fwGroupId = d.Id()
 	)
 

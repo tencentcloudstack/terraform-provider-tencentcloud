@@ -1,16 +1,18 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
 )
 
-func dataSourceTencentCloudCfwEdgeFwSwitches() *schema.Resource {
+func DataSourceTencentCloudCfwEdgeFwSwitches() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfwEdgeFwSwitchesRead,
 		Schema: map[string]*schema.Schema{
@@ -83,20 +85,20 @@ func dataSourceTencentCloudCfwEdgeFwSwitches() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfwEdgeFwSwitchesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfw_edge_fw_switches.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfw_edge_fw_switches.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		data    []*cfw.EdgeIpInfo
 	)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCfwEdgeFwSwitchesByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		data = result
@@ -162,7 +164,7 @@ func dataSourceTencentCloudCfwEdgeFwSwitchesRead(d *schema.ResourceData, meta in
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

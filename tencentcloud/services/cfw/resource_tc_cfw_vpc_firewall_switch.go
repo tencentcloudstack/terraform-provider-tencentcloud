@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
@@ -6,14 +6,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwVpcFirewallSwitch() *schema.Resource {
+func ResourceTencentCloudCfwVpcFirewallSwitch() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwVpcFirewallSwitchCreate,
 		Read:   resourceTencentCloudCfwVpcFirewallSwitchRead,
@@ -45,28 +48,28 @@ func resourceTencentCloudCfwVpcFirewallSwitch() *schema.Resource {
 }
 
 func resourceTencentCloudCfwVpcFirewallSwitchCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	vpcInsId := d.Get("vpc_ins_id").(string)
 	switchId := d.Get("switch_id").(string)
 
-	d.SetId(strings.Join([]string{vpcInsId, switchId}, FILED_SP))
+	d.SetId(strings.Join([]string{vpcInsId, switchId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudCfwVpcFirewallSwitchUpdate(d, meta)
 }
 
 func resourceTencentCloudCfwVpcFirewallSwitchRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -92,18 +95,18 @@ func resourceTencentCloudCfwVpcFirewallSwitchRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudCfwVpcFirewallSwitchUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
-		service    = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service    = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request    = cfw.NewModifyFwGroupSwitchRequest()
 		switchMode int64
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -138,10 +141,10 @@ func resourceTencentCloudCfwVpcFirewallSwitchUpdate(d *schema.ResourceData, meta
 		},
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyFwGroupSwitch(request)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyFwGroupSwitch(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -155,10 +158,10 @@ func resourceTencentCloudCfwVpcFirewallSwitchUpdate(d *schema.ResourceData, meta
 	}
 
 	// wait
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		switchDetail, e := service.DescribeCfwVpcFirewallSwitchById(ctx, vpcInsId, switchId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if *switchDetail.Status == 0 {
@@ -176,8 +179,8 @@ func resourceTencentCloudCfwVpcFirewallSwitchUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudCfwVpcFirewallSwitchDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_vpc_firewall_switch.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

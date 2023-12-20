@@ -1,4 +1,4 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwNatPolicy() *schema.Resource {
+func ResourceTencentCloudCfwNatPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwNatPolicyCreate,
 		Read:   resourceTencentCloudCfwNatPolicyRead,
@@ -50,7 +53,7 @@ func resourceTencentCloudCfwNatPolicy() *schema.Resource {
 			"rule_action": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue(POLICY_RULE_ACTION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_RULE_ACTION),
 				Description:  "How the traffic set in the access control policy passes through the cloud firewall. Values: accept: allow; drop: reject; log: observe.",
 			},
 			"port": {
@@ -72,7 +75,7 @@ func resourceTencentCloudCfwNatPolicy() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      POLICY_ENABLE_TRUE,
-				ValidateFunc: validateAllowedStringValue(POLICY_ENABLE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(POLICY_ENABLE),
 				Description:  "Rule status, true means enabled, false means disabled. Default is true.",
 			},
 			"description": {
@@ -85,11 +88,11 @@ func resourceTencentCloudCfwNatPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_policy.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_policy.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId             = getLogId(contextNil)
+		logId             = tccommon.GetLogId(tccommon.ContextNil)
 		request           = cfw.NewAddNatAcRuleRequest()
 		response          = cfw.NewAddNatAcRuleResponse()
 		createNatRuleItem = cfw.CreateNatRuleItem{}
@@ -138,10 +141,10 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 
 	request.Rules = append(request.Rules, &createNatRuleItem)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().AddNatAcRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().AddNatAcRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -163,13 +166,13 @@ func resourceTencentCloudCfwNatPolicyCreate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_policy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_policy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		ruleUuid = d.Id()
 	)
 
@@ -232,11 +235,11 @@ func resourceTencentCloudCfwNatPolicyRead(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_policy.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_policy.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = getLogId(contextNil)
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = cfw.NewModifyNatAcRuleRequest()
 		modifyRuleItem = cfw.CreateNatRuleItem{}
 		uuid           = d.Id()
@@ -295,10 +298,10 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 
 	request.Rules = append(request.Rules, &modifyRuleItem)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyNatAcRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyNatAcRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -315,13 +318,13 @@ func resourceTencentCloudCfwNatPolicyUpdate(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfwNatPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_nat_policy.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_nat_policy.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		uuid    = d.Id()
 	)
 

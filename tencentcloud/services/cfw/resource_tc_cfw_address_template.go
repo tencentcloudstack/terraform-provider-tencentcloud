@@ -1,16 +1,19 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwAddressTemplate() *schema.Resource {
+func ResourceTencentCloudCfwAddressTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwAddressTemplateCreate,
 		Read:   resourceTencentCloudCfwAddressTemplateRead,
@@ -38,7 +41,7 @@ func resourceTencentCloudCfwAddressTemplate() *schema.Resource {
 			"type": {
 				Required:     true,
 				Type:         schema.TypeInt,
-				ValidateFunc: validateAllowedIntValue(ADDRESS_TEMPLATE_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedIntValue(ADDRESS_TEMPLATE_TYPE),
 				Description:  "1: ip template; 5: domain name templates.",
 			},
 		},
@@ -46,11 +49,11 @@ func resourceTencentCloudCfwAddressTemplate() *schema.Resource {
 }
 
 func resourceTencentCloudCfwAddressTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_address_template.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_address_template.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
 		request  = cfw.NewCreateAddressTemplateRequest()
 		response = cfw.NewCreateAddressTemplateResponse()
 		uuid     string
@@ -72,10 +75,10 @@ func resourceTencentCloudCfwAddressTemplateCreate(d *schema.ResourceData, meta i
 		request.Type = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().CreateAddressTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().CreateAddressTemplate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -96,13 +99,13 @@ func resourceTencentCloudCfwAddressTemplateCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudCfwAddressTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_address_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_address_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		uuid    = d.Id()
 	)
 
@@ -137,11 +140,11 @@ func resourceTencentCloudCfwAddressTemplateRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudCfwAddressTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_address_template.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_address_template.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = cfw.NewModifyAddressTemplateRequest()
 		uuid    = d.Id()
 	)
@@ -164,10 +167,10 @@ func resourceTencentCloudCfwAddressTemplateUpdate(d *schema.ResourceData, meta i
 		request.Type = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyAddressTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyAddressTemplate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -184,13 +187,13 @@ func resourceTencentCloudCfwAddressTemplateUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudCfwAddressTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_address_template.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_address_template.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		uuid    = d.Id()
 	)
 

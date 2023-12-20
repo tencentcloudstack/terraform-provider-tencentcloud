@@ -1,15 +1,18 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCfwNatFwSwitches() *schema.Resource {
+func DataSourceTencentCloudCfwNatFwSwitches() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfwNatFwSwitchesRead,
 		Schema: map[string]*schema.Schema{
@@ -127,13 +130,13 @@ func dataSourceTencentCloudCfwNatFwSwitches() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfw_nat_fw_switches.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfw_nat_fw_switches.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		data     []*cfw.NatSwitchListData
 		natInsId string
 	)
@@ -148,10 +151,10 @@ func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta int
 		paramMap["Status"] = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCfwNatFwSwitchesByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		data = result
@@ -245,7 +248,7 @@ func dataSourceTencentCloudCfwNatFwSwitchesRead(d *schema.ResourceData, meta int
 	d.SetId(natInsId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

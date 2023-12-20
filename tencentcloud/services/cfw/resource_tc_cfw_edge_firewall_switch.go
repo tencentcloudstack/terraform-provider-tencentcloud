@@ -1,17 +1,20 @@
-package tencentcloud
+package cfw
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfw "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfw/v20190904"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfwEdgeFirewallSwitch() *schema.Resource {
+func ResourceTencentCloudCfwEdgeFirewallSwitch() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfwEdgeFirewallSwitchCreate,
 		Read:   resourceTencentCloudCfwEdgeFirewallSwitchRead,
@@ -45,8 +48,8 @@ func resourceTencentCloudCfwEdgeFirewallSwitch() *schema.Resource {
 }
 
 func resourceTencentCloudCfwEdgeFirewallSwitchCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_edge_firewall_switch.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_edge_firewall_switch.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	publicIp := d.Get("public_ip").(string)
 	d.SetId(publicIp)
@@ -55,13 +58,13 @@ func resourceTencentCloudCfwEdgeFirewallSwitchCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudCfwEdgeFirewallSwitchRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_edge_firewall_switch.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_edge_firewall_switch.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		publicIp = d.Id()
 	)
 
@@ -92,13 +95,13 @@ func resourceTencentCloudCfwEdgeFirewallSwitchRead(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudCfwEdgeFirewallSwitchUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_edge_firewall_switch.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_edge_firewall_switch.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId        = getLogId(contextNil)
-		ctx          = context.WithValue(context.TODO(), logIdKey, logId)
-		service      = CfwService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId        = tccommon.GetLogId(tccommon.ContextNil)
+		ctx          = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service      = CfwService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		request      = cfw.NewModifyEdgeIpSwitchRequest()
 		edgeIpSwitch = cfw.EdgeIpSwitch{}
 		publicIp     = d.Id()
@@ -120,10 +123,10 @@ func resourceTencentCloudCfwEdgeFirewallSwitchUpdate(d *schema.ResourceData, met
 
 	request.EdgeIpSwitchLst = append(request.EdgeIpSwitchLst, &edgeIpSwitch)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfwClient().ModifyEdgeIpSwitch(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfwClient().ModifyEdgeIpSwitch(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -137,10 +140,10 @@ func resourceTencentCloudCfwEdgeFirewallSwitchUpdate(d *schema.ResourceData, met
 	}
 
 	// wait
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		switchDetail, e := service.DescribeCfwEdgeFirewallSwitchById(ctx, publicIp)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if *switchDetail.Status == 0 || *switchDetail.Status == 1 {
@@ -158,8 +161,8 @@ func resourceTencentCloudCfwEdgeFirewallSwitchUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudCfwEdgeFirewallSwitchDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfw_edge_firewall_switch.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfw_edge_firewall_switch.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
