@@ -3,5 +3,9 @@ tencentcloud_vpc_peer_connect_manager
 ```
 
 ```release-note:new-resource
-tencentcloud_vpc_peer_connect_accecpt_or_reject
+tencentcloud_vpc_peer_connect_accept_operation
+```
+
+```release-note:new-resource
+tencentcloud_vpc_peer_connect_reject_operation
 ```

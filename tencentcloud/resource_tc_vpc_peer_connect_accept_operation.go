@@ -35,7 +35,6 @@ func resourceTencentCloudVpcPeerConnectAcceptOperationCreate(d *schema.ResourceD
 
 	var (
 		request             = vpc.NewAcceptVpcPeeringConnectionRequest()
-		response            = vpc.NewAcceptVpcPeeringConnectionResponse()
 		peeringConnectionId string
 	)
 	if v, ok := d.GetOk("peering_connection_id"); ok {
@@ -50,7 +49,6 @@ func resourceTencentCloudVpcPeerConnectAcceptOperationCreate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
