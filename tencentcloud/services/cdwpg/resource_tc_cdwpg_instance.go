@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwpg
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwpg/v20201230"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCdwpgInstance() *schema.Resource {
+func ResourceTencentCloudCdwpgInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCdwpgInstanceCreate,
 		Read:   resourceTencentCloudCdwpgInstanceRead,
@@ -144,10 +147,10 @@ func resourceTencentCloudCdwpgInstance() *schema.Resource {
 }
 
 func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdwpg_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = cdwpg.NewCreateInstanceByApiRequest()
@@ -221,10 +224,10 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwpgClient().CreateInstanceByApi(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgClient().CreateInstanceByApi(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -237,8 +240,8 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 	}
 
 	instanceId = *response.Response.InstanceId
-	service := CdwpgService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -246,10 +249,10 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 
 	d.SetId(instanceId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cdwpg:%s:uin/:cdwpgInstance/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -260,14 +263,14 @@ func resourceTencentCloudCdwpgInstanceCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCdwpgInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdwpg_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -362,7 +365,7 @@ func resourceTencentCloudCdwpgInstanceRead(d *schema.ResourceData, meta interfac
 
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "cdwpg", "cdwpgInstance", tcClient.Region, d.Id())
 	if err != nil {
@@ -374,10 +377,10 @@ func resourceTencentCloudCdwpgInstanceRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdwpg_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cdwpg.NewModifyInstanceRequest()
 
@@ -399,10 +402,10 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwpgClient().ModifyInstance(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwpgClient().ModifyInstance(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -413,20 +416,20 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	service := CdwpgService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
 	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cdwpg", "cdwpgInstance", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cdwpg", "cdwpgInstance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -436,20 +439,20 @@ func resourceTencentCloudCdwpgInstanceUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCdwpgInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdwpg_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwpg_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwpgService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwpgService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instanceId := d.Id()
 
 	if err := service.DeleteCdwpgInstanceById(ctx, instanceId); err != nil {
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Deleted"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Deleted"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

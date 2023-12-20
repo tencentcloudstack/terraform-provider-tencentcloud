@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"encoding/json"
@@ -1858,7 +1859,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_datasource_cloud":                                 bi.ResourceTencentCloudBiDatasourceCloud(),
 			"tencentcloud_bi_embed_token_apply":                                bi.ResourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                             bi.ResourceTencentCloudBiEmbedIntervalApply(),
-			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
+			"tencentcloud_cdwpg_instance":                                      cdwpg.ResourceTencentCloudCdwpgInstance(),
 			"tencentcloud_clickhouse_keyval_config":                            cdwch.ResourceTencentCloudClickhouseKeyvalConfig(),
 			"tencentcloud_clickhouse_xml_config":                               cdwch.ResourceTencentCloudClickhouseXmlConfig(),
 			"tencentcloud_clb_target_group_attachments":                        resourceTencentCloudClbTargetGroupAttachments(),
