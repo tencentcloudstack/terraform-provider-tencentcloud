@@ -1,4 +1,4 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
@@ -7,10 +7,12 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceTencentCloudDcxInstances() *schema.Resource {
+func DataSourceTencentCloudDcxInstances() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcxInstancesRead,
 
@@ -134,12 +136,12 @@ func dataSourceTencentCloudDcxInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcxInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dcx_instances.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_dcx_instances.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		id   = ""
@@ -219,7 +221,7 @@ func dataSourceTencentCloudDcxInstancesRead(d *schema.ResourceData, meta interfa
 	d.SetId(fmt.Sprintf("%x", m.Sum(nil)))
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), instanceList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), instanceList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]\n",
 				logId, output.(string), err.Error())
 			return err

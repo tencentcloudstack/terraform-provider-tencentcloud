@@ -1,15 +1,17 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 )
 
-func resourceTencentCloudDcInternetAddressConfig() *schema.Resource {
+func ResourceTencentCloudDcInternetAddressConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcInternetAddressConfigCreate,
 		Read:   resourceTencentCloudDcInternetAddressConfigRead,
@@ -35,8 +37,8 @@ func resourceTencentCloudDcInternetAddressConfig() *schema.Resource {
 }
 
 func resourceTencentCloudDcInternetAddressConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_internet_address_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_internet_address_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	instanceId := d.Get("instance_id").(string)
 
@@ -46,14 +48,14 @@ func resourceTencentCloudDcInternetAddressConfigCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudDcInternetAddressConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_internet_address_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_internet_address_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -82,10 +84,10 @@ func resourceTencentCloudDcInternetAddressConfigRead(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudDcInternetAddressConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_internet_address_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_internet_address_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		enable         bool
@@ -102,10 +104,10 @@ func resourceTencentCloudDcInternetAddressConfigUpdate(d *schema.ResourceData, m
 	if enable {
 		enableRequest.InstanceId = &instanceId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().EnableInternetAddress(enableRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().EnableInternetAddress(enableRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableRequest.GetAction(), enableRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -118,10 +120,10 @@ func resourceTencentCloudDcInternetAddressConfigUpdate(d *schema.ResourceData, m
 	} else {
 		disableRequest.InstanceId = &instanceId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().DisableInternetAddress(disableRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().DisableInternetAddress(disableRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableRequest.GetAction(), disableRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -137,8 +139,8 @@ func resourceTencentCloudDcInternetAddressConfigUpdate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudDcInternetAddressConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_internet_address_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_internet_address_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

@@ -1,17 +1,20 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDcInstance() *schema.Resource {
+func ResourceTencentCloudDcInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcInstanceCreate,
 		Read:   resourceTencentCloudDcInstanceRead,
@@ -127,10 +130,10 @@ func resourceTencentCloudDcInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = dc.NewCreateDirectConnectRequest()
@@ -204,10 +207,10 @@ func resourceTencentCloudDcInstanceCreate(d *schema.ResourceData, meta interface
 		request.SignLaw = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().CreateDirectConnect(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().CreateDirectConnect(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -230,14 +233,14 @@ func resourceTencentCloudDcInstanceCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudDcInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	directConnectId := d.Id()
 
@@ -326,10 +329,10 @@ func resourceTencentCloudDcInstanceRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudDcInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := dc.NewModifyDirectConnectAttributeRequest()
 
@@ -413,10 +416,10 @@ func resourceTencentCloudDcInstanceUpdate(d *schema.ResourceData, meta interface
 			request.SignLaw = helper.Bool(v.(bool))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().ModifyDirectConnectAttribute(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectAttribute(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -432,13 +435,13 @@ func resourceTencentCloudDcInstanceUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudDcInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	directConnectId := d.Id()
 
 	if err := service.DeleteDcInstanceById(ctx, directConnectId); err != nil {

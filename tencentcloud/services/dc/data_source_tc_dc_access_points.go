@@ -1,15 +1,18 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudDcAccessPoints() *schema.Resource {
+func DataSourceTencentCloudDcAccessPoints() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcAccessPointsRead,
 		Schema: map[string]*schema.Schema{
@@ -114,26 +117,26 @@ func dataSourceTencentCloudDcAccessPoints() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcAccessPointsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dc_access_points.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_dc_access_points.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("region_id"); ok {
 		paramMap["RegionId"] = helper.String(v.(string))
 	}
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var accessPointSet []*dc.AccessPoint
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeDcAccessPointsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		accessPointSet = result
 		return nil
@@ -213,7 +216,7 @@ func dataSourceTencentCloudDcAccessPointsRead(d *schema.ResourceData, meta inter
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

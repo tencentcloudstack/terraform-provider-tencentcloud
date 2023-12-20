@@ -1,15 +1,18 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource {
+func DataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcPublicDirectConnectTunnelRoutesRead,
 		Schema: map[string]*schema.Schema{
@@ -95,12 +98,12 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes() *schema.Resource 
 }
 
 func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dc_public_direct_connect_tunnel_routes.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_dc_public_direct_connect_tunnel_routes.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("direct_connect_tunnel_id"); ok {
@@ -127,14 +130,14 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutesRead(d *schema.Resou
 		paramMap["filters"] = tmpSet
 	}
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var routes []*dc.DirectConnectTunnelRoute
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeDcPublicDirectConnectTunnelRoutesByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		routes = result
 		return nil
@@ -184,7 +187,7 @@ func dataSourceTencentCloudDcPublicDirectConnectTunnelRoutesRead(d *schema.Resou
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

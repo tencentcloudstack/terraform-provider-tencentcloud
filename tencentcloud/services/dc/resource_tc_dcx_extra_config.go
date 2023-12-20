@@ -1,16 +1,19 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDcxExtraConfig() *schema.Resource {
+func ResourceTencentCloudDcxExtraConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcxExtraConfigCreate,
 		Read:   resourceTencentCloudDcxExtraConfigRead,
@@ -174,8 +177,8 @@ func resourceTencentCloudDcxExtraConfig() *schema.Resource {
 }
 
 func resourceTencentCloudDcxExtraConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx_extra_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx_extra_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	directConnectTunnelId := d.Get("direct_connect_tunnel_id").(string)
 
@@ -185,14 +188,14 @@ func resourceTencentCloudDcxExtraConfigCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudDcxExtraConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx_extra_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx_extra_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	directConnectTunnelId := d.Id()
 
@@ -312,10 +315,10 @@ func resourceTencentCloudDcxExtraConfigRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudDcxExtraConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx_extra_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx_extra_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request               = dc.NewModifyDirectConnectTunnelExtraRequest()
@@ -410,10 +413,10 @@ func resourceTencentCloudDcxExtraConfigUpdate(d *schema.ResourceData, meta inter
 		request.JumboEnable = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().ModifyDirectConnectTunnelExtra(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().ModifyDirectConnectTunnelExtra(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -428,8 +431,8 @@ func resourceTencentCloudDcxExtraConfigUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudDcxExtraConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx_extra_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx_extra_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

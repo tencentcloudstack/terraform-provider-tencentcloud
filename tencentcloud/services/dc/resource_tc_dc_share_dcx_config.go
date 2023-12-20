@@ -1,15 +1,17 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 )
 
-func resourceTencentCloudDcShareDcxConfig() *schema.Resource {
+func ResourceTencentCloudDcShareDcxConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcShareDcxConfigCreate,
 		Read:   resourceTencentCloudDcShareDcxConfigRead,
@@ -35,8 +37,8 @@ func resourceTencentCloudDcShareDcxConfig() *schema.Resource {
 }
 
 func resourceTencentCloudDcShareDcxConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_share_dcx_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_share_dcx_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	dcxId := d.Get("direct_connect_tunnel_id").(string)
 
@@ -46,14 +48,14 @@ func resourceTencentCloudDcShareDcxConfigCreate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudDcShareDcxConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_share_dcx_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_share_dcx_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	dcxId := d.Id()
 
@@ -84,10 +86,10 @@ func resourceTencentCloudDcShareDcxConfigRead(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudDcShareDcxConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_share_dcx_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_share_dcx_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		enable        bool
@@ -104,10 +106,10 @@ func resourceTencentCloudDcShareDcxConfigUpdate(d *schema.ResourceData, meta int
 	if enable {
 		acceptRequest.DirectConnectTunnelId = &dcxId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().AcceptDirectConnectTunnel(acceptRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().AcceptDirectConnectTunnel(acceptRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, acceptRequest.GetAction(), acceptRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -120,10 +122,10 @@ func resourceTencentCloudDcShareDcxConfigUpdate(d *schema.ResourceData, meta int
 	} else {
 		rejectRequest.DirectConnectTunnelId = &dcxId
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcClient().RejectDirectConnectTunnel(rejectRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseDcClient().RejectDirectConnectTunnel(rejectRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, rejectRequest.GetAction(), rejectRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -139,8 +141,8 @@ func resourceTencentCloudDcShareDcxConfigUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudDcShareDcxConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dc_share_dcx_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dc_share_dcx_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

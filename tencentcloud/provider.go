@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -265,12 +266,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_tenant_instances":                         ccn.DataSourceTencentCloudCcnTenantInstance(),
 			"tencentcloud_ccn_cross_border_flow_monitor":                ccn.DataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":     ccn.DataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
-			"tencentcloud_dc_instances":                                 dataSourceTencentCloudDcInstances(),
-			"tencentcloud_dc_access_points":                             dataSourceTencentCloudDcAccessPoints(),
-			"tencentcloud_dc_internet_address_quota":                    dataSourceTencentCloudDcInternetAddressQuota(),
-			"tencentcloud_dc_internet_address_statistics":               dataSourceTencentCloudDcInternetAddressStatistics(),
-			"tencentcloud_dc_public_direct_connect_tunnel_routes":       dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
-			"tencentcloud_dcx_instances":                                dataSourceTencentCloudDcxInstances(),
+			"tencentcloud_dc_instances":                                 dc.DataSourceTencentCloudDcInstances(),
+			"tencentcloud_dc_access_points":                             dc.DataSourceTencentCloudDcAccessPoints(),
+			"tencentcloud_dc_internet_address_quota":                    dc.DataSourceTencentCloudDcInternetAddressQuota(),
+			"tencentcloud_dc_internet_address_statistics":               dc.DataSourceTencentCloudDcInternetAddressStatistics(),
+			"tencentcloud_dc_public_direct_connect_tunnel_routes":       dc.DataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
+			"tencentcloud_dcx_instances":                                dc.DataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                         dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":                        dataSourceTencentCloudDcGatewayCCNRoutes(),
 			"tencentcloud_security_group":                               dataSourceTencentCloudSecurityGroup(),
@@ -995,12 +996,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_instances_accept_attach":                         ccn.ResourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reject_attach":                         ccn.ResourceTencentCloudCcnInstancesRejectAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                          ccn.ResourceTencentCloudCcnInstancesResetAttach(),
-			"tencentcloud_dc_instance":                                         resourceTencentCloudDcInstance(),
-			"tencentcloud_dcx":                                                 resourceTencentCloudDcxInstance(),
-			"tencentcloud_dcx_extra_config":                                    resourceTencentCloudDcxExtraConfig(),
-			"tencentcloud_dc_share_dcx_config":                                 resourceTencentCloudDcShareDcxConfig(),
-			"tencentcloud_dc_internet_address":                                 resourceTencentCloudDcInternetAddress(),
-			"tencentcloud_dc_internet_address_config":                          resourceTencentCloudDcInternetAddressConfig(),
+			"tencentcloud_dc_instance":                                         dc.ResourceTencentCloudDcInstance(),
+			"tencentcloud_dcx":                                                 dc.ResourceTencentCloudDcxInstance(),
+			"tencentcloud_dcx_extra_config":                                    dc.ResourceTencentCloudDcxExtraConfig(),
+			"tencentcloud_dc_share_dcx_config":                                 dc.ResourceTencentCloudDcShareDcxConfig(),
+			"tencentcloud_dc_internet_address":                                 dc.ResourceTencentCloudDcInternetAddress(),
+			"tencentcloud_dc_internet_address_config":                          dc.ResourceTencentCloudDcInternetAddressConfig(),
 			"tencentcloud_dc_gateway":                                          resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":                                resourceTencentCloudDcGatewayCcnRouteInstance(),
 			"tencentcloud_dc_gateway_attachment":                               resourceTencentCloudDcGatewayAttachment(),

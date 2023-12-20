@@ -1,4 +1,4 @@
-package tencentcloud
+package dc
 
 const (
 	DC_NETWORK_TYPE_VPC   = "VPC"

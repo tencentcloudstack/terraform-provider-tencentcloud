@@ -1,15 +1,18 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudDcInternetAddressQuota() *schema.Resource {
+func DataSourceTencentCloudDcInternetAddressQuota() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcInternetAddressQuotaRead,
 		Schema: map[string]*schema.Schema{
@@ -53,21 +56,21 @@ func dataSourceTencentCloudDcInternetAddressQuota() *schema.Resource {
 }
 
 func dataSourceTencentCloudDcInternetAddressQuotaRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dc_internet_address_quota.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_dc_internet_address_quota.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var quota *dc.DescribeInternetAddressQuotaResponse
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeDcInternetAddressQuota(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		quota = result
 		return nil
@@ -109,7 +112,7 @@ func dataSourceTencentCloudDcInternetAddressQuotaRead(d *schema.ResourceData, me
 	d.SetId(helper.Int64ToStr(*quota.Response.Ipv4BgpQuota))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

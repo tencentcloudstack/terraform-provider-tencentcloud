@@ -1,11 +1,14 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -14,7 +17,7 @@ type DcService struct {
 	client *connectivity.TencentCloudClient
 }
 
-/////////common
+// ///////common
 func (me *DcService) fillFilter(ins []*dc.Filter, key, value string) (outs []*dc.Filter) {
 	if ins == nil {
 		ins = make([]*dc.Filter, 0, 2)
@@ -55,7 +58,7 @@ func (me *DcService) int64Pt2int64(pt *int64) (ret int64) {
 func (me *DcService) DescribeDirectConnects(ctx context.Context, dcId,
 	name string) (infos []dc.DirectConnect, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := dc.NewDescribeDirectConnectsRequest()
 	defer func() {
 		if errRet != nil {
@@ -135,7 +138,7 @@ func (me *DcService) DescribeDirectConnectTunnel(ctx context.Context, dcxId stri
 func (me *DcService) DescribeDirectConnectTunnels(ctx context.Context, dcxId,
 	name string) (infos []dc.DirectConnectTunnel, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := dc.NewDescribeDirectConnectTunnelsRequest()
 	defer func() {
 		if errRet != nil {
@@ -199,7 +202,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 	bgpAsn, vlan, bandwidth int64,
 	routeFilterPrefixes []string) (dcxId string, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := dc.NewCreateDirectConnectTunnelRequest()
 	defer func() {
 		if errRet != nil {
@@ -265,7 +268,7 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 
 func (me *DcService) DeleteDirectConnectTunnel(ctx context.Context, dcxId string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := dc.NewDeleteDirectConnectTunnelRequest()
 	defer func() {
 		if errRet != nil {
@@ -288,7 +291,7 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 	bandwidth, bgpAsn int64,
 	routeFilterPrefixes []string) (errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := dc.NewModifyDirectConnectTunnelAttributeRequest()
 	defer func() {
 		if errRet != nil {
@@ -336,7 +339,7 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 }
 
 func (me *DcService) DescribeDcShareDcxConfigById(ctx context.Context, directConnectTunnelId string) (ShareDcxConfig *dc.DirectConnectTunnel, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := dc.NewDescribeDirectConnectTunnelsRequest()
 	request.DirectConnectTunnelIds = []*string{&directConnectTunnelId}
@@ -365,7 +368,7 @@ func (me *DcService) DescribeDcShareDcxConfigById(ctx context.Context, directCon
 }
 
 func (me *DcService) DescribeDcInternetAddressById(ctx context.Context, instanceId string) (internetAddress *dc.InternetAddressDetail, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := dc.NewDescribeInternetAddressRequest()
 
@@ -394,7 +397,7 @@ func (me *DcService) DescribeDcInternetAddressById(ctx context.Context, instance
 }
 
 func (me *DcService) DeleteDcInternetAddressById(ctx context.Context, instanceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := dc.NewReleaseInternetAddressRequest()
 	request.InstanceId = &instanceId
@@ -418,7 +421,7 @@ func (me *DcService) DeleteDcInternetAddressById(ctx context.Context, instanceId
 }
 
 func (me *DcService) DescribeDcxExtraConfigById(ctx context.Context, directConnectTunnelId string) (dcxExtraConfig *dc.DirectConnectTunnelExtra, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := dc.NewDescribeDirectConnectTunnelExtraRequest()
 	request.DirectConnectTunnelId = &directConnectTunnelId
@@ -444,7 +447,7 @@ func (me *DcService) DescribeDcxExtraConfigById(ctx context.Context, directConne
 
 func (me *DcService) DescribeDcInternetAddressQuota(ctx context.Context) (InternetAddressQuota *dc.DescribeInternetAddressQuotaResponse, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = dc.NewDescribeInternetAddressQuotaRequest()
 	)
 
@@ -470,7 +473,7 @@ func (me *DcService) DescribeDcInternetAddressQuota(ctx context.Context) (Intern
 
 func (me *DcService) DescribeDcInternetAddressStatistics(ctx context.Context) (statistics []*dc.InternetAddressStatistics, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = dc.NewDescribeInternetAddressStatisticsRequest()
 	)
 
@@ -495,7 +498,7 @@ func (me *DcService) DescribeDcInternetAddressStatistics(ctx context.Context) (s
 
 func (me *DcService) DescribeDcPublicDirectConnectTunnelRoutesByFilter(ctx context.Context, param map[string]interface{}) (PublicDirectConnectTunnelRoutes []*dc.DirectConnectTunnelRoute, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = dc.NewDescribePublicDirectConnectTunnelRoutesRequest()
 	)
 
@@ -545,7 +548,7 @@ func (me *DcService) DescribeDcPublicDirectConnectTunnelRoutesByFilter(ctx conte
 }
 
 func (me *DcService) DeleteDcInstanceById(ctx context.Context, directConnectId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := dc.NewDeleteDirectConnectRequest()
 	request.DirectConnectId = &directConnectId
@@ -570,7 +573,7 @@ func (me *DcService) DeleteDcInstanceById(ctx context.Context, directConnectId s
 
 func (me *DcService) DescribeDcAccessPointsByFilter(ctx context.Context, param map[string]interface{}) (AccessPoints []*dc.AccessPoint, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = dc.NewDescribeAccessPointsRequest()
 	)
 

@@ -1,16 +1,19 @@
-package tencentcloud
+package dc
 
 import (
 	"context"
 	"fmt"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudDcxInstance() *schema.Resource {
+func ResourceTencentCloudDcxInstance() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDcxInstanceCreate,
 		Read:   resourceTencentCloudDcxInstanceRead,
@@ -25,13 +28,13 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "ID of the DC to be queried, application deployment offline.",
 			},
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 60),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 60),
 				Description:  "Name of the dedicated tunnel.",
 			},
 			"dc_owner_account": {
@@ -46,7 +49,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      DC_NETWORK_TYPE_VPC,
-				ValidateFunc: validateAllowedStringValue(DC_NETWORK_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(DC_NETWORK_TYPES),
 				Description:  "Type of the network. Valid value: `VPC`, `BMVPC` and `CCN`. The default value is `VPC`.",
 			},
 			"vpc_id": {
@@ -60,7 +63,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      DC_ROUTE_TYPE_BGP,
-				ValidateFunc: validateAllowedStringValue(DC_ROUTE_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(DC_ROUTE_TYPES),
 				Description:  "Type of the route, and available values include BGP and STATIC. The default value is `BGP`.",
 			},
 			"dcg_id": {
@@ -136,12 +139,12 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 }
 
 func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		dcId                      = d.Get("dc_id").(string)
@@ -224,21 +227,21 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		dcxId = d.Id()
 	)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		item, has, e := service.DescribeDirectConnectTunnel(ctx, dcxId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		if has == 0 {
@@ -291,12 +294,12 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		dcxId = d.Id()
@@ -316,12 +319,12 @@ func resourceTencentCloudDcxInstanceUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudDcxInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dcx.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_dcx.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := DcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := DcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var (
 		dcxId = d.Id()
