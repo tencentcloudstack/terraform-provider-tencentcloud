@@ -1,3 +1,23 @@
+## 1.81.60 (December 20, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_vpc_peer_connect_accept_operation` ([#2415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2415))
+* **New Resource:** `tencentcloud_vpc_peer_connect_manager` ([#2415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2415))
+* **New Resource:** `tencentcloud_vpc_peer_connect_reject_operation` ([#2415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2415))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: Support `acl_body` import. ([#2417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2417))
+* resource/tencentcloud_scf_function: Update `runtime` description and add example with triggers. ([#2412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2412))
+* resource/tencentcloud_vpn_connection: Support creating routing type vpn connection. ([#2409](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2409))
+* tencentcloud_ssl_describe_certificate: Support param `company_type` ([#2418](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2418))
+
+BUG FIXES:
+
+* resource/tencentcloud_dnspod_record: Fix `mx` parameter passing problem. ([#2413](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2413))
+* resource/tencentcloud_lighthouse_disk: update the completion condition of disk isolation ([#2414](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2414))
+
 ## 1.81.59 (December 15, 2023)
 
 FEATURES:
