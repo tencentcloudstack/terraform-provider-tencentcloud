@@ -1,15 +1,18 @@
-package tencentcloud
+package cdwch
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickhouseDeleteBackupData() *schema.Resource {
+func ResourceTencentCloudClickhouseDeleteBackupData() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseDeleteBackupDataCreate,
 		Read:   resourceTencentCloudClickhouseDeleteBackupDataRead,
@@ -33,10 +36,10 @@ func resourceTencentCloudClickhouseDeleteBackupData() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseDeleteBackupDataCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_delete_backup_data.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_delete_backup_data.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request     = clickhouse.NewDeleteBackUpDataRequest()
@@ -53,10 +56,10 @@ func resourceTencentCloudClickhouseDeleteBackupDataCreate(d *schema.ResourceData
 		request.BackUpJobId = helper.IntInt64(backUpJobId)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().DeleteBackUpData(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().DeleteBackUpData(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -73,15 +76,15 @@ func resourceTencentCloudClickhouseDeleteBackupDataCreate(d *schema.ResourceData
 }
 
 func resourceTencentCloudClickhouseDeleteBackupDataRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_delete_backup_data.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_delete_backup_data.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudClickhouseDeleteBackupDataDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_delete_backup_data.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_delete_backup_data.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

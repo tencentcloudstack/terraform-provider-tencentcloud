@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
@@ -6,10 +6,12 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudClickhouseAccount() *schema.Resource {
+func ResourceTencentCloudClickhouseAccount() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseAccountCreate,
 		Read:   resourceTencentCloudClickhouseAccountRead,
@@ -45,11 +47,11 @@ func resourceTencentCloudClickhouseAccount() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	instanceId := d.Get("instance_id").(string)
 	userName := d.Get("user_name").(string)
 	params := make(map[string]interface{})
@@ -59,24 +61,24 @@ func resourceTencentCloudClickhouseAccountCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("describe"); ok {
 		params["describe"] = v.(string)
 	}
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := service.ActionAlterCkUser(ctx, ACTION_ALTER_CK_USER_ADD_SYSTEM_USER, params)
 	if err != nil {
 		return err
 	}
-	d.SetId(instanceId + FILED_SP + userName)
+	d.SetId(instanceId + tccommon.FILED_SP + userName)
 
 	return resourceTencentCloudClickhouseAccountRead(d, meta)
 }
 
 func resourceTencentCloudClickhouseAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}
@@ -99,13 +101,13 @@ func resourceTencentCloudClickhouseAccountRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudClickhouseAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}
@@ -125,7 +127,7 @@ func resourceTencentCloudClickhouseAccountUpdate(d *schema.ResourceData, meta in
 		if v, ok := d.GetOk("describe"); ok {
 			params["describe"] = v.(string)
 		}
-		service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		err := service.ActionAlterCkUser(ctx, ACTION_ALTER_CK_USER_UPDATE_SYSTEM_USER, params)
 		if err != nil {
 			return err
@@ -135,13 +137,13 @@ func resourceTencentCloudClickhouseAccountUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudClickhouseAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}

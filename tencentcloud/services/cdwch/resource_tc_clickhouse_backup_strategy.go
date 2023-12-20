@@ -1,14 +1,16 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceTencentCloudClickhouseBackupStrategy() *schema.Resource {
+func ResourceTencentCloudClickhouseBackupStrategy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseBackupStrategyCreate,
 		Read:   resourceTencentCloudClickhouseBackupStrategyRead,
@@ -134,14 +136,14 @@ func resourceTencentCloudClickhouseBackupStrategy() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseBackupStrategyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup_strategy.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup_strategy.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	instanceId := d.Get("instance_id").(string)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	backUpSchedule, err := service.DescribeBackUpScheduleById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -179,14 +181,14 @@ func resourceTencentCloudClickhouseBackupStrategyCreate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudClickhouseBackupStrategyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup_strategy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup_strategy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 	_ = d.Set("instance_id", instanceId)
@@ -261,11 +263,11 @@ func resourceTencentCloudClickhouseBackupStrategyRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudClickhouseBackupStrategyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup_strategy.update")()
-	defer inconsistentCheck(d, meta)()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup_strategy.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instanceId := d.Id()
 
 	backUpSchedule, err := service.DescribeBackUpScheduleById(ctx, instanceId)
@@ -339,8 +341,8 @@ func resourceTencentCloudClickhouseBackupStrategyUpdate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudClickhouseBackupStrategyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup_strategy.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup_strategy.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

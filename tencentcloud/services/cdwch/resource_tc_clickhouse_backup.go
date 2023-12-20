@@ -1,17 +1,20 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickhouseBackup() *schema.Resource {
+func ResourceTencentCloudClickhouseBackup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseBackupCreate,
 		Read:   resourceTencentCloudClickhouseBackupRead,
@@ -37,10 +40,10 @@ func resourceTencentCloudClickhouseBackup() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseBackupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = clickhouse.NewOpenBackUpRequest()
@@ -57,10 +60,10 @@ func resourceTencentCloudClickhouseBackupCreate(d *schema.ResourceData, meta int
 		request.CosBucketName = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().OpenBackUp(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().OpenBackUp(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 
@@ -77,14 +80,14 @@ func resourceTencentCloudClickhouseBackupCreate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudClickhouseBackupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -109,8 +112,8 @@ func resourceTencentCloudClickhouseBackupRead(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudClickhouseBackupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	immutableArgs := []string{"instance_id", "operation_type", "cos_bucket_name"}
 
@@ -123,20 +126,20 @@ func resourceTencentCloudClickhouseBackupUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudClickhouseBackupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_backup.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_backup.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	instanceId := d.Id()
 	request := clickhouse.NewOpenBackUpRequest()
 	request.InstanceId = helper.String(instanceId)
 	request.OperationType = helper.String("close")
 	request.CosBucketName = helper.String(d.Get("cos_bucket_name").(string))
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().OpenBackUp(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().OpenBackUp(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}

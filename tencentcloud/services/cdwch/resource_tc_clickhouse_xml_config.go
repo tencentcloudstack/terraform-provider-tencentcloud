@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
@@ -7,12 +7,14 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 )
 
-func resourceTencentCloudClickhouseXmlConfig() *schema.Resource {
+func ResourceTencentCloudClickhouseXmlConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseXmlConfigCreate,
 		Read:   resourceTencentCloudClickhouseXmlConfigRead,
@@ -59,8 +61,8 @@ func resourceTencentCloudClickhouseXmlConfig() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseXmlConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_xml_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_xml_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var ids []string
 	var instanceId string
@@ -79,22 +81,22 @@ func resourceTencentCloudClickhouseXmlConfigCreate(d *schema.ResourceData, meta 
 		}
 	}
 
-	d.SetId(strings.Join(ids, FILED_SP))
+	d.SetId(strings.Join(ids, tccommon.FILED_SP))
 
 	return resourceTencentCloudClickhouseXmlConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudClickhouseXmlConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_xml_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_xml_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -140,14 +142,14 @@ func resourceTencentCloudClickhouseXmlConfigRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudClickhouseXmlConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_xml_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_xml_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cdwch.NewModifyClusterConfigsRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -176,10 +178,10 @@ func resourceTencentCloudClickhouseXmlConfigUpdate(d *schema.ResourceData, meta 
 	request.ModifyConfContext = modifyConfContexts
 
 	if len(modifyConfContexts) > 0 {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyClusterConfigs(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyClusterConfigs(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -191,8 +193,8 @@ func resourceTencentCloudClickhouseXmlConfigUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -202,8 +204,8 @@ func resourceTencentCloudClickhouseXmlConfigUpdate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudClickhouseXmlConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_xml_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_xml_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickhouseInstance() *schema.Resource {
+func ResourceTencentCloudClickhouseInstance() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudClickhouseInstanceRead,
 		Create: resourceTencentCloudClickhouseInstanceCreate,
@@ -164,14 +167,14 @@ func resourceTencentCloudClickhouseInstance() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	instanceId := d.Id()
 
@@ -222,7 +225,7 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("common_spec", []map[string]interface{}{commonSpec})
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "cdwch", "cdwchInstance", tcClient.Region, d.Id())
 	if err != nil {
@@ -234,10 +237,10 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cdwch_tmp_instance.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cdwch_tmp_instance.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = cdwch.NewCreateInstanceNewRequest()
@@ -324,10 +327,10 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 		request.CommonSpec = &nodeSpec
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().CreateInstanceNew(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().CreateInstanceNew(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -339,13 +342,13 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 	instanceId = *response.Response.InstanceId
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
 		if innerErr != nil {
-			return retryError(innerErr)
+			return tccommon.RetryError(innerErr)
 		}
 		if *instanceInfo.Status != "Serving" {
 			return resource.RetryableError(fmt.Errorf("Still creating"))
@@ -357,8 +360,8 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cdwch:%s:uin/:cdwchInstance/%s", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -371,18 +374,18 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_instance.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cdwch", "cdwchInstance", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cdwch", "cdwchInstance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -400,13 +403,13 @@ func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_instance.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_instance.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instanceId := d.Id()
 
 	if d.Get("charge_type").(string) == "PREPAID" {
@@ -414,10 +417,10 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 			return err
 		}
 
-		err := resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(5*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
 			if innerErr != nil {
-				return retryError(innerErr)
+				return tccommon.RetryError(innerErr)
 			}
 			if *instanceInfo.Status != "Isolated" {
 				return resource.RetryableError(fmt.Errorf("Still isolating"))
@@ -432,10 +435,10 @@ func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta i
 	if err := service.DestroyInstance(ctx, instanceId); err != nil {
 		return err
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		instancesList, innerErr := service.DescribeInstancesNew(ctx, instanceId)
 		if innerErr != nil {
-			return retryError(innerErr)
+			return tccommon.RetryError(innerErr)
 		}
 		if len(instancesList) != 0 {
 			return resource.RetryableError(fmt.Errorf("Still destroying"))

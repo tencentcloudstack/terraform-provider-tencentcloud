@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
@@ -7,12 +7,14 @@ import (
 	"strings"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 )
 
-func resourceTencentCloudClickhouseKeyvalConfig() *schema.Resource {
+func ResourceTencentCloudClickhouseKeyvalConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseKeyvalConfigCreate,
 		Read:   resourceTencentCloudClickhouseKeyvalConfigRead,
@@ -54,10 +56,10 @@ func resourceTencentCloudClickhouseKeyvalConfig() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseKeyvalConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_keyval_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_keyval_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cdwch.NewModifyInstanceKeyValConfigsRequest()
 
@@ -87,10 +89,10 @@ func resourceTencentCloudClickhouseKeyvalConfigCreate(d *schema.ResourceData, me
 	request.InstanceId = &instanceId
 	request.AddItems = addItems
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyInstanceKeyValConfigs(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyInstanceKeyValConfigs(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -101,29 +103,29 @@ func resourceTencentCloudClickhouseKeyvalConfigCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
-	d.SetId(strings.Join(ids, FILED_SP))
+	d.SetId(strings.Join(ids, tccommon.FILED_SP))
 
 	return resourceTencentCloudClickhouseKeyvalConfigRead(d, meta)
 }
 
 func resourceTencentCloudClickhouseKeyvalConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_keyval_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_keyval_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -161,14 +163,14 @@ func resourceTencentCloudClickhouseKeyvalConfigRead(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudClickhouseKeyvalConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_keyval_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_keyval_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cdwch.NewModifyInstanceKeyValConfigsRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -200,10 +202,10 @@ func resourceTencentCloudClickhouseKeyvalConfigUpdate(d *schema.ResourceData, me
 	request.InstanceId = &instanceId
 	request.UpdateItems = updateItems
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyInstanceKeyValConfigs(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyInstanceKeyValConfigs(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -214,27 +216,27 @@ func resourceTencentCloudClickhouseKeyvalConfigUpdate(d *schema.ResourceData, me
 		return err
 	}
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
-	d.SetId(strings.Join(ids, FILED_SP))
+	d.SetId(strings.Join(ids, tccommon.FILED_SP))
 
 	return resourceTencentCloudClickhouseKeyvalConfigRead(d, meta)
 }
 
 func resourceTencentCloudClickhouseKeyvalConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_keyval_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_keyval_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cdwch.NewModifyInstanceKeyValConfigsRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -251,10 +253,10 @@ func resourceTencentCloudClickhouseKeyvalConfigDelete(d *schema.ResourceData, me
 	request.InstanceId = &instanceId
 	request.DelItems = delItems
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyInstanceKeyValConfigs(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyInstanceKeyValConfigs(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -265,8 +267,8 @@ func resourceTencentCloudClickhouseKeyvalConfigDelete(d *schema.ResourceData, me
 		return err
 	}
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{"Serving"}, 10*readRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"Serving"}, 10*tccommon.ReadRetryTimeout, time.Second, service.InstanceStateRefreshFunc(instanceId))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

@@ -1,15 +1,18 @@
-package tencentcloud
+package cdwch
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickhouseRecoverBackupJob() *schema.Resource {
+func ResourceTencentCloudClickhouseRecoverBackupJob() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseRecoverBackupJobCreate,
 		Read:   resourceTencentCloudClickhouseRecoverBackupJobRead,
@@ -33,10 +36,10 @@ func resourceTencentCloudClickhouseRecoverBackupJob() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseRecoverBackupJobCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_recover_backup_job.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_recover_backup_job.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request     = clickhouse.NewRecoverBackUpJobRequest()
@@ -53,10 +56,10 @@ func resourceTencentCloudClickhouseRecoverBackupJobCreate(d *schema.ResourceData
 		request.BackUpJobId = helper.IntInt64(backUpJobId)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().RecoverBackUpJob(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().RecoverBackUpJob(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -73,15 +76,15 @@ func resourceTencentCloudClickhouseRecoverBackupJobCreate(d *schema.ResourceData
 }
 
 func resourceTencentCloudClickhouseRecoverBackupJobRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_recover_backup_job.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_recover_backup_job.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudClickhouseRecoverBackupJobDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_recover_backup_job.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_recover_backup_job.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

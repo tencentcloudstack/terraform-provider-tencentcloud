@@ -1,15 +1,18 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudClickhouseBackupTables() *schema.Resource {
+func DataSourceTencentCloudClickhouseBackupTables() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudClickhouseBackupTablesRead,
 		Schema: map[string]*schema.Schema{
@@ -74,22 +77,22 @@ func dataSourceTencentCloudClickhouseBackupTables() *schema.Resource {
 }
 
 func dataSourceTencentCloudClickhouseBackupTablesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_clickhouse_backup_tables.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_clickhouse_backup_tables.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Get("instance_id").(string)
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var availableTables []*clickhouse.BackupTableContent
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeClickhouseBackupTablesByFilter(ctx, instanceId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		availableTables = result
 		return nil
@@ -133,7 +136,7 @@ func dataSourceTencentCloudClickhouseBackupTablesRead(d *schema.ResourceData, me
 				backupTableContentMap["rip"] = backupTableContent.Rip
 			}
 
-			ids = append(ids, *backupTableContent.Database+FILED_SP+*backupTableContent.Table)
+			ids = append(ids, *backupTableContent.Database+tccommon.FILED_SP+*backupTableContent.Table)
 			tmpList = append(tmpList, backupTableContentMap)
 		}
 
@@ -143,7 +146,7 @@ func dataSourceTencentCloudClickhouseBackupTablesRead(d *schema.ResourceData, me
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

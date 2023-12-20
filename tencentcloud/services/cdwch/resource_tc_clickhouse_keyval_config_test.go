@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch_test
 
 import (
 	"context"
@@ -6,18 +6,23 @@ import (
 	"strings"
 	"testing"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
+	localcdwch "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
 )
 
 func TestAccTencentCloudClickhouseKeyvalConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY)
 		},
-		Providers:    testAccProviders,
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckClickhouseKeyvalConfigDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -50,9 +55,9 @@ func TestAccTencentCloudClickhouseKeyvalConfigResource_basic(t *testing.T) {
 }
 
 func testAccCheckClickhouseKeyvalConfigDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := localcdwch.NewCdwchService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_clickhouse_keyval_config" {
 			continue
@@ -61,7 +66,7 @@ func testAccCheckClickhouseKeyvalConfigDestroy(s *terraform.State) error {
 			return fmt.Errorf("resource id is not set")
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}

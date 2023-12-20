@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
 	"encoding/json"
 	"fmt"
@@ -824,9 +825,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_blueprint":                dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                       dataSourceTencentCloudLighthouseDiskConfig(),
 			"tencentcloud_lighthouse_disks":                             dataSourceTencentCloudLighthouseInstanceDisks(),
-			"tencentcloud_clickhouse_backup_jobs":                       dataSourceTencentCloudClickhouseBackupJobs(),
-			"tencentcloud_clickhouse_backup_job_detail":                 dataSourceTencentCloudClickhouseBackupJobDetail(),
-			"tencentcloud_clickhouse_backup_tables":                     dataSourceTencentCloudClickhouseBackupTables(),
+			"tencentcloud_clickhouse_backup_jobs":                       cdwch.DataSourceTencentCloudClickhouseBackupJobs(),
+			"tencentcloud_clickhouse_backup_job_detail":                 cdwch.DataSourceTencentCloudClickhouseBackupJobDetail(),
+			"tencentcloud_clickhouse_backup_tables":                     cdwch.DataSourceTencentCloudClickhouseBackupTables(),
 			"tencentcloud_cls_shipper_tasks":                            dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                                 dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                    dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -896,8 +897,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_antiddos_overview_attack_trend":               antiddos.DataSourceTencentCloudAntiddosOverviewAttackTrend(),
 			"tencentcloud_kubernetes_cluster_instances":                 dataSourceTencentCloudKubernetesClusterInstances(),
 			"tencentcloud_kubernetes_cluster_node_pools":                dataSourceTencentCloudKubernetesClusterNodePools(),
-			"tencentcloud_clickhouse_spec":                              dataSourceTencentCloudClickhouseSpec(),
-			"tencentcloud_clickhouse_instance_shards":                   dataSourceTencentCloudClickhouseInstanceShards(),
+			"tencentcloud_clickhouse_spec":                              cdwch.DataSourceTencentCloudClickhouseSpec(),
+			"tencentcloud_clickhouse_instance_shards":                   cdwch.DataSourceTencentCloudClickhouseInstanceShards(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1732,12 +1733,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disk":                                     resourceTencentCloudLighthouseDisk(),
 			"tencentcloud_lighthouse_renew_disk":                               resourceTencentCloudLighthouseRenewDisk(),
 			"tencentcloud_lighthouse_renew_instance":                           resourceTencentCloudLighthouseRenewInstance(),
-			"tencentcloud_clickhouse_backup":                                   resourceTencentCloudClickhouseBackup(),
-			"tencentcloud_clickhouse_backup_strategy":                          resourceTencentCloudClickhouseBackupStrategy(),
-			"tencentcloud_clickhouse_recover_backup_job":                       resourceTencentCloudClickhouseRecoverBackupJob(),
-			"tencentcloud_clickhouse_delete_backup_data":                       resourceTencentCloudClickhouseDeleteBackupData(),
-			"tencentcloud_clickhouse_account":                                  resourceTencentCloudClickhouseAccount(),
-			"tencentcloud_clickhouse_account_permission":                       resourceTencentCloudClickhouseAccountPermission(),
+			"tencentcloud_clickhouse_backup":                                   cdwch.ResourceTencentCloudClickhouseBackup(),
+			"tencentcloud_clickhouse_backup_strategy":                          cdwch.ResourceTencentCloudClickhouseBackupStrategy(),
+			"tencentcloud_clickhouse_recover_backup_job":                       cdwch.ResourceTencentCloudClickhouseRecoverBackupJob(),
+			"tencentcloud_clickhouse_delete_backup_data":                       cdwch.ResourceTencentCloudClickhouseDeleteBackupData(),
+			"tencentcloud_clickhouse_account":                                  cdwch.ResourceTencentCloudClickhouseAccount(),
+			"tencentcloud_clickhouse_account_permission":                       cdwch.ResourceTencentCloudClickhouseAccountPermission(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_api_gateway_update_api_app_key":                      resourceTencentCloudApiGatewayUpdateApiAppKey(),
@@ -1753,7 +1754,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_certificate":                                resourceTencentCloudTseCngwCertificate(),
 			"tencentcloud_tse_waf_protection":                                  resourceTencentCloudTseWafProtection(),
 			"tencentcloud_tse_waf_domains":                                     resourceTencentCloudTseWafDomains(),
-			"tencentcloud_clickhouse_instance":                                 resourceTencentCloudClickhouseInstance(),
+			"tencentcloud_clickhouse_instance":                                 cdwch.ResourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  resourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   resourceTencentCloudClsScheduledSql(),
 			"tencentcloud_eb_event_transform":                                  resourceTencentCloudEbEventTransform(),
@@ -1858,8 +1859,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_bi_embed_token_apply":                                bi.ResourceTencentCloudBiEmbedTokenApply(),
 			"tencentcloud_bi_embed_interval_apply":                             bi.ResourceTencentCloudBiEmbedIntervalApply(),
 			"tencentcloud_cdwpg_instance":                                      resourceTencentCloudCdwpgInstance(),
-			"tencentcloud_clickhouse_keyval_config":                            resourceTencentCloudClickhouseKeyvalConfig(),
-			"tencentcloud_clickhouse_xml_config":                               resourceTencentCloudClickhouseXmlConfig(),
+			"tencentcloud_clickhouse_keyval_config":                            cdwch.ResourceTencentCloudClickhouseKeyvalConfig(),
+			"tencentcloud_clickhouse_xml_config":                               cdwch.ResourceTencentCloudClickhouseXmlConfig(),
 			"tencentcloud_clb_target_group_attachments":                        resourceTencentCloudClbTargetGroupAttachments(),
 		},
 

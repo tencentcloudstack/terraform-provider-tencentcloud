@@ -1,14 +1,16 @@
-package tencentcloud
+package cdwch
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func dataSourceTencentCloudClickhouseBackupJobDetail() *schema.Resource {
+func DataSourceTencentCloudClickhouseBackupJobDetail() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudClickhouseBackupJobDetailRead,
 		Schema: map[string]*schema.Schema{
@@ -79,8 +81,8 @@ func dataSourceTencentCloudClickhouseBackupJobDetail() *schema.Resource {
 }
 
 func dataSourceTencentCloudClickhouseBackupJobDetailRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_clickhouse_backup_job_detail.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_clickhouse_backup_job_detail.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
 		request     = clickhouse.NewDescribeBackUpJobDetailRequest()
@@ -99,11 +101,11 @@ func dataSourceTencentCloudClickhouseBackupJobDetailRead(d *schema.ResourceData,
 
 	var tableContents []*clickhouse.BackupTableContent
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().DescribeBackUpJobDetail(request)
+		response, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().DescribeBackUpJobDetail(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		tableContents = response.Response.TableContents
 		return nil
@@ -155,7 +157,7 @@ func dataSourceTencentCloudClickhouseBackupJobDetailRead(d *schema.ResourceData,
 	d.SetId(instanceId + helper.IntToStr(backUpJobId))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

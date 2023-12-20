@@ -1,4 +1,4 @@
-package tencentcloud
+package cdwch
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickhouseAccountPermission() *schema.Resource {
+func ResourceTencentCloudClickhouseAccountPermission() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClickhouseAccountPermissionCreate,
 		Read:   resourceTencentCloudClickhouseAccountPermissionRead,
@@ -104,10 +107,10 @@ func resourceTencentCloudClickhouseAccountPermission() *schema.Resource {
 }
 
 func resourceTencentCloudClickhouseAccountPermissionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account_permission.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account_permission.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = clickhouse.NewModifyUserNewPrivilegeRequest()
@@ -164,10 +167,10 @@ func resourceTencentCloudClickhouseAccountPermissionCreate(d *schema.ResourceDat
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyUserNewPrivilege(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyUserNewPrivilege(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -178,20 +181,20 @@ func resourceTencentCloudClickhouseAccountPermissionCreate(d *schema.ResourceDat
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + cluster + FILED_SP + userName)
+	d.SetId(instanceId + tccommon.FILED_SP + cluster + tccommon.FILED_SP + userName)
 
 	return resourceTencentCloudClickhouseAccountPermissionRead(d, meta)
 }
 
 func resourceTencentCloudClickhouseAccountPermissionRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account_permission.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account_permission.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}
@@ -270,14 +273,14 @@ func resourceTencentCloudClickhouseAccountPermissionRead(d *schema.ResourceData,
 }
 
 func resourceTencentCloudClickhouseAccountPermissionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account_permission.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account_permission.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := clickhouse.NewModifyUserNewPrivilegeRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}
@@ -342,10 +345,10 @@ func resourceTencentCloudClickhouseAccountPermissionUpdate(d *schema.ResourceDat
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCdwchClient().ModifyUserNewPrivilege(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCdwchClient().ModifyUserNewPrivilege(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -360,18 +363,18 @@ func resourceTencentCloudClickhouseAccountPermissionUpdate(d *schema.ResourceDat
 }
 
 func resourceTencentCloudClickhouseAccountPermissionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_clickhouse_account_permission.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_clickhouse_account_permission.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("tencentcloud_clickhouse_account id is broken, id is %s", d.Id())
 	}
 
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CdwchService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	err := service.DescribeCkSqlApis(ctx, idSplit[0], idSplit[1], idSplit[2], DESCRIBE_CK_SQL_APIS_REVOKE_CLUSTER_USER)
 	if err != nil {
 		return err
