@@ -175,7 +175,7 @@ func ResourceTencentCloudCosBucket() *schema.Resource {
 			"acl_body": {
 				Type:     schema.TypeString,
 				Optional: true,
-
+				Computed: true,
 				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
 					return ACLBodyDiffFunc(olds, news, d)
 				},
@@ -607,12 +607,11 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	aclBody, err := xml.Marshal(aclResult)
-
 	if err != nil {
-		log.Printf("[WARN] Marshal XML Error: %s", err.Error())
-	} else if v, ok := d.Get("acl_body").(string); ok && v != "" {
-		_ = d.Set("acl_body", string(aclBody))
+		return err
 	}
+
+	_ = d.Set("acl_body", string(aclBody))
 
 	acl := GetBucketPublicACL(aclResult)
 

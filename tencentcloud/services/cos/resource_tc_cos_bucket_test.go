@@ -570,8 +570,8 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
   acl_body 	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+        <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
@@ -582,15 +582,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
 		<Grant>
 			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-				<ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+				<ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
 			</Grantee>
 			<Permission>FULL_CONTROL</Permission>
 		</Grant>
@@ -611,8 +611,8 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
   acl_body	= <<EOF
 <AccessControlPolicy>
     <Owner>
-        <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-		<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+        <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+		<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
     </Owner>
     <AccessControlList>
         <Grant>
@@ -623,15 +623,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
         <Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>FULL_CONTROL</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>WRITE_ACP</Permission>
         </Grant>
@@ -643,15 +643,15 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+                <ID>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.owner_uin}:uin/${local.owner_uin}</DisplayName>
             </Grantee>
             <Permission>WRITE</Permission>
         </Grant>
