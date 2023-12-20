@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_lighthouse_disk: update the completion condition of disk isolation
+```
