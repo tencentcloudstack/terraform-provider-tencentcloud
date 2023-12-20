@@ -1,15 +1,18 @@
-package tencentcloud
+package chdfs
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudChdfsAccessGroups() *schema.Resource {
+func DataSourceTencentCloudChdfsAccessGroups() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudChdfsAccessGroupsRead,
 		Schema: map[string]*schema.Schema{
@@ -75,12 +78,12 @@ func dataSourceTencentCloudChdfsAccessGroups() *schema.Resource {
 }
 
 func dataSourceTencentCloudChdfsAccessGroupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_chdfs_access_groups.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_chdfs_access_groups.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("vpc_id"); ok {
@@ -91,14 +94,14 @@ func dataSourceTencentCloudChdfsAccessGroupsRead(d *schema.ResourceData, meta in
 		paramMap["owner_uin"] = helper.IntUint64(v.(int))
 	}
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var accessGroups []*chdfs.AccessGroup
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeChdfsAccessGroupsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		accessGroups = result
 		return nil
@@ -148,7 +151,7 @@ func dataSourceTencentCloudChdfsAccessGroupsRead(d *schema.ResourceData, meta in
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

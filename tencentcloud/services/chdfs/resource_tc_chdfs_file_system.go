@@ -1,17 +1,20 @@
-package tencentcloud
+package chdfs
 
 import (
 	"context"
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudChdfsFileSystem() *schema.Resource {
+func ResourceTencentCloudChdfsFileSystem() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudChdfsFileSystemCreate,
 		Read:   resourceTencentCloudChdfsFileSystemRead,
@@ -73,10 +76,10 @@ func resourceTencentCloudChdfsFileSystem() *schema.Resource {
 }
 
 func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_file_system.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_file_system.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = chdfs.NewCreateFileSystemRequest()
@@ -119,10 +122,10 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().CreateFileSystem(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().CreateFileSystem(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -137,9 +140,9 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 	fileSystemId = *response.Response.FileSystem.FileSystemId
 	d.SetId(fileSystemId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	conf := BuildStateChangeConf([]string{}, []string{"2"}, 2*readRetryTimeout, time.Second, service.ChdfsFileSystemStateRefreshFunc(d.Id(), []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"2"}, 2*tccommon.ReadRetryTimeout, time.Second, service.ChdfsFileSystemStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -149,14 +152,14 @@ func resourceTencentCloudChdfsFileSystemCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudChdfsFileSystemRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_file_system.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_file_system.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	fileSystemId := d.Id()
 
@@ -203,10 +206,10 @@ func resourceTencentCloudChdfsFileSystemRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_file_system.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_file_system.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := chdfs.NewModifyFileSystemRequest()
 
@@ -264,10 +267,10 @@ func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().ModifyFileSystem(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().ModifyFileSystem(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -282,13 +285,13 @@ func resourceTencentCloudChdfsFileSystemUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudChdfsFileSystemDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_file_system.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_file_system.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	fileSystemId := d.Id()
 
 	if err := service.DeleteChdfsFileSystemById(ctx, fileSystemId); err != nil {

@@ -1,15 +1,18 @@
-package tencentcloud
+package chdfs
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudChdfsMountPoints() *schema.Resource {
+func DataSourceTencentCloudChdfsMountPoints() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudChdfsMountPointsRead,
 		Schema: map[string]*schema.Schema{
@@ -84,12 +87,12 @@ func dataSourceTencentCloudChdfsMountPoints() *schema.Resource {
 }
 
 func dataSourceTencentCloudChdfsMountPointsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_chdfs_mount_points.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_chdfs_mount_points.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("file_system_id"); ok {
@@ -104,14 +107,14 @@ func dataSourceTencentCloudChdfsMountPointsRead(d *schema.ResourceData, meta int
 		paramMap["owner_uin"] = helper.IntUint64(v.(int))
 	}
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var mountPoints []*chdfs.MountPoint
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeChdfsMountPointsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		mountPoints = result
 		return nil
@@ -161,7 +164,7 @@ func dataSourceTencentCloudChdfsMountPointsRead(d *schema.ResourceData, meta int
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/chdfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfw"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
@@ -763,9 +764,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_time_shift_stream_list":                   dataSourceTencentCloudCssTimeShiftStreamList(),
 			"tencentcloud_css_watermarks":                               dataSourceTencentCloudCssWatermarks(),
 			"tencentcloud_css_xp2p_detail_info_list":                    dataSourceTencentCloudCssXp2pDetailInfoList(),
-			"tencentcloud_chdfs_access_groups":                          dataSourceTencentCloudChdfsAccessGroups(),
-			"tencentcloud_chdfs_mount_points":                           dataSourceTencentCloudChdfsMountPoints(),
-			"tencentcloud_chdfs_file_systems":                           dataSourceTencentCloudChdfsFileSystems(),
+			"tencentcloud_chdfs_access_groups":                          chdfs.DataSourceTencentCloudChdfsAccessGroups(),
+			"tencentcloud_chdfs_mount_points":                           chdfs.DataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_chdfs_file_systems":                           chdfs.DataSourceTencentCloudChdfsFileSystems(),
 			"tencentcloud_tcm_mesh":                                     dataSourceTencentCloudTcmMesh(),
 			"tencentcloud_lighthouse_firewall_rules_template":           dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                         dataSourceTencentCloudCvmInstanceVncUrl(),
@@ -1700,12 +1701,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cbs_disk_backup":                                     cbs.ResourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":                       cbs.ResourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":                  cbs.ResourceTencentCloudCbsDiskBackupRollbackOperation(),
-			"tencentcloud_chdfs_access_group":                                  resourceTencentCloudChdfsAccessGroup(),
-			"tencentcloud_chdfs_access_rule":                                   resourceTencentCloudChdfsAccessRule(),
-			"tencentcloud_chdfs_file_system":                                   resourceTencentCloudChdfsFileSystem(),
-			"tencentcloud_chdfs_life_cycle_rule":                               resourceTencentCloudChdfsLifeCycleRule(),
-			"tencentcloud_chdfs_mount_point":                                   resourceTencentCloudChdfsMountPoint(),
-			"tencentcloud_chdfs_mount_point_attachment":                        resourceTencentCloudChdfsMountPointAttachment(),
+			"tencentcloud_chdfs_access_group":                                  chdfs.ResourceTencentCloudChdfsAccessGroup(),
+			"tencentcloud_chdfs_access_rule":                                   chdfs.ResourceTencentCloudChdfsAccessRule(),
+			"tencentcloud_chdfs_file_system":                                   chdfs.ResourceTencentCloudChdfsFileSystem(),
+			"tencentcloud_chdfs_life_cycle_rule":                               chdfs.ResourceTencentCloudChdfsLifeCycleRule(),
+			"tencentcloud_chdfs_mount_point":                                   chdfs.ResourceTencentCloudChdfsMountPoint(),
+			"tencentcloud_chdfs_mount_point_attachment":                        chdfs.ResourceTencentCloudChdfsMountPointAttachment(),
 			"tencentcloud_mdl_stream_live_input":                               resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                                resourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_cvm_launch_template_version":                         resourceTencentCloudCvmLaunchTemplateVersion(),

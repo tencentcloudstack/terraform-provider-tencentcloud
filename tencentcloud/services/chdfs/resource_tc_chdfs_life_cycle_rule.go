@@ -1,4 +1,4 @@
-package tencentcloud
+package chdfs
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
+func ResourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudChdfsLifeCycleRuleCreate,
 		Read:   resourceTencentCloudChdfsLifeCycleRuleRead,
@@ -88,10 +91,10 @@ func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 }
 
 func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_life_cycle_rule.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_life_cycle_rule.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = chdfs.NewCreateLifeCycleRulesRequest()
@@ -131,10 +134,10 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		request.LifeCycleRules = append(request.LifeCycleRules, &lifeCycleRule)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().CreateLifeCycleRules(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().CreateLifeCycleRules(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -146,29 +149,29 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	lifeCycleRule, err := service.DescribeChdfsLifeCycleRuleByPath(ctx, fileSystemId, path)
 	if err != nil {
 		return err
 	}
 
-	d.SetId(fileSystemId + FILED_SP + helper.UInt64ToStr(*lifeCycleRule.LifeCycleRuleId))
+	d.SetId(fileSystemId + tccommon.FILED_SP + helper.UInt64ToStr(*lifeCycleRule.LifeCycleRuleId))
 
 	return resourceTencentCloudChdfsLifeCycleRuleRead(d, meta)
 }
 
 func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_life_cycle_rule.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_life_cycle_rule.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -237,14 +240,14 @@ func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudChdfsLifeCycleRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_life_cycle_rule.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_life_cycle_rule.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := chdfs.NewModifyLifeCycleRulesRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -282,10 +285,10 @@ func resourceTencentCloudChdfsLifeCycleRuleUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().ModifyLifeCycleRules(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().ModifyLifeCycleRules(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -300,14 +303,14 @@ func resourceTencentCloudChdfsLifeCycleRuleUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudChdfsLifeCycleRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_life_cycle_rule.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_life_cycle_rule.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

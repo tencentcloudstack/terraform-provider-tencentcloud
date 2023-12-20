@@ -1,16 +1,19 @@
-package tencentcloud
+package chdfs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudChdfsMountPoint() *schema.Resource {
+func ResourceTencentCloudChdfsMountPoint() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudChdfsMountPointCreate,
 		Read:   resourceTencentCloudChdfsMountPointRead,
@@ -43,10 +46,10 @@ func resourceTencentCloudChdfsMountPoint() *schema.Resource {
 }
 
 func resourceTencentCloudChdfsMountPointCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_mount_point.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_mount_point.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request      = chdfs.NewCreateMountPointRequest()
@@ -65,10 +68,10 @@ func resourceTencentCloudChdfsMountPointCreate(d *schema.ResourceData, meta inte
 		request.MountPointStatus = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().CreateMountPoint(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().CreateMountPoint(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -87,14 +90,14 @@ func resourceTencentCloudChdfsMountPointCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudChdfsMountPointRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_mount_point.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_mount_point.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	mountPointId := d.Id()
 
@@ -125,10 +128,10 @@ func resourceTencentCloudChdfsMountPointRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudChdfsMountPointUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_mount_point.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_mount_point.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := chdfs.NewModifyMountPointRequest()
 
@@ -148,10 +151,10 @@ func resourceTencentCloudChdfsMountPointUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseChdfsClient().ModifyMountPoint(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseChdfsClient().ModifyMountPoint(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -166,13 +169,13 @@ func resourceTencentCloudChdfsMountPointUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudChdfsMountPointDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_chdfs_mount_point.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_chdfs_mount_point.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := ChdfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	mountPointId := d.Id()
 
 	if err := service.DeleteChdfsMountPointById(ctx, mountPointId); err != nil {
