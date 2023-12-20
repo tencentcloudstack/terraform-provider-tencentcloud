@@ -76,7 +76,7 @@ type ApplyCertificateRequestParams struct {
 	// 加密算法，支持 RSA及ECC。
 	CsrEncryptAlgo *string `json:"CsrEncryptAlgo,omitnil" name:"CsrEncryptAlgo"`
 
-	// 密钥对参数，RSA仅支持2048。ECC仅支持prime256v1
+	// 密钥对参数，RSA仅支持2048。ECC仅支持prime256v1。加密算法选择ECC时，此参数必填
 	CsrKeyParameter *string `json:"CsrKeyParameter,omitnil" name:"CsrKeyParameter"`
 
 	// CSR 的加密密码。
@@ -122,7 +122,7 @@ type ApplyCertificateRequest struct {
 	// 加密算法，支持 RSA及ECC。
 	CsrEncryptAlgo *string `json:"CsrEncryptAlgo,omitnil" name:"CsrEncryptAlgo"`
 
-	// 密钥对参数，RSA仅支持2048。ECC仅支持prime256v1
+	// 密钥对参数，RSA仅支持2048。ECC仅支持prime256v1。加密算法选择ECC时，此参数必填
 	CsrKeyParameter *string `json:"CsrKeyParameter,omitnil" name:"CsrKeyParameter"`
 
 	// CSR 的加密密码。
@@ -417,6 +417,10 @@ type CertificateExtra struct {
 	// 是否是国密证书
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SMCert *int64 `json:"SMCert,omitnil" name:"SMCert"`
+
+	// 公司类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CompanyType *int64 `json:"CompanyType,omitnil" name:"CompanyType"`
 }
 
 type Certificates struct {
@@ -522,7 +526,7 @@ type Certificates struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsVulnerability *bool `json:"IsVulnerability,omitnil" name:"IsVulnerability"`
 
-	// 是否可重颁发证书。
+	// 是否可续费。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewAble *bool `json:"RenewAble,omitnil" name:"RenewAble"`
 
@@ -585,6 +589,54 @@ type Certificates struct {
 	// 托管新证书ID
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HostingRenewCertId *string `json:"HostingRenewCertId,omitnil" name:"HostingRenewCertId"`
+
+	// 存在的续费证书ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HasRenewOrder *string `json:"HasRenewOrder,omitnil" name:"HasRenewOrder"`
+
+	// 重颁发证书原证书是否删除
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReplaceOriCertIsDelete *bool `json:"ReplaceOriCertIsDelete,omitnil" name:"ReplaceOriCertIsDelete"`
+
+	// 是否即将过期， 证书即将到期的30天内为即将过期
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsExpiring *bool `json:"IsExpiring,omitnil" name:"IsExpiring"`
+
+	// DV证书添加验证截止时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DVAuthDeadline *string `json:"DVAuthDeadline,omitnil" name:"DVAuthDeadline"`
+
+	// 域名验证通过时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ValidationPassedTime *string `json:"ValidationPassedTime,omitnil" name:"ValidationPassedTime"`
+
+	// 证书关联的多域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CertSANs []*string `json:"CertSANs,omitnil" name:"CertSANs"`
+
+	// 域名验证驳回信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AwaitingValidationMsg *string `json:"AwaitingValidationMsg,omitnil" name:"AwaitingValidationMsg"`
+
+	// 是否允许下载
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AllowDownload *bool `json:"AllowDownload,omitnil" name:"AllowDownload"`
+
+	// 证书域名是否全部在DNSPOD托管解析
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsDNSPODResolve *bool `json:"IsDNSPODResolve,omitnil" name:"IsDNSPODResolve"`
+
+	// 是否是权益点购买的证书
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsPackage *bool `json:"IsPackage,omitnil" name:"IsPackage"`
+
+	// 是否存在私钥密码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyPasswordCustomFlag *bool `json:"KeyPasswordCustomFlag,omitnil" name:"KeyPasswordCustomFlag"`
+
+	// 支持下载的WEB服务器类型： nginx、apache、iis、tomcat、jks、root、other
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportDownloadType *SupportDownloadType `json:"SupportDownloadType,omitnil" name:"SupportDownloadType"`
 }
 
 // Predefined struct for user
@@ -1780,6 +1832,10 @@ type DescribeCertificateBindResourceTaskDetailResponseParams struct {
 	// 当前结果缓存时间
 	CacheTime *string `json:"CacheTime,omitnil" name:"CacheTime"`
 
+	// 关联tse资源详情	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TSE []*TSEInstanceList `json:"TSE,omitnil" name:"TSE"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
 }
@@ -2402,6 +2458,12 @@ type DescribeCertificatesRequestParams struct {
 
 	// 是否可托管，可选值：1 = 可托管，0 =  不可托管。
 	Hostable *uint64 `json:"Hostable,omitnil" name:"Hostable"`
+
+	// 筛选指定标签的证书
+	Tags []*Tags `json:"Tags,omitnil" name:"Tags"`
+
+	// //是否筛选等待签发的证书，传1是筛选，0和null不筛选
+	IsPendingIssue *int64 `json:"IsPendingIssue,omitnil" name:"IsPendingIssue"`
 }
 
 type DescribeCertificatesRequest struct {
@@ -2448,6 +2510,12 @@ type DescribeCertificatesRequest struct {
 
 	// 是否可托管，可选值：1 = 可托管，0 =  不可托管。
 	Hostable *uint64 `json:"Hostable,omitnil" name:"Hostable"`
+
+	// 筛选指定标签的证书
+	Tags []*Tags `json:"Tags,omitnil" name:"Tags"`
+
+	// //是否筛选等待签发的证书，传1是筛选，0和null不筛选
+	IsPendingIssue *int64 `json:"IsPendingIssue,omitnil" name:"IsPendingIssue"`
 }
 
 func (r *DescribeCertificatesRequest) ToJsonString() string {
@@ -2476,6 +2544,8 @@ func (r *DescribeCertificatesRequest) FromJsonString(s string) error {
 	delete(f, "IsSM")
 	delete(f, "FilterExpiring")
 	delete(f, "Hostable")
+	delete(f, "Tags")
+	delete(f, "IsPendingIssue")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCertificatesRequest has unknown keys!", "")
 	}
@@ -4552,6 +4622,28 @@ type Filter struct {
 	FilterValue *string `json:"FilterValue,omitnil" name:"FilterValue"`
 }
 
+type GatewayCertificate struct {
+	// 网关证书ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Id *string `json:"Id,omitnil" name:"Id"`
+
+	// 网关证书名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitnil" name:"Name"`
+
+	// 绑定域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BindDomains []*string `json:"BindDomains,omitnil" name:"BindDomains"`
+
+	// 证书来源
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CertSource *string `json:"CertSource,omitnil" name:"CertSource"`
+
+	// 当前绑定的SSL证书ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CertId *string `json:"CertId,omitnil" name:"CertId"`
+}
+
 // Predefined struct for user
 type HostCertificateRequestParams struct {
 	// 证书ID
@@ -4969,6 +5061,22 @@ type OperationLog struct {
 
 	// 操作时间。
 	CreatedOn *string `json:"CreatedOn,omitnil" name:"CreatedOn"`
+
+	// 主账号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Uin *string `json:"Uin,omitnil" name:"Uin"`
+
+	// 子账号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubAccountUin *string `json:"SubAccountUin,omitnil" name:"SubAccountUin"`
+
+	// 证书ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CertId *string `json:"CertId,omitnil" name:"CertId"`
+
+	// 操作
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitnil" name:"Type"`
 }
 
 type PackageInfo struct {
@@ -5687,6 +5795,29 @@ type SubmittedData struct {
 	VerifyType *string `json:"VerifyType,omitnil" name:"VerifyType"`
 }
 
+type SupportDownloadType struct {
+	// 是否可以下载nginx可用格式
+	NGINX *bool `json:"NGINX,omitnil" name:"NGINX"`
+
+	// 是否可以下载apache可用格式
+	APACHE *bool `json:"APACHE,omitnil" name:"APACHE"`
+
+	// 是否可以下载tomcat可用格式
+	TOMCAT *bool `json:"TOMCAT,omitnil" name:"TOMCAT"`
+
+	// 是否可以下载iis可用格式
+	IIS *bool `json:"IIS,omitnil" name:"IIS"`
+
+	// 是否可以下载JKS可用格式
+	JKS *bool `json:"JKS,omitnil" name:"JKS"`
+
+	// 是否可以下载其他格式
+	OTHER *bool `json:"OTHER,omitnil" name:"OTHER"`
+
+	// 是否可以下载根证书
+	ROOT *bool `json:"ROOT,omitnil" name:"ROOT"`
+}
+
 type SyncTaskBindResourceResult struct {
 	// 任务ID
 	TaskId *string `json:"TaskId,omitnil" name:"TaskId"`
@@ -5814,6 +5945,32 @@ type TCBInstanceList struct {
 	Environments []*TCBEnvironments `json:"Environments,omitnil" name:"Environments"`
 }
 
+type TSEInstanceDetail struct {
+	// 网关ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GatewayId *string `json:"GatewayId,omitnil" name:"GatewayId"`
+
+	// 网关名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GatewayName *string `json:"GatewayName,omitnil" name:"GatewayName"`
+
+	// 网关证书列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CertificateList []*GatewayCertificate `json:"CertificateList,omitnil" name:"CertificateList"`
+}
+
+type TSEInstanceList struct {
+	// TSE实例详情	
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceList []*TSEInstanceDetail `json:"InstanceList,omitnil" name:"InstanceList"`
+
+	// 该地域下TSE实例总数	
+	TotalCount *uint64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 地域	
+	Region *string `json:"Region,omitnil" name:"Region"`
+}
+
 type Tags struct {
 	// 标签键
 	TagKey *string `json:"TagKey,omitnil" name:"TagKey"`
@@ -5911,41 +6068,83 @@ type TkeSecretDetail struct {
 
 // Predefined struct for user
 type UpdateCertificateInstanceRequestParams struct {
-	// 一键更新新证书ID
-	CertificateId *string `json:"CertificateId,omitnil" name:"CertificateId"`
-
-	// 一键更新原证书ID
+	// 一键更新原证书ID， 查询绑定该证书的云资源然后进行证书更新
 	OldCertificateId *string `json:"OldCertificateId,omitnil" name:"OldCertificateId"`
 
-	// 需要部署的资源类型，参数值可选：clb、cdn、waf、live、ddos、teo、apigateway、vod、tke、tcb
+	// 需要部署的资源类型，参数值可选（小写）：clb、cdn、waf、live、ddos、teo、apigateway、vod、tke、tcb、tse
 	ResourceTypes []*string `json:"ResourceTypes,omitnil" name:"ResourceTypes"`
+
+	// 一键更新新证书ID，不传该则证书公钥和私钥必传
+	CertificateId *string `json:"CertificateId,omitnil" name:"CertificateId"`
 
 	// 需要部署的地域列表（废弃）
 	//
 	// Deprecated: Regions is deprecated.
 	Regions []*string `json:"Regions,omitnil" name:"Regions"`
 
-	// 云资源需要部署的地域列表
+	// 云资源需要部署的地域列表，支持地域的云资源类型必传，如：clb、tke、apigateway、waf、tcb、tse等
 	ResourceTypesRegions []*ResourceTypeRegions `json:"ResourceTypesRegions,omitnil" name:"ResourceTypesRegions"`
+
+	// 证书公钥， 若上传证书公钥， 则CertificateId不用传
+	CertificatePublicKey *string `json:"CertificatePublicKey,omitnil" name:"CertificatePublicKey"`
+
+	// 证书私钥，若上传证书公钥， 则CertificateId不用传
+	CertificatePrivateKey *string `json:"CertificatePrivateKey,omitnil" name:"CertificatePrivateKey"`
+
+	// 旧证书是否忽略到期提醒  0:不忽略通知。1:忽略通知，忽略OldCertificateId到期提醒
+	ExpiringNotificationSwitch *uint64 `json:"ExpiringNotificationSwitch,omitnil" name:"ExpiringNotificationSwitch"`
+
+	// 相同的证书是否允许重复上传，若选择上传证书， 则可以配置该参数
+	Repeatable *bool `json:"Repeatable,omitnil" name:"Repeatable"`
+
+	// 是否允许下载，若选择上传证书， 则可以配置该参数
+	AllowDownload *bool `json:"AllowDownload,omitnil" name:"AllowDownload"`
+
+	// 标签列表，若选择上传证书， 则可以配置该参数
+	Tags []*Tags `json:"Tags,omitnil" name:"Tags"`
+
+	// 项目 ID，若选择上传证书， 则可以配置该参数
+	ProjectId *uint64 `json:"ProjectId,omitnil" name:"ProjectId"`
 }
 
 type UpdateCertificateInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 一键更新新证书ID
-	CertificateId *string `json:"CertificateId,omitnil" name:"CertificateId"`
-
-	// 一键更新原证书ID
+	// 一键更新原证书ID， 查询绑定该证书的云资源然后进行证书更新
 	OldCertificateId *string `json:"OldCertificateId,omitnil" name:"OldCertificateId"`
 
-	// 需要部署的资源类型，参数值可选：clb、cdn、waf、live、ddos、teo、apigateway、vod、tke、tcb
+	// 需要部署的资源类型，参数值可选（小写）：clb、cdn、waf、live、ddos、teo、apigateway、vod、tke、tcb、tse
 	ResourceTypes []*string `json:"ResourceTypes,omitnil" name:"ResourceTypes"`
+
+	// 一键更新新证书ID，不传该则证书公钥和私钥必传
+	CertificateId *string `json:"CertificateId,omitnil" name:"CertificateId"`
 
 	// 需要部署的地域列表（废弃）
 	Regions []*string `json:"Regions,omitnil" name:"Regions"`
 
-	// 云资源需要部署的地域列表
+	// 云资源需要部署的地域列表，支持地域的云资源类型必传，如：clb、tke、apigateway、waf、tcb、tse等
 	ResourceTypesRegions []*ResourceTypeRegions `json:"ResourceTypesRegions,omitnil" name:"ResourceTypesRegions"`
+
+	// 证书公钥， 若上传证书公钥， 则CertificateId不用传
+	CertificatePublicKey *string `json:"CertificatePublicKey,omitnil" name:"CertificatePublicKey"`
+
+	// 证书私钥，若上传证书公钥， 则CertificateId不用传
+	CertificatePrivateKey *string `json:"CertificatePrivateKey,omitnil" name:"CertificatePrivateKey"`
+
+	// 旧证书是否忽略到期提醒  0:不忽略通知。1:忽略通知，忽略OldCertificateId到期提醒
+	ExpiringNotificationSwitch *uint64 `json:"ExpiringNotificationSwitch,omitnil" name:"ExpiringNotificationSwitch"`
+
+	// 相同的证书是否允许重复上传，若选择上传证书， 则可以配置该参数
+	Repeatable *bool `json:"Repeatable,omitnil" name:"Repeatable"`
+
+	// 是否允许下载，若选择上传证书， 则可以配置该参数
+	AllowDownload *bool `json:"AllowDownload,omitnil" name:"AllowDownload"`
+
+	// 标签列表，若选择上传证书， 则可以配置该参数
+	Tags []*Tags `json:"Tags,omitnil" name:"Tags"`
+
+	// 项目 ID，若选择上传证书， 则可以配置该参数
+	ProjectId *uint64 `json:"ProjectId,omitnil" name:"ProjectId"`
 }
 
 func (r *UpdateCertificateInstanceRequest) ToJsonString() string {
@@ -5960,11 +6159,18 @@ func (r *UpdateCertificateInstanceRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "CertificateId")
 	delete(f, "OldCertificateId")
 	delete(f, "ResourceTypes")
+	delete(f, "CertificateId")
 	delete(f, "Regions")
 	delete(f, "ResourceTypesRegions")
+	delete(f, "CertificatePublicKey")
+	delete(f, "CertificatePrivateKey")
+	delete(f, "ExpiringNotificationSwitch")
+	delete(f, "Repeatable")
+	delete(f, "AllowDownload")
+	delete(f, "Tags")
+	delete(f, "ProjectId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateCertificateInstanceRequest has unknown keys!", "")
 	}
@@ -5979,6 +6185,10 @@ type UpdateCertificateInstanceResponseParams struct {
 
 	// 部署状态，1表示部署成功，0表示部署失败
 	DeployStatus *int64 `json:"DeployStatus,omitnil" name:"DeployStatus"`
+
+	// 更新异步创建任务进度详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateSyncProgress []*UpdateSyncProgress `json:"UpdateSyncProgress,omitnil" name:"UpdateSyncProgress"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
@@ -6237,6 +6447,38 @@ type UpdateRecordInfo struct {
 
 	// 最后一次更新时间
 	UpdateTime *string `json:"UpdateTime,omitnil" name:"UpdateTime"`
+}
+
+type UpdateSyncProgress struct {
+	// 资源类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceType *string `json:"ResourceType,omitnil" name:"ResourceType"`
+
+	// 地域结果列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateSyncProgressRegions []*UpdateSyncProgressRegion `json:"UpdateSyncProgressRegions,omitnil" name:"UpdateSyncProgressRegions"`
+
+	// 异步更新进度状态：0， 待处理， 1 已处理， 3 处理中
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil" name:"Status"`
+}
+
+type UpdateSyncProgressRegion struct {
+	// 资源类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitnil" name:"Region"`
+
+	// 总数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitnil" name:"TotalCount"`
+
+	// 执行完成数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OffsetCount *int64 `json:"OffsetCount,omitnil" name:"OffsetCount"`
+
+	// 异步更新进度状态：0， 待处理， 1 已处理， 3 处理中
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitnil" name:"Status"`
 }
 
 // Predefined struct for user

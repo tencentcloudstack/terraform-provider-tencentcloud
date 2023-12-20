@@ -161,6 +161,11 @@ func dataSourceTencentCloudSslDescribeCertificate() *schema.Resource {
 										Computed:    true,
 										Description: "Is it a national secret certificateNote: This field may return NULL, indicating that the valid value cannot be obtained.",
 									},
+									"company_type": {
+										Type:        schema.TypeInt,
+										Computed:    true,
+										Description: "Type of company. Note: This field may return NULL, indicating that the valid value cannot be obtained.",
+									},
 								},
 							},
 						},
@@ -634,6 +639,10 @@ func dataSourceTencentCloudSslDescribeCertificateRead(d *schema.ResourceData, me
 
 		if responese.CertificateExtra.SMCert != nil {
 			certificateExtraMap["s_m_cert"] = responese.CertificateExtra.SMCert
+		}
+
+		if responese.CertificateExtra.CompanyType != nil {
+			certificateExtraMap["company_type"] = responese.CertificateExtra.CompanyType
 		}
 
 		sslResponseMap["certificate_extra"] = []interface{}{certificateExtraMap}

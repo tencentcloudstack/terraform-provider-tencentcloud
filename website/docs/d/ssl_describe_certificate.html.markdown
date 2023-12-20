@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
   * `cert_begin_time` - Certificate takes effect time.Note: This field may return NULL, indicating that the valid value cannot be obtained.
   * `cert_end_time` - The certificate is invalid time.Note: This field may return NULL, indicating that the valid value cannot be obtained.
   * `certificate_extra` - Certificate extension information.Note: This field may return NULL, indicating that the valid value cannot be obtained.
+    * `company_type` - Type of company. Note: This field may return NULL, indicating that the valid value cannot be obtained.
     * `domain_number` - Certificate can be configured in the number of domain names.Note: This field may return NULL, indicating that the valid value cannot be obtained.
     * `origin_certificate_id` - Original certificate ID.Note: This field may return NULL, indicating that the valid value cannot be obtained.
     * `renew_order` - New order certificate ID.Note: This field may return NULL, indicating that the valid value cannot be obtained.

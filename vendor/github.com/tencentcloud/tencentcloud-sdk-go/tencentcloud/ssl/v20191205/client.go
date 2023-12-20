@@ -59,8 +59,9 @@ func NewApplyCertificateRequest() (request *ApplyCertificateRequest) {
 func NewApplyCertificateResponse() (response *ApplyCertificateResponse) {
     response = &ApplyCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ApplyCertificate
@@ -87,6 +88,7 @@ func NewApplyCertificateResponse() (response *ApplyCertificateResponse) {
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  FAILEDOPERATION_PACKAGECOUNTLIMIT = "FailedOperation.PackageCountLimit"
 //  FAILEDOPERATION_PACKAGEEXPIRED = "FailedOperation.PackageExpired"
+//  FAILEDOPERATION_PACKAGENOTFOUND = "FailedOperation.PackageNotFound"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PACKAGEIDSINVALID = "InvalidParameter.PackageIdsInvalid"
@@ -118,6 +120,7 @@ func (c *Client) ApplyCertificate(request *ApplyCertificateRequest) (response *A
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  FAILEDOPERATION_PACKAGECOUNTLIMIT = "FailedOperation.PackageCountLimit"
 //  FAILEDOPERATION_PACKAGEEXPIRED = "FailedOperation.PackageExpired"
+//  FAILEDOPERATION_PACKAGENOTFOUND = "FailedOperation.PackageNotFound"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PACKAGEIDSINVALID = "InvalidParameter.PackageIdsInvalid"
@@ -151,8 +154,9 @@ func NewCancelAuditCertificateRequest() (request *CancelAuditCertificateRequest)
 func NewCancelAuditCertificateResponse() (response *CancelAuditCertificateResponse) {
     response = &CancelAuditCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelAuditCertificate
@@ -199,8 +203,9 @@ func NewCancelCertificateOrderRequest() (request *CancelCertificateOrderRequest)
 func NewCancelCertificateOrderResponse() (response *CancelCertificateOrderResponse) {
     response = &CancelCertificateOrderResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CancelCertificateOrder
@@ -261,8 +266,9 @@ func NewCheckCertificateChainRequest() (request *CheckCertificateChainRequest) {
 func NewCheckCertificateChainResponse() (response *CheckCertificateChainResponse) {
     response = &CheckCertificateChainResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CheckCertificateChain
@@ -313,8 +319,9 @@ func NewCommitCertificateInformationRequest() (request *CommitCertificateInforma
 func NewCommitCertificateInformationResponse() (response *CommitCertificateInformationResponse) {
     response = &CommitCertificateInformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CommitCertificateInformation
@@ -379,8 +386,9 @@ func NewCompleteCertificateRequest() (request *CompleteCertificateRequest) {
 func NewCompleteCertificateResponse() (response *CompleteCertificateResponse) {
     response = &CompleteCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CompleteCertificate
@@ -431,8 +439,9 @@ func NewCreateCertificateRequest() (request *CreateCertificateRequest) {
 func NewCreateCertificateResponse() (response *CreateCertificateResponse) {
     response = &CreateCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCertificate
@@ -493,8 +502,9 @@ func NewCreateCertificateBindResourceSyncTaskRequest() (request *CreateCertifica
 func NewCreateCertificateBindResourceSyncTaskResponse() (response *CreateCertificateBindResourceSyncTaskResponse) {
     response = &CreateCertificateBindResourceSyncTaskResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCertificateBindResourceSyncTask
@@ -543,8 +553,9 @@ func NewCreateCertificateByPackageRequest() (request *CreateCertificateByPackage
 func NewCreateCertificateByPackageResponse() (response *CreateCertificateByPackageResponse) {
     response = &CreateCertificateByPackageResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // CreateCertificateByPackage
@@ -609,8 +620,9 @@ func NewDeleteCertificateRequest() (request *DeleteCertificateRequest) {
 func NewDeleteCertificateResponse() (response *DeleteCertificateResponse) {
     response = &DeleteCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteCertificate
@@ -695,8 +707,9 @@ func NewDeleteManagerRequest() (request *DeleteManagerRequest) {
 func NewDeleteManagerResponse() (response *DeleteManagerResponse) {
     response = &DeleteManagerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeleteManager
@@ -753,8 +766,9 @@ func NewDeployCertificateInstanceRequest() (request *DeployCertificateInstanceRe
 func NewDeployCertificateInstanceResponse() (response *DeployCertificateInstanceResponse) {
     response = &DeployCertificateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeployCertificateInstance
@@ -829,8 +843,9 @@ func NewDeployCertificateRecordRetryRequest() (request *DeployCertificateRecordR
 func NewDeployCertificateRecordRetryResponse() (response *DeployCertificateRecordRetryResponse) {
     response = &DeployCertificateRecordRetryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeployCertificateRecordRetry
@@ -897,8 +912,9 @@ func NewDeployCertificateRecordRollbackRequest() (request *DeployCertificateReco
 func NewDeployCertificateRecordRollbackResponse() (response *DeployCertificateRecordRollbackResponse) {
     response = &DeployCertificateRecordRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DeployCertificateRecordRollback
@@ -971,8 +987,9 @@ func NewDescribeCertificateRequest() (request *DescribeCertificateRequest) {
 func NewDescribeCertificateResponse() (response *DescribeCertificateResponse) {
     response = &DescribeCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificate
@@ -1055,8 +1072,9 @@ func NewDescribeCertificateBindResourceTaskDetailRequest() (request *DescribeCer
 func NewDescribeCertificateBindResourceTaskDetailResponse() (response *DescribeCertificateBindResourceTaskDetailResponse) {
     response = &DescribeCertificateBindResourceTaskDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificateBindResourceTaskDetail
@@ -1105,8 +1123,9 @@ func NewDescribeCertificateBindResourceTaskResultRequest() (request *DescribeCer
 func NewDescribeCertificateBindResourceTaskResultResponse() (response *DescribeCertificateBindResourceTaskResultResponse) {
     response = &DescribeCertificateBindResourceTaskResultResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificateBindResourceTaskResult
@@ -1153,8 +1172,9 @@ func NewDescribeCertificateDetailRequest() (request *DescribeCertificateDetailRe
 func NewDescribeCertificateDetailResponse() (response *DescribeCertificateDetailResponse) {
     response = &DescribeCertificateDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificateDetail
@@ -1163,6 +1183,7 @@ func NewDescribeCertificateDetailResponse() (response *DescribeCertificateDetail
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1170,6 +1191,7 @@ func NewDescribeCertificateDetailResponse() (response *DescribeCertificateDetail
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_BACKENDRESPONSEEMPTY = "InternalError.BackendResponseEmpty"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
+//  RESOURCENOTFOUND_MANAGER = "ResourceNotFound.Manager"
 func (c *Client) DescribeCertificateDetail(request *DescribeCertificateDetailRequest) (response *DescribeCertificateDetailResponse, err error) {
     return c.DescribeCertificateDetailWithContext(context.Background(), request)
 }
@@ -1180,6 +1202,7 @@ func (c *Client) DescribeCertificateDetail(request *DescribeCertificateDetailReq
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1187,6 +1210,7 @@ func (c *Client) DescribeCertificateDetail(request *DescribeCertificateDetailReq
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_BACKENDRESPONSEEMPTY = "InternalError.BackendResponseEmpty"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
+//  RESOURCENOTFOUND_MANAGER = "ResourceNotFound.Manager"
 func (c *Client) DescribeCertificateDetailWithContext(ctx context.Context, request *DescribeCertificateDetailRequest) (response *DescribeCertificateDetailResponse, err error) {
     if request == nil {
         request = NewDescribeCertificateDetailRequest()
@@ -1217,14 +1241,16 @@ func NewDescribeCertificateOperateLogsRequest() (request *DescribeCertificateOpe
 func NewDescribeCertificateOperateLogsResponse() (response *DescribeCertificateOperateLogsResponse) {
     response = &DescribeCertificateOperateLogsResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificateOperateLogs
 // 获取用户账号下有关证书的操作日志。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1238,6 +1264,7 @@ func (c *Client) DescribeCertificateOperateLogs(request *DescribeCertificateOper
 // 获取用户账号下有关证书的操作日志。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
@@ -1273,8 +1300,9 @@ func NewDescribeCertificatesRequest() (request *DescribeCertificatesRequest) {
 func NewDescribeCertificatesResponse() (response *DescribeCertificatesResponse) {
     response = &DescribeCertificatesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCertificates
@@ -1283,6 +1311,7 @@ func NewDescribeCertificatesResponse() (response *DescribeCertificatesResponse) 
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
 //  FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
@@ -1312,6 +1341,7 @@ func (c *Client) DescribeCertificates(request *DescribeCertificatesRequest) (res
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
+//  FAILEDOPERATION_CAMAUTHORIZEDFAIL = "FailedOperation.CAMAuthorizedFail"
 //  FAILEDOPERATION_CANCELORDERFAILED = "FailedOperation.CancelOrderFailed"
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
@@ -1361,8 +1391,9 @@ func NewDescribeCompaniesRequest() (request *DescribeCompaniesRequest) {
 func NewDescribeCompaniesResponse() (response *DescribeCompaniesResponse) {
     response = &DescribeCompaniesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeCompanies
@@ -1413,12 +1444,13 @@ func NewDescribeDeployedResourcesRequest() (request *DescribeDeployedResourcesRe
 func NewDescribeDeployedResourcesResponse() (response *DescribeDeployedResourcesResponse) {
     response = &DescribeDeployedResourcesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeDeployedResources
-// 证书查询关联资源
+// 证书查询关联资源， 最新查询接口请使用CreateCertificateBindResourceSyncTask， 可以查询更多支持的云资源
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1436,7 +1468,7 @@ func (c *Client) DescribeDeployedResources(request *DescribeDeployedResourcesReq
 }
 
 // DescribeDeployedResources
-// 证书查询关联资源
+// 证书查询关联资源， 最新查询接口请使用CreateCertificateBindResourceSyncTask， 可以查询更多支持的云资源
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1479,8 +1511,9 @@ func NewDescribeHostApiGatewayInstanceListRequest() (request *DescribeHostApiGat
 func NewDescribeHostApiGatewayInstanceListResponse() (response *DescribeHostApiGatewayInstanceListResponse) {
     response = &DescribeHostApiGatewayInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostApiGatewayInstanceList
@@ -1549,8 +1582,9 @@ func NewDescribeHostCdnInstanceListRequest() (request *DescribeHostCdnInstanceLi
 func NewDescribeHostCdnInstanceListResponse() (response *DescribeHostCdnInstanceListResponse) {
     response = &DescribeHostCdnInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostCdnInstanceList
@@ -1619,8 +1653,9 @@ func NewDescribeHostClbInstanceListRequest() (request *DescribeHostClbInstanceLi
 func NewDescribeHostClbInstanceListResponse() (response *DescribeHostClbInstanceListResponse) {
     response = &DescribeHostClbInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostClbInstanceList
@@ -1691,8 +1726,9 @@ func NewDescribeHostCosInstanceListRequest() (request *DescribeHostCosInstanceLi
 func NewDescribeHostCosInstanceListResponse() (response *DescribeHostCosInstanceListResponse) {
     response = &DescribeHostCosInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostCosInstanceList
@@ -1763,8 +1799,9 @@ func NewDescribeHostDdosInstanceListRequest() (request *DescribeHostDdosInstance
 func NewDescribeHostDdosInstanceListResponse() (response *DescribeHostDdosInstanceListResponse) {
     response = &DescribeHostDdosInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostDdosInstanceList
@@ -1833,8 +1870,9 @@ func NewDescribeHostDeployRecordRequest() (request *DescribeHostDeployRecordRequ
 func NewDescribeHostDeployRecordResponse() (response *DescribeHostDeployRecordResponse) {
     response = &DescribeHostDeployRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostDeployRecord
@@ -1899,8 +1937,9 @@ func NewDescribeHostDeployRecordDetailRequest() (request *DescribeHostDeployReco
 func NewDescribeHostDeployRecordDetailResponse() (response *DescribeHostDeployRecordDetailResponse) {
     response = &DescribeHostDeployRecordDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostDeployRecordDetail
@@ -1965,8 +2004,9 @@ func NewDescribeHostLighthouseInstanceListRequest() (request *DescribeHostLighth
 func NewDescribeHostLighthouseInstanceListResponse() (response *DescribeHostLighthouseInstanceListResponse) {
     response = &DescribeHostLighthouseInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostLighthouseInstanceList
@@ -2035,8 +2075,9 @@ func NewDescribeHostLiveInstanceListRequest() (request *DescribeHostLiveInstance
 func NewDescribeHostLiveInstanceListResponse() (response *DescribeHostLiveInstanceListResponse) {
     response = &DescribeHostLiveInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostLiveInstanceList
@@ -2105,8 +2146,9 @@ func NewDescribeHostTeoInstanceListRequest() (request *DescribeHostTeoInstanceLi
 func NewDescribeHostTeoInstanceListResponse() (response *DescribeHostTeoInstanceListResponse) {
     response = &DescribeHostTeoInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostTeoInstanceList
@@ -2173,8 +2215,9 @@ func NewDescribeHostTkeInstanceListRequest() (request *DescribeHostTkeInstanceLi
 func NewDescribeHostTkeInstanceListResponse() (response *DescribeHostTkeInstanceListResponse) {
     response = &DescribeHostTkeInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostTkeInstanceList
@@ -2245,8 +2288,9 @@ func NewDescribeHostUpdateRecordRequest() (request *DescribeHostUpdateRecordRequ
 func NewDescribeHostUpdateRecordResponse() (response *DescribeHostUpdateRecordResponse) {
     response = &DescribeHostUpdateRecordResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostUpdateRecord
@@ -2309,8 +2353,9 @@ func NewDescribeHostUpdateRecordDetailRequest() (request *DescribeHostUpdateReco
 func NewDescribeHostUpdateRecordDetailResponse() (response *DescribeHostUpdateRecordDetailResponse) {
     response = &DescribeHostUpdateRecordDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostUpdateRecordDetail
@@ -2373,8 +2418,9 @@ func NewDescribeHostVodInstanceListRequest() (request *DescribeHostVodInstanceLi
 func NewDescribeHostVodInstanceListResponse() (response *DescribeHostVodInstanceListResponse) {
     response = &DescribeHostVodInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostVodInstanceList
@@ -2443,8 +2489,9 @@ func NewDescribeHostWafInstanceListRequest() (request *DescribeHostWafInstanceLi
 func NewDescribeHostWafInstanceListResponse() (response *DescribeHostWafInstanceListResponse) {
     response = &DescribeHostWafInstanceListResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeHostWafInstanceList
@@ -2513,8 +2560,9 @@ func NewDescribeManagerDetailRequest() (request *DescribeManagerDetailRequest) {
 func NewDescribeManagerDetailResponse() (response *DescribeManagerDetailResponse) {
     response = &DescribeManagerDetailResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeManagerDetail
@@ -2567,8 +2615,9 @@ func NewDescribeManagersRequest() (request *DescribeManagersRequest) {
 func NewDescribeManagersResponse() (response *DescribeManagersResponse) {
     response = &DescribeManagersResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribeManagers
@@ -2619,8 +2668,9 @@ func NewDescribePackagesRequest() (request *DescribePackagesRequest) {
 func NewDescribePackagesResponse() (response *DescribePackagesResponse) {
     response = &DescribePackagesResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DescribePackages
@@ -2669,8 +2719,9 @@ func NewDownloadCertificateRequest() (request *DownloadCertificateRequest) {
 func NewDownloadCertificateResponse() (response *DownloadCertificateResponse) {
     response = &DownloadCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // DownloadCertificate
@@ -2749,11 +2800,16 @@ func NewHostCertificateRequest() (request *HostCertificateRequest) {
 func NewHostCertificateResponse() (response *HostCertificateResponse) {
     response = &HostCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // HostCertificate
+// 证书托管接口已重构， 旧接口预下线， 近30天无请求
+//
+// 
+//
 // 云资源托管
 //
 // 可能返回的错误码:
@@ -2770,6 +2826,10 @@ func (c *Client) HostCertificate(request *HostCertificateRequest) (response *Hos
 }
 
 // HostCertificate
+// 证书托管接口已重构， 旧接口预下线， 近30天无请求
+//
+// 
+//
 // 云资源托管
 //
 // 可能返回的错误码:
@@ -2811,8 +2871,9 @@ func NewModifyCertificateAliasRequest() (request *ModifyCertificateAliasRequest)
 func NewModifyCertificateAliasResponse() (response *ModifyCertificateAliasResponse) {
     response = &ModifyCertificateAliasResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCertificateAlias
@@ -2871,8 +2932,9 @@ func NewModifyCertificateProjectRequest() (request *ModifyCertificateProjectRequ
 func NewModifyCertificateProjectResponse() (response *ModifyCertificateProjectResponse) {
     response = &ModifyCertificateProjectResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCertificateProject
@@ -2929,8 +2991,9 @@ func NewModifyCertificateResubmitRequest() (request *ModifyCertificateResubmitRe
 func NewModifyCertificateResubmitResponse() (response *ModifyCertificateResubmitResponse) {
     response = &ModifyCertificateResubmitResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCertificateResubmit
@@ -2987,8 +3050,9 @@ func NewModifyCertificatesExpiringNotificationSwitchRequest() (request *ModifyCe
 func NewModifyCertificatesExpiringNotificationSwitchResponse() (response *ModifyCertificatesExpiringNotificationSwitchResponse) {
     response = &ModifyCertificatesExpiringNotificationSwitchResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ModifyCertificatesExpiringNotificationSwitch
@@ -3039,8 +3103,9 @@ func NewReplaceCertificateRequest() (request *ReplaceCertificateRequest) {
 func NewReplaceCertificateResponse() (response *ReplaceCertificateResponse) {
     response = &ReplaceCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // ReplaceCertificate
@@ -3057,6 +3122,7 @@ func NewReplaceCertificateResponse() (response *ReplaceCertificateResponse) {
 //  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
+//  FAILEDOPERATION_INVALIDCERTIFICATESOURCE = "FailedOperation.InvalidCertificateSource"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
@@ -3065,6 +3131,7 @@ func NewReplaceCertificateResponse() (response *ReplaceCertificateResponse) {
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_RENEWALGORITHMINVALID = "InvalidParameter.RenewAlgorithmInvalid"
 func (c *Client) ReplaceCertificate(request *ReplaceCertificateRequest) (response *ReplaceCertificateResponse, err error) {
     return c.ReplaceCertificateWithContext(context.Background(), request)
 }
@@ -3083,6 +3150,7 @@ func (c *Client) ReplaceCertificate(request *ReplaceCertificateRequest) (respons
 //  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
 //  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
+//  FAILEDOPERATION_INVALIDCERTIFICATESOURCE = "FailedOperation.InvalidCertificateSource"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NETWORKERROR = "FailedOperation.NetworkError"
@@ -3091,6 +3159,7 @@ func (c *Client) ReplaceCertificate(request *ReplaceCertificateRequest) (respons
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_RENEWALGORITHMINVALID = "InvalidParameter.RenewAlgorithmInvalid"
 func (c *Client) ReplaceCertificateWithContext(ctx context.Context, request *ReplaceCertificateRequest) (response *ReplaceCertificateResponse, err error) {
     if request == nil {
         request = NewReplaceCertificateRequest()
@@ -3121,8 +3190,9 @@ func NewRevokeCertificateRequest() (request *RevokeCertificateRequest) {
 func NewRevokeCertificateResponse() (response *RevokeCertificateResponse) {
     response = &RevokeCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // RevokeCertificate
@@ -3189,8 +3259,9 @@ func NewSubmitAuditManagerRequest() (request *SubmitAuditManagerRequest) {
 func NewSubmitAuditManagerResponse() (response *SubmitAuditManagerResponse) {
     response = &SubmitAuditManagerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitAuditManager
@@ -3245,8 +3316,9 @@ func NewSubmitCertificateInformationRequest() (request *SubmitCertificateInforma
 func NewSubmitCertificateInformationResponse() (response *SubmitCertificateInformationResponse) {
     response = &SubmitCertificateInformationResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // SubmitCertificateInformation
@@ -3307,8 +3379,9 @@ func NewUpdateCertificateInstanceRequest() (request *UpdateCertificateInstanceRe
 func NewUpdateCertificateInstanceResponse() (response *UpdateCertificateInstanceResponse) {
     response = &UpdateCertificateInstanceResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateCertificateInstance
@@ -3319,18 +3392,23 @@ func NewUpdateCertificateInstanceResponse() (response *UpdateCertificateInstance
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_CERTIFICATEDEPLOYHASPENDINGRECORD = "FailedOperation.CertificateDeployHasPendingRecord"
 //  FAILEDOPERATION_CERTIFICATEDEPLOYINSTANCEEMPTY = "FailedOperation.CertificateDeployInstanceEmpty"
+//  FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
 //  FAILEDOPERATION_CERTIFICATEHOSTDEPLOYCANNOTALLOW = "FailedOperation.CertificateHostDeployCanNotAllow"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINNERINTERRUPT = "FailedOperation.CertificateHostResourceInnerInterrupt"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINSTANCEHUGELIMIT = "FailedOperation.CertificateHostResourceInstanceHugeLimit"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCETYPEINVALID = "FailedOperation.CertificateHostResourceTypeInvalid"
+//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
+//  FAILEDOPERATION_CERTIFICATEMATCHERROR = "FailedOperation.CertificateMatchError"
 //  FAILEDOPERATION_CERTIFICATENOTAVAILABLE = "FailedOperation.CertificateNotAvailable"
 //  FAILEDOPERATION_CERTIFICATENOTDEPLOYINSTANCE = "FailedOperation.CertificateNotDeployInstance"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
 //  FAILEDOPERATION_NOREALNAMEAUTH = "FailedOperation.NoRealNameAuth"
 //  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) UpdateCertificateInstance(request *UpdateCertificateInstanceRequest) (response *UpdateCertificateInstanceResponse, err error) {
     return c.UpdateCertificateInstanceWithContext(context.Background(), request)
@@ -3344,18 +3422,23 @@ func (c *Client) UpdateCertificateInstance(request *UpdateCertificateInstanceReq
 //  FAILEDOPERATION_AUTHERROR = "FailedOperation.AuthError"
 //  FAILEDOPERATION_CERTIFICATEDEPLOYHASPENDINGRECORD = "FailedOperation.CertificateDeployHasPendingRecord"
 //  FAILEDOPERATION_CERTIFICATEDEPLOYINSTANCEEMPTY = "FailedOperation.CertificateDeployInstanceEmpty"
+//  FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
 //  FAILEDOPERATION_CERTIFICATEHOSTDEPLOYCANNOTALLOW = "FailedOperation.CertificateHostDeployCanNotAllow"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINNERINTERRUPT = "FailedOperation.CertificateHostResourceInnerInterrupt"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCEINSTANCEHUGELIMIT = "FailedOperation.CertificateHostResourceInstanceHugeLimit"
 //  FAILEDOPERATION_CERTIFICATEHOSTRESOURCETYPEINVALID = "FailedOperation.CertificateHostResourceTypeInvalid"
+//  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
+//  FAILEDOPERATION_CERTIFICATEMATCHERROR = "FailedOperation.CertificateMatchError"
 //  FAILEDOPERATION_CERTIFICATENOTAVAILABLE = "FailedOperation.CertificateNotAvailable"
 //  FAILEDOPERATION_CERTIFICATENOTDEPLOYINSTANCE = "FailedOperation.CertificateNotDeployInstance"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
 //  FAILEDOPERATION_NOPROJECTPERMISSION = "FailedOperation.NoProjectPermission"
 //  FAILEDOPERATION_NOREALNAMEAUTH = "FailedOperation.NoRealNameAuth"
 //  FAILEDOPERATION_ROLENOTFOUNDAUTHORIZATION = "FailedOperation.RoleNotFoundAuthorization"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) UpdateCertificateInstanceWithContext(ctx context.Context, request *UpdateCertificateInstanceRequest) (response *UpdateCertificateInstanceResponse, err error) {
     if request == nil {
@@ -3387,8 +3470,9 @@ func NewUpdateCertificateRecordRetryRequest() (request *UpdateCertificateRecordR
 func NewUpdateCertificateRecordRetryResponse() (response *UpdateCertificateRecordRetryResponse) {
     response = &UpdateCertificateRecordRetryResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateCertificateRecordRetry
@@ -3455,8 +3539,9 @@ func NewUpdateCertificateRecordRollbackRequest() (request *UpdateCertificateReco
 func NewUpdateCertificateRecordRollbackResponse() (response *UpdateCertificateRecordRollbackResponse) {
     response = &UpdateCertificateRecordRollbackResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UpdateCertificateRecordRollback
@@ -3527,8 +3612,9 @@ func NewUploadCertificateRequest() (request *UploadCertificateRequest) {
 func NewUploadCertificateResponse() (response *UploadCertificateResponse) {
     response = &UploadCertificateResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UploadCertificate
@@ -3544,10 +3630,14 @@ func NewUploadCertificateResponse() (response *UploadCertificateResponse) {
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATECAERROR = "FailedOperation.CertificateCaError"
+//  FAILEDOPERATION_CERTIFICATEENCRYPTINVALID = "FailedOperation.CertificateEncryptInvalid"
 //  FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
 //  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
+//  FAILEDOPERATION_CERTIFICATEMATCHERROR = "FailedOperation.CertificateMatchError"
 //  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 //  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
@@ -3557,6 +3647,7 @@ func NewUploadCertificateResponse() (response *UploadCertificateResponse) {
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_MISSMATCHPRIVATEKEY = "InvalidParameter.MissMatchPrivateKey"
 //  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) UploadCertificate(request *UploadCertificateRequest) (response *UploadCertificateResponse, err error) {
@@ -3576,10 +3667,14 @@ func (c *Client) UploadCertificate(request *UploadCertificateRequest) (response 
 //  FAILEDOPERATION_CANNOTBEDELETEDISSUED = "FailedOperation.CannotBeDeletedIssued"
 //  FAILEDOPERATION_CANNOTBEDELETEDWITHINHOUR = "FailedOperation.CannotBeDeletedWithinHour"
 //  FAILEDOPERATION_CANNOTGETORDER = "FailedOperation.CannotGetOrder"
+//  FAILEDOPERATION_CERTIFICATECAERROR = "FailedOperation.CertificateCaError"
+//  FAILEDOPERATION_CERTIFICATEENCRYPTINVALID = "FailedOperation.CertificateEncryptInvalid"
 //  FAILEDOPERATION_CERTIFICATEEXISTS = "FailedOperation.CertificateExists"
 //  FAILEDOPERATION_CERTIFICATEINVALID = "FailedOperation.CertificateInvalid"
+//  FAILEDOPERATION_CERTIFICATEMATCHERROR = "FailedOperation.CertificateMatchError"
 //  FAILEDOPERATION_CERTIFICATEMISMATCH = "FailedOperation.CertificateMismatch"
 //  FAILEDOPERATION_CERTIFICATENOTFOUND = "FailedOperation.CertificateNotFound"
+//  FAILEDOPERATION_CERTIFICATEPARSEERROR = "FailedOperation.CertificateParseError"
 //  FAILEDOPERATION_EXCEEDSFREELIMIT = "FailedOperation.ExceedsFreeLimit"
 //  FAILEDOPERATION_INVALIDCERTIFICATESTATUSCODE = "FailedOperation.InvalidCertificateStatusCode"
 //  FAILEDOPERATION_INVALIDPARAM = "FailedOperation.InvalidParam"
@@ -3589,6 +3684,7 @@ func (c *Client) UploadCertificate(request *UploadCertificateRequest) (response 
 //  FAILEDOPERATION_ORDERALREADYREPLACED = "FailedOperation.OrderAlreadyReplaced"
 //  FAILEDOPERATION_ORDERREPLACEFAILED = "FailedOperation.OrderReplaceFailed"
 //  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_MISSMATCHPRIVATEKEY = "InvalidParameter.MissMatchPrivateKey"
 //  INVALIDPARAMETER_WITHDETAILREASON = "InvalidParameter.WithDetailReason"
 //  LIMITEXCEEDED_RATELIMITEXCEEDED = "LimitExceeded.RateLimitExceeded"
 func (c *Client) UploadCertificateWithContext(ctx context.Context, request *UploadCertificateRequest) (response *UploadCertificateResponse, err error) {
@@ -3621,8 +3717,9 @@ func NewUploadConfirmLetterRequest() (request *UploadConfirmLetterRequest) {
 func NewUploadConfirmLetterResponse() (response *UploadConfirmLetterResponse) {
     response = &UploadConfirmLetterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UploadConfirmLetter
@@ -3689,8 +3786,9 @@ func NewUploadRevokeLetterRequest() (request *UploadRevokeLetterRequest) {
 func NewUploadRevokeLetterResponse() (response *UploadRevokeLetterResponse) {
     response = &UploadRevokeLetterResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // UploadRevokeLetter
@@ -3765,8 +3863,9 @@ func NewVerifyManagerRequest() (request *VerifyManagerRequest) {
 func NewVerifyManagerResponse() (response *VerifyManagerResponse) {
     response = &VerifyManagerResponse{
         BaseResponse: &tchttp.BaseResponse{},
-    }
+    } 
     return
+
 }
 
 // VerifyManager

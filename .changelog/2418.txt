@@ -1,0 +1,4 @@
+```release-note:enhancement
+tencentcloud_ssl_describe_certificate: Support param `company_type`
+```
+
