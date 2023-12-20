@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwpg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdwch"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cdn"
@@ -299,12 +300,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_batchs":                                   dataSourceTencentCloudCosBatchs(),
 			"tencentcloud_cos_bucket_inventorys":                        dataSourceTencentCloudCosBucketInventorys(),
 			"tencentcloud_cos_bucket_multipart_uploads":                 dataSourceTencentCloudCosBucketMultipartUploads(),
-			"tencentcloud_cfs_file_systems":                             dataSourceTencentCloudCfsFileSystems(),
-			"tencentcloud_cfs_access_groups":                            dataSourceTencentCloudCfsAccessGroups(),
-			"tencentcloud_cfs_access_rules":                             dataSourceTencentCloudCfsAccessRules(),
-			"tencentcloud_cfs_mount_targets":                            dataSourceTencentCloudCfsMountTargets(),
-			"tencentcloud_cfs_file_system_clients":                      dataSourceTencentCloudCfsFileSystemClients(),
-			"tencentcloud_cfs_available_zone":                           dataSourceTencentCloudCfsAvailableZone(),
+			"tencentcloud_cfs_file_systems":                             cfs.DataSourceTencentCloudCfsFileSystems(),
+			"tencentcloud_cfs_access_groups":                            cfs.DataSourceTencentCloudCfsAccessGroups(),
+			"tencentcloud_cfs_access_rules":                             cfs.DataSourceTencentCloudCfsAccessRules(),
+			"tencentcloud_cfs_mount_targets":                            cfs.DataSourceTencentCloudCfsMountTargets(),
+			"tencentcloud_cfs_file_system_clients":                      cfs.DataSourceTencentCloudCfsFileSystemClients(),
+			"tencentcloud_cfs_available_zone":                           cfs.DataSourceTencentCloudCfsAvailableZone(),
 			"tencentcloud_redis_zone_config":                            dataSourceTencentRedisZoneConfig(),
 			"tencentcloud_redis_instances":                              dataSourceTencentRedisInstances(),
 			"tencentcloud_redis_backup":                                 dataSourceTencentCloudRedisBackup(),
@@ -1076,14 +1077,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_bucket_object":                                   resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                                  resourceTencentCloudCosBucketReferer(),
 			"tencentcloud_cos_bucket_version":                                  resourceTencentCloudCosBucketVersion(),
-			"tencentcloud_cfs_file_system":                                     resourceTencentCloudCfsFileSystem(),
-			"tencentcloud_cfs_access_group":                                    resourceTencentCloudCfsAccessGroup(),
-			"tencentcloud_cfs_access_rule":                                     resourceTencentCloudCfsAccessRule(),
-			"tencentcloud_cfs_auto_snapshot_policy":                            resourceTencentCloudCfsAutoSnapshotPolicy(),
-			"tencentcloud_cfs_auto_snapshot_policy_attachment":                 resourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
-			"tencentcloud_cfs_snapshot":                                        resourceTencentCloudCfsSnapshot(),
+			"tencentcloud_cfs_file_system":                                     cfs.ResourceTencentCloudCfsFileSystem(),
+			"tencentcloud_cfs_access_group":                                    cfs.ResourceTencentCloudCfsAccessGroup(),
+			"tencentcloud_cfs_access_rule":                                     cfs.ResourceTencentCloudCfsAccessRule(),
+			"tencentcloud_cfs_auto_snapshot_policy":                            cfs.ResourceTencentCloudCfsAutoSnapshotPolicy(),
+			"tencentcloud_cfs_auto_snapshot_policy_attachment":                 cfs.ResourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
+			"tencentcloud_cfs_snapshot":                                        cfs.ResourceTencentCloudCfsSnapshot(),
 			"tencentcloud_cfs_user_quota":                                      resourceTencentCloudCfsUserQuota(),
-			"tencentcloud_cfs_sign_up_cfs_service":                             resourceTencentCloudCfsSignUpCfsService(),
+			"tencentcloud_cfs_sign_up_cfs_service":                             cfs.ResourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                                      resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                                 resourceTencentCloudRedisBackupConfig(),
 			"tencentcloud_redis_account":                                       resourceTencentCloudRedisAccount(),

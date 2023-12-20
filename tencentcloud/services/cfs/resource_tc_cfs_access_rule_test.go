@@ -1,9 +1,13 @@
-package tencentcloud
+package cfs_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localcfs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -12,8 +16,8 @@ import (
 func TestAccTencentCloudCfsAccessRule(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCfsAccessRuleDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -30,11 +34,9 @@ func TestAccTencentCloudCfsAccessRule(t *testing.T) {
 }
 
 func testAccCheckCfsAccessRuleDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cfsService := CfsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cfs_access_rule" {
 			continue
@@ -43,10 +45,10 @@ func testAccCheckCfsAccessRuleDestroy(s *terraform.State) error {
 		accessGroupId := rs.Primary.Attributes["access_group_id"]
 		accessRules, err := cfsService.DescribeAccessRule(ctx, accessGroupId, rs.Primary.ID)
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				accessRules, err = cfsService.DescribeAccessRule(ctx, accessGroupId, rs.Primary.ID)
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -63,8 +65,8 @@ func testAccCheckCfsAccessRuleDestroy(s *terraform.State) error {
 
 func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -74,15 +76,13 @@ func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("cfs access rule id is not set")
 		}
 		accessGroupId := rs.Primary.Attributes["access_group_id"]
-		cfsService := CfsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		accessRules, err := cfsService.DescribeAccessRule(ctx, accessGroupId, rs.Primary.ID)
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				accessRules, err = cfsService.DescribeAccessRule(ctx, accessGroupId, rs.Primary.ID)
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -97,7 +97,7 @@ func testAccCheckCfsAccessRuleExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCfsAccessRule = defaultCfsAccessGroup + `
+const testAccCfsAccessRule = DefaultCfsAccessGroup + `
 
 resource "tencentcloud_cfs_access_rule" "foo" {
   access_group_id = local.cfs_access_group_id

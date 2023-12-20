@@ -1,4 +1,4 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
@@ -6,14 +6,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudCfsAccessRule() *schema.Resource {
+func ResourceTencentCloudCfsAccessRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsAccessRuleCreate,
 		Read:   resourceTencentCloudCfsAccessRuleRead,
@@ -35,21 +38,21 @@ func resourceTencentCloudCfsAccessRule() *schema.Resource {
 			"priority": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ValidateFunc: validateIntegerInRange(1, 100),
+				ValidateFunc: tccommon.ValidateIntegerInRange(1, 100),
 				Description:  "The priority level of rule. Valid value ranges: (1~100). `1` indicates the highest priority.",
 			},
 			"rw_permission": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_RW_PERMISSION_RO,
-				ValidateFunc: validateAllowedStringValue(CFS_RW_PERMISSION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CFS_RW_PERMISSION),
 				Description:  "Read and write permissions. Valid values are `RO` and `RW`. and default is `RO`.",
 			},
 			"user_permission": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_USER_PERMISSION_ROOT_SQUASH,
-				ValidateFunc: validateAllowedStringValue(CFS_USER_PERMISSION),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CFS_USER_PERMISSION),
 				Description:  "The permissions of accessing users. Valid values are `all_squash`, `no_all_squash`, `root_squash` and `no_root_squash`. and default is `root_squash`. `all_squash` indicates that all access users are mapped as anonymous users or user groups; `no_all_squash` indicates that access users will match local users first and be mapped to anonymous users or user groups after matching failed; `root_squash` indicates that map access root users to anonymous users or user groups; `no_root_squash` indicates that access root users keep root account permission.",
 			},
 		},
@@ -57,8 +60,8 @@ func resourceTencentCloudCfsAccessRule() *schema.Resource {
 }
 
 func resourceTencentCloudCfsAccessRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_rule.create")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_rule.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cfs.NewCreateCfsRuleRequest()
 	request.PGroupId = helper.String(d.Get("access_group_id").(string))
@@ -67,13 +70,13 @@ func resourceTencentCloudCfsAccessRuleCreate(d *schema.ResourceData, meta interf
 	request.RWPermission = helper.String(d.Get("rw_permission").(string))
 	request.UserPermission = helper.String(d.Get("user_permission").(string))
 	ruleId := ""
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateCfsRule(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().CreateCfsRule(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -93,22 +96,22 @@ func resourceTencentCloudCfsAccessRuleCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_rule.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_rule.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	ruleId := d.Id()
 	groupId := d.Get("access_group_id").(string)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var accessRule *cfs.PGroupRuleInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		rules, errRet := cfsService.DescribeAccessRule(ctx, groupId, ruleId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if len(rules) > 0 {
 			accessRule = rules[0]
@@ -134,8 +137,8 @@ func resourceTencentCloudCfsAccessRuleRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_rule.update")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_rule.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cfs.NewUpdateCfsRuleRequest()
 	request.RuleId = helper.String(d.Id())
@@ -153,13 +156,13 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 		request.Priority = helper.IntInt64(d.Get("priority").(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateCfsRule(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().UpdateCfsRule(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -174,18 +177,18 @@ func resourceTencentCloudCfsAccessRuleUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCfsAccessRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_rule.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_rule.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	ruleId := d.Id()
 	groupId := d.Get("access_group_id").(string)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cfsService.DeleteAccessRule(ctx, groupId, ruleId)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})

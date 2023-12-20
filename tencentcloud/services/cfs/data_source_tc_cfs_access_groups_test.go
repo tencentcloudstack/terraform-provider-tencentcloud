@@ -1,7 +1,9 @@
-package tencentcloud
+package cfs_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,8 +11,8 @@ import (
 func TestAccTencentCloudCfsAccessGroupsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCfsAccessGroupDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -27,7 +29,7 @@ func TestAccTencentCloudCfsAccessGroupsDataSource(t *testing.T) {
 	})
 }
 
-const defaultCfsAccessGroup = `
+const DefaultCfsAccessGroup = `
 data "tencentcloud_cfs_access_groups" "access_groups" {
   name = "keep_access_group"
 }

@@ -1,7 +1,9 @@
-package tencentcloud
+package cfs_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,8 +11,8 @@ import (
 func TestAccTencentCloudCfsFileSystemsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCfsFileSystemDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -32,7 +34,7 @@ func TestAccTencentCloudCfsFileSystemsDataSource(t *testing.T) {
 	})
 }
 
-const testAccCfsFileSystemsDataSource = defaultCfsAccessGroup + `
+const testAccCfsFileSystemsDataSource = DefaultCfsAccessGroup + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "test-cfs-vpc"
   cidr_block = "10.2.0.0/16"

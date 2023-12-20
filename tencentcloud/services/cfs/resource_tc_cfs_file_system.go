@@ -1,18 +1,21 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudCfsFileSystem() *schema.Resource {
+func ResourceTencentCloudCfsFileSystem() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsFileSystemCreate,
 		Read:   resourceTencentCloudCfsFileSystemRead,
@@ -44,14 +47,14 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_NET_VPC,
-				ValidateFunc: validateAllowedStringValue(CFS_NET),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CFS_NET),
 				Description:  "Network type, Default `VPC`. Valid values: `VPC` and `CCN`. Select `VPC` for a Standard or High-Performance file system, and `CCN` for a Standard Turbo or High-Performance Turbo one.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_PROTOCOL_NFS,
-				ValidateFunc: validateAllowedStringValue(CFS_PROTOCOL),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CFS_PROTOCOL),
 				ForceNew:     true,
 				Description:  "File system protocol. Valid values: `NFS`, `CIFS`, `TURBO`. If this parameter is left empty, `NFS` is used by default. For the Turbo series, you must set this parameter to `TURBO`.",
 			},
@@ -59,7 +62,7 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_STORAGETYPE_SD,
-				ValidateFunc: validateAllowedStringValue(CFS_STORAGETYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CFS_STORAGETYPE),
 				ForceNew:     true,
 				Description:  "Storage type of the file system. Valid values: `SD` (Standard), `HP` (High-Performance), `TB` (Standard Turbo), and `TP` (High-Performance Turbo). Default value: `SD`.",
 			},
@@ -123,11 +126,11 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 }
 
 func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_file_system.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_file_system.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	request := cfs.NewCreateCfsFileSystemRequest()
@@ -165,13 +168,13 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	}
 
 	fsId := ""
-	err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateCfsFileSystem(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().CreateCfsFileSystem(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -189,10 +192,10 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	d.SetId(fsId)
 
 	// wait for success status
-	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if len(fileSystems) < 1 {
 			return resource.RetryableError(fmt.Errorf("file system %s not exist", fsId))
@@ -206,9 +209,9 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -218,21 +221,21 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_file_system.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_file_system.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	fsId := d.Id()
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var fileSystem *cfs.FileSystemInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if len(fileSystems) > 0 {
 			fileSystem = fileSystems[0]
@@ -256,10 +259,10 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("capacity", fileSystem.SizeLimit)
 
 	var mountTarget *cfs.MountInfo
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		targets, errRet := cfsService.DescribeMountTargets(ctx, fsId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if len(targets) > 0 {
 			mountTarget = targets[0]
@@ -269,7 +272,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "cfs", "filesystem", tcClient.Region, d.Id())
 	if err != nil {
@@ -291,12 +294,12 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_file_system.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_file_system.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	fsId := d.Id()
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	immutableArgs := []string{"ccn_id", "cidr_block", "net_interface", "capacity"}
@@ -310,10 +313,10 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 	d.Partial(true)
 
 	if d.HasChange("name") {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			errRet := cfsService.ModifyFileSystemName(ctx, fsId, d.Get("name").(string))
 			if errRet != nil {
-				return retryError(errRet)
+				return tccommon.RetryError(errRet)
 			}
 			return nil
 		})
@@ -324,10 +327,10 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 	}
 
 	if d.HasChange("access_group_id") {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			errRet := cfsService.ModifyFileSystemAccessGroup(ctx, fsId, d.Get("access_group_id").(string))
 			if errRet != nil {
-				return retryError(errRet)
+				return tccommon.RetryError(errRet)
 			}
 			return nil
 		})
@@ -342,9 +345,9 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cfs", "filesystem", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -358,18 +361,18 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudCfsFileSystemDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_file_system.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_file_system.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	fsId := d.Id()
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cfsService.DeleteFileSystem(ctx, fsId)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})

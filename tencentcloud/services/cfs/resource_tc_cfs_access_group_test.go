@@ -1,4 +1,4 @@
-package tencentcloud
+package cfs_test
 
 import (
 	"context"
@@ -6,8 +6,13 @@ import (
 	"strings"
 	"testing"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	localcfs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 )
 
 func init() {
@@ -15,12 +20,12 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_cfs_access_group", &resource.Sweeper{
 		Name: "tencentcloud_cfs_access_group",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := CfsService{client}
+			service := localcfs.NewCfsService(client)
 
 			groups, err := service.DescribeAccessGroup(ctx, "", "")
 
@@ -37,10 +42,10 @@ func init() {
 				if err == nil { // ignore deleting the access rules when an error happened
 					for _, item := range rules {
 						ruleId := *item.RuleId
-						err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+						err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 							if delErr := service.DeleteAccessRule(ctx, id, ruleId); delErr != nil {
 								// retry when Pgroup is under deleting rule operation
-								return retryError(delErr)
+								return tccommon.RetryError(delErr)
 							}
 							return nil
 						})
@@ -50,7 +55,7 @@ func init() {
 					}
 				}
 
-				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
+				if tcacctest.IsResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
 					continue
 				}
 				if err := service.DeleteAccessGroup(ctx, id); err != nil {
@@ -67,8 +72,8 @@ func init() {
 func TestAccTencentCloudCfsAccessGroup_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCfsAccessGroupDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -97,11 +102,9 @@ func TestAccTencentCloudCfsAccessGroup_basic(t *testing.T) {
 }
 
 func testAccCheckCfsAccessGroupDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cfsService := CfsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cfs_access_group" {
 			continue
@@ -109,10 +112,10 @@ func testAccCheckCfsAccessGroupDestroy(s *terraform.State) error {
 
 		accessGroups, err := cfsService.DescribeAccessGroup(ctx, rs.Primary.ID, "")
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				accessGroups, err = cfsService.DescribeAccessGroup(ctx, rs.Primary.ID, "")
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -129,8 +132,8 @@ func testAccCheckCfsAccessGroupDestroy(s *terraform.State) error {
 
 func testAccCheckCfsAccessGroupExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -139,15 +142,13 @@ func testAccCheckCfsAccessGroupExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("cfs access group id is not set")
 		}
-		cfsService := CfsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		accessGroups, err := cfsService.DescribeAccessGroup(ctx, rs.Primary.ID, "")
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				accessGroups, err = cfsService.DescribeAccessGroup(ctx, rs.Primary.ID, "")
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})

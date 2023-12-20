@@ -1,4 +1,4 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfsSnapshot() *schema.Resource {
+func ResourceTencentCloudCfsSnapshot() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsSnapshotCreate,
 		Read:   resourceTencentCloudCfsSnapshotRead,
@@ -45,10 +48,10 @@ func resourceTencentCloudCfsSnapshot() *schema.Resource {
 }
 
 func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_snapshot.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_snapshot.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = cfs.NewCreateCfsSnapshotRequest()
@@ -73,10 +76,10 @@ func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateCfsSnapshot(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().CreateCfsSnapshot(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -91,18 +94,18 @@ func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interfac
 	snapshotId = *response.Response.SnapshotId
 	d.SetId(snapshotId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	conf := BuildStateChangeConf([]string{}, []string{"available"}, 2*readRetryTimeout, time.Second, service.CfsSnapshotStateRefreshFunc(d.Id(), []string{}))
+	conf := tccommon.BuildStateChangeConf([]string{}, []string{"available"}, 2*tccommon.ReadRetryTimeout, time.Second, service.CfsSnapshotStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::cfs:%s:uin/:snap/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -113,14 +116,14 @@ func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCfsSnapshotRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_snapshot.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_snapshot.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	snapshotId := d.Id()
 
@@ -143,7 +146,7 @@ func resourceTencentCloudCfsSnapshotRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("snapshot_name", snapshot.SnapshotName)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "cfs", "snap", tcClient.Region, d.Id())
 	if err != nil {
@@ -155,10 +158,10 @@ func resourceTencentCloudCfsSnapshotRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudCfsSnapshotUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_snapshot.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_snapshot.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 	needChange := false
 
 	request := cfs.NewUpdateCfsSnapshotAttributeRequest()
@@ -175,10 +178,10 @@ func resourceTencentCloudCfsSnapshotUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if needChange {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateCfsSnapshotAttribute(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().UpdateCfsSnapshotAttribute(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -191,12 +194,12 @@ func resourceTencentCloudCfsSnapshotUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("cfs", "snap", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("cfs", "snap", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -206,23 +209,23 @@ func resourceTencentCloudCfsSnapshotUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudCfsSnapshotDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_snapshot.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_snapshot.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	snapshotId := d.Id()
 
 	if err := service.DeleteCfsSnapshotById(ctx, snapshotId); err != nil {
 		return err
 	}
 
-	err := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeCfsSnapshotById(ctx, snapshotId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if instance == nil {
 			return nil

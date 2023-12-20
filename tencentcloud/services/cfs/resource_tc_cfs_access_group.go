@@ -1,17 +1,20 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudCfsAccessGroup() *schema.Resource {
+func ResourceTencentCloudCfsAccessGroup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsAccessGroupCreate,
 		Read:   resourceTencentCloudCfsAccessGroupRead,
@@ -25,13 +28,13 @@ func resourceTencentCloudCfsAccessGroup() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 64),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 64),
 				Description:  "Name of the access group, and max length is 64.",
 			},
 			"description": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 255),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 255),
 				Description:  "Description of the access group, and max length is 255.",
 			},
 			//computed
@@ -45,11 +48,11 @@ func resourceTencentCloudCfsAccessGroup() *schema.Resource {
 }
 
 func resourceTencentCloudCfsAccessGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_group.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_group.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	name := d.Get("name").(string)
@@ -58,10 +61,10 @@ func resourceTencentCloudCfsAccessGroupCreate(d *schema.ResourceData, meta inter
 		description = v.(string)
 	}
 	accessGroupId := ""
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		id, errRet := cfsService.CreateAccessGroup(ctx, name, description)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		accessGroupId = id
 		return nil
@@ -75,21 +78,21 @@ func resourceTencentCloudCfsAccessGroupCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfsAccessGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_group.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_group.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	id := d.Id()
 	var accessGroup *cfs.PGroupInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		accessGroups, errRet := cfsService.DescribeAccessGroup(ctx, id, "")
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		if len(accessGroups) > 0 {
 			accessGroup = accessGroups[0]
@@ -112,8 +115,8 @@ func resourceTencentCloudCfsAccessGroupRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_group.update")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_group.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cfs.NewUpdateCfsPGroupRequest()
 	if d.HasChange("name") {
@@ -124,13 +127,13 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 	}
 	id := d.Id()
 	request.PGroupId = &id
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateCfsPGroup(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().UpdateCfsPGroup(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -144,18 +147,18 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudCfsAccessGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_access_group.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_access_group.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		errRet := cfsService.DeleteAccessGroup(ctx, id)
 		if errRet != nil {
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})

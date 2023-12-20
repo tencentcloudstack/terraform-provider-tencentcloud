@@ -1,14 +1,16 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 )
 
-func dataSourceTencentCloudCfsMountTargets() *schema.Resource {
+func DataSourceTencentCloudCfsMountTargets() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfsMountTargetsRead,
 		Schema: map[string]*schema.Schema{
@@ -98,22 +100,22 @@ func dataSourceTencentCloudCfsMountTargets() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfsMountTargetsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfs_mount_targets.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfs_mount_targets.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var mountTargets []*cfs.MountInfo
 
 	fsId := d.Get("file_system_id").(string)
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCfsMountTargetsById(ctx, fsId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		mountTargets = result
 		return nil
@@ -185,7 +187,7 @@ func dataSourceTencentCloudCfsMountTargetsRead(d *schema.ResourceData, meta inte
 	d.SetId(fsId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

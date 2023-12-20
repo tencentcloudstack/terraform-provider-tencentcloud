@@ -1,14 +1,16 @@
-package tencentcloud
+package cfs
 
 import (
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 )
 
-func resourceTencentCloudCfsSignUpCfsService() *schema.Resource {
+func ResourceTencentCloudCfsSignUpCfsService() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsSignUpCfsServiceCreate,
 		Read:   resourceTencentCloudCfsSignUpCfsServiceRead,
@@ -27,20 +29,20 @@ func resourceTencentCloudCfsSignUpCfsService() *schema.Resource {
 }
 
 func resourceTencentCloudCfsSignUpCfsServiceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfs_sign_up_cfs_service.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfs_sign_up_cfs_service.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request          = cfs.NewSignUpCfsServiceRequest()
 		response         = cfs.NewSignUpCfsServiceResponse()
 		cfsServiceStatus string
 	)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().SignUpCfsService(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().SignUpCfsService(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -59,19 +61,19 @@ func resourceTencentCloudCfsSignUpCfsServiceCreate(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudCfsSignUpCfsServiceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_sign_up_cfs_service.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_sign_up_cfs_service.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = cfs.NewDescribeCfsServiceStatusRequest()
 		response = cfs.NewDescribeCfsServiceStatusResponse()
 	)
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().DescribeCfsServiceStatus(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().DescribeCfsServiceStatus(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -89,8 +91,8 @@ func resourceTencentCloudCfsSignUpCfsServiceRead(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudCfsSignUpCfsServiceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_sign_up_cfs_service.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_sign_up_cfs_service.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

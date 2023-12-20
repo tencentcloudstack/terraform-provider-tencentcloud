@@ -1,17 +1,20 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
+func ResourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsAutoSnapshotPolicyCreate,
 		Read:   resourceTencentCloudCfsAutoSnapshotPolicyRead,
@@ -61,10 +64,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request              = cfs.NewCreateAutoSnapshotPolicyRequest()
@@ -95,10 +98,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 		request.IntervalDays = helper.IntUint64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateAutoSnapshotPolicy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().CreateAutoSnapshotPolicy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -117,14 +120,14 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	autoSnapshotPolicyId := d.Id()
 
@@ -166,10 +169,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := cfs.NewUpdateAutoSnapshotPolicyRequest()
 
@@ -212,10 +215,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateAutoSnapshotPolicy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().UpdateAutoSnapshotPolicy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -230,13 +233,13 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	autoSnapshotPolicyId := d.Id()
 
 	if err := service.DeleteCfsAutoSnapshotPolicyById(ctx, autoSnapshotPolicyId); err != nil {

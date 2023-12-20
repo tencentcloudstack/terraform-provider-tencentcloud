@@ -1,16 +1,19 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCfsAccessRules() *schema.Resource {
+func DataSourceTencentCloudCfsAccessRules() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfsAccessRulesRead,
 
@@ -70,11 +73,11 @@ func dataSourceTencentCloudCfsAccessRules() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfsAccessRulesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfs_access_rules.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfs_access_rules.read")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var accessRuleId string
@@ -85,10 +88,10 @@ func dataSourceTencentCloudCfsAccessRulesRead(d *schema.ResourceData, meta inter
 
 	var accessRules []*cfs.PGroupRuleInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		accessRules, errRet = cfsService.DescribeAccessRule(ctx, accessGroupId, accessRuleId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -118,7 +121,7 @@ func dataSourceTencentCloudCfsAccessRulesRead(d *schema.ResourceData, meta inter
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), accessRuleList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), accessRuleList); err != nil {
 			return err
 		}
 	}

@@ -1,4 +1,4 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCfsAutoSnapshotPolicyAttachment() *schema.Resource {
+func ResourceTencentCloudCfsAutoSnapshotPolicyAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCfsAutoSnapshotPolicyAttachmentCreate,
 		Read:   resourceTencentCloudCfsAutoSnapshotPolicyAttachmentRead,
@@ -39,10 +42,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request              = cfs.NewBindAutoSnapshotPolicyRequest()
@@ -59,10 +62,10 @@ func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentCreate(d *schema.Resourc
 		request.FileSystemIds = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().BindAutoSnapshotPolicy(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseCfsClient().BindAutoSnapshotPolicy(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -73,22 +76,22 @@ func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentCreate(d *schema.Resourc
 		return err
 	}
 
-	d.SetId(autoSnapshotPolicyId + FILED_SP + fileSystemIds)
+	d.SetId(autoSnapshotPolicyId + tccommon.FILED_SP + fileSystemIds)
 
 	return resourceTencentCloudCfsAutoSnapshotPolicyAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -117,14 +120,14 @@ func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentRead(d *schema.ResourceD
 }
 
 func resourceTencentCloudCfsAutoSnapshotPolicyAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_cfs_auto_snapshot_policy_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

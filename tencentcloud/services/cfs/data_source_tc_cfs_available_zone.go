@@ -1,15 +1,18 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCfsAvailableZone() *schema.Resource {
+func DataSourceTencentCloudCfsAvailableZone() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfsAvailableZoneRead,
 		Schema: map[string]*schema.Schema{
@@ -68,8 +71,8 @@ func dataSourceTencentCloudCfsAvailableZone() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"sale_status": {
-																Type:     schema.TypeString,
-																Computed: true,
+																Type:        schema.TypeString,
+																Computed:    true,
 																Description: "	Sale status. Valid values: sale_out (sold out), saling (purchasable), no_saling (non-purchasable).",
 															},
 															"protocol": {
@@ -120,21 +123,21 @@ func dataSourceTencentCloudCfsAvailableZone() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfs_available_zone.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfs_available_zone.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := CfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := CfsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var regionZones []*cfs.AvailableRegion
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCfsAvailableZoneByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		regionZones = result
 		return nil
@@ -240,7 +243,7 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

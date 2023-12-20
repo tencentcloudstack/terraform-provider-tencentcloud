@@ -1,16 +1,19 @@
-package tencentcloud
+package cfs
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCfsAccessGroups() *schema.Resource {
+func DataSourceTencentCloudCfsAccessGroups() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudCfsAccessGroupsRead,
 
@@ -65,11 +68,11 @@ func dataSourceTencentCloudCfsAccessGroups() *schema.Resource {
 }
 
 func dataSourceTencentCloudCfsAccessGroupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_cfs_access_groups.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("data_source.tencentcloud_cfs_access_groups.read")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	cfsService := CfsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	var accessGroupId string
@@ -83,10 +86,10 @@ func dataSourceTencentCloudCfsAccessGroupsRead(d *schema.ResourceData, meta inte
 
 	var accessGroups []*cfs.PGroupInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		accessGroups, errRet = cfsService.DescribeAccessGroup(ctx, accessGroupId, name)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -115,7 +118,7 @@ func dataSourceTencentCloudCfsAccessGroupsRead(d *schema.ResourceData, meta inte
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), accessGroupList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), accessGroupList); err != nil {
 			return err
 		}
 	}

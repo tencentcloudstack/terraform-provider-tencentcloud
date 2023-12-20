@@ -1,4 +1,4 @@
-package tencentcloud
+package cfs_test
 
 import (
 	"context"
@@ -6,6 +6,10 @@ import (
 	"log"
 	"testing"
 	"time"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	localcfs "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/cfs"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -16,12 +20,12 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_cfs_file_system", &resource.Sweeper{
 		Name: "tencentcloud_cfs_file_system",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := CfsService{client}
+			service := localcfs.NewCfsService(client)
 
 			fsList, err := service.DescribeFileSystem(ctx, "", "", "")
 			if err != nil {
@@ -37,7 +41,7 @@ func init() {
 						created = result
 					}
 				}
-				if isResourcePersist(name, &created) {
+				if tcacctest.IsResourcePersist(name, &created) {
 					continue
 				}
 				log.Printf("%s -> %s will be sweep", id, name)
@@ -55,8 +59,8 @@ func init() {
 func TestAccTencentCloudCfsFileSystemResource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckCfsFileSystemDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -98,11 +102,9 @@ func TestAccTencentCloudCfsFileSystemResource_Basic(t *testing.T) {
 }
 
 func testAccCheckCfsFileSystemDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cfsService := CfsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_cfs_file_system" {
 			continue
@@ -110,10 +112,10 @@ func testAccCheckCfsFileSystemDestroy(s *terraform.State) error {
 
 		fileSystems, err := cfsService.DescribeFileSystem(ctx, rs.Primary.ID, "", "")
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				fileSystems, err = cfsService.DescribeFileSystem(ctx, rs.Primary.ID, "", "")
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -130,8 +132,8 @@ func testAccCheckCfsFileSystemDestroy(s *terraform.State) error {
 
 func testAccCheckCfsFileSystemExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -140,15 +142,13 @@ func testAccCheckCfsFileSystemExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("cfs file system id is not set")
 		}
-		cfsService := CfsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		cfsService := localcfs.NewCfsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		fileSystems, err := cfsService.DescribeFileSystem(ctx, rs.Primary.ID, "", "")
 		if err != nil {
-			err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 				fileSystems, err = cfsService.DescribeFileSystem(ctx, rs.Primary.ID, "", "")
 				if err != nil {
-					return retryError(err)
+					return tccommon.RetryError(err)
 				}
 				return nil
 			})
@@ -163,7 +163,7 @@ func testAccCheckCfsFileSystemExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCfsFileSystem = defaultCfsAccessGroup + `
+const testAccCfsFileSystem = DefaultCfsAccessGroup + `
 resource "tencentcloud_vpc" "vpc" {
   name       = "test-cfs-vpc"
   cidr_block = "10.2.0.0/16"
@@ -218,5 +218,5 @@ resource "tencentcloud_cfs_file_system" "foo" {
 	  role = "%s"
   }
 }
-`, defaultCfsAccessGroup, value)
+`, DefaultCfsAccessGroup, value)
 }
