@@ -32,6 +32,7 @@ The following arguments are supported:
 * `page_id` - (Optional, Int, ForceNew) Sharing page id, this is empty value 0 when embedding the board.
 * `project_id` - (Optional, Int, ForceNew) Share project id.
 * `scope` - (Optional, String, ForceNew) Page means embedding the page, and panel means embedding the entire board.
+* `ticket_num` - (Optional, Int, ForceNew) Access limit, the limit range is 1-99999, if it is empty, no access limit will be set.
 * `user_corp_id` - (Optional, String, ForceNew) User enterprise ID (for multi-user only).
 * `user_id` - (Optional, String, ForceNew) UserId (for multi-user only).
 
