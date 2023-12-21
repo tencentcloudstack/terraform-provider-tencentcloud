@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
 	"encoding/json"
@@ -1643,10 +1644,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_compare_task":                                    dts.ResourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                                     cvm.ResourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_flow_log":                                        fl.ResourceTencentCloudVpcFlowLog(),
-			"tencentcloud_vpc_end_point_service":                               resourceTencentCloudVpcEndPointService(),
-			"tencentcloud_vpc_end_point":                                       resourceTencentCloudVpcEndPoint(),
-			"tencentcloud_vpc_end_point_service_white_list":                    resourceTencentCloudVpcEndPointServiceWhiteList(),
-			"tencentcloud_vpc_enable_end_point_connect":                        resourceTencentCloudVpcEnableEndPointConnect(),
+			"tencentcloud_vpc_end_point_service":                               pls.ResourceTencentCloudVpcEndPointService(),
+			"tencentcloud_vpc_end_point":                                       pls.ResourceTencentCloudVpcEndPoint(),
+			"tencentcloud_vpc_end_point_service_white_list":                    pls.ResourceTencentCloudVpcEndPointServiceWhiteList(),
+			"tencentcloud_vpc_enable_end_point_connect":                        pls.ResourceTencentCloudVpcEnableEndPointConnect(),
 			"tencentcloud_ci_bucket_attachment":                                ci.ResourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_tcmq_queue":                                          resourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                          resourceTencentCloudTcmqTopic(),

@@ -1,15 +1,18 @@
-package tencentcloud
+package pls
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpcEnableEndPointConnect() *schema.Resource {
+func ResourceTencentCloudVpcEnableEndPointConnect() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpcEnableEndPointConnectCreate,
 		Read:   resourceTencentCloudVpcEnableEndPointConnectRead,
@@ -43,10 +46,10 @@ func resourceTencentCloudVpcEnableEndPointConnect() *schema.Resource {
 }
 
 func resourceTencentCloudVpcEnableEndPointConnectCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_enable_end_point_connect.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_enable_end_point_connect.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request           = vpc.NewEnableVpcEndPointConnectRequest()
@@ -70,10 +73,10 @@ func resourceTencentCloudVpcEnableEndPointConnectCreate(d *schema.ResourceData, 
 		request.AcceptFlag = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().EnableVpcEndPointConnect(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().EnableVpcEndPointConnect(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -84,21 +87,21 @@ func resourceTencentCloudVpcEnableEndPointConnectCreate(d *schema.ResourceData, 
 		return err
 	}
 
-	d.SetId(endPointServiceId + FILED_SP + endPointId)
+	d.SetId(endPointServiceId + tccommon.FILED_SP + endPointId)
 
 	return resourceTencentCloudVpcEnableEndPointConnectRead(d, meta)
 }
 
 func resourceTencentCloudVpcEnableEndPointConnectRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_enable_end_point_connect.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_enable_end_point_connect.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudVpcEnableEndPointConnectDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_enable_end_point_connect.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_enable_end_point_connect.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
