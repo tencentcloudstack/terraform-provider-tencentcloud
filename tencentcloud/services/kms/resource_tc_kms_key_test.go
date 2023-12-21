@@ -1,4 +1,4 @@
-package tencentcloud
+package kms_test
 
 import (
 	"context"
@@ -6,9 +6,14 @@ import (
 	"log"
 	"testing"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svckms "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 )
 
 func init() {
@@ -19,18 +24,16 @@ func init() {
 }
 
 func testSweepKmsKeys(region string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	sharedClient, err := sharedClientForRegion(region)
+	sharedClient, err := tcacctest.SharedClientForRegion(region)
 	if err != nil {
 		return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 	}
-	client := sharedClient.(*TencentCloudClient)
+	client := sharedClient.(tccommon.ProviderMeta)
 
-	kmsService := KmsService{
-		client: client.apiV3Conn,
-	}
+	kmsService := svckms.NewKmsService(client.GetAPIV3Conn())
 
 	param := make(map[string]interface{})
 	param["search_key_alias"] = "tf-testacc-kms-key-"
@@ -41,11 +44,11 @@ func testSweepKmsKeys(region string) error {
 	}
 	for _, v := range keys {
 		keyId := *v.KeyId
-		if *v.KeyState == KMS_KEY_STATE_PENDINGDELETE {
+		if *v.KeyState == svckms.KMS_KEY_STATE_PENDINGDELETE {
 			// Skip keys which are already scheduled for deletion
 			continue
 		}
-		if *v.KeyState == KMS_KEY_STATE_ENABLED {
+		if *v.KeyState == svckms.KMS_KEY_STATE_ENABLED {
 			if err := kmsService.DisableKey(ctx, keyId); err != nil {
 				log.Printf("[ERROR] modify KMS key %s state error: %s", keyId, err.Error())
 			}
@@ -63,8 +66,8 @@ func TestAccKmsKey_basic(t *testing.T) {
 	resourceName := "tencentcloud_kms_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckKmsKeyDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -102,8 +105,8 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 	resourceName := "tencentcloud_kms_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckKmsKeyDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -111,7 +114,7 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckKmsKeyExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
-					resource.TestCheckResourceAttr(resourceName, "key_usage", "ASYMMETRIC_DECRYPT_RSA_2048"),
+					resource.TestCheckResourceAttr(resourceName, "key_usage", "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"),
 				),
 			},
 		},
@@ -119,12 +122,10 @@ func TestAccKmsKey_asymmetricKey(t *testing.T) {
 }
 
 func testAccCheckKmsKeyDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	kmsService := KmsService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	kmsService := svckms.NewKmsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_kms_key" {
 			continue
@@ -134,7 +135,7 @@ func testAccCheckKmsKeyDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		if key != nil && *key.KeyState != KMS_KEY_STATE_PENDINGDELETE {
+		if key != nil && *key.KeyState != svckms.KMS_KEY_STATE_PENDINGDELETE {
 			return fmt.Errorf("[CHECK][KMS key][Destroy] check: Kms key still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -143,8 +144,8 @@ func testAccCheckKmsKeyDestroy(s *terraform.State) error {
 
 func testAccCheckKmsKeyExists(name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[name]
 		if !ok {
@@ -153,9 +154,7 @@ func testAccCheckKmsKeyExists(name string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK][KMS key][Exists] check:KMS key id is not set")
 		}
-		kmsService := KmsService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		kmsService := svckms.NewKmsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		keyId := rs.Primary.ID
 		key, err := kmsService.DescribeKeyById(ctx, keyId)
 		if err != nil {
@@ -188,7 +187,7 @@ func testAccKmsKey_asymmetric(rName string) string {
 resource "tencentcloud_kms_key" "test" {
 	alias = %[1]q
 	description = %[1]q
-	key_usage = "ASYMMETRIC_DECRYPT_RSA_2048"
+	key_usage = "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"
   	is_enabled = false
 }
 `, rName)

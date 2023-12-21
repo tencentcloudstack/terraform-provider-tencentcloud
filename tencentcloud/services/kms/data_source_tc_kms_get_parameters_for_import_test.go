@@ -1,6 +1,7 @@
-package tencentcloud
+package kms_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -11,14 +12,14 @@ func TestAccTencentCloudNeedFixKmsGetParametersForImportDataSource_basic(t *test
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccKmsGetParametersForImportDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_kms_get_parameters_for_import.example"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kms_get_parameters_for_import.example"),
 				),
 			},
 		},
@@ -28,7 +29,7 @@ func TestAccTencentCloudNeedFixKmsGetParametersForImportDataSource_basic(t *test
 const testAccKmsGetParametersForImportDataSource = `
 data "tencentcloud_kms_get_parameters_for_import" "example" {
   key_id             = "786aea8c-4aec-11ee-b601-525400281a45"
-  wrapping_algorithm = "RSAES_OAEP_SHA_1"
+  wrapping_algorithm = "RSAES_tcacctest.OAEP_SHA_1"
   wrapping_key_spec  = "RSA_2048"
 }
 `

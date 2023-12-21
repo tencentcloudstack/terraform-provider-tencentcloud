@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints() *schema.Resource {
+func ResourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsCreate,
 		Read:   resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsRead,
@@ -47,11 +48,11 @@ func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints() *schema.Resour
 }
 
 func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = kms.NewOverwriteWhiteBoxDeviceFingerprintsRequest()
 		keyId   string
 	)
@@ -77,10 +78,10 @@ func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsCreate(d *schema.
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().OverwriteWhiteBoxDeviceFingerprints(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().OverwriteWhiteBoxDeviceFingerprints(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -99,15 +100,15 @@ func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsCreate(d *schema.
 }
 
 func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprintsDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_overwrite_white_box_device_fingerprints.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

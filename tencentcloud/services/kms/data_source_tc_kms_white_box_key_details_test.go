@@ -1,6 +1,7 @@
-package tencentcloud
+package kms_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -11,14 +12,14 @@ func TestAccTencentCloudNeedFixKmsWhiteBoxKeyDetailsDataSource_basic(t *testing.
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccKmsWhiteBoxKeyDetailsDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_kms_white_box_key_details.example"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kms_white_box_key_details.example"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_kms_white_box_key_details.example", "key_infos.0.algorithm"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_kms_white_box_key_details.example", "key_infos.0.create_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_kms_white_box_key_details.example", "key_infos.0.decrypt_key"),

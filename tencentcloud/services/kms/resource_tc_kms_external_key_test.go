@@ -1,6 +1,7 @@
-package tencentcloud
+package kms_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"fmt"
 	"testing"
 
@@ -14,8 +15,8 @@ func TestAccKmsExternalKey_basic(t *testing.T) {
 	resourceName := "tencentcloud_kms_external_key.test"
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckKmsKeyDestroy,
 		Steps: []resource.TestStep{
 			{

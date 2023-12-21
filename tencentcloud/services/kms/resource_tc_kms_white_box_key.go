@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"log"
@@ -11,7 +12,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudKmsWhiteBoxKey() *schema.Resource {
+func ResourceTencentCloudKmsWhiteBoxKey() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKmsWhiteBoxKeyCreate,
 		Read:   resourceTencentCloudKmsWhiteBoxKeyRead,
@@ -34,14 +35,14 @@ func resourceTencentCloudKmsWhiteBoxKey() *schema.Resource {
 			"algorithm": {
 				Required:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(WHITE_BOX_KEY_ALGORITHM),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(WHITE_BOX_KEY_ALGORITHM),
 				Description:  "All algorithm types for creating keys, supported values: AES_256, SM4.",
 			},
 			"status": {
 				Optional:     true,
 				Type:         schema.TypeString,
 				Default:      WHITE_BOX_KEY_STATUS_ENABLED,
-				ValidateFunc: validateAllowedStringValue(WHITE_BOX_KEY_STATUS),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(WHITE_BOX_KEY_STATUS),
 				Description:  "Whether to enable the key. Enabled or Disabled. Default is Enabled.",
 			},
 			"tags": {
@@ -54,12 +55,12 @@ func resourceTencentCloudKmsWhiteBoxKey() *schema.Resource {
 }
 
 func resourceTencentCloudKmsWhiteBoxKeyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_white_box_key.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_white_box_key.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request  = kms.NewCreateWhiteBoxKeyRequest()
 		response = kms.NewCreateWhiteBoxKeyResponse()
 		keyId    string
@@ -77,10 +78,10 @@ func resourceTencentCloudKmsWhiteBoxKeyCreate(d *schema.ResourceData, meta inter
 		request.Algorithm = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().CreateWhiteBoxKey(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().CreateWhiteBoxKey(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -103,8 +104,8 @@ func resourceTencentCloudKmsWhiteBoxKeyCreate(d *schema.ResourceData, meta inter
 	d.SetId(keyId)
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::kms:%s:uin/:key/%s", region, d.Id())
 		if err = tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -117,10 +118,10 @@ func resourceTencentCloudKmsWhiteBoxKeyCreate(d *schema.ResourceData, meta inter
 			disableWhiteBoxKeyRequest := kms.NewDisableWhiteBoxKeyRequest()
 			disableWhiteBoxKeyRequest.KeyId = &keyId
 
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().DisableWhiteBoxKey(disableWhiteBoxKeyRequest)
+			err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().DisableWhiteBoxKey(disableWhiteBoxKeyRequest)
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
@@ -139,13 +140,13 @@ func resourceTencentCloudKmsWhiteBoxKeyCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudKmsWhiteBoxKeyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_white_box_key.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_white_box_key.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		keyId   = d.Id()
 	)
 
@@ -176,7 +177,7 @@ func resourceTencentCloudKmsWhiteBoxKeyRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("status", whiteBoxKey.Status)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "kms", "key", tcClient.Region, d.Id())
 	if err != nil {
@@ -189,11 +190,11 @@ func resourceTencentCloudKmsWhiteBoxKeyRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudKmsWhiteBoxKeyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_white_box_key.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_white_box_key.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                     = getLogId(contextNil)
+		logId                     = tccommon.GetLogId(tccommon.ContextNil)
 		enableWhiteBoxKeyRequest  = kms.NewEnableWhiteBoxKeyRequest()
 		disableWhiteBoxKeyRequest = kms.NewDisableWhiteBoxKeyRequest()
 		keyId                     = d.Id()
@@ -212,10 +213,10 @@ func resourceTencentCloudKmsWhiteBoxKeyUpdate(d *schema.ResourceData, meta inter
 			status := v.(string)
 			if status == WHITE_BOX_KEY_STATUS_DISABLED {
 				disableWhiteBoxKeyRequest.KeyId = &keyId
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().DisableWhiteBoxKey(disableWhiteBoxKeyRequest)
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().DisableWhiteBoxKey(disableWhiteBoxKeyRequest)
 					if e != nil {
-						return retryError(e)
+						return tccommon.RetryError(e)
 					} else {
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableWhiteBoxKeyRequest.GetAction(), disableWhiteBoxKeyRequest.ToJsonString(), result.ToJsonString())
 					}
@@ -229,10 +230,10 @@ func resourceTencentCloudKmsWhiteBoxKeyUpdate(d *schema.ResourceData, meta inter
 				}
 			} else {
 				enableWhiteBoxKeyRequest.KeyId = &keyId
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().EnableWhiteBoxKey(enableWhiteBoxKeyRequest)
+				err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().EnableWhiteBoxKey(enableWhiteBoxKeyRequest)
 					if e != nil {
-						return retryError(e)
+						return tccommon.RetryError(e)
 					} else {
 						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableWhiteBoxKeyRequest.GetAction(), enableWhiteBoxKeyRequest.ToJsonString(), result.ToJsonString())
 					}
@@ -249,12 +250,12 @@ func resourceTencentCloudKmsWhiteBoxKeyUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("kms", "key", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("kms", "key", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -264,13 +265,13 @@ func resourceTencentCloudKmsWhiteBoxKeyUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudKmsWhiteBoxKeyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_white_box_key.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_white_box_key.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		keyId   = d.Id()
 	)
 

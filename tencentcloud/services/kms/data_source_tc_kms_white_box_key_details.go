@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsWhiteBoxKeyDetails() *schema.Resource {
+func DataSourceTencentCloudKmsWhiteBoxKeyDetails() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsWhiteBoxKeyDetailsRead,
 		Schema: map[string]*schema.Schema{
@@ -97,13 +98,13 @@ func dataSourceTencentCloudKmsWhiteBoxKeyDetails() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsWhiteBoxKeyDetailsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_white_box_key_details.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_white_box_key_details.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId           = getLogId(contextNil)
-		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId           = tccommon.GetLogId(tccommon.ContextNil)
+		ctx             = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service         = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		whiteBoxKeyInfo []*kms.WhiteboxKeyInfo
 	)
 
@@ -112,10 +113,10 @@ func dataSourceTencentCloudKmsWhiteBoxKeyDetailsRead(d *schema.ResourceData, met
 		paramMap["KeyStatus"] = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsWhiteBoxKeyDetailsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		whiteBoxKeyInfo = result
@@ -191,7 +192,7 @@ func dataSourceTencentCloudKmsWhiteBoxKeyDetailsRead(d *schema.ResourceData, met
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

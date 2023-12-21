@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsPublicKey() *schema.Resource {
+func DataSourceTencentCloudKmsPublicKey() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsPublicKeyRead,
 		Schema: map[string]*schema.Schema{
@@ -38,13 +39,13 @@ func dataSourceTencentCloudKmsPublicKey() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsPublicKeyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_public_key.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_public_key.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		service   = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId     = tccommon.GetLogId(tccommon.ContextNil)
+		ctx       = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service   = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		publicKey *kms.GetPublicKeyResponseParams
 		keyId     string
 	)
@@ -55,10 +56,10 @@ func dataSourceTencentCloudKmsPublicKeyRead(d *schema.ResourceData, meta interfa
 		keyId = v.(string)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsPublicKeyByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		publicKey = result
@@ -84,7 +85,7 @@ func dataSourceTencentCloudKmsPublicKeyRead(d *schema.ResourceData, meta interfa
 	d.SetId(keyId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

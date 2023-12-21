@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsDescribeKeys() *schema.Resource {
+func DataSourceTencentCloudKmsDescribeKeys() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsDescribeKeysRead,
 		Schema: map[string]*schema.Schema{
@@ -103,13 +104,13 @@ func dataSourceTencentCloudKmsDescribeKeys() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsDescribeKeysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_describe_keys.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_describe_keys.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId       = getLogId(contextNil)
-		ctx         = context.WithValue(context.TODO(), logIdKey, logId)
-		service     = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId       = tccommon.GetLogId(tccommon.ContextNil)
+		ctx         = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service     = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		keyMetadata []*kms.KeyMetadata
 	)
 
@@ -119,10 +120,10 @@ func dataSourceTencentCloudKmsDescribeKeysRead(d *schema.ResourceData, meta inte
 		paramMap["KeyIds"] = helper.InterfacesStringsPoint(keyIdsSet)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsKeyListsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		keyMetadata = result
@@ -164,7 +165,7 @@ func dataSourceTencentCloudKmsDescribeKeysRead(d *schema.ResourceData, meta inte
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

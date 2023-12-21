@@ -1,4 +1,4 @@
-package tencentcloud
+package kms
 
 const (
 	KMS_ORIGIN_TENCENT_KMS = "TENCENT_KMS"

@@ -1,4 +1,4 @@
-package tencentcloud
+package kms
 
 import (
 	"context"
@@ -11,19 +11,26 @@ import (
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/pkg/errors"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewKmsService(client *connectivity.TencentCloudClient) KmsService {
+	return KmsService{client: client}
+}
 
 type KmsService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *KmsService) DescribeKeysByFilter(ctx context.Context, param map[string]interface{}) (keys []*kms.KeyMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewListKeyDetailRequest()
 
 	for k, v := range param {
@@ -85,7 +92,7 @@ func (me *KmsService) DescribeKeysByFilter(ctx context.Context, param map[string
 }
 
 func (me *KmsService) DescribeKeyById(ctx context.Context, keyId string) (key *kms.KeyMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewDescribeKeyRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -103,7 +110,7 @@ func (me *KmsService) DescribeKeyById(ctx context.Context, keyId string) (key *k
 }
 
 func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, description, keyUsage string) (keyId string, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewCreateKeyRequest()
 	request.Type = helper.Uint64(keyType)
 	request.Alias = helper.String(alias)
@@ -128,7 +135,7 @@ func (me *KmsService) CreateKey(ctx context.Context, keyType uint64, alias, desc
 }
 
 func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewEnableKeyRotationRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -145,7 +152,7 @@ func (me *KmsService) EnableKeyRotation(ctx context.Context, keyId string) (errR
 }
 
 func (me *KmsService) DisableKeyRotation(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewDisableKeyRotationRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -162,7 +169,7 @@ func (me *KmsService) DisableKeyRotation(ctx context.Context, keyId string) (err
 }
 
 func (me *KmsService) EnableKey(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewEnableKeyRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -179,7 +186,7 @@ func (me *KmsService) EnableKey(ctx context.Context, keyId string) (errRet error
 }
 
 func (me *KmsService) DisableKey(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewDisableKeyRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -196,7 +203,7 @@ func (me *KmsService) DisableKey(ctx context.Context, keyId string) (errRet erro
 }
 
 func (me *KmsService) ArchiveKey(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewArchiveKeyRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -213,7 +220,7 @@ func (me *KmsService) ArchiveKey(ctx context.Context, keyId string) (errRet erro
 }
 
 func (me *KmsService) CancelKeyArchive(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewCancelKeyArchiveRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -229,7 +236,7 @@ func (me *KmsService) CancelKeyArchive(ctx context.Context, keyId string) (errRe
 	return nil
 }
 func (me *KmsService) CancelKeyDeletion(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewCancelKeyDeletionRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -246,7 +253,7 @@ func (me *KmsService) CancelKeyDeletion(ctx context.Context, keyId string) (errR
 }
 
 func (me *KmsService) UpdateKeyDescription(ctx context.Context, keyId, description string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewUpdateKeyDescriptionRequest()
 	request.KeyId = helper.String(keyId)
 	request.Description = helper.String(description)
@@ -264,7 +271,7 @@ func (me *KmsService) UpdateKeyDescription(ctx context.Context, keyId, descripti
 }
 
 func (me *KmsService) UpdateKeyAlias(ctx context.Context, keyId, alias string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewUpdateAliasRequest()
 	request.KeyId = helper.String(keyId)
 	request.Alias = helper.String(alias)
@@ -282,7 +289,7 @@ func (me *KmsService) UpdateKeyAlias(ctx context.Context, keyId, alias string) (
 }
 
 func (me *KmsService) DeleteKey(ctx context.Context, keyId string, pendingDeleteWindowInDays uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewScheduleKeyDeletionRequest()
 	request.KeyId = helper.String(keyId)
 	request.PendingWindowInDays = helper.Uint64(pendingDeleteWindowInDays)
@@ -300,7 +307,7 @@ func (me *KmsService) DeleteKey(ctx context.Context, keyId string, pendingDelete
 }
 
 func (me *KmsService) ImportKeyMaterial(ctx context.Context, param map[string]interface{}) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	var keyId, wrappingAlgorithm, wrappingKeySpec, keyMaterialBase64 string
 	var validTo uint64
@@ -389,7 +396,7 @@ func (me *KmsService) ImportKeyMaterial(ctx context.Context, param map[string]in
 }
 
 func (me *KmsService) DeleteImportKeyMaterial(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := kms.NewDeleteImportedKeyMaterialRequest()
 	request.KeyId = helper.String(keyId)
 	ratelimit.Check(request.GetAction())
@@ -407,7 +414,7 @@ func (me *KmsService) DeleteImportKeyMaterial(ctx context.Context, keyId string)
 
 func (me *KmsService) DescribeKmsPublicKeyByFilter(ctx context.Context, param map[string]interface{}) (publicKey *kms.GetPublicKeyResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewGetPublicKeyRequest()
 	)
 
@@ -443,7 +450,7 @@ func (me *KmsService) DescribeKmsPublicKeyByFilter(ctx context.Context, param ma
 
 func (me *KmsService) DescribeKmsGetParametersForImportByFilter(ctx context.Context, param map[string]interface{}) (getParametersForImport *kms.GetParametersForImportResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewGetParametersForImportRequest()
 	)
 
@@ -487,7 +494,7 @@ func (me *KmsService) DescribeKmsGetParametersForImportByFilter(ctx context.Cont
 
 func (me *KmsService) DescribeKmsKeyListsByFilter(ctx context.Context, param map[string]interface{}) (KeyLists []*kms.KeyMetadata, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewDescribeKeysRequest()
 	)
 
@@ -524,7 +531,7 @@ func (me *KmsService) DescribeKmsKeyListsByFilter(ctx context.Context, param map
 
 func (me *KmsService) DescribeKmsWhiteBoxKeyDetailsByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxKeyInfo []*kms.WhiteboxKeyInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewDescribeWhiteBoxKeyDetailsRequest()
 	)
 
@@ -574,7 +581,7 @@ func (me *KmsService) DescribeKmsWhiteBoxKeyDetailsByFilter(ctx context.Context,
 
 func (me *KmsService) DescribeKmsListKeysByFilter(ctx context.Context, param map[string]interface{}) (listKeys []*kms.Key, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewListKeysRequest()
 	)
 
@@ -627,7 +634,7 @@ func (me *KmsService) DescribeKmsListKeysByFilter(ctx context.Context, param map
 }
 
 func (me *KmsService) DescribeKmsWhiteBoxKeyById(ctx context.Context, keyId string) (whiteBoxKey *kms.WhiteboxKeyInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := kms.NewDescribeWhiteBoxKeyRequest()
 	request.KeyId = &keyId
@@ -657,7 +664,7 @@ func (me *KmsService) DescribeKmsWhiteBoxKeyById(ctx context.Context, keyId stri
 }
 
 func (me *KmsService) DeleteKmsWhiteBoxKeyById(ctx context.Context, keyId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := kms.NewDeleteWhiteBoxKeyRequest()
 	request.KeyId = &keyId
@@ -682,7 +689,7 @@ func (me *KmsService) DeleteKmsWhiteBoxKeyById(ctx context.Context, keyId string
 }
 
 func (me *KmsService) DescribeKmsCloudResourceAttachmentById(ctx context.Context, keyId string) (keyMetadata *kms.KeyMetadata, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := kms.NewDescribeKeyRequest()
 	request.KeyId = &keyId
@@ -712,7 +719,7 @@ func (me *KmsService) DescribeKmsCloudResourceAttachmentById(ctx context.Context
 }
 
 func (me *KmsService) DeleteKmsCloudResourceAttachmentById(ctx context.Context, keyId, productId, resourceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := kms.NewUnbindCloudResourceRequest()
 	request.KeyId = &keyId
@@ -740,7 +747,7 @@ func (me *KmsService) DeleteKmsCloudResourceAttachmentById(ctx context.Context, 
 
 func (me *KmsService) DescribeKmsWhiteBoxDecryptKeyByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxDecryptKey *kms.DescribeWhiteBoxDecryptKeyResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewDescribeWhiteBoxDecryptKeyRequest()
 	)
 
@@ -775,7 +782,7 @@ func (me *KmsService) DescribeKmsWhiteBoxDecryptKeyByFilter(ctx context.Context,
 
 func (me *KmsService) DescribeKmsWhiteBoxDeviceFingerprintsByFilter(ctx context.Context, param map[string]interface{}) (whiteBoxDeviceFingerprints []*kms.DeviceFingerprint, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewDescribeWhiteBoxDeviceFingerprintsRequest()
 	)
 
@@ -811,7 +818,7 @@ func (me *KmsService) DescribeKmsWhiteBoxDeviceFingerprintsByFilter(ctx context.
 
 func (me *KmsService) DescribeKmsListAlgorithmsByFilter(ctx context.Context) (listAlgorithms *kms.ListAlgorithmsResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = kms.NewListAlgorithmsRequest()
 	)
 

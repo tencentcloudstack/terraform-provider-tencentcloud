@@ -1,6 +1,7 @@
-package tencentcloud
+package kms_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"fmt"
 	"testing"
 
@@ -14,14 +15,14 @@ func TestAccTencentCloudKmsPublicKeyDataSource_basic(t *testing.T) {
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccKmsPublicKeyDataSource, rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_kms_public_key.example"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_kms_public_key.example"),
 				),
 			},
 		},
@@ -36,7 +37,7 @@ data "tencentcloud_kms_public_key" "example" {
 resource "tencentcloud_kms_key" "example" {
   alias                         = "%s"
   description                   = "example of kms key"
-  key_usage                     = "ASYMMETRIC_DECRYPT_RSA_2048"
+  key_usage                     = "ASYMMETRIC_tcacctest.DECRYPT_RSA_2048"
   is_enabled                    = true
 }
 `

@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"log"
 
@@ -10,7 +11,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsKeys() *schema.Resource {
+func DataSourceTencentCloudKmsKeys() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsKeysRead,
 		Schema: map[string]*schema.Schema{
@@ -138,10 +139,10 @@ func dataSourceTencentCloudKmsKeys() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_keys.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_keys.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	param := make(map[string]interface{})
 	if v, ok := d.GetOk("role"); ok {
@@ -168,13 +169,13 @@ func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{})
 	}
 
 	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var keys []*kms.KeyMetadata
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		results, e := kmsService.DescribeKeysByFilter(ctx, param)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		keys = results
 		return nil
@@ -212,7 +213,7 @@ func dataSourceTencentCloudKmsKeysRead(d *schema.ResourceData, meta interface{})
 		return e
 	}
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		return writeToFile(output.(string), keyList)
+		return tccommon.WriteToFile(output.(string), keyList)
 	}
 	return nil
 }

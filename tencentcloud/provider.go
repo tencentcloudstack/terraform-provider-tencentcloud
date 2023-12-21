@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
@@ -605,15 +606,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_address_template_groups":                      dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                           dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                     dataSourceTencentCloudProtocolTemplateGroups(),
-			"tencentcloud_kms_keys":                                     dataSourceTencentCloudKmsKeys(),
-			"tencentcloud_kms_public_key":                               dataSourceTencentCloudKmsPublicKey(),
-			"tencentcloud_kms_get_parameters_for_import":                dataSourceTencentCloudKmsGetParametersForImport(),
-			"tencentcloud_kms_describe_keys":                            dataSourceTencentCloudKmsDescribeKeys(),
-			"tencentcloud_kms_white_box_key_details":                    dataSourceTencentCloudKmsWhiteBoxKeyDetails(),
-			"tencentcloud_kms_list_keys":                                dataSourceTencentCloudKmsListKeys(),
-			"tencentcloud_kms_white_box_decrypt_key":                    dataSourceTencentCloudKmsWhiteBoxDecryptKey(),
-			"tencentcloud_kms_white_box_device_fingerprints":            dataSourceTencentCloudKmsWhiteBoxDeviceFingerprints(),
-			"tencentcloud_kms_list_algorithms":                          dataSourceTencentCloudKmsListAlgorithms(),
+			"tencentcloud_kms_keys":                                     kms.DataSourceTencentCloudKmsKeys(),
+			"tencentcloud_kms_public_key":                               kms.DataSourceTencentCloudKmsPublicKey(),
+			"tencentcloud_kms_get_parameters_for_import":                kms.DataSourceTencentCloudKmsGetParametersForImport(),
+			"tencentcloud_kms_describe_keys":                            kms.DataSourceTencentCloudKmsDescribeKeys(),
+			"tencentcloud_kms_white_box_key_details":                    kms.DataSourceTencentCloudKmsWhiteBoxKeyDetails(),
+			"tencentcloud_kms_list_keys":                                kms.DataSourceTencentCloudKmsListKeys(),
+			"tencentcloud_kms_white_box_decrypt_key":                    kms.DataSourceTencentCloudKmsWhiteBoxDecryptKey(),
+			"tencentcloud_kms_white_box_device_fingerprints":            kms.DataSourceTencentCloudKmsWhiteBoxDeviceFingerprints(),
+			"tencentcloud_kms_list_algorithms":                          kms.DataSourceTencentCloudKmsListAlgorithms(),
 			"tencentcloud_ssm_products":                                 dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                                  dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                          dataSourceTencentCloudSsmSecretVersions(),
@@ -1434,11 +1435,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_address_template_group":                              resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                                   resourceTencentCloudProtocolTemplate(),
 			"tencentcloud_protocol_template_group":                             resourceTencentCloudProtocolTemplateGroup(),
-			"tencentcloud_kms_key":                                             resourceTencentCloudKmsKey(),
-			"tencentcloud_kms_external_key":                                    resourceTencentCloudKmsExternalKey(),
-			"tencentcloud_kms_white_box_key":                                   resourceTencentCloudKmsWhiteBoxKey(),
-			"tencentcloud_kms_cloud_resource_attachment":                       resourceTencentCloudKmsCloudResourceAttachment(),
-			"tencentcloud_kms_overwrite_white_box_device_fingerprints":         resourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints(),
+			"tencentcloud_kms_key":                                             kms.ResourceTencentCloudKmsKey(),
+			"tencentcloud_kms_external_key":                                    kms.ResourceTencentCloudKmsExternalKey(),
+			"tencentcloud_kms_white_box_key":                                   kms.ResourceTencentCloudKmsWhiteBoxKey(),
+			"tencentcloud_kms_cloud_resource_attachment":                       kms.ResourceTencentCloudKmsCloudResourceAttachment(),
+			"tencentcloud_kms_overwrite_white_box_device_fingerprints":         kms.ResourceTencentCloudKmsOverwriteWhiteBoxDeviceFingerprints(),
 			"tencentcloud_ssm_secret":                                          resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),

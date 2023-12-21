@@ -1,6 +1,7 @@
-package tencentcloud
+package kms_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"fmt"
 	"testing"
 
@@ -14,13 +15,13 @@ func TestAccTencentCloudKmsKeyDataSource(t *testing.T) {
 	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceKmsKeyConfig(rName),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID(dataSourceName),
+					tcacctest.AccCheckTencentCloudDataSourceID(dataSourceName),
 					resource.TestCheckResourceAttrSet(dataSourceName, "key_list.0.key_id"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "key_list.0.create_time"),
 					resource.TestCheckResourceAttrSet(dataSourceName, "key_list.0.description"),

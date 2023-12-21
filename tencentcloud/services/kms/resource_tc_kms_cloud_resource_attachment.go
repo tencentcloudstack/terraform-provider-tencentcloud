@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"log"
@@ -12,7 +13,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudKmsCloudResourceAttachment() *schema.Resource {
+func ResourceTencentCloudKmsCloudResourceAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudKmsCloudResourceAttachmentCreate,
 		Read:   resourceTencentCloudKmsCloudResourceAttachmentRead,
@@ -70,11 +71,11 @@ func resourceTencentCloudKmsCloudResourceAttachment() *schema.Resource {
 }
 
 func resourceTencentCloudKmsCloudResourceAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_cloud_resource_attachment.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_cloud_resource_attachment.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = kms.NewBindCloudResourceRequest()
 		keyId      string
 		productId  string
@@ -96,10 +97,10 @@ func resourceTencentCloudKmsCloudResourceAttachmentCreate(d *schema.ResourceData
 		resourceId = v.(string)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseKmsClient().BindCloudResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseKmsClient().BindCloudResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -112,21 +113,21 @@ func resourceTencentCloudKmsCloudResourceAttachmentCreate(d *schema.ResourceData
 		return err
 	}
 
-	d.SetId(strings.Join([]string{keyId, productId, resourceId}, FILED_SP))
+	d.SetId(strings.Join([]string{keyId, productId, resourceId}, tccommon.FILED_SP))
 	return resourceTencentCloudKmsCloudResourceAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudKmsCloudResourceAttachmentRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_cloud_resource_attachment.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_cloud_resource_attachment.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -173,16 +174,16 @@ func resourceTencentCloudKmsCloudResourceAttachmentRead(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudKmsCloudResourceAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_cloud_resource_attachment.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_cloud_resource_attachment.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

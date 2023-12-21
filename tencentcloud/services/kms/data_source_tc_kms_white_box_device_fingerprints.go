@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsWhiteBoxDeviceFingerprints() *schema.Resource {
+func DataSourceTencentCloudKmsWhiteBoxDeviceFingerprints() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsWhiteBoxDeviceFingerprintsRead,
 		Schema: map[string]*schema.Schema{
@@ -47,13 +48,13 @@ func dataSourceTencentCloudKmsWhiteBoxDeviceFingerprints() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsWhiteBoxDeviceFingerprintsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_white_box_device_fingerprints.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_white_box_device_fingerprints.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId              = getLogId(contextNil)
-		ctx                = context.WithValue(context.TODO(), logIdKey, logId)
-		service            = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId              = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service            = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		deviceFingerprints []*kms.DeviceFingerprint
 		keyId              string
 	)
@@ -64,10 +65,10 @@ func dataSourceTencentCloudKmsWhiteBoxDeviceFingerprintsRead(d *schema.ResourceD
 		keyId = v.(string)
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsWhiteBoxDeviceFingerprintsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		deviceFingerprints = result
@@ -100,7 +101,7 @@ func dataSourceTencentCloudKmsWhiteBoxDeviceFingerprintsRead(d *schema.ResourceD
 	d.SetId(keyId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

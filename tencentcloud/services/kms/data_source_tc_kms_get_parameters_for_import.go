@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsGetParametersForImport() *schema.Resource {
+func DataSourceTencentCloudKmsGetParametersForImport() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsGetParametersForImportRead,
 		Schema: map[string]*schema.Schema{
@@ -53,13 +54,13 @@ func dataSourceTencentCloudKmsGetParametersForImport() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsGetParametersForImportRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_get_parameters_for_import.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_get_parameters_for_import.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                  = getLogId(contextNil)
-		ctx                    = context.WithValue(context.TODO(), logIdKey, logId)
-		service                = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId                  = tccommon.GetLogId(tccommon.ContextNil)
+		ctx                    = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service                = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		getParametersForImport *kms.GetParametersForImportResponseParams
 		keyId                  string
 	)
@@ -78,10 +79,10 @@ func dataSourceTencentCloudKmsGetParametersForImportRead(d *schema.ResourceData,
 		paramMap["WrappingKeySpec"] = helper.String(v.(string))
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsGetParametersForImportByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		getParametersForImport = result
@@ -111,7 +112,7 @@ func dataSourceTencentCloudKmsGetParametersForImportRead(d *schema.ResourceData,
 	d.SetId(keyId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

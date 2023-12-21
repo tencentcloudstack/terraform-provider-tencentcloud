@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -9,7 +10,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudKmsListKeys() *schema.Resource {
+func DataSourceTencentCloudKmsListKeys() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsListKeysRead,
 		Schema: map[string]*schema.Schema{
@@ -47,13 +48,13 @@ func dataSourceTencentCloudKmsListKeys() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsListKeysRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_list_keys.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_list_keys.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service  = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		listKeys []*kms.Key
 	)
 
@@ -66,10 +67,10 @@ func dataSourceTencentCloudKmsListKeysRead(d *schema.ResourceData, meta interfac
 		paramMap["HsmClusterId"] = helper.String(v.(string))
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsListKeysByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		listKeys = result
@@ -99,7 +100,7 @@ func dataSourceTencentCloudKmsListKeysRead(d *schema.ResourceData, meta interfac
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

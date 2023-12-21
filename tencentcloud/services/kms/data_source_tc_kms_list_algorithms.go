@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"strconv"
 	"time"
@@ -10,7 +11,7 @@ import (
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 )
 
-func dataSourceTencentCloudKmsListAlgorithms() *schema.Resource {
+func DataSourceTencentCloudKmsListAlgorithms() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudKmsListAlgorithmsRead,
 		Schema: map[string]*schema.Schema{
@@ -81,20 +82,20 @@ func dataSourceTencentCloudKmsListAlgorithms() *schema.Resource {
 }
 
 func dataSourceTencentCloudKmsListAlgorithmsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_kms_list_algorithms.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_kms_list_algorithms.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = getLogId(contextNil)
-		ctx            = context.WithValue(context.TODO(), logIdKey, logId)
-		service        = KmsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service        = KmsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		listAlgorithms *kms.ListAlgorithmsResponseParams
 	)
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeKmsListAlgorithmsByFilter(ctx)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		listAlgorithms = result
@@ -162,7 +163,7 @@ func dataSourceTencentCloudKmsListAlgorithmsRead(d *schema.ResourceData, meta in
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

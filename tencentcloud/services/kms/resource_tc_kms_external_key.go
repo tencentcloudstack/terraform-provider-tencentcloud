@@ -1,6 +1,7 @@
-package tencentcloud
+package kms
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"fmt"
 	"log"
@@ -11,7 +12,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudKmsExternalKey() *schema.Resource {
+func ResourceTencentCloudKmsExternalKey() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
 		"wrapping_algorithm": {
 			Type:        schema.TypeString,
@@ -51,12 +52,12 @@ func resourceTencentCloudKmsExternalKey() *schema.Resource {
 }
 
 func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_external_key.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_external_key.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	keyType := KMS_ORIGIN_TYPE[KMS_ORIGIN_EXTERNAL]
@@ -69,10 +70,10 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 
 	var keyId string
 	var outErr, inErr error
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		keyId, inErr = kmsService.CreateKey(ctx, keyType, alias, description, keyUsage)
 		if inErr != nil {
-			return retryError(inErr)
+			return tccommon.RetryError(inErr)
 		}
 		return nil
 	})
@@ -90,10 +91,10 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 		param["key_material_base64"] = v.(string)
 		param["valid_to"] = d.Get("valid_to").(int)
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.ImportKeyMaterial(ctx, param)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -103,10 +104,10 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 		}
 
 		if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				e := kmsService.DisableKey(ctx, d.Id())
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
 				return nil
 			})
@@ -117,10 +118,10 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 		}
 
 		if isArchived := d.Get("is_archived").(bool); isArchived {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 				e := kmsService.ArchiveKey(ctx, d.Id())
 				if e != nil {
-					return retryError(e)
+					return tccommon.RetryError(e)
 				}
 				return nil
 			})
@@ -132,13 +133,13 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		keyMetaData, err := kmsService.DescribeKeyById(ctx, keyId)
 		if err != nil {
 			return err
 		}
-		resourceName := BuildTagResourceName("kms", "key", tcClient.Region, *keyMetaData.ResourceId)
+		resourceName := tccommon.BuildTagResourceName("kms", "key", tcClient.Region, *keyMetaData.ResourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -148,21 +149,21 @@ func resourceTencentCloudKmsExternalKeyCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_external_key.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_external_key.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	keyId := d.Id()
 	kmsService := &KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var key *kms.KeyMetadata
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := kmsService.DescribeKeyById(ctx, keyId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		key = result
 		return nil
@@ -183,7 +184,7 @@ func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("key_state", key.KeyState)
 	transformKeyState(d)
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "kms", "key", tcClient.Region, *key.ResourceId)
 	if err != nil {
@@ -194,22 +195,22 @@ func resourceTencentCloudKmsExternalKeyRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_external_key.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_external_key.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	keyId := d.Id()
 	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	d.Partial(true)
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.UpdateKeyDescription(ctx, keyId, description)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -222,10 +223,10 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("alias") {
 		alias := d.Get("alias").(string)
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.UpdateKeyAlias(ctx, keyId, alias)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -245,10 +246,10 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 	}
 
 	var key *kms.KeyMetadata
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := kmsService.DescribeKeyById(ctx, keyId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		key = result
 		return nil
@@ -278,7 +279,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 
 		oldValue, newValue := d.GetChange("tags")
@@ -287,7 +288,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		resourceName := BuildTagResourceName("kms", "key", tcClient.Region, *keyMetaData.ResourceId)
+		resourceName := tccommon.BuildTagResourceName("kms", "key", tcClient.Region, *keyMetaData.ResourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -300,22 +301,22 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_kms_external_key.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_kms_external_key.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	kmsService := KmsService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	keyId := d.Id()
 	pendingDeleteWindowInDays := d.Get("pending_delete_window_in_days").(int)
 	isEnabled := d.Get("is_enabled").(bool)
 	if isEnabled {
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DisableKey(ctx, keyId)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -324,10 +325,10 @@ func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta inter
 			return err
 		}
 	}
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		e := kmsService.DeleteKey(ctx, keyId, uint64(pendingDeleteWindowInDays))
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -336,10 +337,10 @@ func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	return resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	return resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		key, e := kmsService.DescribeKeyById(ctx, keyId)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		if *key.KeyState == KMS_KEY_STATE_PENDINGDELETE {
 			return nil
@@ -358,18 +359,18 @@ func updateKeyMaterial(ctx context.Context, kmsService KmsService, d *schema.Res
 
 	var err error
 	if d.HasChange("key_material_base64") && param["key_material_base64"] == "" {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.DeleteImportKeyMaterial(ctx, d.Id())
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
 	} else {
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			e := kmsService.ImportKeyMaterial(ctx, param)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
