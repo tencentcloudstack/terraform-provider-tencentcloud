@@ -9,11 +9,3 @@ resource "tencentcloud_ssl_update_certificate_instance_operation" "update_certif
   resource_types = ["cdn"]
 }
 ```
-
-Import
-
-ssl update_certificate_instance can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_ssl_update_certificate_instance_operation.update_certificate_instance update_certificate_instance_id
-```
