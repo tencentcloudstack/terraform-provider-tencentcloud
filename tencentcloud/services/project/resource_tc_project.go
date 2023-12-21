@@ -1,16 +1,19 @@
-package tencentcloud
+package project
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudProject() *schema.Resource {
+func ResourceTencentCloudProject() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudProjectCreate,
 		Read:   resourceTencentCloudProjectRead,
@@ -55,10 +58,10 @@ func resourceTencentCloudProject() *schema.Resource {
 }
 
 func resourceTencentCloudProjectCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_project.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_project.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = tag.NewAddProjectRequest()
@@ -73,10 +76,10 @@ func resourceTencentCloudProjectCreate(d *schema.ResourceData, meta interface{})
 		request.Info = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTagClient().AddProject(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTagClient().AddProject(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -93,9 +96,9 @@ func resourceTencentCloudProjectCreate(d *schema.ResourceData, meta interface{})
 
 	if v, ok := d.GetOkExists("disable"); ok {
 		if v.(int) == 1 {
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-			service := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+			service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 			projectId := helper.StrToUInt64(d.Id())
 
 			if err := service.DisableProjectById(ctx, projectId); err != nil {
@@ -108,14 +111,14 @@ func resourceTencentCloudProjectCreate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudProjectRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_project.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_project.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	projectId := helper.StrToUInt64(d.Id())
 
@@ -154,10 +157,10 @@ func resourceTencentCloudProjectRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudProjectUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_project.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_project.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := tag.NewUpdateProjectRequest()
 
@@ -188,10 +191,10 @@ func resourceTencentCloudProjectUpdate(d *schema.ResourceData, meta interface{})
 			request.Disable = helper.IntInt64(v.(int))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTagClient().UpdateProject(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseTagClient().UpdateProject(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -207,13 +210,13 @@ func resourceTencentCloudProjectUpdate(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudProjectDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_project.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_project.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	projectId := helper.StrToUInt64(d.Id())
 
 	if err := service.DisableProjectById(ctx, projectId); err != nil {

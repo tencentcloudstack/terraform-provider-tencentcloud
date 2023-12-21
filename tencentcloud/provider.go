@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
 	"encoding/json"
 	"fmt"
@@ -221,7 +222,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_auto_scale_records":                       emr.DataSourceTencentCloudEmrAutoScaleRecords(),
 			"tencentcloud_availability_zones":                           common.DataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                common.DataSourceTencentCloudAvailabilityZonesByProduct(),
-			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
+			"tencentcloud_projects":                                     project.DataSourceTencentCloudProjects(),
 			"tencentcloud_instances":                                    cvm.DataSourceTencentCloudInstances(),
 			"tencentcloud_instances_set":                                cvm.DataSourceTencentCloudInstancesSet(),
 			"tencentcloud_reserved_instances":                           cvm.DataSourceTencentCloudReservedInstances(),
@@ -951,7 +952,7 @@ func Provider() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"tencentcloud_project":                                             resourceTencentCloudProject(),
+			"tencentcloud_project":                                             project.ResourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                         emr.ResourceTencentCloudEmrCluster(),
 			"tencentcloud_emr_user_manager":                                    emr.ResourceTencentCloudEmrUserManager(),
 			"tencentcloud_instance":                                            cvm.ResourceTencentCloudInstance(),
