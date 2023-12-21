@@ -411,16 +411,15 @@ func (me *MysqlService) ModifyAccountMaxUserConnections(ctx context.Context, mys
 	return
 }
 
-func (me *MysqlService) UpgradeDBInstanceEngineVersion(ctx context.Context, mysqlId, engineVersion string, upgradeSubversion, maxDelayTime int64) (asyncRequestId string, errRet error) {
+func (me *MysqlService) UpgradeDBInstanceEngineVersion(ctx context.Context, mysqlId, engineVersion string, upgradeSubversion, maxDelayTime, waitSwitch int64) (asyncRequestId string, errRet error) {
 
 	logId := tccommon.GetLogId(ctx)
 
 	request := cdb.NewUpgradeDBInstanceEngineVersionRequest()
 
-	var waitSwitch int64 = 0 // 0- switch immediately, 1- time window switch
-
 	request.InstanceId = &mysqlId
 	request.EngineVersion = &engineVersion
+	// 0- switch immediately, 1- time window switch
 	request.WaitSwitch = &waitSwitch
 	request.UpgradeSubversion = &upgradeSubversion
 	request.MaxDelayTime = &maxDelayTime

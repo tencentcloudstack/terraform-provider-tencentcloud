@@ -162,6 +162,12 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Default:     false,
 			Description: "Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.",
 		},
+		"wait_switch": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Default:     0,
+			Description: "Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.",
+		},
 		// Computed values
 		"intranet_ip": {
 			Type:        schema.TypeString,
@@ -1145,6 +1151,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		engineVersion := ""
 		var upgradeSubversion int64
 		var maxDelayTime int64
+		var waitSwitch int64
 		if v, ok := d.GetOk("engine_version"); ok {
 			engineVersion = v.(string)
 		}
@@ -1154,8 +1161,11 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if v, ok := d.GetOk("max_deay_time"); ok {
 			maxDelayTime = int64(v.(int))
 		}
+		if v, ok := d.GetOk("wait_switch"); ok {
+			waitSwitch = int64(v.(int))
+		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime)
+		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime, waitSwitch)
 		if err != nil {
 			return err
 		}

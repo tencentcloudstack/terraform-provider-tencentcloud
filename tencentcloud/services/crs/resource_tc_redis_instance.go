@@ -181,6 +181,13 @@ func ResourceTencentCloudRedisInstance() *schema.Resource {
 				Description: "IP address of an instance. When the `operation_network` is `changeVip`, this parameter needs to be configured.",
 			},
 
+			"wait_switch": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     2,
+				Description: "Switching mode: `1`-maintenance time window switching, `2`-immediate switching, default value `2`.",
+			},
+
 			"tags": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -828,7 +835,11 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		typeId := d.Get("type_id").(int)
 		request.InstanceId = &id
 		request.TargetInstanceType = helper.String(strconv.Itoa(typeId))
-		request.SwitchOption = helper.IntInt64(2)
+		if v, ok := d.GetOk("wait_switch"); ok {
+			request.SwitchOption = helper.Int64(v.(int64))
+		} else {
+			request.SwitchOption = helper.IntInt64(2)
+		}
 		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseRedisClient().UpgradeInstanceVersion(request)
 			if e != nil {

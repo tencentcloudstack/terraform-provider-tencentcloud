@@ -34,6 +34,13 @@ func ResourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 			Optional:    true,
 			Description: "The zone information of the primary instance is required when you purchase a disaster recovery instance.",
 		},
+		"slave_deploy_mode": {
+			Type:         schema.TypeInt,
+			Optional:     true,
+			ValidateFunc: tccommon.ValidateAllowedIntValue([]int{0, 1}),
+			Default:      0,
+			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
+		},
 	}
 
 	basic := TencentMsyqlBasicInfo()

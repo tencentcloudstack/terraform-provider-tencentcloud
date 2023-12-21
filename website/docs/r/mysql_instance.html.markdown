@@ -166,6 +166,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) Instance tags.
 * `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
+* `wait_switch` - (Optional, Int) Switch the method of accessing new instances, default is `0`. Supported values include: `0` - switch immediately, `1` - switch in time window.
 
 ## Attributes Reference
 
