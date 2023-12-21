@@ -1,15 +1,17 @@
-package tencentcloud
+package fl
 
 import (
 	"context"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-func resourceTencentCloudVpcFlowLogConfig() *schema.Resource {
+func ResourceTencentCloudVpcFlowLogConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpcFlowLogConfigCreate,
 		Read:   resourceTencentCloudVpcFlowLogConfigRead,
@@ -35,8 +37,8 @@ func resourceTencentCloudVpcFlowLogConfig() *schema.Resource {
 }
 
 func resourceTencentCloudVpcFlowLogConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	flowLogId := d.Get("flow_log_id").(string)
 
@@ -46,14 +48,14 @@ func resourceTencentCloudVpcFlowLogConfigCreate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudVpcFlowLogConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	flowLogId := d.Id()
 
@@ -83,10 +85,10 @@ func resourceTencentCloudVpcFlowLogConfigRead(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudVpcFlowLogConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		enable         bool
@@ -102,10 +104,10 @@ func resourceTencentCloudVpcFlowLogConfigUpdate(d *schema.ResourceData, meta int
 
 	if enable {
 		enableRequest.FlowLogIds = []*string{&flowLogId}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().EnableFlowLogs(enableRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().EnableFlowLogs(enableRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableRequest.GetAction(), enableRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -117,10 +119,10 @@ func resourceTencentCloudVpcFlowLogConfigUpdate(d *schema.ResourceData, meta int
 		}
 	} else {
 		disableRequest.FlowLogIds = []*string{&flowLogId}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DisableFlowLogs(disableRequest)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().DisableFlowLogs(disableRequest)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableRequest.GetAction(), disableRequest.ToJsonString(), result.ToJsonString())
 			}
@@ -136,8 +138,8 @@ func resourceTencentCloudVpcFlowLogConfigUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudVpcFlowLogConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

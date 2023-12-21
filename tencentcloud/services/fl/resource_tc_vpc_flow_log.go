@@ -1,4 +1,4 @@
-package tencentcloud
+package fl
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"regexp"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudVpcFlowLog() *schema.Resource {
+func ResourceTencentCloudVpcFlowLog() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVpcFlowLogCreate,
 		Read:   resourceTencentCloudVpcFlowLogRead,
@@ -102,10 +105,10 @@ func resourceTencentCloudVpcFlowLog() *schema.Resource {
 }
 
 func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = vpc.NewCreateFlowLogRequest()
@@ -159,10 +162,10 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 		request.CloudLogRegion = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateFlowLog(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().CreateFlowLog(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -183,10 +186,10 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 	resourceTencentCloudSetFlowLogId(d, flowLogId, d.Get("vpc_id").(string))
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		client := meta.(*TencentCloudClient).apiV3Conn
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := TagService{client}
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		resourceName := BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		resourceName := tccommon.BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
 		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
 		if err != nil {
 			return err
@@ -197,14 +200,14 @@ func resourceTencentCloudVpcFlowLogCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
 
@@ -272,7 +275,7 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("cloud_log_region", flowLog.CloudLogRegion)
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: client}
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "fl", client.Region, flowLogId)
 	if err != nil {
@@ -287,11 +290,11 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := vpc.NewModifyFlowLogAttributeRequest()
 
@@ -335,10 +338,10 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyFlowLogAttribute(request)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVpcClient().ModifyFlowLogAttribute(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -350,12 +353,12 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("tags") {
-		client := meta.(*TencentCloudClient).apiV3Conn
+		client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := TagService{client}
 		oldValue, newValue := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
+		resourceName := tccommon.BuildTagResourceName("vpc", "fl", client.Region, flowLogId)
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
@@ -366,13 +369,13 @@ func resourceTencentCloudVpcFlowLogUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudVpcFlowLogDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vpc_flow_log.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vpc_flow_log.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := VpcService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
 
 	if err != nil {
@@ -387,7 +390,7 @@ func resourceTencentCloudVpcFlowLogDelete(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudSetFlowLogId(d *schema.ResourceData, id, vpcId string) {
-	d.SetId(id + FILED_SP + vpcId)
+	d.SetId(id + tccommon.FILED_SP + vpcId)
 }
 
 func resourceTencentCloudGetFlowLogId(d *schema.ResourceData) (id, vpcId string, err error) {
@@ -397,7 +400,7 @@ func resourceTencentCloudGetFlowLogId(d *schema.ResourceData) (id, vpcId string,
 		err = fmt.Errorf("invalid id format %s, expect `fl-xxxxxxxx#vpc-xxxxxxxx`", rawId)
 		return
 	}
-	ids := strings.Split(rawId, FILED_SP)
+	ids := strings.Split(rawId, tccommon.FILED_SP)
 	id = ids[0]
 	vpcId = ids[1]
 	return

@@ -1,13 +1,18 @@
-package tencentcloud
+package fl_test
 
 import (
 	"context"
 	"testing"
 	"time"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+
+	svcfl "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 )
 
 func init() {
@@ -15,12 +20,12 @@ func init() {
 	resource.AddTestSweepers("ap-guangzhou", &resource.Sweeper{
 		Name: "ap-guangzhou",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			cli, _ := sharedClientForRegion(r)
-			client := cli.(*TencentCloudClient).apiV3Conn
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			cli, _ := tcacctest.SharedClientForRegion(r)
+			client := cli.(tccommon.ProviderMeta).GetAPIV3Conn()
 
-			service := VpcService{client}
+			service := svcfl.NewVpcService(client)
 
 			request := vpc.NewDescribeFlowLogsRequest()
 			result, err := service.DescribeFlowLogs(ctx, request)
@@ -30,11 +35,11 @@ func init() {
 
 			for i := range result {
 				fl := result[i]
-				created, err := time.Parse(TENCENTCLOUD_COMMON_TIME_LAYOUT, "*fl.CreatedTime")
+				created, err := time.Parse(tccommon.TENCENTCLOUD_COMMON_TIME_LAYOUT, "*fl.CreatedTime")
 				if err != nil {
 					created = time.Time{}
 				}
-				if isResourcePersist(*fl.FlowLogName, &created) {
+				if tcacctest.IsResourcePersist(*fl.FlowLogName, &created) {
 					continue
 				}
 				vpcId := ""
@@ -52,9 +57,9 @@ func TestAccTencentCloudVpcFlowLogResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccVpcFlowLog,
@@ -87,7 +92,7 @@ func TestAccTencentCloudVpcFlowLogResource_basic(t *testing.T) {
 	})
 }
 
-const testAccVpcFlowLog = defaultVpcSubnets + `
+const testAccVpcFlowLog = tcacctest.DefaultVpcSubnets + `
 data "tencentcloud_enis" "eni" {
   name      = "keep-fl-eni"
 }
@@ -107,7 +112,7 @@ resource "tencentcloud_vpc_flow_log" "flow_log" {
 }
 `
 
-const testAccVpcFlowLogUpdate = defaultVpcSubnets + `
+const testAccVpcFlowLogUpdate = tcacctest.DefaultVpcSubnets + `
 data "tencentcloud_enis" "eni" {
   name      = "keep-fl-eni"
 }

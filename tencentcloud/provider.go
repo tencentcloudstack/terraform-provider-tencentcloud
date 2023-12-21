@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"encoding/json"
@@ -961,7 +962,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_snapshot_policy_attachment":                      resourceTencentCloudVpcSnapshotPolicyAttachment(),
 			"tencentcloud_vpc_snapshot_policy_config":                          resourceTencentCloudVpcSnapshotPolicyConfig(),
 			"tencentcloud_vpc_net_detect":                                      resourceTencentCloudVpcNetDetect(),
-			"tencentcloud_vpc_flow_log_config":                                 resourceTencentCloudVpcFlowLogConfig(),
+			"tencentcloud_vpc_flow_log_config":                                 fl.ResourceTencentCloudVpcFlowLogConfig(),
 			"tencentcloud_vpc_classic_link_attachment":                         resourceTencentCloudVpcClassicLinkAttachment(),
 			"tencentcloud_vpc_dhcp_ip":                                         resourceTencentCloudVpcDhcpIp(),
 			"tencentcloud_vpc_ipv6_cidr_block":                                 resourceTencentCloudVpcIpv6CidrBlock(),
@@ -1629,7 +1630,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_compare_task_stop_operation":                     dts.ResourceTencentCloudDtsCompareTaskStopOperation(),
 			"tencentcloud_dts_compare_task":                                    dts.ResourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                                     cvm.ResourceTencentCloudCvmHpcCluster(),
-			"tencentcloud_vpc_flow_log":                                        resourceTencentCloudVpcFlowLog(),
+			"tencentcloud_vpc_flow_log":                                        fl.ResourceTencentCloudVpcFlowLog(),
 			"tencentcloud_vpc_end_point_service":                               resourceTencentCloudVpcEndPointService(),
 			"tencentcloud_vpc_end_point":                                       resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":                    resourceTencentCloudVpcEndPointServiceWhiteList(),
