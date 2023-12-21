@@ -1,17 +1,20 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMongodbInstanceBackup() *schema.Resource {
+func ResourceTencentCloudMongodbInstanceBackup() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMongodbInstanceBackupCreate,
 		Read:   resourceTencentCloudMongodbInstanceBackupRead,
@@ -45,10 +48,10 @@ func resourceTencentCloudMongodbInstanceBackup() *schema.Resource {
 }
 
 func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instance_backup.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_instance_backup.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = mongodb.NewCreateBackupDBInstanceRequest()
@@ -67,10 +70,10 @@ func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, met
 		request.BackupRemark = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateBackupDBInstance(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateBackupDBInstance(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -85,9 +88,9 @@ func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, met
 	taskId = *response.Response.AsyncRequestId
 	d.SetId(taskId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	timeout := d.Timeout(schema.TimeoutCreate)
 	if response != nil && response.Response != nil {
@@ -100,15 +103,15 @@ func resourceTencentCloudMongodbInstanceBackupCreate(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudMongodbInstanceBackupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_backup.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_backup.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudMongodbInstanceBackupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_backup.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_backup.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

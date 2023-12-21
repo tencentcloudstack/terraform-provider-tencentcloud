@@ -1,4 +1,4 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
@@ -8,14 +8,17 @@ import (
 	"reflect"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudMongodbStandbyInstance() *schema.Resource {
+func ResourceTencentCloudMongodbStandbyInstance() *schema.Resource {
 	mongodbStandbyInstanceInfo := map[string]*schema.Schema{
 		"father_instance_region": {
 			Type:        schema.TypeString,
@@ -135,7 +138,7 @@ func mongodbAllStandbyInstanceReqSet(requestInter interface{}, d *schema.Resourc
 }
 
 func mongodbCreateStandbyInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}, masterInfo map[string]string) error {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewCreateDBInstanceHourRequest()
 
 	if err := mongodbAllStandbyInstanceReqSet(request, d, masterInfo); err != nil {
@@ -144,12 +147,12 @@ func mongodbCreateStandbyInstanceByUse(ctx context.Context, d *schema.ResourceDa
 
 	var response *mongodb.CreateDBInstanceHourResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateDBInstanceHour(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -166,7 +169,7 @@ func mongodbCreateStandbyInstanceByUse(ctx context.Context, d *schema.ResourceDa
 }
 
 func mongodbCreateStandbyInstanceByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}, masterInfo map[string]string) error {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewCreateDBInstanceRequest()
 
 	if err := mongodbAllStandbyInstanceReqSet(request, d, masterInfo); err != nil {
@@ -175,12 +178,12 @@ func mongodbCreateStandbyInstanceByMonth(ctx context.Context, d *schema.Resource
 
 	var response *mongodb.CreateDBInstanceResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateDBInstance(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -197,12 +200,12 @@ func mongodbCreateStandbyInstanceByMonth(ctx context.Context, d *schema.Resource
 }
 
 func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_standby_instance.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	client1 := *client
 	mongodbService := MongodbService{client: client}
 	mongodbService1 := MongodbService{client: &client1}
@@ -279,7 +282,7 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -289,15 +292,15 @@ func resourceTencentCloudMongodbStandbyInstanceCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_standby_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 
-	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mongodbService := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instance, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -307,7 +310,7 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 		return nil
 	}
 
-	if nilFields := CheckNil(instance, map[string]string{
+	if nilFields := tccommon.CheckNil(instance, map[string]string{
 		"InstanceName": "instance name",
 		"ProjectId":    "project id",
 		"Zone":         "available zone",
@@ -381,14 +384,14 @@ func resourceTencentCloudMongodbStandbyInstanceRead(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_standby_instance.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	mongodbService := MongodbService{client: client}
 	tagService := TagService{client: client}
 	region := client.Region
@@ -404,7 +407,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		}
 
 		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
-		errUpdate := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)
@@ -448,7 +451,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -475,14 +478,14 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMongodbStandbyInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_standby_instance.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_standby_instance.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	instanceDetail, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)

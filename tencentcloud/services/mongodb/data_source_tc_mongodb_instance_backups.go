@@ -1,15 +1,18 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
+func DataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMongodbInstanceBackupsRead,
 		Schema: map[string]*schema.Schema{
@@ -90,12 +93,12 @@ func dataSourceTencentCloudMongodbInstanceBackups() *schema.Resource {
 }
 
 func dataSourceTencentCloudMongodbInstanceBackupsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instance_backups.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_instance_backups.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -106,14 +109,14 @@ func dataSourceTencentCloudMongodbInstanceBackupsRead(d *schema.ResourceData, me
 		paramMap["backup_method"] = helper.IntInt64(v.(int))
 	}
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var backupList []*mongodb.BackupInfo
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMongodbInstanceBackupsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		backupList = result
 		return nil
@@ -175,7 +178,7 @@ func dataSourceTencentCloudMongodbInstanceBackupsRead(d *schema.ResourceData, me
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

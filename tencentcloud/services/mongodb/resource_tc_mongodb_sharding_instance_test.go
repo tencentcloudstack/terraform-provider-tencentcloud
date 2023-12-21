@@ -1,23 +1,28 @@
-package tencentcloud
+package mongodb_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svcmongodb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 )
 
 func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbShardingInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
@@ -35,7 +40,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "charge_type", svcmongodb.MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "prepaid_period"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "security_groups.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "hidden_zone"),
@@ -43,7 +48,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbShardingInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
@@ -65,12 +70,12 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
 				Config:    testAccMongodbShardingInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
@@ -84,7 +89,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "tags.test", "test-prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "charge_type", MONGODB_CHARGE_TYPE_PREPAID),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "charge_type", svcmongodb.MONGODB_CHARGE_TYPE_PREPAID),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "prepaid_period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "auto_renew_flag", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "hidden_zone"),
@@ -92,7 +97,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
 				Config:    testAccMongodbShardingInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
@@ -106,12 +111,10 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 }
 
 func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	mongodbService := MongodbService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	mongodbService := svcmongodb.NewMongodbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_mongodb_sharding_instance" {
 			continue
@@ -129,7 +132,7 @@ func testAccCheckMongodbShardingInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccMongodbShardingInstance = DefaultMongoDBSpec + `
+const testAccMongodbShardingInstance = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding"
   shard_quantity  = 2
@@ -156,7 +159,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 `
 
-const testAccMongodbShardingInstanceUpdate = DefaultMongoDBSpec + `
+const testAccMongodbShardingInstanceUpdate = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding-update"
   shard_quantity  = 2
@@ -184,7 +187,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 `
 
-const testAccMongodbShardingInstancePrepaid = DefaultMongoDBSpec + `
+const testAccMongodbShardingInstancePrepaid = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid"
   shard_quantity  = 2
@@ -214,7 +217,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
 }
 `
 
-const testAccMongodbShardingInstancePrepaid_update = DefaultMongoDBSpec + `
+const testAccMongodbShardingInstancePrepaid_update = tcacctest.DefaultMongoDBSpec + `
 resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid-update"
   shard_quantity  = 2

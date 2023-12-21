@@ -1,4 +1,4 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
@@ -7,11 +7,14 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudMongodbInstances() *schema.Resource {
+func DataSourceTencentCloudMongodbInstances() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMongodbInstancesRead,
 
@@ -29,7 +32,7 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 			"cluster_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue(MONGODB_CLUSTER_TYPE),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(MONGODB_CLUSTER_TYPE),
 				Description:  "Type of Mongodb cluster, and available values include replica set cluster(expressed with `REPLSET`), sharding cluster(expressed with `SHARD`).",
 			},
 			"tags": {
@@ -159,10 +162,10 @@ func dataSourceTencentCloudMongodbInstances() *schema.Resource {
 }
 
 func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instances.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_instances.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := ""
 	clusterType := -1
@@ -184,7 +187,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 	tags := helper.GetTags(d, "tags")
 
-	mongodbService := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	mongodbService := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	mongodbs, err := mongodbService.DescribeInstancesByFilter(ctx, instanceId, clusterType)
 	if err != nil {
 		return err
@@ -195,7 +198,7 @@ func dataSourceTencentCloudMongodbInstancesRead(d *schema.ResourceData, meta int
 
 instancesLoop:
 	for _, mongo := range mongodbs {
-		if nilFields := CheckNil(mongo, map[string]string{
+		if nilFields := tccommon.CheckNil(mongo, map[string]string{
 			"InstanceId":        "instance id",
 			"InstanceName":      "instance name",
 			"ProjectId":         "project id",
@@ -288,7 +291,7 @@ instancesLoop:
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), instanceList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), instanceList); err != nil {
 			return err
 		}
 	}

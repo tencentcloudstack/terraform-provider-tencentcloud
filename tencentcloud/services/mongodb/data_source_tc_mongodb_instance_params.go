@@ -1,15 +1,18 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
+func DataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMongodbInstanceParamsRead,
 		Schema: map[string]*schema.Schema{
@@ -252,26 +255,26 @@ func dataSourceTencentCloudMongodbInstanceParams() *schema.Resource {
 }
 
 func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instance_params.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_instance_params.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
 		paramMap["instance_id"] = helper.String(v.(string))
 	}
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var instanceParam *mongodb.DescribeInstanceParamsResponseParams
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMongodbInstanceParams(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		instanceParam = result
 		return nil
@@ -471,7 +474,7 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), paramList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), paramList); e != nil {
 			return e
 		}
 	}

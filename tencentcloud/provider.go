@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mdl"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,6 +9,9 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mdl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
@@ -385,13 +387,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_diagnose":                       es.DataSourceTencentCloudElasticsearchDiagnose(),
 			"tencentcloud_elasticsearch_instance_plugin_list":           es.DataSourceTencentCloudElasticsearchInstancePluginList(),
 			"tencentcloud_elasticsearch_describe_index_list":            es.DataSourceTencentCloudElasticsearchDescribeIndexList(),
-			"tencentcloud_mongodb_zone_config":                          dataSourceTencentCloudMongodbZoneConfig(),
-			"tencentcloud_mongodb_instances":                            dataSourceTencentCloudMongodbInstances(),
-			"tencentcloud_mongodb_instance_backups":                     dataSourceTencentCloudMongodbInstanceBackups(),
-			"tencentcloud_mongodb_instance_connections":                 dataSourceTencentCloudMongodbInstanceConnections(),
-			"tencentcloud_mongodb_instance_current_op":                  dataSourceTencentCloudMongodbInstanceCurrentOp(),
-			"tencentcloud_mongodb_instance_params":                      dataSourceTencentCloudMongodbInstanceParams(),
-			"tencentcloud_mongodb_instance_slow_log":                    dataSourceTencentCloudMongodbInstanceSlowLog(),
+			"tencentcloud_mongodb_zone_config":                          mongodb.DataSourceTencentCloudMongodbZoneConfig(),
+			"tencentcloud_mongodb_instances":                            mongodb.DataSourceTencentCloudMongodbInstances(),
+			"tencentcloud_mongodb_instance_backups":                     mongodb.DataSourceTencentCloudMongodbInstanceBackups(),
+			"tencentcloud_mongodb_instance_connections":                 mongodb.DataSourceTencentCloudMongodbInstanceConnections(),
+			"tencentcloud_mongodb_instance_current_op":                  mongodb.DataSourceTencentCloudMongodbInstanceCurrentOp(),
+			"tencentcloud_mongodb_instance_params":                      mongodb.DataSourceTencentCloudMongodbInstanceParams(),
+			"tencentcloud_mongodb_instance_slow_log":                    mongodb.DataSourceTencentCloudMongodbInstanceSlowLog(),
 			"tencentcloud_dayu_cc_https_policies":                       dayu.DataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                        dayu.DataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                           dayu.DataSourceTencentCloudDayuDdosPolicies(),
@@ -1160,11 +1162,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_scale_out_instances":                              as.ResourceTencentCloudAsScaleOutInstances(),
 			"tencentcloud_as_execute_scaling_policy":                           as.ResourceTencentCloudAsExecuteScalingPolicy(),
 			"tencentcloud_as_complete_lifecycle":                               as.ResourceTencentCloudAsCompleteLifecycle(),
-			"tencentcloud_mongodb_instance":                                    resourceTencentCloudMongodbInstance(),
-			"tencentcloud_mongodb_sharding_instance":                           resourceTencentCloudMongodbShardingInstance(),
-			"tencentcloud_mongodb_instance_account":                            resourceTencentCloudMongodbInstanceAccount(),
-			"tencentcloud_mongodb_instance_backup":                             resourceTencentCloudMongodbInstanceBackup(),
-			"tencentcloud_mongodb_instance_backup_download_task":               resourceTencentCloudMongodbInstanceBackupDownloadTask(),
+			"tencentcloud_mongodb_instance":                                    mongodb.ResourceTencentCloudMongodbInstance(),
+			"tencentcloud_mongodb_sharding_instance":                           mongodb.ResourceTencentCloudMongodbShardingInstance(),
+			"tencentcloud_mongodb_instance_account":                            mongodb.ResourceTencentCloudMongodbInstanceAccount(),
+			"tencentcloud_mongodb_instance_backup":                             mongodb.ResourceTencentCloudMongodbInstanceBackup(),
+			"tencentcloud_mongodb_instance_backup_download_task":               mongodb.ResourceTencentCloudMongodbInstanceBackupDownloadTask(),
 			"tencentcloud_dayu_cc_http_policy":                                 dayu.ResourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                                dayu.ResourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                                    dayu.ResourceTencentCloudDayuDdosPolicy(),
@@ -1273,7 +1275,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_grafana_sso_cam_config":                      resourceTencentCloudMonitorGrafanaSsoCamConfig(),
 			"tencentcloud_monitor_grafana_sso_config":                          resourceTencentCloudMonitorGrafanaSsoConfig(),
 			"tencentcloud_monitor_grafana_version_upgrade":                     resourceTencentCloudMonitorGrafanaVersionUpgrade(),
-			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
+			"tencentcloud_mongodb_standby_instance":                            mongodb.ResourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              es.ResourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                        es.ResourceTencentCloudElasticsearchSecurityGroup(),
 			"tencentcloud_elasticsearch_logstash":                              es.ResourceTencentCloudElasticsearchLogstash(),

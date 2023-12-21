@@ -1,27 +1,4 @@
-/*
-Provides a resource to create a mongodb instance_backup_download_task
-
-Example Usage
-
-```hcl
-resource "tencentcloud_mongodb_instance_backup_download_task" "instance_backup_download_task" {
-  instance_id = "cmgo-b43i3wkj"
-  backup_name = "cmgo-b43i3wkj_2023-05-09 14:54"
-  backup_sets {
-    replica_set_id = "cmgo-b43i3wkj_0"
-  }
-}
-```
-
-Import
-
-mongodb instance_backup_download_task can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task instanceId#backupName
-```
-*/
-package tencentcloud
+package mongodb
 
 import (
 	"context"
@@ -32,10 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMongodbInstanceBackupDownloadTask() *schema.Resource {
+func ResourceTencentCloudMongodbInstanceBackupDownloadTask() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate,
 		Read:   resourceTencentCloudMongodbInstanceBackupDownloadTaskRead,
@@ -78,10 +57,10 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTask() *schema.Resource {
 }
 
 func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = mongodb.NewCreateBackupDownloadTaskRequest()
@@ -109,10 +88,10 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.Resou
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateBackupDownloadTask(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateBackupDownloadTask(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -123,22 +102,22 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskCreate(d *schema.Resou
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + backupName)
+	d.SetId(instanceId + tccommon.FILED_SP + backupName)
 
 	return resourceTencentCloudMongodbInstanceBackupDownloadTaskRead(d, meta)
 }
 
 func resourceTencentCloudMongodbInstanceBackupDownloadTaskRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -175,8 +154,8 @@ func resourceTencentCloudMongodbInstanceBackupDownloadTaskRead(d *schema.Resourc
 }
 
 func resourceTencentCloudMongodbInstanceBackupDownloadTaskDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_backup_download_task.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

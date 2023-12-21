@@ -1,4 +1,4 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMongodbInstanceAccount() *schema.Resource {
+func ResourceTencentCloudMongodbInstanceAccount() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMongodbInstanceAccountCreate,
 		Read:   resourceTencentCloudMongodbInstanceAccountRead,
@@ -76,10 +79,10 @@ func resourceTencentCloudMongodbInstanceAccount() *schema.Resource {
 }
 
 func resourceTencentCloudMongodbInstanceAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_account.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_account.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = mongodb.NewCreateAccountUserRequest()
@@ -123,10 +126,10 @@ func resourceTencentCloudMongodbInstanceAccountCreate(d *schema.ResourceData, me
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateAccountUser(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateAccountUser(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -138,13 +141,13 @@ func resourceTencentCloudMongodbInstanceAccountCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + userName)
+	d.SetId(instanceId + tccommon.FILED_SP + userName)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	if response != nil && response.Response != nil {
-		if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
+		if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*tccommon.ReadRetryTimeout); err != nil {
 			return err
 		}
 	}
@@ -153,16 +156,16 @@ func resourceTencentCloudMongodbInstanceAccountCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMongodbInstanceAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_account.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_account.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -214,14 +217,14 @@ func resourceTencentCloudMongodbInstanceAccountRead(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_account.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_account.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := mongodb.NewSetAccountUserPrivilegeRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -255,10 +258,10 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 		}
 
 		var response *mongodb.SetAccountUserPrivilegeResponse
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().SetAccountUserPrivilege(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().SetAccountUserPrivilege(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -270,19 +273,19 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 		if response != nil && response.Response != nil {
-			if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
+			if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*tccommon.ReadRetryTimeout); err != nil {
 				return err
 			}
 		}
 	}
 
 	if d.HasChange("password") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 		password := d.Get("password").(string)
 		err := service.ResetInstancePassword(ctx, instanceId, userName, password)
 		if err != nil {
@@ -295,14 +298,14 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMongodbInstanceAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance_account.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_instance_account.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

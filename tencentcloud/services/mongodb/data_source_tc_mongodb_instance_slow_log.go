@@ -1,14 +1,17 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudMongodbInstanceSlowLog() *schema.Resource {
+func DataSourceTencentCloudMongodbInstanceSlowLog() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMongodbInstanceSlowLogRead,
 		Schema: map[string]*schema.Schema{
@@ -61,12 +64,12 @@ func dataSourceTencentCloudMongodbInstanceSlowLog() *schema.Resource {
 }
 
 func dataSourceTencentCloudMongodbInstanceSlowLogRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_instance_slow_log.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_instance_slow_log.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -89,14 +92,14 @@ func dataSourceTencentCloudMongodbInstanceSlowLogRead(d *schema.ResourceData, me
 		paramMap["format"] = helper.String(v.(string))
 	}
 
-	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var slowLogs []*string
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMongodbInstanceSlowLogByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		slowLogs = result
 		return nil
@@ -117,7 +120,7 @@ func dataSourceTencentCloudMongodbInstanceSlowLogRead(d *schema.ResourceData, me
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), slowLogs); e != nil {
+		if e := tccommon.WriteToFile(output.(string), slowLogs); e != nil {
 			return e
 		}
 	}

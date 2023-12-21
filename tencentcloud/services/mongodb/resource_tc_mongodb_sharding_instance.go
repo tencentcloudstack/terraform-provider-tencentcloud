@@ -1,48 +1,38 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"reflect"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-//internal version: replace import begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-//internal version: replace import end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-
-func resourceTencentCloudMongodbInstance() *schema.Resource {
-	mongodbInstanceInfo := map[string]*schema.Schema{
-		"standby_instance_list": {
-			Type:        schema.TypeList,
-			Computed:    true,
-			Description: "List of standby instances' info.",
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"standby_instance_id": {
-						Type:        schema.TypeString,
-						Computed:    true,
-						Description: "Indicates the ID of standby instance.",
-					},
-					"standby_instance_region": {
-						Type:        schema.TypeString,
-						Computed:    true,
-						Description: "Indicates the region of standby instance.",
-					},
-				},
-			},
+func ResourceTencentCloudMongodbShardingInstance() *schema.Resource {
+	mongodbShardingInstanceInfo := map[string]*schema.Schema{
+		"shard_quantity": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			ForceNew:     true,
+			ValidateFunc: tccommon.ValidateIntegerInRange(2, 20),
+			Description:  "Number of sharding.",
 		},
-		"node_num": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Computed:    true,
-			Description: "The number of nodes in each replica set. Default value: 3.",
+		"nodes_per_shard": {
+			Type:         schema.TypeInt,
+			Required:     true,
+			ForceNew:     true,
+			ValidateFunc: tccommon.ValidateIntegerInRange(3, 5),
+			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
 		},
 		"availability_zone_list": {
 			Type:     schema.TypeList,
@@ -67,57 +57,49 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 		},
 	}
 	basic := TencentMongodbBasicInfo()
-	conflictList := []string{"mongos_cpu", "mongos_memory", "mongos_node_num"}
-	for _, item := range conflictList {
-		delete(basic, item)
-	}
 	for k, v := range basic {
-		mongodbInstanceInfo[k] = v
+		mongodbShardingInstanceInfo[k] = v
 	}
 
 	return &schema.Resource{
-		Create: resourceTencentCloudMongodbInstanceCreate,
-		Read:   resourceTencentCloudMongodbInstanceRead,
-		Update: resourceTencentCloudMongodbInstanceUpdate,
-		Delete: resourceTencentCloudMongodbInstanceDelete,
+		Create: resourceMongodbShardingInstanceCreate,
+		Read:   resourceMongodbShardingInstanceRead,
+		Update: resourceMongodbShardingInstanceUpdate,
+		Delete: resourceMongodbShardingInstanceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 
-		Schema: mongodbInstanceInfo,
+		Schema: mongodbShardingInstanceInfo,
 	}
 }
 
-func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) error {
+func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.ResourceData) error {
 	var (
-		replicateSetNum       = 1
-		nodeNum               = 3
+		replicateSetNum       = d.Get("shard_quantity").(int)
+		nodeNum               = d.Get("nodes_per_shard").(int)
 		goodsNum              = 1
-		clusterType           = MONGODB_CLUSTER_TYPE_REPLSET
+		clusterType           = MONGODB_CLUSTER_TYPE_SHARD
 		memoryInterface       = d.Get("memory").(int)
 		volumeInterface       = d.Get("volume").(int)
 		mongoVersionInterface = d.Get("engine_version").(string)
 		zoneInterface         = d.Get("available_zone").(string)
 		machine               = d.Get("machine_type").(string)
+		password              = d.Get("password").(string)
 		instanceType          = MONGO_INSTANCE_TYPE_FORMAL
 		projectId             = d.Get("project_id").(int)
-		password              string
 	)
-
-	if machine == MONGODB_MACHINE_TYPE_GIO {
-		machine = MONGODB_MACHINE_TYPE_HIO
-	} else if machine == MONGODB_MACHINE_TYPE_TGIO {
-		machine = MONGODB_MACHINE_TYPE_HIO10G
-	}
-
-	if v, ok := d.GetOk("node_num"); ok {
-		nodeNum = v.(int)
-	}
 
 	if v, ok := d.GetOk("password"); ok && v.(string) != "" {
 		password = v.(string)
 	} else {
 		return fmt.Errorf("`password` cannot be empty when creating")
+	}
+
+	if machine == MONGODB_MACHINE_TYPE_GIO {
+		machine = MONGODB_MACHINE_TYPE_HIO
+	} else if machine == MONGODB_MACHINE_TYPE_TGIO {
+		machine = MONGODB_MACHINE_TYPE_HIO10G
 	}
 
 	getType := reflect.TypeOf(requestInter)
@@ -165,6 +147,16 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 		}
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
+
+	if v, ok := d.GetOk("mongos_memory"); ok {
+		value.FieldByName("MongosMemory").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("mongos_cpu"); ok {
+		value.FieldByName("MongosCpu").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("mongos_node_num"); ok {
+		value.FieldByName("MongosNodeNum").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
 	if v, ok := d.GetOk("availability_zone_list"); ok {
 		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
 		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
@@ -175,22 +167,22 @@ func mongodbAllInstanceReqSet(requestInter interface{}, d *schema.ResourceData) 
 	return nil
 }
 
-func mongodbCreateInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	logId := getLogId(ctx)
+func mongodbCreateShardingInstanceByUse(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewCreateDBInstanceHourRequest()
 
-	if err := mongodbAllInstanceReqSet(request, d); err != nil {
+	if err := mongodbAllShardingInstanceReqSet(request, d); err != nil {
 		return err
 	}
 
 	var response *mongodb.CreateDBInstanceHourResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstanceHour(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateDBInstanceHour(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -206,24 +198,22 @@ func mongodbCreateInstanceByUse(ctx context.Context, d *schema.ResourceData, met
 	return nil
 }
 
-func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
-	logId := getLogId(ctx)
+func mongodbCreateShardingInstanceByMonth(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewCreateDBInstanceRequest()
 
-	if err := mongodbAllInstanceReqSet(request, d); err != nil {
+	if err := mongodbAllShardingInstanceReqSet(request, d); err != nil {
 		return err
 	}
 
 	var response *mongodb.CreateDBInstanceResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMongodbClient().CreateDBInstance(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			//internal version: replace bpass begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			//internal version: replace bpass end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -239,13 +229,13 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 	return nil
 }
 
-func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.create")()
+func resourceMongodbShardingInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_sharding_instance.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	mongodbService := MongodbService{client: client}
 	tagService := TagService{client: client}
 	region := client.Region
@@ -257,25 +247,23 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 		if ok || ok1 {
 			return fmt.Errorf("prepaid_period and auto_renew_flag don't make sense for POSTPAID_BY_HOUR instance, please remove them from your template")
 		}
-		if err := mongodbCreateInstanceByUse(ctx, d, meta); err != nil {
+		if err := mongodbCreateShardingInstanceByUse(ctx, d, meta); err != nil {
 			return err
 		}
 	} else {
-		if err := mongodbCreateInstanceByMonth(ctx, d, meta); err != nil {
+		if err := mongodbCreateShardingInstanceByMonth(ctx, d, meta); err != nil {
 			return err
 		}
 	}
 
 	instanceId := d.Id()
 
-	//internal version: replace setTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace setTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 	_, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 	if !has {
-		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
+		return fmt.Errorf("[CRITAL]%s creating mongodb sharding instance failed, instance doesn't exist", logId)
 	}
 
 	// setting instance name
@@ -292,31 +280,27 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
 	}
-	//internal version: replace begin begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace begin end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
+
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
-	//internal version: replace end begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	//internal version: replace end end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
-	return resourceTencentCloudMongodbInstanceRead(d, meta)
+
+	return resourceMongodbShardingInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.read")()
-	defer inconsistentCheck(d, meta)()
+func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_sharding_instance.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	client := meta.(*TencentCloudClient).apiV3Conn
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 
-	mongodbService := MongodbService{client}
-	tagService := TagService{client}
+	mongodbService := MongodbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	instance, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -326,44 +310,38 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		return nil
 	}
 
-	if nilFields := CheckNil(instance, map[string]string{
-		"InstanceName": "instance name",
-		"ProjectId":    "project id",
-		"Zone":         "available zone",
-		"VpcId":        "vpc id",
-		"SubnetId":     "subnet id",
-		"Status":       "status",
-		"Vip":          "vip",
-		"Vport":        "vport",
-		"CreateTime":   "create time",
-		"MongoVersion": "engine version",
-		"Memory":       "memory",
-		"Volume":       "volume",
-		"MachineType":  "machine type",
+	if nilFields := tccommon.CheckNil(instance, map[string]string{
+		"InstanceName":      "instance name",
+		"ProjectId":         "project id",
+		"ClusterType":       "cluster type",
+		"Zone":              "available zone",
+		"VpcId":             "vpc id",
+		"SubnetId":          "subnet id",
+		"Status":            "status",
+		"Vip":               "vip",
+		"Vport":             "vport",
+		"CreateTime":        "create time",
+		"MongoVersion":      "engine version",
+		"Memory":            "memory",
+		"Volume":            "volume",
+		"MachineType":       "machine type",
+		"ReplicationSetNum": "shard quantity",
+		"SecondaryNum":      "secondary number",
 	}); len(nilFields) > 0 {
 		return fmt.Errorf("mongodb %v are nil", nilFields)
 	}
 
+	_ = d.Set("shard_quantity", instance.ReplicationSetNum)
+	_ = d.Set("nodes_per_shard", *instance.SecondaryNum+1)
 	_ = d.Set("instance_name", instance.InstanceName)
-	_ = d.Set("memory", *instance.Memory/1024)
-	_ = d.Set("volume", *instance.Volume/1024)
+	_ = d.Set("memory", *instance.Memory/1024/(*instance.ReplicationSetNum))
+	_ = d.Set("volume", *instance.Volume/1024/(*instance.ReplicationSetNum))
 	_ = d.Set("engine_version", instance.MongoVersion)
 	_ = d.Set("charge_type", MONGODB_CHARGE_TYPE[*instance.PayMode])
 	if MONGODB_CHARGE_TYPE[*instance.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
 		_ = d.Set("auto_renew_flag", *instance.AutoRenewFlag)
 	}
 
-	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
-	if err != nil {
-		return err
-	}
-	groupIds := make([]string, 0)
-	for _, group := range groups {
-		groupIds = append(groupIds, *group.SecurityGroupId)
-	}
-	if len(groupIds) > 1 {
-		_ = d.Set("security_groups", groupIds)
-	}
 	switch *instance.MachineType {
 	case MONGODB_MACHINE_TYPE_TGIO:
 		_ = d.Set("machine_type", MONGODB_MACHINE_TYPE_HIO10G)
@@ -383,13 +361,27 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
-	_ = d.Set("node_num", *instance.SecondaryNum+1)
+	_ = d.Set("mongos_cpu", instance.MongosCpuNum)
+	_ = d.Set("mongos_memory", *instance.MongosMemory/1024)
+	_ = d.Set("mongos_node_num", instance.MongosNodeNum)
+	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
 
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	if len(groupIds) > 1 {
+		_ = d.Set("security_groups", groupIds)
+	}
 	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
 	if err != nil {
 		return err
 	}
-	if len(replicateSets) > 0 {
+	if len(replicateSets) > 1 {
 		var hiddenZone string
 		availabilityZoneList := make([]string, 0, 3)
 		for _, replicate := range replicateSets[0].Nodes {
@@ -402,54 +394,45 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("hidden_zone", hiddenZone)
 		_ = d.Set("availability_zone_list", availabilityZoneList)
 	}
+	tags := make(map[string]string, len(instance.Tags))
+	for _, tag := range instance.Tags {
+		if tag.TagKey == nil {
+			return errors.New("mongodb tag key is nil")
+		}
+		if tag.TagValue == nil {
+			return errors.New("mongodb tag value is nil")
+		}
+		if *tag.TagKey == "project" {
+			continue
+		}
 
-	// standby instance list
-	var standbyInsList []map[string]string
-	for _, v := range instance.StandbyInstances {
-		standbyInsList = append(
-			standbyInsList,
-			map[string]string{
-				"standby_instance_id":     *v.InstanceId,
-				"standby_instance_region": *v.Region,
-			},
-		)
+		tags[*tag.TagKey] = *tag.TagValue
 	}
-
-	// if not standby instance, need set `standby_instance_list`
-	if _, ok := d.GetOk("father_instance_id"); !ok {
-		_ = d.Set("standby_instance_list", standbyInsList)
-	}
-
-	tags, _ := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
-
 	_ = d.Set("tags", tags)
 
 	return nil
 }
 
-func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.update")()
+func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_sharding_instance.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	mongodbService := MongodbService{client: client}
 	tagService := TagService{client: client}
 	region := client.Region
 
 	d.Partial(true)
-
-	immutableArgs := []string{"node_num", "availability_zone_list", "hidden_zone"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
+	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
 	}
-
+	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
+		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_num] does not support update")
+	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
@@ -459,19 +442,19 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		}
 
 		// it will take time to wait for memory and volume change even describe request succeeded even the status returned in describe response is running
-		errUpdate := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		errUpdate := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			infos, has, e := mongodbService.DescribeInstanceById(ctx, instanceId)
 			if e != nil {
 				return resource.NonRetryableError(e)
 			}
 			if !has {
-				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb instance failed, instance doesn't exist", logId))
+				return resource.NonRetryableError(fmt.Errorf("[CRITAL]%s updating mongodb sharding instance failed, instance doesn't exist", logId))
 			}
 
 			memoryDes := *infos.Memory / 1024 / (*infos.ReplicationSetNum)
 			volumeDes := *infos.Volume / 1024 / (*infos.ReplicationSetNum)
 			if memory != int(memoryDes) || volume != int(volumeDes) {
-				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
+				return resource.RetryableError(fmt.Errorf("[CRITAL] updating mongodb sharding instance, current memory and volume values: %d, %d, waiting for them becoming new value: %d, %d", memoryDes, volumeDes, d.Get("memory").(int), d.Get("volume").(int)))
 			}
 			return nil
 		})
@@ -512,7 +495,7 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		resourceName := tccommon.BuildTagResourceName("mongodb", "instance", region, instanceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -533,42 +516,20 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	}
 
-	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
-		vpcId := d.Get("vpc_id").(string)
-		subnetId := d.Get("subnet_id").(string)
-
-		err := mongodbService.ModifyNetworkAddress(ctx, instanceId, vpcId, subnetId)
-		if err != nil {
-			return err
-		}
-	}
-
-	if d.HasChange("security_groups") {
-		securityGroups := d.Get("security_groups").(*schema.Set).List()
-		securityGroupIds := make([]*string, 0, len(securityGroups))
-		for _, securityGroup := range securityGroups {
-			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
-		}
-		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
-		if err != nil {
-			return err
-		}
-	}
-
 	d.Partial(false)
 
-	return resourceTencentCloudMongodbInstanceRead(d, meta)
+	return resourceMongodbShardingInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mongodb_instance.delete")()
+func resourceMongodbShardingInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("resource.tencentcloud_mongodb_sharding_instance.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Id()
 	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	instanceDetail, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
@@ -590,18 +551,11 @@ func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta inte
 			return err
 		}
 	}
+
 	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId, true)
 	if err != nil {
 		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s", logId, "OfflineIsolatedDBInstance", err.Error())
 		return err
 	}
-	//describe and check not exist
-	_, has, errRet := mongodbService.DescribeInstanceById(ctx, instanceId)
-	if errRet != nil {
-		return errRet
-	}
-	if !has {
-		return nil
-	}
-	return fmt.Errorf("[CRITAL]%s mongodb %s fail", logId, "OfflineIsolatedDBInstance")
+	return nil
 }

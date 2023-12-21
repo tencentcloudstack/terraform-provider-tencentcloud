@@ -1,6 +1,10 @@
-package tencentcloud
+package mongodb_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmongodb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mongodb"
+
 	"context"
 	"fmt"
 	"testing"
@@ -12,12 +16,12 @@ import (
 func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckMongodbStandbyInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbStandbyInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_standby_instance.mongodb"),
@@ -25,7 +29,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "memory", "4"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "volume", "100"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "engine_version", "MONGO_36_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "machine_type", MONGODB_MACHINE_TYPE_HIO10G),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "machine_type", svcmongodb.MONGODB_MACHINE_TYPE_HIO10G),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "available_zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb", "status"),
@@ -33,14 +37,14 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "tags.test", "test"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "charge_type", svcmongodb.MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "prepaid_period"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb", "father_instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "father_instance_region", "ap-guangzhou"),
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbStandbyInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "instance_name", "tf-mongodb-standby-test-update"),
@@ -57,7 +61,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"security_groups", "auto_renew_flag", "password"},
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
 				Config:    testAccMongodbStandbyInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_standby_instance.mongodb_prepaid"),
@@ -65,7 +69,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "memory", "8"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "volume", "200"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "engine_version", "MONGO_40_WT"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "machine_type", MONGODB_MACHINE_TYPE_HIO10G),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "machine_type", svcmongodb.MONGODB_MACHINE_TYPE_HIO10G),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "available_zone", "ap-guangzhou-4"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "project_id", "0"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "status"),
@@ -73,7 +77,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "vport"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "create_time"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "tags.test", "test-prepaid"),
-					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "charge_type", MONGODB_CHARGE_TYPE_PREPAID),
+					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "charge_type", svcmongodb.MONGODB_CHARGE_TYPE_PREPAID),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "prepaid_period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "auto_renew_flag", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "father_instance_id"),
@@ -81,7 +85,7 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
 				Config:    testAccMongodbStandbyInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "instance_name", "tf-mongodb-standby-prepaid-update"),
@@ -96,12 +100,10 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 }
 
 func testAccCheckMongodbStandbyInstanceDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	mongodbService := MongodbService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	mongodbService := svcmongodb.NewMongodbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_mongodb_standby_instance" {
 			continue

@@ -1,7 +1,9 @@
-package tencentcloud
+package mongodb
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -70,19 +72,19 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 		"instance_name": {
 			Type:         schema.TypeString,
 			Required:     true,
-			ValidateFunc: validateStringLengthInRange(2, 35),
+			ValidateFunc: tccommon.ValidateStringLengthInRange(2, 35),
 			Description:  "Name of the Mongodb instance.",
 		},
 		"memory": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ValidateFunc: validateIntegerMin(2),
+			ValidateFunc: tccommon.ValidateIntegerMin(2),
 			Description:  "Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.",
 		},
 		"volume": {
 			Type:         schema.TypeInt,
 			Required:     true,
-			ValidateFunc: validateIntegerMin(25),
+			ValidateFunc: tccommon.ValidateIntegerMin(25),
 			Description:  "Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.",
 		},
 		"engine_version": {
@@ -179,13 +181,13 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Optional:     true,
 			ForceNew:     true,
 			Default:      MONGODB_CHARGE_TYPE_POSTPAID,
-			ValidateFunc: validateAllowedStringValue([]string{MONGODB_CHARGE_TYPE_POSTPAID, MONGODB_CHARGE_TYPE_PREPAID}),
+			ValidateFunc: tccommon.ValidateAllowedStringValue([]string{MONGODB_CHARGE_TYPE_POSTPAID, MONGODB_CHARGE_TYPE_PREPAID}),
 			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.",
 		},
 		"prepaid_period": {
 			Type:         schema.TypeInt,
 			Optional:     true,
-			ValidateFunc: validateAllowedIntValue(MONGODB_PREPAID_PERIOD),
+			ValidateFunc: tccommon.ValidateAllowedIntValue(MONGODB_PREPAID_PERIOD),
 			Description:  "The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.",
 		},
 		"auto_renew_flag": {

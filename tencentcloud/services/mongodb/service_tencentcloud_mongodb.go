@@ -1,4 +1,4 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
@@ -6,24 +6,31 @@ import (
 	"log"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewMongodbService(client *connectivity.TencentCloudClient) MongodbService {
+	return MongodbService{client: client}
+}
 
 type MongodbService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId string) (instance *mongodb.InstanceDetail, has bool, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
 	var response *mongodb.DescribeDBInstancesResponse
-	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeDBInstances(request)
 		if e != nil {
@@ -60,7 +67,7 @@ func (me *MongodbService) DescribeInstanceById(ctx context.Context, instanceId s
 }
 
 func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, instanceName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewRenameInstanceRequest()
 	request.InstanceId = &instanceId
 	request.NewName = &instanceName
@@ -77,13 +84,13 @@ func (me *MongodbService) ModifyInstanceName(ctx context.Context, instanceId, in
 }
 
 func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId, accountName, password string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewResetDBInstancePasswordRequest()
 	request.InstanceId = &instanceId
 	request.UserName = &accountName
 	request.Password = &password
 	var response *mongodb.ResetDBInstancePasswordResponse
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().ResetDBInstancePassword(request)
 		if e != nil {
@@ -98,7 +105,7 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	}
 
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId, 3*readRetryTimeout); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId, 3*tccommon.ReadRetryTimeout); err != nil {
 			return err
 		}
 	}
@@ -109,14 +116,14 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 }
 
 func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string, memory int, volume int) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceSpecRequest()
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntUint64(memory)
 	request.Volume = helper.IntUint64(volume)
 	var response *mongodb.ModifyDBInstanceSpecResponse
 	tradeError := false
-	err := resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(6*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().ModifyDBInstanceSpec(request)
 		if e != nil {
@@ -147,7 +154,7 @@ func (me *MongodbService) UpgradeInstance(ctx context.Context, instanceId string
 }
 
 func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string, projectId int) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewAssignProjectRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.ProjectId = helper.IntUint64(projectId)
@@ -164,7 +171,7 @@ func (me *MongodbService) ModifyProjectId(ctx context.Context, instanceId string
 }
 
 func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (infos []*mongodb.SpecificationInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeSpecInfoRequest()
 	if zone != "" {
 		request.Zone = &zone
@@ -185,7 +192,7 @@ func (me *MongodbService) DescribeSpecInfo(ctx context.Context, zone string) (in
 }
 
 func (me *MongodbService) ModifySecurityGroups(ctx context.Context, instanceId string, securityGroups []*string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceSecurityGroupRequest()
 	request.InstanceId = &instanceId
 	request.SecurityGroupIds = securityGroups
@@ -202,7 +209,7 @@ func (me *MongodbService) ModifySecurityGroups(ctx context.Context, instanceId s
 }
 
 func (me *MongodbService) ModifyNetworkAddress(ctx context.Context, instanceId string, vpcId string, subnetId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewModifyDBInstanceNetworkAddressRequest()
 	request.InstanceId = &instanceId
 	request.NewUniqVpcId = &vpcId
@@ -223,7 +230,7 @@ func (me *MongodbService) ModifyNetworkAddress(ctx context.Context, instanceId s
 func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanceId string,
 	clusterType int) (mongodbs []*mongodb.InstanceDetail, errRet error) {
 
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstancesRequest()
 	defer func() {
 		if errRet != nil {
@@ -270,7 +277,7 @@ func (me *MongodbService) DescribeInstancesByFilter(ctx context.Context, instanc
 }
 
 func (me *MongodbService) IsolateInstance(ctx context.Context, instanceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewIsolateDBInstanceRequest()
 	request.InstanceId = &instanceId
 	defer func() {
@@ -279,12 +286,12 @@ func (me *MongodbService) IsolateInstance(ctx context.Context, instanceId string
 		}
 	}()
 	var response *mongodb.IsolateDBInstanceResponse
-	err := resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(10*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().IsolateDBInstance(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		response = result
 		return nil
@@ -299,7 +306,7 @@ func (me *MongodbService) IsolateInstance(ctx context.Context, instanceId string
 }
 
 func (me *MongodbService) TerminateDBInstances(ctx context.Context, instanceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewTerminateDBInstancesRequest()
 	request.InstanceId = &instanceId
 	defer func() {
@@ -308,7 +315,7 @@ func (me *MongodbService) TerminateDBInstances(ctx context.Context, instanceId s
 		}
 	}()
 	var response *mongodb.TerminateDBInstancesResponse
-	err := resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(10*tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().TerminateDBInstances(request)
 		if e != nil {
@@ -328,7 +335,7 @@ func (me *MongodbService) TerminateDBInstances(ctx context.Context, instanceId s
 }
 
 func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId string, period int, renewFlag int) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewRenewDBInstancesRequest()
 	request.InstanceIds = []*string{&instanceId}
 	request.InstanceChargePrepaid = &mongodb.InstanceChargePrepaid{}
@@ -339,12 +346,12 @@ func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId st
 			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
 		}
 	}()
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, e := me.client.UseMongodbClient().RenewDBInstances(request)
 		if e != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		return nil
 	})
@@ -356,7 +363,7 @@ func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId st
 }
 
 func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId string, timeout time.Duration) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncId
 	err := resource.Retry(timeout, func() *resource.RetryError {
@@ -382,7 +389,7 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 }
 
 func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanceId string, timeOutTolerant bool) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewOfflineIsolatedDBInstanceRequest()
 	request.InstanceId = &instanceId
 	defer func() {
@@ -392,7 +399,7 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 	}()
 	var response *mongodb.OfflineIsolatedDBInstanceResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
 		if err != nil {
@@ -411,7 +418,7 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 
 	checkRequest := mongodb.NewDescribeDBInstancesRequest()
 	checkRequest.InstanceIds = []*string{&instanceId}
-	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(20*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(checkRequest.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeDBInstances(checkRequest)
 		if e != nil {
@@ -433,7 +440,7 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 }
 
 func (me *MongodbService) DescribeSecurityGroup(ctx context.Context, instanceId string) (groups []*mongodb.SecurityGroup, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeSecurityGroupRequest()
 	request.InstanceId = helper.String(instanceId)
 	ratelimit.Check(request.GetAction())
@@ -452,7 +459,7 @@ func (me *MongodbService) DescribeSecurityGroup(ctx context.Context, instanceId 
 }
 
 func (me *MongodbService) DescribeDBInstanceNodeProperty(ctx context.Context, instanceId string) (replicateSets []*mongodb.ReplicateSetInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := mongodb.NewDescribeDBInstanceNodePropertyRequest()
 	request.InstanceId = helper.String(instanceId)
 	ratelimit.Check(request.GetAction())
@@ -471,7 +478,7 @@ func (me *MongodbService) DescribeDBInstanceNodeProperty(ctx context.Context, in
 }
 
 func (me *MongodbService) DescribeMongodbInstanceAccountById(ctx context.Context, instanceId string, userName string) (instanceAccount *mongodb.UserInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := mongodb.NewDescribeAccountUsersRequest()
 	request.InstanceId = &instanceId
@@ -505,7 +512,7 @@ func (me *MongodbService) DescribeMongodbInstanceAccountById(ctx context.Context
 }
 
 func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, instanceId string, userName string, mongoUserPassword string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := mongodb.NewDeleteAccountUserRequest()
 	request.InstanceId = &instanceId
@@ -526,7 +533,7 @@ func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, 
 		return
 	}
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId), 3*tccommon.ReadRetryTimeout); err != nil {
 			errRet = err
 			return
 		}
@@ -536,7 +543,7 @@ func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, 
 }
 
 func (me *MongodbService) DescribeMongodbInstanceBackupDownloadTaskById(ctx context.Context, instanceId string, backupName string) (instanceBackupDownloadTask []*mongodb.BackupDownloadTask, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := mongodb.NewDescribeBackupDownloadTaskRequest()
 	request.InstanceId = &instanceId
@@ -567,7 +574,7 @@ func (me *MongodbService) DescribeMongodbInstanceBackupDownloadTaskById(ctx cont
 
 func (me *MongodbService) DescribeMongodbInstanceBackupsByFilter(ctx context.Context, param map[string]interface{}) (instanceBackups []*mongodb.BackupInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = mongodb.NewDescribeDBBackupsRequest()
 	)
 
@@ -618,7 +625,7 @@ func (me *MongodbService) DescribeMongodbInstanceBackupsByFilter(ctx context.Con
 
 func (me *MongodbService) DescribeMongodbInstanceConnectionsByFilter(ctx context.Context, param map[string]interface{}) (instanceConnections []*mongodb.ClientConnection, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = mongodb.NewDescribeClientConnectionsRequest()
 	)
 
@@ -666,7 +673,7 @@ func (me *MongodbService) DescribeMongodbInstanceConnectionsByFilter(ctx context
 
 func (me *MongodbService) DescribeMongodbInstanceCurrentOpByFilter(ctx context.Context, param map[string]interface{}) (instanceCurrentOp []*mongodb.CurrentOp, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = mongodb.NewDescribeCurrentOpRequest()
 	)
 
@@ -735,7 +742,7 @@ func (me *MongodbService) DescribeMongodbInstanceCurrentOpByFilter(ctx context.C
 
 func (me *MongodbService) DescribeMongodbInstanceParams(ctx context.Context, param map[string]interface{}) (instanceParams *mongodb.DescribeInstanceParamsResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = mongodb.NewDescribeInstanceParamsRequest()
 	)
 
@@ -767,7 +774,7 @@ func (me *MongodbService) DescribeMongodbInstanceParams(ctx context.Context, par
 
 func (me *MongodbService) DescribeMongodbInstanceSlowLogByFilter(ctx context.Context, param map[string]interface{}) (instanceSlowLog []*string, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = mongodb.NewDescribeSlowLogsRequest()
 	)
 

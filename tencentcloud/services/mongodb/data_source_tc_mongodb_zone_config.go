@@ -1,13 +1,15 @@
-package tencentcloud
+package mongodb
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
+func DataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudMongodbZoneConfigRead,
 
@@ -91,17 +93,17 @@ func dataSourceTencentCloudMongodbZoneConfig() *schema.Resource {
 }
 
 func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_mongodb_zone_config.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_mongodb_zone_config.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	zone := ""
 	if v, ok := d.GetOk("available_zone"); ok {
 		zone = v.(string)
 	}
 	mongodbService := MongodbService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	infos, err := mongodbService.DescribeSpecInfo(ctx, zone)
 	if err != nil {
@@ -134,7 +136,7 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 
 	id := zone
 	if id == "" {
-		id = meta.(*TencentCloudClient).apiV3Conn.Region
+		id = meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	}
 	d.SetId(id)
 	if err = d.Set("list", configList); err != nil {
@@ -144,7 +146,7 @@ func dataSourceTencentCloudMongodbZoneConfigRead(d *schema.ResourceData, meta in
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), configList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), configList); err != nil {
 			return err
 		}
 	}

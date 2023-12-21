@@ -1,7 +1,9 @@
-package tencentcloud
+package mongodb_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,15 +11,15 @@ import (
 func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				PreConfig: func() { tcacctest.AccStepPreConfigSetTempAKSK(t, tcacctest.ACCOUNT_TYPE_COMMON) },
 				Config:    testAccMongodbZoneConfigDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", defaultAZone),
+					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", tcacctest.DefaultAZone),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.cluster_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.machine_type"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.cpu"),
@@ -32,7 +34,7 @@ func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 	})
 }
 
-const testAccMongodbZoneConfigDataSource = defaultAzVariable + `
+const testAccMongodbZoneConfigDataSource = tcacctest.DefaultAzVariable + `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
 	available_zone = var.default_az
 }
