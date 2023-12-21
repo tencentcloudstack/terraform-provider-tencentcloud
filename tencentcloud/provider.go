@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mdl"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -1741,7 +1742,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_chdfs_life_cycle_rule":                               chdfs.ResourceTencentCloudChdfsLifeCycleRule(),
 			"tencentcloud_chdfs_mount_point":                                   chdfs.ResourceTencentCloudChdfsMountPoint(),
 			"tencentcloud_chdfs_mount_point_attachment":                        chdfs.ResourceTencentCloudChdfsMountPointAttachment(),
-			"tencentcloud_mdl_stream_live_input":                               resourceTencentCloudMdlStreamLiveInput(),
+			"tencentcloud_mdl_stream_live_input":                               mdl.ResourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                                lighthouse.ResourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_cvm_launch_template_version":                         cvm.ResourceTencentCloudCvmLaunchTemplateVersion(),
 			"tencentcloud_apm_instance":                                        apm.ResourceTencentCloudApmInstance(),

@@ -1,16 +1,19 @@
-package tencentcloud
+package mdl
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMdlStreamLiveInput() *schema.Resource {
+func ResourceTencentCloudMdlStreamLiveInput() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMdlStreamLiveInputCreate,
 		Read:   resourceTencentCloudMdlStreamLiveInputRead,
@@ -102,10 +105,10 @@ func resourceTencentCloudMdlStreamLiveInput() *schema.Resource {
 }
 
 func resourceTencentCloudMdlStreamLiveInputCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mdl_stream_live_input.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mdl_stream_live_input.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request  = mdl.NewCreateStreamLiveInputRequest()
@@ -163,10 +166,10 @@ func resourceTencentCloudMdlStreamLiveInputCreate(d *schema.ResourceData, meta i
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMdlClient().CreateStreamLiveInput(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMdlClient().CreateStreamLiveInput(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -185,14 +188,14 @@ func resourceTencentCloudMdlStreamLiveInputCreate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudMdlStreamLiveInputRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mdl_stream_live_input.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mdl_stream_live_input.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MdlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MdlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	id := d.Id()
 
@@ -271,10 +274,10 @@ func resourceTencentCloudMdlStreamLiveInputRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudMdlStreamLiveInputUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mdl_streamlive_input.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mdl_streamlive_input.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := mdl.NewModifyStreamLiveInputRequest()
 
@@ -341,10 +344,10 @@ func resourceTencentCloudMdlStreamLiveInputUpdate(d *schema.ResourceData, meta i
 			}
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMdlClient().ModifyStreamLiveInput(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMdlClient().ModifyStreamLiveInput(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -360,13 +363,13 @@ func resourceTencentCloudMdlStreamLiveInputUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudMdlStreamLiveInputDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mdl_stream_live_input.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_mdl_stream_live_input.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MdlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MdlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	id := d.Id()
 
 	if err := service.DeleteMdlStreamLiveInputById(ctx, id); err != nil {

@@ -1,10 +1,13 @@
-package tencentcloud
+package mdl
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -14,7 +17,7 @@ type MdlService struct {
 }
 
 func (me *MdlService) DescribeMdlStreamLiveInputById(ctx context.Context, id string) (streamliveInput *mdl.InputInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := mdl.NewDescribeStreamLiveInputRequest()
 	request.Id = &id
@@ -42,7 +45,7 @@ func (me *MdlService) DescribeMdlStreamLiveInputById(ctx context.Context, id str
 }
 
 func (me *MdlService) DeleteMdlStreamLiveInputById(ctx context.Context, id string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := mdl.NewDeleteStreamLiveInputRequest()
 	request.Id = &id
