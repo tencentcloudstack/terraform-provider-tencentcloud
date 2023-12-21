@@ -1,15 +1,18 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEmrCvmQuota() *schema.Resource {
+func DataSourceTencentCloudEmrCvmQuota() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEmrCvmQuotaRead,
 		Schema: map[string]*schema.Schema{
@@ -125,12 +128,12 @@ func dataSourceTencentCloudEmrCvmQuota() *schema.Resource {
 }
 
 func dataSourceTencentCloudEmrCvmQuotaRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_emr_cvm_quota.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_emr_cvm_quota.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var clusterId string
 
@@ -144,13 +147,13 @@ func dataSourceTencentCloudEmrCvmQuotaRead(d *schema.ResourceData, meta interfac
 		paramMap["ZoneId"] = helper.IntInt64(v.(int))
 	}
 
-	service := EMRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var cvmQuota *emr.DescribeCvmQuotaResponseParams
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeEmrCvmQuotaByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		cvmQuota = result
 		return nil
@@ -247,7 +250,7 @@ func dataSourceTencentCloudEmrCvmQuotaRead(d *schema.ResourceData, meta interfac
 	d.SetId(clusterId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

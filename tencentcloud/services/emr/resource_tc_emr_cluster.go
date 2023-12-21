@@ -1,9 +1,11 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
 	innerErr "errors"
 	"fmt"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -12,7 +14,7 @@ import (
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 )
 
-func resourceTencentCloudEmrCluster() *schema.Resource {
+func ResourceTencentCloudEmrCluster() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEmrClusterCreate,
 		Read:   resourceTencentCloudEmrClusterRead,
@@ -95,20 +97,20 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 1),
 				Description:  "The flag whether the instance support high availability.(0=>not support, 1=>support).",
 			},
 			"instance_name": {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateStringLengthInRange(6, 36),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(6, 36),
 				Description:  "Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).",
 			},
 			"pay_mode": {
 				Type:         schema.TypeInt,
 				Required:     true,
-				ValidateFunc: validateIntegerInRange(0, 1),
+				ValidateFunc: tccommon.ValidateIntegerInRange(0, 1),
 				Description:  "The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.",
 			},
 			"placement": {
@@ -148,7 +150,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				Default:      EMR_MASTER_WAN_TYPE_NEED_MASTER_WAN,
-				ValidateFunc: validateAllowedStringValue(EMR_MASTER_WAN_TYPES),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(EMR_MASTER_WAN_TYPES),
 				Description: `Whether to enable the cluster Master node public network. Value range:
 				- NEED_MASTER_WAN: Indicates that the cluster Master node public network is enabled.
 				- NOT_NEED_MASTER_WAN: Indicates that it is not turned on.
@@ -171,11 +173,11 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 }
 
 func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_cluster.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_cluster.update")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	emrService := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	instanceId := d.Id()
 	timeUnit, hasTimeUnit := d.GetOkExists("time_unit")
@@ -186,7 +188,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	}
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		err := emrService.ModifyResourcesTags(ctx, meta.(*TencentCloudClient).apiV3Conn.Region, instanceId, oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		err := emrService.ModifyResourcesTags(ctx, meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region, instanceId, oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 		if err != nil {
 			return err
 		}
@@ -224,7 +226,7 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	if err != nil {
 		return err
 	}
-	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -253,11 +255,11 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_cluster.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_cluster.create")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	emrService := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	instanceId, err := emrService.CreateInstance(ctx, d)
 	if err != nil {
@@ -269,7 +271,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)
 	}
-	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, displayStrategy)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -299,11 +301,11 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_cluster.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_cluster.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	emrService := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	instanceId := d.Id()
 	clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
@@ -317,7 +319,7 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 	if err = emrService.DeleteInstance(ctx, d); err != nil {
 		return err
 	}
-	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		clusters, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -348,12 +350,12 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 
 	if metaDB != nil && *metaDB != "" {
 		// remove metadb
-		mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		mysqlService := MysqlService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			err := mysqlService.OfflineIsolatedInstances(ctx, *metaDB)
 			if err != nil {
-				return retryError(err, InternalError)
+				return tccommon.RetryError(err, tccommon.InternalError)
 			}
 			return nil
 		})
@@ -366,13 +368,13 @@ func resourceTencentCloudEmrClusterDelete(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	emrService := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	instanceId := d.Id()
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		_, err := emrService.DescribeInstancesById(ctx, instanceId, DisplayStrategyIsclusterList)
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -390,8 +392,8 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 		return err
 	}
 
-	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 	tags, err := tagService.DescribeResourceTags(ctx, "emr", "emr-instance", region, d.Id())
 	if err != nil {
 		return err

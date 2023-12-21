@@ -1,16 +1,19 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEmr() *schema.Resource {
+func DataSourceTencentCloudEmr() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEmrRead,
 
@@ -110,13 +113,13 @@ func dataSourceTencentCloudEmr() *schema.Resource {
 }
 
 func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_emr.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_emr.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	emrServer := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	filters := map[string]interface{}{}
@@ -131,10 +134,10 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 	}
 	var clusters []*emr.ClusterInstancesInfo
 	var errRet error
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		clusters, errRet = emrServer.DescribeInstances(ctx, filters)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -168,7 +171,7 @@ func dataSourceTencentCloudEmrRead(d *schema.ResourceData, meta interface{}) err
 	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), emr_instances); err != nil {
+		if err := tccommon.WriteToFile(output.(string), emr_instances); err != nil {
 			return err
 		}
 	}

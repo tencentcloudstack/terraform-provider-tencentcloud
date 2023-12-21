@@ -1,15 +1,18 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEmrNodes() *schema.Resource {
+func DataSourceTencentCloudEmrNodes() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEmrNodesRead,
 
@@ -385,10 +388,10 @@ func dataSourceTencentCloudEmrNodes() *schema.Resource {
 }
 
 func dataSourceTencentCloudEmrNodesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_emr_nodes.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_emr_nodes.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	instanceId := d.Get("instance_id").(string)
 	nodeFlag := d.Get("node_flag").(string)
@@ -397,14 +400,14 @@ func dataSourceTencentCloudEmrNodesRead(d *schema.ResourceData, meta interface{}
 	hardwareResourceType := d.Get("hardware_resource_type").(string)
 
 	emrServer := EMRService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	var nodes []*emr.NodeHardwareInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		var errRet error
 		nodes, errRet = emrServer.DescribeClusterNodes(ctx, instanceId, nodeFlag, hardwareResourceType, offset, limit)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		return nil
 	})
@@ -502,7 +505,7 @@ func dataSourceTencentCloudEmrNodesRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("nodes", emrNodes)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if err := writeToFile(output.(string), emrNodes); err != nil {
+		if err := tccommon.WriteToFile(output.(string), emrNodes); err != nil {
 			return err
 		}
 	}

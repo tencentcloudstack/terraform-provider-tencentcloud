@@ -1,4 +1,4 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudEmrUserManager() *schema.Resource {
+func ResourceTencentCloudEmrUserManager() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEmrUserManagerCreate,
 		Read:   resourceTencentCloudEmrUserManagerRead,
@@ -70,10 +73,10 @@ func resourceTencentCloudEmrUserManager() *schema.Resource {
 }
 
 func resourceTencentCloudEmrUserManagerCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_user_manager.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_user_manager.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = emr.NewAddUsersForUserManagerRequest()
@@ -99,10 +102,10 @@ func resourceTencentCloudEmrUserManagerCreate(d *schema.ResourceData, meta inter
 	}
 	request.UserManagerUserList = append(request.UserManagerUserList, &userInfoForUserManager)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEmrClient().AddUsersForUserManager(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().AddUsersForUserManager(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -118,22 +121,22 @@ func resourceTencentCloudEmrUserManagerCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("add user failed, please try again.")
 	}
 
-	d.SetId(instanceId + FILED_SP + userName)
+	d.SetId(instanceId + tccommon.FILED_SP + userName)
 
 	return resourceTencentCloudEmrUserManagerRead(d, meta)
 }
 
 func resourceTencentCloudEmrUserManagerRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_user_manager.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_user_manager.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EMRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -185,14 +188,14 @@ func resourceTencentCloudEmrUserManagerRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudEmrUserManagerUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_user_manager.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_user_manager.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := emr.NewModifyUserManagerPwdRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -208,10 +211,10 @@ func resourceTencentCloudEmrUserManagerUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEmrClient().ModifyUserManagerPwd(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEmrClient().ModifyUserManagerPwd(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -226,14 +229,14 @@ func resourceTencentCloudEmrUserManagerUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudEmrUserManagerDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_emr_user_manager.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_emr_user_manager.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EMRService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

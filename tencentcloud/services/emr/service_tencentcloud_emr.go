@@ -1,4 +1,4 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
@@ -6,21 +6,28 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewEMRService(client *connectivity.TencentCloudClient) EMRService {
+	return EMRService{client: client}
+}
 
 type EMRService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *EMRService) UpdateInstance(ctx context.Context, request *emr.ScaleOutInstanceRequest) (id string, err error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseEmrClient().ScaleOutInstance(request)
 	if err != nil {
@@ -33,7 +40,7 @@ func (me *EMRService) UpdateInstance(ctx context.Context, request *emr.ScaleOutI
 }
 
 func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData) error {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := emr.NewTerminateInstanceRequest()
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = common.StringPtr(v.(string))
@@ -50,7 +57,7 @@ func (me *EMRService) DeleteInstance(ctx context.Context, d *schema.ResourceData
 }
 
 func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData) (id string, err error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := emr.NewCreateInstanceRequest()
 	if v, ok := d.GetOk("product_id"); ok {
 		request.ProductId = common.Uint64Ptr((uint64)(v.(int)))
@@ -190,7 +197,7 @@ func (me *EMRService) CreateInstance(ctx context.Context, d *schema.ResourceData
 }
 
 func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]interface{}) (clusters []*emr.ClusterInstancesInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := emr.NewDescribeInstancesRequest()
 
 	ratelimit.Check(request.GetAction())
@@ -229,7 +236,7 @@ func (me *EMRService) DescribeInstances(ctx context.Context, filters map[string]
 }
 
 func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId string, displayStrategy string) (clusters []*emr.ClusterInstancesInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := emr.NewDescribeInstancesRequest()
 
 	ratelimit.Check(request.GetAction())
@@ -254,7 +261,7 @@ func (me *EMRService) DescribeInstancesById(ctx context.Context, instanceId stri
 }
 
 func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, nodeFlag, hardwareResourceType string, offset, limit int) (nodes []*emr.NodeHardwareInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := emr.NewDescribeClusterNodesRequest()
 
 	ratelimit.Check(request.GetAction())
@@ -282,7 +289,7 @@ func (me *EMRService) DescribeClusterNodes(ctx context.Context, instanceId, node
 }
 
 func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, instanceId string, oldTags, newTags map[string]interface{}) error {
-	resourceName := BuildTagResourceName("emr", "emr-instance", region, instanceId)
+	resourceName := tccommon.BuildTagResourceName("emr", "emr-instance", region, instanceId)
 	rTags, dTags := diffTags(oldTags, newTags)
 	tagService := &TagService{client: me.client}
 	if err := tagService.ModifyTags(ctx, resourceName, rTags, dTags); err != nil {
@@ -350,7 +357,7 @@ func (me *EMRService) ModifyResourcesTags(ctx context.Context, region string, in
 }
 
 func (me *EMRService) DescribeEmrUserManagerById(ctx context.Context, instanceId string, userName string) (userManager *emr.DescribeUsersForUserManagerResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := emr.NewDescribeUsersForUserManagerRequest()
 	request.InstanceId = &instanceId
@@ -380,7 +387,7 @@ func (me *EMRService) DescribeEmrUserManagerById(ctx context.Context, instanceId
 }
 
 func (me *EMRService) DeleteEmrUserManagerById(ctx context.Context, instanceId string, userName string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := emr.NewDeleteUserManagerUserListRequest()
 	request.InstanceId = &instanceId
@@ -406,7 +413,7 @@ func (me *EMRService) DeleteEmrUserManagerById(ctx context.Context, instanceId s
 
 func (me *EMRService) DescribeEmrCvmQuotaByFilter(ctx context.Context, param map[string]interface{}) (cvmQuota *emr.DescribeCvmQuotaResponseParams, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = emr.NewDescribeCvmQuotaRequest()
 	)
 
@@ -440,7 +447,7 @@ func (me *EMRService) DescribeEmrCvmQuotaByFilter(ctx context.Context, param map
 
 func (me *EMRService) DescribeEmrAutoScaleRecordsByFilter(ctx context.Context, param map[string]interface{}) (autoScaleRecords []*emr.AutoScaleRecord, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = emr.NewDescribeAutoScaleRecordsRequest()
 	)
 

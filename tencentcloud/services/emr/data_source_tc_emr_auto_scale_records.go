@@ -1,7 +1,9 @@
-package tencentcloud
+package emr
 
 import (
 	"context"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -10,7 +12,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEmrAutoScaleRecords() *schema.Resource {
+func DataSourceTencentCloudEmrAutoScaleRecords() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEmrAutoScaleRecordsRead,
 		Schema: map[string]*schema.Schema{
@@ -115,14 +117,14 @@ func dataSourceTencentCloudEmrAutoScaleRecords() *schema.Resource {
 }
 
 func dataSourceTencentCloudEmrAutoScaleRecordsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_emr_auto_scale_records.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_emr_auto_scale_records.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var instanceId string
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -149,13 +151,13 @@ func dataSourceTencentCloudEmrAutoScaleRecordsRead(d *schema.ResourceData, meta 
 		paramMap["Filters"] = tmpSet
 	}
 
-	service := EMRService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EMRService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var recordList []*emr.AutoScaleRecord
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeEmrAutoScaleRecordsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		recordList = result
 		return nil
@@ -222,7 +224,7 @@ func dataSourceTencentCloudEmrAutoScaleRecordsRead(d *schema.ResourceData, meta 
 	d.SetId(instanceId)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

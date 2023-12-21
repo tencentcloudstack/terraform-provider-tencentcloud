@@ -1,4 +1,4 @@
-package tencentcloud
+package emr
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"

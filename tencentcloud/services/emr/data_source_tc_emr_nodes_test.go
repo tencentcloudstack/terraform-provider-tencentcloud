@@ -1,7 +1,9 @@
-package tencentcloud
+package emr_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,13 +11,13 @@ import (
 func TestAccDataSourceTencentCloudEMRNodes(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEMRNodes(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_emr_nodes.my_emr_nodes"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_emr_nodes.my_emr_nodes"),
 					resource.TestCheckResourceAttr("data.tencentcloud_emr_nodes.my_emr_nodes", "nodes.#", "1"),
 				),
 			},

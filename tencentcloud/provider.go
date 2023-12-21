@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -196,10 +197,10 @@ func Provider() *schema.Provider {
 
 		DataSourcesMap: map[string]*schema.Resource{
 			"tencentcloud_availability_regions":                         common.DataSourceTencentCloudAvailabilityRegions(),
-			"tencentcloud_emr":                                          dataSourceTencentCloudEmr(),
-			"tencentcloud_emr_nodes":                                    dataSourceTencentCloudEmrNodes(),
-			"tencentcloud_emr_cvm_quota":                                dataSourceTencentCloudEmrCvmQuota(),
-			"tencentcloud_emr_auto_scale_records":                       dataSourceTencentCloudEmrAutoScaleRecords(),
+			"tencentcloud_emr":                                          emr.DataSourceTencentCloudEmr(),
+			"tencentcloud_emr_nodes":                                    emr.DataSourceTencentCloudEmrNodes(),
+			"tencentcloud_emr_cvm_quota":                                emr.DataSourceTencentCloudEmrCvmQuota(),
+			"tencentcloud_emr_auto_scale_records":                       emr.DataSourceTencentCloudEmrAutoScaleRecords(),
 			"tencentcloud_availability_zones":                           common.DataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":                common.DataSourceTencentCloudAvailabilityZonesByProduct(),
 			"tencentcloud_projects":                                     dataSourceTencentCloudProjects(),
@@ -933,8 +934,8 @@ func Provider() *schema.Provider {
 
 		ResourcesMap: map[string]*schema.Resource{
 			"tencentcloud_project":                                             resourceTencentCloudProject(),
-			"tencentcloud_emr_cluster":                                         resourceTencentCloudEmrCluster(),
-			"tencentcloud_emr_user_manager":                                    resourceTencentCloudEmrUserManager(),
+			"tencentcloud_emr_cluster":                                         emr.ResourceTencentCloudEmrCluster(),
+			"tencentcloud_emr_user_manager":                                    emr.ResourceTencentCloudEmrUserManager(),
 			"tencentcloud_instance":                                            cvm.ResourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                        cvm.ResourceTencentCloudInstanceSet(),
 			"tencentcloud_reserved_instance":                                   cvm.ResourceTencentCloudReservedInstance(),
