@@ -1,15 +1,18 @@
-package tencentcloud
+package eb
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudEbPutEvents() *schema.Resource {
+func ResourceTencentCloudEbPutEvents() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEbPutEventsCreate,
 		Read:   resourceTencentCloudEbPutEventsRead,
@@ -63,10 +66,10 @@ func resourceTencentCloudEbPutEvents() *schema.Resource {
 }
 
 func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_put_events.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_put_events.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = eb.NewPutEventsRequest()
@@ -100,10 +103,10 @@ func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interfac
 		request.EventBusId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().PutEvents(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().PutEvents(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -120,15 +123,15 @@ func resourceTencentCloudEbPutEventsCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudEbPutEventsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_put_events.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_put_events.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudEbPutEventsDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_put_events.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_put_events.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

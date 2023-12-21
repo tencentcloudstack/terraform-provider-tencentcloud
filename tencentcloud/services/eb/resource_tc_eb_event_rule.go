@@ -1,4 +1,4 @@
-package tencentcloud
+package eb
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudEbEventRule() *schema.Resource {
+func ResourceTencentCloudEbEventRule() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEbEventRuleCreate,
 		Read:   resourceTencentCloudEbEventRuleRead,
@@ -68,10 +71,10 @@ func resourceTencentCloudEbEventRule() *schema.Resource {
 }
 
 func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_rule.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_rule.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = eb.NewCreateRuleRequest()
@@ -100,10 +103,10 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 		request.Description = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().CreateRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().CreateRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -116,12 +119,12 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 	}
 
 	ruleId = *response.Response.RuleId
-	d.SetId(eventBusId + FILED_SP + ruleId)
+	d.SetId(eventBusId + tccommon.FILED_SP + ruleId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:ruleid/%s/%s", region, eventBusId, ruleId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -132,16 +135,16 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_rule.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_rule.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -181,7 +184,7 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("description", eventRule.Description)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
 	if err != nil {
@@ -193,14 +196,14 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_rule.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_rule.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := eb.NewUpdateRuleRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -236,10 +239,10 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().UpdateRule(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().UpdateRule(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -251,12 +254,12 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 	}
 
 	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
+		resourceName := tccommon.BuildTagResourceName("eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -266,14 +269,14 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudEbEventRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_rule.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_rule.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

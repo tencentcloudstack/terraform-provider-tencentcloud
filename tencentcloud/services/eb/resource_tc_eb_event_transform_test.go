@@ -1,6 +1,10 @@
-package tencentcloud
+package eb_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svceb "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/eb"
+
 	"context"
 	"fmt"
 	"strings"
@@ -15,8 +19,8 @@ import (
 func TestAccTencentCloudEbEventTransformResource_basic(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckEbEventTransformDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -45,9 +49,9 @@ func TestAccTencentCloudEbEventTransformResource_basic(t *testing.T) {
 }
 
 func testAccCheckEbEventTransformDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := EbService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svceb.NewEbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_eb_event_transform" {
 			continue
@@ -55,7 +59,7 @@ func testAccCheckEbEventTransformDestroy(s *terraform.State) error {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("resource id is not set")
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -80,8 +84,8 @@ func testAccCheckEbEventTransformDestroy(s *terraform.State) error {
 
 func testAccCheckEbEventTransformExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -90,7 +94,7 @@ func testAccCheckEbEventTransformExists(r string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("resource id is not set")
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -98,7 +102,7 @@ func testAccCheckEbEventTransformExists(r string) resource.TestCheckFunc {
 		ruleId := idSplit[1]
 		transformationId := idSplit[2]
 
-		service := EbService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svceb.NewEbService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		target, err := service.DescribeEbEventTransformById(ctx, eventBusId, ruleId, transformationId)
 		if err != nil {
 			return err

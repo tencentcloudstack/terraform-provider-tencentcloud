@@ -1,7 +1,9 @@
-package tencentcloud
+package eb_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,15 +13,15 @@ func TestAccTencentCloudEbPlatformProductsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccStepSetRegion(t, "ap-chongqing")
-			testAccPreCheck(t)
+			tcacctest.AccStepSetRegion(t, "ap-chongqing")
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccEbPlatformProductsDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_eb_platform_products.platform_products"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_eb_platform_products.platform_products"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_eb_platform_products.platform_products", "platform_products.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_eb_platform_products.platform_products", "platform_products.0.product_type", "eb_platform_test"),
 				),

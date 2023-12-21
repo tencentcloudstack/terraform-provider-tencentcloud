@@ -1,29 +1,8 @@
-package tencentcloud
+Use this data source to query detailed information of eb eb_search
 
-import (
-	"testing"
+Example Usage
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-)
-
-func TestAccTencentCloudNeedFixEbSearchDataSource_basic(t *testing.T) {
-	t.Parallel()
-	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
-		Providers: testAccProviders,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccEbSearchDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_eb_search.eb_search")),
-			},
-		},
-	})
-}
-
-const testAccEbSearchDataSource = `
-
+```hcl
 resource "tencentcloud_eb_event_bus" "foo" {
   event_bus_name = "tf-event_bus"
   description    = "event bus desc"
@@ -79,5 +58,4 @@ data "tencentcloud_eb_search" "eb_search" {
   # order_fields = [""]
   order_by = "desc"
 }
-
-`
+```

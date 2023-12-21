@@ -1,4 +1,4 @@
-package tencentcloud
+package eb
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudEbEventTarget() *schema.Resource {
+func ResourceTencentCloudEbEventTarget() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEbEventTargetCreate,
 		Read:   resourceTencentCloudEbEventTargetRead,
@@ -160,10 +163,10 @@ func resourceTencentCloudEbEventTarget() *schema.Resource {
 }
 
 func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_target.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_target.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = eb.NewCreateTargetRequest()
@@ -246,10 +249,10 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 		request.RuleId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().CreateTarget(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().CreateTarget(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -262,22 +265,22 @@ func resourceTencentCloudEbEventTargetCreate(d *schema.ResourceData, meta interf
 	}
 
 	targetId = *response.Response.TargetId
-	d.SetId(eventBusId + FILED_SP + ruleId + FILED_SP + targetId)
+	d.SetId(eventBusId + tccommon.FILED_SP + ruleId + tccommon.FILED_SP + targetId)
 
 	return resourceTencentCloudEbEventTargetRead(d, meta)
 }
 
 func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_target.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_target.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -394,14 +397,14 @@ func resourceTencentCloudEbEventTargetRead(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_target.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_target.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := eb.NewUpdateTargetRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -421,10 +424,10 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().UpdateTarget(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().UpdateTarget(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -439,14 +442,14 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudEbEventTargetDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_target.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_target.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

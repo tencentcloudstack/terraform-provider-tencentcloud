@@ -1,15 +1,18 @@
-package tencentcloud
+package eb
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEbPlatformEventNames() *schema.Resource {
+func DataSourceTencentCloudEbPlatformEventNames() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEbPlateformRead,
 		Schema: map[string]*schema.Schema{
@@ -49,11 +52,11 @@ func dataSourceTencentCloudEbPlatformEventNames() *schema.Resource {
 }
 
 func dataSourceTencentCloudEbPlateformRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_eb_platform_event_names.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_eb_platform_event_names.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var productType string
 	paramMap := make(map[string]interface{})
@@ -62,13 +65,13 @@ func dataSourceTencentCloudEbPlateformRead(d *schema.ResourceData, meta interfac
 		paramMap["ProductType"] = helper.String(v.(string))
 	}
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var eventNames []*eb.PlatformEventDetail
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeEbPlateformByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		eventNames = result
 		return nil
@@ -101,7 +104,7 @@ func dataSourceTencentCloudEbPlateformRead(d *schema.ResourceData, meta interfac
 	d.SetId(helper.DataResourceIdsHash(append(ids, productType)))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

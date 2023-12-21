@@ -1,11 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dts"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/domain"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dnspod"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -14,6 +9,13 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dnspod"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/domain"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dts"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/eb"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcdb"
@@ -859,13 +861,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_shipper_tasks":                            cls.DataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                                 cls.DataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                    cls.DataSourceTencentCloudClsMachineGroupConfigs(),
-			"tencentcloud_eb_search":                                    dataSourceTencentCloudEbSearch(),
-			"tencentcloud_eb_bus":                                       dataSourceTencentCloudEbBus(),
-			"tencentcloud_eb_event_rules":                               dataSourceTencentCloudEbEventRules(),
-			"tencentcloud_eb_platform_event_names":                      dataSourceTencentCloudEbPlatformEventNames(),
-			"tencentcloud_eb_platform_event_patterns":                   dataSourceTencentCloudEbPlatformEventPatterns(),
-			"tencentcloud_eb_platform_products":                         dataSourceTencentCloudEbPlatformProducts(),
-			"tencentcloud_eb_plateform_event_template":                  dataSourceTencentCloudEbPlateformEventTemplate(),
+			"tencentcloud_eb_search":                                    eb.DataSourceTencentCloudEbSearch(),
+			"tencentcloud_eb_bus":                                       eb.DataSourceTencentCloudEbBus(),
+			"tencentcloud_eb_event_rules":                               eb.DataSourceTencentCloudEbEventRules(),
+			"tencentcloud_eb_platform_event_names":                      eb.DataSourceTencentCloudEbPlatformEventNames(),
+			"tencentcloud_eb_platform_event_patterns":                   eb.DataSourceTencentCloudEbPlatformEventPatterns(),
+			"tencentcloud_eb_platform_products":                         eb.DataSourceTencentCloudEbPlatformProducts(),
+			"tencentcloud_eb_plateform_event_template":                  eb.DataSourceTencentCloudEbPlateformEventTemplate(),
 			"tencentcloud_wedata_rule_templates":                        dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
 			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
@@ -1785,12 +1787,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_instance":                                 cdwch.ResourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  cls.ResourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   cls.ResourceTencentCloudClsScheduledSql(),
-			"tencentcloud_eb_event_transform":                                  resourceTencentCloudEbEventTransform(),
-			"tencentcloud_eb_event_bus":                                        resourceTencentCloudEbEventBus(),
-			"tencentcloud_eb_event_rule":                                       resourceTencentCloudEbEventRule(),
-			"tencentcloud_eb_event_target":                                     resourceTencentCloudEbEventTarget(),
-			"tencentcloud_eb_put_events":                                       resourceTencentCloudEbPutEvents(),
-			"tencentcloud_eb_event_connector":                                  resourceTencentCloudEbEventConnector(),
+			"tencentcloud_eb_event_transform":                                  eb.ResourceTencentCloudEbEventTransform(),
+			"tencentcloud_eb_event_bus":                                        eb.ResourceTencentCloudEbEventBus(),
+			"tencentcloud_eb_event_rule":                                       eb.ResourceTencentCloudEbEventRule(),
+			"tencentcloud_eb_event_target":                                     eb.ResourceTencentCloudEbEventTarget(),
+			"tencentcloud_eb_put_events":                                       eb.ResourceTencentCloudEbPutEvents(),
+			"tencentcloud_eb_event_connector":                                  eb.ResourceTencentCloudEbEventConnector(),
 			"tencentcloud_dlc_user":                                            dlc.ResourceTencentCloudDlcUser(),
 			"tencentcloud_dlc_work_group":                                      dlc.ResourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_data_engine":                                     dlc.ResourceTencentCloudDlcDataEngine(),

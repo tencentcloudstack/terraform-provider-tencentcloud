@@ -1,17 +1,20 @@
-package tencentcloud
+package eb
 
 import (
 	"context"
 	"fmt"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudEbEventBus() *schema.Resource {
+func ResourceTencentCloudEbEventBus() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudEbEventBusCreate,
 		Read:   resourceTencentCloudEbEventBusRead,
@@ -55,10 +58,10 @@ func resourceTencentCloudEbEventBus() *schema.Resource {
 }
 
 func resourceTencentCloudEbEventBusCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_bus.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_bus.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = eb.NewCreateEventBusRequest()
@@ -81,10 +84,10 @@ func resourceTencentCloudEbEventBusCreate(d *schema.ResourceData, meta interface
 		request.EnableStore = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().CreateEventBus(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().CreateEventBus(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -99,10 +102,10 @@ func resourceTencentCloudEbEventBusCreate(d *schema.ResourceData, meta interface
 	eventBusId = *response.Response.EventBusId
 	d.SetId(eventBusId)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		tagService := TagService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		region := meta.(tccommon.ProviderMeta).GetAPIV3Conn().Region
 		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:eventbusid/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
@@ -113,14 +116,14 @@ func resourceTencentCloudEbEventBusCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEbEventBusRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_bus.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_bus.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	eventBusId := d.Id()
 
@@ -151,7 +154,7 @@ func resourceTencentCloudEbEventBusRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("enable_store", eventBus.EnableStore)
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "eb", "eventbusid", tcClient.Region, d.Id())
 	if err != nil {
@@ -163,17 +166,17 @@ func resourceTencentCloudEbEventBusRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_bus.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_bus.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := eb.NewUpdateEventBusRequest()
 
 	eventBusId := d.Id()
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	eventBus, err := service.DescribeEbEventBusById(ctx, eventBusId)
 	if err != nil {
 		return err
@@ -210,10 +213,10 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().UpdateEventBus(request)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseEbClient().UpdateEventBus(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -225,11 +228,11 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tcClient := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("eb", "eventbusid", tcClient.Region, d.Id())
+		resourceName := tccommon.BuildTagResourceName("eb", "eventbusid", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -239,13 +242,13 @@ func resourceTencentCloudEbEventBusUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudEbEventBusDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_eb_event_bus.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_eb_event_bus.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	eventBusId := d.Id()
 
 	if err := service.DeleteEbEventBusById(ctx, eventBusId); err != nil {

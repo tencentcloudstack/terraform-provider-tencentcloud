@@ -1,13 +1,20 @@
-package tencentcloud
+package eb
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewEbService(client *connectivity.TencentCloudClient) EbService {
+	return EbService{client: client}
+}
 
 type EbService struct {
 	client *connectivity.TencentCloudClient
@@ -15,7 +22,7 @@ type EbService struct {
 
 func (me *EbService) DescribeEbSearchByFilter(ctx context.Context, param map[string]interface{}) (ebSearch []*string, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewDescribeLogTagValueRequest()
 	)
 
@@ -75,7 +82,7 @@ func (me *EbService) DescribeEbSearchByFilter(ctx context.Context, param map[str
 
 func (me *EbService) DescribeEbSearchLogByFilter(ctx context.Context, param map[string]interface{}) (ebSearch []*eb.SearchLogResult, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewSearchLogRequest()
 	)
 
@@ -137,7 +144,7 @@ func (me *EbService) DescribeEbSearchLogByFilter(ctx context.Context, param map[
 }
 
 func (me *EbService) DescribeEbEventBusById(ctx context.Context, eventBusId string) (event *eb.GetEventBusResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewGetEventBusRequest()
 	request.EventBusId = &eventBusId
@@ -166,7 +173,7 @@ func (me *EbService) DescribeEbEventBusById(ctx context.Context, eventBusId stri
 }
 
 func (me *EbService) DeleteEbEventBusById(ctx context.Context, eventBusId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewDeleteEventBusRequest()
 	request.EventBusId = &eventBusId
@@ -190,7 +197,7 @@ func (me *EbService) DeleteEbEventBusById(ctx context.Context, eventBusId string
 }
 
 func (me *EbService) DescribeEbEventTargetById(ctx context.Context, eventBusId string, ruleId string, targetId string) (eventTarget *eb.Target, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewListTargetsRequest()
 	request.EventBusId = &eventBusId
@@ -226,7 +233,7 @@ func (me *EbService) DescribeEbEventTargetById(ctx context.Context, eventBusId s
 }
 
 func (me *EbService) DeleteEbEventTargetById(ctx context.Context, eventBusId string, ruleId string, targetId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewDeleteTargetRequest()
 	request.EventBusId = &eventBusId
@@ -252,7 +259,7 @@ func (me *EbService) DeleteEbEventTargetById(ctx context.Context, eventBusId str
 }
 
 func (me *EbService) DescribeEbEventRuleById(ctx context.Context, eventBusId string, ruleId string) (rule *eb.GetRuleResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewGetRuleRequest()
 	request.EventBusId = &eventBusId
@@ -282,7 +289,7 @@ func (me *EbService) DescribeEbEventRuleById(ctx context.Context, eventBusId str
 }
 
 func (me *EbService) DeleteEbEventRuleById(ctx context.Context, eventBusId string, ruleId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewDeleteRuleRequest()
 	request.EventBusId = &eventBusId
@@ -307,7 +314,7 @@ func (me *EbService) DeleteEbEventRuleById(ctx context.Context, eventBusId strin
 }
 
 func (me *EbService) DescribeEbEventTransformById(ctx context.Context, eventBusId string, ruleId string, transformationId string) (ebTransform *eb.Transformation, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewGetTransformationRequest()
 	request.EventBusId = &eventBusId
@@ -338,7 +345,7 @@ func (me *EbService) DescribeEbEventTransformById(ctx context.Context, eventBusI
 }
 
 func (me *EbService) DeleteEbEventTransformById(ctx context.Context, eventBusId string, ruleId string, transformationId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewDeleteTransformationRequest()
 	request.EventBusId = &eventBusId
@@ -365,7 +372,7 @@ func (me *EbService) DeleteEbEventTransformById(ctx context.Context, eventBusId 
 
 func (me *EbService) DescribeEbBusByFilter(ctx context.Context, param map[string]interface{}) (bus []*eb.EventBus, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewListEventBusesRequest()
 	)
 
@@ -418,7 +425,7 @@ func (me *EbService) DescribeEbBusByFilter(ctx context.Context, param map[string
 }
 
 func (me *EbService) DescribeEbEventConnectorById(ctx context.Context, connectionId string, eventBusId string) (eventConnector *eb.Connection, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewListConnectionsRequest()
 	request.EventBusId = &eventBusId
@@ -452,7 +459,7 @@ func (me *EbService) DescribeEbEventConnectorById(ctx context.Context, connectio
 }
 
 func (me *EbService) DeleteEbEventConnectorById(ctx context.Context, connectionId string, eventBusId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := eb.NewDeleteConnectionRequest()
 	request.ConnectionId = &connectionId
@@ -478,7 +485,7 @@ func (me *EbService) DeleteEbEventConnectorById(ctx context.Context, connectionI
 
 func (me *EbService) DescribeEbEventRulesByFilter(ctx context.Context, param map[string]interface{}) (eventRules []*eb.Rule, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewListRulesRequest()
 	)
 
@@ -532,7 +539,7 @@ func (me *EbService) DescribeEbEventRulesByFilter(ctx context.Context, param map
 
 func (me *EbService) DescribeEbPlateformByFilter(ctx context.Context, param map[string]interface{}) (plateform []*eb.PlatformEventDetail, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewListPlatformEventNamesRequest()
 	)
 
@@ -567,7 +574,7 @@ func (me *EbService) DescribeEbPlateformByFilter(ctx context.Context, param map[
 
 func (me *EbService) DescribeEbPlatformEventPatternsByFilter(ctx context.Context, param map[string]interface{}) (platformEventPatterns []*eb.PlatformEventSummary, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewListPlatformEventPatternsRequest()
 	)
 
@@ -602,7 +609,7 @@ func (me *EbService) DescribeEbPlatformEventPatternsByFilter(ctx context.Context
 
 func (me *EbService) DescribeEbPlatformProductsByFilter(ctx context.Context, param map[string]interface{}) (platformProducts []*eb.PlatformProduct, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewListPlatformProductsRequest()
 	)
 
@@ -631,7 +638,7 @@ func (me *EbService) DescribeEbPlatformProductsByFilter(ctx context.Context, par
 
 func (me *EbService) DescribeEbPlateformEventTemplateByFilter(ctx context.Context, param map[string]interface{}) (plateformEventTemplate *string, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = eb.NewGetPlatformEventTemplateRequest()
 	)
 

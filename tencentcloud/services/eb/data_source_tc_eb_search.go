@@ -1,67 +1,4 @@
-/*
-Use this data source to query detailed information of eb eb_search
-
-Example Usage
-
-```hcl
-resource "tencentcloud_eb_event_bus" "foo" {
-  event_bus_name = "tf-event_bus"
-  description    = "event bus desc"
-  enable_store   = false
-  save_days      = 1
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
-
-resource "tencentcloud_eb_put_events" "put_events" {
-  event_list {
-    source = "ckafka.cloud.tencent"
-    data = jsonencode(
-      {
-        "topic" : "test-topic",
-        "Partition" : 1,
-        "offset" : 37,
-        "msgKey" : "test",
-        "msgBody" : "Hello from Ckafka again!"
-      }
-    )
-    type    = "connector:ckafka"
-    subject = "qcs::ckafka:ap-guangzhou:uin/1250000000:ckafkaId/uin/1250000000/ckafka-123456"
-    time    = 1691572461939
-
-  }
-  event_bus_id = tencentcloud_eb_event_bus.foo.id
-}
-
-data "tencentcloud_eb_search" "eb_search" {
-  start_time   = 1691637288422
-  end_time     = 1691648088422
-  event_bus_id = "eb-jzytzr4e"
-  group_field = "RuleIds"
-  filter {
-  	type = "OR"
-  	filters {
-  		key = "status"
-  		operator = "eq"
-  		value = "1"
-  	}
-  }
-
-  filter {
-  	type = "OR"
-  	filters {
-  		key = "type"
-  		operator = "eq"
-  		value = "connector:ckafka"
-  	}
-  }
-  # order_fields = [""]
-  order_by = "desc"
-}
-```
-*/
-package tencentcloud
+package eb
 
 import (
 	"context"
@@ -70,10 +7,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudEbSearch() *schema.Resource {
+func DataSourceTencentCloudEbSearch() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudEbSearchRead,
 		Schema: map[string]*schema.Schema{
@@ -239,11 +178,11 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 }
 
 func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_eb_search.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_eb_search.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	var (
 		startTime  string
@@ -323,14 +262,14 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 		paramMap["OrderBy"] = helper.String(v.(string))
 	}
 
-	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := EbService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	if groupField != "" {
 		var searchResults []*string
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			response, e := service.DescribeEbSearchByFilter(ctx, paramMap)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			searchResults = response
 			return nil
@@ -345,10 +284,10 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 	}
 
 	var results []*eb.SearchLogResult
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		response, e := service.DescribeEbSearchLogByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		results = response
 		return nil
@@ -403,7 +342,7 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 	d.SetId(helper.DataResourceIdsHash([]string{startTime, endTime, eventBusId}))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), d); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}
