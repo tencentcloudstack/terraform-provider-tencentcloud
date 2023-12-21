@@ -1,9 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +9,11 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mps"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/oceanus"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pls"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/postgresql"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 
@@ -515,20 +517,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_monitor_type":                   monitor.DataSourceTencentCloudMonitorAlarmMonitorType(),
 			"tencentcloud_monitor_statistic_data":                       dataSourceTencentCloudMonitorStatisticData(),
 			"tencentcloud_monitor_tmp_regions":                          dataSourceTencentCloudMonitorTmpRegions(),
-			"tencentcloud_postgresql_instances":                         dataSourceTencentCloudPostgresqlInstances(),
-			"tencentcloud_postgresql_specinfos":                         dataSourceTencentCloudPostgresqlSpecinfos(),
-			"tencentcloud_postgresql_xlogs":                             datasourceTencentCloudPostgresqlXlogs(),
-			"tencentcloud_postgresql_parameter_templates":               dataSourceTencentCloudPostgresqlParameterTemplates(),
-			"tencentcloud_postgresql_readonly_groups":                   dataSourceTencentCloudPostgresqlReadonlyGroups(),
-			"tencentcloud_postgresql_base_backups":                      dataSourceTencentCloudPostgresqlBaseBackups(),
-			"tencentcloud_postgresql_log_backups":                       dataSourceTencentCloudPostgresqlLogBackups(),
-			"tencentcloud_postgresql_backup_download_urls":              dataSourceTencentCloudPostgresqlBackupDownloadUrls(),
-			"tencentcloud_postgresql_db_instance_classes":               dataSourceTencentCloudPostgresqlDbInstanceClasses(),
-			"tencentcloud_postgresql_default_parameters":                dataSourceTencentCloudPostgresqlDefaultParameters(),
-			"tencentcloud_postgresql_recovery_time":                     dataSourceTencentCloudPostgresqlRecoveryTime(),
-			"tencentcloud_postgresql_regions":                           dataSourceTencentCloudPostgresqlRegions(),
-			"tencentcloud_postgresql_db_instance_versions":              dataSourceTencentCloudPostgresqlDbInstanceVersions(),
-			"tencentcloud_postgresql_zones":                             dataSourceTencentCloudPostgresqlZones(),
+			"tencentcloud_postgresql_instances":                         postgresql.DataSourceTencentCloudPostgresqlInstances(),
+			"tencentcloud_postgresql_specinfos":                         postgresql.DataSourceTencentCloudPostgresqlSpecinfos(),
+			"tencentcloud_postgresql_xlogs":                             postgresql.DataSourceTencentCloudPostgresqlXlogs(),
+			"tencentcloud_postgresql_parameter_templates":               postgresql.DataSourceTencentCloudPostgresqlParameterTemplates(),
+			"tencentcloud_postgresql_readonly_groups":                   postgresql.DataSourceTencentCloudPostgresqlReadonlyGroups(),
+			"tencentcloud_postgresql_base_backups":                      postgresql.DataSourceTencentCloudPostgresqlBaseBackups(),
+			"tencentcloud_postgresql_log_backups":                       postgresql.DataSourceTencentCloudPostgresqlLogBackups(),
+			"tencentcloud_postgresql_backup_download_urls":              postgresql.DataSourceTencentCloudPostgresqlBackupDownloadUrls(),
+			"tencentcloud_postgresql_db_instance_classes":               postgresql.DataSourceTencentCloudPostgresqlDbInstanceClasses(),
+			"tencentcloud_postgresql_default_parameters":                postgresql.DataSourceTencentCloudPostgresqlDefaultParameters(),
+			"tencentcloud_postgresql_recovery_time":                     postgresql.DataSourceTencentCloudPostgresqlRecoveryTime(),
+			"tencentcloud_postgresql_regions":                           postgresql.DataSourceTencentCloudPostgresqlRegions(),
+			"tencentcloud_postgresql_db_instance_versions":              postgresql.DataSourceTencentCloudPostgresqlDbInstanceVersions(),
+			"tencentcloud_postgresql_zones":                             postgresql.DataSourceTencentCloudPostgresqlZones(),
 			"tencentcloud_sqlserver_zone_config":                        dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                          dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                            dataSourceTencentCloudSqlserverBackups(),
@@ -1295,24 +1297,24 @@ func Provider() *schema.Provider {
 			"tencentcloud_elasticsearch_diagnose":                              es.ResourceTencentCloudElasticsearchDiagnose(),
 			"tencentcloud_elasticsearch_diagnose_instance":                     es.ResourceTencentCloudElasticsearchDiagnoseInstance(),
 			"tencentcloud_elasticsearch_update_plugins_operation":              es.ResourceTencentCloudElasticsearchUpdatePluginsOperation(),
-			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
-			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
-			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),
-			"tencentcloud_postgresql_readonly_attachment":                      resourceTencentCloudPostgresqlReadonlyAttachment(),
-			"tencentcloud_postgresql_parameter_template":                       resourceTencentCloudPostgresqlParameterTemplate(),
-			"tencentcloud_postgresql_base_backup":                              resourceTencentCloudPostgresqlBaseBackup(),
-			"tencentcloud_postgresql_backup_plan_config":                       resourceTencentCloudPostgresqlBackupPlanConfig(),
-			"tencentcloud_postgresql_security_group_config":                    resourceTencentCloudPostgresqlSecurityGroupConfig(),
-			"tencentcloud_postgresql_backup_download_restriction_config":       resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
-			"tencentcloud_postgresql_restart_db_instance_operation":            resourceTencentCloudPostgresqlRestartDbInstanceOperation(),
-			"tencentcloud_postgresql_renew_db_instance_operation":              resourceTencentCloudPostgresqlRenewDbInstanceOperation(),
-			"tencentcloud_postgresql_isolate_db_instance_operation":            resourceTencentCloudPostgresqlIsolateDbInstanceOperation(),
-			"tencentcloud_postgresql_disisolate_db_instance_operation":         resourceTencentCloudPostgresqlDisisolateDbInstanceOperation(),
-			"tencentcloud_postgresql_rebalance_readonly_group_operation":       resourceTencentCloudPostgresqlRebalanceReadonlyGroupOperation(),
-			"tencentcloud_postgresql_delete_log_backup_operation":              resourceTencentCloudPostgresqlDeleteLogBackupOperation(),
-			"tencentcloud_postgresql_modify_account_remark_operation":          resourceTencentCloudPostgresqlModifyAccountRemarkOperation(),
-			"tencentcloud_postgresql_modify_switch_time_period_operation":      resourceTencentCloudPostgresqlModifySwitchTimePeriodOperation(),
-			"tencentcloud_postgresql_instance_ha_config":                       resourceTencentCloudPostgresqlInstanceHAConfig(),
+			"tencentcloud_postgresql_instance":                                 postgresql.ResourceTencentCloudPostgresqlInstance(),
+			"tencentcloud_postgresql_readonly_instance":                        postgresql.ResourceTencentCloudPostgresqlReadonlyInstance(),
+			"tencentcloud_postgresql_readonly_group":                           postgresql.ResourceTencentCloudPostgresqlReadonlyGroup(),
+			"tencentcloud_postgresql_readonly_attachment":                      postgresql.ResourceTencentCloudPostgresqlReadonlyAttachment(),
+			"tencentcloud_postgresql_parameter_template":                       postgresql.ResourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_base_backup":                              postgresql.ResourceTencentCloudPostgresqlBaseBackup(),
+			"tencentcloud_postgresql_backup_plan_config":                       postgresql.ResourceTencentCloudPostgresqlBackupPlanConfig(),
+			"tencentcloud_postgresql_security_group_config":                    postgresql.ResourceTencentCloudPostgresqlSecurityGroupConfig(),
+			"tencentcloud_postgresql_backup_download_restriction_config":       postgresql.ResourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
+			"tencentcloud_postgresql_restart_db_instance_operation":            postgresql.ResourceTencentCloudPostgresqlRestartDbInstanceOperation(),
+			"tencentcloud_postgresql_renew_db_instance_operation":              postgresql.ResourceTencentCloudPostgresqlRenewDbInstanceOperation(),
+			"tencentcloud_postgresql_isolate_db_instance_operation":            postgresql.ResourceTencentCloudPostgresqlIsolateDbInstanceOperation(),
+			"tencentcloud_postgresql_disisolate_db_instance_operation":         postgresql.ResourceTencentCloudPostgresqlDisisolateDbInstanceOperation(),
+			"tencentcloud_postgresql_rebalance_readonly_group_operation":       postgresql.ResourceTencentCloudPostgresqlRebalanceReadonlyGroupOperation(),
+			"tencentcloud_postgresql_delete_log_backup_operation":              postgresql.ResourceTencentCloudPostgresqlDeleteLogBackupOperation(),
+			"tencentcloud_postgresql_modify_account_remark_operation":          postgresql.ResourceTencentCloudPostgresqlModifyAccountRemarkOperation(),
+			"tencentcloud_postgresql_modify_switch_time_period_operation":      postgresql.ResourceTencentCloudPostgresqlModifySwitchTimePeriodOperation(),
+			"tencentcloud_postgresql_instance_ha_config":                       postgresql.ResourceTencentCloudPostgresqlInstanceHAConfig(),
 			"tencentcloud_sqlserver_instance":                                  resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                        resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                                   resourceTencentCloudSqlserverAccount(),
