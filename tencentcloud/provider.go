@@ -1,12 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -15,6 +9,14 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/emr"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/es"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/fl"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/gaap"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/kms"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/lighthouse"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/mariadb"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
@@ -648,25 +650,25 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_shard_spec":                              dcdb.DataSourceTencentCloudDcdbShardSpec(),
 			"tencentcloud_dcdb_slow_logs":                               dcdb.DataSourceTencentCloudDcdbSlowLogs(),
 			"tencentcloud_dcdb_upgrade_price":                           dcdb.DataSourceTencentCloudDcdbUpgradePrice(),
-			"tencentcloud_mariadb_db_instances":                         dataSourceTencentCloudMariadbDbInstances(),
-			"tencentcloud_mariadb_accounts":                             dataSourceTencentCloudMariadbAccounts(),
-			"tencentcloud_mariadb_security_groups":                      dataSourceTencentCloudMariadbSecurityGroups(),
-			"tencentcloud_mariadb_database_objects":                     dataSourceTencentCloudMariadbDatabaseObjects(),
-			"tencentcloud_mariadb_databases":                            dataSourceTencentCloudMariadbDatabases(),
-			"tencentcloud_mariadb_database_table":                       dataSourceTencentCloudMariadbDatabaseTable(),
-			"tencentcloud_mariadb_dcn_detail":                           dataSourceTencentCloudMariadbDcnDetail(),
-			"tencentcloud_mariadb_file_download_url":                    dataSourceTencentCloudMariadbFileDownloadUrl(),
-			"tencentcloud_mariadb_flow":                                 dataSourceTencentCloudMariadbFlow(),
-			"tencentcloud_mariadb_instance_node_info":                   dataSourceTencentCloudMariadbInstanceNodeInfo(),
-			"tencentcloud_mariadb_instance_specs":                       dataSourceTencentCloudMariadbInstanceSpecs(),
-			"tencentcloud_mariadb_log_files":                            dataSourceTencentCloudMariadbLogFiles(),
-			"tencentcloud_mariadb_orders":                               dataSourceTencentCloudMariadbOrders(),
-			"tencentcloud_mariadb_price":                                dataSourceTencentCloudMariadbPrice(),
-			"tencentcloud_mariadb_project_security_groups":              dataSourceTencentCloudMariadbProjectSecurityGroups(),
-			"tencentcloud_mariadb_renewal_price":                        dataSourceTencentCloudMariadbRenewalPrice(),
-			"tencentcloud_mariadb_sale_info":                            dataSourceTencentCloudMariadbSaleInfo(),
-			"tencentcloud_mariadb_slow_logs":                            dataSourceTencentCloudMariadbSlowLogs(),
-			"tencentcloud_mariadb_upgrade_price":                        dataSourceTencentCloudMariadbUpgradePrice(),
+			"tencentcloud_mariadb_db_instances":                         mariadb.DataSourceTencentCloudMariadbDbInstances(),
+			"tencentcloud_mariadb_accounts":                             mariadb.DataSourceTencentCloudMariadbAccounts(),
+			"tencentcloud_mariadb_security_groups":                      mariadb.DataSourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_mariadb_database_objects":                     mariadb.DataSourceTencentCloudMariadbDatabaseObjects(),
+			"tencentcloud_mariadb_databases":                            mariadb.DataSourceTencentCloudMariadbDatabases(),
+			"tencentcloud_mariadb_database_table":                       mariadb.DataSourceTencentCloudMariadbDatabaseTable(),
+			"tencentcloud_mariadb_dcn_detail":                           mariadb.DataSourceTencentCloudMariadbDcnDetail(),
+			"tencentcloud_mariadb_file_download_url":                    mariadb.DataSourceTencentCloudMariadbFileDownloadUrl(),
+			"tencentcloud_mariadb_flow":                                 mariadb.DataSourceTencentCloudMariadbFlow(),
+			"tencentcloud_mariadb_instance_node_info":                   mariadb.DataSourceTencentCloudMariadbInstanceNodeInfo(),
+			"tencentcloud_mariadb_instance_specs":                       mariadb.DataSourceTencentCloudMariadbInstanceSpecs(),
+			"tencentcloud_mariadb_log_files":                            mariadb.DataSourceTencentCloudMariadbLogFiles(),
+			"tencentcloud_mariadb_orders":                               mariadb.DataSourceTencentCloudMariadbOrders(),
+			"tencentcloud_mariadb_price":                                mariadb.DataSourceTencentCloudMariadbPrice(),
+			"tencentcloud_mariadb_project_security_groups":              mariadb.DataSourceTencentCloudMariadbProjectSecurityGroups(),
+			"tencentcloud_mariadb_renewal_price":                        mariadb.DataSourceTencentCloudMariadbRenewalPrice(),
+			"tencentcloud_mariadb_sale_info":                            mariadb.DataSourceTencentCloudMariadbSaleInfo(),
+			"tencentcloud_mariadb_slow_logs":                            mariadb.DataSourceTencentCloudMariadbSlowLogs(),
+			"tencentcloud_mariadb_upgrade_price":                        mariadb.DataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_mps_schedules":                                dataSourceTencentCloudMpsSchedules(),
 			"tencentcloud_mps_tasks":                                    dataSourceTencentCloudMpsTasks(),
 			"tencentcloud_mps_parse_live_stream_process_notification":   dataSourceTencentCloudMpsParseLiveStreamProcessNotification(),
@@ -1523,23 +1525,23 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_flush_binlog_operation":                         dcdb.ResourceTencentCloudDcdbFlushBinlogOperation(),
 			"tencentcloud_dcdb_switch_db_instance_ha_operation":                dcdb.ResourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
 			"tencentcloud_cat_task_set":                                        cat.ResourceTencentCloudCatTaskSet(),
-			"tencentcloud_mariadb_dedicatedcluster_db_instance":                resourceTencentCloudMariadbDedicatedclusterDbInstance(),
-			"tencentcloud_mariadb_instance":                                    resourceTencentCloudMariadbInstance(),
-			"tencentcloud_mariadb_hour_db_instance":                            resourceTencentCloudMariadbHourDbInstance(),
-			"tencentcloud_mariadb_account":                                     resourceTencentCloudMariadbAccount(),
-			"tencentcloud_mariadb_parameters":                                  resourceTencentCloudMariadbParameters(),
-			"tencentcloud_mariadb_log_file_retention_period":                   resourceTencentCloudMariadbLogFileRetentionPeriod(),
-			"tencentcloud_mariadb_security_groups":                             resourceTencentCloudMariadbSecurityGroups(),
-			"tencentcloud_mariadb_encrypt_attributes":                          resourceTencentCloudMariadbEncryptAttributes(),
-			"tencentcloud_mariadb_account_privileges":                          resourceTencentCloudMariadbAccountPrivileges(),
-			"tencentcloud_mariadb_operate_hour_db_instance":                    resourceTencentCloudMariadbOperateHourDbInstance(),
-			"tencentcloud_mariadb_backup_time":                                 resourceTencentCloudMariadbBackupTime(),
-			"tencentcloud_mariadb_cancel_dcn_job":                              resourceTencentCloudMariadbCancelDcnJob(),
-			"tencentcloud_mariadb_flush_binlog":                                resourceTencentCloudMariadbFlushBinlog(),
-			"tencentcloud_mariadb_switch_ha":                                   resourceTencentCloudMariadbSwitchHA(),
-			"tencentcloud_mariadb_restart_instance":                            resourceTencentCloudMariadbRestartInstance(),
-			"tencentcloud_mariadb_renew_instance":                              resourceTencentCloudMariadbRenewInstance(),
-			"tencentcloud_mariadb_instance_config":                             resourceTencentCloudMariadbInstanceConfig(),
+			"tencentcloud_mariadb_dedicatedcluster_db_instance":                mariadb.ResourceTencentCloudMariadbDedicatedclusterDbInstance(),
+			"tencentcloud_mariadb_instance":                                    mariadb.ResourceTencentCloudMariadbInstance(),
+			"tencentcloud_mariadb_hour_db_instance":                            mariadb.ResourceTencentCloudMariadbHourDbInstance(),
+			"tencentcloud_mariadb_account":                                     mariadb.ResourceTencentCloudMariadbAccount(),
+			"tencentcloud_mariadb_parameters":                                  mariadb.ResourceTencentCloudMariadbParameters(),
+			"tencentcloud_mariadb_log_file_retention_period":                   mariadb.ResourceTencentCloudMariadbLogFileRetentionPeriod(),
+			"tencentcloud_mariadb_security_groups":                             mariadb.ResourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_mariadb_encrypt_attributes":                          mariadb.ResourceTencentCloudMariadbEncryptAttributes(),
+			"tencentcloud_mariadb_account_privileges":                          mariadb.ResourceTencentCloudMariadbAccountPrivileges(),
+			"tencentcloud_mariadb_operate_hour_db_instance":                    mariadb.ResourceTencentCloudMariadbOperateHourDbInstance(),
+			"tencentcloud_mariadb_backup_time":                                 mariadb.ResourceTencentCloudMariadbBackupTime(),
+			"tencentcloud_mariadb_cancel_dcn_job":                              mariadb.ResourceTencentCloudMariadbCancelDcnJob(),
+			"tencentcloud_mariadb_flush_binlog":                                mariadb.ResourceTencentCloudMariadbFlushBinlog(),
+			"tencentcloud_mariadb_switch_ha":                                   mariadb.ResourceTencentCloudMariadbSwitchHA(),
+			"tencentcloud_mariadb_restart_instance":                            mariadb.ResourceTencentCloudMariadbRestartInstance(),
+			"tencentcloud_mariadb_renew_instance":                              mariadb.ResourceTencentCloudMariadbRenewInstance(),
+			"tencentcloud_mariadb_instance_config":                             mariadb.ResourceTencentCloudMariadbInstanceConfig(),
 			"tencentcloud_tdcpg_cluster":                                       resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                                      resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                                       css.ResourceTencentCloudCssWatermark(),

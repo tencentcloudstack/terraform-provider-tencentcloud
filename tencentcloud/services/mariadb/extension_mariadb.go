@@ -1,0 +1,29 @@
+package mariadb
+
+const (
+	MARIADB_TASK_SUCCESS = 0
+	MARIADB_TASK_FAIL    = 1
+	MARIADB_TASK_RUNNING = 2
+)
+
+const (
+	MODIFY_BACKUPTIME_SUCCESS = 0
+)
+
+const (
+	MARIADB_STATUS_ISOLATE = -1
+	MARIADB_STATUS_FLOW    = 1
+	MARIADB_STATUS_RUNNING = 2
+)
+
+const (
+	RSACCESSSTRATEGY_ENABLE = 1
+)
+
+const (
+	ExtranetAccess_ENABLE = 1
+)
+
+const (
+	NONE_FLOW_TASK = 0
+)
