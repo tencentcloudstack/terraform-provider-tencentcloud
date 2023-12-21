@@ -61,6 +61,13 @@ func ResourceTencentCloudBiEmbedTokenApply() *schema.Resource {
 				Description: "UserId (for multi-user only).",
 			},
 
+			"ticket_num": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeInt,
+				Description: "Access limit, the limit range is 1-99999, if it is empty, no access limit will be set.",
+			},
+
 			"bi_token": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -118,6 +125,10 @@ func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta in
 		request.UserId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("ticket_num"); ok {
+		request.TicketNum = helper.IntInt64(v.(int))
+	}
+
 	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseBiClient().CreateEmbedToken(request)
 		if e != nil {
@@ -147,6 +158,10 @@ func resourceTencentCloudBiEmbedTokenApplyCreate(d *schema.ResourceData, meta in
 
 		if token.UpdatedAt != nil {
 			_ = d.Set("udpate_at", token.UpdatedAt)
+		}
+
+		if token.TicketNum != nil {
+			_ = d.Set("ticket_num", token.TicketNum)
 		}
 	}
 
