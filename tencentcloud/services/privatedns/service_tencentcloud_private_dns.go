@@ -1,4 +1,4 @@
-package tencentcloud
+package privatedns
 
 import (
 	"context"
@@ -8,6 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -21,7 +23,7 @@ type PrivateDnsService struct {
 // ////////api
 func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Context, zoneId string,
 	filterList []*privatedns.Filter) (recordInfos []*privatedns.PrivateZoneRecord, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := privatedns.NewDescribePrivateZoneRecordListRequest()
 	defer func() {
 		if errRet != nil {
@@ -53,11 +55,11 @@ getMoreData:
 	request.Limit = &limit
 	request.Offset = &offset
 
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, err := me.client.UsePrivateDnsClient().DescribePrivateZoneRecordList(request)
 		if err != nil {
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		response = result
 		return nil
@@ -80,7 +82,7 @@ getMoreData:
 }
 
 func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId string) (ZoneVpcAttachment *privatedns.PrivateZone, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := privatedns.NewDescribePrivateZoneRequest()
 	request.ZoneId = &zoneId
@@ -112,7 +114,7 @@ func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context
 
 func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId, uniqVpcId, region, uin string) (errRet error) {
 	var (
-		logId        = getLogId(ctx)
+		logId        = tccommon.GetLogId(ctx)
 		asyncRequest = privatedns.NewQueryAsyncBindVpcStatusRequest()
 		uniqId       string
 	)
@@ -162,10 +164,10 @@ func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.C
 
 	// wait
 	asyncRequest.UniqId = &uniqId
-	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+	err = resource.Retry(tccommon.ReadRetryTimeout*5, func() *resource.RetryError {
 		result, e := me.client.UsePrivateDnsClient().QueryAsyncBindVpcStatus(asyncRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, asyncRequest.GetAction(), asyncRequest.ToJsonString(), asyncRequest.ToJsonString())
 		}

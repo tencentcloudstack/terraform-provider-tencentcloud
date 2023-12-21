@@ -1,4 +1,4 @@
-package tencentcloud
+package privatedns
 
 const (
 	DNS_FORWARD_STATUS_ENABLE   = "ENABLED"

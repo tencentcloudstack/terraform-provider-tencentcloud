@@ -1,7 +1,9 @@
-package tencentcloud
+package privatedns_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -10,8 +12,8 @@ func TestAccTencentCloudPrivateDnsRecord_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheck(t) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPrivateDnsRecord_basic,
@@ -28,7 +30,7 @@ func TestAccTencentCloudPrivateDnsRecord_basic(t *testing.T) {
 	})
 }
 
-const testAccPrivateDnsRecord_basic = defaultInstanceVariable + `
+const testAccPrivateDnsRecord_basic = tcacctest.DefaultInstanceVariable + `
 resource "tencentcloud_private_dns_zone" "zone" {
   dns_forward_status = "DISABLED"
   domain             = "domain.com"

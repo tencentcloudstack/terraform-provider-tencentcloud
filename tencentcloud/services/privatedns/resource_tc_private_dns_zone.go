@@ -1,9 +1,11 @@
-package tencentcloud
+package privatedns
 
 import (
 	"context"
 	"fmt"
 	"log"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -12,7 +14,7 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 )
 
-func resourceTencentCloudPrivateDnsZone() *schema.Resource {
+func ResourceTencentCloudPrivateDnsZone() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDPrivateDnsZoneCreate,
 		Read:   resourceTencentCloudDPrivateDnsZoneRead,
@@ -85,7 +87,7 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      DNS_FORWARD_STATUS_DISABLED,
-				ValidateFunc: validateAllowedStringValue(PRIVATE_DNS_FORWARD_STATUS),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(PRIVATE_DNS_FORWARD_STATUS),
 				Description:  "Whether to enable subdomain recursive DNS. Valid values: ENABLED, DISABLED. Default value: DISABLED.",
 			},
 			"account_vpc_set": {
@@ -121,7 +123,7 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CNAME_SPEEDUP_STATUS_ENABLED,
-				ValidateFunc: validateAllowedStringValue(CNAME_SPEEDUP_STATUS),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(CNAME_SPEEDUP_STATUS),
 				Description:  "CNAME acceleration: ENABLED, DISABLED, Default value is ENABLED.",
 			},
 		},
@@ -129,11 +131,11 @@ func resourceTencentCloudPrivateDnsZone() *schema.Resource {
 }
 
 func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.create")()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request = privatedns.NewCreatePrivateZoneRequest()
 	)
 
@@ -196,7 +198,7 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 		request.CnameSpeedupStatus = helper.String(cnameSpeedupStatus)
 	}
 
-	result, err := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().CreatePrivateZone(request)
+	result, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().CreatePrivateZone(request)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create PrivateDns failed, reason:%s\n", logId, err.Error())
@@ -208,12 +210,12 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 	id := *response.Response.ZoneId
 	d.SetId(id)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := TagService{client: client}
 	region := client.Region
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("privatedns", "zone", region, id)
+		resourceName := tccommon.BuildTagResourceName("privatedns", "zone", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -223,12 +225,12 @@ func resourceTencentCloudDPrivateDnsZoneCreate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId    = getLogId(contextNil)
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
+		logId    = tccommon.GetLogId(tccommon.ContextNil)
+		ctx      = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		request  = privatedns.NewDescribePrivateZoneRequest()
 		response *privatedns.DescribePrivateZoneResponse
 		id       = d.Id()
@@ -236,10 +238,10 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 
 	request.ZoneId = &id
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DescribePrivateZone(request)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DescribePrivateZone(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		response = result
@@ -265,7 +267,7 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 	}
 	_ = d.Set("tag_set", tagSets)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := TagService{client: client}
 	region := client.Region
 
@@ -300,11 +302,11 @@ func resourceTencentCloudDPrivateDnsZoneRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.update")()
 
 	var (
-		logId = getLogId(contextNil)
-		ctx   = context.WithValue(context.TODO(), logIdKey, logId)
+		logId = tccommon.GetLogId(tccommon.ContextNil)
+		ctx   = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id    = d.Id()
 	)
 
@@ -327,10 +329,10 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 			request.CnameSpeedupStatus = helper.String(v.(string))
 		}
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZone(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZone(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 			return nil
 		})
@@ -374,10 +376,10 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 			request.AccountVpcSet = accVpcSets
 		}
 
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().ModifyPrivateZoneVpc(request)
+		err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().ModifyPrivateZoneVpc(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			}
 
 			return nil
@@ -389,7 +391,7 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	tagService := TagService{client: client}
 	region := client.Region
 
@@ -397,7 +399,7 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("privatedns", "zone", region, id)
+		resourceName := tccommon.BuildTagResourceName("privatedns", "zone", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
@@ -408,20 +410,20 @@ func resourceTencentCloudDPrivateDnsZoneUpdate(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudDPrivateDnsZoneDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_private_dns_zone.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_private_dns_zone.delete")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = privatedns.NewDeletePrivateZoneRequest()
 		id      = d.Id()
 	)
 
 	request.ZoneId = &id
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, e := meta.(*TencentCloudClient).apiV3Conn.UsePrivateDnsClient().DeletePrivateZone(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		_, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePrivateDnsClient().DeletePrivateZone(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
 		return nil

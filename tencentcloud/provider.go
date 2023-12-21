@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -889,7 +890,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_rule_templates":                        dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
 			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
-			"tencentcloud_private_dns_records":                          dataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_private_dns_records":                          privatedns.DataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                                  dataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                             dataSourceTencentCloudWafTlsVersions(),
 			"tencentcloud_waf_domains":                                  dataSourceTencentCloudWafDomains(),
@@ -1469,9 +1470,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_custom_line":                                  dnspod.ResourceTencentCloudDnspodCustomLine(),
 			"tencentcloud_dnspod_snapshot_config":                              dnspod.ResourceTencentCloudDnspodSnapshotConfig(),
 			"tencentcloud_dnspod_domain_lock":                                  dnspod.ResourceTencentCloudDnspodDomainLock(),
-			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
-			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
-			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
+			"tencentcloud_private_dns_zone":                                    privatedns.ResourceTencentCloudPrivateDnsZone(),
+			"tencentcloud_private_dns_record":                                  privatedns.ResourceTencentCloudPrivateDnsRecord(),
+			"tencentcloud_private_dns_zone_vpc_attachment":                     privatedns.ResourceTencentCloudPrivateDnsZoneVpcAttachment(),
 			"tencentcloud_cls_logset":                                          cls.ResourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                                           cls.ResourceTencentCloudClsTopic(),
 			"tencentcloud_cls_config":                                          cls.ResourceTencentCloudClsConfig(),

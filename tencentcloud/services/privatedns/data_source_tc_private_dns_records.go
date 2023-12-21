@@ -1,15 +1,18 @@
-package tencentcloud
+package privatedns
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudPrivateDnsRecords() *schema.Resource {
+func DataSourceTencentCloudPrivateDnsRecords() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudPrivateDnsRecordsRead,
 		Schema: map[string]*schema.Schema{
@@ -127,12 +130,12 @@ func dataSourceTencentCloudPrivateDnsRecords() *schema.Resource {
 }
 
 func dataSourceTencentCloudPrivateDnsRecordsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_private_dns_records.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_private_dns_records.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	zoneId := d.Get("zone_id").(string)
 	filterList := make([]*privatedns.Filter, 0)
@@ -155,14 +158,14 @@ func dataSourceTencentCloudPrivateDnsRecordsRead(d *schema.ResourceData, meta in
 		}
 	}
 
-	service := PrivateDnsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PrivateDnsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var recordSet []*privatedns.PrivateZoneRecord
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, filterList)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		recordSet = result
 		return nil
@@ -240,7 +243,7 @@ func dataSourceTencentCloudPrivateDnsRecordsRead(d *schema.ResourceData, meta in
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}
