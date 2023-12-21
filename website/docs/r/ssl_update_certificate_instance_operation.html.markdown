@@ -21,6 +21,18 @@ resource "tencentcloud_ssl_update_certificate_instance_operation" "update_certif
 }
 ```
 
+### Upload certificate
+
+```hcl
+resource "tencentcloud_ssl_update_certificate_instance_operation" "update_certificate_instance" {
+  old_certificate_id      = "xxx"
+  certificate_public_key  = file("xxx.crt")
+  certificate_private_key = file("xxx.key")
+  repeatable              = true
+  resource_types          = ["cdn"]
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:

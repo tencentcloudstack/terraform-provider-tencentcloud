@@ -122,15 +122,14 @@ func resourceTencentCloudSslUpdateCertificateInstanceOperationCreate(d *schema.R
 
 	var (
 		request            = ssl.NewUpdateCertificateInstanceRequest()
-		response           = ssl.NewUpdateCertificateInstanceResponse()
 		old_certificate_id string
 	)
 	if v, ok := d.GetOk("certificate_id"); ok {
-		old_certificate_id = v.(string)
 		request.CertificateId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("old_certificate_id"); ok {
+		old_certificate_id = v.(string)
 		request.OldCertificateId = helper.String(v.(string))
 	}
 
@@ -189,13 +188,12 @@ func resourceTencentCloudSslUpdateCertificateInstanceOperationCreate(d *schema.R
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSSLCertificateClient().UpdateCertificateInstance(request)
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseSSLCertificateClient().UpdateCertificateInstance(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		}
-		response = result
 		if response == nil || response.Response == nil || response.Response.DeployRecordId == nil {
 			return resource.RetryableError(fmt.Errorf("operate ssl updateCertificateInstanceOperation response is null"))
 		}
