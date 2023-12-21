@@ -1,4 +1,4 @@
-package tencentcloud
+package pts_test
 
 import (
 	"context"
@@ -6,8 +6,13 @@ import (
 	"strings"
 	"testing"
 
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	svcpts "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudPtsJobResource_basic -v
@@ -15,17 +20,17 @@ func TestAccTencentCloudPtsJobResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckPtsJobDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPtsJob,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPtsJobExists("tencentcloud_pts_job.job"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "scenario_id", defaultScenarioIdJob),
+					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "scenario_id", tcacctest.DefaultScenarioIdJob),
 					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "job_owner", "username"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "project_id", defaultPtsProjectId),
+					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "project_id", tcacctest.DefaultPtsProjectId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_job.job", "note", "desc"),
 				),
 			},
@@ -39,15 +44,15 @@ func TestAccTencentCloudPtsJobResource_basic(t *testing.T) {
 }
 
 func testAccCheckPtsJobDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcpts.NewPtsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_pts_project" {
 			continue
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -68,15 +73,15 @@ func testAccCheckPtsJobDestroy(s *terraform.State) error {
 
 func testAccCheckPtsJobExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -84,7 +89,7 @@ func testAccCheckPtsJobExists(r string) resource.TestCheckFunc {
 		scenarioId := idSplit[1]
 		jobId := idSplit[2]
 
-		service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcpts.NewPtsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		job, err := service.DescribePtsJob(ctx, projectId, scenarioId, jobId)
 		if job == nil {
 			return fmt.Errorf("pts job %s is not found", rs.Primary.ID)
@@ -99,10 +104,10 @@ func testAccCheckPtsJobExists(r string) resource.TestCheckFunc {
 
 const testAccPtsJobVar = `
 variable "project_id" {
-  default = "` + defaultPtsProjectId + `"
+  default = "` + tcacctest.DefaultPtsProjectId + `"
 }
 variable "scenario_id" {
-	default = "` + defaultScenarioIdJob + `"
+	default = "` + tcacctest.DefaultScenarioIdJob + `"
 }
 `
 

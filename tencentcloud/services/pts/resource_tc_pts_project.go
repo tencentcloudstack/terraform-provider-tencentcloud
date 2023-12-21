@@ -1,4 +1,4 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsProject() *schema.Resource {
+func ResourceTencentCloudPtsProject() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudPtsProjectRead,
 		Create: resourceTencentCloudPtsProjectCreate,
@@ -94,10 +97,10 @@ func resourceTencentCloudPtsProject() *schema.Resource {
 }
 
 func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_project.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_project.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewCreateProjectRequest()
@@ -130,10 +133,10 @@ func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateProject(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().CreateProject(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -154,13 +157,13 @@ func resourceTencentCloudPtsProjectCreate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_project.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_project.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	projectId := d.Id()
 
@@ -227,10 +230,10 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_project.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_project.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := pts.NewUpdateProjectRequest()
 
@@ -263,10 +266,10 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().UpdateProject(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().UpdateProject(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -283,13 +286,13 @@ func resourceTencentCloudPtsProjectUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudPtsProjectDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_project.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_project.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	projectId := d.Id()
 

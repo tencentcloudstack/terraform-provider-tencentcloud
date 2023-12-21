@@ -1,4 +1,4 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsCronJob() *schema.Resource {
+func ResourceTencentCloudPtsCronJob() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudPtsCronJobRead,
 		Create: resourceTencentCloudPtsCronJobCreate,
@@ -134,10 +137,10 @@ func resourceTencentCloudPtsCronJob() *schema.Resource {
 }
 
 func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewCreateCronJobRequest()
@@ -187,10 +190,10 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 		request.Note = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateCronJob(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().CreateCronJob(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -206,20 +209,20 @@ func resourceTencentCloudPtsCronJobCreate(d *schema.ResourceData, meta interface
 
 	cronJobId = *response.Response.CronJobId
 
-	d.SetId(projectId + FILED_SP + cronJobId)
+	d.SetId(projectId + tccommon.FILED_SP + cronJobId)
 	return resourceTencentCloudPtsCronJobRead(d, meta)
 }
 
 func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -311,14 +314,14 @@ func resourceTencentCloudPtsCronJobRead(d *schema.ResourceData, meta interface{}
 }
 
 func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := pts.NewUpdateCronJobRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -364,10 +367,10 @@ func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface
 		request.Note = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().UpdateCronJob(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().UpdateCronJob(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -384,15 +387,15 @@ func resourceTencentCloudPtsCronJobUpdate(d *schema.ResourceData, meta interface
 }
 
 func resourceTencentCloudPtsCronJobDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

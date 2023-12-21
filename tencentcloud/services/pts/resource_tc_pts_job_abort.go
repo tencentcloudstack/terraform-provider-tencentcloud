@@ -1,15 +1,18 @@
-package tencentcloud
+package pts
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsJobAbort() *schema.Resource {
+func ResourceTencentCloudPtsJobAbort() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudPtsJobAbortCreate,
 		Read:   resourceTencentCloudPtsJobAbortRead,
@@ -48,10 +51,10 @@ func resourceTencentCloudPtsJobAbort() *schema.Resource {
 }
 
 func resourceTencentCloudPtsJobAbortCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_job_abort.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_job_abort.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = pts.NewAbortJobRequest()
@@ -78,10 +81,10 @@ func resourceTencentCloudPtsJobAbortCreate(d *schema.ResourceData, meta interfac
 		request.AbortReason = helper.IntInt64(v.(int))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().AbortJob(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().AbortJob(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -92,21 +95,21 @@ func resourceTencentCloudPtsJobAbortCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + scenarioId + FILED_SP + jobId)
+	d.SetId(projectId + tccommon.FILED_SP + scenarioId + tccommon.FILED_SP + jobId)
 
 	return resourceTencentCloudPtsJobAbortRead(d, meta)
 }
 
 func resourceTencentCloudPtsJobAbortRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_job_abort.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_job_abort.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudPtsJobAbortDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_job_abort.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_job_abort.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

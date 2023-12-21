@@ -1,15 +1,18 @@
-package tencentcloud
+package pts
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsTmpKeyGenerate() *schema.Resource {
+func ResourceTencentCloudPtsTmpKeyGenerate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudPtsTmpKeyGenerateCreate,
 		Read:   resourceTencentCloudPtsTmpKeyGenerateRead,
@@ -69,10 +72,10 @@ func resourceTencentCloudPtsTmpKeyGenerate() *schema.Resource {
 }
 
 func resourceTencentCloudPtsTmpKeyGenerateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_tmp_key_generate.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewGenerateTmpKeyRequest()
@@ -88,10 +91,10 @@ func resourceTencentCloudPtsTmpKeyGenerateCreate(d *schema.ResourceData, meta in
 		request.ScenarioId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().GenerateTmpKey(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().GenerateTmpKey(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -137,15 +140,15 @@ func resourceTencentCloudPtsTmpKeyGenerateCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudPtsTmpKeyGenerateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_tmp_key_generate.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudPtsTmpKeyGenerateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_tmp_key_generate.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_tmp_key_generate.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

@@ -1,15 +1,18 @@
-package tencentcloud
+package pts
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsCronJobRestart() *schema.Resource {
+func ResourceTencentCloudPtsCronJobRestart() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudPtsCronJobRestartCreate,
 		Read:   resourceTencentCloudPtsCronJobRestartRead,
@@ -34,10 +37,10 @@ func resourceTencentCloudPtsCronJobRestart() *schema.Resource {
 }
 
 func resourceTencentCloudPtsCronJobRestartCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_restart.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_restart.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewRestartCronJobsRequest()
@@ -53,10 +56,10 @@ func resourceTencentCloudPtsCronJobRestartCreate(d *schema.ResourceData, meta in
 		request.CronJobIds = append(request.CronJobIds, helper.String(cronJobId))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().RestartCronJobs(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().RestartCronJobs(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -67,21 +70,21 @@ func resourceTencentCloudPtsCronJobRestartCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + cronJobId)
+	d.SetId(projectId + tccommon.FILED_SP + cronJobId)
 
 	return resourceTencentCloudPtsCronJobRestartRead(d, meta)
 }
 
 func resourceTencentCloudPtsCronJobRestartRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_restart.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_restart.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudPtsCronJobRestartDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_restart.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_restart.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

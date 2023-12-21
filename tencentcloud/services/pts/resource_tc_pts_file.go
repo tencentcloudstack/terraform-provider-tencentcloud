@@ -1,4 +1,4 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
@@ -6,14 +6,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsFile() *schema.Resource {
+func ResourceTencentCloudPtsFile() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudPtsFileRead,
 		Create: resourceTencentCloudPtsFileCreate,
@@ -137,10 +140,10 @@ func resourceTencentCloudPtsFile() *schema.Resource {
 }
 
 func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_file.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_file.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewCreateFileRequest()
@@ -230,15 +233,15 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateFile(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().CreateFile(request)
 		if e != nil {
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
 					return resource.NonRetryableError(e)
 				}
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -251,20 +254,20 @@ func resourceTencentCloudPtsFileCreate(d *schema.ResourceData, meta interface{})
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + fileId)
+	d.SetId(projectId + tccommon.FILED_SP + fileId)
 	return resourceTencentCloudPtsFileRead(d, meta)
 }
 
 func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_file.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_file.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -355,22 +358,22 @@ func resourceTencentCloudPtsFileRead(d *schema.ResourceData, meta interface{}) e
 }
 
 func resourceTencentCloudPtsFileUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_file.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_file.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return resourceTencentCloudPtsFileRead(d, meta)
 }
 
 func resourceTencentCloudPtsFileDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_file.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_file.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

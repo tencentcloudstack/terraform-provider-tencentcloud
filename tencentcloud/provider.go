@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/project"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/privatedns"
 	"encoding/json"
@@ -921,7 +922,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_organization_org_financial_by_product":        dataSourceTencentCloudOrganizationOrgFinancialByProduct(),
 			"tencentcloud_organization_org_auth_node":                   dataSourceTencentCloudOrganizationOrgAuthNode(),
 			"tencentcloud_organization_members":                         dataSourceTencentCloudOrganizationMembers(),
-			"tencentcloud_pts_scenario_with_jobs":                       dataSourceTencentCloudPtsScenarioWithJobs(),
+			"tencentcloud_pts_scenario_with_jobs":                       pts.DataSourceTencentCloudPtsScenarioWithJobs(),
 			"tencentcloud_cam_list_attached_user_policy":                dataSourceTencentCloudCamListAttachedUserPolicy(),
 			"tencentcloud_cam_secret_last_used_time":                    cam.DataSourceTencentCloudCamSecretLastUsedTime(),
 			"tencentcloud_cam_policy_granting_service_access":           cam.DataSourceTencentCloudCamPolicyGrantingServiceAccess(),
@@ -1582,16 +1583,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_stream_monitor":                                  css.ResourceTencentCloudCssStreamMonitor(),
 			"tencentcloud_css_start_stream_monitor":                            css.ResourceTencentCloudCssStartStreamMonitor(),
 			"tencentcloud_css_pull_stream_task_restart":                        css.ResourceTencentCloudCssPullStreamTaskRestart(),
-			"tencentcloud_pts_project":                                         resourceTencentCloudPtsProject(),
-			"tencentcloud_pts_alert_channel":                                   resourceTencentCloudPtsAlertChannel(),
-			"tencentcloud_pts_scenario":                                        resourceTencentCloudPtsScenario(),
-			"tencentcloud_pts_file":                                            resourceTencentCloudPtsFile(),
-			"tencentcloud_pts_job":                                             resourceTencentCloudPtsJob(),
-			"tencentcloud_pts_cron_job":                                        resourceTencentCloudPtsCronJob(),
-			"tencentcloud_pts_tmp_key_generate":                                resourceTencentCloudPtsTmpKeyGenerate(),
-			"tencentcloud_pts_cron_job_restart":                                resourceTencentCloudPtsCronJobRestart(),
-			"tencentcloud_pts_job_abort":                                       resourceTencentCloudPtsJobAbort(),
-			"tencentcloud_pts_cron_job_abort":                                  resourceTencentCloudPtsCronJobAbort(),
+			"tencentcloud_pts_project":                                         pts.ResourceTencentCloudPtsProject(),
+			"tencentcloud_pts_alert_channel":                                   pts.ResourceTencentCloudPtsAlertChannel(),
+			"tencentcloud_pts_scenario":                                        pts.ResourceTencentCloudPtsScenario(),
+			"tencentcloud_pts_file":                                            pts.ResourceTencentCloudPtsFile(),
+			"tencentcloud_pts_job":                                             pts.ResourceTencentCloudPtsJob(),
+			"tencentcloud_pts_cron_job":                                        pts.ResourceTencentCloudPtsCronJob(),
+			"tencentcloud_pts_tmp_key_generate":                                pts.ResourceTencentCloudPtsTmpKeyGenerate(),
+			"tencentcloud_pts_cron_job_restart":                                pts.ResourceTencentCloudPtsCronJobRestart(),
+			"tencentcloud_pts_job_abort":                                       pts.ResourceTencentCloudPtsJobAbort(),
+			"tencentcloud_pts_cron_job_abort":                                  pts.ResourceTencentCloudPtsCronJobAbort(),
 			"tencentcloud_tat_command":                                         resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                         resourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_config":                                  resourceTencentCloudTatInvokerConfig(),

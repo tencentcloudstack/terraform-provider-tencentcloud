@@ -1,4 +1,4 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
@@ -6,14 +6,17 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsAlertChannel() *schema.Resource {
+func ResourceTencentCloudPtsAlertChannel() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudPtsAlertChannelRead,
 		Create: resourceTencentCloudPtsAlertChannelCreate,
@@ -81,10 +84,10 @@ func resourceTencentCloudPtsAlertChannel() *schema.Resource {
 }
 
 func resourceTencentCloudPtsAlertChannelCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_alert_channel.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_alert_channel.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewCreateAlertChannelRequest()
@@ -106,15 +109,15 @@ func resourceTencentCloudPtsAlertChannelCreate(d *schema.ResourceData, meta inte
 		request.AMPConsumerId = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateAlertChannel(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().CreateAlertChannel(request)
 		if e != nil {
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkError.Code == "FailedOperation.DbRecordCreateFailed" {
 					return resource.NonRetryableError(e)
 				}
 			}
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -127,20 +130,20 @@ func resourceTencentCloudPtsAlertChannelCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + noticeId)
+	d.SetId(projectId + tccommon.FILED_SP + noticeId)
 	return resourceTencentCloudPtsAlertChannelRead(d, meta)
 }
 
 func resourceTencentCloudPtsAlertChannelRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_alert_channel.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_alert_channel.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -198,22 +201,22 @@ func resourceTencentCloudPtsAlertChannelRead(d *schema.ResourceData, meta interf
 }
 
 func resourceTencentCloudPtsAlertChannelUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_alert_channel.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_alert_channel.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return resourceTencentCloudPtsAlertChannelRead(d, meta)
 }
 
 func resourceTencentCloudPtsAlertChannelDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_alert_channel.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_alert_channel.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

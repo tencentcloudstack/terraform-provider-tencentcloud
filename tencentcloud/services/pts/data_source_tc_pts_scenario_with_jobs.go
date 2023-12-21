@@ -1,15 +1,18 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudPtsScenarioWithJobs() *schema.Resource {
+func DataSourceTencentCloudPtsScenarioWithJobs() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudPtsScenarioWithJobsRead,
 		Schema: map[string]*schema.Schema{
@@ -1483,12 +1486,12 @@ func dataSourceTencentCloudPtsScenarioWithJobs() *schema.Resource {
 }
 
 func dataSourceTencentCloudPtsScenarioWithJobsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_pts_scenario_with_jobs.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("data_source.tencentcloud_pts_scenario_with_jobs.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("project_ids"); ok {
@@ -1533,14 +1536,14 @@ func dataSourceTencentCloudPtsScenarioWithJobsRead(d *schema.ResourceData, meta 
 		paramMap["Owner"] = helper.String(v.(string))
 	}
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
 	var scenarioWithJobsSet []*pts.ScenarioWithJobs
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribePtsScenarioWithJobsByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 		scenarioWithJobsSet = result
 		return nil
@@ -2694,7 +2697,7 @@ func dataSourceTencentCloudPtsScenarioWithJobsRead(d *schema.ResourceData, meta 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), tmpList); e != nil {
 			return e
 		}
 	}

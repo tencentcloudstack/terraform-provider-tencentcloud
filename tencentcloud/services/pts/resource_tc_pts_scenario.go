@@ -1,4 +1,4 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsScenario() *schema.Resource {
+func ResourceTencentCloudPtsScenario() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudPtsScenarioRead,
 		Create: resourceTencentCloudPtsScenarioCreate,
@@ -675,10 +678,10 @@ func resourceTencentCloudPtsScenario() *schema.Resource {
 }
 
 func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_scenario.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_scenario.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = pts.NewCreateScenarioRequest()
@@ -903,10 +906,10 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 				scriptInfo.UpdatedAt = helper.String(v.(string))
 			}
 			if v, ok := dMap["encoded_content"]; ok {
-				scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
+				scriptInfo.EncodedContent = helper.String(tccommon.StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["encoded_http_archive"]; ok {
-				scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
+				scriptInfo.EncodedHttpArchive = helper.String(tccommon.StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["load_weight"]; ok {
 				scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
@@ -1082,10 +1085,10 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		requestUp.DomainNameConfig = &domainNameConfig
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().CreateScenario(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().CreateScenario(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -1102,10 +1105,10 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 	scenarioId = *response.Response.ScenarioId
 
 	requestUp.ScenarioId = &scenarioId
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().UpdateScenario(requestUp)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().UpdateScenario(requestUp)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -1118,20 +1121,20 @@ func resourceTencentCloudPtsScenarioCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + scenarioId)
+	d.SetId(projectId + tccommon.FILED_SP + scenarioId)
 	return resourceTencentCloudPtsScenarioRead(d, meta)
 }
 
 func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_scenario.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_scenario.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -1345,14 +1348,14 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 				testScriptsMap["updated_at"] = testScripts.UpdatedAt
 			}
 			if testScripts.EncodedContent != nil {
-				content, err := Base64ToString(*testScripts.EncodedContent)
+				content, err := tccommon.Base64ToString(*testScripts.EncodedContent)
 				if err != nil {
 					return fmt.Errorf("`testScripts.EncodedContent` %s does not be decoded to string", *testScripts.EncodedContent)
 				}
 				testScriptsMap["encoded_content"] = content
 			}
 			if testScripts.EncodedHttpArchive != nil {
-				archive, err := Base64ToString(*testScripts.EncodedHttpArchive)
+				archive, err := tccommon.Base64ToString(*testScripts.EncodedHttpArchive)
 				if err != nil {
 					return fmt.Errorf("`testScripts.EncodedHttpArchive` %s does not be decoded to string", *testScripts.EncodedHttpArchive)
 				}
@@ -1577,14 +1580,14 @@ func resourceTencentCloudPtsScenarioRead(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_scenario.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_scenario.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := pts.NewUpdateScenarioRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -1800,10 +1803,10 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 				scriptInfo.UpdatedAt = helper.String(v.(string))
 			}
 			if v, ok := dMap["encoded_content"]; ok {
-				scriptInfo.EncodedContent = helper.String(StringToBase64(v.(string)))
+				scriptInfo.EncodedContent = helper.String(tccommon.StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["encoded_http_archive"]; ok {
-				scriptInfo.EncodedHttpArchive = helper.String(StringToBase64(v.(string)))
+				scriptInfo.EncodedHttpArchive = helper.String(tccommon.StringToBase64(v.(string)))
 			}
 			if v, ok := dMap["load_weight"]; ok {
 				scriptInfo.LoadWeight = helper.Int64(int64(v.(int)))
@@ -1975,10 +1978,10 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 		request.DomainNameConfig = &domainNameConfig
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().UpdateScenario(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().UpdateScenario(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -1995,15 +1998,15 @@ func resourceTencentCloudPtsScenarioUpdate(d *schema.ResourceData, meta interfac
 }
 
 func resourceTencentCloudPtsScenarioDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_scenario.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_scenario.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := PtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := PtsService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

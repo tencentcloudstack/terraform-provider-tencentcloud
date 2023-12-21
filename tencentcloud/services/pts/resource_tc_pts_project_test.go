@@ -1,6 +1,10 @@
-package tencentcloud
+package pts_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcpts "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/pts"
+
 	"context"
 	"fmt"
 	"testing"
@@ -14,8 +18,8 @@ func TestAccTencentCloudPtsProjectResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckPtsProjectDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -40,9 +44,9 @@ func TestAccTencentCloudPtsProjectResource_basic(t *testing.T) {
 }
 
 func testAccCheckPtsProjectDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcpts.NewPtsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_pts_project" {
 			continue
@@ -61,15 +65,15 @@ func testAccCheckPtsProjectDestroy(s *terraform.State) error {
 
 func testAccCheckPtsProjectExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 
-		service := PtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcpts.NewPtsService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		project, err := service.DescribePtsProject(ctx, rs.Primary.ID)
 		if project == nil {
 			return fmt.Errorf("pts project %s is not found", rs.Primary.ID)

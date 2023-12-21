@@ -1,15 +1,18 @@
-package tencentcloud
+package pts
 
 import (
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudPtsCronJobAbort() *schema.Resource {
+func ResourceTencentCloudPtsCronJobAbort() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudPtsCronJobAbortCreate,
 		Read:   resourceTencentCloudPtsCronJobAbortRead,
@@ -34,10 +37,10 @@ func resourceTencentCloudPtsCronJobAbort() *schema.Resource {
 }
 
 func resourceTencentCloudPtsCronJobAbortCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_abort.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_abort.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request   = pts.NewAbortCronJobsRequest()
@@ -54,10 +57,10 @@ func resourceTencentCloudPtsCronJobAbortCreate(d *schema.ResourceData, meta inte
 		request.CronJobIds = append(request.CronJobIds, helper.String(cronJobId))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePtsClient().AbortCronJobs(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UsePtsClient().AbortCronJobs(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -68,21 +71,21 @@ func resourceTencentCloudPtsCronJobAbortCreate(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	d.SetId(projectId + FILED_SP + cronJobId)
+	d.SetId(projectId + tccommon.FILED_SP + cronJobId)
 
 	return resourceTencentCloudPtsCronJobAbortRead(d, meta)
 }
 
 func resourceTencentCloudPtsCronJobAbortRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_abort.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_abort.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }
 
 func resourceTencentCloudPtsCronJobAbortDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_pts_cron_job_abort.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_pts_cron_job_abort.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

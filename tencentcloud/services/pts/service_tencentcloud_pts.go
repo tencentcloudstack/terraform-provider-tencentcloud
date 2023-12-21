@@ -1,13 +1,20 @@
-package tencentcloud
+package pts
 
 import (
 	"context"
 	"log"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewPtsService(client *connectivity.TencentCloudClient) PtsService {
+	return PtsService{client: client}
+}
 
 type PtsService struct {
 	client *connectivity.TencentCloudClient
@@ -15,7 +22,7 @@ type PtsService struct {
 
 func (me *PtsService) DescribePtsProject(ctx context.Context, projectId string) (project *pts.Project, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeProjectsRequest()
 	)
 
@@ -44,7 +51,7 @@ func (me *PtsService) DescribePtsProject(ctx context.Context, projectId string) 
 }
 
 func (me *PtsService) DeletePtsProjectById(ctx context.Context, projectId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteProjectsRequest()
 
@@ -71,7 +78,7 @@ func (me *PtsService) DeletePtsProjectById(ctx context.Context, projectId string
 
 func (me *PtsService) DescribePtsAlertChannel(ctx context.Context, noticeId, projectId string) (alertChannel *pts.AlertChannelRecord, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeAlertChannelsRequest()
 	)
 
@@ -101,7 +108,7 @@ func (me *PtsService) DescribePtsAlertChannel(ctx context.Context, noticeId, pro
 }
 
 func (me *PtsService) DeletePtsAlertChannelById(ctx context.Context, noticeId, projectId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteAlertChannelRequest()
 
@@ -129,7 +136,7 @@ func (me *PtsService) DeletePtsAlertChannelById(ctx context.Context, noticeId, p
 
 func (me *PtsService) DescribePtsScenario(ctx context.Context, projectId, scenarioId string) (scenario *pts.Scenario, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeScenariosRequest()
 	)
 
@@ -159,7 +166,7 @@ func (me *PtsService) DescribePtsScenario(ctx context.Context, projectId, scenar
 }
 
 func (me *PtsService) DeletePtsScenarioById(ctx context.Context, projectId, scenarioId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteScenariosRequest()
 
@@ -187,7 +194,7 @@ func (me *PtsService) DeletePtsScenarioById(ctx context.Context, projectId, scen
 
 func (me *PtsService) DescribePtsFile(ctx context.Context, projectId, fileIds string) (file *pts.File, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeFilesRequest()
 	)
 
@@ -217,7 +224,7 @@ func (me *PtsService) DescribePtsFile(ctx context.Context, projectId, fileIds st
 }
 
 func (me *PtsService) DeletePtsFileById(ctx context.Context, projectId, fileIds string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteFilesRequest()
 
@@ -245,7 +252,7 @@ func (me *PtsService) DeletePtsFileById(ctx context.Context, projectId, fileIds 
 
 func (me *PtsService) DescribePtsJob(ctx context.Context, projectId, scenarioId, jobId string) (job *pts.Job, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeJobsRequest()
 	)
 
@@ -276,7 +283,7 @@ func (me *PtsService) DescribePtsJob(ctx context.Context, projectId, scenarioId,
 }
 
 func (me *PtsService) DeletePtsJobById(ctx context.Context, projectId, scenarioId, jobId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteJobsRequest()
 
@@ -305,7 +312,7 @@ func (me *PtsService) DeletePtsJobById(ctx context.Context, projectId, scenarioI
 
 func (me *PtsService) DescribePtsCronJob(ctx context.Context, cronJobId, projectId string) (cronJob *pts.CronJob, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeCronJobsRequest()
 	)
 
@@ -335,7 +342,7 @@ func (me *PtsService) DescribePtsCronJob(ctx context.Context, cronJobId, project
 }
 
 func (me *PtsService) DeletePtsCronJobById(ctx context.Context, cronJobId, projectId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := pts.NewDeleteCronJobsRequest()
 
@@ -363,7 +370,7 @@ func (me *PtsService) DeletePtsCronJobById(ctx context.Context, cronJobId, proje
 
 func (me *PtsService) DescribePtsScenarioWithJobsByFilter(ctx context.Context, param map[string]interface{}) (scenarioWithJobs []*pts.ScenarioWithJobs, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = pts.NewDescribeScenarioWithJobsRequest()
 	)
 
