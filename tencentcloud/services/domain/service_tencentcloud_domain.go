@@ -1,6 +1,7 @@
-package tencentcloud
+package domain
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 	"log"
 
@@ -14,7 +15,7 @@ type DomainService struct {
 }
 
 func (me *DomainService) DescribeDomainNameList(ctx context.Context, request *domain.DescribeDomainNameListRequest) (result []*domain.DomainList, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",

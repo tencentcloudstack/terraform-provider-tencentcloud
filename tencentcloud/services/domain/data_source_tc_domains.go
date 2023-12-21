@@ -1,6 +1,7 @@
-package tencentcloud
+package domain
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -8,7 +9,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudDomains() *schema.Resource {
+func DataSourceTencentCloudDomains() *schema.Resource {
 	return &schema.Resource{
 		Read: datasourceTencentCloudDomainsRead,
 		Importer: &schema.ResourceImporter{
@@ -91,13 +92,13 @@ func dataSourceTencentCloudDomains() *schema.Resource {
 }
 
 func datasourceTencentCloudDomainsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("datasource.tencentcloud_domains.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("datasource.tencentcloud_domains.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	client := meta.(*TencentCloudClient).apiV3Conn
+	client := meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 	service := DomainService{client}
 	request := domain.NewDescribeDomainNameListRequest()
 
@@ -141,7 +142,7 @@ func datasourceTencentCloudDomainsRead(d *schema.ResourceData, meta interface{})
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok {
-		return writeToFile(output.(string), result)
+		return tccommon.WriteToFile(output.(string), result)
 	}
 
 	return nil

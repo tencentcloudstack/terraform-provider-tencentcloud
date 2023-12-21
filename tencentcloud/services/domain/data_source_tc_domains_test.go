@@ -1,6 +1,7 @@
-package tencentcloud
+package domain_test
 
 import (
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 	"regexp"
 	"testing"
 
@@ -10,8 +11,8 @@ import (
 func TestAccTencentCloudDomainsDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_PREPAY) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDomainsDataSourceBasic,

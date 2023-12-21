@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/domain"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dnspod"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dlc"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/dcg"
@@ -237,7 +238,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_net_detect_state_check":                   dataSourceTencentCloudVpcNetDetectStateCheck(),
 			"tencentcloud_subnet":                                       dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                                  dataSourceTencentCloudRouteTable(),
-			"tencentcloud_domains":                                      dataSourceTencentCloudDomains(),
+			"tencentcloud_domains":                                      domain.DataSourceTencentCloudDomains(),
 			"tencentcloud_eip":                                          cvm.DataSourceTencentCloudEip(),
 			"tencentcloud_eips":                                         cvm.DataSourceTencentCloudEips(),
 			"tencentcloud_eip_address_quota":                            cvm.DataSourceTencentCloudEipAddressQuota(),
