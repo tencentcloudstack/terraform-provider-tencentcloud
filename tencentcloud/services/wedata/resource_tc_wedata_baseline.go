@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataBaseline() *schema.Resource {
+func ResourceTencentCloudWedataBaseline() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataBaselineCreate,
 		Read:   resourceTencentCloudWedataBaselineRead,
@@ -245,11 +248,11 @@ func resourceTencentCloudWedataBaseline() *schema.Resource {
 }
 
 func resourceTencentCloudWedataBaselineCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_baseline.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_baseline.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = wedata.NewCreateBaselineRequest()
 		response   = wedata.NewCreateBaselineResponse()
 		projectId  string
@@ -427,10 +430,10 @@ func resourceTencentCloudWedataBaselineCreate(d *schema.ResourceData, meta inter
 		request.BaselineCreateAlarmRuleRequest = &createAlarmRuleRequest
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateBaseline(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateBaseline(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -446,22 +449,22 @@ func resourceTencentCloudWedataBaselineCreate(d *schema.ResourceData, meta inter
 
 	baselineInt := *response.Response.Data.BaselineId
 	baselineId = helper.Int64ToStr(baselineInt)
-	d.SetId(strings.Join([]string{projectId, baselineId}, FILED_SP))
+	d.SetId(strings.Join([]string{projectId, baselineId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudWedataBaselineRead(d, meta)
 }
 
 func resourceTencentCloudWedataBaselineRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_baseline.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_baseline.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -638,11 +641,11 @@ func resourceTencentCloudWedataBaselineRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudWedataBaselineUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_baseline.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_baseline.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = wedata.NewEditBaselineRequest()
 	)
 
@@ -654,7 +657,7 @@ func resourceTencentCloudWedataBaselineUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -745,10 +748,10 @@ func resourceTencentCloudWedataBaselineUpdate(d *schema.ResourceData, meta inter
 		request.AlarmRuleDto = &alarmRuleDto
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().EditBaseline(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().EditBaseline(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -765,16 +768,16 @@ func resourceTencentCloudWedataBaselineUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudWedataBaselineDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_baseline.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_baseline.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/wedata"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -916,9 +917,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_platform_event_patterns":                   eb.DataSourceTencentCloudEbPlatformEventPatterns(),
 			"tencentcloud_eb_platform_products":                         eb.DataSourceTencentCloudEbPlatformProducts(),
 			"tencentcloud_eb_plateform_event_template":                  eb.DataSourceTencentCloudEbPlateformEventTemplate(),
-			"tencentcloud_wedata_rule_templates":                        dataSourceTencentCloudWedataRuleTemplates(),
-			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
-			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
+			"tencentcloud_wedata_rule_templates":                        wedata.DataSourceTencentCloudWedataRuleTemplates(),
+			"tencentcloud_wedata_data_source_list":                      wedata.DataSourceTencentCloudWedataDataSourceList(),
+			"tencentcloud_wedata_data_source_without_info":              wedata.DataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_private_dns_records":                          privatedns.DataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                                  waf.DataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                             waf.DataSourceTencentCloudWafTlsVersions(),
@@ -1879,16 +1880,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_cc_session":                                      waf.ResourceTencentCloudWafCcSession(),
 			"tencentcloud_waf_ip_access_control":                               waf.ResourceTencentCloudWafIpAccessControl(),
 			"tencentcloud_waf_modify_access_period":                            waf.ResourceTencentCloudWafModifyAccessPeriod(),
-			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
-			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
-			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
-			"tencentcloud_wedata_resource":                                     resourceTencentCloudWedataResource(),
-			"tencentcloud_wedata_script":                                       resourceTencentCloudWedataScript(),
-			"tencentcloud_wedata_dq_rule":                                      resourceTencentCloudWedataDqRule(),
-			"tencentcloud_wedata_baseline":                                     resourceTencentCloudWedataBaseline(),
-			"tencentcloud_wedata_integration_offline_task":                     resourceTencentCloudWedataIntegrationOfflineTask(),
-			"tencentcloud_wedata_integration_realtime_task":                    resourceTencentCloudWedataIntegrationRealtimeTask(),
-			"tencentcloud_wedata_integration_task_node":                        resourceTencentCloudWedataIntegrationTaskNode(),
+			"tencentcloud_wedata_rule_template":                                wedata.ResourceTencentCloudWedataRuleTemplate(),
+			"tencentcloud_wedata_datasource":                                   wedata.ResourceTencentCloudWedataDatasource(),
+			"tencentcloud_wedata_function":                                     wedata.ResourceTencentCloudWedataFunction(),
+			"tencentcloud_wedata_resource":                                     wedata.ResourceTencentCloudWedataResource(),
+			"tencentcloud_wedata_script":                                       wedata.ResourceTencentCloudWedataScript(),
+			"tencentcloud_wedata_dq_rule":                                      wedata.ResourceTencentCloudWedataDqRule(),
+			"tencentcloud_wedata_baseline":                                     wedata.ResourceTencentCloudWedataBaseline(),
+			"tencentcloud_wedata_integration_offline_task":                     wedata.ResourceTencentCloudWedataIntegrationOfflineTask(),
+			"tencentcloud_wedata_integration_realtime_task":                    wedata.ResourceTencentCloudWedataIntegrationRealtimeTask(),
+			"tencentcloud_wedata_integration_task_node":                        wedata.ResourceTencentCloudWedataIntegrationTaskNode(),
 			"tencentcloud_cfw_address_template":                                cfw.ResourceTencentCloudCfwAddressTemplate(),
 			"tencentcloud_cfw_block_ignore":                                    cfw.ResourceTencentCloudCfwBlockIgnore(),
 			"tencentcloud_cfw_edge_policy":                                     cfw.ResourceTencentCloudCfwEdgePolicy(),

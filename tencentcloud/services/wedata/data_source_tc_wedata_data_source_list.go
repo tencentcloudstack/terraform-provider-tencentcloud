@@ -1,18 +1,21 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudWedataDataSourceWithoutInfo() *schema.Resource {
+func DataSourceTencentCloudWedataDataSourceList() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudWedataDataSourceWithoutInfoRead,
+		Read: dataSourceTencentCloudWedataDataSourceListRead,
 		Schema: map[string]*schema.Schema{
 			"order_fields": {
 				Optional:    true,
@@ -53,10 +56,10 @@ func dataSourceTencentCloudWedataDataSourceWithoutInfo() *schema.Resource {
 					},
 				},
 			},
-			"data": {
-				Computed:    true,
+			"rows": {
 				Type:        schema.TypeList,
-				Description: "Data.",
+				Computed:    true,
+				Description: "Data rows.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database_name": {
@@ -226,15 +229,15 @@ func dataSourceTencentCloudWedataDataSourceWithoutInfo() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudWedataDataSourceWithoutInfoRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_wedata_data_source_without_info.read")()
-	defer inconsistentCheck(d, meta)()
+func dataSourceTencentCloudWedataDataSourceListRead(d *schema.ResourceData, meta interface{}) error {
+	defer tccommon.LogElapsed("data_source.tencentcloud_wedata_data_source_list.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
-		data    []*wedata.DataSourceInfo
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
+		ctx            = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service        = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+		dataSourceList []*wedata.DataSourceInfo
 	)
 
 	paramMap := make(map[string]interface{})
@@ -283,13 +286,13 @@ func dataSourceTencentCloudWedataDataSourceWithoutInfoRead(d *schema.ResourceDat
 		paramMap["Filters"] = tmpSet
 	}
 
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeWedataDataSourceWithoutInfoByFilter(ctx, paramMap)
+	err := resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeWedataDataSourceListByFilter(ctx, paramMap)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		}
 
-		data = result
+		dataSourceList = result
 		return nil
 	})
 
@@ -297,150 +300,150 @@ func dataSourceTencentCloudWedataDataSourceWithoutInfoRead(d *schema.ResourceDat
 		return err
 	}
 
-	ids := make([]string, 0, len(data))
-	tmpList := make([]map[string]interface{}, 0, len(data))
+	ids := make([]string, 0, len(dataSourceList))
+	tmpList := make([]map[string]interface{}, 0, len(dataSourceList))
+	if dataSourceList != nil {
 
-	if data != nil {
-		for _, dataSourceInfo := range data {
-			dataSourceInfoMap := map[string]interface{}{}
+		for _, rows := range dataSourceList {
+			rowsMap := map[string]interface{}{}
 
-			if dataSourceInfo.DatabaseName != nil {
-				dataSourceInfoMap["database_name"] = dataSourceInfo.DatabaseName
+			if rows.DatabaseName != nil {
+				rowsMap["database_name"] = rows.DatabaseName
 			}
 
-			if dataSourceInfo.Description != nil {
-				dataSourceInfoMap["description"] = dataSourceInfo.Description
+			if rows.Description != nil {
+				rowsMap["description"] = rows.Description
 			}
 
-			if dataSourceInfo.ID != nil {
-				dataSourceInfoMap["id"] = dataSourceInfo.ID
+			if rows.ID != nil {
+				rowsMap["id"] = rows.ID
 			}
 
-			if dataSourceInfo.Instance != nil {
-				dataSourceInfoMap["instance"] = dataSourceInfo.Instance
+			if rows.Instance != nil {
+				rowsMap["instance"] = rows.Instance
 			}
 
-			if dataSourceInfo.Name != nil {
-				dataSourceInfoMap["name"] = dataSourceInfo.Name
+			if rows.Name != nil {
+				rowsMap["name"] = rows.Name
 			}
 
-			if dataSourceInfo.Region != nil {
-				dataSourceInfoMap["region"] = dataSourceInfo.Region
+			if rows.Region != nil {
+				rowsMap["region"] = rows.Region
 			}
 
-			if dataSourceInfo.Type != nil {
-				dataSourceInfoMap["type"] = dataSourceInfo.Type
+			if rows.Type != nil {
+				rowsMap["type"] = rows.Type
 			}
 
-			if dataSourceInfo.ClusterId != nil {
-				dataSourceInfoMap["cluster_id"] = dataSourceInfo.ClusterId
+			if rows.ClusterId != nil {
+				rowsMap["cluster_id"] = rows.ClusterId
 			}
 
-			if dataSourceInfo.AppId != nil {
-				dataSourceInfoMap["app_id"] = dataSourceInfo.AppId
+			if rows.AppId != nil {
+				rowsMap["app_id"] = rows.AppId
 			}
 
-			if dataSourceInfo.BizParams != nil {
-				dataSourceInfoMap["biz_params"] = dataSourceInfo.BizParams
+			if rows.BizParams != nil {
+				rowsMap["biz_params"] = rows.BizParams
 			}
 
-			if dataSourceInfo.Category != nil {
-				dataSourceInfoMap["category"] = dataSourceInfo.Category
+			if rows.Category != nil {
+				rowsMap["category"] = rows.Category
 			}
 
-			if dataSourceInfo.Display != nil {
-				dataSourceInfoMap["display"] = dataSourceInfo.Display
+			if rows.Display != nil {
+				rowsMap["display"] = rows.Display
 			}
 
-			if dataSourceInfo.OwnerAccount != nil {
-				dataSourceInfoMap["owner_account"] = dataSourceInfo.OwnerAccount
+			if rows.OwnerAccount != nil {
+				rowsMap["owner_account"] = rows.OwnerAccount
 			}
 
-			if dataSourceInfo.Params != nil {
-				dataSourceInfoMap["params"] = dataSourceInfo.Params
+			if rows.Params != nil {
+				rowsMap["params"] = rows.Params
 			}
 
-			if dataSourceInfo.Status != nil {
-				dataSourceInfoMap["status"] = dataSourceInfo.Status
+			if rows.Status != nil {
+				rowsMap["status"] = rows.Status
 			}
 
-			if dataSourceInfo.OwnerAccountName != nil {
-				dataSourceInfoMap["owner_account_name"] = dataSourceInfo.OwnerAccountName
+			if rows.OwnerAccountName != nil {
+				rowsMap["owner_account_name"] = rows.OwnerAccountName
 			}
 
-			if dataSourceInfo.ClusterName != nil {
-				dataSourceInfoMap["cluster_name"] = dataSourceInfo.ClusterName
+			if rows.ClusterName != nil {
+				rowsMap["cluster_name"] = rows.ClusterName
 			}
 
-			if dataSourceInfo.OwnerProjectId != nil {
-				dataSourceInfoMap["owner_project_id"] = dataSourceInfo.OwnerProjectId
+			if rows.OwnerProjectId != nil {
+				rowsMap["owner_project_id"] = rows.OwnerProjectId
 			}
 
-			if dataSourceInfo.OwnerProjectName != nil {
-				dataSourceInfoMap["owner_project_name"] = dataSourceInfo.OwnerProjectName
+			if rows.OwnerProjectName != nil {
+				rowsMap["owner_project_name"] = rows.OwnerProjectName
 			}
 
-			if dataSourceInfo.OwnerProjectIdent != nil {
-				dataSourceInfoMap["owner_project_ident"] = dataSourceInfo.OwnerProjectIdent
+			if rows.OwnerProjectIdent != nil {
+				rowsMap["owner_project_ident"] = rows.OwnerProjectIdent
 			}
 
-			if dataSourceInfo.AuthorityProjectName != nil {
-				dataSourceInfoMap["authority_project_name"] = dataSourceInfo.AuthorityProjectName
+			if rows.AuthorityProjectName != nil {
+				rowsMap["authority_project_name"] = rows.AuthorityProjectName
 			}
 
-			if dataSourceInfo.AuthorityUserName != nil {
-				dataSourceInfoMap["authority_user_name"] = dataSourceInfo.AuthorityUserName
+			if rows.AuthorityUserName != nil {
+				rowsMap["authority_user_name"] = rows.AuthorityUserName
 			}
 
-			if dataSourceInfo.Edit != nil {
-				dataSourceInfoMap["edit"] = dataSourceInfo.Edit
+			if rows.Edit != nil {
+				rowsMap["edit"] = rows.Edit
 			}
 
-			if dataSourceInfo.Author != nil {
-				dataSourceInfoMap["author"] = dataSourceInfo.Author
+			if rows.Author != nil {
+				rowsMap["author"] = rows.Author
 			}
 
-			if dataSourceInfo.Deliver != nil {
-				dataSourceInfoMap["deliver"] = dataSourceInfo.Deliver
+			if rows.Deliver != nil {
+				rowsMap["deliver"] = rows.Deliver
 			}
 
-			if dataSourceInfo.DataSourceStatus != nil {
-				dataSourceInfoMap["data_source_status"] = dataSourceInfo.DataSourceStatus
+			if rows.DataSourceStatus != nil {
+				rowsMap["data_source_status"] = rows.DataSourceStatus
 			}
 
-			if dataSourceInfo.CreateTime != nil {
-				dataSourceInfoMap["create_time"] = dataSourceInfo.CreateTime
+			if rows.CreateTime != nil {
+				rowsMap["create_time"] = rows.CreateTime
 			}
 
-			if dataSourceInfo.ParamsString != nil {
-				dataSourceInfoMap["params_string"] = dataSourceInfo.ParamsString
+			if rows.ParamsString != nil {
+				rowsMap["params_string"] = rows.ParamsString
 			}
 
-			if dataSourceInfo.BizParamsString != nil {
-				dataSourceInfoMap["biz_params_string"] = dataSourceInfo.BizParamsString
+			if rows.BizParamsString != nil {
+				rowsMap["biz_params_string"] = rows.BizParamsString
 			}
 
-			if dataSourceInfo.ModifiedTime != nil {
-				dataSourceInfoMap["modified_time"] = dataSourceInfo.ModifiedTime
+			if rows.ModifiedTime != nil {
+				rowsMap["modified_time"] = rows.ModifiedTime
 			}
 
-			if dataSourceInfo.ShowType != nil {
-				dataSourceInfoMap["show_type"] = dataSourceInfo.ShowType
+			if rows.ShowType != nil {
+				rowsMap["show_type"] = rows.ShowType
 			}
 
-			idInt := *dataSourceInfo.ID
-			id := strconv.FormatUint(idInt, 10)
-			ids = append(ids, id)
-			tmpList = append(tmpList, dataSourceInfoMap)
+			rowIdInt := *rows.ID
+			rowId := strconv.FormatUint(rowIdInt, 10)
+			ids = append(ids, rowId)
+			tmpList = append(tmpList, rowsMap)
 		}
 
-		_ = d.Set("data", tmpList)
+		_ = d.Set("rows", tmpList)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
-		if e := writeToFile(output.(string), tmpList); e != nil {
+		if e := tccommon.WriteToFile(output.(string), d); e != nil {
 			return e
 		}
 	}

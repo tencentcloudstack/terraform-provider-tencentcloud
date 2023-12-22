@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataDatasource() *schema.Resource {
+func ResourceTencentCloudWedataDatasource() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataDatasourceCreate,
 		Read:   resourceTencentCloudWedataDatasourceRead,
@@ -119,11 +122,11 @@ func resourceTencentCloudWedataDatasource() *schema.Resource {
 }
 
 func resourceTencentCloudWedataDatasourceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_datasource.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_datasource.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId          = getLogId(contextNil)
+		logId          = tccommon.GetLogId(tccommon.ContextNil)
 		request        = wedata.NewCreateDataSourceRequest()
 		response       = wedata.NewCreateDataSourceResponse()
 		ownerProjectId string
@@ -199,10 +202,10 @@ func resourceTencentCloudWedataDatasourceCreate(d *schema.ResourceData, meta int
 		request.COSRegion = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateDataSource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateDataSource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -223,22 +226,22 @@ func resourceTencentCloudWedataDatasourceCreate(d *schema.ResourceData, meta int
 
 	DataInt := *response.Response.Data
 	datasourceId = strconv.FormatUint(DataInt, 10)
-	d.SetId(strings.Join([]string{ownerProjectId, datasourceId}, FILED_SP))
+	d.SetId(strings.Join([]string{ownerProjectId, datasourceId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudWedataDatasourceRead(d, meta)
 }
 
 func resourceTencentCloudWedataDatasourceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_datasource.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_datasource.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -316,11 +319,11 @@ func resourceTencentCloudWedataDatasourceRead(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudWedataDatasourceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_datasource.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_datasource.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = wedata.NewModifyDataSourceRequest()
 	)
 
@@ -332,7 +335,7 @@ func resourceTencentCloudWedataDatasourceUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -409,10 +412,10 @@ func resourceTencentCloudWedataDatasourceUpdate(d *schema.ResourceData, meta int
 		request.COSRegion = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyDataSource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().ModifyDataSource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -429,16 +432,16 @@ func resourceTencentCloudWedataDatasourceUpdate(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudWedataDatasourceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_datasource.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_datasource.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

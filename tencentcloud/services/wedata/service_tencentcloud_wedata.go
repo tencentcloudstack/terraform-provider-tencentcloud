@@ -1,12 +1,15 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -17,7 +20,7 @@ type WedataService struct {
 }
 
 func (me *WedataService) DescribeWedataRuleTemplateById(ctx context.Context, projectId string, ruleTemplateId string) (ruleTemplate *wedata.RuleTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeRuleTemplateRequest()
 	request.ProjectId = helper.String(projectId)
@@ -47,7 +50,7 @@ func (me *WedataService) DescribeWedataRuleTemplateById(ctx context.Context, pro
 }
 
 func (me *WedataService) DeleteWedataRuleTemplateById(ctx context.Context, projectId, ruleTemplateId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteRuleTemplateRequest()
 	request.ProjectId = helper.String(projectId)
@@ -73,7 +76,7 @@ func (me *WedataService) DeleteWedataRuleTemplateById(ctx context.Context, proje
 
 func (me *WedataService) DescribeWedataRuleTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ruleTemplates []*wedata.RuleTemplate, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = wedata.NewDescribeRuleTemplatesRequest()
 	)
 
@@ -114,7 +117,7 @@ func (me *WedataService) DescribeWedataRuleTemplatesByFilter(ctx context.Context
 
 func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Context, param map[string]interface{}) (dataSourceList []*wedata.DataSourceInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = wedata.NewDescribeDataSourceListRequest()
 	)
 
@@ -168,7 +171,7 @@ func (me *WedataService) DescribeWedataDataSourceListByFilter(ctx context.Contex
 
 func (me *WedataService) DescribeWedataDataSourceInfoListByFilter(ctx context.Context, param map[string]interface{}) (dataSourceInfoList []*wedata.DatasourceBaseInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = wedata.NewDescribeDataSourceInfoListRequest()
 	)
 
@@ -234,7 +237,7 @@ func (me *WedataService) DescribeWedataDataSourceInfoListByFilter(ctx context.Co
 
 func (me *WedataService) DescribeWedataDataSourceWithoutInfoByFilter(ctx context.Context, param map[string]interface{}) (dataSourceWithoutInfo []*wedata.DataSourceInfo, errRet error) {
 	var (
-		logId   = getLogId(ctx)
+		logId   = tccommon.GetLogId(ctx)
 		request = wedata.NewDescribeDataSourceWithoutInfoRequest()
 	)
 
@@ -273,7 +276,7 @@ func (me *WedataService) DescribeWedataDataSourceWithoutInfoByFilter(ctx context
 }
 
 func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, ownerProjectId, datasourceId string) (datasource *wedata.DataSourceInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeDataSourceListRequest()
 	request.PageNumber = common.Uint64Ptr(1)
@@ -314,7 +317,7 @@ func (me *WedataService) DescribeWedataDatasourceById(ctx context.Context, owner
 }
 
 func (me *WedataService) DeleteWedataDatasourceById(ctx context.Context, ownerProjectId, datasourceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteDataSourcesRequest()
 	Id, _ := strconv.ParseUint(datasourceId, 10, 64)
@@ -341,7 +344,7 @@ func (me *WedataService) DeleteWedataDatasourceById(ctx context.Context, ownerPr
 }
 
 func (me *WedataService) DescribeWedataFunctionById(ctx context.Context, functionId, funcType, funcName, projectId string) (function *wedata.OrganizationalFunction, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeOrganizationalFunctionsRequest()
 	request.Type = common.StringPtr("FUNC_DEVELOP")
@@ -381,7 +384,7 @@ func (me *WedataService) DescribeWedataFunctionById(ctx context.Context, functio
 }
 
 func (me *WedataService) DeleteWedataFunctionById(ctx context.Context, functionId, projectId, clusterIdentifier string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteCustomFunctionRequest()
 	request.FunctionId = &functionId
@@ -408,7 +411,7 @@ func (me *WedataService) DeleteWedataFunctionById(ctx context.Context, functionI
 }
 
 func (me *WedataService) DescribeWedataResourceById(ctx context.Context, projectId, filePath, resourceId string) (resourceInfo *wedata.ResourcePathTree, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeResourceManagePathTreesRequest()
 	request.ProjectId = &projectId
@@ -445,7 +448,7 @@ func (me *WedataService) DescribeWedataResourceById(ctx context.Context, project
 }
 
 func (me *WedataService) DeleteWedataResourceById(ctx context.Context, projectId, resourceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteResourceFileRequest()
 	request.ProjectId = &projectId
@@ -471,7 +474,7 @@ func (me *WedataService) DeleteWedataResourceById(ctx context.Context, projectId
 }
 
 func (me *WedataService) DescribeWedataScriptById(ctx context.Context, projectId, filePath string) (fileInfo *wedata.UserFileInfo, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewGetFileInfoRequest()
 	request.ProjectId = &projectId
@@ -502,7 +505,7 @@ func (me *WedataService) DescribeWedataScriptById(ctx context.Context, projectId
 }
 
 func (me *WedataService) DeleteWedataScriptById(ctx context.Context, projectId, resourceId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteFileRequest()
 	request.ProjectId = &projectId
@@ -528,7 +531,7 @@ func (me *WedataService) DeleteWedataScriptById(ctx context.Context, projectId, 
 }
 
 func (me *WedataService) DescribeWedataDqRuleById(ctx context.Context, projectId, ruleId string) (dqRule *wedata.Rule, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := wedata.NewDescribeRuleRequest()
 	request.ProjectId = &projectId
 	ruleIdInt, _ := strconv.ParseUint(ruleId, 10, 64)
@@ -559,7 +562,7 @@ func (me *WedataService) DescribeWedataDqRuleById(ctx context.Context, projectId
 }
 
 func (me *WedataService) DeleteWedataDqRuleById(ctx context.Context, projectId, ruleId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteRuleRequest()
 	request.ProjectId = &projectId
@@ -586,7 +589,7 @@ func (me *WedataService) DeleteWedataDqRuleById(ctx context.Context, projectId, 
 }
 
 func (me *WedataService) DescribeWedataDqRuleTemplateById(ctx context.Context, projectId, templateId string) (dqRuleTemplate *wedata.RuleTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeRuleTemplateRequest()
 	request.ProjectId = &projectId
@@ -618,7 +621,7 @@ func (me *WedataService) DescribeWedataDqRuleTemplateById(ctx context.Context, p
 }
 
 func (me *WedataService) DeleteWedataDqRuleTemplateById(ctx context.Context, projectId, templateId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteRuleTemplateRequest()
 	request.ProjectId = &projectId
@@ -645,7 +648,7 @@ func (me *WedataService) DeleteWedataDqRuleTemplateById(ctx context.Context, pro
 }
 
 func (me *WedataService) DescribeWedataBaselineById(ctx context.Context, projectId, baselineId string) (baseline *wedata.BaselineDetailResponse, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeBaselineByIdRequest()
 	request.ProjectId = &projectId
@@ -676,7 +679,7 @@ func (me *WedataService) DescribeWedataBaselineById(ctx context.Context, project
 }
 
 func (me *WedataService) DeleteWedataBaselineById(ctx context.Context, projectId, baselineId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteBaselineRequest()
 	request.ProjectId = &projectId
@@ -702,7 +705,7 @@ func (me *WedataService) DeleteWedataBaselineById(ctx context.Context, projectId
 }
 
 func (me *WedataService) DescribeWedataIntegrationOfflineTaskById(ctx context.Context, projectId, taskId string) (integrationOfflineTask *wedata.DescribeIntegrationTaskResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeIntegrationTaskRequest()
 	request.ProjectId = &projectId
@@ -735,7 +738,7 @@ func (me *WedataService) DescribeWedataIntegrationOfflineTaskById(ctx context.Co
 }
 
 func (me *WedataService) DeleteWedataIntegrationOfflineTaskById(ctx context.Context, projectId, taskId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := wedata.NewDeleteOfflineTaskRequest()
 	request.OperatorName = common.StringPtr("")
 	request.ProjectId = &projectId
@@ -762,7 +765,7 @@ func (me *WedataService) DeleteWedataIntegrationOfflineTaskById(ctx context.Cont
 }
 
 func (me *WedataService) DescribeWedataIntegrationRealtimeTaskById(ctx context.Context, projectId, taskId string) (integrationRealtimeTask *wedata.DescribeIntegrationTaskResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeIntegrationTaskRequest()
 	request.ProjectId = &projectId
@@ -794,7 +797,7 @@ func (me *WedataService) DescribeWedataIntegrationRealtimeTaskById(ctx context.C
 }
 
 func (me *WedataService) DeleteWedataIntegrationRealtimeTaskById(ctx context.Context, projectId, taskId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := wedata.NewDeleteIntegrationTaskRequest()
 	request.ProjectId = &projectId
 	request.TaskId = &taskId
@@ -819,7 +822,7 @@ func (me *WedataService) DeleteWedataIntegrationRealtimeTaskById(ctx context.Con
 }
 
 func (me *WedataService) DescribeWedataIntegrationTaskNodeById(ctx context.Context, projectId, nodeId string) (integrationTaskNode *wedata.DescribeIntegrationNodeResponseParams, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDescribeIntegrationNodeRequest()
 	request.ProjectId = &projectId
@@ -850,7 +853,7 @@ func (me *WedataService) DescribeWedataIntegrationTaskNodeById(ctx context.Conte
 }
 
 func (me *WedataService) DeleteWedataIntegrationTaskNodeById(ctx context.Context, projectId, nodeId string) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 
 	request := wedata.NewDeleteIntegrationNodeRequest()
 	request.ProjectId = &projectId

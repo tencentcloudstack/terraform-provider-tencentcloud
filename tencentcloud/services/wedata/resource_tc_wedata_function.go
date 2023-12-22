@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataFunction() *schema.Resource {
+func ResourceTencentCloudWedataFunction() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataFunctionCreate,
 		Read:   resourceTencentCloudWedataFunctionRead,
@@ -129,11 +132,11 @@ func resourceTencentCloudWedataFunction() *schema.Resource {
 }
 
 func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_function.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_function.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                        = getLogId(contextNil)
+		logId                        = tccommon.GetLogId(tccommon.ContextNil)
 		createCustomFunctionRequest  = wedata.NewCreateCustomFunctionRequest()
 		createCustomFunctionResponse = wedata.NewCreateCustomFunctionResponse()
 		saveCustomFunctionRequest    = wedata.NewSaveCustomFunctionRequest()
@@ -177,10 +180,10 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 		projectId = v.(string)
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateCustomFunction(createCustomFunctionRequest)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateCustomFunction(createCustomFunctionRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, createCustomFunctionRequest.GetAction(), createCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -204,7 +207,7 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 	}
 
 	functionId = *createCustomFunctionResponse.Response.FunctionId
-	d.SetId(strings.Join([]string{functionId, funcType, funcName, projectId, clusterIdentifier}, FILED_SP))
+	d.SetId(strings.Join([]string{functionId, funcType, funcName, projectId, clusterIdentifier}, tccommon.FILED_SP))
 
 	saveCustomFunctionRequest.FunctionId = &functionId
 	submitCustomFunctionRequest.FunctionId = &functionId
@@ -261,10 +264,10 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 		saveCustomFunctionRequest.Example = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().SaveCustomFunction(saveCustomFunctionRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().SaveCustomFunction(saveCustomFunctionRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, saveCustomFunctionRequest.GetAction(), saveCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -286,10 +289,10 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 		submitCustomFunctionRequest.Comment = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().SubmitCustomFunction(submitCustomFunctionRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().SubmitCustomFunction(submitCustomFunctionRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, submitCustomFunctionRequest.GetAction(), submitCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -311,16 +314,16 @@ func resourceTencentCloudWedataFunctionCreate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudWedataFunctionRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_function.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_function.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -391,11 +394,11 @@ func resourceTencentCloudWedataFunctionRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_function.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_function.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId                       = getLogId(contextNil)
+		logId                       = tccommon.GetLogId(tccommon.ContextNil)
 		saveCustomFunctionRequest   = wedata.NewSaveCustomFunctionRequest()
 		submitCustomFunctionRequest = wedata.NewSubmitCustomFunctionRequest()
 	)
@@ -408,7 +411,7 @@ func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -475,10 +478,10 @@ func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta inter
 		saveCustomFunctionRequest.Example = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().SaveCustomFunction(saveCustomFunctionRequest)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().SaveCustomFunction(saveCustomFunctionRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, saveCustomFunctionRequest.GetAction(), saveCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -503,10 +506,10 @@ func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta inter
 		submitCustomFunctionRequest.Comment = helper.String(v.(string))
 	}
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().SubmitCustomFunction(submitCustomFunctionRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().SubmitCustomFunction(submitCustomFunctionRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, submitCustomFunctionRequest.GetAction(), submitCustomFunctionRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -528,16 +531,16 @@ func resourceTencentCloudWedataFunctionUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudWedataFunctionDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_function.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_function.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

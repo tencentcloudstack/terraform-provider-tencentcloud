@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -6,13 +6,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataIntegrationRealtimeTask() *schema.Resource {
+func ResourceTencentCloudWedataIntegrationRealtimeTask() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataIntegrationRealtimeTaskCreate,
 		Read:   resourceTencentCloudWedataIntegrationRealtimeTaskRead,
@@ -846,11 +849,11 @@ func resourceTencentCloudWedataIntegrationRealtimeTask() *schema.Resource {
 }
 
 func resourceTencentCloudWedataIntegrationRealtimeTaskCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_integration_realtime_task.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_integration_realtime_task.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId         = getLogId(contextNil)
+		logId         = tccommon.GetLogId(tccommon.ContextNil)
 		request       = wedata.NewCreateIntegrationTaskRequest()
 		response      = wedata.NewCreateIntegrationTaskResponse()
 		modifyRequest = wedata.NewModifyIntegrationTaskRequest()
@@ -893,10 +896,10 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskCreate(d *schema.ResourceD
 
 	request.TaskInfo = &createIntegrationTaskInfo
 	// create
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateIntegrationTask(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateIntegrationTask(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -911,7 +914,7 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskCreate(d *schema.ResourceD
 	}
 
 	taskId = *response.Response.TaskId
-	d.SetId(strings.Join([]string{projectId, taskId}, FILED_SP))
+	d.SetId(strings.Join([]string{projectId, taskId}, tccommon.FILED_SP))
 
 	// modify
 	if dMap, ok := helper.InterfacesHeadMap(d, "task_info"); ok {
@@ -1533,10 +1536,10 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskCreate(d *schema.ResourceD
 	}
 
 	modifyRequest.ProjectId = &projectId
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyIntegrationTask(modifyRequest)
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().ModifyIntegrationTask(modifyRequest)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyRequest.GetAction(), modifyRequest.ToJsonString(), result.ToJsonString())
 		}
@@ -1558,16 +1561,16 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskCreate(d *schema.ResourceD
 }
 
 func resourceTencentCloudWedataIntegrationRealtimeTaskRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_integration_realtime_task.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_integration_realtime_task.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -2265,11 +2268,11 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskRead(d *schema.ResourceDat
 }
 
 func resourceTencentCloudWedataIntegrationRealtimeTaskUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_integration_realtime_task.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_integration_realtime_task.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = wedata.NewModifyIntegrationTaskRequest()
 	)
 
@@ -2281,7 +2284,7 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskUpdate(d *schema.ResourceD
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -2916,10 +2919,10 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskUpdate(d *schema.ResourceD
 	}
 
 	request.ProjectId = &projectId
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyIntegrationTask(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().ModifyIntegrationTask(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -2936,16 +2939,16 @@ func resourceTencentCloudWedataIntegrationRealtimeTaskUpdate(d *schema.ResourceD
 }
 
 func resourceTencentCloudWedataIntegrationRealtimeTaskDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_integration_realtime_task.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_integration_realtime_task.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

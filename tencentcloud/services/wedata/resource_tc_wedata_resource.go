@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"strconv"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataResource() *schema.Resource {
+func ResourceTencentCloudWedataResource() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataResourceCreate,
 		Read:   resourceTencentCloudWedataResourceRead,
@@ -63,11 +66,11 @@ func resourceTencentCloudWedataResource() *schema.Resource {
 }
 
 func resourceTencentCloudWedataResourceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_resource.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_resource.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = wedata.NewCreateOrUpdateResourceRequest()
 		response   = wedata.NewCreateOrUpdateResourceResponse()
 		projectId  string
@@ -103,10 +106,10 @@ func resourceTencentCloudWedataResourceCreate(d *schema.ResourceData, meta inter
 
 	request.NewFile = helper.Bool(true)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateOrUpdateResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateOrUpdateResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -126,22 +129,22 @@ func resourceTencentCloudWedataResourceCreate(d *schema.ResourceData, meta inter
 	}
 
 	resourceId = *response.Response.Data[0].ResourceId
-	d.SetId(strings.Join([]string{projectId, filePath, resourceId}, FILED_SP))
+	d.SetId(strings.Join([]string{projectId, filePath, resourceId}, tccommon.FILED_SP))
 
 	return resourceTencentCloudWedataResourceRead(d, meta)
 }
 
 func resourceTencentCloudWedataResourceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_resource.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_resource.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -188,11 +191,11 @@ func resourceTencentCloudWedataResourceRead(d *schema.ResourceData, meta interfa
 }
 
 func resourceTencentCloudWedataResourceUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_resource.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_resource.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = wedata.NewCreateOrUpdateResourceRequest()
 	)
 
@@ -204,7 +207,7 @@ func resourceTencentCloudWedataResourceUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
@@ -232,10 +235,10 @@ func resourceTencentCloudWedataResourceUpdate(d *schema.ResourceData, meta inter
 
 	request.NewFile = helper.Bool(false)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateOrUpdateResource(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateOrUpdateResource(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -252,16 +255,16 @@ func resourceTencentCloudWedataResourceUpdate(d *schema.ResourceData, meta inter
 }
 
 func resourceTencentCloudWedataResourceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_resource.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_resource.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
+		ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		service = WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}

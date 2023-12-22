@@ -1,4 +1,4 @@
-package tencentcloud
+package wedata
 
 import (
 	"context"
@@ -7,13 +7,16 @@ import (
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
+func ResourceTencentCloudWedataRuleTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudWedataRuleTemplateCreate,
 		Read:   resourceTencentCloudWedataRuleTemplateRead,
@@ -91,10 +94,10 @@ func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
 }
 
 func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_rule_template.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_rule_template.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request        = wedata.NewCreateRuleTemplateRequest()
@@ -148,10 +151,10 @@ func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta i
 		request.WhereFlag = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().CreateRuleTemplate(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().CreateRuleTemplate(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -164,22 +167,22 @@ func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta i
 	}
 
 	ruleTemplateId = *response.Response.Data
-	d.SetId(projectId + FILED_SP + helper.UInt64ToStr(ruleTemplateId))
+	d.SetId(projectId + tccommon.FILED_SP + helper.UInt64ToStr(ruleTemplateId))
 
 	return resourceTencentCloudWedataRuleTemplateRead(d, meta)
 }
 
 func resourceTencentCloudWedataRuleTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_rule_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_rule_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -237,14 +240,14 @@ func resourceTencentCloudWedataRuleTemplateRead(d *schema.ResourceData, meta int
 }
 
 func resourceTencentCloudWedataRuleTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_rule_template.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_rule_template.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := wedata.NewModifyRuleTemplateRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -313,10 +316,10 @@ func resourceTencentCloudWedataRuleTemplateUpdate(d *schema.ResourceData, meta i
 			request.WhereFlag = helper.Bool(v.(bool))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyRuleTemplate(request)
+		err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseWedataClient().ModifyRuleTemplate(request)
 			if e != nil {
-				return retryError(e)
+				return tccommon.RetryError(e)
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
@@ -331,14 +334,14 @@ func resourceTencentCloudWedataRuleTemplateUpdate(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudWedataRuleTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_wedata_rule_template.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_wedata_rule_template.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	service := WedataService{client: meta.(tccommon.ProviderMeta).GetAPIV3Conn()}
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
