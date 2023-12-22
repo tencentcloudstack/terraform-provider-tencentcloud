@@ -1,9 +1,13 @@
-package tencentcloud
+package tcmg_test
 
 import (
 	"context"
 	"fmt"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -14,8 +18,8 @@ func TestAccTencentCloudMonitorTmpGrafanaConfigResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
-		Providers: testAccProviders,
+		PreCheck:  func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMonitorTmpGrafanaConfig,
@@ -36,8 +40,8 @@ func TestAccTencentCloudMonitorTmpGrafanaConfigResource_basic(t *testing.T) {
 
 func testAccCheckMonitorTmpGrafanaConfigExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -48,7 +52,7 @@ func testAccCheckMonitorTmpGrafanaConfigExists(r string) resource.TestCheckFunc 
 		}
 		instanceId := rs.Primary.ID
 
-		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcmonitor.NewMonitorService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		instance, err := service.DescribeMonitorTmpGrafanaConfigById(ctx, instanceId)
 		if err != nil {
 			return err

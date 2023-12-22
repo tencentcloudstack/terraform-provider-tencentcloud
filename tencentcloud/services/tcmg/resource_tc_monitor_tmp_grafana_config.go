@@ -1,16 +1,20 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorTmpGrafanaConfig() *schema.Resource {
+func ResourceTencentCloudMonitorTmpGrafanaConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMonitorTmpGrafanaConfigCreate,
 		Read:   resourceTencentCloudMonitorTmpGrafanaConfigRead,
@@ -36,8 +40,8 @@ func resourceTencentCloudMonitorTmpGrafanaConfig() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorTmpGrafanaConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_grafana_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_grafana_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -50,13 +54,13 @@ func resourceTencentCloudMonitorTmpGrafanaConfigCreate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudMonitorTmpGrafanaConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_grafana_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_grafana_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	instanceId := d.Id()
 
@@ -81,10 +85,10 @@ func resourceTencentCloudMonitorTmpGrafanaConfigRead(d *schema.ResourceData, met
 }
 
 func resourceTencentCloudMonitorTmpGrafanaConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_grafana_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_grafana_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := monitor.NewUpdateGrafanaConfigRequest()
 
@@ -95,10 +99,10 @@ func resourceTencentCloudMonitorTmpGrafanaConfigUpdate(d *schema.ResourceData, m
 		request.Config = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UpdateGrafanaConfig(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdateGrafanaConfig(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -113,8 +117,8 @@ func resourceTencentCloudMonitorTmpGrafanaConfigUpdate(d *schema.ResourceData, m
 }
 
 func resourceTencentCloudMonitorTmpGrafanaConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_tmp_grafana_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_tmp_grafana_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

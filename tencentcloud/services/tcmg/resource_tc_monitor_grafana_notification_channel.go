@@ -1,6 +1,9 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
+func ResourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudMonitorGrafanaNotificationChannelRead,
 		Create: resourceTencentCloudMonitorGrafanaNotificationChannelCreate,
@@ -69,10 +73,10 @@ func resourceTencentCloudMonitorGrafanaNotificationChannel() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_notification_channel.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_notification_channel.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = monitor.NewCreateGrafanaNotificationChannelRequest()
@@ -110,10 +114,10 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.Resou
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateGrafanaNotificationChannel(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().CreateGrafanaNotificationChannel(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -129,20 +133,20 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelCreate(d *schema.Resou
 
 	channelId = *response.Response.ChannelId
 
-	d.SetId(channelId + FILED_SP + instanceId)
+	d.SetId(channelId + tccommon.FILED_SP + instanceId)
 	return resourceTencentCloudMonitorGrafanaNotificationChannelRead(d, meta)
 }
 
 func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_notification_channel.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_notification_channel.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -176,14 +180,14 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelRead(d *schema.Resourc
 }
 
 func resourceTencentCloudMonitorGrafanaNotificationChannelUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_notification_channel.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_notification_channel.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := monitor.NewUpdateGrafanaNotificationChannelRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -217,10 +221,10 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelUpdate(d *schema.Resou
 		return fmt.Errorf("`extra_org_ids` do not support change now.")
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UpdateGrafanaNotificationChannel(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdateGrafanaNotificationChannel(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -236,15 +240,15 @@ func resourceTencentCloudMonitorGrafanaNotificationChannelUpdate(d *schema.Resou
 }
 
 func resourceTencentCloudMonitorGrafanaNotificationChannelDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_notification_channel.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_notification_channel.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

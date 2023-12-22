@@ -1,6 +1,9 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorGrafanaVersionUpgrade() *schema.Resource {
+func ResourceTencentCloudMonitorGrafanaVersionUpgrade() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMonitorGrafanaVersionUpgradeCreate,
 		Read:   resourceTencentCloudMonitorGrafanaVersionUpgradeRead,
@@ -39,8 +43,8 @@ func resourceTencentCloudMonitorGrafanaVersionUpgrade() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorGrafanaVersionUpgradeCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -53,13 +57,13 @@ func resourceTencentCloudMonitorGrafanaVersionUpgradeCreate(d *schema.ResourceDa
 }
 
 func resourceTencentCloudMonitorGrafanaVersionUpgradeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	instanceId := d.Id()
 
@@ -84,11 +88,11 @@ func resourceTencentCloudMonitorGrafanaVersionUpgradeRead(d *schema.ResourceData
 }
 
 func resourceTencentCloudMonitorGrafanaVersionUpgradeUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	request := monitor.NewUpgradeGrafanaInstanceRequest()
 
@@ -100,10 +104,10 @@ func resourceTencentCloudMonitorGrafanaVersionUpgradeUpdate(d *schema.ResourceDa
 		request.Alias = helper.String(v.(string))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UpgradeGrafanaInstance(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpgradeGrafanaInstance(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -115,11 +119,11 @@ func resourceTencentCloudMonitorGrafanaVersionUpgradeUpdate(d *schema.ResourceDa
 	}
 
 	time.Sleep(3 * time.Second)
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
+	err = resource.Retry(1*tccommon.ReadRetryTimeout, func() *resource.RetryError {
 		instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
 		if errRet != nil {
-			return retryError(errRet, InternalError)
+			return tccommon.RetryError(errRet, tccommon.InternalError)
 		}
 		if *instance.InstanceStatus == 2 {
 			return nil
@@ -137,8 +141,8 @@ func resourceTencentCloudMonitorGrafanaVersionUpgradeUpdate(d *schema.ResourceDa
 }
 
 func resourceTencentCloudMonitorGrafanaVersionUpgradeDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_version_upgrade.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

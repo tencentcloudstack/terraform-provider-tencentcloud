@@ -1,7 +1,9 @@
-package tencentcloud
+package tcmg_test
 
 import (
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -11,14 +13,14 @@ func TestAccTencentCloudMonitorGrafanaPluginOverviewsDataSource_basic(t *testing
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			tcacctest.AccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers: tcacctest.AccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMonitorGrafanaPluginOverviewsDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_monitor_grafana_plugin_overviews.plugin_overviews"),
+					tcacctest.AccCheckTencentCloudDataSourceID("data.tencentcloud_monitor_grafana_plugin_overviews.plugin_overviews"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_grafana_plugin_overviews.plugin_overviews", "plugin_set.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_grafana_plugin_overviews.plugin_overviews", "plugin_set.0.plugin_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_monitor_grafana_plugin_overviews.plugin_overviews", "plugin_set.0.version"),

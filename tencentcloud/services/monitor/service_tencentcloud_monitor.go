@@ -20,6 +20,10 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func NewMonitorService(client *connectivity.TencentCloudClient) MonitorService {
+	return MonitorService{client: client}
+}
+
 type MonitorService struct {
 	client *connectivity.TencentCloudClient
 }

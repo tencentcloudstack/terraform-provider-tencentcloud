@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcmg"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcm"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcaplusdb"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tat"
@@ -520,7 +521,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_alarm_basic_alarms":                   monitor.DataSourceTencentCloudMonitorAlarmBasicAlarms(),
 			"tencentcloud_monitor_alarm_basic_metric":                   monitor.DataSourceTencentCloudMonitorAlarmBasicMetric(),
 			"tencentcloud_monitor_alarm_conditions_template":            monitor.DataSourceTencentCloudMonitorAlarmConditionsTemplate(),
-			"tencentcloud_monitor_grafana_plugin_overviews":             dataSourceTencentCloudMonitorGrafanaPluginOverviews(),
+			"tencentcloud_monitor_grafana_plugin_overviews":             tcmg.DataSourceTencentCloudMonitorGrafanaPluginOverviews(),
 			"tencentcloud_monitor_alarm_notice_callbacks":               monitor.DataSourceTencentCloudMonitorAlarmNoticeCallbacks(),
 			"tencentcloud_monitor_alarm_all_namespaces":                 monitor.DataSourceTencentCloudMonitorAlarmAllNamespaces(),
 			"tencentcloud_monitor_alarm_monitor_type":                   monitor.DataSourceTencentCloudMonitorAlarmMonitorType(),
@@ -1279,18 +1280,18 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":                    resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
 			"tencentcloud_monitor_tmp_tke_global_notification":                 resourceTencentCloudMonitorTmpTkeGlobalNotification(),
 			"tencentcloud_monitor_tmp_manage_grafana_attachment":               resourceTencentCloudMonitorTmpManageGrafanaAttachment(),
-			"tencentcloud_monitor_grafana_instance":                            resourceTencentCloudMonitorGrafanaInstance(),
-			"tencentcloud_monitor_grafana_integration":                         resourceTencentCloudMonitorGrafanaIntegration(),
-			"tencentcloud_monitor_grafana_notification_channel":                resourceTencentCloudMonitorGrafanaNotificationChannel(),
-			"tencentcloud_monitor_grafana_plugin":                              resourceTencentCloudMonitorGrafanaPlugin(),
-			"tencentcloud_monitor_grafana_sso_account":                         resourceTencentCloudMonitorGrafanaSsoAccount(),
-			"tencentcloud_monitor_tmp_grafana_config":                          resourceTencentCloudMonitorTmpGrafanaConfig(),
-			"tencentcloud_monitor_grafana_dns_config":                          resourceTencentCloudMonitorGrafanaDnsConfig(),
-			"tencentcloud_monitor_grafana_env_config":                          resourceTencentCloudMonitorGrafanaEnvConfig(),
-			"tencentcloud_monitor_grafana_whitelist_config":                    resourceTencentCloudMonitorGrafanaWhitelistConfig(),
-			"tencentcloud_monitor_grafana_sso_cam_config":                      resourceTencentCloudMonitorGrafanaSsoCamConfig(),
-			"tencentcloud_monitor_grafana_sso_config":                          resourceTencentCloudMonitorGrafanaSsoConfig(),
-			"tencentcloud_monitor_grafana_version_upgrade":                     resourceTencentCloudMonitorGrafanaVersionUpgrade(),
+			"tencentcloud_monitor_grafana_instance":                            tcmg.ResourceTencentCloudMonitorGrafanaInstance(),
+			"tencentcloud_monitor_grafana_integration":                         tcmg.ResourceTencentCloudMonitorGrafanaIntegration(),
+			"tencentcloud_monitor_grafana_notification_channel":                tcmg.ResourceTencentCloudMonitorGrafanaNotificationChannel(),
+			"tencentcloud_monitor_grafana_plugin":                              tcmg.ResourceTencentCloudMonitorGrafanaPlugin(),
+			"tencentcloud_monitor_grafana_sso_account":                         tcmg.ResourceTencentCloudMonitorGrafanaSsoAccount(),
+			"tencentcloud_monitor_tmp_grafana_config":                          tcmg.ResourceTencentCloudMonitorTmpGrafanaConfig(),
+			"tencentcloud_monitor_grafana_dns_config":                          tcmg.ResourceTencentCloudMonitorGrafanaDnsConfig(),
+			"tencentcloud_monitor_grafana_env_config":                          tcmg.ResourceTencentCloudMonitorGrafanaEnvConfig(),
+			"tencentcloud_monitor_grafana_whitelist_config":                    tcmg.ResourceTencentCloudMonitorGrafanaWhitelistConfig(),
+			"tencentcloud_monitor_grafana_sso_cam_config":                      tcmg.ResourceTencentCloudMonitorGrafanaSsoCamConfig(),
+			"tencentcloud_monitor_grafana_sso_config":                          tcmg.ResourceTencentCloudMonitorGrafanaSsoConfig(),
+			"tencentcloud_monitor_grafana_version_upgrade":                     tcmg.ResourceTencentCloudMonitorGrafanaVersionUpgrade(),
 			"tencentcloud_mongodb_standby_instance":                            mongodb.ResourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              es.ResourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_elasticsearch_security_group":                        es.ResourceTencentCloudElasticsearchSecurityGroup(),

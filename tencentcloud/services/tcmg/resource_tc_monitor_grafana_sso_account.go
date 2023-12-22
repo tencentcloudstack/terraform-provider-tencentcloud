@@ -1,6 +1,9 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorGrafanaSsoAccount() *schema.Resource {
+func ResourceTencentCloudMonitorGrafanaSsoAccount() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudMonitorGrafanaSsoAccountRead,
 		Create: resourceTencentCloudMonitorGrafanaSsoAccountCreate,
@@ -66,10 +70,10 @@ func resourceTencentCloudMonitorGrafanaSsoAccount() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorGrafanaSsoAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_account.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request    = monitor.NewCreateSSOAccountRequest()
@@ -106,10 +110,10 @@ func resourceTencentCloudMonitorGrafanaSsoAccountCreate(d *schema.ResourceData, 
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateSSOAccount(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().CreateSSOAccount(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -125,20 +129,20 @@ func resourceTencentCloudMonitorGrafanaSsoAccountCreate(d *schema.ResourceData, 
 
 	userId = *response.Response.UserId
 
-	d.SetId(strings.Join([]string{instanceId, userId}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, userId}, tccommon.FILED_SP))
 	return resourceTencentCloudMonitorGrafanaSsoAccountRead(d, meta)
 }
 
 func resourceTencentCloudMonitorGrafanaSsoAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_account.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -181,14 +185,14 @@ func resourceTencentCloudMonitorGrafanaSsoAccountRead(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudMonitorGrafanaSsoAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_account.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := monitor.NewUpdateSSOAccountRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -229,10 +233,10 @@ func resourceTencentCloudMonitorGrafanaSsoAccountUpdate(d *schema.ResourceData, 
 		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UpdateSSOAccount(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().UpdateSSOAccount(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -248,15 +252,15 @@ func resourceTencentCloudMonitorGrafanaSsoAccountUpdate(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudMonitorGrafanaSsoAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_account.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_account.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

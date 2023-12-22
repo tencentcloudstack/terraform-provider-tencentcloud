@@ -1,16 +1,20 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorGrafanaSsoCamConfig() *schema.Resource {
+func ResourceTencentCloudMonitorGrafanaSsoCamConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudMonitorGrafanaSsoCamConfigCreate,
 		Read:   resourceTencentCloudMonitorGrafanaSsoCamConfigRead,
@@ -37,8 +41,8 @@ func resourceTencentCloudMonitorGrafanaSsoCamConfig() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorGrafanaSsoCamConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -51,14 +55,14 @@ func resourceTencentCloudMonitorGrafanaSsoCamConfigCreate(d *schema.ResourceData
 }
 
 func resourceTencentCloudMonitorGrafanaSsoCamConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
 	instanceId := d.Id()
 
@@ -83,10 +87,10 @@ func resourceTencentCloudMonitorGrafanaSsoCamConfigRead(d *schema.ResourceData, 
 }
 
 func resourceTencentCloudMonitorGrafanaSsoCamConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	request := monitor.NewEnableSSOCamCheckRequest()
 
@@ -98,10 +102,10 @@ func resourceTencentCloudMonitorGrafanaSsoCamConfigUpdate(d *schema.ResourceData
 		request.EnableSSOCamCheck = helper.Bool(v.(bool))
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().EnableSSOCamCheck(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().EnableSSOCamCheck(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
@@ -116,8 +120,8 @@ func resourceTencentCloudMonitorGrafanaSsoCamConfigUpdate(d *schema.ResourceData
 }
 
 func resourceTencentCloudMonitorGrafanaSsoCamConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_sso_cam_config.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	return nil
 }

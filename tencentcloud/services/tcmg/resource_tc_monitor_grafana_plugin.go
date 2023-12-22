@@ -1,6 +1,9 @@
-package tencentcloud
+package tcmg
 
 import (
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
+
 	"context"
 	"fmt"
 	"log"
@@ -9,10 +12,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMonitorGrafanaPlugin() *schema.Resource {
+func ResourceTencentCloudMonitorGrafanaPlugin() *schema.Resource {
 	return &schema.Resource{
 		Read:   resourceTencentCloudMonitorGrafanaPluginRead,
 		Create: resourceTencentCloudMonitorGrafanaPluginCreate,
@@ -45,10 +49,10 @@ func resourceTencentCloudMonitorGrafanaPlugin() *schema.Resource {
 }
 
 func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_plugin.create")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_plugin.create")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
 	var (
 		request = monitor.NewInstallPluginsRequest()
@@ -74,10 +78,10 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 	}
 	request.Plugins = append(request.Plugins, &plugin)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().InstallPlugins(request)
+	err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().InstallPlugins(request)
 		if e != nil {
-			return retryError(e)
+			return tccommon.RetryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -93,12 +97,12 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 
 	descResquest.PluginId = &pluginId
 	descResquest.InstanceId = &instanceId
-	outErr := resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().DescribeInstalledPlugins(descResquest)
+	outErr := resource.Retry(2*tccommon.ReadRetryTimeout, func() *resource.RetryError {
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseMonitorClient().DescribeInstalledPlugins(descResquest)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		if len(response.Response.PluginSet) < 1 {
 			return resource.RetryableError(fmt.Errorf("Installing pluin %v, retry...", pluginId))
@@ -110,20 +114,20 @@ func resourceTencentCloudMonitorGrafanaPluginCreate(d *schema.ResourceData, meta
 		return outErr
 	}
 
-	d.SetId(strings.Join([]string{instanceId, pluginId}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, pluginId}, tccommon.FILED_SP))
 	return resourceTencentCloudMonitorGrafanaPluginRead(d, meta)
 }
 
 func resourceTencentCloudMonitorGrafanaPluginRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_plugin.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_plugin.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -155,12 +159,12 @@ func resourceTencentCloudMonitorGrafanaPluginRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudMonitorGrafanaPluginUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_plugin.update")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_plugin.update")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	request := monitor.NewUninstallGrafanaPluginsRequest()
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
@@ -187,15 +191,15 @@ func resourceTencentCloudMonitorGrafanaPluginUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudMonitorGrafanaPluginDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_monitor_grafana_plugin.delete")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_monitor_grafana_plugin.delete")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := svcmonitor.NewMonitorService(meta.(tccommon.ProviderMeta).GetAPIV3Conn())
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}

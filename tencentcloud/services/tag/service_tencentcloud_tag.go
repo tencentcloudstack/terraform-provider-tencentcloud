@@ -115,7 +115,7 @@ func (me *TagService) DescribeResourceTags(ctx context.Context, serviceType, res
 //internal version: replace waitTag begin, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 //internal version: replace waitTag end, please do not modify this annotation and refrain from inserting any code between the beginning and end lines of the annotation.
 
-func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {
+func DiffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]string, deleteTags []string) {
 	replaceTags = make(map[string]string)
 	deleteTags = make([]string, 0)
 	for k, v := range newTags {

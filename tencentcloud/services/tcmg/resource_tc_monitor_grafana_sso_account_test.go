@@ -1,10 +1,14 @@
-package tencentcloud
+package tcmg_test
 
 import (
 	"context"
 	"fmt"
 	"strings"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 
@@ -16,8 +20,8 @@ func TestAccTencentCloudMonitorGrafanaSsoAccount_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckSsoAccountDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -41,9 +45,9 @@ func TestAccTencentCloudMonitorGrafanaSsoAccount_basic(t *testing.T) {
 }
 
 func testAccCheckSsoAccountDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcmonitor.NewMonitorService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_grafana_sso_account" {
 			continue
@@ -51,7 +55,7 @@ func testAccCheckSsoAccountDestroy(s *terraform.State) error {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("resource id is not set")
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
@@ -72,8 +76,8 @@ func testAccCheckSsoAccountDestroy(s *terraform.State) error {
 
 func testAccCheckSsoAccountExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -82,14 +86,14 @@ func testAccCheckSsoAccountExists(r string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("resource id is not set")
 		}
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		idSplit := strings.Split(rs.Primary.ID, tccommon.FILED_SP)
 		if len(idSplit) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		instanceId := idSplit[0]
 		userId := idSplit[1]
 
-		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcmonitor.NewMonitorService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		ssoAccount, err := service.DescribeMonitorSsoAccount(ctx, instanceId, userId)
 		if err != nil {
 			return err
@@ -105,7 +109,7 @@ func testAccCheckSsoAccountExists(r string) resource.TestCheckFunc {
 
 const testMonitorGrafanaSsoAccountVar = `
 variable "instance_id" {
-  default = "` + defaultGrafanaInstanceId + `"
+  default = "` + tcacctest.DefaultGrafanaInstanceId + `"
 }
 `
 

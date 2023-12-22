@@ -1,4 +1,4 @@
-package tencentcloud
+package tcmg_test
 
 import (
 	"context"
@@ -7,6 +7,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
+	svcmonitor "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/monitor"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
@@ -14,8 +19,8 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheckCommon(t, tcacctest.ACCOUNT_TYPE_COMMON) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckGrafanaInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -23,7 +28,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaInstanceExists("tencentcloud_monitor_grafana_instance.grafanaInstance"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "instance_name", "test-grafana"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", tcacctest.DefaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_monitor_grafana_instance.grafanaInstance", "internal_url"),
@@ -34,7 +39,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGrafanaInstanceExists("tencentcloud_monitor_grafana_instance.grafanaInstance"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "instance_name", "test-grafana-update"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", defaultGrafanaVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "vpc_id", tcacctest.DefaultGrafanaVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "subnet_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_instance.grafanaInstance", "enable_internet", "true"),
 				),
@@ -50,9 +55,9 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 }
 
 func testAccCheckGrafanaInstanceDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+	service := svcmonitor.NewMonitorService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_grafana_instance" {
 			continue
@@ -80,8 +85,8 @@ func testAccCheckGrafanaInstanceDestroy(s *terraform.State) error {
 
 func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[r]
 		if !ok {
@@ -92,7 +97,7 @@ func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 		}
 		instanceId := rs.Primary.ID
 
-		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := svcmonitor.NewMonitorService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 		instance, err := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
 		if err != nil {
 			return err
@@ -108,10 +113,10 @@ func testAccCheckGrafanaInstanceExists(r string) resource.TestCheckFunc {
 
 const testMonitorGrafanaInstanceVar = `
 variable "vpc_id" {
-  default = "` + defaultGrafanaVpcId + `"
+  default = "` + tcacctest.DefaultGrafanaVpcId + `"
 }
 variable "subnet_id" {
-  default = "` + defaultGrafanaSubnetId + `"
+  default = "` + tcacctest.DefaultGrafanaSubnetId + `"
 }
 `
 
