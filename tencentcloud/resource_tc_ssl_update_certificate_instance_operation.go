@@ -171,7 +171,7 @@ func resourceTencentCloudSslUpdateCertificateInstanceOperationCreate(d *schema.R
 		request.CertificatePrivateKey = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("expiring_notification_switch"); v != nil {
+	if v, _ := d.GetOkExists("expiring_notification_switch"); v != nil {
 		request.ExpiringNotificationSwitch = helper.IntUint64(v.(int))
 	}
 
@@ -179,11 +179,11 @@ func resourceTencentCloudSslUpdateCertificateInstanceOperationCreate(d *schema.R
 		request.Repeatable = helper.Bool(v.(bool))
 	}
 
-	if v, _ := d.GetOk("allow_download"); v != nil {
+	if v, _ := d.GetOkExists("allow_download"); v != nil {
 		request.AllowDownload = helper.Bool(v.(bool))
 	}
 
-	if v, _ := d.GetOk("project_id"); v != nil {
+	if v, _ := d.GetOkExists("project_id"); v != nil {
 		request.ProjectId = helper.IntUint64(v.(int))
 	}
 
