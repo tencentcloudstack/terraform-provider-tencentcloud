@@ -1,15 +1,6 @@
 package tencentcloud
 
 import (
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trabbit"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -18,6 +9,17 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tmp"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tpulsar"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trabbit"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpc"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vpn"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/waf"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tco"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tcr"
@@ -918,20 +920,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_data_source_list":                      dataSourceTencentCloudWedataDataSourceList(),
 			"tencentcloud_wedata_data_source_without_info":              dataSourceTencentCloudWedataDataSourceWithoutInfo(),
 			"tencentcloud_private_dns_records":                          privatedns.DataSourceTencentCloudPrivateDnsRecords(),
-			"tencentcloud_waf_ciphers":                                  dataSourceTencentCloudWafCiphers(),
-			"tencentcloud_waf_tls_versions":                             dataSourceTencentCloudWafTlsVersions(),
-			"tencentcloud_waf_domains":                                  dataSourceTencentCloudWafDomains(),
-			"tencentcloud_waf_find_domains":                             dataSourceTencentCloudWafFindDomains(),
-			"tencentcloud_waf_waf_infos":                                dataSourceTencentCloudWafWafInfos(),
-			"tencentcloud_waf_ports":                                    dataSourceTencentCloudWafPorts(),
-			"tencentcloud_waf_user_domains":                             dataSourceTencentCloudWafUserDomains(),
-			"tencentcloud_waf_attack_log_histogram":                     dataSourceTencentCloudWafAttackLogHistogram(),
-			"tencentcloud_waf_attack_log_list":                          dataSourceTencentCloudWafAttackLogList(),
-			"tencentcloud_waf_attack_overview":                          dataSourceTencentCloudWafAttackOverview(),
-			"tencentcloud_waf_attack_total_count":                       dataSourceTencentCloudWafAttackTotalCount(),
-			"tencentcloud_waf_peak_points":                              dataSourceTencentCloudWafPeakPoints(),
-			"tencentcloud_waf_instance_qps_limit":                       dataSourceTencentCloudWafInstanceQpsLimit(),
-			"tencentcloud_waf_user_clb_regions":                         dataSourceTencentCloudWafUserClbRegions(),
+			"tencentcloud_waf_ciphers":                                  waf.DataSourceTencentCloudWafCiphers(),
+			"tencentcloud_waf_tls_versions":                             waf.DataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_waf_domains":                                  waf.DataSourceTencentCloudWafDomains(),
+			"tencentcloud_waf_find_domains":                             waf.DataSourceTencentCloudWafFindDomains(),
+			"tencentcloud_waf_waf_infos":                                waf.DataSourceTencentCloudWafWafInfos(),
+			"tencentcloud_waf_ports":                                    waf.DataSourceTencentCloudWafPorts(),
+			"tencentcloud_waf_user_domains":                             waf.DataSourceTencentCloudWafUserDomains(),
+			"tencentcloud_waf_attack_log_histogram":                     waf.DataSourceTencentCloudWafAttackLogHistogram(),
+			"tencentcloud_waf_attack_log_list":                          waf.DataSourceTencentCloudWafAttackLogList(),
+			"tencentcloud_waf_attack_overview":                          waf.DataSourceTencentCloudWafAttackOverview(),
+			"tencentcloud_waf_attack_total_count":                       waf.DataSourceTencentCloudWafAttackTotalCount(),
+			"tencentcloud_waf_peak_points":                              waf.DataSourceTencentCloudWafPeakPoints(),
+			"tencentcloud_waf_instance_qps_limit":                       waf.DataSourceTencentCloudWafInstanceQpsLimit(),
+			"tencentcloud_waf_user_clb_regions":                         waf.DataSourceTencentCloudWafUserClbRegions(),
 			"tencentcloud_cfw_nat_fw_switches":                          cfw.DataSourceTencentCloudCfwNatFwSwitches(),
 			"tencentcloud_cfw_vpc_fw_switches":                          cfw.DataSourceTencentCloudCfwVpcFwSwitches(),
 			"tencentcloud_cfw_edge_fw_switches":                         cfw.DataSourceTencentCloudCfwEdgeFwSwitches(),
@@ -1860,23 +1862,23 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_bind_work_groups_to_user_attachment":             dlc.ResourceTencentCloudDlcBindWorkGroupsToUserAttachment(),
 			"tencentcloud_dlc_update_row_filter_operation":                     dlc.ResourceTencentCloudDlcUpdateRowFilterOperation(),
 			"tencentcloud_dlc_user_data_engine_config":                         dlc.ResourceTencentCloudDlcUserDataEngineConfig(),
-			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
-			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
-			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
-			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
-			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
-			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
-			"tencentcloud_waf_anti_fake":                                       resourceTencentCloudWafAntiFake(),
-			"tencentcloud_waf_anti_info_leak":                                  resourceTencentCloudWafAntiInfoLeak(),
-			"tencentcloud_waf_auto_deny_rules":                                 resourceTencentCloudWafAutoDenyRules(),
-			"tencentcloud_waf_module_status":                                   resourceTencentCloudWafModuleStatus(),
-			"tencentcloud_waf_protection_mode":                                 resourceTencentCloudWafProtectionMode(),
-			"tencentcloud_waf_web_shell":                                       resourceTencentCloudWafWebShell(),
-			"tencentcloud_waf_cc":                                              resourceTencentCloudWafCc(),
-			"tencentcloud_waf_cc_auto_status":                                  resourceTencentCloudWafCcAutoStatus(),
-			"tencentcloud_waf_cc_session":                                      resourceTencentCloudWafCcSession(),
-			"tencentcloud_waf_ip_access_control":                               resourceTencentCloudWafIpAccessControl(),
-			"tencentcloud_waf_modify_access_period":                            resourceTencentCloudWafModifyAccessPeriod(),
+			"tencentcloud_waf_custom_rule":                                     waf.ResourceTencentCloudWafCustomRule(),
+			"tencentcloud_waf_custom_white_rule":                               waf.ResourceTencentCloudWafCustomWhiteRule(),
+			"tencentcloud_waf_clb_domain":                                      waf.ResourceTencentCloudWafClbDomain(),
+			"tencentcloud_waf_saas_domain":                                     waf.ResourceTencentCloudWafSaasDomain(),
+			"tencentcloud_waf_clb_instance":                                    waf.ResourceTencentCloudWafClbInstance(),
+			"tencentcloud_waf_saas_instance":                                   waf.ResourceTencentCloudWafSaasInstance(),
+			"tencentcloud_waf_anti_fake":                                       waf.ResourceTencentCloudWafAntiFake(),
+			"tencentcloud_waf_anti_info_leak":                                  waf.ResourceTencentCloudWafAntiInfoLeak(),
+			"tencentcloud_waf_auto_deny_rules":                                 waf.ResourceTencentCloudWafAutoDenyRules(),
+			"tencentcloud_waf_module_status":                                   waf.ResourceTencentCloudWafModuleStatus(),
+			"tencentcloud_waf_protection_mode":                                 waf.ResourceTencentCloudWafProtectionMode(),
+			"tencentcloud_waf_web_shell":                                       waf.ResourceTencentCloudWafWebShell(),
+			"tencentcloud_waf_cc":                                              waf.ResourceTencentCloudWafCc(),
+			"tencentcloud_waf_cc_auto_status":                                  waf.ResourceTencentCloudWafCcAutoStatus(),
+			"tencentcloud_waf_cc_session":                                      waf.ResourceTencentCloudWafCcSession(),
+			"tencentcloud_waf_ip_access_control":                               waf.ResourceTencentCloudWafIpAccessControl(),
+			"tencentcloud_waf_modify_access_period":                            waf.ResourceTencentCloudWafModifyAccessPeriod(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_wedata_datasource":                                   resourceTencentCloudWedataDatasource(),
 			"tencentcloud_wedata_function":                                     resourceTencentCloudWedataFunction(),
