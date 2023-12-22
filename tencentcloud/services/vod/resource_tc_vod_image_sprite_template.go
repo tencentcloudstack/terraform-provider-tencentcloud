@@ -1,4 +1,4 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
@@ -7,14 +7,17 @@ import (
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
+func ResourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodImageSpriteTemplateCreate,
 		Read:   resourceTencentCloudVodImageSpriteTemplateRead,
@@ -28,7 +31,7 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 			"sample_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"Percent", "Time"}),
+				ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"Percent", "Time"}),
 				Description:  "Sampling type. Valid values: `Percent`, `Time`. `Percent`: by percent. `Time`: by time interval.",
 			},
 			"sample_interval": {
@@ -49,13 +52,13 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 64),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 64),
 				Description:  "Name of a time point screen capturing template. Length limit: 64 characters.",
 			},
 			"comment": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 256),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 256),
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"fill_type": {
@@ -103,10 +106,10 @@ func resourceTencentCloudVodImageSpriteTemplate() *schema.Resource {
 }
 
 func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_image_sprite_template.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_image_sprite_template.create")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vod.NewCreateImageSpriteTemplateRequest()
 	)
 
@@ -128,12 +131,12 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 
 	var response *vod.CreateImageSpriteTemplateResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateImageSpriteTemplate(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateImageSpriteTemplate(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -149,15 +152,15 @@ func resourceTencentCloudVodImageSpriteTemplateCreate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_image_sprite_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_image_sprite_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
 		subAppId   = d.Get("sub_app_id").(int)
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
@@ -188,10 +191,10 @@ func resourceTencentCloudVodImageSpriteTemplateRead(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_image_sprite_template.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_image_sprite_template.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifyImageSpriteTemplateRequest()
 		id         = d.Id()
 		changeFlag = false
@@ -240,12 +243,12 @@ func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, me
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyImageSpriteTemplate(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifyImageSpriteTemplate(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -260,14 +263,14 @@ func resourceTencentCloudVodImageSpriteTemplateUpdate(d *schema.ResourceData, me
 }
 
 func resourceTencentCloudVodImageSpriteTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_image_sprite_template.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_image_sprite_template.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := vodService.DeleteImageSpriteTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {

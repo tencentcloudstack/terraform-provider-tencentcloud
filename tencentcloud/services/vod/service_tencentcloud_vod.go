@@ -1,4 +1,4 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
@@ -6,19 +6,26 @@ import (
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
+
+func NewVodService(client *connectivity.TencentCloudClient) VodService {
+	return VodService{client: client}
+}
 
 type VodService struct {
 	client *connectivity.TencentCloudClient
 }
 
 func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx context.Context, filters map[string]interface{}) (templates []*vod.AdaptiveDynamicStreamingTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDescribeAdaptiveDynamicStreamingTemplatesRequest()
 
 	offset := VOD_DEFAULT_OFFSET
@@ -42,11 +49,11 @@ func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesByFilter(ctx cont
 	for {
 		var response *vod.DescribeAdaptiveDynamicStreamingTemplatesResponse
 		var err error
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVodClient().DescribeAdaptiveDynamicStreamingTemplates(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			templates = append(templates, response.Response.AdaptiveDynamicStreamingTemplateSet...)
 			return nil
@@ -90,7 +97,7 @@ func (me *VodService) DescribeAdaptiveDynamicStreamingTemplatesById(ctx context.
 }
 
 func (me *VodService) DeleteAdaptiveDynamicStreamingTemplate(ctx context.Context, templateId string, subAppid uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDeleteAdaptiveDynamicStreamingTemplateRequest()
 
 	idUint, _ := strconv.ParseUint(templateId, 0, 64)
@@ -99,12 +106,12 @@ func (me *VodService) DeleteAdaptiveDynamicStreamingTemplate(ctx context.Context
 		request.SubAppId = &subAppid
 	}
 
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseVodClient().DeleteAdaptiveDynamicStreamingTemplate(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -116,7 +123,7 @@ func (me *VodService) DeleteAdaptiveDynamicStreamingTemplate(ctx context.Context
 }
 
 func (me *VodService) DescribeProcedureTemplatesByFilter(ctx context.Context, filters map[string]interface{}) (templates []*vod.ProcedureTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDescribeProcedureTemplatesRequest()
 
 	offset := VOD_DEFAULT_OFFSET
@@ -139,11 +146,11 @@ func (me *VodService) DescribeProcedureTemplatesByFilter(ctx context.Context, fi
 	for {
 		var response *vod.DescribeProcedureTemplatesResponse
 		var err error
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVodClient().DescribeProcedureTemplates(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			templates = append(templates, response.Response.ProcedureTemplateSet...)
 			return nil
@@ -187,7 +194,7 @@ func (me *VodService) DescribeProcedureTemplatesById(ctx context.Context, templa
 }
 
 func (me *VodService) DeleteProcedureTemplate(ctx context.Context, templateId string, subAppid uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDeleteProcedureTemplateRequest()
 
 	request.Name = &templateId
@@ -195,12 +202,12 @@ func (me *VodService) DeleteProcedureTemplate(ctx context.Context, templateId st
 		request.SubAppId = &subAppid
 	}
 
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseVodClient().DeleteProcedureTemplate(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -212,7 +219,7 @@ func (me *VodService) DeleteProcedureTemplate(ctx context.Context, templateId st
 }
 
 func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx context.Context, filters map[string]interface{}) (templates []*vod.SnapshotByTimeOffsetTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDescribeSnapshotByTimeOffsetTemplatesRequest()
 
 	offset := VOD_DEFAULT_OFFSET
@@ -236,11 +243,11 @@ func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx context.
 	for {
 		var response *vod.DescribeSnapshotByTimeOffsetTemplatesResponse
 		var err error
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVodClient().DescribeSnapshotByTimeOffsetTemplates(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			templates = append(templates, response.Response.SnapshotByTimeOffsetTemplateSet...)
 			return nil
@@ -284,7 +291,7 @@ func (me *VodService) DescribeSnapshotByTimeOffsetTemplatesById(ctx context.Cont
 }
 
 func (me *VodService) DeleteSnapshotByTimeOffsetTemplate(ctx context.Context, templateId string, subAppid uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDeleteSnapshotByTimeOffsetTemplateRequest()
 
 	idUint, _ := strconv.ParseUint(templateId, 0, 64)
@@ -293,12 +300,12 @@ func (me *VodService) DeleteSnapshotByTimeOffsetTemplate(ctx context.Context, te
 		request.SubAppId = &subAppid
 	}
 
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseVodClient().DeleteSnapshotByTimeOffsetTemplate(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -310,7 +317,7 @@ func (me *VodService) DeleteSnapshotByTimeOffsetTemplate(ctx context.Context, te
 }
 
 func (me *VodService) DescribeImageSpriteTemplatesByFilter(ctx context.Context, filters map[string]interface{}) (templates []*vod.ImageSpriteTemplate, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDescribeImageSpriteTemplatesRequest()
 
 	offset := VOD_DEFAULT_OFFSET
@@ -334,11 +341,11 @@ func (me *VodService) DescribeImageSpriteTemplatesByFilter(ctx context.Context, 
 	for {
 		var response *vod.DescribeImageSpriteTemplatesResponse
 		var err error
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVodClient().DescribeImageSpriteTemplates(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			templates = append(templates, response.Response.ImageSpriteTemplateSet...)
 			return nil
@@ -382,7 +389,7 @@ func (me *VodService) DescribeImageSpriteTemplatesById(ctx context.Context, temp
 }
 
 func (me *VodService) DeleteImageSpriteTemplate(ctx context.Context, templateId string, subAppid uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDeleteImageSpriteTemplateRequest()
 
 	idUint, _ := strconv.ParseUint(templateId, 0, 64)
@@ -391,12 +398,12 @@ func (me *VodService) DeleteImageSpriteTemplate(ctx context.Context, templateId 
 		request.SubAppId = &subAppid
 	}
 
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseVodClient().DeleteImageSpriteTemplate(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})
@@ -408,7 +415,7 @@ func (me *VodService) DeleteImageSpriteTemplate(ctx context.Context, templateId 
 }
 
 func (me *VodService) DescribeSuperPlayerConfigsByFilter(ctx context.Context, filters map[string]interface{}) (configs []*vod.PlayerConfig, errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDescribeSuperPlayerConfigsRequest()
 
 	offset := VOD_DEFAULT_OFFSET
@@ -431,11 +438,11 @@ func (me *VodService) DescribeSuperPlayerConfigsByFilter(ctx context.Context, fi
 	for {
 		var response *vod.DescribeSuperPlayerConfigsResponse
 		var err error
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.ReadRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseVodClient().DescribeSuperPlayerConfigs(request)
 			if err != nil {
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			configs = append(configs, response.Response.PlayerConfigSet...)
 			return nil
@@ -478,7 +485,7 @@ func (me *VodService) DescribeSuperPlayerConfigsById(ctx context.Context, config
 }
 
 func (me *VodService) DeleteSuperPlayerConfig(ctx context.Context, configId string, subAppid uint64) (errRet error) {
-	logId := getLogId(ctx)
+	logId := tccommon.GetLogId(ctx)
 	request := vod.NewDeleteSuperPlayerConfigRequest()
 
 	request.Name = &configId
@@ -486,12 +493,12 @@ func (me *VodService) DeleteSuperPlayerConfig(ctx context.Context, configId stri
 		request.SubAppId = &subAppid
 	}
 
-	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		_, errRet = me.client.UseVodClient().DeleteSuperPlayerConfig(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
-			return retryError(errRet)
+			return tccommon.RetryError(errRet)
 		}
 		return nil
 	})

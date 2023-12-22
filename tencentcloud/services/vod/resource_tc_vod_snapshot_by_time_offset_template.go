@@ -1,4 +1,4 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
@@ -7,14 +7,17 @@ import (
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
+func ResourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate,
 		Read:   resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead,
@@ -28,7 +31,7 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 64),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 64),
 				Description:  "Name of a time point screen capturing template. Length limit: 64 characters.",
 			},
 			"width": {
@@ -57,7 +60,7 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 			"comment": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 256),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 256),
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"sub_app_id": {
@@ -87,10 +90,10 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplate() *schema.Resource {
 }
 
 func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.create")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vod.NewCreateSnapshotByTimeOffsetTemplateRequest()
 	)
 
@@ -111,12 +114,12 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 
 	var response *vod.CreateSnapshotByTimeOffsetTemplateResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateSnapshotByTimeOffsetTemplate(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateSnapshotByTimeOffsetTemplate(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -132,15 +135,15 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateCreate(d *schema.Resourc
 }
 
 func resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
 		subAppId   = d.Get("sub_app_id").(int)
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
@@ -168,10 +171,10 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateRead(d *schema.ResourceD
 }
 
 func resourceTencentCloudVodSnapshotByTimeOffsetTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifySnapshotByTimeOffsetTemplateRequest()
 		id         = d.Id()
 		changeFlag = false
@@ -208,12 +211,12 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateUpdate(d *schema.Resourc
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySnapshotByTimeOffsetTemplate(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySnapshotByTimeOffsetTemplate(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -228,14 +231,14 @@ func resourceTencentCloudVodSnapshotByTimeOffsetTemplateUpdate(d *schema.Resourc
 }
 
 func resourceTencentCloudVodSnapshotByTimeOffsetTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_snapshot_by_time_offset_template.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := vodService.DeleteSnapshotByTimeOffsetTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {

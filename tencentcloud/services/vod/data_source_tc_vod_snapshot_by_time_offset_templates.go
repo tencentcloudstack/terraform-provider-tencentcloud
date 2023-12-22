@@ -1,15 +1,18 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
+func DataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVodSnapshotByTimeOffsetTemplatesRead,
 
@@ -103,10 +106,10 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates() *schema.Resource {
 }
 
 func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplatesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vod_snapshot_by_time_offset_templates.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vod_snapshot_by_time_offset_templates.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	filter := make(map[string]interface{})
 	if v, ok := d.GetOk("definition"); ok {
@@ -120,7 +123,7 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplatesRead(d *schema.Resour
 	}
 
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	templates, err := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 	if err != nil {
@@ -153,7 +156,7 @@ func dataSourceTencentCloudVodSnapshotByTimeOffsetTemplatesRead(d *schema.Resour
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), templatesList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), templatesList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]", logId, output.(string), err.Error())
 			return err
 		}

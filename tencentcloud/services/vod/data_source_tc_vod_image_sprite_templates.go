@@ -1,15 +1,18 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
+func DataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVodImageSpriteTemplatesRead,
 
@@ -118,10 +121,10 @@ func dataSourceTencentCloudVodImageSpriteTemplates() *schema.Resource {
 }
 
 func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vod_image_sprite_templates.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vod_image_sprite_templates.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	filter := make(map[string]interface{})
 	if v, ok := d.GetOk("definition"); ok {
@@ -135,7 +138,7 @@ func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, m
 	}
 
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	templates, err := vodService.DescribeImageSpriteTemplatesByFilter(ctx, filter)
 	if err != nil {
@@ -171,7 +174,7 @@ func dataSourceTencentCloudVodImageSpriteTemplatesRead(d *schema.ResourceData, m
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), templatesList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), templatesList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]", logId, output.(string), err.Error())
 			return err
 		}

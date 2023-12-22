@@ -1,18 +1,21 @@
-package tencentcloud
+package vod
 
 import (
 	"fmt"
 	"log"
 	"strings"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodSubApplication() *schema.Resource {
+func ResourceTencentCloudVodSubApplication() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodSubApplicationCreate,
 		Read:   resourceTencentCloudVodSubApplicationRead,
@@ -26,14 +29,14 @@ func resourceTencentCloudVodSubApplication() *schema.Resource {
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 40),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 40),
 				Description:  "Sub application name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.",
 			},
 			"status": {
 				Type:         schema.TypeString,
 				Required:     true,
 				Description:  "Sub appliaction status.",
-				ValidateFunc: validateAllowedStringValue(VOD_SUB_APPLICATION_STATUS),
+				ValidateFunc: tccommon.ValidateAllowedStringValue(VOD_SUB_APPLICATION_STATUS),
 			},
 			"description": {
 				Type:        schema.TypeString,
@@ -51,10 +54,10 @@ func resourceTencentCloudVodSubApplication() *schema.Resource {
 }
 
 func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_sub_application.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_sub_application.create")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewCreateSubAppIdRequest()
 		subAppId   *uint64
 		subAppName *string
@@ -69,12 +72,12 @@ func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta in
 		request.Description = helper.String(v.(string))
 	}
 
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err := meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateSubAppId(request)
+		response, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateSubAppId(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		subAppId = response.Response.SubAppId
 		return nil
@@ -82,19 +85,19 @@ func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	d.SetId(*subAppName + FILED_SP + helper.UInt64ToStr(*subAppId))
+	d.SetId(*subAppName + tccommon.FILED_SP + helper.UInt64ToStr(*subAppId))
 
 	if v, ok := d.GetOk("status"); ok {
 		statusResquest := vod.NewModifySubAppIdStatusRequest()
 		statusResquest.SubAppId = subAppId
 		statusResquest.Status = helper.String(v.(string))
 
-		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(statusResquest.GetAction())
-			_, err := meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySubAppIdStatus(statusResquest)
+			_, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusResquest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		}); err != nil {
@@ -106,18 +109,18 @@ func resourceTencentCloudVodSubApplicationCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudVodSubApplicationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_sub_application.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_sub_application.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		//logId   = getLogId(contextNil)
-		//ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		client  = meta.(*TencentCloudClient).apiV3Conn
+		//logId   = tccommon.GetLogId(tccommon.ContextNil)
+		//ctx     = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+		client  = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		request = vod.NewDescribeSubAppIdsRequest()
 		appInfo = vod.SubAppIdInfo{}
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("sub application id is borken, id is %s", d.Id())
 	}
@@ -152,15 +155,15 @@ func resourceTencentCloudVodSubApplicationRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_sub_application.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_sub_application.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifySubAppIdInfoRequest()
 		changeFlag = false
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("sub application id is borken, id is %s", d.Id())
 	}
@@ -182,12 +185,12 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySubAppIdInfo(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdInfo(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -202,12 +205,12 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 		}
 		statusRequest.SubAppId = helper.Uint64(helper.StrToUInt64(subAppId))
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(statusRequest.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySubAppIdStatus(statusRequest)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusRequest)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, statusRequest.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -216,10 +219,10 @@ func resourceTencentCloudVodSubApplicationUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudVodSubApplicationDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_sub_application.delete")()
-	logId := getLogId(contextNil)
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_sub_application.delete")()
+	logId := tccommon.GetLogId(tccommon.ContextNil)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
+	idSplit := strings.Split(d.Id(), tccommon.FILED_SP)
 	if len(idSplit) != 2 {
 		return fmt.Errorf("sub application id is borken, id is %s", d.Id())
 	}
@@ -228,11 +231,11 @@ func resourceTencentCloudVodSubApplicationDelete(d *schema.ResourceData, meta in
 	// first turn off
 	statusRequest.Status = helper.String("Off")
 	statusRequest.SubAppId = helper.Uint64(helper.StrToUInt64(subAppId))
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(statusRequest.GetAction())
-		if _, err := meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySubAppIdStatus(statusRequest); err != nil {
+		if _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, statusRequest.GetAction(), err.Error())
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		return nil
 	}); err != nil {
@@ -240,11 +243,11 @@ func resourceTencentCloudVodSubApplicationDelete(d *schema.ResourceData, meta in
 	}
 	// then destroy
 	statusRequest.Status = helper.String("Destroyed")
-	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	if err := resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(statusRequest.GetAction())
-		if _, err := meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySubAppIdStatus(statusRequest); err != nil {
+		if _, err := meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySubAppIdStatus(statusRequest); err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, statusRequest.GetAction(), err.Error())
-			return retryError(err, InternalError)
+			return tccommon.RetryError(err, tccommon.InternalError)
 		}
 		return nil
 	}); err != nil {

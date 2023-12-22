@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tsf"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/tse"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/trocket"
@@ -593,11 +594,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_instances":                            cynosdb.DataSourceTencentCloudCynosdbInstances(),
 			"tencentcloud_cynosdb_zone_config":                          cynosdb.DataSourceTencentCloudCynosdbZoneConfig(),
 			"tencentcloud_cynosdb_instance_slow_queries":                cynosdb.DataSourceTencentCloudCynosdbInstanceSlowQueries(),
-			"tencentcloud_vod_adaptive_dynamic_streaming_templates":     dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
-			"tencentcloud_vod_image_sprite_templates":                   dataSourceTencentCloudVodImageSpriteTemplates(),
-			"tencentcloud_vod_procedure_templates":                      dataSourceTencentCloudVodProcedureTemplates(),
-			"tencentcloud_vod_snapshot_by_time_offset_templates":        dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
-			"tencentcloud_vod_super_player_configs":                     dataSourceTencentCloudVodSuperPlayerConfigs(),
+			"tencentcloud_vod_adaptive_dynamic_streaming_templates":     vod.DataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
+			"tencentcloud_vod_image_sprite_templates":                   vod.DataSourceTencentCloudVodImageSpriteTemplates(),
+			"tencentcloud_vod_procedure_templates":                      vod.DataSourceTencentCloudVodProcedureTemplates(),
+			"tencentcloud_vod_snapshot_by_time_offset_templates":        vod.DataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
+			"tencentcloud_vod_super_player_configs":                     vod.DataSourceTencentCloudVodSuperPlayerConfigs(),
 			"tencentcloud_sqlserver_publish_subscribes":                 sqlserver.DataSourceTencentCloudSqlserverPublishSubscribes(),
 			"tencentcloud_sqlserver_instance_param_records":             sqlserver.DataSourceTencentCloudSqlserverInstanceParamRecords(),
 			"tencentcloud_sqlserver_project_security_groups":            sqlserver.DataSourceTencentCloudSqlserverProjectSecurityGroups(),
@@ -1409,12 +1410,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_read_only_instance_exclusive_access":         cynosdb.ResourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_cynosdb_proxy_end_point":                             cynosdb.ResourceTencentCloudCynosdbProxyEndPoint(),
 			"tencentcloud_cynosdb_upgrade_proxy_version":                       cynosdb.ResourceTencentCloudCynosdbUpgradeProxyVersion(),
-			"tencentcloud_vod_adaptive_dynamic_streaming_template":             resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
-			"tencentcloud_vod_image_sprite_template":                           resourceTencentCloudVodImageSpriteTemplate(),
-			"tencentcloud_vod_procedure_template":                              resourceTencentCloudVodProcedureTemplate(),
-			"tencentcloud_vod_snapshot_by_time_offset_template":                resourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
-			"tencentcloud_vod_super_player_config":                             resourceTencentCloudVodSuperPlayerConfig(),
-			"tencentcloud_vod_sub_application":                                 resourceTencentCloudVodSubApplication(),
+			"tencentcloud_vod_adaptive_dynamic_streaming_template":             vod.ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
+			"tencentcloud_vod_image_sprite_template":                           vod.ResourceTencentCloudVodImageSpriteTemplate(),
+			"tencentcloud_vod_procedure_template":                              vod.ResourceTencentCloudVodProcedureTemplate(),
+			"tencentcloud_vod_snapshot_by_time_offset_template":                vod.ResourceTencentCloudVodSnapshotByTimeOffsetTemplate(),
+			"tencentcloud_vod_super_player_config":                             vod.ResourceTencentCloudVodSuperPlayerConfig(),
+			"tencentcloud_vod_sub_application":                                 vod.ResourceTencentCloudVodSubApplication(),
 			"tencentcloud_sqlserver_publish_subscribe":                         sqlserver.ResourceTencentCloudSqlserverPublishSubscribe(),
 			"tencentcloud_api_gateway_usage_plan":                              apigateway.ResourceTencentCloudAPIGatewayUsagePlan(),
 			"tencentcloud_api_gateway_usage_plan_attachment":                   apigateway.ResourceTencentCloudAPIGatewayUsagePlanAttachment(),

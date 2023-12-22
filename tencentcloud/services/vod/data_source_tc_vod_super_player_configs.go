@@ -1,15 +1,18 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
+func DataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudVodSuperPlayerConfigsRead,
 
@@ -131,10 +134,10 @@ func dataSourceTencentCloudVodSuperPlayerConfigs() *schema.Resource {
 }
 
 func dataSourceTencentCloudVodSuperPlayerConfigsRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_vod_super_player_configs.read")()
+	defer tccommon.LogElapsed("data_source.tencentcloud_vod_super_player_configs.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	filter := make(map[string]interface{})
 	if v, ok := d.GetOk("name"); ok {
@@ -148,7 +151,7 @@ func dataSourceTencentCloudVodSuperPlayerConfigsRead(d *schema.ResourceData, met
 	}
 
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 	configs, err := vodService.DescribeSuperPlayerConfigsByFilter(ctx, filter)
 	if err != nil {
@@ -204,7 +207,7 @@ func dataSourceTencentCloudVodSuperPlayerConfigsRead(d *schema.ResourceData, met
 	}
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
-		if err := writeToFile(output.(string), configsList); err != nil {
+		if err := tccommon.WriteToFile(output.(string), configsList); err != nil {
 			log.Printf("[CRITAL]%s output file[%s] fail, reason[%s]", logId, output.(string), err.Error())
 			return err
 		}

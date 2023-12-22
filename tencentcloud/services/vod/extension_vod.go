@@ -1,6 +1,10 @@
-package tencentcloud
+package vod
 
-import "github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+import (
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+)
 
 const (
 	VOD_AUDIO_CHANNEL_MONO   = "mono"
@@ -65,13 +69,13 @@ func VodWatermarkResource() *schema.Resource {
 			"text_content": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(0, 100),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 100),
 				Description:  "Text content of up to `100` characters. This needs to be entered only when the watermark type is text. Note: this field may return null, indicating that no valid values can be obtained.",
 			},
 			"svg_content": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(0, 2000000),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(0, 2000000),
 				Description:  "SVG content of up to `2000000` characters. This needs to be entered only when the watermark type is `SVG`. Note: this field may return null, indicating that no valid values can be obtained.",
 			},
 			"start_time_offset": {

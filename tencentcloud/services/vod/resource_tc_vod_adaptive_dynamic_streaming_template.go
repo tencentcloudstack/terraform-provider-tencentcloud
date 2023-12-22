@@ -1,4 +1,4 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
@@ -7,14 +7,17 @@ import (
 	"strconv"
 	"time"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource {
+func ResourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate,
 		Read:   resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead,
@@ -33,7 +36,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 			"name": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateStringLengthInRange(1, 64),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 64),
 				Description:  "Template name. Length limit: 64 characters.",
 			},
 			"drm_type": {
@@ -57,7 +60,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 			"comment": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 256),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 256),
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"sub_app_id": {
@@ -87,7 +90,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 									"fps": {
 										Type:         schema.TypeInt,
 										Required:     true,
-										ValidateFunc: validateIntegerInRange(0, 60),
+										ValidateFunc: tccommon.ValidateIntegerInRange(0, 60),
 										Description:  "Video frame rate in Hz. Value range: `[0, 60]`. If the value is `0`, the frame rate will be the same as that of the source video.",
 									},
 									"bitrate": {
@@ -117,7 +120,7 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 										Type:         schema.TypeString,
 										Optional:     true,
 										Default:      "black",
-										ValidateFunc: validateAllowedStringValue([]string{"stretch", "black"}),
+										ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"stretch", "black"}),
 										Description:  "Fill type. Fill refers to the way of processing a screenshot when its aspect ratio is different from that of the source video. The following fill types are supported: `stretch`: stretch. The screenshot will be stretched frame by frame to match the aspect ratio of the source video, which may make the screenshot shorter or longer; `black`: fill with black. This option retains the aspect ratio of the source video for the screenshot and fills the unmatched area with black color blocks. Default value: black. Note: this field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -180,10 +183,10 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplate() *schema.Resource 
 }
 
 func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.create")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vod.NewCreateAdaptiveDynamicStreamingTemplateRequest()
 	)
 
@@ -229,12 +232,12 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 
 	var response *vod.CreateAdaptiveDynamicStreamingTemplateResponse
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		response, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateAdaptiveDynamicStreamingTemplate(request)
+		response, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateAdaptiveDynamicStreamingTemplate(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -250,15 +253,15 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateCreate(d *schema.Res
 }
 
 func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
 		subAppId   = d.Get("sub_app_id").(int)
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
 	// waiting for refreshing cache
@@ -312,10 +315,10 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateRead(d *schema.Resou
 }
 
 func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifyAdaptiveDynamicStreamingTemplateRequest()
 		id         = d.Id()
 		changeFlag = false
@@ -389,12 +392,12 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifyAdaptiveDynamicStreamingTemplate(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifyAdaptiveDynamicStreamingTemplate(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -409,14 +412,14 @@ func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 }
 
 func resourceTencentCloudVodAdaptiveDynamicStreamingTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_adaptive_dynamic_streaming_template.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := vodService.DeleteAdaptiveDynamicStreamingTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {

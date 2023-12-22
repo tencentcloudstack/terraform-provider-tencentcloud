@@ -1,18 +1,21 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
+func ResourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodSuperPlayerConfigCreate,
 		Read:   resourceTencentCloudVodSuperPlayerConfigRead,
@@ -27,7 +30,7 @@ func resourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateStringLengthInRange(1, 64),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 64),
 				Description:  "Player configuration name, which can contain up to 64 letters, digits, underscores, and hyphens (such as test_ABC-123) and must be unique under a user.",
 			},
 			"drm_switch": {
@@ -96,7 +99,7 @@ func resourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
 			"comment": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 256),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 256),
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"sub_app_id": {
@@ -120,10 +123,10 @@ func resourceTencentCloudVodSuperPlayerConfig() *schema.Resource {
 }
 
 func resourceTencentCloudVodSuperPlayerConfigCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_super_player_config.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_super_player_config.create")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vod.NewCreateSuperPlayerConfigRequest()
 	)
 
@@ -198,12 +201,12 @@ func resourceTencentCloudVodSuperPlayerConfigCreate(d *schema.ResourceData, meta
 	}
 
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateSuperPlayerConfig(request)
+		_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateSuperPlayerConfig(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -217,14 +220,14 @@ func resourceTencentCloudVodSuperPlayerConfigCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudVodSuperPlayerConfigRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_super_player_config.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_super_player_config.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
 	config, has, err := vodService.DescribeSuperPlayerConfigsById(ctx, id)
@@ -272,10 +275,10 @@ func resourceTencentCloudVodSuperPlayerConfigRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_super_player_config.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_super_player_config.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewModifySuperPlayerConfigRequest()
 		id         = d.Id()
 		changeFlag = false
@@ -345,12 +348,12 @@ func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ModifySuperPlayerConfig(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ModifySuperPlayerConfig(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -365,14 +368,14 @@ func resourceTencentCloudVodSuperPlayerConfigUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudVodSuperPlayerConfigDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_super_player_config.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_super_player_config.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := vodService.DeleteSuperPlayerConfig(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {

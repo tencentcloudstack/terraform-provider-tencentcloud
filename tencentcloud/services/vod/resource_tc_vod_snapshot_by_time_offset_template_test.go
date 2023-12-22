@@ -1,10 +1,14 @@
-package tencentcloud
+package vod_test
 
 import (
 	"context"
 	"fmt"
 	"strconv"
 	"testing"
+
+	tcacctest "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/acctest"
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+	svcvod "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/services/vod"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -15,16 +19,14 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_vod_snapshot_template", &resource.Sweeper{
 		Name: "tencentcloud_vod_snapshot_template",
 		F: func(r string) error {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			sharedClient, err := sharedClientForRegion(r)
+			logId := tccommon.GetLogId(tccommon.ContextNil)
+			ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
+			sharedClient, err := tcacctest.SharedClientForRegion(r)
 			if err != nil {
 				return fmt.Errorf("getting tencentcloud client error: %s", err.Error())
 			}
-			client := sharedClient.(*TencentCloudClient)
-			vodService := VodService{
-				client: client.apiV3Conn,
-			}
+			client := sharedClient.(tccommon.ProviderMeta)
+			vodService := svcvod.NewVodService(client.GetAPIV3Conn())
 			filter := make(map[string]interface{})
 			templates, e := vodService.DescribeSnapshotByTimeOffsetTemplatesByFilter(ctx, filter)
 			if e != nil {
@@ -55,8 +57,8 @@ func init() {
 func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
+		PreCheck:     func() { tcacctest.AccPreCheck(t) },
+		Providers:    tcacctest.AccProviders,
 		CheckDestroy: testAccCheckVodSnapshotByTimeOffsetTemplateDestroy,
 		Steps: []resource.TestStep{
 			{
@@ -97,12 +99,10 @@ func TestAccTencentCloudVodSnapshotByTimeOffsetTemplateResource(t *testing.T) {
 }
 
 func testAccCheckVodSnapshotByTimeOffsetTemplateDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
-	vodService := VodService{
-		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-	}
+	vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_vod_snapshot_by_time_offset_template" {
 			continue
@@ -127,8 +127,8 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateDestroy(s *terraform.State) erro
 
 func testAccCheckVodSnapshotByTimeOffsetTemplateExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		logId := tccommon.GetLogId(tccommon.ContextNil)
+		ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
@@ -137,9 +137,7 @@ func testAccCheckVodSnapshotByTimeOffsetTemplateExists(n string) resource.TestCh
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("vod snapshot by time offset template id is not set")
 		}
-		vodService := VodService{
-			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
-		}
+		vodService := svcvod.NewVodService(tcacctest.AccProvider.Meta().(tccommon.ProviderMeta).GetAPIV3Conn())
 
 		var (
 			filter = map[string]interface{}{

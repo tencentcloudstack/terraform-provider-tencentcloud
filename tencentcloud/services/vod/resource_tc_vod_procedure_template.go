@@ -1,18 +1,21 @@
-package tencentcloud
+package vod
 
 import (
 	"context"
 	"log"
 	"strconv"
 
+	tccommon "github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/common"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
+
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-func resourceTencentCloudVodProcedureTemplate() *schema.Resource {
+func ResourceTencentCloudVodProcedureTemplate() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudVodProcedureTemplateCreate,
 		Read:   resourceTencentCloudVodProcedureTemplateRead,
@@ -27,13 +30,13 @@ func resourceTencentCloudVodProcedureTemplate() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateStringLengthInRange(1, 20),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 20),
 				Description:  "Task flow name (up to 20 characters).",
 			},
 			"comment": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateStringLengthInRange(1, 256),
+				ValidateFunc: tccommon.ValidateStringLengthInRange(1, 256),
 				Description:  "Template description. Length limit: 256 characters.",
 			},
 			"sub_app_id": {
@@ -222,7 +225,7 @@ func resourceTencentCloudVodProcedureTemplate() *schema.Resource {
 									"position_type": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateAllowedStringValue([]string{"Time", "Percent"}),
+										ValidateFunc: tccommon.ValidateAllowedStringValue([]string{"Time", "Percent"}),
 										Description:  "Screen capturing mode. Valid values: `Time`, `Percent`. `Time`: screen captures by time point, `Percent`: screen captures by percentage.",
 									},
 									"position_value": {
@@ -521,10 +524,10 @@ func generateMediaProcessTask(d *schema.ResourceData) (mediaReq *vod.MediaProces
 }
 
 func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_procedure_template.create")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_procedure_template.create")()
 
 	var (
-		logId   = getLogId(contextNil)
+		logId   = tccommon.GetLogId(tccommon.ContextNil)
 		request = vod.NewCreateProcedureTemplateRequest()
 	)
 
@@ -541,12 +544,12 @@ func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta
 	}
 
 	var err error
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().CreateProcedureTemplate(request)
+		_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().CreateProcedureTemplate(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return retryError(err)
+			return tccommon.RetryError(err)
 		}
 		return nil
 	})
@@ -559,15 +562,15 @@ func resourceTencentCloudVodProcedureTemplateCreate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_procedure_template.read")()
-	defer inconsistentCheck(d, meta)()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_procedure_template.read")()
+	defer tccommon.InconsistentCheck(d, meta)()
 
 	var (
-		logId      = getLogId(contextNil)
-		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
+		ctx        = context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 		id         = d.Id()
 		subAppId   = d.Get("sub_app_id").(int)
-		client     = meta.(*TencentCloudClient).apiV3Conn
+		client     = meta.(tccommon.ProviderMeta).GetAPIV3Conn()
 		vodService = VodService{client: client}
 	)
 	template, has, err := vodService.DescribeProcedureTemplatesById(ctx, id, subAppId)
@@ -776,10 +779,10 @@ func resourceTencentCloudVodProcedureTemplateRead(d *schema.ResourceData, meta i
 }
 
 func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_procedure_template.update")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_procedure_template.update")()
 
 	var (
-		logId      = getLogId(contextNil)
+		logId      = tccommon.GetLogId(tccommon.ContextNil)
 		request    = vod.NewResetProcedureTemplateRequest()
 		id         = d.Id()
 		changeFlag = false
@@ -802,12 +805,12 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 
 	if changeFlag {
 		var err error
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(tccommon.WriteRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			_, err = meta.(*TencentCloudClient).apiV3Conn.UseVodClient().ResetProcedureTemplate(request)
+			_, err = meta.(tccommon.ProviderMeta).GetAPIV3Conn().UseVodClient().ResetProcedureTemplate(request)
 			if err != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-				return retryError(err)
+				return tccommon.RetryError(err)
 			}
 			return nil
 		})
@@ -822,14 +825,14 @@ func resourceTencentCloudVodProcedureTemplateUpdate(d *schema.ResourceData, meta
 }
 
 func resourceTencentCloudVodProcedureTemplateDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_vod_procedure_template.delete")()
+	defer tccommon.LogElapsed("resource.tencentcloud_vod_procedure_template.delete")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := tccommon.GetLogId(tccommon.ContextNil)
+	ctx := context.WithValue(context.TODO(), tccommon.LogIdKey, logId)
 
 	id := d.Id()
 	vodService := VodService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+		client: meta.(tccommon.ProviderMeta).GetAPIV3Conn(),
 	}
 
 	if err := vodService.DeleteProcedureTemplate(ctx, id, uint64(d.Get("sub_app_id").(int))); err != nil {
